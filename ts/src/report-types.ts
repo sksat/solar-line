@@ -232,6 +232,8 @@ export interface SummarySection {
   markdown: string;
   /** Optional comparison table */
   table?: ComparisonTable;
+  /** Optional orbital diagrams rendered within this section */
+  orbitalDiagrams?: OrbitalDiagram[];
 }
 
 /** A cross-episode or summary report page */

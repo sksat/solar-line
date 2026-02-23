@@ -74,6 +74,63 @@
     {
       "heading": "航路の連続性",
       "markdown": "全5話の航路は太陽系内の連続した旅程を構成する:\n\n**火星 → ガニメデ → (木星脱出) → エンケラドス → タイタニア → 地球**\n\n各話の到着地点が次話の出発地点と一致しており、航路の連続性は完全に保たれている。特に注目すべきは:\n\n- 第1話〜第3話: 太陽系外側へ向かう往路（火星→木星→土星→天王星）\n- 第4話: 帰還出発（天王星→地球）= 「新しいソーラーライン」の開拓\n- 第5話: 帰還完結（地球到着・捕捉）= ソーラーライン完結\n\n第2話の弾道遷移（約455日）のみがBrachistochroneではなく、損傷状態での受動的な軌道遷移である点も物語と整合する。全航路の合計距離は約35.9 AU。",
+      "orbitalDiagrams": [
+        {
+          "id": "summary-full-route",
+          "title": "ケストレル号 全航路概観（太陽中心、約35.9 AU）",
+          "centerLabel": "太陽",
+          "scaleMode": "log",
+          "radiusUnit": "AU",
+          "orbits": [
+            { "id": "earth", "label": "地球", "radius": 1.0, "color": "#58a6ff", "angle": 4.19, "meanMotion": 1.991e-7 },
+            { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149", "angle": 0, "meanMotion": 1.059e-7 },
+            { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 2.09, "meanMotion": 1.678e-8 },
+            { "id": "saturn", "label": "土星", "radius": 9.582, "color": "#e3b341", "angle": 3.14, "meanMotion": 6.759e-9 },
+            { "id": "uranus", "label": "天王星", "radius": 19.2, "color": "#79c0ff", "angle": 4.71, "meanMotion": 2.369e-9 }
+          ],
+          "transfers": [
+            {
+              "label": "第1話: 火星→木星 Brachistochrone 72h",
+              "fromOrbitId": "mars",
+              "toOrbitId": "jupiter",
+              "color": "#3fb950",
+              "style": "brachistochrone",
+              "startTime": 0,
+              "endTime": 259200
+            },
+            {
+              "label": "第2話: 木星→土星 弾道遷移 ≈455日",
+              "fromOrbitId": "jupiter",
+              "toOrbitId": "saturn",
+              "color": "#8b949e",
+              "style": "hyperbolic",
+              "startTime": 259200,
+              "endTime": 39571200
+            },
+            {
+              "label": "第3話: 土星→天王星 Brachistochrone 143h",
+              "fromOrbitId": "saturn",
+              "toOrbitId": "uranus",
+              "color": "#3fb950",
+              "style": "brachistochrone",
+              "startTime": 39571200,
+              "endTime": 40086720
+            },
+            {
+              "label": "第4-5話: 天王星→地球 Brachistochrone",
+              "fromOrbitId": "uranus",
+              "toOrbitId": "earth",
+              "color": "#d2a8ff",
+              "style": "brachistochrone",
+              "startTime": 40086720,
+              "endTime": 40803520
+            }
+          ],
+          "animation": {
+            "durationSeconds": 40803520
+          }
+        }
+      ],
       "table": {
         "caption": "航路の連続性",
         "episodes": [

@@ -1269,6 +1269,82 @@ describe("renderSummaryPage", () => {
     const html = renderSummaryPage(sampleSummaryReport);
     assert.ok(html.includes('../index.html'));
   });
+
+  it("renders orbital diagrams in sections that have them", () => {
+    const reportWithDiagram: SummaryReport = {
+      slug: "test-diagrams",
+      title: "ダイアグラムテスト",
+      summary: "軌道図テスト",
+      sections: [
+        {
+          heading: "航路テスト",
+          markdown: "テスト",
+          orbitalDiagrams: [
+            {
+              id: "test-diagram",
+              title: "テスト軌道図",
+              centerLabel: "太陽",
+              scaleMode: "log",
+              radiusUnit: "AU",
+              orbits: [
+                { id: "earth", label: "地球", radius: 1.0, color: "#58a6ff" },
+                { id: "mars", label: "火星", radius: 1.524, color: "#f85149", angle: 0 },
+              ],
+              transfers: [
+                {
+                  label: "テスト遷移",
+                  fromOrbitId: "earth",
+                  toOrbitId: "mars",
+                  color: "#3fb950",
+                  style: "brachistochrone",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const html = renderSummaryPage(reportWithDiagram);
+    assert.ok(html.includes("test-diagram"));
+    assert.ok(html.includes("テスト軌道図"));
+    assert.ok(html.includes("orbital-diagram"));
+  });
+
+  it("includes animation script when section has animated diagrams", () => {
+    const reportWithAnimated: SummaryReport = {
+      slug: "test-animated",
+      title: "アニメーションテスト",
+      summary: "テスト",
+      sections: [
+        {
+          heading: "テスト",
+          markdown: "テスト",
+          orbitalDiagrams: [
+            {
+              id: "animated-test",
+              title: "アニメーション付き",
+              centerLabel: "太陽",
+              orbits: [
+                { id: "a", label: "A", radius: 1.0, color: "#fff" },
+                { id: "b", label: "B", radius: 2.0, color: "#fff" },
+              ],
+              transfers: [
+                { label: "T", fromOrbitId: "a", toOrbitId: "b", color: "#fff", style: "hohmann", startTime: 0, endTime: 100 },
+              ],
+              animation: { durationSeconds: 100 },
+            },
+          ],
+        },
+      ],
+    };
+    const html = renderSummaryPage(reportWithAnimated);
+    assert.ok(html.includes("orbital-animation.js"));
+  });
+
+  it("does not include animation script when no animated diagrams", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(!html.includes("orbital-animation.js"));
+  });
 });
 
 // --- layoutHtml with summaryPages ---

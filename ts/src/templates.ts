@@ -1005,17 +1005,25 @@ ${rows}
 export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteManifest["summaryPages"]): string {
   const sections = report.sections.map(section => {
     const tableHtml = section.table ? renderComparisonTable(section.table) : "";
+    const diagramHtml = section.orbitalDiagrams ? renderOrbitalDiagrams(section.orbitalDiagrams) : "";
     return `<div class="summary-section">
 <h2>${escapeHtml(section.heading)}</h2>
 ${markdownToHtml(section.markdown)}
+${diagramHtml}
 ${tableHtml}
 </div>`;
   }).join("\n");
+
+  // Include animation script if any section has animated diagrams
+  const hasAnimatedDiagrams = report.sections.some(
+    s => s.orbitalDiagrams?.some(d => d.animation) ?? false
+  );
+  const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
 
   const content = `
 <h1>${escapeHtml(report.title)}</h1>
 <p>${escapeHtml(report.summary)}</p>
 ${sections}`;
 
-  return layoutHtml(report.title, content, "..", summaryPages);
+  return layoutHtml(report.title, content + animScript, "..", summaryPages);
 }
