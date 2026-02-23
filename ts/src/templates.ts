@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, SourceCitation } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -225,6 +225,8 @@ footer {
 .dialogue-quote .timestamp { color: #8b949e; font-size: 0.85em; margin-left: 0.5rem; }
 .dv-chart { margin: 1rem 0; }
 .dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
+.orbital-diagram { text-align: center; }
+.orbital-diagram svg { max-width: 100%; height: auto; }
 `;
 
 /** Wrap content in the common HTML layout */
@@ -388,6 +390,248 @@ ${barsSvg}
 </div>`;
 }
 
+/**
+ * Scale a radius value to pixel space using the given scale mode.
+ * Returns a value in [minPx, maxPx].
+ */
+function scaleRadius(
+  value: number,
+  maxValue: number,
+  maxPx: number,
+  mode: "linear" | "sqrt" | "log",
+  minPx: number = 20,
+): number {
+  if (maxValue <= 0 || value <= 0) return minPx;
+  let ratio: number;
+  switch (mode) {
+    case "linear":
+      ratio = value / maxValue;
+      break;
+    case "sqrt":
+      ratio = Math.sqrt(value / maxValue);
+      break;
+    case "log":
+      ratio = Math.log(1 + value) / Math.log(1 + maxValue);
+      break;
+  }
+  return minPx + ratio * (maxPx - minPx);
+}
+
+/**
+ * Generate an SVG path for a Hohmann transfer ellipse arc between two circular orbits.
+ * Draws a half-ellipse from departure angle to arrival (180° transfer).
+ */
+function hohmannArcPath(r1px: number, r2px: number, fromAngle: number): string {
+  // Hohmann is half an ellipse: semi-major axis = (r1+r2)/2
+  const a = (r1px + r2px) / 2;
+  const b = Math.sqrt(r1px * r2px); // semi-minor for visual approximation
+  // Start at departure orbit, end 180° later at arrival orbit
+  const startX = r1px * Math.cos(fromAngle);
+  const startY = -r1px * Math.sin(fromAngle);
+  const endX = -r1px * Math.cos(fromAngle) * (r2px / r1px);
+  const endY = r1px * Math.sin(fromAngle) * (r2px / r1px);
+  // Use SVG arc: large-arc-flag=1 for the long way around
+  const sweepFlag = r2px >= r1px ? 1 : 0;
+  return `M ${startX.toFixed(1)} ${startY.toFixed(1)} A ${a.toFixed(1)} ${b.toFixed(1)} 0 0 ${sweepFlag} ${endX.toFixed(1)} ${endY.toFixed(1)}`;
+}
+
+/**
+ * Generate an SVG path for a hyperbolic escape/capture arc.
+ * Draws an open curve departing from the inner orbit.
+ */
+function hyperbolicArcPath(r1px: number, r2px: number, fromAngle: number): string {
+  const startX = r1px * Math.cos(fromAngle);
+  const startY = -r1px * Math.sin(fromAngle);
+  // End point at the outer orbit, offset by ~60° (schematic)
+  const endAngle = fromAngle + Math.PI * 0.35;
+  const endX = r2px * Math.cos(endAngle);
+  const endY = -r2px * Math.sin(endAngle);
+  // Control point for the open curve
+  const midR = (r1px + r2px) * 0.7;
+  const midAngle = fromAngle + Math.PI * 0.15;
+  const cpX = midR * Math.cos(midAngle);
+  const cpY = -midR * Math.sin(midAngle);
+  return `M ${startX.toFixed(1)} ${startY.toFixed(1)} Q ${cpX.toFixed(1)} ${cpY.toFixed(1)} ${endX.toFixed(1)} ${endY.toFixed(1)}`;
+}
+
+/**
+ * Generate an SVG path for a brachistochrone (constant-thrust) transfer.
+ * Drawn as a smooth Bezier arc with a distinct visual style (dashed in CSS).
+ */
+function brachistochroneArcPath(r1px: number, r2px: number, fromAngle: number): string {
+  const startX = r1px * Math.cos(fromAngle);
+  const startY = -r1px * Math.sin(fromAngle);
+  // End at arrival orbit, roughly 90° ahead
+  const endAngle = fromAngle + Math.PI * 0.5;
+  const endX = r2px * Math.cos(endAngle);
+  const endY = -r2px * Math.sin(endAngle);
+  // Midpoint "flip" marker position
+  const midAngle = fromAngle + Math.PI * 0.25;
+  const midR = (r1px + r2px) / 2;
+  const cpX = midR * Math.cos(midAngle);
+  const cpY = -midR * Math.sin(midAngle);
+  return `M ${startX.toFixed(1)} ${startY.toFixed(1)} Q ${cpX.toFixed(1)} ${cpY.toFixed(1)} ${endX.toFixed(1)} ${endY.toFixed(1)}`;
+}
+
+/** Generate SVG path for a transfer arc */
+function transferArcPath(
+  style: TransferArc["style"],
+  fromOrbit: OrbitDefinition,
+  toOrbit: OrbitDefinition,
+  fromPx: number,
+  toPx: number,
+): string {
+  const fromAngle = fromOrbit.angle ?? 0;
+  switch (style) {
+    case "hohmann":
+      return hohmannArcPath(fromPx, toPx, fromAngle);
+    case "hyperbolic":
+      return hyperbolicArcPath(fromPx, toPx, fromAngle);
+    case "brachistochrone":
+      return brachistochroneArcPath(fromPx, toPx, fromAngle);
+  }
+}
+
+/** Style label for the legend */
+function transferStyleLabel(style: TransferArc["style"]): string {
+  switch (style) {
+    case "hohmann": return "ホーマン遷移";
+    case "hyperbolic": return "双曲線軌道";
+    case "brachistochrone": return "ブラキストクローネ（模式図）";
+  }
+}
+
+/**
+ * Render an orbital transfer diagram as inline SVG.
+ * Top-down view of orbital system with concentric orbits and transfer arcs.
+ */
+export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
+  const size = 500;
+  const cx = size / 2;
+  const cy = size / 2;
+  const maxPlotR = size / 2 - 50; // leave margin for labels
+  const mode = diagram.scaleMode ?? "sqrt";
+
+  // Determine the maximum radius for scaling
+  const maxOrbitR = diagram.viewRadius ?? Math.max(...diagram.orbits.map(o => o.radius));
+
+  // Build orbit ID → definition lookup
+  const orbitMap = new Map(diagram.orbits.map(o => [o.id, o]));
+
+  // Compute pixel radii for each orbit
+  const orbitPxMap = new Map<string, number>();
+  for (const orbit of diagram.orbits) {
+    orbitPxMap.set(orbit.id, scaleRadius(orbit.radius, maxOrbitR, maxPlotR, mode));
+  }
+
+  // Draw orbit circles
+  const orbitCircles = diagram.orbits.map(orbit => {
+    const r = orbitPxMap.get(orbit.id)!;
+    return `<circle cx="0" cy="0" r="${r.toFixed(1)}" fill="none" stroke="${orbit.color}" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="4 2"/>`;
+  }).join("\n    ");
+
+  // Draw orbit labels and optional body dots
+  const orbitLabels = diagram.orbits.map(orbit => {
+    const r = orbitPxMap.get(orbit.id)!;
+    const parts: string[] = [];
+    if (orbit.angle !== undefined) {
+      // Draw body dot at specified angle
+      const bx = r * Math.cos(orbit.angle);
+      const by = -r * Math.sin(orbit.angle);
+      parts.push(`<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="4" fill="${orbit.color}"/>`);
+      // Label next to the dot
+      const lx = (r + 12) * Math.cos(orbit.angle);
+      const ly = -(r + 12) * Math.sin(orbit.angle);
+      parts.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${orbit.color}" font-size="11" text-anchor="middle" dominant-baseline="middle">${escapeHtml(orbit.label)}</text>`);
+    } else {
+      // Label at top of orbit
+      parts.push(`<text x="0" y="${(-r - 8).toFixed(1)}" fill="${orbit.color}" font-size="10" text-anchor="middle">${escapeHtml(orbit.label)}</text>`);
+    }
+    return parts.join("\n    ");
+  }).join("\n    ");
+
+  // Draw transfer arcs
+  const transferPaths = diagram.transfers.map(t => {
+    const fromOrbit = orbitMap.get(t.fromOrbitId);
+    const toOrbit = orbitMap.get(t.toOrbitId);
+    if (!fromOrbit || !toOrbit) return "";
+    const fromPx = orbitPxMap.get(t.fromOrbitId)!;
+    const toPx = orbitPxMap.get(t.toOrbitId)!;
+    const path = transferArcPath(t.style, fromOrbit, toOrbit, fromPx, toPx);
+    const dashArray = t.style === "brachistochrone" ? ' stroke-dasharray="8 4"' : "";
+    const arrowId = `arrow-${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}`;
+    return `<path d="${path}" fill="none" stroke="${t.color}" stroke-width="2"${dashArray} marker-end="url(#${arrowId})"/>
+    <marker id="${arrowId}" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="${t.color}"/></marker>`;
+  }).join("\n    ");
+
+  // Draw burn markers
+  const burnMarkersSvg = diagram.transfers.flatMap(t => {
+    if (!t.burnMarkers) return [];
+    const fromOrbit = orbitMap.get(t.fromOrbitId);
+    const toOrbit = orbitMap.get(t.toOrbitId);
+    if (!fromOrbit || !toOrbit) return [];
+    const fromPx = orbitPxMap.get(t.fromOrbitId)!;
+    const toPx = orbitPxMap.get(t.toOrbitId)!;
+    return t.burnMarkers.map(bm => {
+      // Place marker at interpolated radius at specified angle
+      const r = (fromPx + toPx) / 2;
+      const mx = r * Math.cos(bm.angle);
+      const my = -r * Math.sin(bm.angle);
+      return `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="3" fill="var(--yellow)" stroke="var(--bg)" stroke-width="1"/>
+    <text x="${(mx + 10).toFixed(1)}" y="${my.toFixed(1)}" fill="var(--yellow)" font-size="9" dominant-baseline="middle">${escapeHtml(bm.label)}</text>`;
+    });
+  }).join("\n    ");
+
+  // Build legend
+  const styles = [...new Set(diagram.transfers.map(t => t.style))];
+  const legendItems = styles.map((s, i) => {
+    const y = i * 18;
+    const dash = s === "brachistochrone" ? ' stroke-dasharray="6 3"' : "";
+    const color = diagram.transfers.find(t => t.style === s)?.color ?? "var(--fg)";
+    return `<line x1="0" y1="${y + 6}" x2="20" y2="${y + 6}" stroke="${color}" stroke-width="2"${dash}/>
+    <text x="24" y="${y + 10}" fill="var(--fg)" font-size="10">${transferStyleLabel(s)}</text>`;
+  }).join("\n    ");
+
+  const legendHeight = styles.length * 18 + 4;
+
+  const svg = `<svg width="${size}" height="${size + legendHeight + 10}" viewBox="${-cx} ${-cy} ${size} ${size + legendHeight + 10}" xmlns="http://www.w3.org/2000/svg">
+  <style>text { font-family: "SFMono-Regular", Consolas, monospace; }</style>
+  <g>
+    <!-- Central body -->
+    <circle cx="0" cy="0" r="6" fill="var(--yellow)"/>
+    <text x="0" y="18" fill="var(--yellow)" font-size="11" text-anchor="middle">${escapeHtml(diagram.centerLabel)}</text>
+
+    <!-- Orbits -->
+    ${orbitCircles}
+
+    <!-- Labels & body positions -->
+    ${orbitLabels}
+
+    <!-- Transfer arcs -->
+    ${transferPaths}
+
+    <!-- Burn markers -->
+    ${burnMarkersSvg}
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(${-cx + 10}, ${cy + 10})">
+    ${legendItems}
+  </g>
+</svg>`;
+
+  return `<div class="card orbital-diagram" id="${escapeHtml(diagram.id)}">
+<h4>${escapeHtml(diagram.title)}</h4>
+${svg}
+</div>`;
+}
+
+/** Render all orbital diagrams for an episode */
+export function renderOrbitalDiagrams(diagrams: OrbitalDiagram[]): string {
+  if (diagrams.length === 0) return "";
+  return `<h2>軌道遷移図</h2>\n${diagrams.map(renderOrbitalDiagram).join("\n")}`;
+}
+
 /** Render the interactive brachistochrone calculator widget */
 export function renderCalculator(): string {
   return `<div class="calc-section card" id="calculator">
@@ -516,6 +760,9 @@ export function renderEpisode(report: EpisodeReport): string {
   const explorationSection = report.explorations && report.explorations.length > 0
     ? renderExplorations(report.explorations)
     : "";
+  const diagramSection = report.diagrams && report.diagrams.length > 0
+    ? renderOrbitalDiagrams(report.diagrams)
+    : "";
   const calculator = renderCalculator();
 
   const content = `
@@ -526,6 +773,8 @@ ${videoSection}
 ${dialogueSection}
 
 ${dvChart}
+
+${diagramSection}
 
 <h2>軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}

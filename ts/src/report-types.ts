@@ -108,6 +108,64 @@ export interface TransferAnalysis {
   sources?: SourceCitation[];
 }
 
+/** A single orbit in an orbital diagram */
+export interface OrbitDefinition {
+  /** Stable identifier, e.g. "mars" or "ganymede" */
+  id: string;
+  /** Display label, e.g. "火星" */
+  label: string;
+  /** Orbital radius in AU (heliocentric) or km (body-centric) */
+  radius: number;
+  /** Display color */
+  color: string;
+  /** Position angle in radians (0 = +X, counterclockwise). If omitted, body dot is not drawn. */
+  angle?: number;
+}
+
+/** A burn marker on a transfer arc */
+export interface BurnMarker {
+  /** Angle in radians where the burn occurs */
+  angle: number;
+  /** Label for the burn, e.g. "ΔV₁ = 2.3 km/s" */
+  label: string;
+}
+
+/** A transfer arc connecting two orbits */
+export interface TransferArc {
+  /** Display label, e.g. "ホーマン遷移" */
+  label: string;
+  /** ID of the departure orbit */
+  fromOrbitId: string;
+  /** ID of the arrival orbit */
+  toOrbitId: string;
+  /** Display color */
+  color: string;
+  /** Transfer type — determines SVG rendering style */
+  style: "hohmann" | "hyperbolic" | "brachistochrone";
+  /** Optional burn markers along the arc */
+  burnMarkers?: BurnMarker[];
+}
+
+/** An orbital transfer diagram rendered as inline SVG */
+export interface OrbitalDiagram {
+  /** Unique identifier, e.g. "ep01-diagram-01" */
+  id: string;
+  /** Diagram title */
+  title: string;
+  /** Label for the central body, e.g. "太陽" or "木星" */
+  centerLabel: string;
+  /** Scale mode for mapping orbital radii to pixel radii */
+  scaleMode?: "linear" | "sqrt" | "log";
+  /** Orbit definitions */
+  orbits: OrbitDefinition[];
+  /** Transfer arcs between orbits */
+  transfers: TransferArc[];
+  /** Maximum radius to display (same unit as orbit radii). Auto-calculated if omitted. */
+  viewRadius?: number;
+  /** Unit for radius values, e.g. "AU" or "km" */
+  radiusUnit?: string;
+}
+
 /** Per-episode report data */
 export interface EpisodeReport {
   /** Episode number */
@@ -124,6 +182,8 @@ export interface EpisodeReport {
   transfers: TransferAnalysis[];
   /** Multi-parameter explorations linked to transfers */
   explorations?: ParameterExploration[];
+  /** Orbital transfer diagrams */
+  diagrams?: OrbitalDiagram[];
 }
 
 /** Site-wide manifest listing all available reports */

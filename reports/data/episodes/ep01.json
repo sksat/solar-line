@@ -222,6 +222,39 @@
       ]
     }
   ],
+  "diagrams": [
+    {
+      "id": "ep01-diagram-01",
+      "title": "火星 → 木星（ガニメデ）遷移概観",
+      "centerLabel": "太陽",
+      "scaleMode": "sqrt",
+      "radiusUnit": "AU",
+      "orbits": [
+        { "id": "earth", "label": "地球", "radius": 1.0, "color": "#58a6ff" },
+        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149", "angle": 0 },
+        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 2.094 }
+      ],
+      "transfers": [
+        {
+          "label": "ホーマン遷移（参考、約3.1年）",
+          "fromOrbitId": "mars",
+          "toOrbitId": "jupiter",
+          "color": "#8b949e",
+          "style": "hohmann"
+        },
+        {
+          "label": "ブラキストクローネ遷移（72時間）",
+          "fromOrbitId": "mars",
+          "toOrbitId": "jupiter",
+          "color": "#3fb950",
+          "style": "brachistochrone",
+          "burnMarkers": [
+            { "angle": 0.52, "label": "加速反転" }
+          ]
+        }
+      ]
+    }
+  ],
   "explorations": [
     {
       "id": "ep01-exploration-01",

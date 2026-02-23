@@ -282,6 +282,67 @@
       ]
     }
   ],
+  "diagrams": [
+    {
+      "id": "ep02-diagram-01",
+      "title": "木星圏脱出（木星中心座標）",
+      "centerLabel": "木星",
+      "scaleMode": "sqrt",
+      "radiusUnit": "RJ",
+      "orbits": [
+        { "id": "io", "label": "イオ", "radius": 5.9, "color": "#d29922", "angle": 1.57 },
+        { "id": "europa", "label": "エウロパ", "radius": 9.4, "color": "#8b949e", "angle": 2.36 },
+        { "id": "ganymede", "label": "ガニメデ", "radius": 15.0, "color": "#58a6ff", "angle": 3.14 },
+        { "id": "callisto", "label": "カリスト", "radius": 26.3, "color": "#6e7681", "angle": 4.19 },
+        { "id": "escape-point", "label": "脱出点 (50 RJ)", "radius": 50.0, "color": "#3fb950", "angle": 0.3 }
+      ],
+      "transfers": [
+        {
+          "label": "双曲線脱出軌道（10.3 km/s）",
+          "fromOrbitId": "ganymede",
+          "toOrbitId": "escape-point",
+          "color": "#f85149",
+          "style": "hyperbolic",
+          "burnMarkers": [
+            { "angle": 0.3, "label": "v = 10.3 km/s" }
+          ]
+        }
+      ],
+      "viewRadius": 55
+    },
+    {
+      "id": "ep02-diagram-02",
+      "title": "太陽中心遷移: 木星圏 → 土星圏（エンケラドス）",
+      "centerLabel": "太陽",
+      "scaleMode": "sqrt",
+      "radiusUnit": "AU",
+      "orbits": [
+        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149" },
+        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 0 },
+        { "id": "saturn", "label": "土星", "radius": 9.537, "color": "#c9d1d9", "angle": 2.618 },
+        { "id": "uranus", "label": "天王星", "radius": 19.19, "color": "#58a6ff" }
+      ],
+      "transfers": [
+        {
+          "label": "ホーマン遷移（参考、約10年）",
+          "fromOrbitId": "jupiter",
+          "toOrbitId": "saturn",
+          "color": "#8b949e",
+          "style": "hohmann"
+        },
+        {
+          "label": "双曲線軌道（約455日、噴射なし）",
+          "fromOrbitId": "jupiter",
+          "toOrbitId": "saturn",
+          "color": "#3fb950",
+          "style": "hyperbolic",
+          "burnMarkers": [
+            { "angle": 1.31, "label": "捕獲 ΔV ≥ 0.61 km/s" }
+          ]
+        }
+      ]
+    }
+  ],
   "explorations": [
     {
       "id": "ep02-exploration-01",

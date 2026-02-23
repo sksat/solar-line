@@ -15,8 +15,10 @@ import {
   renderBarChart,
   renderLogsIndex,
   renderLogPage,
+  renderOrbitalDiagram,
+  renderOrbitalDiagrams,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, OrbitalDiagram } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -518,5 +520,215 @@ describe("renderLogPage", () => {
   it("wraps in layout with log title", () => {
     const html = renderLogPage("test", "2026-02-23", "content");
     assert.ok(html.includes("セッションログ: 2026-02-23"));
+  });
+});
+
+// --- renderOrbitalDiagram ---
+
+const sampleDiagram: OrbitalDiagram = {
+  id: "ep01-diagram-01",
+  title: "火星→ガニメデ ブラキストクローネ遷移",
+  centerLabel: "太陽",
+  scaleMode: "sqrt",
+  radiusUnit: "AU",
+  orbits: [
+    { id: "mars", label: "火星", radius: 1.524, color: "#f85149", angle: 0 },
+    { id: "jupiter", label: "木星", radius: 5.203, color: "#d29922", angle: Math.PI * 0.6 },
+  ],
+  transfers: [
+    {
+      label: "ブラキストクローネ遷移",
+      fromOrbitId: "mars",
+      toOrbitId: "jupiter",
+      color: "#58a6ff",
+      style: "brachistochrone",
+      burnMarkers: [{ angle: Math.PI * 0.25, label: "加速反転" }],
+    },
+  ],
+};
+
+describe("renderOrbitalDiagram", () => {
+  it("renders SVG with diagram ID", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes('id="ep01-diagram-01"'));
+    assert.ok(html.includes("<svg"));
+    assert.ok(html.includes("</svg>"));
+  });
+
+  it("renders diagram title", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes("火星→ガニメデ ブラキストクローネ遷移"));
+  });
+
+  it("renders center body label", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes("太陽"));
+  });
+
+  it("renders orbit circles for all orbits", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    // Should have circle elements for each orbit (dashed)
+    const circleMatches = html.match(/<circle.*?stroke-dasharray="4 2"/g);
+    assert.ok(circleMatches);
+    assert.equal(circleMatches.length, 2);
+  });
+
+  it("renders orbit labels", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes("火星"));
+    assert.ok(html.includes("木星"));
+  });
+
+  it("renders body dots when angle is specified", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    // Mars has angle=0, Jupiter has angle=π*0.6 — both should have filled dots
+    const filledCircles = html.match(/<circle.*?fill="#[a-f0-9]+"/gi);
+    assert.ok(filledCircles);
+    assert.ok(filledCircles.length >= 2); // at least the two body dots
+  });
+
+  it("renders transfer arc with correct style", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    // Brachistochrone should have dashed stroke
+    assert.ok(html.includes('stroke-dasharray="8 4"'));
+    // Should have a path element
+    assert.ok(html.includes("<path"));
+  });
+
+  it("renders burn markers", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes("加速反転"));
+  });
+
+  it("renders legend", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes("ブラキストクローネ（模式図）"));
+  });
+
+  it("renders Hohmann transfer without dashed stroke", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      id: "test-hohmann",
+      transfers: [{
+        label: "ホーマン遷移",
+        fromOrbitId: "mars",
+        toOrbitId: "jupiter",
+        color: "#58a6ff",
+        style: "hohmann",
+      }],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes("<path"));
+    // Hohmann should NOT have dashed stroke
+    assert.ok(!html.includes('stroke-dasharray="8 4"'));
+    assert.ok(html.includes("ホーマン遷移"));
+  });
+
+  it("renders hyperbolic transfer", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      id: "test-hyperbolic",
+      transfers: [{
+        label: "双曲線脱出",
+        fromOrbitId: "mars",
+        toOrbitId: "jupiter",
+        color: "#3fb950",
+        style: "hyperbolic",
+      }],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes("双曲線軌道"));
+    assert.ok(html.includes("<path"));
+  });
+
+  it("handles orbits without angles (labels at top)", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-no-angle",
+      title: "テスト",
+      centerLabel: "太陽",
+      orbits: [
+        { id: "earth", label: "地球", radius: 1.0, color: "#58a6ff" },
+      ],
+      transfers: [],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes("地球"));
+  });
+
+  it("escapes HTML in labels", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-escape",
+      title: '<script>alert("xss")</script>',
+      centerLabel: "太陽",
+      orbits: [],
+      transfers: [],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(!html.includes("<script>"));
+    assert.ok(html.includes("&lt;script&gt;"));
+  });
+
+  it("defaults to sqrt scale mode", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-default-scale",
+      title: "テスト",
+      centerLabel: "太陽",
+      orbits: [
+        { id: "inner", label: "内", radius: 1.0, color: "#fff" },
+        { id: "outer", label: "外", radius: 10.0, color: "#fff" },
+      ],
+      transfers: [],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    // Should render without errors (sqrt is default)
+    assert.ok(html.includes("<svg"));
+  });
+
+  it("gracefully handles missing orbit references in transfers", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-missing-ref",
+      title: "テスト",
+      centerLabel: "太陽",
+      orbits: [{ id: "mars", label: "火星", radius: 1.5, color: "#f00" }],
+      transfers: [{
+        label: "遷移",
+        fromOrbitId: "mars",
+        toOrbitId: "nonexistent",
+        color: "#fff",
+        style: "hohmann",
+      }],
+    };
+    // Should not throw
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes("<svg"));
+  });
+});
+
+describe("renderOrbitalDiagrams", () => {
+  it("renders section heading and diagrams", () => {
+    const html = renderOrbitalDiagrams([sampleDiagram]);
+    assert.ok(html.includes("軌道遷移図"));
+    assert.ok(html.includes("ep01-diagram-01"));
+  });
+
+  it("returns empty string for empty array", () => {
+    assert.equal(renderOrbitalDiagrams([]), "");
+  });
+});
+
+describe("renderEpisode with diagrams", () => {
+  it("includes orbital diagrams when provided", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      diagrams: [sampleDiagram],
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("軌道遷移図"));
+    assert.ok(html.includes("ep01-diagram-01"));
+  });
+
+  it("omits diagram section when no diagrams", () => {
+    const html = renderEpisode(sampleEpisodeReport);
+    assert.ok(!html.includes("軌道遷移図"));
   });
 });
