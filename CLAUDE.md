@@ -39,6 +39,11 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - Raw data should be placed under `raw_data/` within the workspace (already gitignored)
 - YouTube subtitle data is collected via scripts; ニコニコ動画 comments are NOT subtitles
 - Dialogue attribution (who said what) requires contextual understanding of characters and scene changes — do not fully automate this; use Claude/Codex to verify speaker identity
+- **Two-phase dialogue pipeline:**
+  - Phase 1 (Extraction): Extract raw dialogue lines with timestamps from subtitles → `epXX_lines.json` (automated)
+  - Phase 2 (Attribution): Assign speakers using context → `epXX_dialogue.json` (context-assisted, NOT fully automated)
+  - Keeping these in separate files means re-running extraction doesn't lose attribution work
+- Timestamp accuracy matters — cross-reference multiple subtitle tracks where available
 - Properly cite all referenced material
 
 ## Reports
