@@ -1,5 +1,6 @@
 # Build artifacts
 /target/
+/dist/
 ts/dist/
 ts/node_modules/
 ts/pkg/

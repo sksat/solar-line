@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test src/**/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "node --experimental-strip-types src/build.ts --data-dir ../reports --out-dir ../dist"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
