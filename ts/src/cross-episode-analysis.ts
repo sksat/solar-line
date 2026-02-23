@@ -1,7 +1,7 @@
 /**
  * Cross-Episode Consistency Analysis
  *
- * Compares parameters, assumptions, and findings across all 4 episodes
+ * Compares parameters, assumptions, and findings across all 5 episodes
  * to identify consistency patterns and discrepancies.
  *
  * Human directive: エピソード間の整合性も考察したい
@@ -71,12 +71,23 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
   },
   {
     episode: 4,
-    route: "タイタニア（天王星）→ 地球",
+    route: "タイタニア（天王星）→ 地球（出発）",
     transferTime: "8.3日（300t想定）〜105日（48,000t想定）",
     brachistochroneDeltaV: 1202, // at 48,000t, 65% thrust
     massBoundaryT: null, // wide range feasible
     thrustUsedMN: 6.37,
     verdict: "条件付き（幅広い質量で成立）",
+    departureBody: "タイタニア（天王星系）",
+    arrivalBody: "地球",
+  },
+  {
+    episode: 5,
+    route: "天王星→地球（到着・捕捉）",
+    transferTime: "8.3日（300t）〜105日（48,000t）※暫定",
+    brachistochroneDeltaV: 15207, // at 300t, 65% thrust
+    massBoundaryT: null, // analysis pending subtitle data
+    thrustUsedMN: 6.37,
+    verdict: "暫定: 条件付き（捕捉ΔV 0.42〜3.18 km/s）",
     departureBody: "タイタニア（天王星系）",
     arrivalBody: "地球",
   },
@@ -86,29 +97,29 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
 export function buildShipSpecsTable(): ComparisonTable {
   return {
     caption: "船仕様の使用状況",
-    episodes: [1, 2, 3, 4],
+    episodes: [1, 2, 3, 4, 5],
     rows: [
       {
         metric: "推力 (MN)",
-        values: { 1: "9.8", 2: "≈0（トリムのみ）", 3: "9.8", 4: "6.37（65%）" },
+        values: { 1: "9.8", 2: "≈0（トリムのみ）", 3: "9.8", 4: "6.37（65%）", 5: "6.37（65%）※暫定" },
         status: "ok",
         note: "損傷状態を反映、一貫性あり",
       },
       {
         metric: "公称質量 (t)",
-        values: { 1: "48,000", 2: "48,000", 3: "48,000", 4: "48,000" },
+        values: { 1: "48,000", 2: "48,000", 3: "48,000", 4: "48,000", 5: "48,000" },
         status: "warn",
         note: "全話で同一値だが物理的に非整合",
       },
       {
         metric: "質量境界値 (t)",
-        values: { 1: "≤299", 2: "—", 3: "≤452", 4: "≤3,929（30日）" },
+        values: { 1: "≤299", 2: "—", 3: "≤452", 4: "≤3,929（30日）", 5: "※暫定" },
         status: "ok",
         note: "数百t程度が真の質量と推定",
       },
       {
         metric: "エンジン状態",
-        values: { 1: "正常", 2: "損傷（連続点火不可）", 3: "修復済", 4: "損傷（65%出力）" },
+        values: { 1: "正常", 2: "損傷（連続点火不可）", 3: "修復済", 4: "損傷（65%出力）", 5: "損傷（65%出力）※暫定" },
         status: "ok",
         note: "物語の進行に整合",
       },
@@ -120,29 +131,29 @@ export function buildShipSpecsTable(): ComparisonTable {
 export function buildRouteContinuityTable(): ComparisonTable {
   return {
     caption: "航路の連続性",
-    episodes: [1, 2, 3, 4],
+    episodes: [1, 2, 3, 4, 5],
     rows: [
       {
         metric: "出発地",
-        values: { 1: "火星", 2: "木星圏（50 RJ）", 3: "エンケラドス", 4: "タイタニア" },
+        values: { 1: "火星", 2: "木星圏（50 RJ）", 3: "エンケラドス", 4: "タイタニア", 5: "（天王星→地球遷移中）" },
         status: "ok",
         note: "各話の到着地が次話の出発地に対応",
       },
       {
         metric: "到着地",
-        values: { 1: "ガニメデ（木星系）", 2: "エンケラドス（土星系）", 3: "タイタニア（天王星系）", 4: "地球" },
+        values: { 1: "ガニメデ（木星系）", 2: "エンケラドス（土星系）", 3: "タイタニア（天王星系）", 4: "地球（出発）", 5: "地球（到着）" },
         status: "ok",
-        note: "太陽系外側→内側への帰路が成立",
+        note: "太陽系外側→内側への帰路が完結",
       },
       {
         metric: "遷移時間",
-        values: { 1: "72h", 2: "≈455日", 3: "143h 12m", 4: "8.3〜105日" },
+        values: { 1: "72h", 2: "≈455日", 3: "143h 12m", 4: "8.3〜105日", 5: "※暫定（ep04継続）" },
         status: "ok",
         note: "Brachistochrone前提で現実的",
       },
       {
         metric: "判定",
-        values: { 1: "条件付き", 2: "妥当", 3: "条件付き", 4: "条件付き" },
+        values: { 1: "条件付き", 2: "妥当", 3: "条件付き", 4: "条件付き", 5: "暫定: 条件付き" },
         status: "ok",
         note: "全話で物理的に成立可能",
       },
@@ -154,7 +165,7 @@ export function buildRouteContinuityTable(): ComparisonTable {
 export function buildAccuracyTable(): ComparisonTable {
   return {
     caption: "科学的精度のハイライト",
-    episodes: [1, 2, 3, 4],
+    episodes: [1, 2, 3, 4, 5],
     rows: [
       {
         metric: "実データとの整合",
@@ -163,6 +174,7 @@ export function buildAccuracyTable(): ComparisonTable {
           2: "木星脱出速度8.42 km/s",
           3: "航法精度99.8%",
           4: "天王星磁場傾斜99.5%",
+          5: "※字幕待ち",
         },
         status: "ok",
         note: "Voyager 2データ等との高精度一致",
@@ -174,6 +186,7 @@ export function buildAccuracyTable(): ComparisonTable {
           2: "太陽脱出速度ギリギリ",
           3: "ΔV 11,165 km/s",
           4: "被曝量480 mSv<ICRP上限",
+          5: "点火回数3回で成否※暫定",
         },
         status: "ok",
         note: "実在の物理定数・安全基準を参照",
@@ -186,29 +199,29 @@ export function buildAccuracyTable(): ComparisonTable {
 export function buildDeltaVScalingTable(): ComparisonTable {
   return {
     caption: "Brachistochrone ΔV スケーリング",
-    episodes: [1, 2, 3, 4],
+    episodes: [1, 2, 3, 4, 5],
     rows: [
       {
         metric: "距離 (AU)",
-        values: { 1: "3.68", 2: "4.38（弾道）", 3: "9.62", 4: "18.2" },
+        values: { 1: "3.68", 2: "4.38（弾道）", 3: "9.62", 4: "18.2", 5: "18.2（ep04継続）" },
         status: "ok",
-        note: "太陽系外側へ距離増大",
+        note: "太陽系外側へ距離増大→帰還",
       },
       {
         metric: "Brachistochrone ΔV (km/s)",
-        values: { 1: "8,497", 2: "—（弾道）", 3: "11,165", 4: "1,202（48kt）" },
+        values: { 1: "8,497", 2: "—（弾道）", 3: "11,165", 4: "1,202（48kt）", 5: "15,207（300t）※暫定" },
         status: "ok",
         note: "距離と時間に対して整合的にスケーリング",
       },
       {
         metric: "必要加速度 (g)",
-        values: { 1: "3.34", 2: "—", 3: "2.21", 4: "0.014（48kt）" },
+        values: { 1: "3.34", 2: "—", 3: "2.21", 4: "0.014（48kt）", 5: "2.17（300t）※暫定" },
         status: "ok",
         note: "遷移時間が長いほど加速度は低い",
       },
       {
         metric: "ホーマン基準 (年)",
-        values: { 1: "3.1", 2: "10", 3: "27.3", 4: "16.1" },
+        values: { 1: "3.1", 2: "10", 3: "27.3", 4: "16.1", 5: "16.1（ep04と同区間）" },
         status: "ok",
         note: "Brachistochroneとの比較で劇的短縮",
       },
@@ -221,11 +234,11 @@ export function generateCrossEpisodeReport(): SummaryReport {
   return {
     slug: "cross-episode",
     title: "クロスエピソード整合性分析",
-    summary: "SOLAR LINE 全4話を通じた軌道力学パラメータの整合性を分析する。船の仕様、航路の連続性、質量問題、科学的精度を横断的に検証する。",
+    summary: "SOLAR LINE 全5話を通じた軌道力学パラメータの整合性を分析する。船の仕様、航路の連続性、質量問題、科学的精度を横断的に検証する。※第5話は暫定分析（字幕データ未取得）。",
     sections: [
       {
         heading: "船仕様の一貫性",
-        markdown: `ケストレル号の仕様は全4話を通じて一貫している。推力9.8 MN、D-He³核融合パルスドライブ（TSF-43Rオリオンマイクロパルサー）という基本仕様は変わらず、第2話での損傷（連続点火不可）と第3話での修復、第4話での再損傷（65%出力=6.37 MN）という状態変化も物語の進行と整合する。
+        markdown: `ケストレル号の仕様は全5話を通じて一貫している。推力9.8 MN、D-He³核融合パルスドライブ（TSF-43Rオリオンマイクロパルサー）という基本仕様は変わらず、第2話での損傷（連続点火不可）と第3話での修復、第4話での再損傷（65%出力=6.37 MN）という状態変化も物語の進行と整合する。
 
 **公称質量48,000tの謎** は全話を貫く最大の不整合点である。しかし、これは「非整合」というよりも作品の核心的なミステリーの一つと解釈できる。`,
         table: buildShipSpecsTable(),
@@ -245,16 +258,17 @@ export function generateCrossEpisodeReport(): SummaryReport {
       },
       {
         heading: "航路の連続性",
-        markdown: `全4話の航路は太陽系内の連続した旅程を構成する:
+        markdown: `全5話の航路は太陽系内の連続した旅程を構成する:
 
 **火星 → ガニメデ → (木星脱出) → エンケラドス → タイタニア → 地球**
 
 各話の到着地点が次話の出発地点と一致しており、航路の連続性は完全に保たれている。特に注目すべきは:
 
 - 第1話〜第3話: 太陽系外側へ向かう往路（火星→木星→土星→天王星）
-- 第4話: 帰還（天王星→地球）= 「新しいソーラーライン」の開拓
+- 第4話: 帰還出発（天王星→地球）= 「新しいソーラーライン」の開拓
+- 第5話: 帰還完結（地球到着・捕捉）= ソーラーライン完結
 
-第2話の弾道遷移（約455日）のみがBrachistochroneではなく、損傷状態での受動的な軌道遷移である点も物語と整合する。`,
+第2話の弾道遷移（約455日）のみがBrachistochroneではなく、損傷状態での受動的な軌道遷移である点も物語と整合する。全航路の合計距離は約35.9 AU。`,
         table: buildRouteContinuityTable(),
       },
       {
@@ -299,21 +313,29 @@ export function generateCrossEpisodeReport(): SummaryReport {
       },
       {
         heading: "総合評価",
-        markdown: `SOLAR LINE 全4話を通じた軌道力学描写は、**内部的に高い整合性** を持つ。
+        markdown: `SOLAR LINE 全5話を通じた軌道力学描写は、**内部的に高い整合性** を持つ。
+
+※第5話は暫定分析（字幕データ未取得）。第4話からの継続パラメータに基づく予測分析であり、字幕取得後に更新予定。
 
 **整合している点:**
 - 船の推力仕様（9.8 MN基準）が全話で一貫
-- 航路の連続性が完全
+- 航路の連続性が完全（火星→ガニメデ→木星脱出→エンケラドス→タイタニア→地球）
 - Brachistochrone ΔVのスケーリングが物理法則に従う
 - 損傷・修復の状態遷移が物語と一致
 - 実在の科学データ（Voyager 2、ICRP基準）との高精度一致
+- 第5話の地球捕捉分析: 月軌道での捕捉ΔV 0.42 km/sは残り点火回数で十分達成可能
 
 **唯一の系統的不整合:**
 - 公称質量48,000tでは全てのBrachistochrone遷移が桁違いに不可能
 - 真の質量は **300〜500t** 程度と推定（第1話: ≤299t, 第3話: ≤452t）
 - この不整合自体が作品の意図的な設定である可能性あり
 
-結論: 質量の謎を除けば、SOLAR LINE は **宇宙力学的にきわめて丁寧に設計されたSF作品** である。`,
+**第5話で注目すべき物理的ドラマ:**
+- 残り点火回数2-3回で brachistochrone(2回) + 捕捉(1回) = ギリギリ3回
+- 放射線被曝480 mSv（ICRP上限500 mSvまで残り20 mSv）
+- 第2話の脱出速度マージン0.53 km/s、第4話のシールドマージン6分と同様の「ギリギリ」設計
+
+結論: 質量の謎を除けば、SOLAR LINE は **宇宙力学的にきわめて丁寧に設計されたSF作品** である。全5話で太陽系を約35.9 AU横断する壮大な航路が、一貫した物理法則の下で描かれている。`,
       },
     ],
   };

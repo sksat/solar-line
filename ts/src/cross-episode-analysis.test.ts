@@ -30,8 +30,8 @@ describe("SHIP_SPECS", () => {
 });
 
 describe("EPISODE_SUMMARIES", () => {
-  it("has 4 episodes", () => {
-    assert.equal(EPISODE_SUMMARIES.length, 4);
+  it("has 5 episodes", () => {
+    assert.equal(EPISODE_SUMMARIES.length, 5);
   });
 
   it("episodes are in order", () => {
@@ -81,7 +81,7 @@ describe("buildShipSpecsTable", () => {
   const table = buildShipSpecsTable();
 
   it("has correct episodes", () => {
-    assert.deepEqual(table.episodes, [1, 2, 3, 4]);
+    assert.deepEqual(table.episodes, [1, 2, 3, 4, 5]);
   });
 
   it("has at least 3 rows", () => {

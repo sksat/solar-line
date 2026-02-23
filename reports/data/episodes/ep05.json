@@ -1,0 +1,532 @@
+{
+  "episode": 5,
+  "title": "第5話（最終話）: 天王星→地球 — ソーラーライン完結",
+  "summary": "※暫定版: 字幕データ未取得のため、第4話からの継続パラメータと軌道力学計算に基づく予測分析。Episode 5は2026年2月24日にニコニコ動画に投稿（sm45987761）。字幕データ取得後に更新予定。\n\nケストレル号の太陽系横断の最終行程を分析する。天王星タイタニアから地球への帰還は、損傷状態（推力65%、残り点火回数2-3回）での brachistochrone 遷移となる。地球への接近速度と捕捉ΔVが物語上の最大の課題である。",
+  "videoCards": [
+    {
+      "provider": "niconico",
+      "id": "sm45987761",
+      "title": "SOLAR LINE Part5 END（ソーラーライン）【良いソフトウェアトーク劇場】",
+      "caption": "最終話（27分11秒）2026年2月24日投稿"
+    }
+  ],
+  "dialogueQuotes": [
+    {
+      "id": "ep05-quote-placeholder-01",
+      "speaker": "※暫定",
+      "text": "（字幕データ未取得のため、第4話終了時点の状態を引き継ぎ分析）",
+      "timestamp": "—"
+    }
+  ],
+  "transfers": [
+    {
+      "id": "ep05-transfer-01",
+      "episode": 5,
+      "description": "ホーマン遷移基準線: 天王星→地球",
+      "timestamp": "—（参考値）",
+      "claimedDeltaV": null,
+      "computedDeltaV": 15.94,
+      "assumptions": [
+        "天王星と地球の円軌道を仮定",
+        "二体問題近似（太陽重力のみ）",
+        "最小エネルギー遷移（ホーマン軌道）"
+      ],
+      "verdict": "plausible",
+      "explanation": "ホーマン遷移による天王星→地球の基準所要時間は約16.1年（5,863日）、合計ΔV 15.94 km/s。出発ΔV 4.66 km/s、到着ΔV 11.28 km/s。到着側のΔVが大きいのは内側軌道（地球）での速度差が大きいため。この所要時間は物語上あまりにも長く、brachistochrone遷移が必須となる。",
+      "parameters": {
+        "μ_sun": 132712440041,
+        "r_uranus_km": 2872460000,
+        "r_earth_km": 149598023,
+        "transfer_sma_km": 1511029012,
+        "departure_dv_kms": 4.66,
+        "arrival_dv_kms": 11.28,
+        "transfer_time_years": 16.05
+      },
+      "evidenceQuoteIds": [],
+      "sources": [
+        {
+          "claim": "天王星軌道半径",
+          "sourceType": "reference",
+          "sourceRef": "NASA Fact Sheet",
+          "sourceLabel": "NASA Uranus Fact Sheet"
+        },
+        {
+          "claim": "地球軌道半径",
+          "sourceType": "reference",
+          "sourceRef": "NASA Fact Sheet",
+          "sourceLabel": "NASA Earth Fact Sheet"
+        }
+      ]
+    },
+    {
+      "id": "ep05-transfer-02",
+      "episode": 5,
+      "description": "Brachistochrone遷移: 天王星→地球（質量別シナリオ）",
+      "timestamp": "—（第4話からの継続）",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "天王星→地球最接近距離 18.2 AU を使用",
+        "推力65%（6.37 MN）— 第4話からの損傷状態",
+        "直線brachistochrone（中間点反転）近似",
+        "質量を変数として複数シナリオを検討"
+      ],
+      "verdict": "conditional",
+      "explanation": "天王星→地球 brachistochrone遷移の所要時間は質量に大きく依存する。\n\n- **300t**: 8.3日、ΔV 15,207 km/s、加速度 2.17G — ep01の質量境界値と整合する最速シナリオ\n- **500t**: 10.7日、ΔV 11,780 km/s、加速度 1.30G — ep03の質量境界値に対応\n- **48,000t**: 105日、ΔV 1,202 km/s、加速度 0.014G — 公称質量では緩やかな加速\n\n300tでのピーク速度7,604 km/s（光速の2.5%）は高いが、D-He³核融合パルスドライブのSF設定として許容範囲内。48,000tでは105日と長期だが、ホーマンの16.1年に比べれば劇的な短縮。\n\n点火回数の制約（残り2-3回）から、brachistochroneの加速・減速で2回、地球捕捉で1回の計3回が最小構成。最大3回の場合、修正余地なし。",
+      "parameters": {
+        "distance_km": 2722861977,
+        "distance_au": 18.2,
+        "thrust_n": 6370000,
+        "mass_300t_time_days": 8.3,
+        "mass_300t_dv_kms": 15207,
+        "mass_500t_time_days": 10.7,
+        "mass_500t_dv_kms": 11780,
+        "mass_48000t_time_days": 105,
+        "mass_48000t_dv_kms": 1202
+      },
+      "evidenceQuoteIds": [],
+      "sources": [
+        {
+          "claim": "推力65%、6.37 MN",
+          "sourceType": "episode",
+          "sourceRef": "第4話 17:29",
+          "sourceLabel": "ep04 出発時推力設定"
+        },
+        {
+          "claim": "公称質量48,000t",
+          "sourceType": "worldbuilding",
+          "sourceRef": "note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "ソーラーラインのよもやま話"
+        }
+      ]
+    },
+    {
+      "id": "ep05-transfer-03",
+      "episode": 5,
+      "description": "地球捕捉: 接近速度とΔV要件",
+      "timestamp": "—（予測分析）",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "brachistochrone減速が正常に完了する場合、v∞ ≈ 0 で地球SOIに到達",
+        "減速が不完全な場合、残余v∞に応じた追加ΔVが必要",
+        "LEO（400km）、GEO（35,786km）、月軌道（384,400km）の3つの捕捉先を検討",
+        "パッチドコニック近似"
+      ],
+      "verdict": "conditional",
+      "explanation": "地球捕捉の難易度は接近速度（v∞）に大きく依存する。\n\n**Brachistochrone到着（v∞ ≈ 0）の場合:**\n- LEO投入: 3.18 km/s — 地球重力圏での減速のみ\n- GEO投入: 1.27 km/s — より穏やかな減速\n- 月軌道捕捉: 0.42 km/s — **最小ΔVオプション**\n\n**ホーマン到着（v∞ ≈ 11.3 km/s）の場合:**\n- LEO投入: 7.98 km/s — 大気制動(aerobrake)なしでは厳しい\n- 月軌道: 10.35 km/s — 高速通過\n\n損傷状態のケストレル号にとって、brachistochrone減速を確実に完了し、v∞ ≈ 0で到着することが最重要。月軌道での捕捉（0.42 km/s）なら残り1回の点火で十分実現可能。",
+      "parameters": {
+        "v_circ_earth_kms": 29.78,
+        "v_esc_sun_at_earth_kms": 42.12,
+        "hohmann_v_inf_kms": 11.28,
+        "leo_radius_km": 6771,
+        "moon_orbit_radius_km": 384400,
+        "dv_capture_leo_v0_kms": 3.18,
+        "dv_capture_geo_v0_kms": 1.27,
+        "dv_capture_moon_v0_kms": 0.42
+      },
+      "evidenceQuoteIds": [],
+      "sources": [
+        {
+          "claim": "地球重力パラメータ",
+          "sourceType": "reference",
+          "sourceRef": "NASA JPL DE440/DE441",
+          "sourceLabel": "JPL Planetary Ephemeris"
+        },
+        {
+          "claim": "月軌道半径",
+          "sourceType": "reference",
+          "sourceRef": "NASA Moon Fact Sheet",
+          "sourceLabel": "NASA Moon Fact Sheet"
+        }
+      ]
+    },
+    {
+      "id": "ep05-transfer-04",
+      "episode": 5,
+      "description": "点火回数バジェット分析",
+      "timestamp": "—（第4話パラメータからの継続分析）",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "第4話時点: エンジンノズルコイル劣化、残り点火回数3-4回",
+        "天王星脱出に1回使用済み → 残り2-3回",
+        "Brachistochrone: 加速1回 + 減速1回 = 2回",
+        "地球捕捉: 1回",
+        "熱マージン78%、1回の点火あたり推定5%消費"
+      ],
+      "verdict": "conditional",
+      "explanation": "残り2-3回の点火で地球帰還を完遂できるかが最終話の物理的テーマとなる。\n\n**最小構成（3回）:** brachistochrone加速(1) + 減速(1) + 捕捉(1) — 修正余地なし\n**余裕構成（4回→残3回）:** 上記 + 軌道修正(1) — わずかな余裕\n\n熱マージンは78%から開始、3回の点火で推定63%まで低下。50%を下回ると深刻なリスクだが、63%は「中程度」のリスク域。\n\n放射線被曝は既に480 mSvでICRP緊急時上限（500 mSv）まで残り20 mSvしかない。追加被曝なしが理想的だが、地球磁気圏通過時のバン・アレン帯を考慮する必要がある。",
+      "parameters": {
+        "burns_available_min": 2,
+        "burns_available_max": 3,
+        "burns_brach": 2,
+        "burns_capture": 1,
+        "burns_total_min": 3,
+        "thermal_initial": 0.78,
+        "thermal_per_burn": 0.05,
+        "thermal_final_est": 0.63,
+        "radiation_current_msv": 480,
+        "radiation_icrp_limit_msv": 500,
+        "radiation_nasa_limit_msv": 600
+      },
+      "evidenceQuoteIds": [],
+      "sources": [
+        {
+          "claim": "残り点火回数3-4回",
+          "sourceType": "episode",
+          "sourceRef": "第4話 17:16",
+          "sourceLabel": "ep04 エンジン状態報告"
+        },
+        {
+          "claim": "累積被曝480 mSv",
+          "sourceType": "episode",
+          "sourceRef": "第4話 10:17",
+          "sourceLabel": "ep04 被曝線量"
+        },
+        {
+          "claim": "ICRP緊急時被曝限度",
+          "sourceType": "reference",
+          "sourceRef": "ICRP Publication 103",
+          "sourceLabel": "ICRP 2007勧告"
+        }
+      ]
+    },
+    {
+      "id": "ep05-transfer-05",
+      "episode": 5,
+      "description": "ソーラーライン全航路総括: 火星→地球（全5話）",
+      "timestamp": "全5話",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "各区間の太陽中心距離を直線距離として近似",
+        "実際の軌道遷移距離はこれより長い（特にホーマン遷移の場合）"
+      ],
+      "verdict": "plausible",
+      "explanation": "ケストレル号の全航路は火星から天王星まで外側に進み、最終話で地球に帰還する。\n\n**全行程:**\n- 第1話: 火星→ガニメデ（3.68 AU）— brachistochrone 72時間\n- 第2話: 木星圏→エンケラドス（4.38 AU）— 弾道遷移 455日\n- 第3話: エンケラドス→タイタニア（9.62 AU）— brachistochrone 143時間\n- 第4-5話: タイタニア→地球（18.20 AU）— brachistochrone（損傷状態）\n\n**合計距離: 約35.9 AU**（太陽中心距離ベース）\n**最遠点: 天王星軌道 19.2 AU**\n\n太陽系の内側から外縁まで往復する壮大な航路であり、各区間の軌道力学が一貫して精密に設計されている。質量の謎を除けば、全話を通じて物理的に整合する旅程である。",
+      "parameters": {
+        "total_distance_au": 35.88,
+        "furthest_point_au": 19.20,
+        "route_legs": 4,
+        "brachistochrone_legs": 3,
+        "ballistic_legs": 1
+      },
+      "evidenceQuoteIds": [],
+      "sources": [
+        {
+          "claim": "各惑星軌道半径",
+          "sourceType": "reference",
+          "sourceRef": "NASA Planetary Fact Sheets",
+          "sourceLabel": "NASA惑星データ"
+        }
+      ]
+    }
+  ],
+  "explorations": [
+    {
+      "id": "ep05-exploration-01",
+      "transferId": "ep05-transfer-02",
+      "question": "質量が異なる場合、天王星→地球の遷移時間とΔVはどう変わるか?",
+      "boundaryCondition": "損傷推力6.37 MNでの brachistochrone遷移。質量が小さいほど加速度が増し、遷移時間が短縮される。",
+      "scenarios": [
+        {
+          "label": "300t（第1話境界値）",
+          "variedParam": "質量",
+          "variedValue": 300,
+          "variedUnit": "t",
+          "results": {
+            "遷移時間": "8.3日",
+            "ΔV": "15,207 km/s",
+            "加速度": "2.17G",
+            "ピーク速度": "7,604 km/s (2.5%c)"
+          },
+          "feasible": true,
+          "note": "高いΔVだが核融合パルスドライブのSF設定で許容範囲"
+        },
+        {
+          "label": "500t（第3話境界値）",
+          "variedParam": "質量",
+          "variedValue": 500,
+          "variedUnit": "t",
+          "results": {
+            "遷移時間": "10.7日",
+            "ΔV": "11,780 km/s",
+            "加速度": "1.30G",
+            "ピーク速度": "5,890 km/s (2.0%c)"
+          },
+          "feasible": true,
+          "note": "ほぼ1Gに近い加速度、乗員への負担も現実的"
+        },
+        {
+          "label": "1,000t",
+          "variedParam": "質量",
+          "variedValue": 1000,
+          "variedUnit": "t",
+          "results": {
+            "遷移時間": "15.1日",
+            "ΔV": "8,328 km/s",
+            "加速度": "0.65G",
+            "ピーク速度": "4,164 km/s (1.4%c)"
+          },
+          "feasible": true,
+          "note": "火星重力相当の加速度、長期遷移に適する"
+        },
+        {
+          "label": "48,000t（公称質量）",
+          "variedParam": "質量",
+          "variedValue": 48000,
+          "variedUnit": "t",
+          "results": {
+            "遷移時間": "105日",
+            "ΔV": "1,202 km/s",
+            "加速度": "0.014G",
+            "ピーク速度": "601 km/s (0.2%c)"
+          },
+          "feasible": true,
+          "note": "低加速度だが十分実行可能。物語上の時間制約に依存。",
+          "collapsedByDefault": true
+        }
+      ],
+      "summary": "300-500tで8-11日、48,000tで105日。第1話・第3話の質量境界値（299t、452t）と整合する300-500tシナリオでは、約10日前後で地球到達が可能。これは物語の最終話（27分間のエピソード）に描写しうる時間スケールとして妥当。"
+    },
+    {
+      "id": "ep05-exploration-02",
+      "transferId": "ep05-transfer-03",
+      "question": "接近速度(v∞)が異なる場合、地球捕捉に必要なΔVはどう変わるか?",
+      "boundaryCondition": "v∞ = 0（理想的brachistochrone完了）から v∞ = 10 km/s（減速不足）まで。",
+      "scenarios": [
+        {
+          "label": "v∞ = 0（理想到着）",
+          "variedParam": "接近超過速度",
+          "variedValue": 0,
+          "variedUnit": "km/s",
+          "results": {
+            "LEO捕捉ΔV": "3.18 km/s",
+            "GEO捕捉ΔV": "1.27 km/s",
+            "月軌道捕捉ΔV": "0.42 km/s"
+          },
+          "feasible": true,
+          "note": "理想的。月軌道なら0.42 km/sで捕捉可能。"
+        },
+        {
+          "label": "v∞ = 1 km/s",
+          "variedParam": "接近超過速度",
+          "variedValue": 1,
+          "variedUnit": "km/s",
+          "results": {
+            "LEO捕捉ΔV": "3.23 km/s",
+            "GEO捕捉ΔV": "1.50 km/s",
+            "月軌道捕捉ΔV": "0.83 km/s"
+          },
+          "feasible": true,
+          "note": "わずかな超過。月軌道でも1 km/s未満で捕捉可能。"
+        },
+        {
+          "label": "v∞ = 3 km/s",
+          "variedParam": "接近超過速度",
+          "variedValue": 3,
+          "variedUnit": "km/s",
+          "results": {
+            "LEO捕捉ΔV": "3.76 km/s",
+            "GEO捕捉ΔV": "2.35 km/s",
+            "月軌道捕捉ΔV": "2.38 km/s"
+          },
+          "feasible": true,
+          "note": "中程度の超過。LEO以外でもΔVが増大する。"
+        },
+        {
+          "label": "v∞ = 10 km/s",
+          "variedParam": "接近超過速度",
+          "variedValue": 10,
+          "variedUnit": "km/s",
+          "results": {
+            "LEO捕捉ΔV": "6.50 km/s",
+            "GEO捕捉ΔV": "8.40 km/s",
+            "月軌道捕捉ΔV": "9.35 km/s"
+          },
+          "feasible": false,
+          "note": "大幅な減速不足。損傷状態での捕捉は困難。大気制動が必要。",
+          "collapsedByDefault": true
+        }
+      ],
+      "summary": "brachistochrone減速が正常に完了すれば（v∞ ≈ 0）、月軌道での捕捉はわずか0.42 km/sで実行可能。これは損傷状態の1回の点火で十分達成できる。v∞が3 km/sを超えると、全ての捕捉先で2 km/s以上のΔVが必要となり、状況が厳しくなる。"
+    },
+    {
+      "id": "ep05-exploration-03",
+      "transferId": "ep05-transfer-04",
+      "question": "点火回数と熱マージンの制約下で、どの帰還プロファイルが実行可能か?",
+      "boundaryCondition": "残り点火回数2-3回、熱マージン78%、推力65%（6.37 MN）",
+      "scenarios": [
+        {
+          "label": "最小構成: Brach(2) + 月軌道捕捉(1) = 3回",
+          "variedParam": "点火回数",
+          "variedValue": 3,
+          "variedUnit": "回",
+          "results": {
+            "brachistochrone": "加速+減速 2回",
+            "捕捉": "月軌道 1回（0.42 km/s）",
+            "修正": "なし",
+            "最終熱マージン": "約63%"
+          },
+          "feasible": true,
+          "note": "残り3回（最大）でちょうど実行可能。修正余地ゼロ。"
+        },
+        {
+          "label": "LEO直接投入: Brach(2) + LEO捕捉(1) = 3回",
+          "variedParam": "点火回数",
+          "variedValue": 3,
+          "variedUnit": "回",
+          "results": {
+            "brachistochrone": "加速+減速 2回",
+            "捕捉": "LEO 1回（3.18 km/s）",
+            "修正": "なし",
+            "最終熱マージン": "約63%"
+          },
+          "feasible": true,
+          "note": "LEO直接投入は可能だが捕捉ΔVが大きく、エンジン負荷が高い。"
+        },
+        {
+          "label": "残り2回のみ: Brach(2) + 捕捉なし",
+          "variedParam": "点火回数",
+          "variedValue": 2,
+          "variedUnit": "回",
+          "results": {
+            "brachistochrone": "加速+減速 2回",
+            "捕捉": "不可（フライバイのみ）",
+            "修正": "なし",
+            "最終熱マージン": "約68%"
+          },
+          "feasible": false,
+          "note": "地球捕捉不可。フライバイして太陽周回軌道へ。救援が必要。",
+          "collapsedByDefault": true
+        }
+      ],
+      "summary": "残り3回の点火で月軌道捕捉まで到達可能。2回しか残っていない場合、brachistochroneは完遂できるが地球捕捉ができず、フライバイとなるリスクがある。物語的には「ギリギリ3回で成功」というシナリオが最も劇的であり、第2話の太陽脱出速度ギリギリ（余裕0.53 km/s）や第4話のシールドマージン（6分/14分）と同様の緊張感を生む設計と推測される。"
+    }
+  ],
+  "diagrams": [
+    {
+      "id": "ep05-diagram-01",
+      "title": "太陽中心座標: 天王星→地球 帰還遷移",
+      "centerLabel": "太陽",
+      "scaleMode": "sqrt",
+      "radiusUnit": "AU",
+      "orbits": [
+        {
+          "id": "earth-orbit",
+          "label": "地球 (1.0 AU)",
+          "radius": 1.0,
+          "color": "#4488ff",
+          "angle": 0,
+          "meanMotion": 1.991e-7
+        },
+        {
+          "id": "mars-orbit",
+          "label": "火星 (1.52 AU)",
+          "radius": 1.52,
+          "color": "#ff6644",
+          "angle": 1.05
+        },
+        {
+          "id": "jupiter-orbit",
+          "label": "木星 (5.20 AU)",
+          "radius": 5.20,
+          "color": "#ffaa44",
+          "angle": 2.09
+        },
+        {
+          "id": "saturn-orbit",
+          "label": "土星 (9.58 AU)",
+          "radius": 9.58,
+          "color": "#ddbb66",
+          "angle": 3.14
+        },
+        {
+          "id": "uranus-orbit",
+          "label": "天王星 (19.2 AU)",
+          "radius": 19.2,
+          "color": "#66dddd",
+          "angle": 4.19
+        }
+      ],
+      "transfers": [
+        {
+          "label": "ホーマン基準線（16.1年）",
+          "fromOrbitId": "uranus-orbit",
+          "toOrbitId": "earth-orbit",
+          "color": "#888888",
+          "style": "hohmann",
+          "startTime": 0,
+          "endTime": 8
+        },
+        {
+          "label": "Brachistochrone（8-105日）",
+          "fromOrbitId": "uranus-orbit",
+          "toOrbitId": "earth-orbit",
+          "color": "#ff4444",
+          "style": "brachistochrone",
+          "startTime": 0,
+          "endTime": 5
+        }
+      ],
+      "animation": {
+        "durationSeconds": 10
+      }
+    },
+    {
+      "id": "ep05-diagram-02",
+      "title": "地球中心座標: 地球捕捉シナリオ",
+      "centerLabel": "地球",
+      "scaleMode": "log",
+      "radiusUnit": "km",
+      "orbits": [
+        {
+          "id": "leo",
+          "label": "LEO (6,771 km)",
+          "radius": 6771,
+          "color": "#44ff44"
+        },
+        {
+          "id": "geo",
+          "label": "GEO (42,157 km)",
+          "radius": 42157,
+          "color": "#ffff44"
+        },
+        {
+          "id": "moon-orbit",
+          "label": "月軌道 (384,400 km)",
+          "radius": 384400,
+          "color": "#aaaaaa",
+          "angle": 2.36,
+          "meanMotion": 2.662e-6
+        },
+        {
+          "id": "earth-soi",
+          "label": "地球SOI (924,000 km)",
+          "radius": 924000,
+          "color": "#4488ff44"
+        }
+      ],
+      "transfers": [
+        {
+          "label": "月軌道捕捉 (0.42 km/s)",
+          "fromOrbitId": "earth-soi",
+          "toOrbitId": "moon-orbit",
+          "color": "#66ff66",
+          "style": "hyperbolic"
+        },
+        {
+          "label": "LEO直接投入 (3.18 km/s)",
+          "fromOrbitId": "earth-soi",
+          "toOrbitId": "leo",
+          "color": "#ff6666",
+          "style": "hyperbolic"
+        }
+      ],
+      "animation": {
+        "durationSeconds": 8
+      }
+    }
+  ]
+}

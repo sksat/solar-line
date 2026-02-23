@@ -40,6 +40,7 @@ export function hohmannTransferDv(
 export const MU = {
   SUN: 1.32712440041e11,
   EARTH: 3.986004418e5,
+  MOON: 4.9048695e3,
   MARS: 4.28283714e4,
   JUPITER: 1.26686534e8,
   SATURN: 3.7931187e7,
@@ -72,6 +73,15 @@ export const URANUS_RADIUS = 25_559;
 
 /** Titania orbital radius around Uranus (km) — NASA fact sheet */
 export const TITANIA_ORBIT_RADIUS = 435_910;
+
+/** Earth equatorial radius (km) — NASA fact sheet */
+export const EARTH_RADIUS = 6_371;
+
+/** Moon orbital radius around Earth (km) — NASA fact sheet (semi-major axis) */
+export const MOON_ORBIT_RADIUS = 384_400;
+
+/** Low Earth Orbit altitude (km) — typical ISS-like orbit */
+export const LEO_ALTITUDE = 400;
 
 /**
  * Escape velocity at a given distance from a body.
