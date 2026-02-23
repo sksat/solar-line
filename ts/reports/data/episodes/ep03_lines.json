@@ -1,0 +1,1147 @@
+{
+  "schemaVersion": 1,
+  "videoId": "l1jjXpv17-E",
+  "episode": 3,
+  "sourceSubtitle": {
+    "language": "ja",
+    "source": "youtube-auto",
+    "rawContentHash": "fb7aff31162e409be6ce536b24dd8dac48816e770cd55ac384fbe45eb04ce25d"
+  },
+  "lines": [
+    {
+      "lineId": "ep03-line-001",
+      "startMs": 6839,
+      "endMs": 25349,
+      "text": "木星公案校舎の高校ログからは追跡できません。おそらく非公式のアドバイザリーを受けて行したものと推定されます。非公式ね、案外木星の影にでも隠れてるんじゃないかと思ったけど、そこまでバカじゃないか。",
+      "rawEntryIds": [
+        "cue-1"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-002",
+      "startMs": 27840,
+      "endMs": 29109,
+      "text": "捨てるしかないでしょう。",
+      "rawEntryIds": [
+        "cue-3"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-003",
+      "startMs": 29119,
+      "endMs": 41430,
+      "text": "何か手がかりでもあればいいと思ったけど中身は死体だったんだからにもほっぱり出してどこに消えたんだか",
+      "rawEntryIds": [
+        "cue-5"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-004",
+      "startMs": 43559,
+      "endMs": 49229,
+      "text": "それならいいけどな。",
+      "rawEntryIds": [
+        "cue-7"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-005",
+      "startMs": 60680,
+      "endMs": 72109,
+      "text": "毎秒相を合わせていると思われます。骨を拾う時間はやろうってか趣味が悪いよな。地球人は。",
+      "rawEntryIds": [
+        "cue-9"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-006",
+      "startMs": 82280,
+      "endMs": 84670,
+      "text": "D構に違反しています。",
+      "rawEntryIds": [
+        "cue-11"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-007",
+      "startMs": 84680,
+      "endMs": 108910,
+      "text": "本域は木星機道連合の試験に復しますが、現在惑星官輸送協定不足英語校に基づき当期校は臨時の生害緊急執行権を行使しています。期の高権は現在起動公案機構監督にあります。直ちに主進路を停止し冷却モードへ移行してください。指勢制御を固定し、相対速度を維持してください。",
+      "rawEntryIds": [
+        "cue-13",
+        "cue-15",
+        "cue-17",
+        "cue-19",
+        "cue-21",
+        "cue-23",
+        "cue-25"
+      ],
+      "mergeReasons": [
+        "continuation_marker",
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-008",
+      "startMs": 108920,
+      "endMs": 109789,
+      "text": "繰り返します。",
+      "rawEntryIds": [
+        "cue-27"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-009",
+      "startMs": 109799,
+      "endMs": 120510,
+      "text": "どうされますか?を地球人に逆らう馬はいない。了解。式客開始規制御を固定します輸送協定不足",
+      "rawEntryIds": [
+        "cue-29"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-010",
+      "startMs": 122920,
+      "endMs": 127670,
+      "text": "あいつら以は起動連合の試験にしますが現在惑星",
+      "rawEntryIds": [
+        "cue-31",
+        "cue-33"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-011",
+      "startMs": 132480,
+      "endMs": 137790,
+      "text": "計算を丸めて急いでもよかったですが、そしたらあなたも生き急ぐことになりますよ。",
+      "rawEntryIds": [
+        "cue-35"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-012",
+      "startMs": 139200,
+      "endMs": 151309,
+      "text": "外園コ路は土性権でのコ路とは根本的に異なります。まししてやこの船は内炎輸送向けに設計されたものです。計算上高校は可能ですが保証はできません。",
+      "rawEntryIds": [
+        "cue-37"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-013",
+      "startMs": 153271,
+      "endMs": 157846,
+      "text": "[音楽]今まで以上に危険だということです。木星へのダイレクトエントリーと同じか。それよりはかに船のりは危険なものさ。もう",
+      "rawEntryIds": [
+        "cue-39",
+        "cue-41"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-014",
+      "startMs": 166319,
+      "endMs": 168910,
+      "text": "それお前自分のこと言ってんのか?",
+      "rawEntryIds": [
+        "cue-43"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-015",
+      "startMs": 168920,
+      "endMs": 176430,
+      "text": "まさか道場の天皇星人のことです。そうかい。コ路の目的地はウラヌス",
+      "rawEntryIds": [
+        "cue-45"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-016",
+      "startMs": 177040,
+      "endMs": 180772,
+      "text": "タイタニア集団複合施設天皇政治有効機構宇宙校です。",
+      "rawEntryIds": [
+        "cue-47"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-017",
+      "startMs": 181680,
+      "endMs": 183509,
+      "text": "まだ港は相てんのか?",
+      "rawEntryIds": [
+        "cue-49"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-018",
+      "startMs": 183519,
+      "endMs": 189270,
+      "text": "少なくとも閉鎖されたというアドバイザリーは配信されていません。報だね。所要時間は",
+      "rawEntryIds": [
+        "cue-51"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-019",
+      "startMs": 191560,
+      "endMs": 195830,
+      "text": "日か。神が世界を作るのにかけた時間と同じです。",
+      "rawEntryIds": [
+        "cue-53"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-020",
+      "startMs": 198319,
+      "endMs": 225229,
+      "text": "を受けて巡口加速火星公安校舎のMTS9907のエントリーまで進みます。このビーコンが公安校舎の誘導集団となり、ここから先はオービタルカーテンの外側、つまり無誘導での高校となります。無誘導か一昔前なら自殺行為だな。この先[音楽]は完成後方と背景構成観測のみで位置を把握することになります。内園線で進むのは今でも自殺[音楽]行為です。",
+      "rawEntryIds": [
+        "cue-55",
+        "cue-57",
+        "cue-59",
+        "cue-61",
+        "cue-63",
+        "cue-65",
+        "cue-67",
+        "cue-69",
+        "cue-71"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep03-line-021",
+      "startMs": 225239,
+      "endMs": 247229,
+      "text": "天皇政権までは2回の後方補正を行いますが、最終誤差はプラスマイナス18km以内でなければなりません。もしもそれたら生きてるうちに戻れないだろうな。今でも外園線の3割は2期間[音楽]となっています。そのほとんどは後方誤りによるものです。また天皇星の影ではプラズモイドの発生が予防されています。",
+      "rawEntryIds": [
+        "cue-73",
+        "cue-75",
+        "cue-77",
+        "cue-79",
+        "cue-81",
+        "cue-83",
+        "cue-85",
+        "cue-87"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-022",
+      "startMs": 247239,
+      "endMs": 253830,
+      "text": "天皇星の時期権はねじれてるから厄介だな。",
+      "rawEntryIds": [
+        "cue-89",
+        "cue-91"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-023",
+      "startMs": 274600,
+      "endMs": 278909,
+      "text": "外炎コ路は今までと異なり無導での高校となります。",
+      "rawEntryIds": [
+        "cue-93"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-024",
+      "startMs": 280998,
+      "endMs": 298950,
+      "text": "[音楽]デルターVを自力で積むことになります。内炎コ路では高校を謝っても落ちる先がありますが、外炎コ路では重力で回収してくれる天体もほぼなく後方ビーコンも存在せず太陽の重力も弱く背景構成観測以外の目印もありません。",
+      "rawEntryIds": [
+        "cue-95",
+        "cue-97",
+        "cue-99",
+        "cue-101",
+        "cue-103",
+        "cue-105"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-025",
+      "startMs": 298960,
+      "endMs": 301469,
+      "text": "極めて[音楽]危険です。",
+      "rawEntryIds": [
+        "cue-107"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-026",
+      "startMs": 301479,
+      "endMs": 315189,
+      "text": "それは今までだって同じだったろ。違います。外園後路では人間は全く役に立ちません。それはつまり広報AIである私に全てを委ねることに他なりません。",
+      "rawEntryIds": [
+        "cue-109",
+        "cue-111",
+        "cue-113",
+        "cue-115"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-027",
+      "startMs": 315199,
+      "endMs": 318990,
+      "text": "問題はその私です。",
+      "rawEntryIds": [
+        "cue-117"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-028",
+      "startMs": 319000,
+      "endMs": 335510,
+      "text": "お前ふざけてんのか?[音楽]私たちがここまでたどり着いたのも木星でビーコンの情報を拾ったからですが、あれはダイレクトエントリーの出口に都合よく配置[音楽]されていました。そしてそのダイレクトエントリーを提案したのは私です。",
+      "rawEntryIds": [
+        "cue-119",
+        "cue-121",
+        "cue-123",
+        "cue-125",
+        "cue-127",
+        "cue-129",
+        "cue-131"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-029",
+      "startMs": 335520,
+      "endMs": 354870,
+      "text": "私なのです。バカバかしい。決めたのは私だろうがですが、もし私に何らかの異常があり、それが外園コ路で顕在化したら人間だけではリカバリーは不可能です。内園コ路とは異なり、外園には誘導がないためです。",
+      "rawEntryIds": [
+        "cue-133",
+        "cue-135",
+        "cue-137",
+        "cue-139",
+        "cue-141",
+        "cue-143"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-030",
+      "startMs": 354880,
+      "endMs": 360990,
+      "text": "行くぞ。話聞いてましたか?聞いてたさ。",
+      "rawEntryIds": [
+        "cue-145"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-031",
+      "startMs": 361000,
+      "endMs": 366350,
+      "text": "それでも私にはお前が必要なんだ。",
+      "rawEntryIds": [
+        "cue-147"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-032",
+      "startMs": 368919,
+      "endMs": 371870,
+      "text": "。",
+      "rawEntryIds": [
+        "cue-149"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-033",
+      "startMs": 371880,
+      "endMs": 378070,
+      "text": "帰る場所なんて最初からないさ。",
+      "rawEntryIds": [
+        "cue-151"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-034",
+      "startMs": 380440,
+      "endMs": 383790,
+      "text": "大丈夫ですか?心拍数が増えていますが。",
+      "rawEntryIds": [
+        "cue-153"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-035",
+      "startMs": 383800,
+      "endMs": 391029,
+      "text": "大丈夫なわけないだろう。私は火星生まれなんだ。1位は重すぎる。",
+      "rawEntryIds": [
+        "cue-155",
+        "cue-157"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-036",
+      "startMs": 391039,
+      "endMs": 398350,
+      "text": "これが地球です。",
+      "rawEntryIds": [
+        "cue-159"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-037",
+      "startMs": 401039,
+      "endMs": 403550,
+      "text": "。",
+      "rawEntryIds": [
+        "cue-161"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-038",
+      "startMs": 403560,
+      "endMs": 422510,
+      "text": "哀れですね。あなたたち外収居住者は0.8Gの低重力環境に適用し、もはや地球の重力にすら耐えられない。王角膜が押し下げられ、呼吸も満足にできず、血圧も足りずに頭部に血が回らない。筋力も不足している。",
+      "rawEntryIds": [
+        "cue-163",
+        "cue-165",
+        "cue-167",
+        "cue-169",
+        "cue-171",
+        "cue-173"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-039",
+      "startMs": 422520,
+      "endMs": 433390,
+      "text": "ただ重力区画に放置しているだけで勝手に弱っていくのですから私は楽ですが。趣味が悪いよな。地球人は。",
+      "rawEntryIds": [
+        "cue-175"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-040",
+      "startMs": 445520,
+      "endMs": 448029,
+      "text": "あなたの登録はまだ有効です。",
+      "rawEntryIds": [
+        "cue-177"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-041",
+      "startMs": 448039,
+      "endMs": 454230,
+      "text": "あなたは火星の方の家にあり、あなたの初見利は火星の名の元に守られています。",
+      "rawEntryIds": [
+        "cue-179"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-042",
+      "startMs": 471639,
+      "endMs": 482469,
+      "text": "もしくはあなたが通信していた先の火星のあの小型貨物線でしょうか。サーナ。",
+      "rawEntryIds": [
+        "cue-181"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-043",
+      "startMs": 493919,
+      "endMs": 497710,
+      "text": "条により保護されています。保護は現在も有効です。",
+      "rawEntryIds": [
+        "cue-183"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-044",
+      "startMs": 501639,
+      "endMs": 505710,
+      "text": "記録の開示を要求します。",
+      "rawEntryIds": [
+        "cue-185"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-045",
+      "startMs": 505720,
+      "endMs": 516269,
+      "text": "後報による認証を行いました。保護は無効になりました。8時間以内に火星連邦当局に通告してください。",
+      "rawEntryIds": [
+        "cue-187",
+        "cue-189",
+        "cue-191"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-046",
+      "startMs": 517599,
+      "endMs": 525389,
+      "text": "地球じゃAIには名前つけないんじゃないのかですがあなたたちは名前で呼ぶのでしょう。",
+      "rawEntryIds": [
+        "cue-193",
+        "cue-195",
+        "cue-197"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-047",
+      "startMs": 526839,
+      "endMs": 540150,
+      "text": "火星居住者も意外とロマンチストなんですね。ではミューズガニメデへ直接整意した船とあなたたちは通信を行いました。通信相手を教えてください。",
+      "rawEntryIds": [
+        "cue-199"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-048",
+      "startMs": 542560,
+      "endMs": 548870,
+      "text": "MPAMCSCV02814と2回通信を行いました。",
+      "rawEntryIds": [
+        "cue-201",
+        "cue-203"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-049",
+      "startMs": 548880,
+      "endMs": 551470,
+      "text": "その船の所材を知っていますか?",
+      "rawEntryIds": [
+        "cue-205"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-050",
+      "startMs": 551480,
+      "endMs": 563110,
+      "text": "いえ、街当は木星起動上では確認できませんでした。これ以上の情報はありません。コンテナーを開封したのはあなたたちですか?",
+      "rawEntryIds": [
+        "cue-207"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-051",
+      "startMs": 572399,
+      "endMs": 576750,
+      "text": "せればよかっただろう。",
+      "rawEntryIds": [
+        "cue-209"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-052",
+      "startMs": 579399,
+      "endMs": 581990,
+      "text": "なかった?",
+      "rawEntryIds": [
+        "cue-211"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-053",
+      "startMs": 582000,
+      "endMs": 597670,
+      "text": "全ての船舶には後方AIの搭載が必要でその鍵は地球が持っている。だから本来はお前らが木政権に到着した時点で戦命令を出すだけであいつらの船は止まったはずだ。でも地球はそうしなかった。",
+      "rawEntryIds": [
+        "cue-213",
+        "cue-215",
+        "cue-217",
+        "cue-219",
+        "cue-221"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-054",
+      "startMs": 597680,
+      "endMs": 602990,
+      "text": "火星がいたからか。じゃあ罪には何だったんだ?",
+      "rawEntryIds": [
+        "cue-223"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-055",
+      "startMs": 608760,
+      "endMs": 619509,
+      "text": "船舶に広方鍵が利用できなかった理由について何か知っていますか?ビフォーメインアップチェックリスト外部状態問題なし外格クラック",
+      "rawEntryIds": [
+        "cue-225"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-056",
+      "startMs": 621480,
+      "endMs": 630750,
+      "text": "RCSノズル開表式プレヒート温度416°適正値燃料残量は問題なし却圧力",
+      "rawEntryIds": [
+        "cue-227",
+        "cue-229"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-057",
+      "startMs": 633120,
+      "endMs": 640150,
+      "text": "2次1.18Mパスカル一部霊媒の漏洩が見られますが熱余裕に問題はありません。",
+      "rawEntryIds": [
+        "cue-231",
+        "cue-233"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-058",
+      "startMs": 640160,
+      "endMs": 646550,
+      "text": "ビフォメインアップチェックリストコンプリート",
+      "rawEntryIds": [
+        "cue-235",
+        "cue-237"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-059",
+      "startMs": 649480,
+      "endMs": 652590,
+      "text": "言いました。",
+      "rawEntryIds": [
+        "cue-239"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-060",
+      "startMs": 652600,
+      "endMs": 667670,
+      "text": "そうかい。じゃあ見めだな。メインアップ式アーム衝撃に備えてください。放射線レベル許容範囲内54321",
+      "rawEntryIds": [
+        "cue-241",
+        "cue-243",
+        "cue-245"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-061",
+      "startMs": 687279,
+      "endMs": 692910,
+      "text": "質問は私がします。出柔らかに。",
+      "rawEntryIds": [
+        "cue-247"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-062",
+      "startMs": 702360,
+      "endMs": 711069,
+      "text": "太陽系は広いようで見かけより狭い地球に知られたくないこともあるのよ。それはあなたたち火星も同じよね。",
+      "rawEntryIds": [
+        "cue-249"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-063",
+      "startMs": 714440,
+      "endMs": 722269,
+      "text": "ダめで火星はいいのです?なぜ私はあなたをタイタニアへ運ぼうとしているのです?",
+      "rawEntryIds": [
+        "cue-251",
+        "cue-253"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-064",
+      "startMs": 722279,
+      "endMs": 737670,
+      "text": "自分の心に聞いてみれば少なくとも人ならそうするから。",
+      "rawEntryIds": [
+        "cue-255",
+        "cue-257"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-065",
+      "startMs": 740760,
+      "endMs": 769389,
+      "text": "ケ、私はいつだってあなたのそばにいますよ。私もな。あなたのおっしゃる通り方鍵を使って戦命令を出せば彼女は外炎まで足を踏み入れることはなかったでしょう。ですが、あの船のは私たちの保有する方法を受け付けませんでした。",
+      "rawEntryIds": [
+        "cue-259",
+        "cue-261"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-066",
+      "startMs": 772720,
+      "endMs": 804550,
+      "text": "は全く異なるものです。私たちは当初罪にはあのコンテナーだと思っていましたが、もしかするとそれは大きな勘違いなのかもしれません。だとすると罪にはこの太陽系の秩序を大きくかねないものです。それは何なんだよ。私たちが何のために公安交射体制を敷きコー路のナビゲーションを提供しているのかそれは後方支援システムを統一し広報による統制を取るためです。",
+      "rawEntryIds": [
+        "cue-263",
+        "cue-265",
+        "cue-267",
+        "cue-269",
+        "cue-271",
+        "cue-273",
+        "cue-275",
+        "cue-277",
+        "cue-279"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep03-line-067",
+      "startMs": 804560,
+      "endMs": 813550,
+      "text": "これは軍事も民間も関係なくだからこそ太陽系の秩序は今まで守られてきました。",
+      "rawEntryIds": [
+        "cue-281",
+        "cue-283"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-068",
+      "startMs": 813560,
+      "endMs": 821310,
+      "text": "それが破られればどうなるかぐらいあなたたちにも分かるはずです。",
+      "rawEntryIds": [
+        "cue-285",
+        "cue-287"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-069",
+      "startMs": 823880,
+      "endMs": 854990,
+      "text": "現在背景構成観測系と完成後方系の整合が取れません。後方統合システムは両系統の信頼[音楽]区間が重なっていることから判断不能の応答を提示しています。現在位置は対応基準で14.72AU。速度は青函巡口でおよそ3000km/秒。背景構成観測と完成後方系は[音楽]それぞれ違うコースにナビゲートしています。この2つの差は角度にして1.23°になります。この誤差は天皇星光点面でおよそ",
+      "rawEntryIds": [
+        "cue-289",
+        "cue-291",
+        "cue-293",
+        "cue-295",
+        "cue-297",
+        "cue-299",
+        "cue-301",
+        "cue-303",
+        "cue-305",
+        "cue-307"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-070",
+      "startMs": 857399,
+      "endMs": 858049,
+      "text": "一方のコースは天皇に交差し、もう一方は太陽の昼急外炎を超えるコースです。",
+      "rawEntryIds": [
+        "cue-309"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-071",
+      "startMs": 858059,
+      "endMs": 863629,
+      "text": "[音楽]",
+      "rawEntryIds": [
+        "cue-311"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-072",
+      "startMs": 863954,
+      "endMs": 866430,
+      "text": "[音楽]",
+      "rawEntryIds": [
+        "cue-313"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-073",
+      "startMs": 878880,
+      "endMs": 908509,
+      "text": "92.3%。ただし外園では構成がほぼ静止して見えるためわずかなご検室でも致名的となる可能性があります。特に高エネルギーな銀が宇宙線がセンサー系に飛び込んだとするとそれが技行点となり構成データベースの基地性と偶然一致した可能性があります。完成後方形については言わずもがなドリフトの石産ですでに致名的な誤差を生じている[音楽]可能性があります。こちらの信頼度は91.7%です。",
+      "rawEntryIds": [
+        "cue-315",
+        "cue-317",
+        "cue-319",
+        "cue-321",
+        "cue-323",
+        "cue-325",
+        "cue-327",
+        "cue-329",
+        "cue-331",
+        "cue-333",
+        "cue-335"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-074",
+      "startMs": 908519,
+      "endMs": 926829,
+      "text": "土星のDSN地上局との[音楽]最終構成は約21分前。それでこの2つから[音楽]どっちかを選べってか感がいいのは人間の特権だと思います。褒められたってことにしとくよ。あら、感良くないですね。占い師にならなくて良かったよ。",
+      "rawEntryIds": [
+        "cue-337",
+        "cue-339",
+        "cue-341",
+        "cue-343",
+        "cue-345",
+        "cue-347"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-075",
+      "startMs": 926839,
+      "endMs": 937030,
+      "text": "法案法では統合後方会が分岐した時界の信頼が2%以内なら人間司令による優先選択を実施することが定められています。",
+      "rawEntryIds": [
+        "cue-349",
+        "cue-351",
+        "cue-353"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-076",
+      "startMs": 937040,
+      "endMs": 951150,
+      "text": "要は機械に決められないから人に[音楽]決めてもらうってことだな。修正可能な時間窓は約10分です。今すぐに決めてください。せっかちだね。選ぶだけ[音楽]でしょ。命をかけてな。",
+      "rawEntryIds": [
+        "cue-355",
+        "cue-357",
+        "cue-359",
+        "cue-361",
+        "cue-363"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-077",
+      "startMs": 951160,
+      "endMs": 960389,
+      "text": "構成基準から結果が分かるのは1日から3日後です。構成は極めて遠いため微小なしさとなり累積しなければ差が見えません。",
+      "rawEntryIds": [
+        "cue-365",
+        "cue-367",
+        "cue-369"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-078",
+      "startMs": 960399,
+      "endMs": 968350,
+      "text": "つまり間違っ[音楽]て選んだ場合すでに帰れなくなった後にその事実が分かることになります。",
+      "rawEntryIds": [
+        "cue-371",
+        "cue-373",
+        "cue-375"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-079",
+      "startMs": 968360,
+      "endMs": 984749,
+      "text": "星は嘘をつかないか私にはそうは見えないけどな。完成後方系のコースへ私は何もせずに輝いてるだけの星よりもこの船を信じる[音楽]。",
+      "rawEntryIds": [
+        "cue-377",
+        "cue-379",
+        "cue-381",
+        "cue-383"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-080",
+      "startMs": 993279,
+      "endMs": 1008430,
+      "text": "天皇性時期権に突入します。現在コードは25RUナビゲーション3章を天皇星原点に切り替えました。天皇星って輪があると思ってたんだけどな。赤外線で見れば見えますよ。",
+      "rawEntryIds": [
+        "cue-385",
+        "cue-387",
+        "cue-389",
+        "cue-391",
+        "cue-393"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-081",
+      "startMs": 1008440,
+      "endMs": 1016470,
+      "text": "暗い星だよな。地球と比べるとおよそ1/300以下の太陽光ですから光を受けられるだけまだましか?",
+      "rawEntryIds": [
+        "cue-395",
+        "cue-397",
+        "cue-399"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-082",
+      "startMs": 1022759,
+      "endMs": 1031909,
+      "text": "ええ、外していれば今頃太陽系の暗闇みに向けて飛び続けているところでした。あの、",
+      "rawEntryIds": [
+        "cue-401"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-083",
+      "startMs": 1033760,
+      "endMs": 1035150,
+      "text": "んだよ。",
+      "rawEntryIds": [
+        "cue-403"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-084",
+      "startMs": 1035160,
+      "endMs": 1049870,
+      "text": "なぜあの時完成後方形を選んだのでしょうか?あなたならきっと夢があるとか言って星を選ぶものだと思っていました。夢だけじゃ船は動かないからな。お前が言ったんだぞ。",
+      "rawEntryIds": [
+        "cue-405",
+        "cue-407",
+        "cue-409",
+        "cue-411",
+        "cue-413"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-085",
+      "startMs": 1049880,
+      "endMs": 1053590,
+      "text": "そうでした。",
+      "rawEntryIds": [
+        "cue-415"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep03-line-086",
+      "startMs": 1057080,
+      "endMs": 1066070,
+      "text": "でしょうか。お前が嘘をつくとしたらどういう時だ?私は嘘をつきません。家庭の話だ。",
+      "rawEntryIds": [
+        "cue-417",
+        "cue-419",
+        "cue-421"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-087",
+      "startMs": 1066080,
+      "endMs": 1075029,
+      "text": "もし私が嘘をつくとしたら、それはあなたとの信頼を壊したくない時です。そうか。",
+      "rawEntryIds": [
+        "cue-423",
+        "cue-425"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep03-line-088",
+      "startMs": 1079280,
+      "endMs": 1086240,
+      "text": "ここまで来たのはお前の意志なのか?あの天皇星人と何を話した",
+      "rawEntryIds": [
+        "cue-427",
+        "cue-429"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    }
+  ],
+  "extractedAt": "2026-02-23T20:28:49.476Z",
+  "mergeConfig": {
+    "maxGapMs": 300,
+    "minCueDurationMs": 100
+  }
+}

@@ -1,0 +1,548 @@
+{
+  "episode": 3,
+  "title": "SOLAR LINE Part 3 — エンケラドスから天王星タイタニアへ",
+  "summary": "ケストレルがエンケラドス（土星系）を出発し、天王星のタイタニア集合施設へ向かう「外縁航路」に挑む。内縁航路と異なり誘導ビーコンがなく、背景恒星観測と慣性航法のみで航行する極めて危険なルート。航行中に2つの航法系が不一致を起こし、きりたんが人間の判断でコース選択を迫られる。",
+  "videoCards": [
+    {
+      "provider": "niconico",
+      "id": "sm45588149",
+      "title": "【ソフトウェアトーク劇場】SOLAR LINE Part 3",
+      "caption": "ニコニコ動画（オリジナル公開）"
+    },
+    {
+      "provider": "youtube",
+      "id": "l1jjXpv17-E",
+      "title": "【ソフトウェアトーク劇場】SOLAR LINE Part 3",
+      "caption": "YouTube版"
+    }
+  ],
+  "dialogueQuotes": [
+    {
+      "id": "ep03-quote-01",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "外縁航路は土星圏での航路とは根本的に異なります。まして、この船は内縁輸送向けに設計されたものです。計算上航行は可能ですが、保証はできません",
+      "timestamp": "02:19"
+    },
+    {
+      "id": "ep03-quote-02",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "航路の目的地はウラヌス3、タイタニア集合複合施設、天王星自治有効機構宇宙港です",
+      "timestamp": "02:57"
+    },
+    {
+      "id": "ep03-quote-03",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "所要時間は143時間12分",
+      "timestamp": "03:11"
+    },
+    {
+      "id": "ep03-quote-04",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "まずはエンケラドスから土星の重力アシストを受けて巡航加速。航法ビーコンのエントリーまで進みます。ここから先はオービタルカーテンの外側、つまり無誘導での航行となります",
+      "timestamp": "03:18"
+    },
+    {
+      "id": "ep03-quote-05",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "天王星圏までは2回の航路補正を行いますが、最終誤差はプラスマイナス18km以内でなければなりません",
+      "timestamp": "03:48"
+    },
+    {
+      "id": "ep03-quote-06",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "現在位置は太陽基準で14.72AU。速度は巡航速度でおよそ3000km毎秒。背景恒星観測と慣性航法系はそれぞれ違うコースにナビゲートしています。この2つの差は角度にして1.23度になります",
+      "timestamp": "13:58"
+    },
+    {
+      "id": "ep03-quote-07",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "この誤差は天王星交点面でおよそ1436万km。一方のコースは天王星に交差し、もう一方は太陽系の外縁を超えるコースです",
+      "timestamp": "14:17"
+    },
+    {
+      "id": "ep03-quote-08",
+      "speaker": "きりたん",
+      "text": "星は嘘をつかないか……私にはそうは見えないけどな。慣性航法系のコースへ",
+      "timestamp": "16:12"
+    },
+    {
+      "id": "ep03-quote-09",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "天王星へのエントリー減速完了。間もなく天王星磁気圏に突入します。現在高度は25RU",
+      "timestamp": "16:33"
+    },
+    {
+      "id": "ep03-quote-10",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "ええ、外していれば今頃太陽系の暗闇に向けて飛び続けているところでした",
+      "timestamp": "17:03"
+    }
+  ],
+  "transfers": [
+    {
+      "id": "ep03-transfer-01",
+      "episode": 3,
+      "description": "ホーマン遷移基準値: 土星軌道 → 天王星軌道（最小エネルギー）",
+      "timestamp": "該当なし（参考計算）",
+      "claimedDeltaV": null,
+      "computedDeltaV": 2.74,
+      "assumptions": [
+        "土星（1,433,530,000 km）と天王星（2,872,460,000 km）の太陽中心円軌道を仮定",
+        "共面軌道（軌道傾斜角の変更なし）",
+        "衝撃的噴射（瞬間的な速度変更）",
+        "二体問題（太陽の重力のみ）"
+      ],
+      "verdict": "indeterminate",
+      "explanation": "古典的ホーマン遷移には合計約2.74 km/sのΔVが必要だが、約9,971日（約27.3年）を要する。143時間の所要時間とは全く異なる次元の問題であり、作中の推進技術はホーマン級を大幅に超えている。",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "departureRadius": 1433530000,
+        "arrivalRadius": 2872460000,
+        "departureDeltaV": 1.49,
+        "arrivalDeltaV": 1.25,
+        "transferTimeDays": 9971,
+        "transferTimeYears": 27.3
+      },
+      "sources": [
+        {
+          "claim": "土星軌道半径: 1,433,530,000 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Saturn Fact Sheet",
+          "sourceLabel": "NASA惑星データ"
+        },
+        {
+          "claim": "天王星軌道半径: 2,872,460,000 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Uranus Fact Sheet",
+          "sourceLabel": "NASA惑星データ"
+        }
+      ]
+    },
+    {
+      "id": "ep03-transfer-02",
+      "episode": 3,
+      "description": "土星重力アシスト出発: エンケラドス軌道からの脱出",
+      "timestamp": "03:18",
+      "claimedDeltaV": null,
+      "computedDeltaV": 5.23,
+      "assumptions": [
+        "エンケラドス軌道（238,020 km）からの脱出を仮定",
+        "円軌道からの衝撃噴射",
+        "土星重力アシストによる太陽中心系での加速は別途考慮"
+      ],
+      "verdict": "plausible",
+      "explanation": "エンケラドス軌道からの土星脱出には約5.23 km/sのΔVが必要（脱出速度17.85 km/s − 円軌道速度12.62 km/s）。これはケストレルの推進能力の範囲内である。土星の公転速度（9.62 km/s）がさらに太陽中心系での速度に加算される重力アシスト効果を受ける。",
+      "parameters": {
+        "mu": 37931187,
+        "departureRadius": 238020,
+        "escapeVelocity": 17.85,
+        "circularVelocity": 12.62,
+        "saturnOrbitalVelocity": 9.62
+      },
+      "evidenceQuoteIds": ["ep03-quote-04"],
+      "sources": [
+        {
+          "claim": "エンケラドス軌道半径: 238,020 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Enceladus Fact Sheet",
+          "sourceLabel": "NASA衛星データ"
+        },
+        {
+          "claim": "土星重力アシストを使用して巡航加速",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45588149 03:18",
+          "sourceLabel": "Part 3 ケイの航路説明"
+        }
+      ]
+    },
+    {
+      "id": "ep03-transfer-03",
+      "episode": 3,
+      "description": "ブラキストクローネ遷移: 土星→天王星 143時間12分",
+      "timestamp": "03:11",
+      "claimedDeltaV": null,
+      "computedDeltaV": 11165,
+      "assumptions": [
+        "土星−天王星最短距離（1,438,930,000 km ≈ 9.62 AU）を使用",
+        "ブラキストクローネ（中間点で反転する一定加速）を仮定",
+        "重力項を無視（エンジン加速が支配的）",
+        "143時間12分＝515,520秒"
+      ],
+      "verdict": "conditional",
+      "explanation": "143時間12分でのブラキストクローネ遷移には、最短距離でも約11,165 km/sのΔVと約2.2Gの一定加速が必要。これはケストレルの推力（9.8 MN）では48,000tの質量に対して106倍不足する。ただし、Part 1と同様に質量が約452t以下であれば物理的に可能。Part 1の分析で得られた質量境界（≤299t）と整合する。なお、ASR精度の問題から巡航速度「3000 km/s」は「30 km/s」の誤認の可能性もあり、その場合はブラキストクローネではなく重力アシスト+低推力の長期遷移となる。",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "departureRadius": 1433530000,
+        "arrivalRadius": 2872460000,
+        "distance": 1438930000,
+        "transferTimeSec": 515520,
+        "requiredAccelMs2": 21.66,
+        "requiredAccelG": 2.21,
+        "requiredThrustMN": 1039.56,
+        "thrustRatio": 106.08,
+        "maxFeasibleMassT": 452.5
+      },
+      "evidenceQuoteIds": ["ep03-quote-01", "ep03-quote-03"],
+      "sources": [
+        {
+          "claim": "所要時間143時間12分",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45588149 03:11",
+          "sourceLabel": "Part 3 ケイの航行計画"
+        },
+        {
+          "claim": "船体質量: 約48,000 t",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "ソーラーライン設定資料"
+        },
+        {
+          "claim": "推力: 9.8 MN",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "ソーラーライン設定資料"
+        }
+      ]
+    },
+    {
+      "id": "ep03-transfer-04",
+      "episode": 3,
+      "description": "航法危機: 14.72 AUでの1.23°コース分岐",
+      "timestamp": "13:58",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "太陽中心座標系で14.72 AUの位置",
+        "背景恒星観測（信頼度92.3%）と慣性航法系（信頼度91.7%）の不一致",
+        "天王星までの残距離: 約4.48 AU（670,379,343 km）",
+        "小角度近似: 誤差 ≈ 距離 × tan(1.23°)"
+      ],
+      "verdict": "plausible",
+      "explanation": "1.23°の航法不一致が天王星交点面で約1,436万kmの位置誤差を生むという描写は、物理計算と極めてよく一致する（計算値: 14,393,613 km、作中値: 14,360,000 km、比率1.002）。天王星のヒル球（約5,179万km）内には収まるが、±18km以内の精度要件からは約80万倍逸脱する。2つの航法系の信頼度差がわずか0.6%しかなく、AIでは判断不能のため人間の直感による選択が必要になる——という展開は、実際の深宇宙航行の問題を正確に反映している。",
+      "parameters": {
+        "positionAU": 14.72,
+        "angleDeg": 1.23,
+        "remainingDistAU": 4.48,
+        "computedErrorKm": 14393613,
+        "statedErrorKm": 14360000,
+        "uranusSOIKm": 51793935,
+        "errorMarginKm": 18,
+        "stellarNavConfidence": 0.923,
+        "inertialNavConfidence": 0.917
+      },
+      "evidenceQuoteIds": ["ep03-quote-06", "ep03-quote-07", "ep03-quote-08"],
+      "sources": [
+        {
+          "claim": "位置: 太陽基準14.72 AU",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45588149 13:58",
+          "sourceLabel": "Part 3 ケイの航法報告"
+        },
+        {
+          "claim": "航法不一致: 1.23度",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45588149 14:06",
+          "sourceLabel": "Part 3 ケイの航法報告"
+        },
+        {
+          "claim": "天王星交点面での誤差: 1436万km",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45588149 14:17",
+          "sourceLabel": "Part 3 ケイの航法報告"
+        },
+        {
+          "claim": "天王星のヒル球半径: 約5,179万km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Uranus Fact Sheet (μ_U / μ_Sun)",
+          "sourceLabel": "NASAデータから計算"
+        }
+      ]
+    },
+    {
+      "id": "ep03-transfer-05",
+      "episode": 3,
+      "description": "天王星到着: 高度25RU（63.9万km）での減速・捕獲",
+      "timestamp": "16:33",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "天王星半径RU = 25,559 km → 25 RU = 638,975 km",
+        "タイタニア軌道半径: 435,910 km",
+        "捕獲ΔVは接近速度に大きく依存（ブラキストクローネなら膨大、低速接近なら少量）"
+      ],
+      "verdict": "conditional",
+      "explanation": "25 RU（638,975 km）からの天王星エントリーという描写は現実的。タイタニア軌道（435,910 km）は25 RU以内にあり、接近経路としては妥当。脱出速度は25 RUで約4.26 km/s、タイタニア軌道で約5.16 km/s。低速接近（v_inf数km/s）であれば捕獲ΔVは数km/sで済む。ただし、ブラキストクローネ遷移の巡航速度（計算値: ~2,791 km/s平均）からの減速が必要な場合、膨大なΔVが必要。タイタニアの公転周期は約8.7日。",
+      "parameters": {
+        "mu": 5793939,
+        "approachRadiusRU": 25,
+        "approachRadiusKm": 638975,
+        "titaniaOrbitRadiusKm": 435910,
+        "escapeVelocityAt25RU": 4.26,
+        "escapeVelocityAtTitania": 5.16,
+        "circularVelocityAtTitania": 3.65,
+        "titaniaPeriodDays": 8.70
+      },
+      "evidenceQuoteIds": ["ep03-quote-09", "ep03-quote-10"],
+      "sources": [
+        {
+          "claim": "接近高度: 25 RU",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45588149 16:33",
+          "sourceLabel": "Part 3 天王星エントリー"
+        },
+        {
+          "claim": "天王星半径: 25,559 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Uranus Fact Sheet",
+          "sourceLabel": "NASA惑星データ"
+        },
+        {
+          "claim": "タイタニア軌道半径: 435,910 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Titania (Uranus III) data",
+          "sourceLabel": "NASA衛星データ"
+        }
+      ]
+    }
+  ],
+  "explorations": [
+    {
+      "id": "ep03-exploration-01",
+      "transferId": "ep03-transfer-03",
+      "question": "48,000tの質量で143時間12分のブラキストクローネ遷移は可能か？ 必要推力と質量境界は？",
+      "boundaryCondition": "mass ≤ 452t at 9.8 MN for 143h 12m, closest distance",
+      "scenarios": [
+        {
+          "label": "48,000t（設定値）",
+          "variedParam": "質量",
+          "variedValue": 48000,
+          "variedUnit": "t",
+          "results": {
+            "requiredThrustMN": 1039.56,
+            "thrustRatio": 106.08,
+            "requiredAccelG": 2.21
+          },
+          "feasible": false,
+          "note": "必要推力は設定推力の106倍。48,000tでは不可能。"
+        },
+        {
+          "label": "452t（質量境界）",
+          "variedParam": "質量",
+          "variedValue": 452,
+          "variedUnit": "t",
+          "results": {
+            "requiredThrustMN": 9.8,
+            "thrustRatio": 1.0,
+            "requiredAccelG": 2.21
+          },
+          "feasible": true,
+          "note": "9.8 MN推力で丁度達成可能な質量上限。Part 1の299tと同オーダー。"
+        },
+        {
+          "label": "300t（Part 1境界付近）",
+          "variedParam": "質量",
+          "variedValue": 300,
+          "variedUnit": "t",
+          "results": {
+            "requiredThrustMN": 6.5,
+            "thrustRatio": 0.66,
+            "requiredAccelG": 2.21
+          },
+          "feasible": true,
+          "note": "Part 1の72時間遷移で得られた質量境界。推力余裕34%。"
+        }
+      ],
+      "summary": "Part 1（火星→ガニメデ72時間）と同様に、48,000tの設定質量では物理的に不可能。必要推力は設定値の106倍。質量が452t以下であれば設定推力で達成可能。Part 1の質量境界（299t）と近い値であり、ケストレルの「真の」質量がこの範囲にあるとすれば両エピソードの描写が整合する。"
+    },
+    {
+      "id": "ep03-exploration-02",
+      "transferId": "ep03-transfer-04",
+      "question": "航法危機の数値は物理的に正確か？ 外縁航路の危険性は妥当か？",
+      "scenarios": [
+        {
+          "label": "1.23°誤差（作中値）",
+          "variedParam": "航法不一致角度",
+          "variedValue": 1.23,
+          "variedUnit": "度",
+          "results": {
+            "errorKm": 14393613,
+            "errorVsSOIPercent": 27.8,
+            "errorVsMarginRatio": 799645
+          },
+          "feasible": true,
+          "note": "計算値（14,393,613 km）と作中値（14,360,000 km）が0.2%以内で一致。非常に正確な描写。"
+        },
+        {
+          "label": "0.1°誤差（仮定: より良い航法精度）",
+          "variedParam": "航法不一致角度",
+          "variedValue": 0.1,
+          "variedUnit": "度",
+          "results": {
+            "errorKm": 1170183,
+            "errorVsSOIPercent": 2.26,
+            "errorVsMarginRatio": 65010
+          },
+          "feasible": true,
+          "note": "0.1°でも117万kmの誤差。18kmの精度要件を満たすには0.0000015°以下の精度が必要。"
+        },
+        {
+          "label": "5°誤差（仮定: 大きな不一致）",
+          "variedParam": "航法不一致角度",
+          "variedValue": 5,
+          "variedUnit": "度",
+          "results": {
+            "errorKm": 58619067,
+            "errorVsSOIPercent": 113.2,
+            "errorVsMarginRatio": 3256615
+          },
+          "feasible": false,
+          "note": "5°の誤差ではヒル球を超え、天王星に到達すること自体が困難。"
+        }
+      ],
+      "summary": "作中の航法危機の描写は驚くほど物理的に正確。1.23°の角度誤差から14.36万kmの位置誤差を導出する計算は数学的に正しい（検証値との差0.2%）。外縁航路で3割が遭難するという設定も、ビーコンなし＋恒星視差が極小＋慣性航法のドリフト、という条件を考えると説得力がある。宇宙線がセンサーに影響するという描写も、実際の深宇宙探査機が直面する問題を反映している。"
+    },
+    {
+      "id": "ep03-exploration-03",
+      "transferId": "ep03-transfer-03",
+      "question": "巡航速度は本当に3000 km/sか？ ASR誤認の可能性は？",
+      "scenarios": [
+        {
+          "label": "3000 km/s（ASR出力通り）",
+          "variedParam": "巡航速度",
+          "variedValue": 3000,
+          "variedUnit": "km/s",
+          "results": {
+            "cFraction": 0.01,
+            "transferTimeHoursAtAvgV": 133.2,
+            "consistentWith143h": true
+          },
+          "feasible": true,
+          "note": "光速の1%。143h遷移の平均速度（~2,791 km/s）と概ね整合。ブラキストクローネの巡航速度として矛盾なし。"
+        },
+        {
+          "label": "300 km/s（10倍小さい）",
+          "variedParam": "巡航速度",
+          "variedValue": 300,
+          "variedUnit": "km/s",
+          "results": {
+            "cFraction": 0.001,
+            "transferTimeHoursAtAvgV": 1332,
+            "consistentWith143h": false
+          },
+          "feasible": false,
+          "note": "300 km/sでは所要時間は1,332時間（約55日）。143時間の10倍近く。"
+        },
+        {
+          "label": "30 km/s（100倍小さい）",
+          "variedParam": "巡航速度",
+          "variedValue": 30,
+          "variedUnit": "km/s",
+          "results": {
+            "cFraction": 0.0001,
+            "transferTimeHoursAtAvgV": 13324,
+            "consistentWith143h": false
+          },
+          "feasible": false,
+          "note": "30 km/sでは所要時間は13,324時間（約555日）。ホーマン遷移よりは速いが143時間には程遠い。"
+        }
+      ],
+      "summary": "ASR出力の「3000 km/s」は、143時間12分の遷移時間に対してブラキストクローネ理論から算出される平均速度（~2,791 km/s）と整合する。VTTの数値認識精度は低いが、この場合はオーダーとして正しい可能性が高い。光速の約1%であり、D-He³核融合パルスエンジンの設定と合わせて考えると、SF的に非現実的とまでは言えない。"
+    }
+  ],
+  "diagrams": [
+    {
+      "id": "ep03-diagram-01",
+      "title": "太陽中心系: 土星→天王星遷移",
+      "centerLabel": "太陽",
+      "scaleMode": "sqrt",
+      "radiusUnit": "AU",
+      "orbits": [
+        {
+          "id": "saturn",
+          "label": "土星",
+          "radius": 9.58,
+          "color": "#daa520",
+          "angle": 3.14
+        },
+        {
+          "id": "uranus",
+          "label": "天王星",
+          "radius": 19.19,
+          "color": "#88ccee",
+          "angle": 0.4
+        },
+        {
+          "id": "nav-crisis",
+          "label": "航法危機 (14.72 AU)",
+          "radius": 14.72,
+          "color": "#ff4444",
+          "angle": 1.8
+        }
+      ],
+      "transfers": [
+        {
+          "label": "ホーマン遷移 (27.3年)",
+          "fromOrbitId": "saturn",
+          "toOrbitId": "uranus",
+          "color": "#888888",
+          "style": "hohmann"
+        },
+        {
+          "label": "ブラキストクローネ (143h)",
+          "fromOrbitId": "saturn",
+          "toOrbitId": "uranus",
+          "color": "#ff6600",
+          "style": "brachistochrone",
+          "burnMarkers": [
+            {
+              "angle": 3.14,
+              "label": "出発ΔV"
+            },
+            {
+              "angle": 0.4,
+              "label": "到着ΔV"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ep03-diagram-02",
+      "title": "天王星中心系: 接近・タイタニア軌道",
+      "centerLabel": "天王星",
+      "scaleMode": "linear",
+      "radiusUnit": "km",
+      "orbits": [
+        {
+          "id": "uranus-surface",
+          "label": "天王星表面",
+          "radius": 25559,
+          "color": "#88ccee"
+        },
+        {
+          "id": "titania",
+          "label": "タイタニア",
+          "radius": 435910,
+          "color": "#cc8844",
+          "angle": 1.2
+        },
+        {
+          "id": "approach-25ru",
+          "label": "接近 (25 RU)",
+          "radius": 638975,
+          "color": "#ff4444",
+          "angle": 2.8
+        }
+      ],
+      "transfers": [
+        {
+          "label": "捕獲軌道",
+          "fromOrbitId": "approach-25ru",
+          "toOrbitId": "titania",
+          "color": "#44ff44",
+          "style": "hyperbolic"
+        }
+      ]
+    }
+  ]
+}

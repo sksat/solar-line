@@ -43,6 +43,7 @@ export const MU = {
   MARS: 4.28283714e4,
   JUPITER: 1.26686534e8,
   SATURN: 3.7931187e7,
+  URANUS: 5.793939e6,
 } as const;
 
 /** Mean orbital radii (semi-major axes) around the Sun (km) — NASA fact sheets */
@@ -64,6 +65,12 @@ export const SATURN_RADIUS = 60_268;
 
 /** Enceladus orbital radius around Saturn (km) — NASA fact sheet */
 export const ENCELADUS_ORBIT_RADIUS = 238_020;
+
+/** Uranus equatorial radius (km) — NASA fact sheet */
+export const URANUS_RADIUS = 25_559;
+
+/** Titania orbital radius around Uranus (km) — NASA fact sheet */
+export const TITANIA_ORBIT_RADIUS = 435_910;
 
 /**
  * Escape velocity at a given distance from a body.

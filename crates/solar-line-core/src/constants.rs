@@ -54,6 +54,9 @@ pub mod orbit_radius {
     /// Saturn mean orbital radius (~9.537 AU)
     pub const SATURN: Km = Km(1_433_530_000.0);
 
+    /// Uranus mean orbital radius (~19.19 AU)
+    pub const URANUS: Km = Km(2_872_460_000.0);
+
     /// Mercury mean orbital radius (~0.387 AU)
     pub const MERCURY: Km = Km(57_909_050.0);
 
