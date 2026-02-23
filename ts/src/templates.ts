@@ -277,6 +277,12 @@ footer {
 .comparison-table tr.status-conflict td:first-child { border-left: 3px solid var(--red); }
 .summary-section { margin: 2rem 0; }
 .summary-section h2 { border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+@media (max-width: 600px) {
+  .calc-control { grid-template-columns: 1fr; gap: 0.25rem; }
+  .comparison-table { font-size: 0.8em; }
+  .comparison-table td, .comparison-table th { padding: 0.3rem; }
+  .scenario-table { font-size: 0.8em; }
+}
 `;
 
 /** Wrap content in the common HTML layout */
@@ -384,7 +390,7 @@ export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQ
 ${dvComparison}
 ${citationsHtml}
 ${assumptionsList}
-<p>${escapeHtml(t.explanation)}</p>
+${markdownToHtml(t.explanation)}
 ${sourcesHtml}
 </div>`;
 }
@@ -635,7 +641,7 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
   }).join("\n    ");
 
   // Draw transfer arcs
-  const transferPaths = diagram.transfers.map(t => {
+  const transferPaths = diagram.transfers.map((t, idx) => {
     const fromOrbit = orbitMap.get(t.fromOrbitId);
     const toOrbit = orbitMap.get(t.toOrbitId);
     if (!fromOrbit || !toOrbit) return "";
@@ -643,8 +649,8 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     const toPx = orbitPxMap.get(t.toOrbitId)!;
     const pathD = transferArcPath(t.style, fromOrbit, toOrbit, fromPx, toPx);
     const dashArray = t.style === "brachistochrone" ? ' stroke-dasharray="8 4"' : "";
-    const arrowId = `arrow-${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}`;
-    const transferPathAttr = isAnimated ? ` data-transfer-path="${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}"` : "";
+    const arrowId = `arrow-${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}-${idx}`;
+    const transferPathAttr = isAnimated ? ` data-transfer-path="${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}-${idx}"` : "";
     return `<path d="${pathD}" fill="none" stroke="${t.color}" stroke-width="2"${dashArray}${transferPathAttr} marker-end="url(#${arrowId})"/>
     <marker id="${arrowId}" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="${t.color}"/></marker>`;
   }).join("\n    ");
@@ -721,14 +727,15 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
           color: o.color,
         })),
       transfers: diagram.transfers
-        .filter(t => t.startTime !== undefined && t.endTime !== undefined)
-        .map(t => ({
+        .map((t, idx) => ({ t, idx }))
+        .filter(({ t }) => t.startTime !== undefined && t.endTime !== undefined)
+        .map(({ t, idx }) => ({
           fromOrbitId: t.fromOrbitId,
           toOrbitId: t.toOrbitId,
           startTime: t.startTime!,
           endTime: t.endTime!,
           color: t.color,
-          pathId: `${t.fromOrbitId}-${t.toOrbitId}`,
+          pathId: `${t.fromOrbitId}-${t.toOrbitId}-${idx}`,
         })),
     };
     animationHtml = `
@@ -873,7 +880,7 @@ function buildDvChart(transfers: TransferAnalysis[]): string {
 }
 
 /** Render a full episode report page */
-export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest["summaryPages"]): string {
+export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest["summaryPages"], totalEpisodes?: number): string {
   const videoSection = report.videoCards && report.videoCards.length > 0
     ? renderVideoCards(report.videoCards)
     : "";
@@ -927,10 +934,15 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     : "";
   const calculator = renderCalculator();
 
+  const isProvisional = report.summary.includes("暫定");
+  const provisionalBadge = isProvisional
+    ? ' <span class="verdict verdict-indeterminate" style="font-size:0.6em;vertical-align:middle">暫定分析</span>'
+    : "";
+
   const content = `
-<h1>第${report.episode}話: ${escapeHtml(report.title)}</h1>
+<h1>第${report.episode}話: ${escapeHtml(report.title)}${provisionalBadge}</h1>
 ${videoSection}
-<p>${escapeHtml(report.summary)}</p>
+${markdownToHtml(report.summary)}
 
 ${dialogueSection}
 
@@ -945,11 +957,24 @@ ${unlinkedSection}
 
 ${calculator}`;
 
+  // Build prev/next episode navigation
+  const total = totalEpisodes ?? 0;
+  let episodeNav = "";
+  if (total > 1) {
+    const prevLink = report.episode > 1
+      ? `<a href="ep-${String(report.episode - 1).padStart(3, "0")}.html">← 第${report.episode - 1}話</a>`
+      : `<span></span>`;
+    const nextLink = report.episode < total
+      ? `<a href="ep-${String(report.episode + 1).padStart(3, "0")}.html">第${report.episode + 1}話 →</a>`
+      : `<span></span>`;
+    episodeNav = `\n<nav style="display:flex;justify-content:space-between;margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)">${prevLink} <a href="../index.html">トップ</a> ${nextLink}</nav>`;
+  }
+
   // Include animation script if any diagram is animated
   const hasAnimatedDiagrams = report.diagrams?.some(d => d.animation) ?? false;
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
 
-  return layoutHtml(`第${report.episode}話`, content + animScript, "..", summaryPages);
+  return layoutHtml(`第${report.episode}話`, content + episodeNav + animScript, "..", summaryPages);
 }
 
 /** Render the session logs index page */
@@ -988,7 +1013,10 @@ export function renderComparisonTable(table: ComparisonTable): string {
   const rows = table.rows.map(row => {
     const cells = table.episodes.map(ep => {
       const val = row.values[ep] ?? "—";
-      return `<td class="numeric">${escapeHtml(val)}</td>`;
+      // Only apply numeric class if value looks like a number/measurement
+      const isNumeric = /^[\d.,≤≥~≈<>]+(\s*(km\/s|MN|AU|t|%|mSv|日|年))?$/.test(val.trim()) || val === "—";
+      const cls = isNumeric ? ' class="numeric"' : '';
+      return `<td${cls}>${escapeHtml(val)}</td>`;
     }).join("");
     return `<tr class="status-${row.status}"><td>${escapeHtml(row.metric)}</td>${cells}<td class="note">${escapeHtml(row.note)}</td></tr>`;
   }).join("\n");
@@ -1023,7 +1051,7 @@ ${tableHtml}
 
   const content = `
 <h1>${escapeHtml(report.title)}</h1>
-<p>${escapeHtml(report.summary)}</p>
+${markdownToHtml(report.summary)}
 ${sections}`;
 
   return layoutHtml(report.title, content + animScript, "..", summaryPages);

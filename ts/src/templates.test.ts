@@ -1027,7 +1027,7 @@ describe("renderOrbitalDiagram with animation", () => {
 
   it("adds data-transfer-path to transfer arc paths", () => {
     const html = renderOrbitalDiagram(animatedDiagram);
-    assert.ok(html.includes('data-transfer-path="mars-jupiter"'));
+    assert.ok(html.includes('data-transfer-path="mars-jupiter-0"'));
   });
 
   it("does NOT add data-animated for static diagrams", () => {
@@ -1479,5 +1479,136 @@ describe("animation controls accessibility attributes", () => {
     const html = renderOrbitalDiagram(animatedDiagram);
     assert.ok(html.includes('role="group"'));
     assert.ok(html.includes('aria-label="アニメーション操作"'));
+  });
+});
+
+// --- Task 027: Report quality improvements ---
+
+describe("renderTransferCard renders markdown in explanation", () => {
+  it("renders bold text in explanation", () => {
+    const t = { ...sampleTransfer, explanation: "This is **important** and has a `code` snippet." };
+    const html = renderTransferCard(t);
+    assert.ok(html.includes("<strong>important</strong>"));
+    assert.ok(html.includes("<code>code</code>"));
+  });
+
+  it("renders list items in explanation", () => {
+    const t = { ...sampleTransfer, explanation: "Results:\n- Item A\n- Item B" };
+    const html = renderTransferCard(t);
+    assert.ok(html.includes("<li>Item A</li>"));
+    assert.ok(html.includes("<li>Item B</li>"));
+  });
+});
+
+describe("renderEpisode prev/next navigation", () => {
+  it("renders prev/next links when totalEpisodes provided", () => {
+    const report: EpisodeReport = { ...sampleEpisodeReport, episode: 2 };
+    const html = renderEpisode(report, undefined, 5);
+    assert.ok(html.includes("← 第1話"));
+    assert.ok(html.includes("第3話 →"));
+    assert.ok(html.includes("ep-001.html"));
+    assert.ok(html.includes("ep-003.html"));
+  });
+
+  it("omits prev link for episode 1", () => {
+    const html = renderEpisode(sampleEpisodeReport, undefined, 5);
+    assert.ok(!html.includes("← 第0話"));
+    assert.ok(html.includes("第2話 →"));
+  });
+
+  it("omits next link for last episode", () => {
+    const report: EpisodeReport = { ...sampleEpisodeReport, episode: 5 };
+    const html = renderEpisode(report, undefined, 5);
+    assert.ok(html.includes("← 第4話"));
+    assert.ok(!html.includes("第6話 →"));
+  });
+
+  it("skips nav when totalEpisodes not provided", () => {
+    const html = renderEpisode(sampleEpisodeReport);
+    assert.ok(!html.includes("← 第"));
+  });
+});
+
+describe("renderEpisode provisional badge", () => {
+  it("shows provisional badge when summary contains 暫定", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      summary: "※暫定版: 字幕データ未取得のため予測分析。",
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("暫定分析"));
+    assert.ok(html.includes("verdict-indeterminate"));
+  });
+
+  it("does not show provisional badge for normal reports", () => {
+    const html = renderEpisode(sampleEpisodeReport);
+    assert.ok(!html.includes("暫定分析"));
+  });
+});
+
+describe("renderComparisonTable smart numeric detection", () => {
+  it("applies numeric class to number-like values", () => {
+    const table: ComparisonTable = {
+      caption: "Test",
+      episodes: [1],
+      rows: [{ metric: "Speed", values: { 1: "9.8" }, status: "ok", note: "ok" }],
+    };
+    const html = renderComparisonTable(table);
+    assert.ok(html.includes('class="numeric"'));
+  });
+
+  it("does not apply numeric class to text values", () => {
+    const table: ComparisonTable = {
+      caption: "Test",
+      episodes: [1],
+      rows: [{ metric: "Status", values: { 1: "損傷（65%出力）" }, status: "ok", note: "ok" }],
+    };
+    const html = renderComparisonTable(table);
+    // The cell for "損傷（65%出力）" should NOT have numeric class
+    assert.ok(html.includes("<td>損傷（65%出力）</td>"));
+  });
+
+  it("applies numeric class to dash placeholder", () => {
+    const table: ComparisonTable = {
+      caption: "Test",
+      episodes: [1],
+      rows: [{ metric: "Speed", values: { 1: "—" }, status: "ok", note: "ok" }],
+    };
+    const html = renderComparisonTable(table);
+    assert.ok(html.includes('class="numeric">—</td>'));
+  });
+});
+
+describe("renderEpisode renders summary as markdown", () => {
+  it("renders bold in episode summary", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      summary: "This is **important** context.",
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("<strong>important</strong>"));
+  });
+});
+
+describe("SVG marker IDs are unique per transfer index", () => {
+  it("generates unique arrow IDs for same-orbit-pair transfers", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-dup",
+      title: "Test",
+      centerLabel: "Sun",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "a", label: "A", radius: 1.0, color: "#fff" },
+        { id: "b", label: "B", radius: 5.0, color: "#aaa" },
+      ],
+      transfers: [
+        { label: "T1", fromOrbitId: "a", toOrbitId: "b", color: "#f00", style: "hohmann" },
+        { label: "T2", fromOrbitId: "a", toOrbitId: "b", color: "#0f0", style: "brachistochrone" },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes('id="arrow-a-b-0"'));
+    assert.ok(html.includes('id="arrow-a-b-1"'));
   });
 });

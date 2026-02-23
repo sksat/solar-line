@@ -150,7 +150,7 @@ export function build(config: BuildConfig): void {
   // Generate episode pages
   for (const ep of episodes) {
     const filename = `ep-${String(ep.episode).padStart(3, "0")}.html`;
-    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages));
+    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages, episodes.length));
   }
 
   // Generate summary pages
