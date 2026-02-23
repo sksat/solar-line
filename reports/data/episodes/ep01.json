@@ -72,13 +72,13 @@
     {
       "id": "ep01-transfer-02",
       "episode": 1,
-      "description": "72時間高速遷移: ブラキストクローネ 火星 → 木星（最接近、約3.68 AU）",
+      "description": "72時間高速遷移: Brachistochrone 火星 → 木星（最接近、約3.68 AU）",
       "timestamp": "00:00 - 19:20（全編）",
       "claimedDeltaV": null,
       "computedDeltaV": 8497.39,
       "evidenceQuoteIds": ["ep01-quote-01", "ep01-quote-03"],
       "assumptions": [
-        "直線ブラキストクローネ: 半分まで加速、半分で減速",
+        "直線Brachistochrone: 半分まで加速、半分で減速",
         "最接近の幾何条件: 火星-木星間距離 約5億5,063万km（約3.68 AU）",
         "静止→静止遷移（始点と終点で相対速度ゼロ）",
         "全行程で一定加速度（燃料消費なし）",
@@ -133,13 +133,13 @@
     {
       "id": "ep01-transfer-03",
       "episode": 1,
-      "description": "150時間通常ルート: ブラキストクローネ 火星 → 木星（最接近）",
+      "description": "150時間通常ルート: Brachistochrone 火星 → 木星（最接近）",
       "timestamp": "該当なし（契約上の通常スケジュールとして言及）",
       "claimedDeltaV": null,
       "computedDeltaV": 4078.75,
       "evidenceQuoteIds": ["ep01-quote-02"],
       "assumptions": [
-        "72時間分析と同じブラキストクローネモデル",
+        "72時間分析と同じBrachistochroneモデル",
         "最接近の幾何条件（約3.68 AU）",
         "150時間 = 540,000秒",
         "静止→静止遷移"
@@ -243,7 +243,7 @@
           "style": "hohmann"
         },
         {
-          "label": "ブラキストクローネ遷移（72時間）",
+          "label": "Brachistochrone遷移（72時間）",
           "fromOrbitId": "mars",
           "toOrbitId": "jupiter",
           "color": "#3fb950",
@@ -330,7 +330,8 @@
             "reachable72hAU": 22.9
           },
           "feasible": true,
-          "note": "28.9時間で到達可能だが、21gの加速度は人体にとって致命的。無人機なら可能。ただし積荷が船体質量の88%を占める。"
+          "note": "28.9時間で到達可能だが、21gの加速度は人体にとって致命的。無人機なら可能。ただし積荷が船体質量の88%を占める。",
+          "collapsedByDefault": true
         }
       ],
       "summary": "9.8 MN推力で72時間以内の火星-木星遷移が成立するには、船の質量が約299t以下である必要がある。「約48000 t」が公称値通りなら不可能だが、42.8mの小型貨物船にとって48,000tは極めて重い。299t〜数百tが船体質量として合理的な範囲であり、質量表記に何らかの誤記や解釈の齟齬がある可能性がある。"

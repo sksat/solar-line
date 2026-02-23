@@ -1,6 +1,6 @@
 # Task 017: レポート構造改善
 
-## Status: UNCLAIMED
+## Status: DONE
 
 ## Human Directives (複数の指示をまとめたタスク)
 

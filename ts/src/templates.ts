@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -160,6 +160,9 @@ li { margin: 0.25rem 0; }
 .scenario-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); word-break: break-word; overflow-wrap: break-word; }
 .scenario-table .feasible { color: var(--green); }
 .scenario-table .infeasible { color: var(--red); }
+.collapsed-scenarios { margin-top: 0.5rem; }
+.collapsed-scenarios summary { cursor: pointer; color: #8b949e; font-size: 0.85em; }
+.collapsed-scenarios summary:hover { color: var(--accent); }
 nav { margin-bottom: 2rem; }
 nav a { margin-right: 1rem; }
 footer {
@@ -226,6 +229,9 @@ footer {
 }
 .dialogue-quote .speaker { color: var(--accent); font-weight: 600; }
 .dialogue-quote .timestamp { color: #8b949e; font-size: 0.85em; margin-left: 0.5rem; }
+.evidence-citations { font-size: 0.9em; color: #8b949e; margin: 0.5rem 0; border-left: 2px solid var(--border); padding-left: 0.75rem; }
+.inline-citation { display: inline; }
+.inline-citation .timestamp { font-size: 0.85em; color: #8b949e; }
 .dv-chart { margin: 1rem 0; overflow-x: auto; }
 .dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
 .orbital-diagram { text-align: center; }
@@ -293,14 +299,27 @@ function renderSources(sources: SourceCitation[]): string {
   return `<dl class="sources-list"><dt style="color:var(--accent);margin-bottom:0.2rem">出典</dt>${items}</dl>`;
 }
 
+/** Render inline citations from evidence quotes */
+function renderInlineCitations(quotes: DialogueQuote[]): string {
+  if (quotes.length === 0) return "";
+  const citations = quotes.map(q =>
+    `<span class="inline-citation">${escapeHtml(q.speaker)}「${escapeHtml(q.text)}」<span class="timestamp">(${escapeHtml(q.timestamp)})</span></span>`
+  ).join("　");
+  return `<p class="evidence-citations">${citations}</p>`;
+}
+
 /** Render a single transfer analysis card */
-export function renderTransferCard(t: TransferAnalysis): string {
+export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQuote[]): string {
   const verdictClass = `verdict-${t.verdict}`;
   const dvComparison = t.claimedDeltaV !== null && t.computedDeltaV !== null
     ? `<p>作中のΔV: <strong>${t.claimedDeltaV.toFixed(2)} km/s</strong> | 計算値: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong></p>`
     : t.computedDeltaV !== null
       ? `<p>計算ΔV: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong>（作中で明示されず）</p>`
       : `<p>（ΔVは単一のスカラー値として表現不可 — 詳細は下記分析を参照）</p>`;
+
+  const citationsHtml = inlineQuotes && inlineQuotes.length > 0
+    ? renderInlineCitations(inlineQuotes)
+    : "";
 
   const assumptionsList = t.assumptions.length > 0
     ? `<h4>前提条件</h4>\n<ul>${t.assumptions.map(a => `<li>${escapeHtml(a)}</li>`).join("\n")}</ul>`
@@ -312,6 +331,7 @@ export function renderTransferCard(t: TransferAnalysis): string {
 <h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
 <p>第${t.episode}話 @ ${escapeHtml(t.timestamp)}</p>
 ${dvComparison}
+${citationsHtml}
 ${assumptionsList}
 <p>${escapeHtml(t.explanation)}</p>
 ${sourcesHtml}
@@ -507,7 +527,7 @@ function transferStyleLabel(style: TransferArc["style"]): string {
   switch (style) {
     case "hohmann": return "ホーマン遷移";
     case "hyperbolic": return "双曲線軌道";
-    case "brachistochrone": return "ブラキストクローネ（模式図）";
+    case "brachistochrone": return "Brachistochrone（模式図）";
   }
 }
 
@@ -645,7 +665,7 @@ export function renderOrbitalDiagrams(diagrams: OrbitalDiagram[]): string {
 /** Render the interactive brachistochrone calculator widget */
 export function renderCalculator(): string {
   return `<div class="calc-section card" id="calculator">
-<h2>ブラキストクローネ計算機 <span class="calc-badge" id="calc-engine-badge">エンジン: JS</span></h2>
+<h2>Brachistochrone 計算機 <span class="calc-badge" id="calc-engine-badge">エンジン: JS</span></h2>
 <p>距離・船質量・遷移時間を変えて、必要な加速度と&Delta;Vへの影響を探索できます。</p>
 <p class="calc-assumptions">前提: 直線経路、中間点で加速反転減速、一定推力、重力無視、静止→静止遷移。</p>
 
@@ -700,32 +720,45 @@ export function renderCalculator(): string {
 <script type="module" src="../calculator.js"></script>`;
 }
 
+/** Render a scenario table row */
+function renderScenarioRow(s: ExplorationScenario): string {
+  const cls = s.feasible ? "feasible" : "infeasible";
+  const icon = s.feasible ? "✓" : "✗";
+  const resultCells = Object.entries(s.results)
+    .map(([_k, v]) => `<td>${typeof v === "number" ? (v >= 1000 ? v.toExponential(2) : v.toFixed(2)) : v}</td>`)
+    .join("");
+  return `<tr class="${cls}"><td>${icon} ${escapeHtml(s.label)}</td><td>${s.variedValue.toLocaleString()} ${escapeHtml(s.variedUnit)}</td>${resultCells}<td>${escapeHtml(s.note)}</td></tr>`;
+}
+
 /** Render a parameter exploration section */
 export function renderExploration(exp: ParameterExploration): string {
   const boundary = exp.boundaryCondition
     ? `<p class="boundary">${escapeHtml(exp.boundaryCondition)}</p>`
     : "";
 
-  const rows = exp.scenarios.map(s => {
-    const cls = s.feasible ? "feasible" : "infeasible";
-    const icon = s.feasible ? "✓" : "✗";
-    const resultCells = Object.entries(s.results)
-      .map(([_k, v]) => `<td>${typeof v === "number" ? (v >= 1000 ? v.toExponential(2) : v.toFixed(2)) : v}</td>`)
-      .join("");
-    return `<tr class="${cls}"><td>${icon} ${escapeHtml(s.label)}</td><td>${s.variedValue.toLocaleString()} ${escapeHtml(s.variedUnit)}</td>${resultCells}<td>${escapeHtml(s.note)}</td></tr>`;
-  }).join("\n");
+  const visibleScenarios = exp.scenarios.filter(s => !s.collapsedByDefault);
+  const collapsedScenarios = exp.scenarios.filter(s => s.collapsedByDefault);
+
+  const visibleRows = visibleScenarios.map(renderScenarioRow).join("\n");
+  const collapsedRows = collapsedScenarios.map(renderScenarioRow).join("\n");
 
   const resultHeaders = exp.scenarios.length > 0
     ? Object.keys(exp.scenarios[0].results).map(k => `<th>${escapeHtml(k)}</th>`).join("")
+    : "";
+
+  const tableHead = `<thead><tr><th>シナリオ</th><th>パラメータ</th>${resultHeaders}<th>備考</th></tr></thead>`;
+
+  const collapsedSection = collapsedRows
+    ? `\n<details class="collapsed-scenarios"><summary>他のシナリオを表示</summary>\n<table class="scenario-table">\n${tableHead}\n<tbody>${collapsedRows}</tbody>\n</table>\n</details>`
     : "";
 
   return `<div class="card exploration" id="${escapeHtml(exp.id)}">
 <h4>${escapeHtml(exp.question)}</h4>
 ${boundary}
 <table class="scenario-table">
-<thead><tr><th>シナリオ</th><th>パラメータ</th>${resultHeaders}<th>備考</th></tr></thead>
-<tbody>${rows}</tbody>
-</table>
+${tableHead}
+<tbody>${visibleRows}</tbody>
+</table>${collapsedSection}
 <p>${escapeHtml(exp.summary)}</p>
 </div>`;
 }
@@ -756,20 +789,48 @@ export function renderEpisode(report: EpisodeReport): string {
   const dialogueSection = report.dialogueQuotes && report.dialogueQuotes.length > 0
     ? renderDialogueQuotes(report.dialogueQuotes)
     : "";
+
+  // Group explorations by transferId for nested rendering
+  const explorationsByTransfer = new Map<string, ParameterExploration[]>();
+  const unlinkedExplorations: ParameterExploration[] = [];
+  if (report.explorations) {
+    for (const exp of report.explorations) {
+      const transferExists = report.transfers.some(t => t.id === exp.transferId);
+      if (transferExists) {
+        const list = explorationsByTransfer.get(exp.transferId) ?? [];
+        list.push(exp);
+        explorationsByTransfer.set(exp.transferId, list);
+      } else {
+        unlinkedExplorations.push(exp);
+      }
+    }
+  }
+
+  // Render each transfer with its nested explorations and inline citations
   const cards = report.transfers.map((t) => {
-    const quoteRefs = t.evidenceQuoteIds && report.dialogueQuotes
+    // Resolve inline citations from evidenceQuoteIds
+    const inlineQuotes = t.evidenceQuoteIds && report.dialogueQuotes
       ? t.evidenceQuoteIds
           .map(id => report.dialogueQuotes!.find(q => q.id === id))
           .filter((q): q is DialogueQuote => q !== undefined)
-          .map(q => renderDialogueQuote(q))
-          .join("\n")
-      : "";
-    return renderTransferCard(t) + (quoteRefs ? `<div class="card" style="margin-top:-0.5rem;border-top:none;border-top-left-radius:0;border-top-right-radius:0"><h4>根拠となる台詞</h4>${quoteRefs}</div>` : "");
+      : [];
+
+    const transferHtml = renderTransferCard(t, inlineQuotes);
+
+    // Render nested explorations for this transfer
+    const relatedExplorations = explorationsByTransfer.get(t.id) ?? [];
+    const explorationHtml = relatedExplorations.map(renderExploration).join("\n");
+
+    return transferHtml + explorationHtml;
   }).join("\n");
+
   const dvChart = buildDvChart(report.transfers);
-  const explorationSection = report.explorations && report.explorations.length > 0
-    ? renderExplorations(report.explorations)
+
+  // Render any explorations not linked to a specific transfer
+  const unlinkedSection = unlinkedExplorations.length > 0
+    ? `<h2>その他のパラメータ探索</h2>\n${unlinkedExplorations.map(renderExploration).join("\n")}`
     : "";
+
   const diagramSection = report.diagrams && report.diagrams.length > 0
     ? renderOrbitalDiagrams(report.diagrams)
     : "";
@@ -789,7 +850,7 @@ ${diagramSection}
 <h2>軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}
 
-${explorationSection}
+${unlinkedSection}
 
 ${calculator}`;
 

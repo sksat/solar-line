@@ -13,13 +13,14 @@ import {
   renderDialogueQuote,
   renderDialogueQuotes,
   renderBarChart,
+  renderExploration,
   renderLogsIndex,
   renderLogPage,
   renderOrbitalDiagram,
   renderOrbitalDiagrams,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, OrbitalDiagram } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -478,7 +479,7 @@ describe("renderEpisode with enrichments", () => {
     assert.ok(html.includes("<svg"));
   });
 
-  it("renders evidence quotes linked to transfers", () => {
+  it("renders inline citations for evidence quotes", () => {
     const report: EpisodeReport = {
       episode: 1,
       title: "Test",
@@ -490,7 +491,11 @@ describe("renderEpisode with enrichments", () => {
       }],
     };
     const html = renderEpisode(report);
-    assert.ok(html.includes("根拠となる台詞"));
+    // Should render inline citation, not separate "根拠となる台詞" box
+    assert.ok(!html.includes("根拠となる台詞"));
+    assert.ok(html.includes("evidence-citations"));
+    assert.ok(html.includes("きりたん"));
+    assert.ok(html.includes("72時間以内に届けてほしい"));
   });
 });
 
@@ -603,7 +608,7 @@ describe("renderOrbitalDiagram", () => {
 
   it("renders legend", () => {
     const html = renderOrbitalDiagram(sampleDiagram);
-    assert.ok(html.includes("ブラキストクローネ（模式図）"));
+    assert.ok(html.includes("Brachistochrone（模式図）"));
   });
 
   it("renders Hohmann transfer without dashed stroke", () => {
@@ -809,5 +814,136 @@ describe("renderTransferCard handles long text", () => {
     const html = renderTransferCard(longTransfer);
     assert.ok(html.includes("古典的ホーマン遷移"));
     assert.ok(html.includes("</div>"));
+  });
+
+  it("renders inline citations when quotes provided", () => {
+    const quotes: DialogueQuote[] = [
+      { id: "q1", speaker: "きりたん", text: "72時間以内に届けてほしい", timestamp: "01:14" },
+    ];
+    const html = renderTransferCard(sampleTransfer, quotes);
+    assert.ok(html.includes("evidence-citations"));
+    assert.ok(html.includes("きりたん"));
+    assert.ok(html.includes("72時間以内に届けてほしい"));
+    assert.ok(html.includes("01:14"));
+  });
+
+  it("omits citation section when no quotes provided", () => {
+    const html = renderTransferCard(sampleTransfer);
+    assert.ok(!html.includes("evidence-citations"));
+  });
+});
+
+// --- Nested explorations in renderEpisode ---
+
+describe("renderEpisode nests explorations under transfers", () => {
+  it("renders explorations after their parent transfer", () => {
+    const report: EpisodeReport = {
+      episode: 1,
+      title: "Test",
+      summary: "Test",
+      transfers: [sampleTransfer],
+      explorations: [{
+        id: "exp-01",
+        transferId: "ep01-transfer-01",
+        question: "質量境界は？",
+        scenarios: [{
+          label: "48,000t",
+          variedParam: "mass",
+          variedValue: 48000000,
+          variedUnit: "kg",
+          results: { accel: 0.204 },
+          feasible: false,
+          note: "不可能",
+        }],
+        summary: "テスト概要",
+      }],
+    };
+    const html = renderEpisode(report);
+    // The exploration should appear (nested, not in separate section)
+    assert.ok(html.includes("質量境界は？"));
+    // Should NOT have the old separate "パラメータ探索" heading
+    assert.ok(!html.includes("<h2>パラメータ探索</h2>"));
+  });
+
+  it("renders unlinked explorations in fallback section", () => {
+    const report: EpisodeReport = {
+      episode: 1,
+      title: "Test",
+      summary: "Test",
+      transfers: [sampleTransfer],
+      explorations: [{
+        id: "exp-unlinked",
+        transferId: "nonexistent-transfer",
+        question: "リンク切れ探索",
+        scenarios: [],
+        summary: "テスト",
+      }],
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("その他のパラメータ探索"));
+    assert.ok(html.includes("リンク切れ探索"));
+  });
+});
+
+// --- Collapsible scenarios ---
+
+describe("renderExploration with collapsedByDefault", () => {
+  it("puts collapsed scenarios in details element", () => {
+    const exp: ParameterExploration = {
+      id: "exp-collapse-test",
+      transferId: "t1",
+      question: "テスト",
+      scenarios: [
+        {
+          label: "妥当",
+          variedParam: "mass",
+          variedValue: 300,
+          variedUnit: "kg",
+          results: { accel: 32.0 },
+          feasible: true,
+          note: "境界",
+        },
+        {
+          label: "非現実的",
+          variedParam: "mass",
+          variedValue: 48,
+          variedUnit: "kg",
+          results: { accel: 204.0 },
+          feasible: true,
+          note: "過酷",
+          collapsedByDefault: true,
+        },
+      ],
+      summary: "テスト概要",
+    };
+    const html = renderExploration(exp);
+    assert.ok(html.includes("<details"));
+    assert.ok(html.includes("他のシナリオを表示"));
+    assert.ok(html.includes("非現実的"));
+    // The visible scenario should be in the main table, not in details
+    assert.ok(html.includes("妥当"));
+  });
+
+  it("omits details element when no scenarios are collapsed", () => {
+    const exp: ParameterExploration = {
+      id: "exp-no-collapse",
+      transferId: "t1",
+      question: "テスト",
+      scenarios: [
+        {
+          label: "シナリオA",
+          variedParam: "mass",
+          variedValue: 300,
+          variedUnit: "kg",
+          results: { accel: 32.0 },
+          feasible: true,
+          note: "OK",
+        },
+      ],
+      summary: "テスト概要",
+    };
+    const html = renderExploration(exp);
+    assert.ok(!html.includes("<details"));
+    assert.ok(html.includes("シナリオA"));
   });
 });

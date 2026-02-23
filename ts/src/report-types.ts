@@ -56,6 +56,8 @@ export interface ExplorationScenario {
   feasible: boolean;
   /** Brief note on this scenario */
   note: string;
+  /** If true, this scenario is collapsed by default (e.g. too implausible to show prominently) */
+  collapsedByDefault?: boolean;
 }
 
 /** Multi-parameter exploration for a transfer analysis */
