@@ -56,6 +56,11 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Orbital transfer diagrams**: Include graphs showing planetary orbits, celestial body positions, and transfer trajectories to make the analysis more visually understandable
 - Each episode report should embed the YouTube and Niconico video at the top (use a video card component)
 - Quote character dialogue with timestamps in analysis, e.g. きりたん「~~~」(10:05)
+- **Dialogue citations should be natural** — don't create a separate "evidence quotes" section that feels intrusive. Weave quotes naturally into the analysis text.
+- **Nested analysis structure**: Each transfer analysis (problem) should contain its related parameter explorations (scenarios) as nested sub-sections, not as separate flat sections
+- **Scenario ordering**: Present the most plausible scenario first, then alternatives. Collapse implausible scenarios by default (use `<details>`)
+- **Terminology**: Prefer "brachistochrone" (English/formula notation) over カタカナ「ブラキストクローネ」 — the latter is rarely used in Japanese technical writing
+- **Interactive orbital diagrams**: Add time slider to animate orbital transfers, showing how celestial body positions change during the transfer
 
 ## Key Principles
 
