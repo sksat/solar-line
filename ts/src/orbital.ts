@@ -42,16 +42,54 @@ export const MU = {
   EARTH: 3.986004418e5,
   MARS: 4.28283714e4,
   JUPITER: 1.26686534e8,
+  SATURN: 3.7931187e7,
 } as const;
 
 /** Mean orbital radii (semi-major axes) around the Sun (km) — NASA fact sheets */
 export const ORBIT_RADIUS = {
   MARS: 227_939_200,
   JUPITER: 778_570_000,
+  SATURN: 1_433_530_000,
+  URANUS: 2_872_460_000,
 } as const;
 
 /** Ganymede orbital radius around Jupiter (km) — NASA fact sheet */
 export const GANYMEDE_ORBIT_RADIUS = 1_070_400;
+
+/** Jupiter equatorial radius (km) — NASA fact sheet */
+export const JUPITER_RADIUS = 71_492;
+
+/** Saturn equatorial radius (km) — NASA fact sheet */
+export const SATURN_RADIUS = 60_268;
+
+/** Enceladus orbital radius around Saturn (km) — NASA fact sheet */
+export const ENCELADUS_ORBIT_RADIUS = 238_020;
+
+/**
+ * Escape velocity at a given distance from a body.
+ * v_esc = sqrt(2 * mu / r)
+ */
+export function escapeVelocity(mu: number, r: number): number {
+  return Math.sqrt((2 * mu) / r);
+}
+
+/**
+ * Circular orbital velocity at distance r.
+ * v_circ = sqrt(mu / r)
+ */
+export function circularVelocity(mu: number, r: number): number {
+  return Math.sqrt(mu / r);
+}
+
+/**
+ * Hyperbolic excess velocity given speed and escape velocity.
+ * v_inf = sqrt(v² - v_esc²)
+ * Returns 0 if v < v_esc (bound orbit).
+ */
+export function hyperbolicExcess(v: number, vEsc: number): number {
+  if (v <= vEsc) return 0;
+  return Math.sqrt(v * v - vEsc * vEsc);
+}
 
 /**
  * Orbital period: T = 2π * sqrt(a³/μ)

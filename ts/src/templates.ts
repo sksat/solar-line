@@ -291,9 +291,11 @@ function renderSources(sources: SourceCitation[]): string {
 /** Render a single transfer analysis card */
 export function renderTransferCard(t: TransferAnalysis): string {
   const verdictClass = `verdict-${t.verdict}`;
-  const dvComparison = t.claimedDeltaV !== null
+  const dvComparison = t.claimedDeltaV !== null && t.computedDeltaV !== null
     ? `<p>作中のΔV: <strong>${t.claimedDeltaV.toFixed(2)} km/s</strong> | 計算値: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong></p>`
-    : `<p>計算ΔV: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong>（作中で明示されず）</p>`;
+    : t.computedDeltaV !== null
+      ? `<p>計算ΔV: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong>（作中で明示されず）</p>`
+      : `<p>（ΔVは単一のスカラー値として表現不可 — 詳細は下記分析を参照）</p>`;
 
   const assumptionsList = t.assumptions.length > 0
     ? `<h4>前提条件</h4>\n<ul>${t.assumptions.map(a => `<li>${escapeHtml(a)}</li>`).join("\n")}</ul>`

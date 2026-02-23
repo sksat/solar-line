@@ -86,8 +86,8 @@ export interface TransferAnalysis {
   timestamp: string;
   /** ΔV claimed in the anime (km/s), null if not explicitly stated */
   claimedDeltaV: number | null;
-  /** ΔV computed by our analysis (km/s) */
-  computedDeltaV: number;
+  /** ΔV computed by our analysis (km/s), null if not expressible as single scalar */
+  computedDeltaV: number | null;
   /** Assumptions made for this analysis */
   assumptions: string[];
   /** Verdict: plausible, implausible, indeterminate, or conditional */

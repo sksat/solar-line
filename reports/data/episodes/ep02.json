@@ -1,0 +1,452 @@
+{
+  "episode": 2,
+  "title": "SOLAR LINE Part 2 — 木星圏脱出からエンケラドスへ",
+  "summary": "ケストレルが損傷した船体で木星圏を脱出し、土星の衛星エンケラドスの廃棄寸前のステーションで応急修理を受ける。その後、天王星圏への「外縁軌道」投入を試みるが、正体不明の大型船が接近する。",
+  "videoCards": [
+    {
+      "provider": "niconico",
+      "id": "sm45407401",
+      "title": "【ソフトウェアトーク劇場】SOLAR LINE Part 2",
+      "caption": "ニコニコ動画（オリジナル公開）"
+    },
+    {
+      "provider": "youtube",
+      "id": "YXZWJLKD7Oo",
+      "title": "【ソフトウェアトーク劇場】SOLAR LINE Part 2",
+      "caption": "YouTube版"
+    }
+  ],
+  "dialogueQuotes": [
+    {
+      "id": "ep02-quote-01",
+      "speaker": "ケストレル船載AI",
+      "text": "冷却系圧力 0.04 MPa低下。冷媒が局所的に漏洩している可能性があります。次の加速で冷却余裕はゼロになります",
+      "timestamp": "00:54"
+    },
+    {
+      "id": "ep02-quote-02",
+      "speaker": "ケストレル船載AI",
+      "text": "骨格フレーム応力比は114%。少なくとも3点で歪みを検出しています。連続フルバーンは不可です",
+      "timestamp": "01:05"
+    },
+    {
+      "id": "ep02-quote-03",
+      "speaker": "ケストレル船載AI",
+      "text": "高度50RJ、木星基準速度10.3 km/s。洗面の中心線に投入。スラストはトリムのみ",
+      "timestamp": "09:08"
+    },
+    {
+      "id": "ep02-quote-04",
+      "speaker": "ケストレル船載AI",
+      "text": "放射線シールドの残寿命42分。このままでは航路の途中でコア放射圏に焼かれます",
+      "timestamp": "07:44"
+    },
+    {
+      "id": "ep02-quote-05",
+      "speaker": "ケストレル船載AI",
+      "text": "外縁軌道投入のための推進シークエンスを開始。転化ウィンドウまで残り5時間",
+      "timestamp": "16:07"
+    },
+    {
+      "id": "ep02-quote-06",
+      "speaker": "ケストレル船載AI",
+      "text": "外縁軌道は修正機動を許容しません。一度外せば帰還の可能性は消えます",
+      "timestamp": "16:15"
+    },
+    {
+      "id": "ep02-quote-07",
+      "speaker": "ケストレル船載AI",
+      "text": "軌道交差警告。衝突の危険あり。相対速度0.12 km/s",
+      "timestamp": "16:38"
+    },
+    {
+      "id": "ep02-quote-08",
+      "speaker": "きりたん",
+      "text": "私の船の10倍以上だ。地球か火星の船しかありえない",
+      "timestamp": "17:51"
+    }
+  ],
+  "transfers": [
+    {
+      "id": "ep02-transfer-01",
+      "episode": 2,
+      "description": "ホーマン遷移基準値: 木星軌道 → 土星軌道（最小エネルギー）",
+      "timestamp": "該当なし（参考計算）",
+      "claimedDeltaV": null,
+      "computedDeltaV": 3.36,
+      "assumptions": [
+        "木星（778,570,000 km）と土星（1,433,530,000 km）の太陽中心円軌道を仮定",
+        "共面軌道（軌道傾斜角の変更なし）",
+        "衝撃的噴射（瞬間的な速度変更）",
+        "二体問題（太陽の重力のみ）"
+      ],
+      "verdict": "indeterminate",
+      "explanation": "古典的ホーマン遷移には合計約3.36 km/sのΔVが必要だが、約3,672日（約10年）を要する。作中のケストレルは損傷した状態で木星圏を脱出し、土星圏に到達しているが、所要時間については明示的な言及がない。ホーマン遷移は最小エネルギーの基準値として参考とする。",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "departureRadius": 778570000,
+        "arrivalRadius": 1433530000,
+        "transferTimeDays": 3671.5,
+        "departureDeltaV": 1.81,
+        "arrivalDeltaV": 1.55
+      },
+      "sources": [
+        {
+          "claim": "木星軌道半径: 778,570,000 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceLabel": "NASA/JPL 太陽系力学データ（木星平均軌道半径）"
+        },
+        {
+          "claim": "土星軌道半径: 1,433,530,000 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceLabel": "NASA/JPL 太陽系力学データ（土星平均軌道半径）"
+        }
+      ]
+    },
+    {
+      "id": "ep02-transfer-02",
+      "episode": 2,
+      "description": "木星圏脱出: 高度50 RJ、木星基準速度10.3 km/s",
+      "timestamp": "09:08",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "evidenceQuoteIds": ["ep02-quote-03", "ep02-quote-04"],
+      "assumptions": [
+        "木星中心基準での速度: 10.3 km/s",
+        "高度: 50木星半径（RJ）= 3,574,600 km（RJ = 71,492 km）",
+        "高度50 RJでの木星脱出速度: 約8.42 km/s（二体問題）",
+        "順行方向への離脱を仮定（木星公転方向と同じ）"
+      ],
+      "verdict": "plausible",
+      "explanation": "高度50 RJ（約3,574,600 km）での木星脱出速度は約8.42 km/sであり、10.3 km/sはこれを上回る。双曲線超過速度（v∞）は約5.93 km/sとなり、ケストレルは木星の重力束縛から完全に解放されている。\n\n興味深いことに、この双曲線超過速度を木星の公転速度（約13.06 km/s）に加えると、太陽中心速度は約18.99 km/sとなる。これは木星軌道での太陽脱出速度（約18.46 km/s）をわずかに上回り、ケストレルは太陽系脱出軌道に乗っていることになる。\n\nただし、この軌道は土星軌道を通過するため、土星の重力で減速・捕獲される可能性がある。また、木星圏内での加速過程（エピソード1の遷移から継続）を考慮すると、この速度は自然な結果と言える。放射線シールド残寿命42分という制約の中で木星磁気圏を通過するという描写は、プラズマ圏の構造を考慮した現実的な懸念である。",
+      "parameters": {
+        "altitudeRJ": 50,
+        "altitudeKm": 3574600,
+        "jupiterVelocityKms": 10.3,
+        "escapeVelocityKms": 8.42,
+        "hyperbolicExcessKms": 5.93,
+        "jupiterOrbitalVKms": 13.06,
+        "heliocentricVKms": 18.99,
+        "solarEscapeVKms": 18.46,
+        "solarVInfKms": 4.44,
+        "isUnboundFromJupiter": true,
+        "isUnboundFromSun": true
+      },
+      "sources": [
+        {
+          "claim": "高度50 RJ、木星基準速度10.3 km/s",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 09:08",
+          "sourceLabel": "Part 2 09:08「高度50RJ、木星基準速度10.3km/s」"
+        },
+        {
+          "claim": "放射線シールド残寿命42分",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 07:44",
+          "sourceLabel": "Part 2 07:44「放射線シールドの残寿命42分」"
+        },
+        {
+          "claim": "木星赤道半径: 71,492 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceLabel": "NASA/JPL 太陽系力学データ（木星赤道半径）"
+        }
+      ]
+    },
+    {
+      "id": "ep02-transfer-03",
+      "episode": 2,
+      "description": "太陽中心遷移軌道: 木星圏 → 土星圏（双曲線軌道）",
+      "timestamp": "09:08 - 13:45",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "evidenceQuoteIds": ["ep02-quote-03", "ep02-quote-05", "ep02-quote-06"],
+      "assumptions": [
+        "木星離脱時の双曲線超過速度: 約5.93 km/s（順行方向）",
+        "太陽中心速度: 約18.99 km/s → 太陽系脱出軌道（双曲線）",
+        "追加噴射なし（船は損傷状態、トリムのみ）",
+        "土星軌道での通過速度: 約14.31 km/s"
+      ],
+      "verdict": "conditional",
+      "explanation": "ケストレルの太陽中心速度（約18.99 km/s）は木星軌道での太陽脱出速度（約18.46 km/s）をわずかに上回り、太陽系脱出軌道（双曲線軌道）に乗っている。この軌道は追加噴射なしで土星軌道を通過する。\n\n推定通過時間は約455日（約1.25年）。土星軌道での速度は約14.31 km/sで、土星公転速度（約9.62 km/s）との差（v∞ ≈ 4.69 km/s）が土星圏での超過速度となる。\n\n条件付きとする理由は以下の通り:\n1. 順行方向への完全な離脱を仮定しているが、実際の離脱方向は木星の重力アシストや磁気圏通過経路に依存する\n2. 約455日間の航行中に軌道修正不要という「修正機動を許容しません」の制約は、初期条件の精度に強く依存する\n3. 太陽系脱出速度とのマージンが約0.53 km/sと非常に小さく、離脱方向のわずかなずれで楕円軌道になる可能性がある",
+      "parameters": {
+        "heliocentricVKms": 18.99,
+        "solarEscapeVKms": 18.46,
+        "solarVInfKms": 4.44,
+        "arrivalVAtSaturnKms": 14.31,
+        "saturnOrbitalVKms": 9.62,
+        "vInfAtSaturnKms": 4.69,
+        "estimatedTransitDays": 455,
+        "estimatedTransitYears": 1.25
+      },
+      "sources": [
+        {
+          "claim": "スラストはトリムのみ（損傷状態）",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 09:08",
+          "sourceLabel": "Part 2 09:08「スラストはトリムのみ」"
+        },
+        {
+          "claim": "外縁軌道は修正機動を許容しない",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 16:15",
+          "sourceLabel": "Part 2 16:15「外縁軌道は修正機動を許容しません。一度外せば帰還の可能性は消えます」"
+        }
+      ]
+    },
+    {
+      "id": "ep02-transfer-04",
+      "episode": 2,
+      "description": "土星圏捕獲: エンケラドス軌道への減速",
+      "timestamp": "13:45",
+      "claimedDeltaV": null,
+      "computedDeltaV": 5.83,
+      "evidenceQuoteIds": ["ep02-quote-05"],
+      "assumptions": [
+        "土星圏での超過速度: 約4.69 km/s",
+        "エンケラドス軌道半径（238,020 km）での捕獲を仮定",
+        "エンケラドス軌道での脱出速度: 約17.85 km/s（土星の重力）",
+        "円軌道捕獲: 双曲線接近→エンケラドス軌道速度まで減速",
+        "逆噴射による直接捕獲（エアロブレーキング不可）"
+      ],
+      "verdict": "conditional",
+      "explanation": "土星圏に超過速度約4.69 km/sで接近する場合、エンケラドス軌道（238,020 km）での近点速度は約18.46 km/sとなる。円軌道速度（約12.62 km/s）まで減速するには約5.83 km/sのΔVが必要。\n\nしかし、最小限の捕獲（ちょうど束縛軌道に入る）だけなら約0.61 km/sで済む。これはケストレルの損傷状態でも実現可能な範囲である。\n\n条件付きとする理由:\n1. エピソード1の分析で示した通り、船の質量が300t程度であれば公称推力9.8 MNで32.7 m/s²の加速が得られるが、損傷状態では推力が制限される\n2. 最小捕獲（0.61 km/s）は楕円軌道投入であり、エンケラドスへのランデブーには追加の機動が必要\n3. エンケラドスのステーションでの応急修理を考えると、実際にはステーションと同じ軌道に入る必要がある",
+      "parameters": {
+        "vInfAtSaturnKms": 4.69,
+        "enceladusOrbitRadiusKm": 238020,
+        "escapeVelocityAtEncKms": 17.85,
+        "circularVelocityAtEncKms": 12.62,
+        "periapsisVelocityKms": 18.46,
+        "dvCircularCaptureKms": 5.83,
+        "dvMinCaptureKms": 0.61,
+        "enceladusPeriodHours": 32.9
+      },
+      "sources": [
+        {
+          "claim": "エンケラドスへの到着・応急修理",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 13:45",
+          "sourceLabel": "Part 2 13:45「よく来たね、エンケラドスへ」"
+        },
+        {
+          "claim": "エンケラドス軌道半径: 238,020 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceLabel": "NASA/JPL 太陽系力学データ（エンケラドス平均軌道半径）"
+        }
+      ]
+    },
+    {
+      "id": "ep02-transfer-05",
+      "episode": 2,
+      "description": "正体不明の大型船との接近遭遇（50万t級、相対速度0.12 km/s）",
+      "timestamp": "16:38 - 18:30",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "evidenceQuoteIds": ["ep02-quote-07", "ep02-quote-08"],
+      "assumptions": [
+        "対象の推定質量: 50万t級（きりたんの船の10倍以上）",
+        "相対速度: 0.12 km/s = 120 m/s",
+        "距離3 kmで停止・並走",
+        "トランスポンダを切った状態で相対速度を限りなく0に近づけて待ち伏せ"
+      ],
+      "verdict": "plausible",
+      "explanation": "相対速度0.12 km/s（120 m/s）での3 km距離並走は、軌道力学的に自然な近接運用である。大型船が事前にケストレルの軌道を予測し、同一軌道に投入して相対速度をほぼゼロに合わせた上で待機していたという描写は合理的である。\n\n50万t級の船が同じ軌道要素を持つためには:\n1. 大型船側にも十分なΔV能力が必要（少なくとも外縁軌道投入ΔV + ランデブーΔV）\n2. ケストレルの軌道を事前に予測できる情報（ビーコンによる誘導を示唆）\n3. 相対速度120 m/sは接近機動としては緩やかで、意図的な制御を示す\n\n「トランスポンダを切った上で相対速度を限りなく0に近づけた」という船載AIの分析は、この遭遇が偶然ではなく計画的な待ち伏せであることを裏付けている。",
+      "parameters": {
+        "unknownVesselMassT": 500000,
+        "relativeVelocityKms": 0.12,
+        "relativeVelocityMs": 120,
+        "distanceKm": 3
+      },
+      "sources": [
+        {
+          "claim": "相対速度0.12 km/s",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 16:38",
+          "sourceLabel": "Part 2 16:38「軌道交差警告。衝突の危険あり。相対速度0.12km/s」"
+        },
+        {
+          "claim": "想定質量50万t級、距離3kmで停止並走",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 17:51",
+          "sourceLabel": "Part 2 17:51「想定質量50万t級。距離3kmで停止並走しています」"
+        },
+        {
+          "claim": "トランスポンダを切った状態で待ち伏せ",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45407401 17:31",
+          "sourceLabel": "Part 2 17:31「トランスポンダを切った上で相対速度を限りなく0に近づけ、そこに漂って待ち構えていたものと推定」"
+        }
+      ]
+    }
+  ],
+  "explorations": [
+    {
+      "id": "ep02-exploration-01",
+      "transferId": "ep02-transfer-02",
+      "question": "木星離脱方向（順行 vs 逆行）で太陽中心軌道はどう変わるか？",
+      "boundaryCondition": "v_helio = v_Jupiter ± v_inf = 13.06 ± 5.93 km/s（太陽脱出速度: 18.46 km/s）",
+      "scenarios": [
+        {
+          "label": "順行離脱（最良ケース）",
+          "variedParam": "departureDirection",
+          "variedValue": 1,
+          "variedUnit": "prograde",
+          "results": {
+            "heliocentricVKms": 18.99,
+            "solarEscapeVKms": 18.46,
+            "isHyperbolic": true,
+            "reachesSaturn": true,
+            "transitDays": 455
+          },
+          "feasible": true,
+          "note": "太陽系脱出軌道。追加噴射なしで土星を通過する。推定通過時間は約455日。"
+        },
+        {
+          "label": "逆行離脱（最悪ケース）",
+          "variedParam": "departureDirection",
+          "variedValue": -1,
+          "variedUnit": "retrograde",
+          "results": {
+            "heliocentricVKms": 7.12,
+            "solarEscapeVKms": 18.46,
+            "isHyperbolic": false,
+            "reachesSaturn": false
+          },
+          "feasible": false,
+          "note": "太陽中心速度は7.12 km/sとなり、内惑星方向へ向かう。土星には到達しない。離脱方向が決定的に重要。"
+        },
+        {
+          "label": "45°斜め離脱",
+          "variedParam": "departureDirection",
+          "variedValue": 0.707,
+          "variedUnit": "cos(45°)",
+          "results": {
+            "heliocentricVKms": 17.25,
+            "solarEscapeVKms": 18.46,
+            "isHyperbolic": false,
+            "reachesSaturn": false
+          },
+          "feasible": false,
+          "note": "順行成分が約4.2 km/sに減少。楕円軌道となり、遠日点は土星軌道に届かない可能性が高い。順行方向への離脱が必須。"
+        }
+      ],
+      "summary": "木星離脱のv∞（約5.93 km/s）は、順行方向に正確に射出された場合のみ太陽系脱出軌道となり土星に到達する。離脱角度が45°以上ずれると土星には到達しない。これは木星の重力アシスト（スイングバイ）効果と考えることもでき、イオ・プラズマトーラスを通過する経路が結果的に適切な離脱方向を実現した可能性がある。磁気圏のプラズマ・シースに沿った航行が暗示する経路は、物理的に順行離脱と整合しうる。"
+    },
+    {
+      "id": "ep02-exploration-02",
+      "transferId": "ep02-transfer-04",
+      "question": "損傷状態の推力で土星捕獲に必要なΔVは生成可能か？",
+      "boundaryCondition": "最小捕獲ΔV ≈ 0.61 km/s、円軌道捕獲ΔV ≈ 5.83 km/s",
+      "scenarios": [
+        {
+          "label": "300 t、通常推力（9.8 MN）",
+          "variedParam": "thrust",
+          "variedValue": 9800000,
+          "variedUnit": "N",
+          "results": {
+            "accelMs2": 32.67,
+            "dvAvailable60sKms": 1.96,
+            "minCaptureFeasible": true,
+            "circCaptureFeasible": true
+          },
+          "feasible": true,
+          "note": "通常推力なら60秒で1.96 km/sのΔVを生成でき、最小捕獲は余裕で可能。円軌道捕獲にも約178秒で到達。ただし損傷状態では通常推力は使用不可。"
+        },
+        {
+          "label": "300 t、50%推力（4.9 MN）",
+          "variedParam": "thrust",
+          "variedValue": 4900000,
+          "variedUnit": "N",
+          "results": {
+            "accelMs2": 16.33,
+            "dvAvailable60sKms": 0.98,
+            "minCaptureFeasible": true,
+            "circCaptureFeasible": true
+          },
+          "feasible": true,
+          "note": "50%推力でも最小捕獲は37秒で達成可能。エンケラドスの応急修理ステーションへの到達は実現可能。"
+        },
+        {
+          "label": "300 t、25%推力（2.45 MN）",
+          "variedParam": "thrust",
+          "variedValue": 2450000,
+          "variedUnit": "N",
+          "results": {
+            "accelMs2": 8.17,
+            "dvAvailable60sKms": 0.49,
+            "minCaptureFeasible": true,
+            "circCaptureFeasible": true
+          },
+          "feasible": true,
+          "note": "25%推力でも75秒の噴射で最小捕獲可能。円軌道捕獲には714秒（約12分）を要する。"
+        },
+        {
+          "label": "300 t、トリムのみ（推定1%、98 kN）",
+          "variedParam": "thrust",
+          "variedValue": 98000,
+          "variedUnit": "N",
+          "results": {
+            "accelMs2": 0.327,
+            "dvAvailable60sKms": 0.0196,
+            "minCaptureFeasible": true,
+            "circCaptureFeasible": true
+          },
+          "feasible": true,
+          "note": "トリムのみでも最小捕獲は1867秒（約31分）で達成可能。ただし円軌道到達には17,850秒（約5時間）を要し、接近中のタイミング制約が厳しくなる。"
+        }
+      ],
+      "summary": "船の質量が300t程度であれば、最小捕獲ΔV（0.61 km/s）はトリム推力のみでも約31分で生成可能。これはエンケラドスのステーションに辿り着くという作中の描写と整合する。完全な円軌道捕獲（5.83 km/s）にはより大きな噴射が必要だが、最小捕獲後に楕円軌道からゆっくりと軌道修正することも可能。損傷状態の船が「応急修理」を受けられる程度にはステーションに近づけるという描写は妥当である。"
+    },
+    {
+      "id": "ep02-exploration-03",
+      "transferId": "ep02-transfer-03",
+      "question": "「外縁軌道は修正機動を許容しない」—この制約はどの程度厳しいか？",
+      "boundaryCondition": "太陽系脱出速度とのマージン: v_helio - v_esc = 18.99 - 18.46 ≈ 0.53 km/s",
+      "scenarios": [
+        {
+          "label": "正確な順行離脱",
+          "variedParam": "velocityError",
+          "variedValue": 0,
+          "variedUnit": "km/s",
+          "results": {
+            "heliocentricVKms": 18.99,
+            "marginKms": 0.53,
+            "reachesSaturn": true
+          },
+          "feasible": true,
+          "note": "完璧な離脱で0.53 km/sのマージン。土星軌道を通過する双曲線軌道。"
+        },
+        {
+          "label": "速度誤差 -0.5 km/s",
+          "variedParam": "velocityError",
+          "variedValue": -0.5,
+          "variedUnit": "km/s",
+          "results": {
+            "heliocentricVKms": 18.49,
+            "marginKms": 0.03,
+            "reachesSaturn": true
+          },
+          "feasible": true,
+          "note": "ギリギリで太陽系脱出軌道を維持。マージンは0.03 km/sしかなく、わずかな擾乱で楕円軌道に転落する。"
+        },
+        {
+          "label": "速度誤差 -0.6 km/s",
+          "variedParam": "velocityError",
+          "variedValue": -0.6,
+          "variedUnit": "km/s",
+          "results": {
+            "heliocentricVKms": 18.39,
+            "marginKms": -0.07,
+            "reachesSaturn": false
+          },
+          "feasible": false,
+          "note": "楕円軌道となり、遠日点が土星軌道に届かない可能性がある。修正噴射が不可能な場合、帰還の可能性が消える。"
+        }
+      ],
+      "summary": "「修正機動を許容しない」という制約は、太陽系脱出速度とのマージンが約0.53 km/sしかないことを考慮すると非常に合理的である。0.6 km/s以上の速度誤差があれば土星に到達できない。損傷した船でトリム推力のみの状態では、大きな修正機動は物理的にも困難であり、一発勝負の投入が求められるという緊迫した状況の描写は、軌道力学的にも裏付けられている。"
+    }
+  ]
+}
