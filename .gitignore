@@ -2,6 +2,7 @@
 /target/
 ts/dist/
 ts/node_modules/
+ts/pkg/
 
 # Raw data (never commit)
 raw_data/

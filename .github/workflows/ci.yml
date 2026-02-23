@@ -17,18 +17,24 @@ jobs:
       - run: cargo test --workspace
 
   typescript:
-    name: TypeScript tests
+    name: TypeScript + WASM tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ts
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: jetli/wasm-pack-action@v0.4.0
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
           cache: "npm"
           cache-dependency-path: ts/package-lock.json
+      - run: wasm-pack build --target nodejs --out-dir ../../ts/pkg crates/solar-line-wasm
       - run: npm ci
+        working-directory: ts
       - run: npx tsc
+        working-directory: ts
       - run: node --test src/**/*.test.ts
+        working-directory: ts
