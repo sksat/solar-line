@@ -10,14 +10,7 @@
       "caption": "最終話（27分11秒）2026年2月24日投稿"
     }
   ],
-  "dialogueQuotes": [
-    {
-      "id": "ep05-quote-placeholder-01",
-      "speaker": "※暫定",
-      "text": "（字幕データ未取得のため、第4話終了時点の状態を引き継ぎ分析）",
-      "timestamp": "—"
-    }
-  ],
+  "dialogueQuotes": [],
   "transfers": [
     {
       "id": "ep05-transfer-01",
@@ -46,13 +39,13 @@
       "sources": [
         {
           "claim": "天王星軌道半径",
-          "sourceType": "reference",
+          "sourceType": "external-reference",
           "sourceRef": "NASA Fact Sheet",
           "sourceLabel": "NASA Uranus Fact Sheet"
         },
         {
           "claim": "地球軌道半径",
-          "sourceType": "reference",
+          "sourceType": "external-reference",
           "sourceRef": "NASA Fact Sheet",
           "sourceLabel": "NASA Earth Fact Sheet"
         }
@@ -88,14 +81,14 @@
       "sources": [
         {
           "claim": "推力65%、6.37 MN",
-          "sourceType": "episode",
+          "sourceType": "episode-dialogue",
           "sourceRef": "第4話 17:29",
           "sourceLabel": "ep04 出発時推力設定"
         },
         {
           "claim": "公称質量48,000t",
-          "sourceType": "worldbuilding",
-          "sourceRef": "note.com/yuepicos/n/n4da939fc40ed",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
           "sourceLabel": "ソーラーラインのよもやま話"
         }
       ]
@@ -129,13 +122,13 @@
       "sources": [
         {
           "claim": "地球重力パラメータ",
-          "sourceType": "reference",
+          "sourceType": "external-reference",
           "sourceRef": "NASA JPL DE440/DE441",
           "sourceLabel": "JPL Planetary Ephemeris"
         },
         {
           "claim": "月軌道半径",
-          "sourceType": "reference",
+          "sourceType": "external-reference",
           "sourceRef": "NASA Moon Fact Sheet",
           "sourceLabel": "NASA Moon Fact Sheet"
         }
@@ -174,19 +167,19 @@
       "sources": [
         {
           "claim": "残り点火回数3-4回",
-          "sourceType": "episode",
+          "sourceType": "episode-dialogue",
           "sourceRef": "第4話 17:16",
           "sourceLabel": "ep04 エンジン状態報告"
         },
         {
           "claim": "累積被曝480 mSv",
-          "sourceType": "episode",
+          "sourceType": "episode-dialogue",
           "sourceRef": "第4話 10:17",
           "sourceLabel": "ep04 被曝線量"
         },
         {
           "claim": "ICRP緊急時被曝限度",
-          "sourceType": "reference",
+          "sourceType": "external-reference",
           "sourceRef": "ICRP Publication 103",
           "sourceLabel": "ICRP 2007勧告"
         }
@@ -216,7 +209,7 @@
       "sources": [
         {
           "claim": "各惑星軌道半径",
-          "sourceType": "reference",
+          "sourceType": "external-reference",
           "sourceRef": "NASA Planetary Fact Sheets",
           "sourceLabel": "NASA惑星データ"
         }
