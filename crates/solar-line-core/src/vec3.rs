@@ -74,6 +74,8 @@ where
 }
 
 /// Trait for types that wrap an f64 value.
+/// All implementors are `Copy`, so consuming `self` is intentional.
+#[allow(clippy::wrong_self_convention)]
 pub trait AsF64 {
     fn as_f64(self) -> f64;
 }

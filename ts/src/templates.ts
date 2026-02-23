@@ -862,7 +862,7 @@ export function renderExplorations(explorations: ParameterExploration[]): string
 /** Build a ΔV summary chart from transfer data */
 function buildDvChart(transfers: TransferAnalysis[]): string {
   const chartBars = transfers
-    .filter(t => t.computedDeltaV > 0)
+    .filter((t): t is TransferAnalysis & { computedDeltaV: number } => t.computedDeltaV != null && t.computedDeltaV > 0)
     .map(t => ({
       label: t.description,
       value: t.computedDeltaV,

@@ -37,10 +37,7 @@ const DEFAULT_MAX_ITER: u32 = 50;
 ///
 /// # Assumptions
 /// - Elliptical orbit only (e < 1). For hyperbolic orbits, use a different solver.
-pub fn solve_kepler(
-    mean_anomaly: Radians,
-    e: Eccentricity,
-) -> Result<KeplerSolution, String> {
+pub fn solve_kepler(mean_anomaly: Radians, e: Eccentricity) -> Result<KeplerSolution, String> {
     solve_kepler_with_params(mean_anomaly, e, DEFAULT_TOL, DEFAULT_MAX_ITER)
 }
 
@@ -134,10 +131,7 @@ pub fn true_to_mean_anomaly(nu: Radians, e: Eccentricity) -> Radians {
 }
 
 /// Convert mean anomaly to true anomaly (via Kepler equation solver).
-pub fn mean_to_true_anomaly(
-    mean_anomaly: Radians,
-    e: Eccentricity,
-) -> Result<Radians, String> {
+pub fn mean_to_true_anomaly(mean_anomaly: Radians, e: Eccentricity) -> Result<Radians, String> {
     let solution = solve_kepler(mean_anomaly, e)?;
     Ok(eccentric_to_true_anomaly(solution.eccentric_anomaly, e))
 }
@@ -153,11 +147,7 @@ pub fn mean_motion(mu: Mu, a: crate::units::Km) -> f64 {
 }
 
 /// Propagate mean anomaly forward by Δt seconds.
-pub fn propagate_mean_anomaly(
-    m0: Radians,
-    n: f64,
-    dt: Seconds,
-) -> Radians {
+pub fn propagate_mean_anomaly(m0: Radians, n: f64, dt: Seconds) -> Radians {
     Radians(m0.value() + n * dt.value()).normalize()
 }
 

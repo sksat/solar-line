@@ -6,18 +6,26 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   rust:
-    name: Rust tests
+    name: Rust tests + lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
       - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy -- -D warnings
       - run: cargo test --workspace
 
   typescript:
-    name: TypeScript + WASM tests
+    name: TypeScript tests + typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +42,19 @@ jobs:
       - run: wasm-pack build --target nodejs --out-dir ../../ts/pkg crates/solar-line-wasm
       - run: npm ci
         working-directory: ts
-      - run: npx tsc
+      - run: npm run typecheck
         working-directory: ts
-      - run: node --test src/**/*.test.ts
+      - run: npm test
         working-directory: ts
+
+  wasm-web:
+    name: WASM browser build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: jetli/wasm-pack-action@v0.4.0
+      - run: wasm-pack build --target web --out-dir ../../ts/pkg crates/solar-line-wasm

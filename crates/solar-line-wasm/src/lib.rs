@@ -92,8 +92,7 @@ pub struct KeplerResult {
 pub fn solve_kepler(mean_anomaly: f64, e: f64) -> Result<JsValue, JsError> {
     let ecc =
         Eccentricity::elliptical(e).ok_or_else(|| JsError::new("eccentricity must be in [0,1)"))?;
-    let sol = kepler::solve_kepler(Radians(mean_anomaly), ecc)
-        .map_err(|e| JsError::new(&e))?;
+    let sol = kepler::solve_kepler(Radians(mean_anomaly), ecc).map_err(|e| JsError::new(&e))?;
     let result = KeplerResult {
         eccentric_anomaly: sol.eccentric_anomaly.value(),
         iterations: sol.iterations,
