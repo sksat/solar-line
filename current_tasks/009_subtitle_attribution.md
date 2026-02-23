@@ -2,41 +2,37 @@
 
 ## Status: IN PROGRESS
 
-## Goal
-Collect subtitle data for available episodes and perform speaker attribution to build an attributed dialogue dataset for analysis.
+## Progress
+- [x] Architecture design (two-phase pipeline, Codex-reviewed)
+- [x] Phase 1 types: `dialogue-extraction-types.ts` (ExtractedLine, EpisodeLines, MergeConfig)
+- [x] Phase 1 logic: `dialogue-extraction.ts` (shouldMergeCues, mergeCueTexts, extractLines, validateEpisodeLines)
+- [x] Phase 1 tests: 25 tests, all passing
+- [x] Phase 1 CLI: `extract-dialogue.ts` (npm run extract-dialogue)
+- [x] Subtitle collection: Downloaded ja-orig and ja tracks for Episode 1 (CQ_OkDjEwRk)
+- [x] Extraction run: 478 raw cues → 239 filtered → 87 dialogue lines → ep01_lines.json
+- [x] Speaker registry: ep01_speakers.json (6 speakers identified)
+- [x] Partial attribution: ep01_dialogue.json (first ~20 lines attributed, ~67 remaining)
+- [ ] Complete attribution for all 87 lines
+- [ ] Update ep01.json dialogueQuotes from attributed data
+- [ ] Cross-reference with transfer analysis
+
+## Key Finding: VOICEROID ASR Quality
+YouTube auto-generated subtitles have very poor accuracy for VOICEROID/software-talk content.
+Many terms are misrecognized. Speaker attribution must rely on context, not ASR text.
+See `ideas/voiceroid_asr_quality.md`.
+
+## Next Session TODO
+1. Continue speaker attribution for lines 20-87 in ep01_dialogue.json
+2. The dialogue text in ep01_dialogue.json should be corrected based on actual video content
+   (ASR text is unreliable — need to verify against video)
+3. Update ep01.json dialogueQuotes with corrected, attributed quotes
+4. Consider alternate subtitle sources (manual transcription?)
+
+## Architecture
+- Phase 1 (Extraction): `epXX_lines.json` — automated, raw text+timing
+- Phase 2 (Attribution): `epXX_dialogue.json` — context-assisted speaker assignment
+- Speaker registry: `epXX_speakers.json` — character definitions
+- Files are separate so re-running extraction doesn't lose attribution
 
 ## Depends on
 - Task 004 (subtitle collection pipeline)
-
-## Architecture (Human Directive)
-
-**Two-phase pipeline, separate files:**
-
-### Phase 1: Dialogue Extraction (automated)
-- Input: Raw subtitle files (from yt-dlp)
-- Output: `reports/data/episodes/epXX_lines.json` — raw dialogue lines with timestamps, NO speaker info
-- Fully automated: parse subtitles, merge continuation lines, clean formatting
-- Timestamp refinement: cross-reference multiple subtitle tracks if available
-
-### Phase 2: Speaker Attribution (context-assisted)
-- Input: `epXX_lines.json` + episode context (scene descriptions, character knowledge)
-- Output: `reports/data/episodes/epXX_dialogue.json` — full EpisodeDialogue with speakers
-- NOT fully automated: Claude/Codex reviews context to assign speakers
-- Scene breaks identified from context clues
-- Confidence levels (verified/inferred/uncertain) for each attribution
-
-**Rationale:** Separating phases means re-running extraction doesn't lose attribution work. Attribution files can be independently reviewed and corrected.
-
-## Scope
-1. Collect subtitles for Episode 1 using collect-subtitles script
-2. Implement Phase 1: dialogue line extraction with improved timestamps
-3. Implement Phase 2: context-based speaker attribution
-4. Generate epXX_lines.json and epXX_dialogue.json
-5. Update ep01.json dialogue quotes from attributed data
-6. Cross-reference dialogue with analysis findings
-
-## Notes
-- Speaker attribution requires contextual understanding — use nice-friend for verification
-- Scene breaks need careful identification from context clues
-- Timestamp accuracy is a concern — use multiple signals where possible
-- This enriches existing episode analyses with actual dialogue citations

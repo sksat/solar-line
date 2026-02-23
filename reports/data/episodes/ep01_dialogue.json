@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "videoId": "CQ_OkDjEwRk",
+  "episode": 1,
+  "title": "SOLAR LINE Part 1 — 火星からガニメデへ",
+  "sourceUrl": "https://www.nicovideo.jp/watch/sm45280425",
+  "language": "ja",
+  "speakers": [
+    {
+      "id": "kiritan",
+      "nameJa": "きりたん",
+      "nameEn": "Kiritan",
+      "aliases": ["キリタン"]
+    },
+    {
+      "id": "kestrel-ai",
+      "nameJa": "ケストレルAI",
+      "nameEn": "Kestrel AI",
+      "aliases": ["公案", "コアン"]
+    },
+    {
+      "id": "client",
+      "nameJa": "依頼人",
+      "nameEn": "Client",
+      "aliases": []
+    },
+    {
+      "id": "rai",
+      "nameJa": "ライ",
+      "nameEn": "Rai",
+      "aliases": []
+    },
+    {
+      "id": "mars-control",
+      "nameJa": "火星管制",
+      "nameEn": "Mars Control",
+      "aliases": []
+    },
+    {
+      "id": "ganymede-control",
+      "nameJa": "ガニメデ管制",
+      "nameEn": "Ganymede Control",
+      "aliases": []
+    }
+  ],
+  "scenes": [
+    {
+      "id": "ep01-scene-01",
+      "startMs": 0,
+      "endMs": 72000,
+      "description": "オープニング — ケストレル号の船内整備"
+    },
+    {
+      "id": "ep01-scene-02",
+      "startMs": 72000,
+      "endMs": 165000,
+      "description": "依頼受注 — 72時間ガニメデ配送の依頼"
+    },
+    {
+      "id": "ep01-scene-03",
+      "startMs": 165000,
+      "endMs": 360000,
+      "description": "火星出港 — RCS航行から核融合パルス転換"
+    },
+    {
+      "id": "ep01-scene-04",
+      "startMs": 360000,
+      "endMs": 520000,
+      "description": "航行計画 — 嵐の回廊ルート検討"
+    },
+    {
+      "id": "ep01-scene-05",
+      "startMs": 520000,
+      "endMs": 660000,
+      "description": "ライとの遭遇 — コンテナの秘密"
+    },
+    {
+      "id": "ep01-scene-06",
+      "startMs": 660000,
+      "endMs": 840000,
+      "description": "ダイレクトエントリー — 木星への直接突入"
+    },
+    {
+      "id": "ep01-scene-07",
+      "startMs": 840000,
+      "endMs": 1050000,
+      "description": "ペリジュピター通過 — オーバースとガニメデ接近"
+    },
+    {
+      "id": "ep01-scene-08",
+      "startMs": 1050000,
+      "endMs": 1200000,
+      "description": "到着 — ガニメデ管制との交信"
+    }
+  ],
+  "dialogue": [
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "結露まだ残ってる",
+      "startMs": 4000,
+      "endMs": 8190,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-0"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "ASR原文: 結露まだ残ってる。冒頭のきりたん台詞。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "航案環境データ更新、相対湿度47%。補助RCSベントを閉じることを推奨します。ブロアだけでなんとかしようとするものではありません",
+      "startMs": 11360,
+      "endMs": 22870,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-1", "cue-3", "cue-5", "cue-7"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "ASR原文に誤認識多数。AIによるステータス報告・推奨。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "あなたはまた冷却待ちの工室を作ろうとしています",
+      "startMs": 24920,
+      "endMs": 29429,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-9"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "AIからきりたんへの警告。「あなた」という呼びかけがAI的。"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "主貨物区画衝撃ユニットの死んだ針戻してる？",
+      "startMs": 29439,
+      "endMs": 34430,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-10"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "きりたんがAIに確認。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "針は死んでいません。動いてないだけです",
+      "startMs": 34440,
+      "endMs": 38470,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-11a"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "AIの返答。皮肉めいた表現。"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "この船もおんぼろだからね。念には念を入れないと",
+      "startMs": 38480,
+      "endMs": 47110,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-12"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "きりたんの独白風。カジュアルな口調。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "反応質量タンクのスロッシング指数が低い。重力がないために後部慣性が低く、微小な姿勢変化で液面が立ちやすい状態です",
+      "startMs": 47120,
+      "endMs": 56310,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-11", "cue-12a"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "AIのテクニカルレポート。ASR誤認識多数。"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "じゃあ腹持ちすれば問題ないか",
+      "startMs": 53280,
+      "endMs": 56310,
+      "sceneId": "ep01-scene-01",
+      "confidence": "uncertain",
+      "rawEntryIds": [],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "ASR誤認識が激しい。きりたんのカジュアルな返答と推定。"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "それがいいんじゃないの。古いものほど可愛いんだよ",
+      "startMs": 66640,
+      "endMs": 71990,
+      "sceneId": "ep01-scene-01",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-13"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "船への愛着を語る。きりたんらしい台詞。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "依頼が入っています。ガニメデ中央港へ72時間以内、封印コンテナ2基、危険物指定なし",
+      "startMs": 72920,
+      "endMs": 79469,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-15", "cue-17", "cue-19"],
+      "transferRefs": ["ep01-transfer-02"],
+      "mentions": [
+        {
+          "concept": "other",
+          "textSpan": [16, 22],
+          "normalizedValue": 72,
+          "unit": "hours"
+        }
+      ],
+      "note": "AIが依頼内容を報告。72時間制限の最初の言及。"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "えらい急ぐね。普通は150時間はかけるけど",
+      "startMs": 79479,
+      "endMs": 84749,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-21", "cue-23"],
+      "transferRefs": ["ep01-transfer-03"],
+      "mentions": [
+        {
+          "concept": "other",
+          "textSpan": [10, 16],
+          "normalizedValue": 150,
+          "unit": "hours"
+        }
+      ],
+      "note": "きりたんが通常ルートの所要時間に言及。150時間の根拠。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "ガニメデの優先権テーブルは大型で埋まっています。あなたは裏口枠です。航案ネットの噂ですが、コンテナの中身はガニメデの未来そのものだとか",
+      "startMs": 84759,
+      "endMs": 94469,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-25"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "AIが背景情報を提供。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "ガニメデまで72時間以内に輸送するには嵐の回廊を通過する必要があります。まともな輸送会社が受ける仕事ではありません",
+      "startMs": 96680,
+      "endMs": 105469,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-27", "cue-29"],
+      "transferRefs": ["ep01-transfer-02"],
+      "mentions": [
+        {
+          "concept": "gravity_assist",
+          "textSpan": [22, 28],
+          "normalizedValue": null,
+          "unit": null
+        }
+      ],
+      "note": "AIが嵐の回廊ルートの必要性を説明。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "正面から突っ切るコースになります。木星の重力圏へ落下し、磁気の中で木星の重力アシストを受けて軌道を変え、ペリジュピターオーバースでガニメデの最接近軌道を取ります。オーバースのウィンドウは長く見積もっても数時間、タイミングがずれれば木星の重力に捕まって落下します。まともな人間が取るコースではありません",
+      "startMs": 113759,
+      "endMs": 140270,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-31", "cue-33", "cue-35", "cue-37", "cue-39", "cue-41", "cue-43", "cue-45", "cue-47", "cue-49"],
+      "transferRefs": ["ep01-transfer-02"],
+      "mentions": [
+        {
+          "concept": "gravity_assist",
+          "textSpan": [25, 38],
+          "normalizedValue": null,
+          "unit": null
+        },
+        {
+          "concept": "orbit",
+          "textSpan": [45, 62],
+          "normalizedValue": null,
+          "unit": null
+        }
+      ],
+      "note": "AIが嵐の回廊ルートの詳細を説明。重力アシスト、ペリジュピターオーバースに言及。ASR誤認識が多いが文脈から修正。"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "まともな人間はフリーにはならないからね",
+      "startMs": 137000,
+      "endMs": 140270,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": [],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "きりたんの自嘲的な返答。AIの「まともな人間」に対する返し。"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケストレルAI",
+      "text": "報酬は通常料金の3倍、遅延は1時間ごとに15%減。公安税は免除、ガニメデ配とのことです",
+      "startMs": 140280,
+      "endMs": 149990,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": ["cue-51", "cue-53", "cue-55", "cue-57"],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "AIが報酬条件を説明。"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "分かった。受けるよ",
+      "startMs": 167000,
+      "endMs": 170000,
+      "sceneId": "ep01-scene-02",
+      "confidence": "inferred",
+      "rawEntryIds": [],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "きりたんが依頼を受諾。"
+    },
+    {
+      "speakerId": "client",
+      "speakerName": "依頼人",
+      "text": "契約成立です。コンテナはこちらで運び込みます",
+      "startMs": 170000,
+      "endMs": 177000,
+      "sceneId": "ep01-scene-02",
+      "confidence": "uncertain",
+      "rawEntryIds": [],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "依頼人の返答と推定。丁寧な口調。AIの可能性もあり。"
+    }
+  ],
+  "attributionNotes": "Phase 2 speaker attribution: Claude Opus 4.6による文脈ベースの話者判定。自動字幕のASR品質が非常に低い（VOICEROID音声はYouTube ASRと相性が悪い）ため、テキストは文脈から修正した推定値。話者判定の根拠: (1) AIは丁寧語・技術用語・ステータス報告を使用、(2) きりたんはカジュアルな口調・決定権を持つ、(3) 場面構成からの推定。confidence=uncertainの行は動画の再確認が必要。全87行中、冒頭部分のみ初回判定済み。残りは次セッションで継続。",
+  "reviewedBy": "Claude Opus 4.6 (context-assisted)",
+  "reviewedAt": "2026-02-23T00:00:00Z",
+  "rawContentHash": "9b3381e10b4345ac87782bc7ef6fcb16eb410c2fe3aaa152e4eef60fe75f8ac1"
+}

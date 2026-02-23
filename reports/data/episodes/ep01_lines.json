@@ -1,0 +1,1171 @@
+{
+  "schemaVersion": 1,
+  "videoId": "CQ_OkDjEwRk",
+  "episode": 1,
+  "sourceSubtitle": {
+    "language": "ja",
+    "source": "youtube-auto",
+    "rawContentHash": "9b3381e10b4345ac87782bc7ef6fcb16eb410c2fe3aaa152e4eef60fe75f8ac1"
+  },
+  "lines": [
+    {
+      "lineId": "ep01-line-001",
+      "startMs": 11360,
+      "endMs": 22870,
+      "text": "公案環境データ更新相対湿度47%補助RCSベンを閉じることを推奨します。ブロアだけでな何とかしようとするものではありません。",
+      "rawEntryIds": [
+        "cue-1",
+        "cue-3",
+        "cue-5",
+        "cue-7"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-002",
+      "startMs": 24920,
+      "endMs": 29429,
+      "text": "あなたはまた冷却町ちの工室を作ろうとしています。",
+      "rawEntryIds": [
+        "cue-9"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-003",
+      "startMs": 47280,
+      "endMs": 53270,
+      "text": "がないために後部完成が低く微償な姿勢変化で駅面が立ちやすい状態です。",
+      "rawEntryIds": [
+        "cue-11"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-004",
+      "startMs": 66640,
+      "endMs": 71990,
+      "text": "それがいいんじゃないの。く物ほど可愛いんだよ。",
+      "rawEntryIds": [
+        "cue-13"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-005",
+      "startMs": 72920,
+      "endMs": 79469,
+      "text": "本入っています。ガニメで中央へ72時間以内封印コンテナ2期危険物指定なし。",
+      "rawEntryIds": [
+        "cue-15",
+        "cue-17",
+        "cue-19"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-006",
+      "startMs": 79479,
+      "endMs": 84749,
+      "text": "えらい急ぐね。普通は150時間はかけるだけど。",
+      "rawEntryIds": [
+        "cue-21",
+        "cue-23"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-007",
+      "startMs": 84759,
+      "endMs": 94469,
+      "text": "ガニメデの優先権テーブルは大型で埋まっています。あなたは裏口枠です。公案ネットの噂ですが、コンテナの中身はガニメデの未来そのものだとか。",
+      "rawEntryIds": [
+        "cue-25"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-008",
+      "startMs": 96680,
+      "endMs": 105469,
+      "text": "ガニメデまで72時間以内に輸送するには嵐の回路を通過する必要があります。まともな輸送会社が受けう仕事ではありません。",
+      "rawEntryIds": [
+        "cue-27",
+        "cue-29"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-009",
+      "startMs": 113759,
+      "endMs": 140270,
+      "text": "正面から突っきるコ路になります。木星の重力権へ落下し、時期の中で世の重力アシストを受けて軌動を変え、ペリジュピターオーバースでカニメデの再接近起動を取ります。オーバースのウィンドウは長く見積もっても数時間、タイミングがずれれば木星の重力に捕まって落下します。まともな人間が取るコ路ではありません。まともな人間はフリーにはならないからね。",
+      "rawEntryIds": [
+        "cue-31",
+        "cue-33",
+        "cue-35",
+        "cue-37",
+        "cue-39",
+        "cue-41",
+        "cue-43",
+        "cue-45",
+        "cue-47",
+        "cue-49"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep01-line-010",
+      "startMs": 140280,
+      "endMs": 149990,
+      "text": "で、報酬は通常料金の3倍、遅延は1時間ごとに15%減公安税は免除はガニメデ配とのことです。",
+      "rawEntryIds": [
+        "cue-51",
+        "cue-53",
+        "cue-55",
+        "cue-57"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-011",
+      "startMs": 152000,
+      "endMs": 154869,
+      "text": "破でも受けようフリーがいなかったということです。",
+      "rawEntryIds": [
+        "cue-59"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-012",
+      "startMs": 154879,
+      "endMs": 159390,
+      "text": "まともな人間ならね。あんたたちの取分は",
+      "rawEntryIds": [
+        "cue-61"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-013",
+      "startMs": 161120,
+      "endMs": 165030,
+      "text": "割。こっちは命がけなんだ。",
+      "rawEntryIds": [
+        "cue-63"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-014",
+      "startMs": 167800,
+      "endMs": 170710,
+      "text": "分かった。受けるよ。",
+      "rawEntryIds": [
+        "cue-65"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-015",
+      "startMs": 170720,
+      "endMs": 174030,
+      "text": "契約成立です。コンテナはこちらで運び込みます。",
+      "rawEntryIds": [
+        "cue-67"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-016",
+      "startMs": 197879,
+      "endMs": 221949,
+      "text": "火星公安法に基づいて公案周辺5万kmまではRCS水進のみ核融合パルス式の使用は禁止です。安全距離内での式は自動的に罰金と放射線警報の発例対象となります。式許可は回収マーカー通過後に発行します。了解。免許を手放す機はまだないので式転下許可権までのコ路設定完了。",
+      "rawEntryIds": [
+        "cue-69",
+        "cue-71",
+        "cue-73",
+        "cue-75",
+        "cue-77",
+        "cue-79",
+        "cue-81"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-017",
+      "startMs": 221959,
+      "endMs": 265990,
+      "text": "現行RCSプロファイルで到達まで22分。ビフォメインアップチェック。外部状態問題なし外角クラックなしRCSノズル開式プレヒート温度412°適正値燃料残量は問題なし。冷却系圧力1次系2.34MP、2次系1.18MP問題なし。ビフォアメインアップチェックコンプリートあんたも座れば座ることに意味があるのなら何のために機械が人型になったと思ってんのさ。全く人型にしろとは頼んでいません。そうかい。",
+      "rawEntryIds": [
+        "cue-83",
+        "cue-85",
+        "cue-87",
+        "cue-89",
+        "cue-91",
+        "cue-93",
+        "cue-95",
+        "cue-97",
+        "cue-99",
+        "cue-101",
+        "cue-103",
+        "cue-105",
+        "cue-107"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-018",
+      "startMs": 269639,
+      "endMs": 275310,
+      "text": "なければよかったのでは?そうだな。後悔してる。",
+      "rawEntryIds": [
+        "cue-109",
+        "cue-111"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-019",
+      "startMs": 275320,
+      "endMs": 277390,
+      "text": "そうですか。",
+      "rawEntryIds": [
+        "cue-113"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-020",
+      "startMs": 277400,
+      "endMs": 282110,
+      "text": "火星の試後方カメラで52°極感を確認。",
+      "rawEntryIds": [
+        "cue-115"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-021",
+      "startMs": 282120,
+      "endMs": 285749,
+      "text": "外周マーカーレーダー圏内に入りました。",
+      "rawEntryIds": [
+        "cue-117"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-022",
+      "startMs": 285759,
+      "endMs": 302070,
+      "text": "こちら火星機は安全県外に到達各融合パルス式の転換を許可します。安全な後悔を感謝する。そちらの空をあまり明るくしないように心がけるよ。メインアップ準備。",
+      "rawEntryIds": [
+        "cue-119",
+        "cue-121",
+        "cue-123",
+        "cue-125",
+        "cue-127"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-023",
+      "startMs": 302080,
+      "endMs": 330189,
+      "text": "3カートリッジ1番想定核融合パルスロ転下温度到達まで8秒重力影響許容範囲内水補助室RCS圧安安定巡行加速で鳴らすいきなりフルバンは骨格に悪いから露出力は65%に設定想定水力は6.3Mコンメイン",
+      "rawEntryIds": [
+        "cue-129",
+        "cue-131",
+        "cue-133",
+        "cue-135",
+        "cue-137",
+        "cue-139"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-024",
+      "startMs": 332280,
+      "endMs": 343070,
+      "text": "アームド衝撃に備えてください。放射線レベル許容範囲内54321",
+      "rawEntryIds": [
+        "cue-141",
+        "cue-143"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-025",
+      "startMs": 352560,
+      "endMs": 360070,
+      "text": "だろうな。25万kmまでは肉眼にて視認できます。流れ星だと思ってくれればいいけど。",
+      "rawEntryIds": [
+        "cue-145",
+        "cue-147",
+        "cue-149"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-026",
+      "startMs": 360080,
+      "endMs": 363510,
+      "text": "の住民も慣れっこですから何とも思わないでしょうね。",
+      "rawEntryIds": [
+        "cue-151"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-027",
+      "startMs": 366520,
+      "endMs": 373070,
+      "text": "夢で船が動かせるのであればそういうところだぞ。露出力",
+      "rawEntryIds": [
+        "cue-153"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-028",
+      "startMs": 374639,
+      "endMs": 381710,
+      "text": "水進行率-1.8%骨格許容範囲内",
+      "rawEntryIds": [
+        "cue-155",
+        "cue-157"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-029",
+      "startMs": 397360,
+      "endMs": 403469,
+      "text": "迷うのは人生だけにしてください。別に迷ったつもりはないけど。",
+      "rawEntryIds": [
+        "cue-159",
+        "cue-161"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-030",
+      "startMs": 403479,
+      "endMs": 407469,
+      "text": "そうでしょうか。",
+      "rawEntryIds": [
+        "cue-163"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-031",
+      "startMs": 410720,
+      "endMs": 463990,
+      "text": "は私の親父なんだよね。法案舎から独立した後、小型貨物線で木星権への即達配送をするために木星赤道面の時期嵐を横断して最短距離でガニメデに向かうコ路を編み出した。回廊を抜けるには好転速度が早いようにぴったり軌動を差し込むだけじゃなく、イオの調力による期待の歪みやイの火山活動によるセンサー系の乱れにも対処しなくちゃならない。回廊を抜けてもフェリジュピターでのオーバースに失敗すれば木星の重力移度に深く入りすぎたまま軌動が閉じ待機圏に捉えられ後方もなく飲み込まれるまともな人間が取るコ路じゃないでも親父だけは全て成功してきた木星の時期嵐は当時から2倍以上の規模になっています。単純な比較はできません。",
+      "rawEntryIds": [
+        "cue-165",
+        "cue-167",
+        "cue-169",
+        "cue-171",
+        "cue-173",
+        "cue-175",
+        "cue-177",
+        "cue-179",
+        "cue-181",
+        "cue-183",
+        "cue-185",
+        "cue-187",
+        "cue-189",
+        "cue-191",
+        "cue-193",
+        "cue-195"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-032",
+      "startMs": 464000,
+      "endMs": 482629,
+      "text": "それに何十隻石もの船が嵐の街емに挑んで失敗してきました。わずか14時間の短縮のためにです。集回コ路を取れば安全にガニメデに到達できます。わざわざ無謀なコ路を取って命を危険にさらす必要はないのではないでしょうか。",
+      "rawEntryIds": [
+        "cue-197",
+        "cue-199",
+        "cue-201",
+        "cue-203",
+        "cue-205",
+        "cue-207"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-033",
+      "startMs": 482639,
+      "endMs": 488029,
+      "text": "2を届けることがあなたの仕事です。",
+      "rawEntryIds": [
+        "cue-209"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-034",
+      "startMs": 490840,
+      "endMs": 498749,
+      "text": "いつかこの手で通ってみたいね。集会路のプランも作っておいて負けず嫌いですね。",
+      "rawEntryIds": [
+        "cue-211",
+        "cue-213"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-035",
+      "startMs": 498759,
+      "endMs": 503110,
+      "text": "バカだな。船は夢が動かすんだよ。バカですね。船を動かすのは銃水素とヘリウム",
+      "rawEntryIds": [
+        "cue-215"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-036",
+      "startMs": 524480,
+      "endMs": 543630,
+      "text": "識別パターンは非公式。接近速度は相対0.3km。こちらのコ路に合わせる動きを取っています。こんなおぼ小型線に直回をかけてくるやは1人しかいない。賢をついでつぎます。",
+      "rawEntryIds": [
+        "cue-217",
+        "cue-219",
+        "cue-221",
+        "cue-223",
+        "cue-225",
+        "cue-227"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-037",
+      "startMs": 545959,
+      "endMs": 554110,
+      "text": "ね。偶然やつかな?私もこんなところでお前の耳障りな声を聞くとは思わなかったよ。",
+      "rawEntryIds": [
+        "cue-229",
+        "cue-231",
+        "cue-233"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-038",
+      "startMs": 554120,
+      "endMs": 559150,
+      "text": "で、こんなところに来るやはいない。お前例の依頼受けたらしいな。",
+      "rawEntryIds": [
+        "cue-235"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-039",
+      "startMs": 560640,
+      "endMs": 562829,
+      "text": "お前の罪に人間だぞ。",
+      "rawEntryIds": [
+        "cue-237"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-040",
+      "startMs": 562839,
+      "endMs": 577100,
+      "text": "は、お前が優先スロットで火星を出発した直後、公安回線がロックダウンされた。直後に火星の左作艇が何隻席も木星方向に出発していくのが見えた。噂だと地球の保安定も同じく星に向けて動き出してるらしい。",
+      "rawEntryIds": [
+        "cue-239",
+        "cue-241"
+      ],
+      "mergeReasons": [
+        "continuation_marker",
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-041",
+      "startMs": 579959,
+      "endMs": 584870,
+      "text": "地球権の保安定と火星権の佐々艇どっちも本気で探してる。",
+      "rawEntryIds": [
+        "cue-243"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-042",
+      "startMs": 586880,
+      "endMs": 589430,
+      "text": "売られたなら火権が抑えられてる。",
+      "rawEntryIds": [
+        "cue-245"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-043",
+      "startMs": 589440,
+      "endMs": 590910,
+      "text": "それは嬉しいね。",
+      "rawEntryIds": [
+        "cue-247"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-044",
+      "startMs": 590920,
+      "endMs": 597820,
+      "text": "火星と地球の間で暗号通信が複数会走ってる。あいつらが強調することなんて生のコンテナ以外ありえない。あいつらは機械だのみの総戦しかできないから接触は木星へのエントリーだろうな。",
+      "rawEntryIds": [
+        "cue-249"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-045",
+      "startMs": 608200,
+      "endMs": 609710,
+      "text": "そりゃどうも。",
+      "rawEntryIds": [
+        "cue-251"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-046",
+      "startMs": 609720,
+      "endMs": 615790,
+      "text": "あいつらに取ってみれば嵐の改そこまで難易度が高いコールじゃない。なんとかして逃げ切れ。",
+      "rawEntryIds": [
+        "cue-253"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-047",
+      "startMs": 616880,
+      "endMs": 629320,
+      "text": "なんとかして逃げ切れね。全くとんでもないをつまされたな。コンテナの外部放射線射兵レベルは[音楽]A30でした。あのコンテナほとんどが射兵剤かよ。通常の貨物にしては射兵が高すぎますし、植物や資料をわざわざ行便に載せる意味がありません。",
+      "rawEntryIds": [
+        "cue-255",
+        "cue-257",
+        "cue-259",
+        "cue-261",
+        "cue-263"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-048",
+      "startMs": 637320,
+      "endMs": 647310,
+      "text": "校舎兵かつ急行となれば生きていて放射線被爆を避けなければならない対象が格納されていると考えるのが妥当です。",
+      "rawEntryIds": [
+        "cue-265",
+        "cue-267",
+        "cue-269"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-049",
+      "startMs": 647320,
+      "endMs": 651790,
+      "text": "じゃあ人間だな。",
+      "rawEntryIds": [
+        "cue-271"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-050",
+      "startMs": 654360,
+      "endMs": 696670,
+      "text": "要望を全て叶えるとすると木星への直接エントリーしか方法はありません。木星赤道面にフルバーンでエントリーし、高エネルギー直接繊維でガニメデに接近します。このコ路であれば嵐の回路よりもさらに10時間早くガニメデに到達できます。オーバー筋の木星は1.5RJ。調力による期待王力は数百t相当です。小型線なら耐えられる可能性がありますが、地球や火星の大型艇ではまず耐えられないでしょうね。この船だって耐えられないだろう。85%の確率で基礎骨格が破断します。終わってんじゃねえか。乗務員は重力保護で守られますから大丈夫ですよ。",
+      "rawEntryIds": [
+        "cue-273",
+        "cue-275",
+        "cue-277",
+        "cue-279",
+        "cue-281",
+        "cue-283",
+        "cue-285",
+        "cue-287",
+        "cue-289",
+        "cue-291",
+        "cue-293",
+        "cue-295",
+        "cue-297",
+        "cue-299"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep01-line-051",
+      "startMs": 696680,
+      "endMs": 723710,
+      "text": "船が空中分解するまではな。オーバースのウィンドウは嵐の回廊では数時間ありましたが、ダイレクトエントリーの場合ターゲットウィンドウはプラスマイナス5分です。必要デルタVは-2.3kmマ秒。中央を180秒以上外せばガニメで交差は消失の重力移度に落ちます。その前にアビオが焼き切れて放射線に焼かれそうだな。",
+      "rawEntryIds": [
+        "cue-301",
+        "cue-303",
+        "cue-305",
+        "cue-307",
+        "cue-309",
+        "cue-311",
+        "cue-313",
+        "cue-315",
+        "cue-317"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-052",
+      "startMs": 723720,
+      "endMs": 730190,
+      "text": "木星待機にじっくり潰されるよりはマしですね。考えたくもない。",
+      "rawEntryIds": [
+        "cue-319",
+        "cue-321"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-053",
+      "startMs": 730200,
+      "endMs": 790150,
+      "text": "それでどうしますか?どうもこうもやってやるしかないだろう。どうせおっ手に捕まればそれで終わりなんだ。かけてみようぜ。そう来なくちゃですね。お前なんか楽しんでないか?木星待機の風は時速480kmなんですって。やめろって演技でもない。フォアエントリーチェックリスト路401°で安定冷却済み一時国格地設計値範囲内放射線フィールド到着時残業42分そんなに短いかダイレクトエントリーでは後方車検に直接突っ込みますから持つだけましか後方計算ペリジュピター到達予測まで残り11時間42分オーバースウィンドウプラスマイナス5君180秒以内分かってる。おい、お前気が狂るったか。",
+      "rawEntryIds": [
+        "cue-323",
+        "cue-325",
+        "cue-327",
+        "cue-329",
+        "cue-331",
+        "cue-333",
+        "cue-335",
+        "cue-337",
+        "cue-339",
+        "cue-341",
+        "cue-343",
+        "cue-345",
+        "cue-347",
+        "cue-349",
+        "cue-351",
+        "cue-353",
+        "cue-355"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-054",
+      "startMs": 792600,
+      "endMs": 795710,
+      "text": "お前が木星への直撃コースにいるからだろうが。",
+      "rawEntryIds": [
+        "cue-357"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-055",
+      "startMs": 797920,
+      "endMs": 799069,
+      "text": "バカか。",
+      "rawEntryIds": [
+        "cue-359"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-056",
+      "startMs": 799079,
+      "endMs": 802430,
+      "text": "というかついてきてたのかよ。気持ち悪いな。",
+      "rawEntryIds": [
+        "cue-361"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-057",
+      "startMs": 810279,
+      "endMs": 811670,
+      "text": "フルバーンで突っ込む。",
+      "rawEntryIds": [
+        "cue-363"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-058",
+      "startMs": 811680,
+      "endMs": 813030,
+      "text": "お前今なんつった?",
+      "rawEntryIds": [
+        "cue-365"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-059",
+      "startMs": 813040,
+      "endMs": 830030,
+      "text": "了解。露出力は100%で設定。想定水力は9.8mニュン。メインアップ。式アームド衝撃に備えてください。放射線レベル許容範囲内。何か言い残すことはあるか?",
+      "rawEntryIds": [
+        "cue-367",
+        "cue-369",
+        "cue-371"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-060",
+      "startMs": 832120,
+      "endMs": 833710,
+      "text": "ガニメで出会おうぜ。",
+      "rawEntryIds": [
+        "cue-373"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-061",
+      "startMs": 833720,
+      "endMs": 839110,
+      "text": "54321",
+      "rawEntryIds": [
+        "cue-375"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-062",
+      "startMs": 857959,
+      "endMs": 867150,
+      "text": "ない光景だなきどうでしょうペリジュピターの景色は違うかもしませんがでかすぎて距離感がつめなくなるな。",
+      "rawEntryIds": [
+        "cue-377",
+        "cue-379",
+        "cue-381"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-063",
+      "startMs": 867160,
+      "endMs": 874110,
+      "text": "ガリレオ探査の気分ですね。それ木星に突っ込んだ探索だろう。我々の先輩です。",
+      "rawEntryIds": [
+        "cue-383",
+        "cue-385"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-064",
+      "startMs": 874120,
+      "endMs": 877310,
+      "text": "だからやめろって。",
+      "rawEntryIds": [
+        "cue-387"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-065",
+      "startMs": 877320,
+      "endMs": 886870,
+      "text": "まだ後悔してますか?今更後悔してもう遅いだろう。エントリーしちゃったんだから。まあそうですね。今更です。",
+      "rawEntryIds": [
+        "cue-389",
+        "cue-391",
+        "cue-393"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-066",
+      "startMs": 886880,
+      "endMs": 902030,
+      "text": "しかしでっかいな。木星ってのは近寄ると直径は火星の11倍、質量は318倍です。熱い待機の下には液体水素の海があります。聞かなきゃよかったよ。",
+      "rawEntryIds": [
+        "cue-395",
+        "cue-397",
+        "cue-399",
+        "cue-401"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-067",
+      "startMs": 902040,
+      "endMs": 909430,
+      "text": "残り1分で時期圏通過。時期シールドは最大出力を維持。被爆系0点リセット。",
+      "rawEntryIds": [
+        "cue-403",
+        "cue-405"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-068",
+      "startMs": 909440,
+      "endMs": 919629,
+      "text": "引き返しますか?それは引き返せる時に行ってくれ。次回から気をつけます。そうだな。",
+      "rawEntryIds": [
+        "cue-407",
+        "cue-409",
+        "cue-411"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-069",
+      "startMs": 923320,
+      "endMs": 933269,
+      "text": "ウィンドプラスマイナス180秒。速度48.9km秒。問題なし。戦放射線レベル上昇中。",
+      "rawEntryIds": [
+        "cue-413",
+        "cue-415",
+        "cue-417"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-070",
+      "startMs": 933279,
+      "endMs": 938309,
+      "text": "現在毎8ベルト時期シールドは稼働中。",
+      "rawEntryIds": [
+        "cue-419"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-071",
+      "startMs": 938319,
+      "endMs": 946629,
+      "text": "調力は調力による機待力は現在130%設計上の許容値を上回っています。",
+      "rawEntryIds": [
+        "cue-421",
+        "cue-423"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-072",
+      "startMs": 946639,
+      "endMs": 961540,
+      "text": "時のズルの焦点によってエンジン出力が6%低下中。このタイミングでよ。オーバース準備。出力はピークに設定。定値を超えています。バースを超える力は黒の熱を圧縮します。足りないよりマしだろう。了解。ピーク出力の設定。オーバース時間を再計算しました。近まで残り",
+      "rawEntryIds": [
+        "cue-425",
+        "cue-427",
+        "cue-429"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-073",
+      "startMs": 976839,
+      "endMs": 992670,
+      "text": "上昇中オーバース準備式アームド衝撃に備えてください。放射線レベル許容範囲内54321",
+      "rawEntryIds": [
+        "cue-431",
+        "cue-433",
+        "cue-435"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-074",
+      "startMs": 1009199,
+      "endMs": 1016030,
+      "text": "デルターV進行残り1.8km前",
+      "rawEntryIds": [
+        "cue-437"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-075",
+      "startMs": 1019880,
+      "endMs": 1026630,
+      "text": "余裕だったらこんな恥ずかしいこと言わないだろう。",
+      "rawEntryIds": [
+        "cue-439",
+        "cue-441"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-076",
+      "startMs": 1029559,
+      "endMs": 1039110,
+      "text": "デルター部進行残り0.3km時ずるの王力歪み許容値を超",
+      "rawEntryIds": [
+        "cue-443",
+        "cue-445"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-077",
+      "startMs": 1052000,
+      "endMs": 1067350,
+      "text": "。水系に損傷7%時ずるのコイル王力は限界値を17秒間増加しました。",
+      "rawEntryIds": [
+        "cue-447",
+        "cue-449"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-078",
+      "startMs": 1070400,
+      "endMs": 1083149,
+      "text": "な。先体温度近衡に復帰しました。改めて報告します。時期ノズルの一部が蘇生変形を起こしています。長時間の高出力運転は危険です。",
+      "rawEntryIds": [
+        "cue-451",
+        "cue-453",
+        "cue-455",
+        "cue-457"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-079",
+      "startMs": 1083159,
+      "endMs": 1092669,
+      "text": "ちょっとは干渉に浸らせろよ。座ってただけでしょ。ナビがそれ言う。おい、やったな。",
+      "rawEntryIds": [
+        "cue-459"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-080",
+      "startMs": 1094240,
+      "endMs": 1096920,
+      "text": "公案ネットはお前の話で持ち切りだぞ。木星にダイレクトエントリーしたってな。",
+      "rawEntryIds": [
+        "cue-461"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-081",
+      "startMs": 1096930,
+      "endMs": 1101590,
+      "text": "[音楽]もう2度とごめんだけどな。",
+      "rawEntryIds": [
+        "cue-463",
+        "cue-465"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-082",
+      "startMs": 1101600,
+      "endMs": 1105630,
+      "text": "地球と火星の奴らは呑キに周回コールに回ったよ。お前の",
+      "rawEntryIds": [
+        "cue-467"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-083",
+      "startMs": 1106080,
+      "endMs": 1109950,
+      "text": "時間前を走ってるなあ。後でログ見せてくれよ。",
+      "rawEntryIds": [
+        "cue-469"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-084",
+      "startMs": 1112039,
+      "endMs": 1116230,
+      "text": "時期フィールドと木星プラズマとのフラッシュで何も見えなかったよ。",
+      "rawEntryIds": [
+        "cue-471"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-085",
+      "startMs": 1133600,
+      "endMs": 1138350,
+      "text": "お疲れさんと言いたいところだがメではお前の入行を許可できない。",
+      "rawEntryIds": [
+        "cue-473"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-086",
+      "startMs": 1150039,
+      "endMs": 1152480,
+      "text": "すまないが、他の港を渡ってくれ。",
+      "rawEntryIds": [
+        "cue-475"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-087",
+      "startMs": 1152490,
+      "endMs": 1155829,
+      "text": "[音楽]",
+      "rawEntryIds": [
+        "cue-477"
+      ],
+      "mergeReasons": []
+    }
+  ],
+  "extractedAt": "2026-02-23T19:33:24.950Z",
+  "mergeConfig": {
+    "maxGapMs": 300,
+    "minCueDurationMs": 100
+  }
+}

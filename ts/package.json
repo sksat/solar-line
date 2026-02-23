@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "build": "node --experimental-strip-types src/build.ts --data-dir ../reports --out-dir ../dist",
     "collect-subtitles": "node --experimental-strip-types src/collect-subtitles.ts",
-    "extract-session-log": "node --experimental-strip-types src/extract-session-log.ts"
+    "extract-session-log": "node --experimental-strip-types src/extract-session-log.ts",
+    "extract-dialogue": "node --experimental-strip-types src/extract-dialogue.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
