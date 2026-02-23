@@ -1,6 +1,6 @@
 # Task 013: Episode 1 Reanalysis — Evidence & Multi-Parameter Exploration
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Goal
 Address human feedback on Episode 1 analysis:
