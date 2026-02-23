@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "episode": 2,
+  "videoId": "YXZWJLKD7Oo",
+  "speakers": [
+    {
+      "id": "kiritan",
+      "nameJa": "きりたん",
+      "nameEn": "Kiritan",
+      "aliases": ["キリタン"],
+      "notes": "ケストレル号の船長兼パイロット。損傷した船体で木星圏からの脱出を試みる。"
+    },
+    {
+      "id": "kestrel-ai",
+      "nameJa": "ケストレルAI",
+      "nameEn": "Kestrel AI",
+      "aliases": ["公案", "コアン", "航案"],
+      "notes": "ケストレル号の船載AI。損傷状況の報告、航法計算、EVA時間管理を行う。丁寧語を使う。"
+    },
+    {
+      "id": "enceladus-keeper",
+      "nameJa": "エンケラドスの管理人",
+      "nameEn": "Enceladus Station Keeper",
+      "aliases": [],
+      "notes": "エンケラドスの廃棄寸前のステーションをたった1人で管理する女性。土星圏の孤独な存在。契約と借金のために残っている。"
+    },
+    {
+      "id": "unknown-vessel",
+      "nameJa": "正体不明の大型船",
+      "nameEn": "Unknown Vessel",
+      "aliases": [],
+      "notes": "50万t級の登録なし・発信号なしの船。外縁軌道投入直前にケストレルに接近。「その荷を地球や火星に渡すな」と通信。"
+    }
+  ],
+  "attributionNotes": "話者判定はYouTube自動字幕のASR結果とPart 2の物語コンテキスト（ニコニコ動画 sm45407401）に基づく。VOICEROID音声のASR精度が低く多くのテキストに誤認識がある。話者判定は発言の内容・文脈・口調（きりたん=ぞんざい語、AI=丁寧語、管理人=女性語）から推定。",
+  "reviewedBy": "Claude Opus 4.6 (context-assisted, NOT fully automated)",
+  "reviewedAt": "2026-02-23T00:00:00Z"
+}

@@ -21,12 +21,19 @@ YouTube auto-generated subtitles have very poor accuracy for VOICEROID/software-
 Many terms are misrecognized. Speaker attribution must rely on context, not ASR text.
 See `ideas/voiceroid_asr_quality.md`.
 
+## Task 028 Progress (EP02-04)
+Task 028 completed Phase 2 attribution for EP02, EP03, and EP04:
+- EP02: ep02_speakers.json (4 speakers) + ep02_dialogue.json (102 entries, 9 scenes)
+- EP03: ep03_speakers.json (4 speakers) + ep03_dialogue.json (53 entries, 10 scenes)
+- EP04: ep04_speakers.json (5 speakers) + ep04_dialogue.json (34 entries, 10 scenes)
+
 ## Next Session TODO
 1. Continue speaker attribution for lines 20-87 in ep01_dialogue.json
 2. The dialogue text in ep01_dialogue.json should be corrected based on actual video content
    (ASR text is unreliable — need to verify against video)
 3. Update ep01.json dialogueQuotes with corrected, attributed quotes
 4. Consider alternate subtitle sources (manual transcription?)
+5. EP05 dialogue: blocked until YouTube subtitle availability
 
 ## Architecture
 - Phase 1 (Extraction): `epXX_lines.json` — automated, raw text+timing

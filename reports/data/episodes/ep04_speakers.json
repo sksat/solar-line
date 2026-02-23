@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "episode": 4,
+  "videoId": "1cTmWjYSlTM",
+  "speakers": [
+    {
+      "id": "kiritan",
+      "nameJa": "きりたん",
+      "nameEn": "Kiritan",
+      "aliases": ["キリタン"],
+      "notes": "ケストレル号の船長兼パイロット。父親が嵐の回廊を開拓したことが明かされる。「新しいソーラーライン」を開く決意。"
+    },
+    {
+      "id": "kestrel-ai",
+      "nameJa": "ケストレルAI（ケイ）",
+      "nameEn": "Kestrel AI (Kei)",
+      "aliases": ["公案", "コアン", "航案", "ケイ"],
+      "notes": "ケストレル号の船載AI。損傷状態（推力65%、シールドコイル2系のみ、点火回数3-4回）を管理。きりたんから「相棒」と呼ばれる。"
+    },
+    {
+      "id": "titania-control",
+      "nameJa": "タイタニア管制",
+      "nameEn": "Titania Control",
+      "aliases": [],
+      "notes": "タイタニア集合複合施設の管制。天王星自治有効機構の施設。ケストレルの修理を受け入れる。"
+    },
+    {
+      "id": "guest",
+      "nameJa": "ゲスト（天王星人）",
+      "nameEn": "Guest (Uranian)",
+      "aliases": ["エスパー"],
+      "notes": "天王星圏出身の人物。タイタニアで降りる。きりたんとの別れのシーン。"
+    },
+    {
+      "id": "fleet-officer",
+      "nameJa": "追跡艦隊",
+      "nameEn": "Pursuit Fleet",
+      "aliases": [],
+      "notes": "土星方面から接近する地球保安艦隊（5隻以上）。到着まで33時間。"
+    }
+  ],
+  "attributionNotes": "話者判定はYouTube自動字幕のASR結果とPart 4の物語コンテキスト（ニコニコ動画 sm45851569）に基づく。EP04はプラズモイド遭遇、タイタニア到着、地球への出発の3部構成。きりたんの父親の背景が明かされ、「新しいソーラーライン」の決意が語られる重要話。",
+  "reviewedBy": "Claude Opus 4.6 (context-assisted, NOT fully automated)",
+  "reviewedAt": "2026-02-23T00:00:00Z"
+}
