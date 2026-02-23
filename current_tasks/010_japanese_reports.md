@@ -1,6 +1,6 @@
 # Task 010: Localize Reports to Japanese
 
-## Status: TODO
+## Status: DONE
 
 ## Goal
 Convert all GitHub Pages report templates and existing report data to Japanese (日本語).

@@ -6,6 +6,4 @@ Claim a task, work on it, commit your changes, and push to origin.
 以下追加指示（反映済みのものは削除すること）
 ===
 
-- すべてがインタラクティブである必要は必ずしもないので、解析結果のグラフなどはレポート内に適宜貼ること
-- 各話レポートなどでは、YouTube および nicovideo を最初に embed すること。そのための Card component を作っておくと便利かも。
-- レポートでは、適宜"きりたん「~~~」(10:05)"のような、考察元になった発言を引用すること
+（なし）

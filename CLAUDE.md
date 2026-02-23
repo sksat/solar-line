@@ -46,6 +46,9 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **All reports published to GitHub Pages must be written in Japanese (日本語)**
 - Reports include per-transfer analysis and session logs
 - Session logs should be collected from Claude Code conversation logs (not just stdout)
+- Not everything needs to be interactive — include static analysis graphs/charts in reports where appropriate
+- Each episode report should embed the YouTube and Niconico video at the top (use a video card component)
+- Quote character dialogue with timestamps in analysis, e.g. きりたん「~~~」(10:05)
 
 ## Key Principles
 
