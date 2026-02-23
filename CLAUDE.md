@@ -60,3 +60,9 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Document assumptions.** Every analysis depends on assumptions about parameters, data sources, and orbital conditions. Make these explicit in code comments and reports.
 - **Don't trust unverified data.** Only original source material and parameters from verified institutions are reliable. Everything else must be cross-checked.
 - **Structure for traceability.** Build code and reports so that assumptions and data provenance are easy to inspect.
+
+---
+## 人間からの一時的な指示（反映待ち）
+
+- ケストレルの性能評価の根拠が無い
+- 分析をする際は、何かひとつでも誤りがあったら諦めるのではなく、複数のパターンを想定してどのパラメータがどうであったら成立するか、といったことを議論するべき。これは基本方針に追加。
