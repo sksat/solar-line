@@ -1,0 +1,584 @@
+{
+  "episode": 4,
+  "title": "SOLAR LINE Part 4 — タイタニアから地球へ「新しいソーラーライン」",
+  "summary": "大破状態のケストレルが天王星磁気圏のプラズモイドを突破してタイタニアに到着。タイタニアの施設で応急修理を行うが、地球の保安艦隊（5隻以上）が土星方面から33時間後に到着することが判明。きりたんは「新しいソーラーライン」——地球の航法インフラに依存しない独自航路——で地球への帰還を決意する。推力は損傷により65%（6.3 MN）に制限、噴射可能回数は最大4回。",
+  "videoCards": [
+    {
+      "provider": "niconico",
+      "id": "sm45851569",
+      "title": "【ソフトウェアトーク劇場】SOLAR LINE Part 4",
+      "caption": "ニコニコ動画（オリジナル公開）"
+    },
+    {
+      "provider": "youtube",
+      "id": "1cTmWjYSlTM",
+      "title": "【ソフトウェアトーク劇場】SOLAR LINE Part 4",
+      "caption": "YouTube版"
+    }
+  ],
+  "dialogueQuotes": [
+    {
+      "id": "ep04-quote-01",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "2次冷却系圧力、現在0.74 MPa。規定値の63%まで低下。冷媒の漏洩が加速しています。このままでは12時間以内に式の冷却能力を喪失します",
+      "timestamp": "00:07"
+    },
+    {
+      "id": "ep04-quote-02",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "タイタニアまでは現在の軌道で残り9時間42分",
+      "timestamp": "00:20"
+    },
+    {
+      "id": "ep04-quote-03",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "タイタニアへの軌道投入には減速噴射が必要です。もしも式が使えなければこのまま天王星の重力圏を突き抜けることになります",
+      "timestamp": "00:30"
+    },
+    {
+      "id": "ep04-quote-04",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "磁気ノズルのコイル温度異常上昇の兆候あり。次の式点火で完全に消耗する可能性が",
+      "timestamp": "01:17"
+    },
+    {
+      "id": "ep04-quote-05",
+      "speaker": "きりたん",
+      "text": "つまりあと1回しか打てないってことか",
+      "timestamp": "01:25"
+    },
+    {
+      "id": "ep04-quote-06",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "天王星磁気圏内でプラズモイド発生を検知。進路上、数分後に交差。RCSのみでは回避不能。式を使えば回避できますが、減速用の点火ができなくなる可能性があります",
+      "timestamp": "02:13"
+    },
+    {
+      "id": "ep04-quote-07",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "天王星は自転軸と磁軸が60°もずれています。その他の惑星と異なり、プラズモイドの挙動が極めて予測しづらいのです",
+      "timestamp": "02:39"
+    },
+    {
+      "id": "ep04-quote-08",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "磁気シールドの残寿命は14分。プラズモイドの通過には最低でも8分かかります",
+      "timestamp": "02:39"
+    },
+    {
+      "id": "ep04-quote-09",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "タイタニアまでの被曝量は現在の航路で累積48ミリシーベルト、許容範囲以内です",
+      "timestamp": "06:32"
+    },
+    {
+      "id": "ep04-quote-10",
+      "speaker": "きりたん",
+      "text": "目的地は地球だ。新しいソーラーラインを私が開いてやる",
+      "timestamp": "16:12"
+    },
+    {
+      "id": "ep04-quote-11",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "推定点火可能回数3回、最大4回。磁気シールドコイル2系のみ稼働。主機フルバーンは推奨しません。冷却系圧力1次系1.87MPa、2次系0.96MPa。熱余裕は規定値の78%",
+      "timestamp": "17:16"
+    },
+    {
+      "id": "ep04-quote-12",
+      "speaker": "きりたん",
+      "text": "出力は65%に設定。想定推力は6.3メガニュートン。巡行加速で太陽に向かって落ちるぞ",
+      "timestamp": "17:29"
+    },
+    {
+      "id": "ep04-quote-13",
+      "speaker": "きりたん",
+      "text": "私の親父は嵐の回廊を開いた。それは地球のためでも火星のためでもない。奴らが手を伸ばせない場所に道を作りたかったんだ。お前は道具じゃない。私の相棒だ",
+      "timestamp": "15:56"
+    },
+    {
+      "id": "ep04-quote-14",
+      "speaker": "ケストレル船載AI（ケイ）",
+      "text": "少なくとも5隻。おそらくは公安艦隊でしょうね。到着まで33時間",
+      "timestamp": "13:18"
+    }
+  ],
+  "transfers": [
+    {
+      "id": "ep04-transfer-01",
+      "episode": 4,
+      "description": "ホーマン遷移基準値: 天王星軌道 → 地球軌道（最小エネルギー）",
+      "timestamp": "該当なし（参考計算）",
+      "claimedDeltaV": null,
+      "computedDeltaV": 15.94,
+      "assumptions": [
+        "天王星（2,872,460,000 km）と地球（149,598,023 km）の太陽中心円軌道を仮定",
+        "共面軌道（軌道傾斜角の変更なし）",
+        "衝撃的噴射（瞬間的な速度変更）",
+        "二体問題（太陽の重力のみ）"
+      ],
+      "verdict": "indeterminate",
+      "explanation": "古典的ホーマン遷移には合計約15.94 km/sのΔVが必要で、約16.1年を要する。天王星→地球は太陽系で最も長い内惑星への帰還軌道の一つであり、ΔVの大部分（11.28 km/s）は地球軌道での減速に消費される。作中の描写では巡行加速で「太陽に向かって落ちる」と言及しており、ホーマン遷移よりも高推力のBrachistochrone型遷移を示唆している。",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "departureRadius": 2872460000,
+        "arrivalRadius": 149598023,
+        "departureDeltaV": 4.66,
+        "arrivalDeltaV": 11.28,
+        "transferTimeDays": 5863,
+        "transferTimeYears": 16.1
+      },
+      "sources": [
+        {
+          "claim": "天王星軌道半径: 2,872,460,000 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Uranus Fact Sheet",
+          "sourceLabel": "NASA惑星データ"
+        },
+        {
+          "claim": "地球軌道半径: 149,598,023 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Earth Fact Sheet",
+          "sourceLabel": "NASA惑星データ"
+        }
+      ]
+    },
+    {
+      "id": "ep04-transfer-02",
+      "episode": 4,
+      "description": "天王星脱出: タイタニア軌道からの出発",
+      "timestamp": "17:29",
+      "claimedDeltaV": null,
+      "computedDeltaV": 1.51,
+      "assumptions": [
+        "タイタニア軌道（435,910 km）からの脱出を仮定",
+        "円軌道からの衝撃噴射",
+        "推力65%制限（6.37 MN）で噴射"
+      ],
+      "verdict": "plausible",
+      "explanation": "タイタニア軌道からの天王星脱出には約1.51 km/sのΔVが必要（脱出速度5.16 km/s − 円軌道速度3.65 km/s）。これはケストレルの損傷状態でも十分達成可能な値。天王星の公転速度（6.80 km/s）が太陽中心系での速度に加算される重力アシスト効果を受けるため、内側の軌道へ向かうには逆行方向への脱出が必要。",
+      "parameters": {
+        "mu": 5793939,
+        "departureRadius": 435910,
+        "escapeVelocity": 5.16,
+        "circularVelocity": 3.65,
+        "uranusOrbitalVelocity": 6.80,
+        "damagedThrustMN": 6.37
+      },
+      "evidenceQuoteIds": ["ep04-quote-11", "ep04-quote-12"],
+      "sources": [
+        {
+          "claim": "タイタニア軌道半径: 435,910 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA Titania (Uranus III) data",
+          "sourceLabel": "NASA衛星データ"
+        },
+        {
+          "claim": "出力65%、推力6.3 MN",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 17:29",
+          "sourceLabel": "Part 4 きりたんの出発準備"
+        }
+      ]
+    },
+    {
+      "id": "ep04-transfer-03",
+      "episode": 4,
+      "description": "Brachistochrone遷移: 天王星→地球（65%推力）",
+      "timestamp": "17:29",
+      "claimedDeltaV": null,
+      "computedDeltaV": 1202,
+      "assumptions": [
+        "天王星−地球最短距離（2,722,861,977 km ≈ 18.2 AU）を使用",
+        "Brachistochrone（中間点で反転する一定加速）を仮定",
+        "推力6.37 MN（65%出力）での加速",
+        "質量48,000 tを仮定（加速度0.133 m/s²）"
+      ],
+      "verdict": "conditional",
+      "explanation": "48,000 tの設定質量で65%推力の場合、天王星→地球のBrachistochrone遷移には最短距離でも約105日を要し、ΔVは約1,202 km/sとなる。加速度は0.0135G（0.133 m/s²）と非常に低い。ただし、これまでのエピソードと同様に実効質量が数百トンであれば、大幅に短縮される。例えば300 tなら加速度は2.16G（21.2 m/s²）となり、わずか数日で到達可能。さらに65%推力の制限により、以前のエピソードよりも遷移に制約がかかる。",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "departureRadius": 2872460000,
+        "arrivalRadius": 149598023,
+        "distance": 2722861977,
+        "damagedThrustN": 6370000,
+        "accelMs2": 0.133,
+        "accelG": 0.0135,
+        "deltaVKms": 1202,
+        "timeSec": 9059281,
+        "timeDays": 104.9
+      },
+      "evidenceQuoteIds": ["ep04-quote-10", "ep04-quote-12"],
+      "sources": [
+        {
+          "claim": "目的地は地球",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 16:12",
+          "sourceLabel": "Part 4 きりたんの宣言"
+        },
+        {
+          "claim": "出力65%、推力6.3 MN",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 17:29",
+          "sourceLabel": "Part 4 出発シーケンス"
+        },
+        {
+          "claim": "船体質量: 約48,000 t",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "ソーラーライン設定資料"
+        }
+      ]
+    },
+    {
+      "id": "ep04-transfer-04",
+      "episode": 4,
+      "description": "プラズモイド遭遇: 天王星磁気圏内の通過",
+      "timestamp": "02:13",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "天王星の磁軸は自転軸から60°傾斜（Voyager 2実測値: 59.7°）",
+        "プラズモイド通過時間: 最低8分",
+        "磁気シールド残寿命: 14分（余裕: 6分）",
+        "RCSのみでは回避不能、主機使用は減速燃料を消費"
+      ],
+      "verdict": "plausible",
+      "explanation": "天王星の磁軸傾斜60°は実際のVoyager 2観測値（59.7°）と99.5%一致する。この極端な傾斜により天王星の磁気圏は「不均一に回転するフットボール」のように振る舞い、プラズモイドの発生位置と挙動が他の惑星と比べて予測困難になる——これは2019年のDiBraccio & Gershmanの研究と完全に整合する。シールド14分の寿命に対し通過8分、余裕6分（43%）という設定は、不確実性を考慮すると「余裕とは言えない」というケイの評価が妥当。実際にシールドコイル1系が脱落し、ピーク時12.6 cSv/min（126 mSv/min）の被曝を受けた描写は、プラズモイドの予測困難性を裏付けている。",
+      "parameters": {
+        "shieldLifeMin": 14,
+        "transitMin": 8,
+        "marginMin": 6,
+        "marginFraction": 0.429,
+        "peakRadiationMsvMin": 126,
+        "totalExposureMSv": 480,
+        "statedMagneticTiltDeg": 60,
+        "realMagneticTiltDeg": 59.7,
+        "tiltAccuracyPercent": 99.5
+      },
+      "evidenceQuoteIds": ["ep04-quote-06", "ep04-quote-07", "ep04-quote-08", "ep04-quote-09"],
+      "sources": [
+        {
+          "claim": "天王星磁軸傾斜: 60°",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 02:39",
+          "sourceLabel": "Part 4 ケイの磁気圏解説"
+        },
+        {
+          "claim": "天王星磁軸の実測値: 59.7°（自転軸からの傾斜）",
+          "sourceType": "external-reference",
+          "sourceRef": "Voyager 2 magnetometer data, Ness et al. 1986",
+          "sourceLabel": "Voyager 2観測データ"
+        },
+        {
+          "claim": "天王星プラズモイドの観測・分析",
+          "sourceType": "external-reference",
+          "sourceRef": "DiBraccio & Gershman 2019, Geophysical Research Letters",
+          "sourceLabel": "天王星プラズモイド研究"
+        },
+        {
+          "claim": "磁気シールド残寿命14分、プラズモイド通過最低8分",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 02:39",
+          "sourceLabel": "Part 4 プラズモイド遭遇"
+        }
+      ]
+    },
+    {
+      "id": "ep04-transfer-05",
+      "episode": 4,
+      "description": "地球艦隊の接近: 土星軌道方面から33時間",
+      "timestamp": "13:18",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "少なくとも5隻の保安艦が土星軌道方面から接近",
+        "到着まで33時間（ケストレルのタイタニア到着まで9h42m → 約23h18mの猶予）",
+        "施設への突入ではなく破壊が目的"
+      ],
+      "verdict": "plausible",
+      "explanation": "地球艦隊が33時間でタイタニアに到達するには、残距離に応じて841〜12,112 km/sの平均速度が必要。残距離1億kmなら841 km/s（光速の0.28%）、土星-天王星間最短距離なら12,112 km/s（光速の4%）。作中世界では高推力ブラキストクローネ航行が確立しているため、大型保安艦がこの速度域に達することは設定上不自然ではない。ケストレルのタイタニア到着（9h42m後）から艦隊到着まで約23時間の猶予があり、応急修理・補給・出発の時間として妥当な制約設定。",
+      "parameters": {
+        "fleetETAHours": 33,
+        "fleetShipCount": 5,
+        "arrivalTimeHours": 9.7,
+        "availableTimeHours": 23.3,
+        "avgSpeedAt100MillionKm": 842,
+        "avgSpeedAtSaturnUranusKms": 12112
+      },
+      "evidenceQuoteIds": ["ep04-quote-14"],
+      "sources": [
+        {
+          "claim": "5隻以上、33時間で到着",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 13:18",
+          "sourceLabel": "Part 4 艦隊検知"
+        }
+      ]
+    }
+  ],
+  "explorations": [
+    {
+      "id": "ep04-exploration-01",
+      "transferId": "ep04-transfer-03",
+      "question": "65%推力のケストレルは天王星→地球をどの程度の時間で飛行できるか？ 質量境界は？",
+      "boundaryCondition": "mass ≤ 3,929t at 6.37 MN for 30-day trip, closest distance",
+      "scenarios": [
+        {
+          "label": "48,000t（設定値）",
+          "variedParam": "質量",
+          "variedValue": 48000,
+          "variedUnit": "t",
+          "results": {
+            "accelG": 0.0135,
+            "timeDays": 104.9,
+            "deltaVKms": 1202
+          },
+          "feasible": true,
+          "note": "105日（約3.5ヶ月）で到達可能。加速度は0.014Gと低いが物理的には可能。ΔVは1,202 km/s。"
+        },
+        {
+          "label": "300t（エピソード横断の質量境界付近）",
+          "variedParam": "質量",
+          "variedValue": 300,
+          "variedUnit": "t",
+          "results": {
+            "accelG": 2.16,
+            "timeDays": 8.3,
+            "deltaVKms": 15230
+          },
+          "feasible": true,
+          "note": "8.3日で到達。加速度2.16Gは人体に負荷がかかるが短期間なら耐えうる。Part 1-3の質量境界と整合。"
+        },
+        {
+          "label": "3,929t（30日遷移の質量境界）",
+          "variedParam": "質量",
+          "variedValue": 3929,
+          "variedUnit": "t",
+          "results": {
+            "accelG": 0.165,
+            "timeDays": 30,
+            "deltaVKms": 4202
+          },
+          "feasible": true,
+          "note": "30日で到達可能な質量上限。月面の重力（0.17G）に近い加速度。"
+        },
+        {
+          "label": "35,364t（90日遷移の質量境界）",
+          "variedParam": "質量",
+          "variedValue": 35364,
+          "variedUnit": "t",
+          "results": {
+            "accelG": 0.0184,
+            "timeDays": 90,
+            "deltaVKms": 1401
+          },
+          "feasible": true,
+          "note": "3ヶ月で到達。微小重力環境での長期航海。",
+          "collapsedByDefault": true
+        }
+      ],
+      "summary": "65%推力制限下でも、天王星→地球のBrachistochrone遷移は48,000tで約105日、300tなら約8日。制限推力により以前のエピソードよりも遷移時間が長くなるが、ケストレルの「真の」質量が数百トン台であれば十分に実用的な時間で到達可能。ホーマン遷移（16.1年）と比べれば桁違いに速い。"
+    },
+    {
+      "id": "ep04-exploration-02",
+      "transferId": "ep04-transfer-04",
+      "question": "プラズモイド遭遇の科学的正確性は？ 天王星磁気圏の描写は妥当か？",
+      "scenarios": [
+        {
+          "label": "磁軸傾斜60°（作中値）",
+          "variedParam": "磁軸傾斜",
+          "variedValue": 60,
+          "variedUnit": "度",
+          "results": {
+            "accuracyPercent": 99.5,
+            "realValueDeg": 59.7,
+            "source": "Voyager 2"
+          },
+          "feasible": true,
+          "note": "Voyager 2の実測値（59.7°）と0.5%の誤差。太陽系で最も異常な磁場構造を正確に描写。"
+        },
+        {
+          "label": "シールド余裕6分（43%）",
+          "variedParam": "シールド余裕",
+          "variedValue": 6,
+          "variedUnit": "分",
+          "results": {
+            "marginFraction": 0.429,
+            "worstCaseMSv": 1008,
+            "actualMSv": 480
+          },
+          "feasible": true,
+          "note": "実際にはシールドコイル1系が脱落し、想定以上の被曝（480 mSv）。「余裕とは言えない」というケイの評価が正しかった。最悪シナリオ（ピーク放射線を全通過時間受ける場合）の1,008 mSvの半分程度に収まった。"
+        },
+        {
+          "label": "480 mSv被曝の医学的影響",
+          "variedParam": "累積被曝量",
+          "variedValue": 480,
+          "variedUnit": "mSv",
+          "results": {
+            "icrpAnnualLimitMSv": 50,
+            "icrpEmergencyLimitMSv": 500,
+            "nasaCareerLimitMSv": 600,
+            "acuteEffects": "軽度の悪心の可能性"
+          },
+          "feasible": true,
+          "note": "480 mSvはICRP緊急被曝限度（500 mSv）をわずかに下回る。NASAの宇宙飛行士のキャリア限度（600 mSv）以内。急性症状は軽い悪心程度で、作中の描写（「数時間以内に軽い吐き気を催す可能性」）は医学的に正確。"
+        }
+      ],
+      "summary": "Episode 4のプラズモイド遭遇は科学的に非常に正確。天王星磁軸の60°傾斜（実測値59.7°）、プラズモイドの予測困難性、被曝量と症状の関係——いずれもVoyager 2の観測データおよびICRP/NASAの放射線防護基準と高い整合性を示す。2019年のDiBraccio & Gershman論文で明らかになった天王星プラズモイドの知見が作中に反映されていると考えられる。"
+    },
+    {
+      "id": "ep04-exploration-03",
+      "transferId": "ep04-transfer-02",
+      "question": "損傷状態のケストレルはタイタニア軌道を脱出できるか？ 噴射回数の制約は？",
+      "scenarios": [
+        {
+          "label": "65%推力（6.37 MN）",
+          "variedParam": "推力",
+          "variedValue": 6.37,
+          "variedUnit": "MN",
+          "results": {
+            "dvEscapeKms": 1.51,
+            "feasibleAt48000t": true,
+            "feasibleAt300t": true
+          },
+          "feasible": true,
+          "note": "天王星脱出に必要な1.51 km/sは65%推力でも十分に達成可能。噴射3-4回のうち1回を消費。"
+        },
+        {
+          "label": "噴射予算: 天王星脱出 + 巡行加速 + 地球到着",
+          "variedParam": "噴射回数",
+          "variedValue": 4,
+          "variedUnit": "回",
+          "results": {
+            "escBurn": 1,
+            "cruiseBurn": 1,
+            "midcourseBurn": 1,
+            "arrivalBurn": 1,
+            "totalBurns": 4
+          },
+          "feasible": true,
+          "note": "Brachistochrone遷移には最低2回の噴射（加速+減速）が必要。航路修正を含めると3-4回で丁度ぎりぎり。損傷による制約が物語上の緊張感を生んでいる。"
+        }
+      ],
+      "summary": "ケストレルは65%推力でも天王星脱出（1.51 km/s）は問題なく可能。しかし地球までのBrachistochrone遷移には加速・減速の2噴射が最低限必要で、航路修正を加えると3-4回。「推定点火可能回数3回、最大4回」という制約は、天王星脱出1回＋遷移2-3回でちょうど使い切る計算であり、エラー余裕がほぼゼロという極限状態を正確に描写している。"
+    }
+  ],
+  "diagrams": [
+    {
+      "id": "ep04-diagram-01",
+      "title": "太陽中心系: 天王星→地球遷移",
+      "centerLabel": "太陽",
+      "scaleMode": "sqrt",
+      "radiusUnit": "AU",
+      "orbits": [
+        {
+          "id": "earth",
+          "label": "地球",
+          "radius": 1.0,
+          "color": "#4488ff",
+          "angle": 0.0,
+          "meanMotion": 1.991e-7
+        },
+        {
+          "id": "mars",
+          "label": "火星",
+          "radius": 1.524,
+          "color": "#ff4444",
+          "angle": 1.2
+        },
+        {
+          "id": "jupiter",
+          "label": "木星",
+          "radius": 5.203,
+          "color": "#dd8844",
+          "angle": 2.5
+        },
+        {
+          "id": "saturn",
+          "label": "土星",
+          "radius": 9.58,
+          "color": "#daa520",
+          "angle": 4.0,
+          "meanMotion": 6.761e-9
+        },
+        {
+          "id": "uranus",
+          "label": "天王星",
+          "radius": 19.19,
+          "color": "#88ccee",
+          "angle": 3.14,
+          "meanMotion": 2.370e-9
+        }
+      ],
+      "transfers": [
+        {
+          "label": "ホーマン遷移 (16.1年)",
+          "fromOrbitId": "uranus",
+          "toOrbitId": "earth",
+          "color": "#888888",
+          "style": "hohmann"
+        },
+        {
+          "label": "Brachistochrone (105日 @ 48kt)",
+          "fromOrbitId": "uranus",
+          "toOrbitId": "earth",
+          "color": "#ff6600",
+          "style": "brachistochrone",
+          "burnMarkers": [
+            {
+              "angle": 3.14,
+              "label": "出発ΔV"
+            },
+            {
+              "angle": 0.0,
+              "label": "到着ΔV"
+            }
+          ],
+          "startTime": 0,
+          "endTime": 9059281
+        }
+      ],
+      "animation": {
+        "durationSeconds": 9059281
+      }
+    },
+    {
+      "id": "ep04-diagram-02",
+      "title": "天王星中心系: タイタニア出発",
+      "centerLabel": "天王星",
+      "scaleMode": "linear",
+      "radiusUnit": "km",
+      "orbits": [
+        {
+          "id": "uranus-surface",
+          "label": "天王星表面",
+          "radius": 25559,
+          "color": "#88ccee"
+        },
+        {
+          "id": "titania",
+          "label": "タイタニア",
+          "radius": 435910,
+          "color": "#cc8844",
+          "angle": 1.2,
+          "meanMotion": 8.354e-6
+        }
+      ],
+      "transfers": [
+        {
+          "label": "脱出軌道 (1.51 km/s)",
+          "fromOrbitId": "titania",
+          "toOrbitId": "uranus-surface",
+          "color": "#ff6600",
+          "style": "hyperbolic",
+          "startTime": 0,
+          "endTime": 36000
+        }
+      ],
+      "animation": {
+        "durationSeconds": 36000
+      }
+    }
+  ]
+}

@@ -1,0 +1,1132 @@
+{
+  "schemaVersion": 1,
+  "videoId": "1cTmWjYSlTM",
+  "episode": 4,
+  "sourceSubtitle": {
+    "language": "ja",
+    "source": "youtube-auto",
+    "rawContentHash": "ec2ca3670aec8f3129c699452865158f51cb33f57616ccd170ab138b877f2931"
+  },
+  "lines": [
+    {
+      "lineId": "ep04-line-001",
+      "startMs": 7399,
+      "endMs": 25470,
+      "text": "規定値の63%まで低下。例媒の漏洩が加速しています。このままでは12時間以内に式の冷却能力を喪失します。12時間かタイタニアまでは現在の起動で残り9時間42分。",
+      "rawEntryIds": [
+        "cue-1",
+        "cue-3",
+        "cue-5",
+        "cue-7",
+        "cue-9"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-002",
+      "startMs": 25480,
+      "endMs": 47670,
+      "text": "ギリギリか楽観的ですね。冷却が死んでも完成で滑り込めるだろう。いえ、タイタニアへの起動投入には原則噴射が必要です。もしも式が使えなければこのまま天皇星の重力権を突き抜けることになります。オールトの雲でも見に行くかね。あら、ロマンティックですね。褒められたってことにしとく。",
+      "rawEntryIds": [
+        "cue-11",
+        "cue-13",
+        "cue-15",
+        "cue-17",
+        "cue-19",
+        "cue-21",
+        "cue-23",
+        "cue-25"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep04-line-003",
+      "startMs": 47680,
+      "endMs": 52110,
+      "text": "やはり楽観的ですね。怒るなよ。",
+      "rawEntryIds": [
+        "cue-27"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-004",
+      "startMs": 52120,
+      "endMs": 57069,
+      "text": "骨格王力モニターフレーム3番と7番で美少クラックを検出。",
+      "rawEntryIds": [
+        "cue-29",
+        "cue-31"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-005",
+      "startMs": 57079,
+      "endMs": 63270,
+      "text": "木星でのオーバー筋に受けた歪みが長時間の高校で進行しています。",
+      "rawEntryIds": [
+        "cue-33"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-006",
+      "startMs": 65720,
+      "endMs": 67310,
+      "text": "でもよく持ってるよ。",
+      "rawEntryIds": [
+        "cue-35"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-007",
+      "startMs": 67320,
+      "endMs": 71749,
+      "text": "これは持っているとは言いません。このまま進行して基礎骨格が破断すれば",
+      "rawEntryIds": [
+        "cue-37"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-008",
+      "startMs": 76880,
+      "endMs": 83230,
+      "text": "時期ノズルのコイル温度異常上昇の候あり、次の式転下で完全に消耗する可能性が",
+      "rawEntryIds": [
+        "cue-39"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-009",
+      "startMs": 84880,
+      "endMs": 87510,
+      "text": "つまりあと1回しか打てないってことか。",
+      "rawEntryIds": [
+        "cue-41"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-010",
+      "startMs": 87520,
+      "endMs": 94910,
+      "text": "1回打てれば幸運です。",
+      "rawEntryIds": [
+        "cue-43",
+        "cue-45"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-011",
+      "startMs": 97920,
+      "endMs": 100190,
+      "text": "別に何も。",
+      "rawEntryIds": [
+        "cue-47"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-012",
+      "startMs": 100200,
+      "endMs": 104230,
+      "text": "あの天皇星人と何を話した?何を聞いた?",
+      "rawEntryIds": [
+        "cue-49"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-013",
+      "startMs": 114680,
+      "endMs": 116990,
+      "text": "ただ少し気になっただけなんです。",
+      "rawEntryIds": [
+        "cue-51"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-014",
+      "startMs": 117000,
+      "endMs": 119789,
+      "text": "何がだよ。",
+      "rawEntryIds": [
+        "cue-53"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-015",
+      "startMs": 119799,
+      "endMs": 132750,
+      "text": "星は嘘をつかないのかって。人間はすぐに嘘をつきますからね。天皇星期圏内でプラズモイド発生を検知。進路上",
+      "rawEntryIds": [
+        "cue-55"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-016",
+      "startMs": 133120,
+      "endMs": 136750,
+      "text": "分後に交差。ほとんど肉眼が眼じゃ見えないな。",
+      "rawEntryIds": [
+        "cue-57"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-017",
+      "startMs": 139879,
+      "endMs": 158710,
+      "text": "と比べると比較的低運で低密度ですので賢の放射はほとんどありません。回避はRCSのみでは回避不能式を使えば回避できますが原速用の転ができなくなる可能性があります。突っきるしかないってことか。時期シールドの残寿命は14分。",
+      "rawEntryIds": [
+        "cue-59",
+        "cue-61",
+        "cue-63",
+        "cue-65",
+        "cue-67",
+        "cue-69"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-018",
+      "startMs": 158720,
+      "endMs": 188630,
+      "text": "プラズモイドの通過には最低でも8分かかります。6分の余裕がある。6分は余裕とは言いません。天は自転軸と地軸が60°もずれています。その他の惑星と異なり、プラズモイドの挙動が極めて予測しづらいのです。もしも予測よりプラズモイドの規模が大きければ時期シールドは持ちません。そのまま通過すれば強力な放射線が尖閣を貫くことになり、毎粉数シーベルとの被爆ありえます。",
+      "rawEntryIds": [
+        "cue-71",
+        "cue-73",
+        "cue-75",
+        "cue-77",
+        "cue-79",
+        "cue-81",
+        "cue-83",
+        "cue-85",
+        "cue-87",
+        "cue-89"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep04-line-019",
+      "startMs": 188640,
+      "endMs": 194309,
+      "text": "現代の科学技術を持ってしても急制放射線症候軍にはなす術がありません。",
+      "rawEntryIds": [
+        "cue-91",
+        "cue-93"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-020",
+      "startMs": 194319,
+      "endMs": 203030,
+      "text": "タイタニアまで持てばいい方です。もしもそうなったらお前が私の後をついでくれよな。",
+      "rawEntryIds": [
+        "cue-95",
+        "cue-97",
+        "cue-99"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-021",
+      "startMs": 203040,
+      "endMs": 209110,
+      "text": "私が親父の後をついだようにさ。",
+      "rawEntryIds": [
+        "cue-101"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-022",
+      "startMs": 213319,
+      "endMs": 224190,
+      "text": "プラズモイドエントリー時期シールド負の王力によって3番フレームの気裂が拡大しています。外格温度上昇。",
+      "rawEntryIds": [
+        "cue-103",
+        "cue-105",
+        "cue-107"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-023",
+      "startMs": 224200,
+      "endMs": 229910,
+      "text": "所的に摂取180°を長。6番フレームにも気裂を確認。",
+      "rawEntryIds": [
+        "cue-109",
+        "cue-111"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-024",
+      "startMs": 229920,
+      "endMs": 234509,
+      "text": "期待力の許容値を修正します。-12%。",
+      "rawEntryIds": [
+        "cue-113"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-025",
+      "startMs": 234519,
+      "endMs": 240030,
+      "text": "外部占量毎分3.8Cベルト上昇中。",
+      "rawEntryIds": [
+        "cue-115"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-026",
+      "startMs": 240040,
+      "endMs": 259030,
+      "text": "8番フレームにも気裂を確認。3番フレームの気裂は拡大中。プラズモイドが想定よりも強力です。シールドコイルが押し込まれることで骨格フレームの歪みが拡大しています。北製へのダイレクトエントリーの時もこんな感じだったな。",
+      "rawEntryIds": [
+        "cue-117",
+        "cue-119",
+        "cue-121",
+        "cue-123",
+        "cue-125",
+        "cue-127"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-027",
+      "startMs": 259040,
+      "endMs": 261909,
+      "text": "ここまでで先体は大きく損傷しています。",
+      "rawEntryIds": [
+        "cue-129"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-028",
+      "startMs": 261919,
+      "endMs": 266350,
+      "text": "あの時とは違います。同じだよ。",
+      "rawEntryIds": [
+        "cue-131"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-029",
+      "startMs": 266360,
+      "endMs": 292590,
+      "text": "あの時も今もお前がいるだろう。ケ、私はいつだったそばに時期段パフレームの一部が破断。シールドコイル1系応答なし。コイル2系で代退中。外部毎分12.6Cベルト。今のはシールドコイルが骨格フレームから脱落しました。シールド残業は残り130秒。",
+      "rawEntryIds": [
+        "cue-133",
+        "cue-135",
+        "cue-137",
+        "cue-139",
+        "cue-141",
+        "cue-143",
+        "cue-145"
+      ],
+      "mergeReasons": [
+        "continuation_marker",
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-030",
+      "startMs": 292600,
+      "endMs": 300749,
+      "text": "外部線低下を確認。プラズモイド中心部へ突入。脱出まで残り145秒。",
+      "rawEntryIds": [
+        "cue-147",
+        "cue-149"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-031",
+      "startMs": 300759,
+      "endMs": 314270,
+      "text": "医療区画へ退避してください。現役隔離室の中に入れば被爆を軽減できます。できる限り小さく体をめて物影へ隠れてください。",
+      "rawEntryIds": [
+        "cue-151",
+        "cue-153",
+        "cue-155",
+        "cue-157"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-032",
+      "startMs": 325000,
+      "endMs": 328629,
+      "text": "まあな。そんなとこ",
+      "rawEntryIds": [
+        "cue-159"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-033",
+      "startMs": 330720,
+      "endMs": 333150,
+      "text": "お前は何も怖くないのか?",
+      "rawEntryIds": [
+        "cue-161"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-034",
+      "startMs": 333160,
+      "endMs": 336670,
+      "text": "天皇政権ではよくあることだから。",
+      "rawEntryIds": [
+        "cue-163"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-035",
+      "startMs": 342960,
+      "endMs": 344629,
+      "text": "何がだよ。",
+      "rawEntryIds": [
+        "cue-165"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-036",
+      "startMs": 344639,
+      "endMs": 366029,
+      "text": "けのこと。なんで名前を知ってる本人から聞いたのか。さあね。プラズモイド",
+      "rawEntryIds": [
+        "cue-167",
+        "cue-169"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-037",
+      "startMs": 366840,
+      "endMs": 370070,
+      "text": "シールドコイルは全系統を消しました。",
+      "rawEntryIds": [
+        "cue-171"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-038",
+      "startMs": 376479,
+      "endMs": 386150,
+      "text": "シーベルと即座に生命に関わることはありません。ほとんどの場合は無症状ですが数時間以内に軽い吐き家気を模様す可能性があります。",
+      "rawEntryIds": [
+        "cue-173"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-039",
+      "startMs": 392240,
+      "endMs": 399150,
+      "text": "タイタニアまでの被爆量は現在のコ路で累積48mmシーベルと許容範囲以内です。",
+      "rawEntryIds": [
+        "cue-175",
+        "cue-177",
+        "cue-179"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-040",
+      "startMs": 399160,
+      "endMs": 408469,
+      "text": "分かった。ただブリッジには戻らずそのままでください。少しでも被爆を避けるためです。",
+      "rawEntryIds": [
+        "cue-181"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-041",
+      "startMs": 410960,
+      "endMs": 413309,
+      "text": "別に私は気にしないけど。",
+      "rawEntryIds": [
+        "cue-183"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-042",
+      "startMs": 413319,
+      "endMs": 417309,
+      "text": "お前は火星の体制金を甘く見すぎだ。これで地球人の",
+      "rawEntryIds": [
+        "cue-185"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-043",
+      "startMs": 419160,
+      "endMs": 425869,
+      "text": "免疫導入から14日が本来隔離期間だ。私たちと同じ空気を吸うにはまだ早い。",
+      "rawEntryIds": [
+        "cue-187",
+        "cue-189"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-044",
+      "startMs": 439360,
+      "endMs": 444990,
+      "text": "ケは私に聞いたの。なぜ私はあなたをタイタニアへ運ぼうとしているのですって。",
+      "rawEntryIds": [
+        "cue-191"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-045",
+      "startMs": 457960,
+      "endMs": 472350,
+      "text": "この星はね、横倒しに転がりながら太陽の周りを回ってる。だから季節も中夜も他の星とは全然違う。地球の常識が通用しない場所。それが天皇性。",
+      "rawEntryIds": [
+        "cue-193"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-046",
+      "startMs": 501680,
+      "endMs": 504749,
+      "text": "どこから聞いても面白そうで楽しみだよ。",
+      "rawEntryIds": [
+        "cue-195"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-047",
+      "startMs": 526680,
+      "endMs": 544190,
+      "text": "でも外炎開発の経済性が疑問されて地球のパンデミックもあり海洋性異炎の移住計画が頓座すると施設の存在意義が一気に由来だの。財政的負担だけがのしかかり結局地球は維持費を段階的に削減してタイタニアから撤退した。",
+      "rawEntryIds": [
+        "cue-197",
+        "cue-199",
+        "cue-201",
+        "cue-203",
+        "cue-205",
+        "cue-207"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-048",
+      "startMs": 544200,
+      "endMs": 549790,
+      "text": "集団という名前は文字通り地球が管理できる宇宙の終わりという意味になった。",
+      "rawEntryIds": [
+        "cue-209",
+        "cue-211"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-049",
+      "startMs": 549800,
+      "endMs": 574509,
+      "text": "つまり公案校舎が管理する後路軍ソーラーラインの集団ということ。まあ、実際にはオービタルカーテンの外側で地球は管理できていないんだけど、彼らはプライドが高いから。私が聞いたのはなぜお前ら天皇星人が顧問を話すのかってことなんだが、私の記憶だとお前らはエスパーを話すはずだ。なんだそんなこと。",
+      "rawEntryIds": [
+        "cue-213",
+        "cue-215",
+        "cue-217",
+        "cue-219",
+        "cue-221",
+        "cue-223",
+        "cue-225",
+        "cue-227"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep04-line-050",
+      "startMs": 574519,
+      "endMs": 583110,
+      "text": "だって私たちは火星人だもの顧問を話すわよ。あなたも火星人だから顧問を話してるんでしょ。それと同じ。",
+      "rawEntryIds": [
+        "cue-229",
+        "cue-231",
+        "cue-233"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-051",
+      "startMs": 583120,
+      "endMs": 586190,
+      "text": "じゃあここは今火星の施設なのか?",
+      "rawEntryIds": [
+        "cue-235"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-052",
+      "startMs": 588240,
+      "endMs": 614750,
+      "text": "誰も教えてくれなかったんでな。この施設の話が途中だったわね。結局地球は早々にタイタニアから撤退したけど、火星は投資を続けていたわ。私たちにとってここは地球の管理が届かない唯一の場所。ソーラーラインの集団だから。",
+      "rawEntryIds": [
+        "cue-237"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-053",
+      "startMs": 616600,
+      "endMs": 620470,
+      "text": "480mシーベルと随分と無茶をしてきたのね。",
+      "rawEntryIds": [
+        "cue-239",
+        "cue-241"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-054",
+      "startMs": 620480,
+      "endMs": 623509,
+      "text": "火星から飛んできたんだ。色々あるさ。",
+      "rawEntryIds": [
+        "cue-243"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-055",
+      "startMs": 634839,
+      "endMs": 635990,
+      "text": "何の話です?",
+      "rawEntryIds": [
+        "cue-245"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-056",
+      "startMs": 636000,
+      "endMs": 642389,
+      "text": "だから検感とか不調とかの私はroです。生態ではありません。",
+      "rawEntryIds": [
+        "cue-247",
+        "cue-249"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-057",
+      "startMs": 666320,
+      "endMs": 686790,
+      "text": "成立から15年後、後方技術が地球のインフラに全面依存している状況に危機感を抱いた連邦議会は火星独自の後方技術の開発に乗り出したの。ソーラーラインは対応系を支える物流インフラであると同時に公安校舎とそれによる厚路誘導によって成り立つ地球の支配体制の象徴だった。",
+      "rawEntryIds": [
+        "cue-251",
+        "cue-253",
+        "cue-255",
+        "cue-257",
+        "cue-259",
+        "cue-261",
+        "cue-263"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-058",
+      "startMs": 686800,
+      "endMs": 697910,
+      "text": "そうして生まれたのが広方技術研究機構。当時はヘラスボ凡地の地下に施設があった。創設者はトーマスアレ。その名を取ってアレ研究所と呼ばれていたわ。",
+      "rawEntryIds": [
+        "cue-265"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-059",
+      "startMs": 700360,
+      "endMs": 716230,
+      "text": "厳密には製造じゃない。収穫ね。完成候法とビーコン誘導によって成り立つソーラーラインに対抗するため火星が目をつけたのは星を見て高校する背景構成観測だったの。着眼点は良かった。",
+      "rawEntryIds": [
+        "cue-267"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-060",
+      "startMs": 719639,
+      "endMs": 742629,
+      "text": "の高校には限界が生じたの。それに複雑な先体システムを統合するAIを火星は作れなかった。だから生体を使ったそれを知った地球は激怒して研究所は一夜で瓦礫の山になった。第1次公安税紛争において地球が火星権への一部コ路の誘導サービスを停止したことで火星は存続機に陥った。",
+      "rawEntryIds": [
+        "cue-269",
+        "cue-271",
+        "cue-273",
+        "cue-275",
+        "cue-277",
+        "cue-279",
+        "cue-281"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-061",
+      "startMs": 742639,
+      "endMs": 749670,
+      "text": "地球にとっては生命への暴徳でも火星にとっては死活問題だったの。",
+      "rawEntryIds": [
+        "cue-283"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-062",
+      "startMs": 770519,
+      "endMs": 774150,
+      "text": "たから何を許さないのです?",
+      "rawEntryIds": [
+        "cue-285"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-063",
+      "startMs": 774160,
+      "endMs": 788310,
+      "text": "お前を引き取って相棒だって言いながら結局はお前を物扱いしてること。",
+      "rawEntryIds": [
+        "cue-287",
+        "cue-289"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-064",
+      "startMs": 791160,
+      "endMs": 797470,
+      "text": "新宇宙スケ内に反応があった土星機道方面から複数の大型船舶が接近中。",
+      "rawEntryIds": [
+        "cue-291",
+        "cue-293"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-065",
+      "startMs": 797480,
+      "endMs": 801470,
+      "text": "少なくとも5席おそらくは黒連の保安定でしょうね。",
+      "rawEntryIds": [
+        "cue-295",
+        "cue-297"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-066",
+      "startMs": 803440,
+      "endMs": 808750,
+      "text": "奴らがオービタルカーテンを超えて集団までわざわざ足を運ぶということはその可能性が",
+      "rawEntryIds": [
+        "cue-299"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-067",
+      "startMs": 811040,
+      "endMs": 825389,
+      "text": "33時間。おそらくは施設に突入するまでもなく破壊するつもりね。奴らはすでに後方鍵が効かないの存在に気がついているとすればこのタイタニアの集団施設が何のために存在しているかも分かっているはず。",
+      "rawEntryIds": [
+        "cue-301",
+        "cue-303"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-068",
+      "startMs": 827440,
+      "endMs": 849110,
+      "text": "え、彼らは生命への冒涜を絶対に許さない。彼らが番恐れているのは遺伝子改造による新しい人類の誕生よ。人類が未だにつの死であることで地球は故郷として理解され、惑星感で抑が働いていると彼らは考えている。そこでもしを故郷とする新しい人類が生まれてまったら地球を保護",
+      "rawEntryIds": [
+        "cue-305",
+        "cue-307",
+        "cue-309"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-069",
+      "startMs": 855920,
+      "endMs": 870870,
+      "text": "パンデミックは地球のトラウマになっている。もしも未知の病原体に体制を持った強い人類が地球の外側で生まれてしまえば、あの青い星はただの牢獄になる。だからこそ地球はこの施設を必ず破壊しにくる。",
+      "rawEntryIds": [
+        "cue-311",
+        "cue-313",
+        "cue-315",
+        "cue-317",
+        "cue-319"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-070",
+      "startMs": 870880,
+      "endMs": 894470,
+      "text": "ならなぜお前らはそれを分かっていて私たちをタイタニアまで誘導した?火星の研究所が破壊されてお前らはタイタニアにわざわざその拠点を移した。それは地球から隠れて研究を続けるためだろう。だったらなぜこんなことをした?そこまでして火星に残っていた罪を回収したかったのか?",
+      "rawEntryIds": [
+        "cue-321",
+        "cue-323",
+        "cue-325",
+        "cue-327",
+        "cue-329",
+        "cue-331",
+        "cue-333",
+        "cue-335"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-071",
+      "startMs": 894480,
+      "endMs": 896590,
+      "text": "どうなんだ?",
+      "rawEntryIds": [
+        "cue-337"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-072",
+      "startMs": 896600,
+      "endMs": 900509,
+      "text": "私たちはただ証明して欲しいの。",
+      "rawEntryIds": [
+        "cue-339"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-073",
+      "startMs": 900519,
+      "endMs": 906670,
+      "text": "子宮のインフラに頼らなくても対応系を移動できる技術があるということ。",
+      "rawEntryIds": [
+        "cue-341",
+        "cue-343"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-074",
+      "startMs": 906680,
+      "endMs": 913509,
+      "text": "自分勝手だな。",
+      "rawEntryIds": [
+        "cue-345"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-075",
+      "startMs": 915880,
+      "endMs": 922389,
+      "text": "1人でこの船を飛ばせるんですか?お前。お前ではありません。",
+      "rawEntryIds": [
+        "cue-347",
+        "cue-349"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-076",
+      "startMs": 922600,
+      "endMs": 932710,
+      "text": "です。あなたがくれた名前です。記憶力がないのは知っていましたが忘れちゃったんですか?",
+      "rawEntryIds": [
+        "cue-351"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-077",
+      "startMs": 939759,
+      "endMs": 951949,
+      "text": "いずれにせよそれはタイタニアを脱出した後の話です。少なくとも私にはあなたに物扱いされた記憶なんて1つもありません。",
+      "rawEntryIds": [
+        "cue-353",
+        "cue-355",
+        "cue-357",
+        "cue-359"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-078",
+      "startMs": 955600,
+      "endMs": 968870,
+      "text": "私の親父は嵐の回廊を開いた。それは地球のためでも火星のためでもない。奴らが手を伸ばせない場所に道を作りたかったんだ。お前は道具じゃない。私の相棒だ。",
+      "rawEntryIds": [
+        "cue-361",
+        "cue-363",
+        "cue-365",
+        "cue-367"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-079",
+      "startMs": 968880,
+      "endMs": 972069,
+      "text": "新しい技術の証明なんてどうでもいい。",
+      "rawEntryIds": [
+        "cue-369"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-080",
+      "startMs": 972079,
+      "endMs": 1036390,
+      "text": "ただ2人で証明したいんだ。地球の許可なく火星の口出しなく私たちの意思で対応系を渡れる道がああるってことを目的地は地球だ。新しいソーラーラインを私が開いてやる。ビフォアメインアップチェックリスト外部状態修理完了。外格クラック7箇所内うち3箇所に構造補強済みRCSノズル開政制御系凹当問題なし式プレート温度408°適正値燃料残量問題なし冷却系圧力1次系1.87MP2次系0.96MP仮説パッチによる修理のため熱余裕は規定値の78%主期フルバーンは推奨しません。時期シールドコイル2系のみ稼働時期のずる素変形あり仮説修理済み推定転加可能回数3回最大4回ビフォアメインアップチェックリストコンプリートボロボロ",
+      "rawEntryIds": [
+        "cue-371",
+        "cue-373",
+        "cue-375",
+        "cue-377",
+        "cue-379",
+        "cue-381",
+        "cue-383",
+        "cue-385",
+        "cue-387",
+        "cue-389",
+        "cue-391",
+        "cue-393",
+        "cue-395",
+        "cue-397",
+        "cue-399",
+        "cue-401",
+        "cue-403",
+        "cue-405",
+        "cue-407",
+        "cue-409"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-081",
+      "startMs": 1040319,
+      "endMs": 1046949,
+      "text": "たことにしとくなら悪口言い放題ですねんだ",
+      "rawEntryIds": [
+        "cue-411",
+        "cue-413"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-082",
+      "startMs": 1048600,
+      "endMs": 1083669,
+      "text": "メインアップ準備フリーカートリッジ9番総点核融合パルスロ転下温度到達まで8秒重力影響許容範囲内水補助室RCS圧安定巡行加速で太陽に向かって落ちるぞ。露出力は65%に設定想定水力は6.3M座らないんですか?座ることに意味があるならな。誰に似たんだか。さあ、元からこうだったけどな。",
+      "rawEntryIds": [
+        "cue-415",
+        "cue-417",
+        "cue-419",
+        "cue-421",
+        "cue-423",
+        "cue-425",
+        "cue-427",
+        "cue-429",
+        "cue-431"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-083",
+      "startMs": 1086360,
+      "endMs": 1101390,
+      "text": "するのか今でもよくわかりません。感覚も思考も全てこの船と繋がっています。それでも私は人間なのでしょうか?お前はKだ。私の相棒それ以上でも以下でもない。",
+      "rawEntryIds": [
+        "cue-433",
+        "cue-435",
+        "cue-437",
+        "cue-439"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep04-line-084",
+      "startMs": 1101400,
+      "endMs": 1104029,
+      "text": "メインアップ。",
+      "rawEntryIds": [
+        "cue-441"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep04-line-085",
+      "startMs": 1104039,
+      "endMs": 1114470,
+      "text": "式アームド衝撃に備えてください。放射線レベル許容範囲内54321",
+      "rawEntryIds": [
+        "cue-443",
+        "cue-445"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    }
+  ],
+  "extractedAt": "2026-02-23T20:59:29.543Z",
+  "mergeConfig": {
+    "maxGapMs": 300,
+    "minCueDurationMs": 100
+  }
+}

@@ -48,6 +48,7 @@ export const MU = {
 
 /** Mean orbital radii (semi-major axes) around the Sun (km) — NASA fact sheets */
 export const ORBIT_RADIUS = {
+  EARTH: 149_598_023,
   MARS: 227_939_200,
   JUPITER: 778_570_000,
   SATURN: 1_433_530_000,
