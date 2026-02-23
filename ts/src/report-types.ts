@@ -202,6 +202,50 @@ export interface EpisodeReport {
   diagrams?: OrbitalDiagram[];
 }
 
+/** A row in a cross-episode comparison table */
+export interface ComparisonRow {
+  /** Metric label (e.g. "船の質量") */
+  metric: string;
+  /** Values per episode, keyed by episode number */
+  values: Record<number, string>;
+  /** Consistency status */
+  status: "ok" | "warn" | "conflict";
+  /** Brief note explaining the consistency finding */
+  note: string;
+}
+
+/** A comparison table for cross-episode analysis */
+export interface ComparisonTable {
+  /** Table caption/title */
+  caption: string;
+  /** Episode numbers that appear as columns */
+  episodes: number[];
+  /** Rows of the comparison */
+  rows: ComparisonRow[];
+}
+
+/** A section in a summary report */
+export interface SummarySection {
+  /** Section heading */
+  heading: string;
+  /** Section body in Markdown */
+  markdown: string;
+  /** Optional comparison table */
+  table?: ComparisonTable;
+}
+
+/** A cross-episode or summary report page */
+export interface SummaryReport {
+  /** URL slug, e.g. "cross-episode" */
+  slug: string;
+  /** Page title */
+  title: string;
+  /** Brief summary of the page content */
+  summary: string;
+  /** Structured sections */
+  sections: SummarySection[];
+}
+
 /** Site-wide manifest listing all available reports */
 export interface SiteManifest {
   /** Project title */
@@ -225,6 +269,15 @@ export interface SiteManifest {
     /** Brief description */
     description: string;
     /** Relative path to the log page */
+    path: string;
+  }[];
+  /** List of summary/cross-episode pages */
+  summaryPages?: {
+    /** Page title */
+    title: string;
+    /** URL slug */
+    slug: string;
+    /** Relative path to the page */
     path: string;
   }[];
 }

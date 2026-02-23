@@ -7,12 +7,13 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { EpisodeReport, SiteManifest } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, SummaryReport } from "./report-types.ts";
 import {
   renderIndex,
   renderEpisode,
   renderLogsIndex,
   renderLogPage,
+  renderSummaryPage,
 } from "./templates.ts";
 
 export interface BuildConfig {
@@ -84,8 +85,25 @@ export function discoverLogs(dataDir: string): LogEntry[] {
   });
 }
 
+/** Discover summary JSON files in data/summary/ */
+export function discoverSummaries(dataDir: string): SummaryReport[] {
+  const summaryDir = path.join(dataDir, "data", "summary");
+  if (!fs.existsSync(summaryDir)) return [];
+
+  const files = fs.readdirSync(summaryDir)
+    .filter(f => f.endsWith(".json"))
+    .sort();
+
+  const summaries: SummaryReport[] = [];
+  for (const file of files) {
+    const report = readJsonFile<SummaryReport>(path.join(summaryDir, file));
+    if (report) summaries.push(report);
+  }
+  return summaries;
+}
+
 /** Generate the site manifest from discovered data */
-export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[]): SiteManifest {
+export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summaries: SummaryReport[] = []): SiteManifest {
   return {
     title: "SOLAR LINE 考察",
     generatedAt: new Date().toISOString(),
@@ -101,6 +119,11 @@ export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[]): Site
       description: log.description,
       path: `logs/${log.filename}.html`,
     })),
+    summaryPages: summaries.length > 0 ? summaries.map(s => ({
+      title: s.title,
+      slug: s.slug,
+      path: `summary/${s.slug}.html`,
+    })) : undefined,
   };
 }
 
@@ -111,11 +134,15 @@ export function build(config: BuildConfig): void {
   // Discover content
   const episodes = discoverEpisodes(dataDir);
   const logs = discoverLogs(dataDir);
-  const manifest = buildManifest(episodes, logs);
+  const summaries = discoverSummaries(dataDir);
+  const manifest = buildManifest(episodes, logs, summaries);
 
   // Ensure output directories
   ensureDir(path.join(outDir, "episodes"));
   ensureDir(path.join(outDir, "logs"));
+  if (summaries.length > 0) {
+    ensureDir(path.join(outDir, "summary"));
+  }
 
   // Generate index page
   fs.writeFileSync(path.join(outDir, "index.html"), renderIndex(manifest));
@@ -123,16 +150,24 @@ export function build(config: BuildConfig): void {
   // Generate episode pages
   for (const ep of episodes) {
     const filename = `ep-${String(ep.episode).padStart(3, "0")}.html`;
-    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep));
+    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages));
+  }
+
+  // Generate summary pages
+  for (const summary of summaries) {
+    fs.writeFileSync(
+      path.join(outDir, "summary", `${summary.slug}.html`),
+      renderSummaryPage(summary, manifest.summaryPages),
+    );
   }
 
   // Generate log pages
   const logManifest = manifest.logs;
-  fs.writeFileSync(path.join(outDir, "logs", "index.html"), renderLogsIndex(logManifest));
+  fs.writeFileSync(path.join(outDir, "logs", "index.html"), renderLogsIndex(logManifest, manifest.summaryPages));
   for (const log of logs) {
     fs.writeFileSync(
       path.join(outDir, "logs", `${log.filename}.html`),
-      renderLogPage(log.filename, log.date, log.content),
+      renderLogPage(log.filename, log.date, log.content, manifest.summaryPages),
     );
   }
 
@@ -176,7 +211,7 @@ export function build(config: BuildConfig): void {
 
   const totalTransfers = episodes.reduce((sum, ep) => sum + ep.transfers.length, 0);
   console.log(
-    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${logs.length} logs → ${outDir}`,
+    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${summaries.length} summaries, ${logs.length} logs → ${outDir}`,
   );
 }
 

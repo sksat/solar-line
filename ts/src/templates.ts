@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, SummaryReport, ComparisonTable, ComparisonRow } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -266,10 +266,24 @@ footer {
   text-align: right;
 }
 .ship-marker { filter: drop-shadow(0 0 3px rgba(255,255,255,0.6)); }
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 1rem 0; }
+.comparison-table caption { text-align: left; font-weight: 600; color: #f0f6fc; margin-bottom: 0.5rem; font-size: 1em; }
+.comparison-table th { color: #8b949e; font-weight: normal; font-size: 0.85em; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); text-align: left; }
+.comparison-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); }
+.comparison-table td.numeric { text-align: right; font-family: "SFMono-Regular", Consolas, monospace; }
+.comparison-table td.note { color: #8b949e; font-size: 0.85em; }
+.comparison-table tr.status-ok td:first-child { border-left: 3px solid var(--green); }
+.comparison-table tr.status-warn td:first-child { border-left: 3px solid var(--yellow); }
+.comparison-table tr.status-conflict td:first-child { border-left: 3px solid var(--red); }
+.summary-section { margin: 2rem 0; }
+.summary-section h2 { border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
 `;
 
 /** Wrap content in the common HTML layout */
-export function layoutHtml(title: string, content: string, basePath: string = "."): string {
+export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"]): string {
+  const summaryNav = summaryPages && summaryPages.length > 0
+    ? summaryPages.map(p => ` <a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`).join("")
+    : "";
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -279,7 +293,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <style>${REPORT_CSS}</style>
 </head>
 <body>
-<nav><a href="${basePath}/index.html">トップ</a> <a href="${basePath}/logs/index.html">セッションログ</a></nav>
+<nav><a href="${basePath}/index.html">トップ</a>${summaryNav} <a href="${basePath}/logs/index.html">セッションログ</a></nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成</footer>
 </body>
@@ -294,6 +308,12 @@ export function renderIndex(manifest: SiteManifest): string {
       ).join("\n")
     : "<li>エピソードレポートはまだありません。</li>";
 
+  const summaryList = manifest.summaryPages && manifest.summaryPages.length > 0
+    ? `\n<h2>総合分析</h2>\n<ul>\n${manifest.summaryPages.map(p =>
+        `<li><a href="${p.path}">${escapeHtml(p.title)}</a></li>`
+      ).join("\n")}\n</ul>`
+    : "";
+
   const content = `
 <h1>SOLAR LINE 考察</h1>
 <p>SOLAR LINE に描かれた軌道遷移の宇宙力学的分析。</p>
@@ -302,12 +322,13 @@ export function renderIndex(manifest: SiteManifest): string {
 <ul>
 ${episodeList}
 </ul>
+${summaryList}
 
 <h2>セッションログ</h2>
 <p><a href="logs/index.html">すべてのセッションログを見る →</a></p>
 <p><em>生成日時: ${escapeHtml(manifest.generatedAt)}</em></p>`;
 
-  return layoutHtml("トップ", content);
+  return layoutHtml("トップ", content, ".", manifest.summaryPages);
 }
 
 /** Map verdict to Japanese label */
@@ -851,7 +872,7 @@ function buildDvChart(transfers: TransferAnalysis[]): string {
 }
 
 /** Render a full episode report page */
-export function renderEpisode(report: EpisodeReport): string {
+export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest["summaryPages"]): string {
   const videoSection = report.videoCards && report.videoCards.length > 0
     ? renderVideoCards(report.videoCards)
     : "";
@@ -927,11 +948,11 @@ ${calculator}`;
   const hasAnimatedDiagrams = report.diagrams?.some(d => d.animation) ?? false;
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
 
-  return layoutHtml(`第${report.episode}話`, content + animScript, "..");
+  return layoutHtml(`第${report.episode}話`, content + animScript, "..", summaryPages);
 }
 
 /** Render the session logs index page */
-export function renderLogsIndex(logs: SiteManifest["logs"]): string {
+export function renderLogsIndex(logs: SiteManifest["logs"], summaryPages?: SiteManifest["summaryPages"]): string {
   const logList = logs.length > 0
     ? logs.map(log =>
         `<li><a href="${log.filename}.html">${escapeHtml(log.date)}</a> — ${escapeHtml(log.description)}</li>`
@@ -945,11 +966,11 @@ export function renderLogsIndex(logs: SiteManifest["logs"]): string {
 ${logList}
 </ul>`;
 
-  return layoutHtml("セッションログ", content, "..");
+  return layoutHtml("セッションログ", content, "..", summaryPages);
 }
 
 /** Render a single session log page */
-export function renderLogPage(filename: string, date: string, markdownContent: string): string {
+export function renderLogPage(filename: string, date: string, markdownContent: string, summaryPages?: SiteManifest["summaryPages"]): string {
   const htmlContent = markdownToHtml(markdownContent);
   const content = `
 <h1>セッションログ: ${escapeHtml(date)}</h1>
@@ -957,5 +978,44 @@ export function renderLogPage(filename: string, date: string, markdownContent: s
 ${htmlContent}
 </div>`;
 
-  return layoutHtml(`ログ ${date}`, content, "..");
+  return layoutHtml(`ログ ${date}`, content, "..", summaryPages);
+}
+
+/** Render a comparison table */
+export function renderComparisonTable(table: ComparisonTable): string {
+  const epHeaders = table.episodes.map(ep => `<th>第${ep}話</th>`).join("");
+  const rows = table.rows.map(row => {
+    const cells = table.episodes.map(ep => {
+      const val = row.values[ep] ?? "—";
+      return `<td class="numeric">${escapeHtml(val)}</td>`;
+    }).join("");
+    return `<tr class="status-${row.status}"><td>${escapeHtml(row.metric)}</td>${cells}<td class="note">${escapeHtml(row.note)}</td></tr>`;
+  }).join("\n");
+
+  return `<table class="comparison-table">
+<caption>${escapeHtml(table.caption)}</caption>
+<thead><tr><th>パラメータ</th>${epHeaders}<th>整合性</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+}
+
+/** Render a summary report page */
+export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteManifest["summaryPages"]): string {
+  const sections = report.sections.map(section => {
+    const tableHtml = section.table ? renderComparisonTable(section.table) : "";
+    return `<div class="summary-section">
+<h2>${escapeHtml(section.heading)}</h2>
+${markdownToHtml(section.markdown)}
+${tableHtml}
+</div>`;
+  }).join("\n");
+
+  const content = `
+<h1>${escapeHtml(report.title)}</h1>
+<p>${escapeHtml(report.summary)}</p>
+${sections}`;
+
+  return layoutHtml(report.title, content, "..", summaryPages);
 }

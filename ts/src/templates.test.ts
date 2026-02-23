@@ -18,9 +18,11 @@ import {
   renderLogPage,
   renderOrbitalDiagram,
   renderOrbitalDiagrams,
+  renderComparisonTable,
+  renderSummaryPage,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ComparisonTable, SummaryReport } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -1084,5 +1086,238 @@ describe("renderEpisode includes animation script", () => {
     };
     const html = renderEpisode(report);
     assert.ok(!html.includes('orbital-animation.js'));
+  });
+});
+
+// --- renderComparisonTable ---
+
+const sampleComparisonTable: ComparisonTable = {
+  caption: "テスト比較表",
+  episodes: [1, 2, 3],
+  rows: [
+    {
+      metric: "推力 (MN)",
+      values: { 1: "9.8", 2: "0", 3: "9.8" },
+      status: "ok",
+      note: "一貫性あり",
+    },
+    {
+      metric: "質量 (t)",
+      values: { 1: "48,000", 2: "48,000", 3: "48,000" },
+      status: "warn",
+      note: "物理的に非整合",
+    },
+    {
+      metric: "ΔV矛盾",
+      values: { 1: "8,497", 2: "—", 3: "11,165" },
+      status: "conflict",
+      note: "公称質量で不可能",
+    },
+  ],
+};
+
+describe("renderComparisonTable", () => {
+  it("renders a table element", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("<table"));
+    assert.ok(html.includes("</table>"));
+  });
+
+  it("includes the caption", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("テスト比較表"));
+  });
+
+  it("includes episode headers", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("第1話"));
+    assert.ok(html.includes("第2話"));
+    assert.ok(html.includes("第3話"));
+  });
+
+  it("includes metric labels", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("推力 (MN)"));
+    assert.ok(html.includes("質量 (t)"));
+  });
+
+  it("includes cell values", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("9.8"));
+    assert.ok(html.includes("48,000"));
+    assert.ok(html.includes("11,165"));
+  });
+
+  it("includes status classes", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("status-ok"));
+    assert.ok(html.includes("status-warn"));
+    assert.ok(html.includes("status-conflict"));
+  });
+
+  it("includes consistency notes", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("一貫性あり"));
+    assert.ok(html.includes("物理的に非整合"));
+  });
+
+  it("renders dash for missing episode values", () => {
+    const table: ComparisonTable = {
+      caption: "部分データ",
+      episodes: [1, 2],
+      rows: [{
+        metric: "テスト",
+        values: { 1: "あり" },
+        status: "ok",
+        note: "ep2欠損",
+      }],
+    };
+    const html = renderComparisonTable(table);
+    assert.ok(html.includes("—"), "should show dash for missing ep2 value");
+  });
+
+  it("escapes HTML in values", () => {
+    const table: ComparisonTable = {
+      caption: "XSSテスト",
+      episodes: [1],
+      rows: [{
+        metric: '<script>alert("xss")</script>',
+        values: { 1: '<img src=x onerror=alert(1)>' },
+        status: "ok",
+        note: "safe",
+      }],
+    };
+    const html = renderComparisonTable(table);
+    assert.ok(!html.includes("<script>"));
+    assert.ok(!html.includes("<img"));
+  });
+
+  it("includes パラメータ and 整合性 headers", () => {
+    const html = renderComparisonTable(sampleComparisonTable);
+    assert.ok(html.includes("パラメータ"));
+    assert.ok(html.includes("整合性"));
+  });
+});
+
+// --- renderSummaryPage ---
+
+const sampleSummaryReport: SummaryReport = {
+  slug: "test-summary",
+  title: "テストサマリー",
+  summary: "テスト用のサマリーページです。",
+  sections: [
+    {
+      heading: "セクション1",
+      markdown: "これは**テスト**です。",
+      table: sampleComparisonTable,
+    },
+    {
+      heading: "セクション2",
+      markdown: "テーブルなしのセクション。",
+    },
+  ],
+};
+
+describe("renderSummaryPage", () => {
+  it("renders a complete HTML page", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("<!DOCTYPE html>"));
+    assert.ok(html.includes("</html>"));
+  });
+
+  it("includes the title", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("テストサマリー"));
+  });
+
+  it("includes the summary", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("テスト用のサマリーページです。"));
+  });
+
+  it("renders all sections", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("セクション1"));
+    assert.ok(html.includes("セクション2"));
+  });
+
+  it("renders markdown content as HTML", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("<strong>テスト</strong>"));
+  });
+
+  it("includes comparison table in sections that have one", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("comparison-table"));
+    assert.ok(html.includes("テスト比較表"));
+  });
+
+  it("includes navigation links", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("トップ"));
+    assert.ok(html.includes("セッションログ"));
+  });
+
+  it("includes summary page links in nav when provided", () => {
+    const summaryPages = [{ title: "総合分析", slug: "cross-ep", path: "summary/cross-ep.html" }];
+    const html = renderSummaryPage(sampleSummaryReport, summaryPages);
+    assert.ok(html.includes("総合分析"));
+    assert.ok(html.includes("summary/cross-ep.html"));
+  });
+
+  it("uses .. as basePath for navigation", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes('../index.html'));
+  });
+});
+
+// --- layoutHtml with summaryPages ---
+
+describe("layoutHtml with summaryPages", () => {
+  it("includes summary page links when provided", () => {
+    const summaryPages = [
+      { title: "クロスエピソード", slug: "cross-episode", path: "summary/cross-episode.html" },
+    ];
+    const html = layoutHtml("テスト", "<p>content</p>", ".", summaryPages);
+    assert.ok(html.includes("クロスエピソード"));
+    assert.ok(html.includes("summary/cross-episode.html"));
+  });
+
+  it("does not include summary nav when not provided", () => {
+    const html = layoutHtml("テスト", "<p>content</p>", ".");
+    // Only standard nav links
+    assert.ok(html.includes("トップ"));
+    assert.ok(html.includes("セッションログ"));
+  });
+});
+
+// --- renderIndex with summaryPages ---
+
+describe("renderIndex with summaryPages", () => {
+  it("includes 総合分析 section when summaryPages present", () => {
+    const manifest: SiteManifest = {
+      title: "SOLAR LINE 考察",
+      generatedAt: "2026-02-23T00:00:00Z",
+      episodes: [],
+      logs: [],
+      summaryPages: [
+        { title: "クロスエピソード整合性分析", slug: "cross-episode", path: "summary/cross-episode.html" },
+      ],
+    };
+    const html = renderIndex(manifest);
+    assert.ok(html.includes("総合分析"));
+    assert.ok(html.includes("クロスエピソード整合性分析"));
+    assert.ok(html.includes("summary/cross-episode.html"));
+  });
+
+  it("does not include 総合分析 section when no summaryPages", () => {
+    const manifest: SiteManifest = {
+      title: "SOLAR LINE 考察",
+      generatedAt: "2026-02-23T00:00:00Z",
+      episodes: [],
+      logs: [],
+    };
+    const html = renderIndex(manifest);
+    assert.ok(!html.includes("総合分析"));
   });
 });
