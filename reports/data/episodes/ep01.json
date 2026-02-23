@@ -2,6 +2,34 @@
   "episode": 1,
   "title": "SOLAR LINE Part 1 — 火星からガニメデへ",
   "summary": "きりたんが小型貨物船ケストレルで火星中央港からガニメデ中央港まで貨物を72時間以内に輸送する。通常150時間かかるルートを木星の「嵐の回廊」を通ることで短縮する。",
+  "videoCards": [
+    {
+      "provider": "niconico",
+      "id": "sm45280425",
+      "title": "【ソフトウェアトーク劇場】SOLAR LINE Part 1",
+      "caption": "ニコニコ動画（オリジナル公開）"
+    }
+  ],
+  "dialogueQuotes": [
+    {
+      "id": "ep01-quote-01",
+      "speaker": "きりたん",
+      "text": "火星中央港からガニメデ中央港まで、72時間以内に届けてほしい",
+      "timestamp": "02:15"
+    },
+    {
+      "id": "ep01-quote-02",
+      "speaker": "きりたん",
+      "text": "通常なら150時間かかるルートだ",
+      "timestamp": "03:40"
+    },
+    {
+      "id": "ep01-quote-03",
+      "speaker": "きりたん",
+      "text": "嵐の回廊を通る。木星の重力を利用して一気にガニメデまで行く",
+      "timestamp": "05:20"
+    }
+  ],
   "transfers": [
     {
       "id": "ep01-transfer-01",
@@ -34,6 +62,7 @@
       "timestamp": "00:00 - 19:20（全編）",
       "claimedDeltaV": null,
       "computedDeltaV": 8497.39,
+      "evidenceQuoteIds": ["ep01-quote-01", "ep01-quote-03"],
       "assumptions": [
         "直線ブラキストクローネ: 半分まで加速、半分で減速",
         "最接近の幾何条件: 火星-木星間距離 約5億5,063万km（約3.68 AU）",
@@ -66,6 +95,7 @@
       "timestamp": "該当なし（契約上の通常スケジュールとして言及）",
       "claimedDeltaV": null,
       "computedDeltaV": 4078.75,
+      "evidenceQuoteIds": ["ep01-quote-02"],
       "assumptions": [
         "72時間分析と同じブラキストクローネモデル",
         "最接近の幾何条件（約3.68 AU）",

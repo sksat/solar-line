@@ -1,6 +1,6 @@
 # Task 012: Report Enrichment — Video Embeds, Graphs, Dialogue Quotes
 
-## Status: TODO
+## Status: IN PROGRESS
 
 ## Goal
 Enrich episode reports with video embeds, static analysis charts, and dialogue citations.

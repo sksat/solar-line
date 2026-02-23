@@ -8,10 +8,15 @@ import {
   renderEpisode,
   renderTransferCard,
   renderCalculator,
+  renderVideoCard,
+  renderVideoCards,
+  renderDialogueQuote,
+  renderDialogueQuotes,
+  renderBarChart,
   renderLogsIndex,
   renderLogPage,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -277,6 +282,212 @@ describe("renderEpisode includes calculator", () => {
     const html = renderEpisode(sampleEpisodeReport);
     assert.ok(html.includes('id="calculator"'));
     assert.ok(html.includes("calculator.js"));
+  });
+});
+
+// --- renderVideoCard ---
+
+const sampleYouTubeCard: VideoCard = {
+  provider: "youtube",
+  id: "dQw4w9WgXcQ",
+  title: "テスト動画",
+  caption: "YouTube版",
+};
+
+const sampleNiconicoCard: VideoCard = {
+  provider: "niconico",
+  id: "sm45280425",
+  title: "SOLAR LINE Part 1",
+  caption: "ニコニコ動画（オリジナル）",
+};
+
+describe("renderVideoCard", () => {
+  it("renders YouTube iframe with correct embed URL", () => {
+    const html = renderVideoCard(sampleYouTubeCard);
+    assert.ok(html.includes("youtube-nocookie.com/embed/dQw4w9WgXcQ"));
+    assert.ok(html.includes("iframe"));
+    assert.ok(html.includes("allowfullscreen"));
+  });
+
+  it("renders Niconico iframe with correct embed URL", () => {
+    const html = renderVideoCard(sampleNiconicoCard);
+    assert.ok(html.includes("embed.nicovideo.jp/watch/sm45280425"));
+    assert.ok(html.includes("iframe"));
+  });
+
+  it("includes caption when provided", () => {
+    const html = renderVideoCard(sampleYouTubeCard);
+    assert.ok(html.includes("YouTube版"));
+    assert.ok(html.includes("video-caption"));
+  });
+
+  it("omits caption when not provided", () => {
+    const card: VideoCard = { provider: "youtube", id: "test123" };
+    const html = renderVideoCard(card);
+    assert.ok(!html.includes("video-caption"));
+  });
+
+  it("includes start time parameter for YouTube", () => {
+    const card: VideoCard = { provider: "youtube", id: "abc", startSec: 120 };
+    const html = renderVideoCard(card);
+    assert.ok(html.includes("?start=120"));
+  });
+
+  it("includes start time parameter for Niconico", () => {
+    const card: VideoCard = { provider: "niconico", id: "sm123", startSec: 60 };
+    const html = renderVideoCard(card);
+    assert.ok(html.includes("?from=60"));
+  });
+
+  it("encodes video ID to prevent injection", () => {
+    const card: VideoCard = { provider: "youtube", id: "test<script>" };
+    const html = renderVideoCard(card);
+    assert.ok(!html.includes("<script>"));
+    assert.ok(html.includes("test%3Cscript%3E"));
+  });
+});
+
+describe("renderVideoCards", () => {
+  it("wraps cards in video-cards container", () => {
+    const html = renderVideoCards([sampleYouTubeCard, sampleNiconicoCard]);
+    assert.ok(html.includes("video-cards"));
+    assert.ok(html.includes("youtube-nocookie.com"));
+    assert.ok(html.includes("embed.nicovideo.jp"));
+  });
+
+  it("returns empty string for empty array", () => {
+    assert.equal(renderVideoCards([]), "");
+  });
+});
+
+// --- renderDialogueQuote ---
+
+const sampleQuote: DialogueQuote = {
+  id: "ep01-quote-01",
+  speaker: "きりたん",
+  text: "72時間以内に届けてほしい",
+  timestamp: "02:15",
+};
+
+describe("renderDialogueQuote", () => {
+  it("renders speaker name and quote text", () => {
+    const html = renderDialogueQuote(sampleQuote);
+    assert.ok(html.includes("きりたん"));
+    assert.ok(html.includes("72時間以内に届けてほしい"));
+  });
+
+  it("renders timestamp", () => {
+    const html = renderDialogueQuote(sampleQuote);
+    assert.ok(html.includes("02:15"));
+  });
+
+  it("includes quote ID for linking", () => {
+    const html = renderDialogueQuote(sampleQuote);
+    assert.ok(html.includes('id="ep01-quote-01"'));
+  });
+
+  it("uses Japanese bracket format", () => {
+    const html = renderDialogueQuote(sampleQuote);
+    assert.ok(html.includes("「72時間以内に届けてほしい」"));
+  });
+
+  it("escapes HTML in quote text", () => {
+    const q: DialogueQuote = { id: "q1", speaker: "A", text: '<script>alert("xss")</script>', timestamp: "00:00" };
+    const html = renderDialogueQuote(q);
+    assert.ok(!html.includes("<script>"));
+  });
+});
+
+describe("renderDialogueQuotes", () => {
+  it("renders section heading and quotes", () => {
+    const html = renderDialogueQuotes([sampleQuote]);
+    assert.ok(html.includes("主要な台詞"));
+    assert.ok(html.includes("きりたん"));
+  });
+
+  it("returns empty string for empty array", () => {
+    assert.equal(renderDialogueQuotes([]), "");
+  });
+});
+
+// --- renderBarChart ---
+
+describe("renderBarChart", () => {
+  it("renders SVG with bars", () => {
+    const html = renderBarChart("テストチャート", [
+      { label: "A", value: 100 },
+      { label: "B", value: 50 },
+    ], "km/s");
+    assert.ok(html.includes("<svg"));
+    assert.ok(html.includes("</svg>"));
+    assert.ok(html.includes("テストチャート"));
+    assert.ok(html.includes("km/s"));
+  });
+
+  it("returns empty string for empty bars", () => {
+    assert.equal(renderBarChart("Empty", []), "");
+  });
+
+  it("uses custom colors when provided", () => {
+    const html = renderBarChart("Chart", [
+      { label: "Green", value: 10, color: "var(--green)" },
+    ]);
+    assert.ok(html.includes("var(--green)"));
+  });
+
+  it("scales bars relative to maximum", () => {
+    const html = renderBarChart("Chart", [
+      { label: "Big", value: 1000 },
+      { label: "Small", value: 100 },
+    ]);
+    // Both should be present
+    assert.ok(html.includes("Big"));
+    assert.ok(html.includes("Small"));
+  });
+});
+
+// --- renderEpisode with video cards and dialogue ---
+
+describe("renderEpisode with enrichments", () => {
+  it("includes video cards when provided", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      videoCards: [sampleNiconicoCard],
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("embed.nicovideo.jp"));
+    assert.ok(html.includes("video-cards"));
+  });
+
+  it("includes dialogue quotes when provided", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      dialogueQuotes: [sampleQuote],
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("主要な台詞"));
+    assert.ok(html.includes("きりたん"));
+  });
+
+  it("renders ΔV comparison chart", () => {
+    const html = renderEpisode(sampleEpisodeReport);
+    assert.ok(html.includes("ΔV 比較"));
+    assert.ok(html.includes("<svg"));
+  });
+
+  it("renders evidence quotes linked to transfers", () => {
+    const report: EpisodeReport = {
+      episode: 1,
+      title: "Test",
+      summary: "Test",
+      dialogueQuotes: [sampleQuote],
+      transfers: [{
+        ...sampleTransfer,
+        evidenceQuoteIds: ["ep01-quote-01"],
+      }],
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("根拠となる台詞"));
   });
 });
 

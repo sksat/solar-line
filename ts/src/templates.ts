@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -194,6 +194,25 @@ footer {
 .calc-results .result-gap { color: var(--red); font-weight: 600; }
 .calc-badge { font-size: 0.75em; color: #8b949e; float: right; }
 .calc-assumptions { font-size: 0.8em; color: #8b949e; margin-top: 0.5rem; }
+.video-cards { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+.video-card { flex: 1 1 400px; min-width: 300px; }
+.video-card iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.video-card .video-caption { font-size: 0.85em; color: #8b949e; margin-top: 0.25rem; }
+.dialogue-quote {
+  border-left: 3px solid var(--accent);
+  padding: 0.4rem 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.95em;
+}
+.dialogue-quote .speaker { color: var(--accent); font-weight: 600; }
+.dialogue-quote .timestamp { color: #8b949e; font-size: 0.85em; margin-left: 0.5rem; }
+.dv-chart { margin: 1rem 0; }
+.dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
 `;
 
 /** Wrap content in the common HTML layout */
@@ -259,6 +278,81 @@ ${assumptionsList}
 </div>`;
 }
 
+/** Allowed embed hosts for video cards (security whitelist) */
+const EMBED_HOSTS: Record<VideoCard["provider"], string> = {
+  youtube: "https://www.youtube-nocookie.com/embed/",
+  niconico: "https://embed.nicovideo.jp/watch/",
+};
+
+/** Render a video embed card */
+export function renderVideoCard(card: VideoCard): string {
+  const baseUrl = EMBED_HOSTS[card.provider];
+  const startParam = card.startSec ? (card.provider === "youtube" ? `?start=${card.startSec}` : `?from=${card.startSec}`) : "";
+  const src = `${baseUrl}${encodeURIComponent(card.id)}${startParam}`;
+  const title = card.title ? escapeHtml(card.title) : `${card.provider} embed`;
+  const caption = card.caption ? `<p class="video-caption">${escapeHtml(card.caption)}</p>` : "";
+
+  return `<div class="video-card">
+<iframe src="${src}" title="${title}" allowfullscreen loading="lazy"></iframe>
+${caption}
+</div>`;
+}
+
+/** Render a set of video cards */
+export function renderVideoCards(cards: VideoCard[]): string {
+  if (cards.length === 0) return "";
+  return `<div class="video-cards">\n${cards.map(renderVideoCard).join("\n")}\n</div>`;
+}
+
+/** Render a single dialogue quote */
+export function renderDialogueQuote(q: DialogueQuote): string {
+  return `<div class="dialogue-quote" id="${escapeHtml(q.id)}">
+<span class="speaker">${escapeHtml(q.speaker)}</span>「${escapeHtml(q.text)}」<span class="timestamp">(${escapeHtml(q.timestamp)})</span>
+</div>`;
+}
+
+/** Render a list of dialogue quotes as a section */
+export function renderDialogueQuotes(quotes: DialogueQuote[]): string {
+  if (quotes.length === 0) return "";
+  return `<h2>主要な台詞</h2>\n${quotes.map(renderDialogueQuote).join("\n")}`;
+}
+
+/**
+ * Render a horizontal bar chart as inline SVG.
+ * Each bar has a label, value, and optional color.
+ * Values are scaled relative to the maximum value.
+ */
+export function renderBarChart(
+  title: string,
+  bars: { label: string; value: number; color?: string }[],
+  unit: string = "",
+): string {
+  if (bars.length === 0) return "";
+  const maxVal = Math.max(...bars.map(b => b.value));
+  const barHeight = 24;
+  const labelWidth = 160;
+  const chartWidth = 600;
+  const barAreaWidth = chartWidth - labelWidth - 80;
+  const svgHeight = bars.length * (barHeight + 8) + 30;
+
+  const barsSvg = bars.map((b, i) => {
+    const y = i * (barHeight + 8) + 20;
+    const width = maxVal > 0 ? Math.max(1, (b.value / maxVal) * barAreaWidth) : 0;
+    const color = b.color || "var(--accent)";
+    const displayVal = b.value >= 1000 ? b.value.toExponential(2) : b.value.toFixed(2);
+    return `<text x="${labelWidth - 8}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" text-anchor="end" font-size="11">${escapeHtml(b.label)}</text>
+<rect x="${labelWidth}" y="${y}" width="${width}" height="${barHeight}" rx="3" fill="${color}" opacity="0.85"/>
+<text x="${labelWidth + width + 6}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" font-size="11">${displayVal} ${escapeHtml(unit)}</text>`;
+  }).join("\n");
+
+  return `<div class="dv-chart card">
+<h4>${escapeHtml(title)}</h4>
+<svg width="${chartWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">
+${barsSvg}
+</svg>
+</div>`;
+}
+
 /** Render the interactive brachistochrone calculator widget */
 export function renderCalculator(): string {
   return `<div class="calc-section card" id="calculator">
@@ -317,14 +411,47 @@ export function renderCalculator(): string {
 <script type="module" src="../calculator.js"></script>`;
 }
 
+/** Build a ΔV summary chart from transfer data */
+function buildDvChart(transfers: TransferAnalysis[]): string {
+  const chartBars = transfers
+    .filter(t => t.computedDeltaV > 0)
+    .map(t => ({
+      label: t.description.length > 25 ? t.description.slice(0, 22) + "…" : t.description,
+      value: t.computedDeltaV,
+      color: t.verdict === "plausible" ? "var(--green)" : t.verdict === "implausible" ? "var(--red)" : "var(--yellow)",
+    }));
+  return renderBarChart("ΔV 比較", chartBars, "km/s");
+}
+
 /** Render a full episode report page */
 export function renderEpisode(report: EpisodeReport): string {
-  const cards = report.transfers.map(renderTransferCard).join("\n");
+  const videoSection = report.videoCards && report.videoCards.length > 0
+    ? renderVideoCards(report.videoCards)
+    : "";
+  const dialogueSection = report.dialogueQuotes && report.dialogueQuotes.length > 0
+    ? renderDialogueQuotes(report.dialogueQuotes)
+    : "";
+  const cards = report.transfers.map((t) => {
+    const quoteRefs = t.evidenceQuoteIds && report.dialogueQuotes
+      ? t.evidenceQuoteIds
+          .map(id => report.dialogueQuotes!.find(q => q.id === id))
+          .filter((q): q is DialogueQuote => q !== undefined)
+          .map(q => renderDialogueQuote(q))
+          .join("\n")
+      : "";
+    return renderTransferCard(t) + (quoteRefs ? `<div class="card" style="margin-top:-0.5rem;border-top:none;border-top-left-radius:0;border-top-right-radius:0"><h4>根拠となる台詞</h4>${quoteRefs}</div>` : "");
+  }).join("\n");
+  const dvChart = buildDvChart(report.transfers);
   const calculator = renderCalculator();
 
   const content = `
 <h1>第${report.episode}話: ${escapeHtml(report.title)}</h1>
+${videoSection}
 <p>${escapeHtml(report.summary)}</p>
+
+${dialogueSection}
+
+${dvChart}
 
 <h2>軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}
