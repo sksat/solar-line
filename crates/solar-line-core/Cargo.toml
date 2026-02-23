@@ -1,0 +1,7 @@
+[package]
+name = "solar-line-core"
+version = "0.1.0"
+edition = "2021"
+description = "Orbital mechanics analysis for SOLAR LINE 考察"
+
+[dependencies]

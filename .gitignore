@@ -1,0 +1,26 @@
+# Build artifacts
+/target/
+ts/dist/
+ts/node_modules/
+
+# Raw data (never commit)
+raw_data/
+*.mp4
+*.mkv
+*.webm
+*.srt
+*.vtt
+
+# Agent logs (local only, not committed via CI)
+agent_logs/
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.*

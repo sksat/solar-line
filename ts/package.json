@@ -1,0 +1,15 @@
+{
+  "name": "solar-line",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SOLAR LINE 考察 — scripts and reports",
+  "type": "module",
+  "scripts": {
+    "test": "node --test src/**/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
