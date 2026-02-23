@@ -44,7 +44,7 @@ describe("discoverEpisodes", () => {
       summary: "Test episode",
       transfers: [],
     };
-    fs.writeFileSync(path.join(epDir, "ep-001.json"), JSON.stringify(episode));
+    fs.writeFileSync(path.join(epDir, "ep01.json"), JSON.stringify(episode));
 
     const result = discoverEpisodes(tmpDir);
     assert.equal(result.length, 1);
@@ -58,8 +58,8 @@ describe("discoverEpisodes", () => {
 
     const ep2: EpisodeReport = { episode: 2, title: "Second", summary: "", transfers: [] };
     const ep1: EpisodeReport = { episode: 1, title: "First", summary: "", transfers: [] };
-    fs.writeFileSync(path.join(epDir, "ep-002.json"), JSON.stringify(ep2));
-    fs.writeFileSync(path.join(epDir, "ep-001.json"), JSON.stringify(ep1));
+    fs.writeFileSync(path.join(epDir, "ep02.json"), JSON.stringify(ep2));
+    fs.writeFileSync(path.join(epDir, "ep01.json"), JSON.stringify(ep1));
 
     const result = discoverEpisodes(tmpDir);
     assert.equal(result[0].episode, 1);
@@ -181,7 +181,7 @@ describe("build (integration)", () => {
         },
       ],
     };
-    fs.writeFileSync(path.join(epDir, "ep-001.json"), JSON.stringify(episode));
+    fs.writeFileSync(path.join(epDir, "ep01.json"), JSON.stringify(episode));
 
     build({ dataDir, outDir });
 
