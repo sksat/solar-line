@@ -79,6 +79,7 @@ function initDiagramAnimation(card) {
     currentTime = Math.max(0, Math.min(duration, t));
     var sliderVal = duration > 0 ? (currentTime / duration) * 1000 : 0;
     slider.value = Math.round(sliderVal);
+    slider.setAttribute("aria-valuenow", String(Math.round(sliderVal)));
     timeDisplay.textContent = formatTime(currentTime, duration);
 
     // Update body positions
@@ -144,6 +145,7 @@ function initDiagramAnimation(card) {
       currentTime = duration;
       playing = false;
       playBtn.textContent = "▶";
+      playBtn.setAttribute("aria-label", "再生");
       lastTimestamp = null;
     }
     updateFrame(currentTime);
@@ -156,12 +158,14 @@ function initDiagramAnimation(card) {
     if (playing) {
       playing = false;
       playBtn.textContent = "▶";
+      playBtn.setAttribute("aria-label", "再生");
       lastTimestamp = null;
       if (animFrameId) cancelAnimationFrame(animFrameId);
     } else {
       if (currentTime >= duration) currentTime = 0;
       playing = true;
       playBtn.textContent = "⏸";
+      playBtn.setAttribute("aria-label", "一時停止");
       lastTimestamp = null;
       animFrameId = requestAnimationFrame(animate);
     }
@@ -175,6 +179,7 @@ function initDiagramAnimation(card) {
     if (playing) {
       playing = false;
       playBtn.textContent = "▶";
+      playBtn.setAttribute("aria-label", "再生");
       lastTimestamp = null;
       if (animFrameId) cancelAnimationFrame(animFrameId);
     }

@@ -465,7 +465,7 @@ export function renderBarChart(
 
   return `<div class="dv-chart card">
 <h4>${escapeHtml(title)}</h4>
-<svg viewBox="0 0 ${chartWidth} ${svgHeight}" width="100%" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 ${chartWidth} ${svgHeight}" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(title)}">
 ${barsSvg}
 </svg>
 </div>`;
@@ -679,7 +679,8 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
 
   const legendHeight = styles.length * 18 + 4;
 
-  const svg = `<svg width="${size}" height="${size + legendHeight + 10}" viewBox="${-cx} ${-cy} ${size} ${size + legendHeight + 10}" xmlns="http://www.w3.org/2000/svg">
+  const ariaLabel = `${diagram.title} — ${diagram.centerLabel}中心の軌道図`;
+  const svg = `<svg width="${size}" height="${size + legendHeight + 10}" viewBox="${-cx} ${-cy} ${size} ${size + legendHeight + 10}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(ariaLabel)}">
   <style>text { font-family: "SFMono-Regular", Consolas, monospace; }</style>
   <g>
     <!-- Central body -->
@@ -732,10 +733,10 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     };
     animationHtml = `
 <script type="application/json" class="orbital-animation-data">${JSON.stringify(animData)}</script>
-<div class="orbital-animation-controls">
-  <button class="anim-play" title="再生/一時停止">▶</button>
-  <input type="range" class="anim-slider" min="0" max="1000" value="0" step="1">
-  <span class="time-display">0h</span>
+<div class="orbital-animation-controls" role="group" aria-label="アニメーション操作">
+  <button class="anim-play" title="再生/一時停止" aria-label="再生">▶</button>
+  <input type="range" class="anim-slider" min="0" max="1000" value="0" step="1" aria-label="アニメーション時間" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="0">
+  <span class="time-display" aria-live="polite">0h</span>
 </div>`;
   }
 
@@ -757,23 +758,23 @@ export function renderCalculator(): string {
   return `<div class="calc-section card" id="calculator">
 <h2>Brachistochrone 計算機 <span class="calc-badge" id="calc-engine-badge">エンジン: JS</span></h2>
 <p>距離・船質量・遷移時間を変えて、必要な加速度と&Delta;Vへの影響を探索できます。</p>
-<p class="calc-assumptions">前提: 直線経路、中間点で加速反転減速、一定推力、重力無視、静止→静止遷移。</p>
+<p class="calc-assumptions" id="calc-assumptions">前提: 直線経路、中間点で加速反転減速、一定推力、重力無視、静止→静止遷移。</p>
 
 <div class="calc-controls">
   <div class="calc-control">
     <label for="calc-distance">距離</label>
-    <input type="range" id="calc-distance-range" min="0.5" max="10" step="0.01" value="3.68">
-    <input type="number" id="calc-distance" min="0.1" max="50" step="0.01" value="3.68">
+    <input type="range" id="calc-distance-range" min="0.5" max="10" step="0.01" value="3.68" aria-label="距離 (AU)" aria-describedby="calc-assumptions">
+    <input type="number" id="calc-distance" min="0.1" max="50" step="0.01" value="3.68" aria-describedby="calc-assumptions">
   </div>
   <div class="calc-control">
     <label for="calc-mass">船質量</label>
-    <input type="range" id="calc-mass-range" min="10" max="100000" step="10" value="48000">
-    <input type="number" id="calc-mass" min="1" max="1000000" step="1" value="48000">
+    <input type="range" id="calc-mass-range" min="10" max="100000" step="10" value="48000" aria-label="船質量 (t)" aria-describedby="calc-assumptions">
+    <input type="number" id="calc-mass" min="1" max="1000000" step="1" value="48000" aria-describedby="calc-assumptions">
   </div>
   <div class="calc-control">
     <label for="calc-time">遷移時間</label>
-    <input type="range" id="calc-time-range" min="1" max="500" step="1" value="72">
-    <input type="number" id="calc-time" min="1" max="10000" step="1" value="72">
+    <input type="range" id="calc-time-range" min="1" max="500" step="1" value="72" aria-label="遷移時間 (h)" aria-describedby="calc-assumptions">
+    <input type="number" id="calc-time" min="1" max="10000" step="1" value="72" aria-describedby="calc-assumptions">
   </div>
 </div>
 
@@ -784,7 +785,7 @@ export function renderCalculator(): string {
   <button id="preset-mass_4800t">質量 = 4,800 t の場合</button>
 </div>
 
-<div class="calc-results">
+<div class="calc-results" aria-live="polite">
 <table>
   <tr><th colspan="2">遷移の要件</th><th colspan="2">船の性能 (ケストレル号, 9.8 MN)</th></tr>
   <tr>

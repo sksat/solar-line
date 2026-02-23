@@ -1397,3 +1397,87 @@ describe("renderIndex with summaryPages", () => {
     assert.ok(!html.includes("総合分析"));
   });
 });
+
+// --- Accessibility attributes ---
+
+describe("SVG accessibility attributes", () => {
+  it("orbital diagram SVG has role=img and aria-label", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes('role="img"'));
+    assert.ok(html.includes('aria-label="'));
+    assert.ok(html.includes("太陽中心の軌道図"));
+  });
+
+  it("orbital diagram aria-label includes title and center label", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes("火星→ガニメデ ブラキストクローネ遷移 — 太陽中心の軌道図"));
+  });
+
+  it("bar chart SVG has role=img and aria-label", () => {
+    const html = renderBarChart("ΔV 比較", [
+      { label: "A", value: 100 },
+    ], "km/s");
+    assert.ok(html.includes('role="img"'));
+    assert.ok(html.includes('aria-label="ΔV 比較"'));
+  });
+
+  it("escapes HTML in orbital diagram aria-label", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-aria-escape",
+      title: 'Test <script>"alert"</script>',
+      centerLabel: "太陽",
+      orbits: [],
+      transfers: [],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(!html.includes('<script>"alert"</script>'));
+    assert.ok(html.includes("&lt;script&gt;"));
+  });
+});
+
+describe("calculator accessibility attributes", () => {
+  it("range sliders have aria-label", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('aria-label="距離 (AU)"'));
+    assert.ok(html.includes('aria-label="船質量 (t)"'));
+    assert.ok(html.includes('aria-label="遷移時間 (h)"'));
+  });
+
+  it("range sliders have aria-describedby linking to assumptions", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="calc-assumptions"'));
+    assert.ok(html.includes('aria-describedby="calc-assumptions"'));
+  });
+
+  it("results section has aria-live for dynamic updates", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('aria-live="polite"'));
+  });
+});
+
+describe("animation controls accessibility attributes", () => {
+  it("play button has aria-label", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('aria-label="再生"'));
+  });
+
+  it("time slider has aria-label and aria-value attributes", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('aria-label="アニメーション時間"'));
+    assert.ok(html.includes('aria-valuemin="0"'));
+    assert.ok(html.includes('aria-valuemax="1000"'));
+    assert.ok(html.includes('aria-valuenow="0"'));
+  });
+
+  it("time display has aria-live for dynamic updates", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    // The time-display span should have aria-live
+    assert.ok(/<span class="time-display" aria-live="polite">/.test(html));
+  });
+
+  it("animation controls group has role and aria-label", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('role="group"'));
+    assert.ok(html.includes('aria-label="アニメーション操作"'));
+  });
+});
