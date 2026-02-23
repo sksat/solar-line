@@ -6,18 +6,18 @@
     {
       "id": "ep01-transfer-01",
       "episode": 1,
-      "description": "Hohmann transfer baseline: Mars orbit → Jupiter orbit (minimum energy)",
-      "timestamp": "N/A (reference calculation)",
+      "description": "ホーマン遷移基準値: 火星軌道 → 木星軌道（最小エネルギー）",
+      "timestamp": "該当なし（参考計算）",
       "claimedDeltaV": null,
       "computedDeltaV": 10.15,
       "assumptions": [
-        "Heliocentric circular orbits for Mars (227,939,200 km) and Jupiter (778,570,000 km)",
-        "Coplanar orbits (no inclination change)",
-        "Impulsive burns (instantaneous velocity changes)",
-        "Two-body problem (Sun gravity only)"
+        "火星（227,939,200 km）と木星（778,570,000 km）の太陽中心円軌道を仮定",
+        "共面軌道（軌道傾斜角の変更なし）",
+        "衝撃的噴射（瞬間的な速度変更）",
+        "二体問題（太陽の重力のみ）"
       ],
       "verdict": "indeterminate",
-      "explanation": "The classical Hohmann transfer requires ~10.15 km/s total ΔV but takes ~1,127 days (~3.1 years). This is the minimum-energy baseline — far too slow for the 72-hour deadline. The in-universe setting clearly assumes propulsion technology beyond Hohmann-class transfers.",
+      "explanation": "古典的ホーマン遷移には合計約10.15 km/sのΔVが必要だが、約1,127日（約3.1年）を要する。これは最小エネルギーの基準値であり、72時間の期限には遅すぎる。作中の設定はホーマン級を超える推進技術を明確に前提としている。",
       "parameters": {
         "mu": 1.32712440041e11,
         "departureRadius": 227939200,
@@ -30,19 +30,19 @@
     {
       "id": "ep01-transfer-02",
       "episode": 1,
-      "description": "72-hour fast transfer: brachistochrone Mars → Jupiter (closest approach, ~3.68 AU)",
-      "timestamp": "00:00 - 19:20 (entire episode)",
+      "description": "72時間高速遷移: ブラキストクローネ 火星 → 木星（最接近、約3.68 AU）",
+      "timestamp": "00:00 - 19:20（全編）",
       "claimedDeltaV": null,
       "computedDeltaV": 8497.39,
       "assumptions": [
-        "Straight-line brachistochrone: accelerate halfway, decelerate halfway",
-        "Closest approach geometry: Mars-Jupiter distance ~550.6M km (~3.68 AU)",
-        "Rest-to-rest transfer (zero relative velocity at start and end)",
-        "Constant acceleration throughout (no fuel depletion)",
-        "Ignores solar gravity (optimistic — solar gravity is ~12x ship acceleration near Mars)"
+        "直線ブラキストクローネ: 半分まで加速、半分で減速",
+        "最接近の幾何条件: 火星-木星間距離 約5億5,063万km（約3.68 AU）",
+        "静止→静止遷移（始点と終点で相対速度ゼロ）",
+        "全行程で一定加速度（燃料消費なし）",
+        "太陽重力を無視（楽観的 — 火星付近では太陽重力が船の加速度の約12倍）"
       ],
       "verdict": "implausible",
-      "explanation": "A 72-hour brachistochrone at closest approach requires ~32.8 m/s² (~3.3g) constant acceleration and ~8,497 km/s total ΔV. The Kestrel's stated thrust of 9.8 MN on 48,000t mass provides only ~0.204 m/s² (~0.02g) — roughly 160x too weak. Even with continuous burn for the full 72 hours, the ship's ΔV budget is only ~52.9 km/s, which is ~160x less than the ~8,497 km/s needed. The reachable distance in 72h with stated thrust is only ~3.4M km (~0.023 AU), far short of the ~3.68 AU required. Note: this analysis is optimistic since it ignores solar gravity, which is dominant at these thrust levels.",
+      "explanation": "最接近距離での72時間ブラキストクローネは約32.8 m/s²（約3.3g）の一定加速度と合計約8,497 km/sのΔVを要する。ケストレルの公称推力9.8 MNと48,000tの質量では約0.204 m/s²（約0.02g）しか得られず、約160倍不足する。72時間の連続噴射でも船のΔV余力は約52.9 km/sに過ぎず、必要な約8,497 km/sの約160分の1。公称推力で72時間に到達可能な距離は約340万km（約0.023 AU）にとどまり、必要な約3.68 AUには遠く及ばない。注: この分析は太陽重力を無視しており楽観的である。",
       "parameters": {
         "mu": 1.32712440041e11,
         "departureRadius": 227939200,
@@ -62,18 +62,18 @@
     {
       "id": "ep01-transfer-03",
       "episode": 1,
-      "description": "150-hour normal route: brachistochrone Mars → Jupiter (closest approach)",
-      "timestamp": "N/A (referenced in contract as normal schedule)",
+      "description": "150時間通常ルート: ブラキストクローネ 火星 → 木星（最接近）",
+      "timestamp": "該当なし（契約上の通常スケジュールとして言及）",
       "claimedDeltaV": null,
       "computedDeltaV": 4078.75,
       "assumptions": [
-        "Same brachistochrone model as 72h analysis",
-        "Closest approach geometry (~3.68 AU)",
-        "150 hours = 540,000 seconds",
-        "Rest-to-rest transfer"
+        "72時間分析と同じブラキストクローネモデル",
+        "最接近の幾何条件（約3.68 AU）",
+        "150時間 = 540,000秒",
+        "静止→静止遷移"
       ],
       "verdict": "implausible",
-      "explanation": "Even the 'normal' 150-hour route requires ~7.55 m/s² (~0.77g) and ~4,079 km/s ΔV at closest approach. This is ~37x the Kestrel's rated acceleration. The 150h route is less extreme than 72h but still requires propulsion far beyond the stated engine specifications. The worldbuilding is internally consistent (72h is 'extreme' vs 150h 'normal'), but both timeframes require thrust-to-weight ratios the Kestrel's stated specs cannot provide.",
+      "explanation": "「通常の」150時間ルートでも、最接近距離で約7.55 m/s²（約0.77g）と約4,079 km/sのΔVが必要。これはケストレルの公称加速度の約37倍に相当する。150時間ルートは72時間ほど極端ではないが、公称エンジン仕様をはるかに超える推進力が必要。世界観は内部的に整合している（72時間は「極端」vs 150時間が「通常」）が、どちらの時間枠もケストレルの公称仕様では実現不可能な推力質量比を要する。",
       "parameters": {
         "mu": 1.32712440041e11,
         "distanceKm": 550630800,
@@ -88,19 +88,19 @@
     {
       "id": "ep01-transfer-04",
       "episode": 1,
-      "description": "Ship capability assessment: Kestrel TSF-43R engine at 48,000t",
-      "timestamp": "N/A (ship specification analysis)",
+      "description": "船の性能評価: ケストレル TSF-43R エンジン（48,000t時）",
+      "timestamp": "該当なし（船の仕様分析）",
       "claimedDeltaV": null,
       "computedDeltaV": 52.92,
       "assumptions": [
-        "Ship mass: 48,000 t (48,000,000 kg) as stated in worldbuilding document",
-        "Normal thrust: 9.8 MN (TSF-43R Orion Micropulser)",
-        "Peak thrust: 10.7 MN (emergency full burn)",
-        "Continuous burn for 72 hours (no fuel depletion modeled)",
-        "D-He³ fusion pulse drive (no Isp/exhaust velocity specified)"
+        "船の質量: 48,000 t（48,000,000 kg）世界設定資料に記載",
+        "通常推力: 9.8 MN（TSF-43R オライオン・マイクロパルサー）",
+        "最大推力: 10.7 MN（緊急フルバーン）",
+        "72時間連続噴射（燃料消費モデルなし）",
+        "D-He³ 核融合パルスドライブ（比推力/排気速度の記載なし）"
       ],
       "verdict": "indeterminate",
-      "explanation": "The Kestrel achieves 0.204 m/s² (0.02g) normal acceleration and 0.223 m/s² peak. In 72h continuous burn, maximum ΔV is ~52.9 km/s (normal) or ~57.8 km/s (peak). This is substantial for real-world spacecraft but insufficient for the depicted 72h interplanetary transfer by ~2 orders of magnitude. The discrepancy may indicate: (1) the 48,000t mass is a translation/notation issue, (2) the fusion drive operates differently than constant-thrust, (3) the setting includes unstated physics (gravitational assists, space infrastructure, pre-acceleration), or (4) the dramatic scenario prioritizes narrative over strict physical accuracy. Without exhaust velocity/Isp data, we cannot determine propellant fraction or true ΔV budget via the Tsiolkovsky equation.",
+      "explanation": "ケストレルは通常加速度0.204 m/s²（0.02g）、最大0.223 m/s²を発揮する。72時間連続噴射での最大ΔVは約52.9 km/s（通常）または約57.8 km/s（最大）。現実の宇宙機としては相当な値だが、描かれた72時間の惑星間遷移には約2桁不足する。この差異は以下を示唆する可能性がある:（1）48,000tという質量が翻訳/表記の問題、（2）核融合ドライブが定推力とは異なる動作をする、（3）作中に明示されていない物理法則（重力アシスト、宇宙インフラ、事前加速など）がある、（4）ドラマ上の演出が物理的正確さより優先されている。排気速度/比推力のデータがないため、ツィオルコフスキーの式による推進剤比率や真のΔV余力を算出できない。",
       "parameters": {
         "shipMassKg": 48000000,
         "thrustN": 9800000,

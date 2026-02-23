@@ -37,11 +37,11 @@ async function tryLoadWasm() {
     wasmModule = mod;
     useWasm = true;
     const badge = document.getElementById("calc-engine-badge");
-    if (badge) badge.textContent = "Engine: WASM";
+    if (badge) badge.textContent = "エンジン: WASM";
   } catch {
     useWasm = false;
     const badge = document.getElementById("calc-engine-badge");
-    if (badge) badge.textContent = "Engine: JS (WASM unavailable)";
+    if (badge) badge.textContent = "エンジン: JS（WASM利用不可）";
   }
 }
 
@@ -163,13 +163,13 @@ function updateCalculator() {
   // Gap / verdict
   const verdictEl = document.getElementById("res-verdict");
   if (accelRatio <= 1.0) {
-    verdictEl.textContent = "Within ship capability";
+    verdictEl.textContent = "船の性能内";
     verdictEl.className = "verdict verdict-plausible";
   } else if (accelRatio <= 2.0) {
-    verdictEl.textContent = formatNumber(accelRatio, 1) + "\u00D7 shortfall (marginal)";
+    verdictEl.textContent = formatNumber(accelRatio, 1) + "\u00D7 不足（限界的）";
     verdictEl.className = "verdict verdict-indeterminate";
   } else {
-    verdictEl.textContent = formatNumber(accelRatio, 0) + "\u00D7 shortfall";
+    verdictEl.textContent = formatNumber(accelRatio, 0) + "\u00D7 不足";
     verdictEl.className = "verdict verdict-implausible";
   }
 

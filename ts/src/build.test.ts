@@ -154,7 +154,7 @@ describe("build (integration)", () => {
 
     const index = fs.readFileSync(path.join(outDir, "index.html"), "utf-8");
     assert.ok(index.includes("SOLAR LINE"));
-    assert.ok(index.includes("No episode reports yet."));
+    assert.ok(index.includes("エピソードレポートはまだありません。"));
   });
 
   it("generates episode pages from JSON data", () => {
@@ -191,12 +191,12 @@ describe("build (integration)", () => {
     const html = fs.readFileSync(epPage, "utf-8");
     assert.ok(html.includes("Test Episode"));
     assert.ok(html.includes("Test Transfer"));
-    assert.ok(html.includes("plausible"));
+    assert.ok(html.includes("妥当"));
 
     // Verify index references it
     const index = fs.readFileSync(path.join(outDir, "index.html"), "utf-8");
-    assert.ok(index.includes("Episode 1: Test Episode"));
-    assert.ok(index.includes("1 transfers"));
+    assert.ok(index.includes("第1話: Test Episode"));
+    assert.ok(index.includes("1件の軌道遷移"));
   });
 
   it("generates log pages from markdown files", () => {

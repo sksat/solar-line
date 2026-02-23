@@ -124,7 +124,7 @@ describe("renderTransferCard", () => {
   it("renders transfer details", () => {
     const html = renderTransferCard(sampleTransfer);
     assert.ok(html.includes("Earth to Mars Hohmann Transfer"));
-    assert.ok(html.includes("plausible"));
+    assert.ok(html.includes("妥当"));
     assert.ok(html.includes("verdict-plausible"));
     assert.ok(html.includes("5.60"));
     assert.ok(html.includes("5.59"));
@@ -133,8 +133,8 @@ describe("renderTransferCard", () => {
   it("handles null claimed ΔV", () => {
     const t = { ...sampleTransfer, claimedDeltaV: null };
     const html = renderTransferCard(t);
-    assert.ok(html.includes("no explicit claim"));
-    assert.ok(!html.includes("Claimed ΔV"));
+    assert.ok(html.includes("作中で明示されず"));
+    assert.ok(!html.includes("作中のΔV"));
   });
 
   it("renders assumptions list", () => {
@@ -166,15 +166,15 @@ const sampleManifest: SiteManifest = {
 describe("renderIndex", () => {
   it("renders episode list", () => {
     const html = renderIndex(sampleManifest);
-    assert.ok(html.includes("Episode 1: Departure"));
-    assert.ok(html.includes("2 transfers"));
+    assert.ok(html.includes("第1話: Departure"));
+    assert.ok(html.includes("2件の軌道遷移"));
     assert.ok(html.includes("episodes/ep-001.html"));
   });
 
   it("renders empty state when no episodes", () => {
     const empty = { ...sampleManifest, episodes: [] };
     const html = renderIndex(empty);
-    assert.ok(html.includes("No episode reports yet."));
+    assert.ok(html.includes("エピソードレポートはまだありません。"));
   });
 
   it("includes generation timestamp", () => {
@@ -195,7 +195,7 @@ const sampleEpisodeReport: EpisodeReport = {
 describe("renderEpisode", () => {
   it("renders episode title and summary", () => {
     const html = renderEpisode(sampleEpisodeReport);
-    assert.ok(html.includes("Episode 1: Departure"));
+    assert.ok(html.includes("第1話: Departure"));
     assert.ok(html.includes("The crew departs Earth orbit."));
   });
 
@@ -207,7 +207,7 @@ describe("renderEpisode", () => {
   it("shows empty state when no transfers", () => {
     const empty = { ...sampleEpisodeReport, transfers: [] };
     const html = renderEpisode(empty);
-    assert.ok(html.includes("No transfers analyzed yet."));
+    assert.ok(html.includes("分析された軌道遷移はまだありません。"));
   });
 
   it("uses parent basePath for navigation", () => {
@@ -257,8 +257,8 @@ describe("renderCalculator", () => {
 
   it("includes assumptions disclaimer", () => {
     const html = renderCalculator();
-    assert.ok(html.includes("straight-line path"));
-    assert.ok(html.includes("no gravity"));
+    assert.ok(html.includes("直線経路"));
+    assert.ok(html.includes("重力無視"));
   });
 
   it("references calculator.js script", () => {
@@ -291,7 +291,7 @@ describe("renderLogsIndex", () => {
 
   it("renders empty state", () => {
     const html = renderLogsIndex([]);
-    assert.ok(html.includes("No session logs yet."));
+    assert.ok(html.includes("セッションログはまだありません。"));
   });
 });
 
@@ -306,6 +306,6 @@ describe("renderLogPage", () => {
 
   it("wraps in layout with log title", () => {
     const html = renderLogPage("test", "2026-02-23", "content");
-    assert.ok(html.includes("Session Log: 2026-02-23"));
+    assert.ok(html.includes("セッションログ: 2026-02-23"));
   });
 });
