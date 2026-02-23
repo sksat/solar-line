@@ -230,9 +230,9 @@
       "scaleMode": "sqrt",
       "radiusUnit": "AU",
       "orbits": [
-        { "id": "earth", "label": "地球", "radius": 1.0, "color": "#58a6ff" },
-        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149", "angle": 0 },
-        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 2.094 }
+        { "id": "earth", "label": "地球", "radius": 1.0, "color": "#58a6ff", "meanMotion": 1.991e-7 },
+        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149", "angle": 0, "meanMotion": 1.059e-7 },
+        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 2.094, "meanMotion": 1.678e-8 }
       ],
       "transfers": [
         {
@@ -250,9 +250,14 @@
           "style": "brachistochrone",
           "burnMarkers": [
             { "angle": 0.52, "label": "加速反転" }
-          ]
+          ],
+          "startTime": 0,
+          "endTime": 259200
         }
-      ]
+      ],
+      "animation": {
+        "durationSeconds": 259200
+      }
     }
   ],
   "explorations": [

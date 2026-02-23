@@ -168,6 +168,12 @@ export function build(config: BuildConfig): void {
     fs.copyFileSync(calcSrc, path.join(outDir, "calculator.js"));
   }
 
+  // Copy orbital animation JS for interactive diagrams
+  const animSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "orbital-animation.js");
+  if (fs.existsSync(animSrc)) {
+    fs.copyFileSync(animSrc, path.join(outDir, "orbital-animation.js"));
+  }
+
   const totalTransfers = episodes.reduce((sum, ep) => sum + ep.transfers.length, 0);
   console.log(
     `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${logs.length} logs → ${outDir}`,

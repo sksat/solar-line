@@ -290,10 +290,10 @@
       "scaleMode": "sqrt",
       "radiusUnit": "RJ",
       "orbits": [
-        { "id": "io", "label": "イオ", "radius": 5.9, "color": "#d29922", "angle": 1.57 },
-        { "id": "europa", "label": "エウロパ", "radius": 9.4, "color": "#8b949e", "angle": 2.36 },
-        { "id": "ganymede", "label": "ガニメデ", "radius": 15.0, "color": "#58a6ff", "angle": 3.14 },
-        { "id": "callisto", "label": "カリスト", "radius": 26.3, "color": "#6e7681", "angle": 4.19 },
+        { "id": "io", "label": "イオ", "radius": 5.9, "color": "#d29922", "angle": 1.57, "meanMotion": 4.109e-5 },
+        { "id": "europa", "label": "エウロパ", "radius": 9.4, "color": "#8b949e", "angle": 2.36, "meanMotion": 2.048e-5 },
+        { "id": "ganymede", "label": "ガニメデ", "radius": 15.0, "color": "#58a6ff", "angle": 3.14, "meanMotion": 1.017e-5 },
+        { "id": "callisto", "label": "カリスト", "radius": 26.3, "color": "#6e7681", "angle": 4.19, "meanMotion": 4.358e-6 },
         { "id": "escape-point", "label": "脱出点 (50 RJ)", "radius": 50.0, "color": "#3fb950", "angle": 0.3 }
       ],
       "transfers": [
@@ -305,10 +305,15 @@
           "style": "hyperbolic",
           "burnMarkers": [
             { "angle": 0.3, "label": "v = 10.3 km/s" }
-          ]
+          ],
+          "startTime": 0,
+          "endTime": 252000
         }
       ],
-      "viewRadius": 55
+      "viewRadius": 55,
+      "animation": {
+        "durationSeconds": 252000
+      }
     },
     {
       "id": "ep02-diagram-02",
@@ -317,10 +322,10 @@
       "scaleMode": "sqrt",
       "radiusUnit": "AU",
       "orbits": [
-        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149" },
-        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 0 },
-        { "id": "saturn", "label": "土星", "radius": 9.537, "color": "#c9d1d9", "angle": 2.618 },
-        { "id": "uranus", "label": "天王星", "radius": 19.19, "color": "#58a6ff" }
+        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149", "meanMotion": 1.059e-7 },
+        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 0, "meanMotion": 1.678e-8 },
+        { "id": "saturn", "label": "土星", "radius": 9.537, "color": "#c9d1d9", "angle": 2.618, "meanMotion": 6.761e-9 },
+        { "id": "uranus", "label": "天王星", "radius": 19.19, "color": "#58a6ff", "meanMotion": 2.370e-9 }
       ],
       "transfers": [
         {
@@ -338,9 +343,14 @@
           "style": "hyperbolic",
           "burnMarkers": [
             { "angle": 1.31, "label": "捕獲 ΔV ≥ 0.61 km/s" }
-          ]
+          ],
+          "startTime": 0,
+          "endTime": 39312000
         }
-      ]
+      ],
+      "animation": {
+        "durationSeconds": 39312000
+      }
     }
   ],
   "explorations": [

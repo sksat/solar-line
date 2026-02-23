@@ -122,6 +122,8 @@ export interface OrbitDefinition {
   color: string;
   /** Position angle in radians (0 = +X, counterclockwise). If omitted, body dot is not drawn. */
   angle?: number;
+  /** Mean angular motion in rad/s for animation. If omitted, body stays fixed during animation. */
+  meanMotion?: number;
 }
 
 /** A burn marker on a transfer arc */
@@ -146,6 +148,16 @@ export interface TransferArc {
   style: "hohmann" | "hyperbolic" | "brachistochrone";
   /** Optional burn markers along the arc */
   burnMarkers?: BurnMarker[];
+  /** Start time in seconds from animation epoch (t=0). Used for animated diagrams. */
+  startTime?: number;
+  /** End time in seconds from animation epoch. Used for animated diagrams. */
+  endTime?: number;
+}
+
+/** Animation configuration for an orbital diagram */
+export interface AnimationConfig {
+  /** Total animation duration in real-world seconds (e.g. transfer duration) */
+  durationSeconds: number;
 }
 
 /** An orbital transfer diagram rendered as inline SVG */
@@ -166,6 +178,8 @@ export interface OrbitalDiagram {
   viewRadius?: number;
   /** Unit for radius values, e.g. "AU" or "km" */
   radiusUnit?: string;
+  /** Animation configuration. If present, diagram renders with interactive time slider. */
+  animation?: AnimationConfig;
 }
 
 /** Per-episode report data */

@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -236,6 +236,36 @@ footer {
 .dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
 .orbital-diagram { text-align: center; }
 .orbital-diagram svg { max-width: 100%; height: auto; }
+.orbital-animation-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem auto;
+  max-width: 480px;
+  font-size: 0.85em;
+}
+.orbital-animation-controls input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+}
+.orbital-animation-controls button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--accent);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.85em;
+  min-width: 2rem;
+}
+.orbital-animation-controls button:hover { background: var(--border); }
+.orbital-animation-controls .time-display {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  color: var(--fg);
+  min-width: 4rem;
+  text-align: right;
+}
+.ship-marker { filter: drop-shadow(0 0 3px rgba(255,255,255,0.6)); }
 `;
 
 /** Wrap content in the common HTML layout */
@@ -560,19 +590,22 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     return `<circle cx="0" cy="0" r="${r.toFixed(1)}" fill="none" stroke="${orbit.color}" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="4 2"/>`;
   }).join("\n    ");
 
+  const isAnimated = !!diagram.animation;
+
   // Draw orbit labels and optional body dots
   const orbitLabels = diagram.orbits.map(orbit => {
     const r = orbitPxMap.get(orbit.id)!;
     const parts: string[] = [];
+    const orbitIdAttr = isAnimated ? ` data-orbit-id="${escapeHtml(orbit.id)}"` : "";
     if (orbit.angle !== undefined) {
       // Draw body dot at specified angle
       const bx = r * Math.cos(orbit.angle);
       const by = -r * Math.sin(orbit.angle);
-      parts.push(`<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="4" fill="${orbit.color}"/>`);
+      parts.push(`<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="4" fill="${orbit.color}"${orbitIdAttr}/>`);
       // Label next to the dot
       const lx = (r + 12) * Math.cos(orbit.angle);
       const ly = -(r + 12) * Math.sin(orbit.angle);
-      parts.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${orbit.color}" font-size="11" text-anchor="middle" dominant-baseline="middle">${escapeHtml(orbit.label)}</text>`);
+      parts.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${orbit.color}" font-size="11" text-anchor="middle" dominant-baseline="middle"${orbitIdAttr}>${escapeHtml(orbit.label)}</text>`);
     } else {
       // Label at top of orbit
       parts.push(`<text x="0" y="${(-r - 8).toFixed(1)}" fill="${orbit.color}" font-size="10" text-anchor="middle">${escapeHtml(orbit.label)}</text>`);
@@ -587,10 +620,11 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     if (!fromOrbit || !toOrbit) return "";
     const fromPx = orbitPxMap.get(t.fromOrbitId)!;
     const toPx = orbitPxMap.get(t.toOrbitId)!;
-    const path = transferArcPath(t.style, fromOrbit, toOrbit, fromPx, toPx);
+    const pathD = transferArcPath(t.style, fromOrbit, toOrbit, fromPx, toPx);
     const dashArray = t.style === "brachistochrone" ? ' stroke-dasharray="8 4"' : "";
     const arrowId = `arrow-${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}`;
-    return `<path d="${path}" fill="none" stroke="${t.color}" stroke-width="2"${dashArray} marker-end="url(#${arrowId})"/>
+    const transferPathAttr = isAnimated ? ` data-transfer-path="${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}"` : "";
+    return `<path d="${pathD}" fill="none" stroke="${t.color}" stroke-width="2"${dashArray}${transferPathAttr} marker-end="url(#${arrowId})"/>
     <marker id="${arrowId}" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="${t.color}"/></marker>`;
   }).join("\n    ");
 
@@ -650,9 +684,44 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
   </g>
 </svg>`;
 
-  return `<div class="card orbital-diagram" id="${escapeHtml(diagram.id)}">
+  // Build animation data and controls if animated
+  let animationHtml = "";
+  if (diagram.animation) {
+    const animData = {
+      durationSeconds: diagram.animation.durationSeconds,
+      orbits: diagram.orbits
+        .filter(o => o.angle !== undefined)
+        .map(o => ({
+          id: o.id,
+          initialAngle: o.angle!,
+          meanMotion: o.meanMotion ?? 0,
+          radiusPx: orbitPxMap.get(o.id)!,
+          color: o.color,
+        })),
+      transfers: diagram.transfers
+        .filter(t => t.startTime !== undefined && t.endTime !== undefined)
+        .map(t => ({
+          fromOrbitId: t.fromOrbitId,
+          toOrbitId: t.toOrbitId,
+          startTime: t.startTime!,
+          endTime: t.endTime!,
+          color: t.color,
+          pathId: `${t.fromOrbitId}-${t.toOrbitId}`,
+        })),
+    };
+    animationHtml = `
+<script type="application/json" class="orbital-animation-data">${JSON.stringify(animData)}</script>
+<div class="orbital-animation-controls">
+  <button class="anim-play" title="再生/一時停止">▶</button>
+  <input type="range" class="anim-slider" min="0" max="1000" value="0" step="1">
+  <span class="time-display">0h</span>
+</div>`;
+  }
+
+  const animAttr = diagram.animation ? ' data-animated="true"' : "";
+  return `<div class="card orbital-diagram" id="${escapeHtml(diagram.id)}"${animAttr}>
 <h4>${escapeHtml(diagram.title)}</h4>
-${svg}
+${svg}${animationHtml}
 </div>`;
 }
 
@@ -854,7 +923,11 @@ ${unlinkedSection}
 
 ${calculator}`;
 
-  return layoutHtml(`第${report.episode}話`, content, "..");
+  // Include animation script if any diagram is animated
+  const hasAnimatedDiagrams = report.diagrams?.some(d => d.animation) ?? false;
+  const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
+
+  return layoutHtml(`第${report.episode}話`, content + animScript, "..");
 }
 
 /** Render the session logs index page */

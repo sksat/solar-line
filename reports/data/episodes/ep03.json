@@ -464,14 +464,16 @@
           "label": "土星",
           "radius": 9.58,
           "color": "#daa520",
-          "angle": 3.14
+          "angle": 3.14,
+          "meanMotion": 6.761e-9
         },
         {
           "id": "uranus",
           "label": "天王星",
           "radius": 19.19,
           "color": "#88ccee",
-          "angle": 0.4
+          "angle": 0.4,
+          "meanMotion": 2.370e-9
         },
         {
           "id": "nav-crisis",
@@ -504,9 +506,14 @@
               "angle": 0.4,
               "label": "到着ΔV"
             }
-          ]
+          ],
+          "startTime": 0,
+          "endTime": 514800
         }
-      ]
+      ],
+      "animation": {
+        "durationSeconds": 514800
+      }
     },
     {
       "id": "ep03-diagram-02",
@@ -526,7 +533,8 @@
           "label": "タイタニア",
           "radius": 435910,
           "color": "#cc8844",
-          "angle": 1.2
+          "angle": 1.2,
+          "meanMotion": 8.354e-6
         },
         {
           "id": "approach-25ru",
@@ -542,9 +550,14 @@
           "fromOrbitId": "approach-25ru",
           "toOrbitId": "titania",
           "color": "#44ff44",
-          "style": "hyperbolic"
+          "style": "hyperbolic",
+          "startTime": 0,
+          "endTime": 43200
         }
-      ]
+      ],
+      "animation": {
+        "durationSeconds": 43200
+      }
     }
   ]
 }

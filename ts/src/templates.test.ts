@@ -20,7 +20,7 @@ import {
   renderOrbitalDiagrams,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -945,5 +945,144 @@ describe("renderExploration with collapsedByDefault", () => {
     const html = renderExploration(exp);
     assert.ok(!html.includes("<details"));
     assert.ok(html.includes("シナリオA"));
+  });
+});
+
+// --- Animated orbital diagrams ---
+
+const animatedDiagram: OrbitalDiagram = {
+  id: "ep01-diagram-anim",
+  title: "火星→木星 アニメーション",
+  centerLabel: "太陽",
+  scaleMode: "sqrt",
+  radiusUnit: "AU",
+  orbits: [
+    { id: "mars", label: "火星", radius: 1.524, color: "#f85149", angle: 0, meanMotion: 1.059e-7 },
+    { id: "jupiter", label: "木星", radius: 5.203, color: "#d29922", angle: 2.094, meanMotion: 1.678e-8 },
+  ],
+  transfers: [
+    {
+      label: "Brachistochrone遷移",
+      fromOrbitId: "mars",
+      toOrbitId: "jupiter",
+      color: "#3fb950",
+      style: "brachistochrone",
+      startTime: 0,
+      endTime: 259200,
+    },
+  ],
+  animation: {
+    durationSeconds: 259200,
+  },
+};
+
+describe("renderOrbitalDiagram with animation", () => {
+  it("adds data-animated attribute when animation config present", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('data-animated="true"'));
+  });
+
+  it("embeds animation JSON in script tag", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('<script type="application/json" class="orbital-animation-data">'));
+  });
+
+  it("animation JSON includes durationSeconds", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    assert.equal(data.durationSeconds, 259200);
+  });
+
+  it("animation JSON includes orbit meanMotion values", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    assert.ok(data.orbits);
+    const marsOrbit = data.orbits.find((o: { id: string }) => o.id === "mars");
+    assert.ok(marsOrbit);
+    assert.equal(marsOrbit.meanMotion, 1.059e-7);
+    assert.equal(marsOrbit.initialAngle, 0);
+  });
+
+  it("animation JSON includes transfer timing", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    assert.ok(data.transfers);
+    assert.equal(data.transfers[0].startTime, 0);
+    assert.equal(data.transfers[0].endTime, 259200);
+  });
+
+  it("adds data-orbit-id to body dot circles for animation targeting", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('data-orbit-id="mars"'));
+    assert.ok(html.includes('data-orbit-id="jupiter"'));
+  });
+
+  it("adds data-transfer-path to transfer arc paths", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('data-transfer-path="mars-jupiter"'));
+  });
+
+  it("does NOT add data-animated for static diagrams", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes('data-animated'));
+  });
+
+  it("does NOT embed animation JSON for static diagrams", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes('orbital-animation-data'));
+  });
+
+  it("renders slider container for animated diagrams", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    assert.ok(html.includes('class="orbital-animation-controls"'));
+    assert.ok(html.includes('type="range"'));
+  });
+
+  it("does NOT render slider for static diagrams", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes('orbital-animation-controls'));
+  });
+
+  it("animation JSON includes pixel radii for orbits", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    const marsOrbit = data.orbits.find((o: { id: string }) => o.id === "mars");
+    assert.ok(marsOrbit);
+    assert.ok(typeof marsOrbit.radiusPx === "number");
+    assert.ok(marsOrbit.radiusPx > 0);
+  });
+});
+
+describe("REPORT_CSS includes animation styles", () => {
+  it("includes animation controls styles", () => {
+    assert.ok(REPORT_CSS.includes(".orbital-animation-controls"));
+  });
+});
+
+describe("renderEpisode includes animation script", () => {
+  it("includes orbital-animation.js when diagrams are animated", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      diagrams: [animatedDiagram],
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes('orbital-animation.js'));
+  });
+
+  it("does NOT include orbital-animation.js for static diagrams", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      diagrams: [sampleDiagram],
+    };
+    const html = renderEpisode(report);
+    assert.ok(!html.includes('orbital-animation.js'));
   });
 });
