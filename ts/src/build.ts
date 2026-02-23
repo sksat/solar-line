@@ -7,7 +7,7 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { EpisodeReport, SiteManifest, SummaryReport } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, SummaryReport, VerdictCounts } from "./report-types.ts";
 import {
   renderIndex,
   renderEpisode,
@@ -102,17 +102,42 @@ export function discoverSummaries(dataDir: string): SummaryReport[] {
   return summaries;
 }
 
+/** Count verdict types in an episode's transfers */
+export function countVerdicts(ep: EpisodeReport): VerdictCounts {
+  const counts: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0 };
+  for (const t of ep.transfers) {
+    counts[t.verdict]++;
+  }
+  return counts;
+}
+
+/** Sum multiple VerdictCounts */
+function sumVerdicts(all: VerdictCounts[]): VerdictCounts {
+  const total: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0 };
+  for (const v of all) {
+    total.plausible += v.plausible;
+    total.implausible += v.implausible;
+    total.conditional += v.conditional;
+    total.indeterminate += v.indeterminate;
+  }
+  return total;
+}
+
 /** Generate the site manifest from discovered data */
 export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summaries: SummaryReport[] = []): SiteManifest {
+  const episodeVerdicts = episodes.map(ep => countVerdicts(ep));
   return {
     title: "SOLAR LINE 考察",
     generatedAt: new Date().toISOString(),
-    episodes: episodes.map(ep => ({
+    episodes: episodes.map((ep, i) => ({
       episode: ep.episode,
       title: ep.title,
       transferCount: ep.transfers.length,
+      summary: ep.summary,
+      verdicts: episodeVerdicts[i],
       path: `episodes/ep-${String(ep.episode).padStart(3, "0")}.html`,
     })),
+    totalVerdicts: episodeVerdicts.length > 0 ? sumVerdicts(episodeVerdicts) : undefined,
     logs: logs.map(log => ({
       filename: log.filename,
       date: log.date,

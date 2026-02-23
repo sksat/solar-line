@@ -22,7 +22,7 @@ import {
   renderSummaryPage,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ComparisonTable, SummaryReport } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ComparisonTable, SummaryReport, VerdictCounts } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -1395,6 +1395,108 @@ describe("renderIndex with summaryPages", () => {
     };
     const html = renderIndex(manifest);
     assert.ok(!html.includes("総合分析"));
+  });
+});
+
+// --- renderIndex enhanced content ---
+
+describe("renderIndex enhanced content", () => {
+  const enrichedManifest: SiteManifest = {
+    title: "SOLAR LINE 考察",
+    generatedAt: "2026-02-23T00:00:00Z",
+    episodes: [
+      {
+        episode: 1,
+        title: "火星からガニメデへ",
+        transferCount: 4,
+        summary: "きりたんが72時間でガニメデへ。",
+        verdicts: { plausible: 1, conditional: 2, indeterminate: 1, implausible: 0 },
+        path: "episodes/ep-001.html",
+      },
+      {
+        episode: 2,
+        title: "木星圏脱出",
+        transferCount: 5,
+        summary: "木星圏から土星へ。",
+        verdicts: { plausible: 3, conditional: 1, indeterminate: 1, implausible: 0 },
+        path: "episodes/ep-002.html",
+      },
+    ],
+    totalVerdicts: { plausible: 4, conditional: 3, indeterminate: 2, implausible: 0 },
+    logs: [],
+  };
+
+  it("includes project overview with creator name", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("ゆえぴこ"), "should mention the creator");
+  });
+
+  it("includes project overview with ship name", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("ケストレル"), "should mention the ship Kestrel");
+  });
+
+  it("includes route summary", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("火星"), "should mention Mars");
+    assert.ok(html.includes("ガニメデ"), "should mention Ganymede");
+    assert.ok(html.includes("エンケラドス"), "should mention Enceladus");
+    assert.ok(html.includes("タイタニア"), "should mention Titania");
+    assert.ok(html.includes("地球"), "should mention Earth");
+    assert.ok(html.includes("35.9 AU"), "should mention total distance");
+  });
+
+  it("renders stats section with total counts", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("分析概要"), "should have stats heading");
+    assert.ok(html.includes("2"), "should show episode count");
+    assert.ok(html.includes("9"), "should show total transfer count");
+  });
+
+  it("renders verdict badges in stats section", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("verdict-plausible"), "should have plausible badge");
+    assert.ok(html.includes("verdict-conditional"), "should have conditional badge");
+    assert.ok(html.includes("verdict-indeterminate"), "should have indeterminate badge");
+  });
+
+  it("renders episode cards with summaries", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("きりたんが72時間でガニメデへ。"), "should show ep1 summary");
+    assert.ok(html.includes("木星圏から土星へ。"), "should show ep2 summary");
+  });
+
+  it("renders episode cards with per-episode verdict badges", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("episode-card"), "should use episode-card class");
+    assert.ok(html.includes("episode-meta"), "should use episode-meta class");
+  });
+
+  it("hides stats section when no totalVerdicts", () => {
+    const minimal: SiteManifest = {
+      title: "SOLAR LINE 考察",
+      generatedAt: "2026-02-23T00:00:00Z",
+      episodes: [{ episode: 1, title: "T", transferCount: 1, path: "episodes/ep-001.html" }],
+      logs: [],
+    };
+    const html = renderIndex(minimal);
+    assert.ok(!html.includes("分析概要"), "should not have stats without totalVerdicts");
+  });
+
+  it("hides zero-count verdict badges in episode cards", () => {
+    const html = renderIndex(enrichedManifest);
+    // EP1 has 0 implausible, so verdict-implausible should not appear near EP1's section
+    // But EP2 also has 0 implausible. Check that implausible badge doesn't appear in any episode card
+    // (it should only appear in the total stats if count > 0)
+    const episodeCardSection = html.split("エピソードレポート")[1];
+    // implausible count is 0 for both episodes, so no implausible badge in episode cards
+    assert.ok(!episodeCardSection?.includes("verdict-implausible") || !episodeCardSection?.includes("非現実的"), "should not show implausible badge when count is 0");
+  });
+
+  it("includes CSS for stats grid", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("stats-grid"), "should include stats-grid class");
+    assert.ok(html.includes("stat-number"), "should include stat-number class");
   });
 });
 

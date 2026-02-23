@@ -248,6 +248,14 @@ export interface SummaryReport {
   sections: SummarySection[];
 }
 
+/** Verdict count breakdown */
+export interface VerdictCounts {
+  plausible: number;
+  implausible: number;
+  conditional: number;
+  indeterminate: number;
+}
+
 /** Site-wide manifest listing all available reports */
 export interface SiteManifest {
   /** Project title */
@@ -259,9 +267,15 @@ export interface SiteManifest {
     episode: number;
     title: string;
     transferCount: number;
+    /** Brief summary of the episode */
+    summary?: string;
+    /** Verdict breakdown for this episode's transfers */
+    verdicts?: VerdictCounts;
     /** Relative path to the episode page */
     path: string;
   }[];
+  /** Total verdict counts across all episodes */
+  totalVerdicts?: VerdictCounts;
   /** List of session logs */
   logs: {
     /** Log filename */

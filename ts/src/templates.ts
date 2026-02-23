@@ -277,11 +277,19 @@ footer {
 .comparison-table tr.status-conflict td:first-child { border-left: 3px solid var(--red); }
 .summary-section { margin: 2rem 0; }
 .summary-section h2 { border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+.stats-grid .stat-row { display: flex; flex-wrap: wrap; gap: 1rem; }
+.stats-grid .stat-item { display: flex; align-items: center; gap: 0.4rem; }
+.stats-grid .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent); font-family: "SFMono-Regular", Consolas, monospace; }
+.stats-grid .stat-label { font-size: 0.9em; color: #8b949e; }
+.stats-grid .stat-count { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
+.episode-card h3 { margin-top: 0; }
+.episode-card .episode-meta { font-size: 0.9em; color: #8b949e; margin-top: 0.5rem; }
 @media (max-width: 600px) {
   .calc-control { grid-template-columns: 1fr; gap: 0.25rem; }
   .comparison-table { font-size: 0.8em; }
   .comparison-table td, .comparison-table th { padding: 0.3rem; }
   .scenario-table { font-size: 0.8em; }
+  .stats-grid .stat-number { font-size: 1.4rem; }
 }
 `;
 
@@ -306,13 +314,61 @@ ${content}
 </html>`;
 }
 
+/** Render verdict badge inline */
+function verdictBadge(verdict: string): string {
+  const label = verdict === "plausible" ? "妥当" : verdict === "implausible" ? "非現実的" : verdict === "conditional" ? "条件付き" : "判定不能";
+  return `<span class="verdict verdict-${verdict}">${label}</span>`;
+}
+
 /** Render the site index page */
 export function renderIndex(manifest: SiteManifest): string {
-  const episodeList = manifest.episodes.length > 0
-    ? manifest.episodes.map(ep =>
-        `<li><a href="${ep.path}">第${ep.episode}話: ${escapeHtml(ep.title)}</a>（${ep.transferCount}件の軌道遷移）</li>`
-      ).join("\n")
-    : "<li>エピソードレポートはまだありません。</li>";
+  const totalTransfers = manifest.episodes.reduce((sum, ep) => sum + ep.transferCount, 0);
+
+  // Project overview section
+  const overview = `
+<h1>SOLAR LINE 考察</h1>
+<p>『<a href="https://www.nicovideo.jp/user/5844196/series/531506">良いソフトウェアトーク劇場</a>』のSFシリーズ長編「SOLAR LINE」に描かれた軌道遷移を宇宙力学的に検証するプロジェクト。</p>
+<div class="card">
+<p>ゆえぴこ氏の「SOLAR LINE」は、主人公きりたんが小型貨物船ケストレルで太陽系を駆け巡る物語です。本サイトでは、作中で描かれた各軌道遷移について、実際の軌道力学に基づくΔV計算・加速度分析を行い、描写の妥当性を考察しています。</p>
+<p>航路: <strong>火星</strong> → <strong>ガニメデ</strong>（木星系） → <strong>エンケラドス</strong>（土星系） → <strong>タイタニア</strong>（天王星系） → <strong>地球</strong>（約35.9 AU）</p>
+</div>`;
+
+  // Stats section
+  const tv = manifest.totalVerdicts;
+  const statsSection = tv ? `
+<h2>分析概要</h2>
+<div class="card stats-grid">
+<div class="stat-row">
+  <div class="stat-item"><span class="stat-number">${manifest.episodes.length}</span><span class="stat-label">エピソード</span></div>
+  <div class="stat-item"><span class="stat-number">${totalTransfers}</span><span class="stat-label">軌道遷移</span></div>
+</div>
+<div class="stat-row" style="margin-top:0.75rem">
+  <div class="stat-item">${verdictBadge("plausible")} <span class="stat-count">${tv.plausible}</span></div>
+  <div class="stat-item">${verdictBadge("conditional")} <span class="stat-count">${tv.conditional}</span></div>
+  <div class="stat-item">${verdictBadge("indeterminate")} <span class="stat-count">${tv.indeterminate}</span></div>
+  <div class="stat-item">${verdictBadge("implausible")} <span class="stat-count">${tv.implausible}</span></div>
+</div>
+</div>` : "";
+
+  // Episode cards
+  const episodeCards = manifest.episodes.length > 0
+    ? manifest.episodes.map(ep => {
+        const verdictSummary = ep.verdicts
+          ? [
+              ep.verdicts.plausible > 0 ? `${verdictBadge("plausible")} ${ep.verdicts.plausible}` : "",
+              ep.verdicts.conditional > 0 ? `${verdictBadge("conditional")} ${ep.verdicts.conditional}` : "",
+              ep.verdicts.indeterminate > 0 ? `${verdictBadge("indeterminate")} ${ep.verdicts.indeterminate}` : "",
+              ep.verdicts.implausible > 0 ? `${verdictBadge("implausible")} ${ep.verdicts.implausible}` : "",
+            ].filter(Boolean).join(" ")
+          : "";
+        const summaryLine = ep.summary ? `<p>${escapeHtml(ep.summary)}</p>` : "";
+        return `<div class="card episode-card">
+<h3><a href="${ep.path}">第${ep.episode}話: ${escapeHtml(ep.title)}</a></h3>
+${summaryLine}
+<p class="episode-meta">${ep.transferCount}件の軌道遷移 ${verdictSummary}</p>
+</div>`;
+      }).join("\n")
+    : "<p>エピソードレポートはまだありません。</p>";
 
   const summaryList = manifest.summaryPages && manifest.summaryPages.length > 0
     ? `\n<h2>総合分析</h2>\n<ul>\n${manifest.summaryPages.map(p =>
@@ -320,14 +376,11 @@ export function renderIndex(manifest: SiteManifest): string {
       ).join("\n")}\n</ul>`
     : "";
 
-  const content = `
-<h1>SOLAR LINE 考察</h1>
-<p>SOLAR LINE に描かれた軌道遷移の宇宙力学的分析。</p>
+  const content = `${overview}
+${statsSection}
 
 <h2>エピソードレポート</h2>
-<ul>
-${episodeList}
-</ul>
+${episodeCards}
 ${summaryList}
 
 <h2>セッションログ</h2>
