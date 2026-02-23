@@ -28,10 +28,9 @@ Task 028 completed Phase 2 attribution for EP02, EP03, and EP04:
 - EP04: ep04_speakers.json (5 speakers) + ep04_dialogue.json (34 entries, 10 scenes)
 
 ## Next Session TODO
-1. Continue speaker attribution for lines 20-87 in ep01_dialogue.json
-2. The dialogue text in ep01_dialogue.json should be corrected based on actual video content
-   (ASR text is unreliable — need to verify against video)
-3. Update ep01.json dialogueQuotes with corrected, attributed quotes
+1. ~~Continue speaker attribution for lines 20-87 in ep01_dialogue.json~~ DONE (Task 029)
+2. ~~Update ep01.json dialogueQuotes with corrected, attributed quotes~~ DONE (Task 029)
+3. Verify EP01 dialogue text against actual video content (ASR corrections need visual confirmation)
 4. Consider alternate subtitle sources (manual transcription?)
 5. EP05 dialogue: blocked until YouTube subtitle availability
 
