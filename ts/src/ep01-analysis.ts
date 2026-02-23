@@ -174,6 +174,73 @@ export function massSensitivity() {
 }
 
 /**
+ * Boundary analysis: what is the maximum ship mass that makes a
+ * brachistochrone transfer feasible in the given time?
+ *
+ * From brachistochrone: a_req = 4d / t²
+ * From Newton: a = F / m → m_max = F / a_req = F * t² / (4d)
+ */
+export function maxFeasibleMass(
+  distanceKm: number,
+  timeSec: number,
+  thrustN: number = KESTREL.thrustN,
+) {
+  const distanceM = distanceKm * 1000;
+  const aReqMs2 = (4 * distanceM) / (timeSec * timeSec);
+  const maxMassKg = thrustN / aReqMs2;
+  return {
+    aReqMs2,
+    aReqG: aReqMs2 / 9.80665,
+    maxMassKg,
+    maxMassT: maxMassKg / 1000,
+  };
+}
+
+/**
+ * Boundary analysis: what thrust is needed for a given mass and transfer?
+ *
+ * F_req = m * a_req = m * 4d / t²
+ */
+export function requiredThrust(
+  distanceKm: number,
+  timeSec: number,
+  massKg: number = KESTREL.massKg,
+) {
+  const distanceM = distanceKm * 1000;
+  const aReqMs2 = (4 * distanceM) / (timeSec * timeSec);
+  const thrustN = massKg * aReqMs2;
+  return {
+    aReqMs2,
+    aReqG: aReqMs2 / 9.80665,
+    thrustN,
+    thrustMN: thrustN / 1e6,
+    thrustRatioToKestrel: thrustN / KESTREL.thrustN,
+  };
+}
+
+/**
+ * Boundary analysis: minimum transfer time for given mass and thrust.
+ *
+ * t_min = sqrt(4d * m / F) = sqrt(4d / a)
+ */
+export function minimumTransferTime(
+  distanceKm: number,
+  massKg: number = KESTREL.massKg,
+  thrustN: number = KESTREL.thrustN,
+) {
+  const distanceM = distanceKm * 1000;
+  const accelMs2 = thrustN / massKg;
+  const tSec = Math.sqrt((4 * distanceM) / accelMs2);
+  return {
+    accelMs2,
+    accelG: accelMs2 / 9.80665,
+    timeSec: tSec,
+    timeHours: tSec / 3600,
+    timeDays: tSec / 86400,
+  };
+}
+
+/**
  * Full Episode 1 analysis combining all transfers.
  */
 export function analyzeEpisode1() {
@@ -184,6 +251,13 @@ export function analyzeEpisode1() {
   const reachable = reachableDistance();
   const massSens = massSensitivity();
 
+  // Boundary analyses for closest-approach scenario
+  const closestDist = DISTANCE_SCENARIOS.closest;
+  const massBoundary72h = maxFeasibleMass(closestDist, EP01_CONTRACT.deadlineSec);
+  const thrustBoundary72h = requiredThrust(closestDist, EP01_CONTRACT.deadlineSec);
+  const minTime48kt = minimumTransferTime(closestDist);
+  const minTime299t = minimumTransferTime(closestDist, 299_000);
+
   return {
     hohmann,
     shipAcceleration: shipAccel,
@@ -191,5 +265,11 @@ export function analyzeEpisode1() {
     brachistochrone150h: req150h,
     reachableWithShipThrust: reachable,
     massSensitivity: massSens,
+    boundaries: {
+      massBoundary72h,
+      thrustBoundary72h,
+      minTimeAtCanonicalMass: minTime48kt,
+      minTimeAt299t: minTime299t,
+    },
   };
 }

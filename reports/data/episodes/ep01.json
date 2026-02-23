@@ -53,7 +53,21 @@
         "transferTimeDays": 1126.84,
         "departureDeltaV": 5.88,
         "arrivalDeltaV": 4.27
-      }
+      },
+      "sources": [
+        {
+          "claim": "火星軌道半径: 227,939,200 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceLabel": "NASA/JPL 太陽系力学データ（火星平均軌道半径）"
+        },
+        {
+          "claim": "木星軌道半径: 778,570,000 km",
+          "sourceType": "external-reference",
+          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceLabel": "NASA/JPL 太陽系力学データ（木星平均軌道半径）"
+        }
+      ]
     },
     {
       "id": "ep01-transfer-02",
@@ -70,8 +84,8 @@
         "全行程で一定加速度（燃料消費なし）",
         "太陽重力を無視（楽観的 — 火星付近では太陽重力が船の加速度の約12倍）"
       ],
-      "verdict": "implausible",
-      "explanation": "最接近距離での72時間ブラキストクローネは約32.8 m/s²（約3.3g）の一定加速度と合計約8,497 km/sのΔVを要する。ケストレルの公称推力9.8 MNと48,000tの質量では約0.204 m/s²（約0.02g）しか得られず、約160倍不足する。72時間の連続噴射でも船のΔV余力は約52.9 km/sに過ぎず、必要な約8,497 km/sの約160分の1。公称推力で72時間に到達可能な距離は約340万km（約0.023 AU）にとどまり、必要な約3.68 AUには遠く及ばない。注: この分析は太陽重力を無視しており楽観的である。",
+      "verdict": "conditional",
+      "explanation": "公称スペック（48,000t、9.8 MN）では72時間遷移に必要な加速度の約0.6%しか得られず不可能。しかし、条件次第では成立しうる。境界分析により、9.8 MN推力で72時間遷移を達成するには船の質量が約299t以下である必要がある。48,000tが表記の問題で実際は48tの場合、加速度は約204 m/s²（約21g）となり、最接近距離なら約29時間で到達可能（ただし乗員への負荷は極めて大きい）。また、「嵐の回廊」が木星の重力アシストを含む何らかの省エネルギー経路を意味する可能性もある。",
       "parameters": {
         "mu": 1.32712440041e11,
         "departureRadius": 227939200,
@@ -85,8 +99,36 @@
         "accelRatio": 0.006,
         "shipDvBudgetKms": 52.92,
         "requiredDvKms": 8497.39,
-        "dvRatio": 0.006
-      }
+        "dvRatio": 0.006,
+        "maxFeasibleMassKg": 298934,
+        "maxFeasibleMassT": 299
+      },
+      "sources": [
+        {
+          "claim": "72時間の期限",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45280425 02:15",
+          "sourceLabel": "Part 1 02:15「72時間以内に届けてほしい」"
+        },
+        {
+          "claim": "嵐の回廊（木星の重力利用）",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45280425 05:20",
+          "sourceLabel": "Part 1 05:20「嵐の回廊を通る。木星の重力を利用して一気にガニメデまで行く」"
+        },
+        {
+          "claim": "船の質量: 約48,000 t（標準積載時）",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "世界設定資料「ソーラーラインのよもやま話」（最大質量…約48000 t（標準積載時））"
+        },
+        {
+          "claim": "通常推力: 9.8 MN（TSF-43R オライオン・マイクロパルサー）",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "世界設定資料「ソーラーラインのよもやま話」（TSF-43R エンジン仕様）"
+        }
+      ]
     },
     {
       "id": "ep01-transfer-03",
@@ -102,8 +144,8 @@
         "150時間 = 540,000秒",
         "静止→静止遷移"
       ],
-      "verdict": "implausible",
-      "explanation": "「通常の」150時間ルートでも、最接近距離で約7.55 m/s²（約0.77g）と約4,079 km/sのΔVが必要。これはケストレルの公称加速度の約37倍に相当する。150時間ルートは72時間ほど極端ではないが、公称エンジン仕様をはるかに超える推進力が必要。世界観は内部的に整合している（72時間は「極端」vs 150時間が「通常」）が、どちらの時間枠もケストレルの公称仕様では実現不可能な推力質量比を要する。",
+      "verdict": "conditional",
+      "explanation": "「通常の」150時間ルートでも、最接近距離で約7.55 m/s²（約0.77g）と約4,079 km/sのΔVが必要。これはケストレルの公称加速度の約37倍に相当する。ただし、150時間で成立するには船の質量が約1,297t以下であればよい。世界観は内部的に整合している（72時間は「極端」vs 150時間が「通常」）。もし船の実効質量が数百t〜千数百tの範囲であれば、150時間ルートは0.77gの加速度で成立し、これは有人宇宙船としては合理的な値である。",
       "parameters": {
         "mu": 1.32712440041e11,
         "distanceKm": 550630800,
@@ -112,25 +154,35 @@
         "requiredAccelG": 0.77,
         "shipAccelMs2": 0.204,
         "requiredDvKms": 4078.75,
-        "shipDvBudgetKms": 52.92
-      }
+        "shipDvBudgetKms": 52.92,
+        "maxFeasibleMassKg": 1297457,
+        "maxFeasibleMassT": 1297
+      },
+      "sources": [
+        {
+          "claim": "通常150時間かかるルート",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45280425 03:40",
+          "sourceLabel": "Part 1 03:40「通常なら150時間かかるルートだ」"
+        }
+      ]
     },
     {
       "id": "ep01-transfer-04",
       "episode": 1,
-      "description": "船の性能評価: ケストレル TSF-43R エンジン（48,000t時）",
+      "description": "船の性能評価: ケストレル TSF-43R エンジン",
       "timestamp": "該当なし（船の仕様分析）",
       "claimedDeltaV": null,
       "computedDeltaV": 52.92,
       "assumptions": [
-        "船の質量: 48,000 t（48,000,000 kg）世界設定資料に記載",
-        "通常推力: 9.8 MN（TSF-43R オライオン・マイクロパルサー）",
-        "最大推力: 10.7 MN（緊急フルバーン）",
-        "72時間連続噴射（燃料消費モデルなし）",
-        "D-He³ 核融合パルスドライブ（比推力/排気速度の記載なし）"
+        "船の質量: 約48,000 t（48,000,000 kg）— 世界設定資料「ソーラーラインのよもやま話」に記載",
+        "通常推力: 9.8 MN（TSF-43R オライオン・マイクロパルサー）— 同資料に記載",
+        "最大推力: 10.7 MN（緊急フルバーン）— 同資料に記載",
+        "72時間連続噴射（燃料消費モデルなし — 排気速度/比推力の公式設定なし）",
+        "D-He³ 核融合パルスドライブ — 同資料に記載"
       ],
-      "verdict": "indeterminate",
-      "explanation": "ケストレルは通常加速度0.204 m/s²（0.02g）、最大0.223 m/s²を発揮する。72時間連続噴射での最大ΔVは約52.9 km/s（通常）または約57.8 km/s（最大）。現実の宇宙機としては相当な値だが、描かれた72時間の惑星間遷移には約2桁不足する。この差異は以下を示唆する可能性がある:（1）48,000tという質量が翻訳/表記の問題、（2）核融合ドライブが定推力とは異なる動作をする、（3）作中に明示されていない物理法則（重力アシスト、宇宙インフラ、事前加速など）がある、（4）ドラマ上の演出が物理的正確さより優先されている。排気速度/比推力のデータがないため、ツィオルコフスキーの式による推進剤比率や真のΔV余力を算出できない。",
+      "verdict": "conditional",
+      "explanation": "公称スペック（48,000t、9.8 MN）では加速度0.204 m/s²（0.02g）であり、72時間での到達距離は約340万km（0.023 AU）。惑星間遷移には約2桁不足する。しかし、質量解釈を変えると状況が大きく変わる。72時間遷移の成否は質量に強く依存し、約299t以下なら最接近時に72時間で到達可能。この値は42.8m級の小型貨物船としては妥当な範囲内にある。「約48000 t」は表記の曖昧さを含む可能性があり（48,000 kg = 48t の誤記、4,800tの桁違いなど）、確定的な判断には追加情報が必要。排気速度/比推力の設定がないため、ツィオルコフスキーの式による推進剤込みΔV余力は算出不能。",
       "parameters": {
         "shipMassKg": 48000000,
         "thrustN": 9800000,
@@ -141,7 +193,194 @@
         "dvPeak72hKms": 57.78,
         "reachableDistanceKm": 3429216,
         "reachableDistanceAU": 0.023
-      }
+      },
+      "sources": [
+        {
+          "claim": "船の質量: 約48,000 t（標準積載時）、全長42.8m",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "世界設定資料「ソーラーラインのよもやま話」（ケストレル船体諸元）"
+        },
+        {
+          "claim": "TSF-43R オライオン・マイクロパルサー、通常推力 9.8 MN、最大 10.7 MN",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "世界設定資料「ソーラーラインのよもやま話」（エンジン仕様）"
+        },
+        {
+          "claim": "D-He³ 核融合パルスドライブ",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "世界設定資料「ソーラーラインのよもやま話」（推進方式）"
+        },
+        {
+          "claim": "積荷: 密封コンテナ2基、42.3トン、トリムインデックス0.64",
+          "sourceType": "worldbuilding-doc",
+          "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
+          "sourceLabel": "世界設定資料「ソーラーラインのよもやま話」（積荷情報）"
+        }
+      ]
+    }
+  ],
+  "explorations": [
+    {
+      "id": "ep01-exploration-01",
+      "transferId": "ep01-transfer-02",
+      "question": "9.8 MN推力を前提とした場合、72時間遷移が成立する最大質量は？",
+      "boundaryCondition": "m ≤ F·t² / (4·d) = 9.8×10⁶ × (259200)² / (4 × 5.506×10¹¹) ≈ 299 t",
+      "scenarios": [
+        {
+          "label": "48,000 t（公称値）",
+          "variedParam": "mass",
+          "variedValue": 48000000,
+          "variedUnit": "kg",
+          "results": {
+            "accelMs2": 0.204,
+            "accelG": 0.021,
+            "minTimeHours": 912.4,
+            "reachable72hAU": 0.023
+          },
+          "feasible": false,
+          "note": "最小遷移時間は約912時間（38日）。72時間には全く届かない。"
+        },
+        {
+          "label": "4,800 t（桁違い解釈）",
+          "variedParam": "mass",
+          "variedValue": 4800000,
+          "variedUnit": "kg",
+          "results": {
+            "accelMs2": 2.042,
+            "accelG": 0.208,
+            "minTimeHours": 288.5,
+            "reachable72hAU": 0.229
+          },
+          "feasible": false,
+          "note": "最小遷移時間は約289時間（12日）。まだ72時間には届かないが、桁が近づく。"
+        },
+        {
+          "label": "480 t（小型貨物船）",
+          "variedParam": "mass",
+          "variedValue": 480000,
+          "variedUnit": "kg",
+          "results": {
+            "accelMs2": 20.42,
+            "accelG": 2.08,
+            "minTimeHours": 91.2,
+            "reachable72hAU": 2.29
+          },
+          "feasible": false,
+          "note": "最小遷移時間は約91時間。72時間にかなり近いが、まだ超過。搭乗者は2gの加速に耐える必要がある。"
+        },
+        {
+          "label": "299 t（境界質量）",
+          "variedParam": "mass",
+          "variedValue": 299000,
+          "variedUnit": "kg",
+          "results": {
+            "accelMs2": 32.78,
+            "accelG": 3.34,
+            "minTimeHours": 72.0,
+            "reachable72hAU": 3.68
+          },
+          "feasible": true,
+          "note": "ちょうど72時間で到達可能な境界条件。ただし3.3gの持続加速は搭乗者にとって過酷。積荷比率14.1%。"
+        },
+        {
+          "label": "48 t（48,000 kg解釈）",
+          "variedParam": "mass",
+          "variedValue": 48000,
+          "variedUnit": "kg",
+          "results": {
+            "accelMs2": 204.17,
+            "accelG": 20.82,
+            "minTimeHours": 28.9,
+            "reachable72hAU": 22.9
+          },
+          "feasible": true,
+          "note": "28.9時間で到達可能だが、21gの加速度は人体にとって致命的。無人機なら可能。ただし積荷が船体質量の88%を占める。"
+        }
+      ],
+      "summary": "9.8 MN推力で72時間以内の火星-木星遷移が成立するには、船の質量が約299t以下である必要がある。「約48000 t」が公称値通りなら不可能だが、42.8mの小型貨物船にとって48,000tは極めて重い。299t〜数百tが船体質量として合理的な範囲であり、質量表記に何らかの誤記や解釈の齟齬がある可能性がある。"
+    },
+    {
+      "id": "ep01-exploration-02",
+      "transferId": "ep01-transfer-02",
+      "question": "48,000t質量を前提とした場合、72時間遷移に必要な推力は？",
+      "boundaryCondition": "F ≥ m·4·d/t² = 4.8×10⁷ × 32.78 ≈ 1,574 MN",
+      "scenarios": [
+        {
+          "label": "公称推力（9.8 MN）",
+          "variedParam": "thrust",
+          "variedValue": 9800000,
+          "variedUnit": "N",
+          "results": {
+            "accelMs2": 0.204,
+            "minTimeHours": 912.4
+          },
+          "feasible": false,
+          "note": "72時間に必要な推力の約0.6%しかない。"
+        },
+        {
+          "label": "100 MN（公称の約10倍）",
+          "variedParam": "thrust",
+          "variedValue": 100000000,
+          "variedUnit": "N",
+          "results": {
+            "accelMs2": 2.083,
+            "minTimeHours": 286.0
+          },
+          "feasible": false,
+          "note": "10倍でもまだ不足。最小遷移時間は約286時間。"
+        },
+        {
+          "label": "1,574 MN（境界推力）",
+          "variedParam": "thrust",
+          "variedValue": 1574000000,
+          "variedUnit": "N",
+          "results": {
+            "accelMs2": 32.79,
+            "minTimeHours": 72.0
+          },
+          "feasible": true,
+          "note": "48,000tの船体で72時間遷移を達成する境界条件。公称推力の約161倍。"
+        }
+      ],
+      "summary": "48,000t質量を前提とすると、72時間遷移には約1,574 MN（公称の約161倍）の推力が必要。D-He³核融合パルスドライブの理論限界次第では不可能とは言い切れないが、公称スペックからは大きく逸脱する。「緊急フルバーン」(10.7 MN)程度の差では到底足りない。"
+    },
+    {
+      "id": "ep01-exploration-03",
+      "transferId": "ep01-transfer-03",
+      "question": "150時間「通常ルート」が成立する条件は？",
+      "boundaryCondition": "m ≤ F·t² / (4·d) = 9.8×10⁶ × (540000)² / (4 × 5.506×10¹¹) ≈ 1,297 t",
+      "scenarios": [
+        {
+          "label": "1,297 t（境界質量）",
+          "variedParam": "mass",
+          "variedValue": 1297000,
+          "variedUnit": "kg",
+          "results": {
+            "accelMs2": 7.56,
+            "accelG": 0.77,
+            "minTimeHours": 150.0
+          },
+          "feasible": true,
+          "note": "0.77gの加速度は有人宇宙船として現実的な値。150時間ルートが「通常」と呼ばれることの傍証として、搭乗者に無理のない加速度である点は注目に値する。"
+        },
+        {
+          "label": "480 t（小型貨物船）",
+          "variedParam": "mass",
+          "variedValue": 480000,
+          "variedUnit": "kg",
+          "results": {
+            "accelMs2": 20.42,
+            "accelG": 2.08,
+            "minTimeHours": 91.2
+          },
+          "feasible": true,
+          "note": "480tなら91時間で到達でき、150時間の余裕がある。途中で減速・方向転換する余地が生まれる。"
+        }
+      ],
+      "summary": "150時間ルートは船の質量が約1,297t以下で成立する。必要な加速度0.77gは有人船として合理的であり、「通常ルート」と呼ばれることと整合する。これは世界設定の質量（48,000t）が実際はもっと軽い可能性を示唆する。もし船が1,000t級であれば、150時間ルートは日常的に運航可能であり、72時間の短縮は「かなり無理をする」レベル（約3g以上の加速が必要）として自然に説明できる。"
     }
   ]
 }

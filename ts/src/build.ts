@@ -43,7 +43,7 @@ export function discoverEpisodes(dataDir: string): EpisodeReport[] {
   if (!fs.existsSync(episodesDir)) return [];
 
   const files = fs.readdirSync(episodesDir)
-    .filter(f => f.endsWith(".json"))
+    .filter(f => /^ep\d+\.json$/.test(f))
     .sort();
 
   const episodes: EpisodeReport[] = [];

@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, SourceCitation } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -145,6 +145,18 @@ li { margin: 0.25rem 0; }
 .verdict-plausible { background: var(--green); color: #000; }
 .verdict-implausible { background: var(--red); color: #fff; }
 .verdict-indeterminate { background: var(--yellow); color: #000; }
+.verdict-conditional { background: #8957e5; color: #fff; }
+.sources-list { font-size: 0.85em; color: #8b949e; margin-top: 0.5rem; }
+.sources-list dt { font-weight: 600; color: var(--fg); margin-top: 0.3rem; }
+.sources-list dd { margin-left: 1rem; }
+.exploration { margin: 1rem 0; }
+.exploration h4 { color: var(--accent); }
+.exploration .boundary { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.85em; color: var(--yellow); margin: 0.5rem 0; }
+.scenario-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.5rem 0; }
+.scenario-table th { color: #8b949e; font-weight: normal; font-size: 0.85em; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
+.scenario-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); }
+.scenario-table .feasible { color: var(--green); }
+.scenario-table .infeasible { color: var(--red); }
 nav { margin-bottom: 2rem; }
 nav a { margin-right: 1rem; }
 footer {
@@ -257,10 +269,28 @@ ${episodeList}
   return layoutHtml("トップ", content);
 }
 
+/** Map verdict to Japanese label */
+function verdictLabel(v: TransferAnalysis["verdict"]): string {
+  switch (v) {
+    case "plausible": return "妥当";
+    case "implausible": return "非現実的";
+    case "conditional": return "条件付き";
+    case "indeterminate": return "判定不能";
+  }
+}
+
+/** Render source citations */
+function renderSources(sources: SourceCitation[]): string {
+  if (sources.length === 0) return "";
+  const items = sources.map(s =>
+    `<dt>${escapeHtml(s.claim)}</dt><dd>${escapeHtml(s.sourceLabel)}</dd>`
+  ).join("\n");
+  return `<dl class="sources-list"><dt style="color:var(--accent);margin-bottom:0.2rem">出典</dt>${items}</dl>`;
+}
+
 /** Render a single transfer analysis card */
 export function renderTransferCard(t: TransferAnalysis): string {
   const verdictClass = `verdict-${t.verdict}`;
-  const verdictLabel = t.verdict === "plausible" ? "妥当" : t.verdict === "implausible" ? "非現実的" : "判定不能";
   const dvComparison = t.claimedDeltaV !== null
     ? `<p>作中のΔV: <strong>${t.claimedDeltaV.toFixed(2)} km/s</strong> | 計算値: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong></p>`
     : `<p>計算ΔV: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong>（作中で明示されず）</p>`;
@@ -269,12 +299,15 @@ export function renderTransferCard(t: TransferAnalysis): string {
     ? `<h4>前提条件</h4>\n<ul>${t.assumptions.map(a => `<li>${escapeHtml(a)}</li>`).join("\n")}</ul>`
     : "";
 
+  const sourcesHtml = t.sources && t.sources.length > 0 ? renderSources(t.sources) : "";
+
   return `<div class="card" id="${escapeHtml(t.id)}">
-<h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel}</span></h3>
+<h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
 <p>第${t.episode}話 @ ${escapeHtml(t.timestamp)}</p>
 ${dvComparison}
 ${assumptionsList}
 <p>${escapeHtml(t.explanation)}</p>
+${sourcesHtml}
 </div>`;
 }
 
@@ -411,6 +444,42 @@ export function renderCalculator(): string {
 <script type="module" src="../calculator.js"></script>`;
 }
 
+/** Render a parameter exploration section */
+export function renderExploration(exp: ParameterExploration): string {
+  const boundary = exp.boundaryCondition
+    ? `<p class="boundary">${escapeHtml(exp.boundaryCondition)}</p>`
+    : "";
+
+  const rows = exp.scenarios.map(s => {
+    const cls = s.feasible ? "feasible" : "infeasible";
+    const icon = s.feasible ? "✓" : "✗";
+    const resultCells = Object.entries(s.results)
+      .map(([_k, v]) => `<td>${typeof v === "number" ? (v >= 1000 ? v.toExponential(2) : v.toFixed(2)) : v}</td>`)
+      .join("");
+    return `<tr class="${cls}"><td>${icon} ${escapeHtml(s.label)}</td><td>${s.variedValue.toLocaleString()} ${escapeHtml(s.variedUnit)}</td>${resultCells}<td>${escapeHtml(s.note)}</td></tr>`;
+  }).join("\n");
+
+  const resultHeaders = exp.scenarios.length > 0
+    ? Object.keys(exp.scenarios[0].results).map(k => `<th>${escapeHtml(k)}</th>`).join("")
+    : "";
+
+  return `<div class="card exploration" id="${escapeHtml(exp.id)}">
+<h4>${escapeHtml(exp.question)}</h4>
+${boundary}
+<table class="scenario-table">
+<thead><tr><th>シナリオ</th><th>パラメータ</th>${resultHeaders}<th>備考</th></tr></thead>
+<tbody>${rows}</tbody>
+</table>
+<p>${escapeHtml(exp.summary)}</p>
+</div>`;
+}
+
+/** Render all explorations for an episode */
+export function renderExplorations(explorations: ParameterExploration[]): string {
+  if (explorations.length === 0) return "";
+  return `<h2>パラメータ探索</h2>\n<p>描写が成立する条件を多角的に分析します。</p>\n${explorations.map(renderExploration).join("\n")}`;
+}
+
 /** Build a ΔV summary chart from transfer data */
 function buildDvChart(transfers: TransferAnalysis[]): string {
   const chartBars = transfers
@@ -418,7 +487,7 @@ function buildDvChart(transfers: TransferAnalysis[]): string {
     .map(t => ({
       label: t.description.length > 25 ? t.description.slice(0, 22) + "…" : t.description,
       value: t.computedDeltaV,
-      color: t.verdict === "plausible" ? "var(--green)" : t.verdict === "implausible" ? "var(--red)" : "var(--yellow)",
+      color: t.verdict === "plausible" ? "var(--green)" : t.verdict === "implausible" ? "var(--red)" : t.verdict === "conditional" ? "#8957e5" : "var(--yellow)",
     }));
   return renderBarChart("ΔV 比較", chartBars, "km/s");
 }
@@ -442,6 +511,9 @@ export function renderEpisode(report: EpisodeReport): string {
     return renderTransferCard(t) + (quoteRefs ? `<div class="card" style="margin-top:-0.5rem;border-top:none;border-top-left-radius:0;border-top-right-radius:0"><h4>根拠となる台詞</h4>${quoteRefs}</div>` : "");
   }).join("\n");
   const dvChart = buildDvChart(report.transfers);
+  const explorationSection = report.explorations && report.explorations.length > 0
+    ? renderExplorations(report.explorations)
+    : "";
   const calculator = renderCalculator();
 
   const content = `
@@ -455,6 +527,8 @@ ${dvChart}
 
 <h2>軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}
+
+${explorationSection}
 
 ${calculator}`;
 

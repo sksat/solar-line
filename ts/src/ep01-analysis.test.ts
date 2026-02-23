@@ -12,6 +12,9 @@ import {
   brachistochroneRequirements,
   reachableDistance,
   massSensitivity,
+  maxFeasibleMass,
+  requiredThrust,
+  minimumTransferTime,
   analyzeEpisode1,
   KESTREL,
   EP01_CONTRACT,
@@ -256,6 +259,85 @@ describe("mass sensitivity analysis", () => {
   });
 });
 
+describe("boundary analysis: maxFeasibleMass", () => {
+  it("closest approach, 72h: max mass ≈ 299 tonnes", () => {
+    const result = maxFeasibleMass(DISTANCE_SCENARIOS.closest, EP01_CONTRACT.deadlineSec);
+    // F / a_req = 9.8e6 / 32.78 ≈ 299,000 kg
+    assert.ok(
+      result.maxMassT > 250 && result.maxMassT < 350,
+      `maxMass=${result.maxMassT} t, expected ~299`,
+    );
+  });
+
+  it("required acceleration for closest 72h ≈ 33 m/s² (3.3g)", () => {
+    const result = maxFeasibleMass(DISTANCE_SCENARIOS.closest, EP01_CONTRACT.deadlineSec);
+    assert.ok(
+      result.aReqG > 3.0 && result.aReqG < 3.8,
+      `aReqG=${result.aReqG}, expected ~3.3`,
+    );
+  });
+
+  it("canonical 48,000t mass far exceeds max feasible mass", () => {
+    const result = maxFeasibleMass(DISTANCE_SCENARIOS.closest, EP01_CONTRACT.deadlineSec);
+    assert.ok(
+      KESTREL.massKg > result.maxMassKg * 100,
+      "48,000t is >100x the feasible mass limit",
+    );
+  });
+
+  it("longer transfer time allows heavier mass", () => {
+    const m72h = maxFeasibleMass(DISTANCE_SCENARIOS.closest, EP01_CONTRACT.deadlineSec);
+    const m150h = maxFeasibleMass(DISTANCE_SCENARIOS.closest, EP01_CONTRACT.normalTimeSec);
+    assert.ok(m150h.maxMassKg > m72h.maxMassKg);
+  });
+});
+
+describe("boundary analysis: requiredThrust", () => {
+  it("at 48,000t for closest 72h: thrust ≈ 1,574 GN (~160x Kestrel)", () => {
+    const result = requiredThrust(DISTANCE_SCENARIOS.closest, EP01_CONTRACT.deadlineSec);
+    assert.ok(
+      result.thrustRatioToKestrel > 100 && result.thrustRatioToKestrel < 200,
+      `thrustRatio=${result.thrustRatioToKestrel}, expected ~160`,
+    );
+  });
+
+  it("at 299t for closest 72h: thrust ≈ 9.8 MN (matches Kestrel)", () => {
+    const result = requiredThrust(
+      DISTANCE_SCENARIOS.closest,
+      EP01_CONTRACT.deadlineSec,
+      299_000,
+    );
+    assert.ok(
+      Math.abs(result.thrustMN - 9.8) < 1.0,
+      `thrust=${result.thrustMN} MN, expected ~9.8`,
+    );
+  });
+});
+
+describe("boundary analysis: minimumTransferTime", () => {
+  it("at canonical 48,000t: min time >> 72h", () => {
+    const result = minimumTransferTime(DISTANCE_SCENARIOS.closest);
+    assert.ok(
+      result.timeHours > 500,
+      `minTime=${result.timeHours} h, expected >> 72h`,
+    );
+  });
+
+  it("at 299t: min time ≈ 72h", () => {
+    const result = minimumTransferTime(DISTANCE_SCENARIOS.closest, 299_000);
+    assert.ok(
+      Math.abs(result.timeHours - 72) < 5,
+      `minTime=${result.timeHours} h, expected ~72h`,
+    );
+  });
+
+  it("lighter mass → shorter min time", () => {
+    const heavy = minimumTransferTime(DISTANCE_SCENARIOS.closest, 48_000_000);
+    const light = minimumTransferTime(DISTANCE_SCENARIOS.closest, 48_000);
+    assert.ok(light.timeSec < heavy.timeSec);
+  });
+});
+
 describe("full Episode 1 analysis", () => {
   it("analyzeEpisode1 returns all expected sections", () => {
     const result = analyzeEpisode1();
@@ -265,6 +347,11 @@ describe("full Episode 1 analysis", () => {
     assert.ok(result.brachistochrone150h);
     assert.ok(result.reachableWithShipThrust);
     assert.ok(result.massSensitivity);
+    assert.ok(result.boundaries);
+    assert.ok(result.boundaries.massBoundary72h);
+    assert.ok(result.boundaries.thrustBoundary72h);
+    assert.ok(result.boundaries.minTimeAtCanonicalMass);
+    assert.ok(result.boundaries.minTimeAt299t);
   });
 
   it("analysis is internally consistent", () => {

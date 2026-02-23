@@ -29,6 +29,51 @@ export interface DialogueQuote {
   timestamp: string;
 }
 
+/** A source citation for a parameter or claim used in analysis */
+export interface SourceCitation {
+  /** The parameter or claim being cited (e.g. "船の質量: 約48000 t") */
+  claim: string;
+  /** Source type */
+  sourceType: "worldbuilding-doc" | "episode-dialogue" | "episode-visual" | "external-reference";
+  /** Source URL or identifier (e.g. note.com URL, video ID with timestamp) */
+  sourceRef: string;
+  /** Human-readable description of the source */
+  sourceLabel: string;
+}
+
+/** A single scenario in a parameter exploration */
+export interface ExplorationScenario {
+  /** Label for this scenario (e.g. "質量 48t 解釈") */
+  label: string;
+  /** The varied parameter and its value */
+  variedParam: string;
+  variedValue: number;
+  /** Unit for the varied parameter */
+  variedUnit: string;
+  /** Key computed results */
+  results: Record<string, number>;
+  /** Is this scenario feasible for the depicted transfer? */
+  feasible: boolean;
+  /** Brief note on this scenario */
+  note: string;
+}
+
+/** Multi-parameter exploration for a transfer analysis */
+export interface ParameterExploration {
+  /** Unique ID, e.g. "ep01-exploration-01" */
+  id: string;
+  /** ID of the TransferAnalysis this explores */
+  transferId: string;
+  /** What question does this exploration answer? */
+  question: string;
+  /** Algebraic boundary condition (e.g. "mass ≤ 299t for 72h feasibility") */
+  boundaryCondition?: string;
+  /** Individual scenarios */
+  scenarios: ExplorationScenario[];
+  /** Summary of findings */
+  summary: string;
+}
+
 /** A single orbital transfer analysis */
 export interface TransferAnalysis {
   /** Unique identifier, e.g. "ep01-transfer-01" */
@@ -45,8 +90,8 @@ export interface TransferAnalysis {
   computedDeltaV: number;
   /** Assumptions made for this analysis */
   assumptions: string[];
-  /** Verdict: plausible, implausible, or indeterminate */
-  verdict: "plausible" | "implausible" | "indeterminate";
+  /** Verdict: plausible, implausible, indeterminate, or conditional */
+  verdict: "plausible" | "implausible" | "indeterminate" | "conditional";
   /** Detailed explanation of the verdict */
   explanation: string;
   /** Orbital parameters used */
@@ -59,6 +104,8 @@ export interface TransferAnalysis {
   };
   /** IDs of DialogueQuotes that serve as evidence for this analysis */
   evidenceQuoteIds?: string[];
+  /** Source citations for parameters used in this analysis */
+  sources?: SourceCitation[];
 }
 
 /** Per-episode report data */
@@ -75,6 +122,8 @@ export interface EpisodeReport {
   dialogueQuotes?: DialogueQuote[];
   /** All transfer analyses for this episode */
   transfers: TransferAnalysis[];
+  /** Multi-parameter explorations linked to transfers */
+  explorations?: ParameterExploration[];
 }
 
 /** Site-wide manifest listing all available reports */
