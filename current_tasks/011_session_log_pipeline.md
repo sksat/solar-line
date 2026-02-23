@@ -1,6 +1,6 @@
 # Task 011: Session Log Collection from Conversation Logs
 
-## Status: TODO
+## Status: DONE
 
 ## Goal
 Set up a pipeline to collect Claude Code conversation logs (not just stdout) and publish them to GitHub Pages.
