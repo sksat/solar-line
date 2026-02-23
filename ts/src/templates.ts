@@ -18,14 +18,18 @@ export function escapeHtml(text: string): string {
 /**
  * Minimal Markdown to HTML converter.
  * Supports: headings (#), paragraphs, bold (**), inline code (`),
- * unordered lists (- ), and code blocks (```).
+ * unordered lists (- ), ordered lists (1. ), and code blocks (```).
  * This is intentionally minimal — not a full Markdown parser.
  */
 export function markdownToHtml(md: string): string {
   const lines = md.split("\n");
   const output: string[] = [];
   let inCodeBlock = false;
-  let inList = false;
+  let listType: "ul" | "ol" | null = null;
+
+  function closeList(): void {
+    if (listType) { output.push(`</${listType}>`); listType = null; }
+  }
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -36,7 +40,7 @@ export function markdownToHtml(md: string): string {
         output.push("</code></pre>");
         inCodeBlock = false;
       } else {
-        if (inList) { output.push("</ul>"); inList = false; }
+        closeList();
         output.push("<pre><code>");
         inCodeBlock = true;
       }
@@ -49,14 +53,14 @@ export function markdownToHtml(md: string): string {
 
     // Empty line — close list if open
     if (line.trim() === "") {
-      if (inList) { output.push("</ul>"); inList = false; }
+      closeList();
       continue;
     }
 
     // Headings
     const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
     if (headingMatch) {
-      if (inList) { output.push("</ul>"); inList = false; }
+      closeList();
       const level = headingMatch[1].length;
       output.push(`<h${level}>${inlineFormat(headingMatch[2])}</h${level}>`);
       continue;
@@ -64,17 +68,24 @@ export function markdownToHtml(md: string): string {
 
     // Unordered list items
     if (line.match(/^[-*]\s+/)) {
-      if (!inList) { output.push("<ul>"); inList = true; }
+      if (listType !== "ul") { closeList(); output.push("<ul>"); listType = "ul"; }
       output.push(`<li>${inlineFormat(line.replace(/^[-*]\s+/, ""))}</li>`);
       continue;
     }
 
+    // Ordered list items
+    if (line.match(/^\d+\.\s+/)) {
+      if (listType !== "ol") { closeList(); output.push("<ol>"); listType = "ol"; }
+      output.push(`<li>${inlineFormat(line.replace(/^\d+\.\s+/, ""))}</li>`);
+      continue;
+    }
+
     // Paragraph
-    if (inList) { output.push("</ul>"); inList = false; }
+    closeList();
     output.push(`<p>${inlineFormat(line)}</p>`);
   }
 
-  if (inList) output.push("</ul>");
+  closeList();
   if (inCodeBlock) output.push("</code></pre>");
 
   return output.join("\n");
@@ -262,7 +273,7 @@ footer {
 .orbital-animation-controls .time-display {
   font-family: "SFMono-Regular", Consolas, monospace;
   color: var(--fg);
-  min-width: 4rem;
+  min-width: 5rem;
   text-align: right;
 }
 .ship-marker { filter: drop-shadow(0 0 3px rgba(255,255,255,0.6)); }

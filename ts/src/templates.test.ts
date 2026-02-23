@@ -91,6 +91,55 @@ describe("markdownToHtml", () => {
   it("handles empty input", () => {
     assert.equal(markdownToHtml(""), "");
   });
+
+  it("converts ordered lists", () => {
+    const html = markdownToHtml("1. first\n2. second\n3. third");
+    assert.ok(html.includes("<ol>"));
+    assert.ok(html.includes("<li>first</li>"));
+    assert.ok(html.includes("<li>second</li>"));
+    assert.ok(html.includes("<li>third</li>"));
+    assert.ok(html.includes("</ol>"));
+  });
+
+  it("does not mix ordered and unordered lists", () => {
+    const html = markdownToHtml("- bullet\n\n1. numbered");
+    assert.ok(html.includes("<ul>"));
+    assert.ok(html.includes("<li>bullet</li>"));
+    assert.ok(html.includes("</ul>"));
+    assert.ok(html.includes("<ol>"));
+    assert.ok(html.includes("<li>numbered</li>"));
+    assert.ok(html.includes("</ol>"));
+  });
+
+  it("closes ordered list on empty line", () => {
+    const html = markdownToHtml("1. item\n\nParagraph");
+    assert.ok(html.includes("</ol>"));
+    assert.ok(html.includes("<p>Paragraph</p>"));
+  });
+
+  it("closes ordered list before heading", () => {
+    const html = markdownToHtml("1. item\n## Heading");
+    assert.ok(html.includes("</ol>"));
+    assert.ok(html.includes("<h2>Heading</h2>"));
+  });
+
+  it("handles inline formatting in ordered list items", () => {
+    const html = markdownToHtml("1. this is **bold** and `code`");
+    assert.ok(html.includes("<strong>bold</strong>"));
+    assert.ok(html.includes("<code>code</code>"));
+  });
+
+  it("switches from unordered to ordered list", () => {
+    const html = markdownToHtml("- bullet\n1. numbered");
+    assert.ok(html.includes("</ul>"));
+    assert.ok(html.includes("<ol>"));
+  });
+
+  it("switches from ordered to unordered list", () => {
+    const html = markdownToHtml("1. numbered\n- bullet");
+    assert.ok(html.includes("</ol>"));
+    assert.ok(html.includes("<ul>"));
+  });
 });
 
 // --- layoutHtml ---
@@ -158,6 +207,16 @@ describe("renderTransferCard", () => {
     const implausible = { ...sampleTransfer, verdict: "implausible" as const };
     const html = renderTransferCard(implausible);
     assert.ok(html.includes("verdict-implausible"));
+  });
+
+  it("renders transfer without mu parameter", () => {
+    const t: TransferAnalysis = {
+      ...sampleTransfer,
+      parameters: { thrust: 9800000, mass: 48000000 },
+    };
+    const html = renderTransferCard(t);
+    assert.ok(html.includes("Earth to Mars Hohmann Transfer"));
+    assert.ok(html.includes('class="card"'));
   });
 });
 
@@ -926,6 +985,29 @@ describe("renderExploration with collapsedByDefault", () => {
     assert.ok(html.includes("妥当"));
   });
 
+  it("renders string values in scenario results", () => {
+    const exp: ParameterExploration = {
+      id: "exp-string-vals",
+      transferId: "t1",
+      question: "テスト",
+      scenarios: [
+        {
+          label: "300t",
+          variedParam: "mass",
+          variedValue: 300,
+          variedUnit: "t",
+          results: { "遷移時間": "8.3日", "ΔV": "15,207 km/s" },
+          feasible: true,
+          note: "妥当",
+        },
+      ],
+      summary: "テスト概要",
+    };
+    const html = renderExploration(exp);
+    assert.ok(html.includes("8.3日"), "should render string result value directly");
+    assert.ok(html.includes("15,207 km/s"), "should render string result value directly");
+  });
+
   it("omits details element when no scenarios are collapsed", () => {
     const exp: ParameterExploration = {
       id: "exp-no-collapse",
@@ -1599,6 +1681,16 @@ describe("renderTransferCard renders markdown in explanation", () => {
     const html = renderTransferCard(t);
     assert.ok(html.includes("<li>Item A</li>"));
     assert.ok(html.includes("<li>Item B</li>"));
+  });
+
+  it("renders ordered list items in explanation", () => {
+    const t = { ...sampleTransfer, explanation: "条件:\n1. 順行方向への離脱\n2. 木星重力圏外\n3. 追加噴射なし" };
+    const html = renderTransferCard(t);
+    assert.ok(html.includes("<ol>"));
+    assert.ok(html.includes("<li>順行方向への離脱</li>"));
+    assert.ok(html.includes("<li>木星重力圏外</li>"));
+    assert.ok(html.includes("<li>追加噴射なし</li>"));
+    assert.ok(html.includes("</ol>"));
   });
 });
 

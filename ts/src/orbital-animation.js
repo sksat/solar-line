@@ -13,7 +13,10 @@
 
 /**
  * Format time in seconds to a human-readable string.
- * <72h shows hours, >=72h shows days+hours.
+ * <=72h: hours (e.g. "12.5h")
+ * <=30d: days + hours (e.g. "5d 12h")
+ * <=365d: days (e.g. "142d")
+ * >365d: years + days (e.g. "1y 87d")
  */
 function formatTime(seconds, totalDuration) {
   const hours = seconds / 3600;
@@ -21,9 +24,19 @@ function formatTime(seconds, totalDuration) {
     return hours.toFixed(1) + "h";
   }
   const days = Math.floor(hours / 24);
-  const remainH = Math.floor(hours % 24);
-  if (days === 0) return remainH + "h";
-  return days + "d " + remainH + "h";
+  var remainH = Math.floor(hours % 24);
+  if (totalDuration <= 2592000) { // <=30d
+    if (days === 0) return remainH + "h";
+    return days + "d " + remainH + "h";
+  }
+  if (totalDuration <= 31536000) { // <=365d
+    return days + "d";
+  }
+  // >365d: show years + days
+  var years = Math.floor(days / 365);
+  var remainD = days % 365;
+  if (years === 0) return remainD + "d";
+  return years + "y " + remainD + "d";
 }
 
 /**

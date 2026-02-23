@@ -50,8 +50,8 @@ export interface ExplorationScenario {
   variedValue: number;
   /** Unit for the varied parameter */
   variedUnit: string;
-  /** Key computed results */
-  results: Record<string, number>;
+  /** Key computed results (values may be numeric or formatted strings) */
+  results: Record<string, number | string>;
   /** Is this scenario feasible for the depicted transfer? */
   feasible: boolean;
   /** Brief note on this scenario */
@@ -98,7 +98,7 @@ export interface TransferAnalysis {
   explanation: string;
   /** Orbital parameters used */
   parameters: {
-    mu: number;
+    mu?: number;
     departureRadius?: number;
     arrivalRadius?: number;
     eccentricity?: number;
