@@ -61,6 +61,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Scenario ordering**: Present the most plausible scenario first, then alternatives. Collapse implausible scenarios by default (use `<details>`)
 - **Terminology**: Prefer "brachistochrone" (English/formula notation) over カタカナ「ブラキストクローネ」 — the latter is rarely used in Japanese technical writing
 - **Interactive orbital diagrams**: Add time slider to animate orbital transfers, showing how celestial body positions change during the transfer
+- **Report review**: Periodically have other Claude Code sessions or Codex review reports for readability/clarity
+- **VTT/transcription accuracy**: VTT and other transcriptions are not always perfect — correct text from context when actually using it in reports
 
 ## Key Principles
 
@@ -69,3 +71,4 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Structure for traceability.** Build code and reports so that assumptions and data provenance are easy to inspect.
 - **Explore multiple scenarios.** When an analysis finds a discrepancy, do not simply conclude "implausible" and stop. Instead, explore multiple parameter variations: what mass, thrust, trajectory, or timing would make the depicted scenario work? Discuss boundary conditions and plausible interpretations. The goal is to map the space of possibilities, not to render a single verdict.
 - **Cite evidence for all claims.** Ship specs, orbital parameters, and other values used in analysis must cite their source (episode timestamp, worldbuilding document URL, etc.). Unsourced parameters undermine the analysis.
+- **Cross-episode consistency.** Analyze consistency across episodes — e.g., do ship specs, mass assumptions, or orbital parameters used in one episode agree with those in another? Flag and discuss discrepancies.
