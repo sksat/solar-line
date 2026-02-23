@@ -1,0 +1,117 @@
+{
+  "episode": 1,
+  "title": "SOLAR LINE Part 1 — 火星からガニメデへ",
+  "summary": "きりたんが小型貨物船ケストレルで火星中央港からガニメデ中央港まで貨物を72時間以内に輸送する。通常150時間かかるルートを木星の「嵐の回廊」を通ることで短縮する。",
+  "transfers": [
+    {
+      "id": "ep01-transfer-01",
+      "episode": 1,
+      "description": "Hohmann transfer baseline: Mars orbit → Jupiter orbit (minimum energy)",
+      "timestamp": "N/A (reference calculation)",
+      "claimedDeltaV": null,
+      "computedDeltaV": 10.15,
+      "assumptions": [
+        "Heliocentric circular orbits for Mars (227,939,200 km) and Jupiter (778,570,000 km)",
+        "Coplanar orbits (no inclination change)",
+        "Impulsive burns (instantaneous velocity changes)",
+        "Two-body problem (Sun gravity only)"
+      ],
+      "verdict": "indeterminate",
+      "explanation": "The classical Hohmann transfer requires ~10.15 km/s total ΔV but takes ~1,127 days (~3.1 years). This is the minimum-energy baseline — far too slow for the 72-hour deadline. The in-universe setting clearly assumes propulsion technology beyond Hohmann-class transfers.",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "departureRadius": 227939200,
+        "arrivalRadius": 778570000,
+        "transferTimeDays": 1126.84,
+        "departureDeltaV": 5.88,
+        "arrivalDeltaV": 4.27
+      }
+    },
+    {
+      "id": "ep01-transfer-02",
+      "episode": 1,
+      "description": "72-hour fast transfer: brachistochrone Mars → Jupiter (closest approach, ~3.68 AU)",
+      "timestamp": "00:00 - 19:20 (entire episode)",
+      "claimedDeltaV": null,
+      "computedDeltaV": 8497.39,
+      "assumptions": [
+        "Straight-line brachistochrone: accelerate halfway, decelerate halfway",
+        "Closest approach geometry: Mars-Jupiter distance ~550.6M km (~3.68 AU)",
+        "Rest-to-rest transfer (zero relative velocity at start and end)",
+        "Constant acceleration throughout (no fuel depletion)",
+        "Ignores solar gravity (optimistic — solar gravity is ~12x ship acceleration near Mars)"
+      ],
+      "verdict": "implausible",
+      "explanation": "A 72-hour brachistochrone at closest approach requires ~32.8 m/s² (~3.3g) constant acceleration and ~8,497 km/s total ΔV. The Kestrel's stated thrust of 9.8 MN on 48,000t mass provides only ~0.204 m/s² (~0.02g) — roughly 160x too weak. Even with continuous burn for the full 72 hours, the ship's ΔV budget is only ~52.9 km/s, which is ~160x less than the ~8,497 km/s needed. The reachable distance in 72h with stated thrust is only ~3.4M km (~0.023 AU), far short of the ~3.68 AU required. Note: this analysis is optimistic since it ignores solar gravity, which is dominant at these thrust levels.",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "departureRadius": 227939200,
+        "arrivalRadius": 778570000,
+        "distanceKm": 550630800,
+        "distanceAU": 3.68,
+        "requiredAccelMs2": 32.78,
+        "requiredAccelG": 3.34,
+        "shipAccelMs2": 0.204,
+        "shipAccelG": 0.021,
+        "accelRatio": 0.006,
+        "shipDvBudgetKms": 52.92,
+        "requiredDvKms": 8497.39,
+        "dvRatio": 0.006
+      }
+    },
+    {
+      "id": "ep01-transfer-03",
+      "episode": 1,
+      "description": "150-hour normal route: brachistochrone Mars → Jupiter (closest approach)",
+      "timestamp": "N/A (referenced in contract as normal schedule)",
+      "claimedDeltaV": null,
+      "computedDeltaV": 4078.75,
+      "assumptions": [
+        "Same brachistochrone model as 72h analysis",
+        "Closest approach geometry (~3.68 AU)",
+        "150 hours = 540,000 seconds",
+        "Rest-to-rest transfer"
+      ],
+      "verdict": "implausible",
+      "explanation": "Even the 'normal' 150-hour route requires ~7.55 m/s² (~0.77g) and ~4,079 km/s ΔV at closest approach. This is ~37x the Kestrel's rated acceleration. The 150h route is less extreme than 72h but still requires propulsion far beyond the stated engine specifications. The worldbuilding is internally consistent (72h is 'extreme' vs 150h 'normal'), but both timeframes require thrust-to-weight ratios the Kestrel's stated specs cannot provide.",
+      "parameters": {
+        "mu": 1.32712440041e11,
+        "distanceKm": 550630800,
+        "distanceAU": 3.68,
+        "requiredAccelMs2": 7.55,
+        "requiredAccelG": 0.77,
+        "shipAccelMs2": 0.204,
+        "requiredDvKms": 4078.75,
+        "shipDvBudgetKms": 52.92
+      }
+    },
+    {
+      "id": "ep01-transfer-04",
+      "episode": 1,
+      "description": "Ship capability assessment: Kestrel TSF-43R engine at 48,000t",
+      "timestamp": "N/A (ship specification analysis)",
+      "claimedDeltaV": null,
+      "computedDeltaV": 52.92,
+      "assumptions": [
+        "Ship mass: 48,000 t (48,000,000 kg) as stated in worldbuilding document",
+        "Normal thrust: 9.8 MN (TSF-43R Orion Micropulser)",
+        "Peak thrust: 10.7 MN (emergency full burn)",
+        "Continuous burn for 72 hours (no fuel depletion modeled)",
+        "D-He³ fusion pulse drive (no Isp/exhaust velocity specified)"
+      ],
+      "verdict": "indeterminate",
+      "explanation": "The Kestrel achieves 0.204 m/s² (0.02g) normal acceleration and 0.223 m/s² peak. In 72h continuous burn, maximum ΔV is ~52.9 km/s (normal) or ~57.8 km/s (peak). This is substantial for real-world spacecraft but insufficient for the depicted 72h interplanetary transfer by ~2 orders of magnitude. The discrepancy may indicate: (1) the 48,000t mass is a translation/notation issue, (2) the fusion drive operates differently than constant-thrust, (3) the setting includes unstated physics (gravitational assists, space infrastructure, pre-acceleration), or (4) the dramatic scenario prioritizes narrative over strict physical accuracy. Without exhaust velocity/Isp data, we cannot determine propellant fraction or true ΔV budget via the Tsiolkovsky equation.",
+      "parameters": {
+        "shipMassKg": 48000000,
+        "thrustN": 9800000,
+        "peakThrustN": 10700000,
+        "accelNormalMs2": 0.204,
+        "accelPeakMs2": 0.223,
+        "dvNormal72hKms": 52.92,
+        "dvPeak72hKms": 57.78,
+        "reachableDistanceKm": 3429216,
+        "reachableDistanceAU": 0.023
+      }
+    }
+  ]
+}
