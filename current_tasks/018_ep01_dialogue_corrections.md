@@ -1,6 +1,6 @@
 # Task 018: 第1話台詞データ修正
 
-## Status: UNCLAIMED
+## Status: DONE
 
 ## Human Directives
 - 第一話の依頼（ep01-quote-01「火星中央港からガニメデ中央港まで、72時間以内に届けてほしい」）は、

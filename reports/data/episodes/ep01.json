@@ -13,9 +13,9 @@
   "dialogueQuotes": [
     {
       "id": "ep01-quote-01",
-      "speaker": "きりたん",
+      "speaker": "依頼人",
       "text": "火星中央港からガニメデ中央港まで、72時間以内に届けてほしい",
-      "timestamp": "02:15"
+      "timestamp": "01:14"
     },
     {
       "id": "ep01-quote-02",
@@ -107,8 +107,8 @@
         {
           "claim": "72時間の期限",
           "sourceType": "episode-dialogue",
-          "sourceRef": "sm45280425 02:15",
-          "sourceLabel": "Part 1 02:15「72時間以内に届けてほしい」"
+          "sourceRef": "sm45280425 01:14",
+          "sourceLabel": "Part 1 01:14「72時間以内に届けてほしい」（依頼人→きりたん）"
         },
         {
           "claim": "嵐の回廊（木星の重力利用）",
