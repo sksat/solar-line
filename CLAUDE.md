@@ -36,9 +36,16 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 ## Data Handling
 
 - Raw data (video files, raw transcripts) is gitignored — never commit these
+- Raw data should be placed under `raw_data/` within the workspace (already gitignored)
 - YouTube subtitle data is collected via scripts; ニコニコ動画 comments are NOT subtitles
 - Dialogue attribution (who said what) requires contextual understanding of characters and scene changes — do not fully automate this; use Claude/Codex to verify speaker identity
 - Properly cite all referenced material
+
+## Reports
+
+- **All reports published to GitHub Pages must be written in Japanese (日本語)**
+- Reports include per-transfer analysis and session logs
+- Session logs should be collected from Claude Code conversation logs (not just stdout)
 
 ## Key Principles
 
