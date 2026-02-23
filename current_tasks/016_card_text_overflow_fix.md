@@ -1,6 +1,6 @@
 # Task 016: ΔV比較カードのテキスト溢れ修正
 
-## Status: UNCLAIMED
+## Status: DONE
 
 ## Problem
 ΔV比較やその他のカードで文字列がカードから溢れて見切れてしまうことがある。

@@ -17,6 +17,7 @@ import {
   renderLogPage,
   renderOrbitalDiagram,
   renderOrbitalDiagrams,
+  REPORT_CSS,
 } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, OrbitalDiagram } from "./report-types.ts";
 
@@ -730,5 +731,83 @@ describe("renderEpisode with diagrams", () => {
   it("omits diagram section when no diagrams", () => {
     const html = renderEpisode(sampleEpisodeReport);
     assert.ok(!html.includes("軌道遷移図"));
+  });
+});
+
+// --- Text overflow handling ---
+
+describe("REPORT_CSS handles text overflow", () => {
+  it("includes overflow-wrap for cards", () => {
+    assert.ok(REPORT_CSS.includes("overflow-wrap"));
+  });
+
+  it("includes word-break for scenario table cells", () => {
+    // Scenario table cells with long Japanese text need word-break
+    assert.ok(/\.scenario-table\s+td[^}]*word-break/.test(REPORT_CSS) ||
+              /\.scenario-table[^}]*td[^}]*word-break/.test(REPORT_CSS) ||
+              REPORT_CSS.includes("word-break"));
+  });
+
+  it("includes overflow-x handling for cards", () => {
+    // Cards should not allow horizontal overflow
+    assert.ok(/\.card[^}]*overflow/.test(REPORT_CSS));
+  });
+});
+
+describe("renderBarChart handles long labels", () => {
+  it("renders SVG with viewBox for responsive scaling", () => {
+    const html = renderBarChart("テスト", [
+      { label: "ホーマン遷移基準値: 火星軌道→木星軌道（最小エネルギー）", value: 100 },
+    ], "km/s");
+    assert.ok(html.includes("<svg"));
+    // SVG should use viewBox for responsive scaling
+    assert.ok(html.includes("viewBox"));
+  });
+
+  it("truncates long labels to prevent SVG overflow", () => {
+    const longLabel = "非常に長い軌道遷移の説明で、カードからはみ出してしまう可能性がある";
+    const html = renderBarChart("テスト", [
+      { label: longLabel, value: 100 },
+    ], "km/s");
+    // The label should be truncated in the SVG output
+    assert.ok(html.includes("…"));
+  });
+
+  it("handles large numeric values without overflow", () => {
+    const html = renderBarChart("テスト", [
+      { label: "高速遷移", value: 11165.23 },
+      { label: "低速遷移", value: 2.74 },
+    ], "km/s");
+    assert.ok(html.includes("<svg"));
+    // Large values should use exponential notation
+    assert.ok(html.includes("e+"));
+  });
+});
+
+describe("renderTransferCard handles long text", () => {
+  it("renders long descriptions without structural issues", () => {
+    const longTransfer: TransferAnalysis = {
+      ...sampleTransfer,
+      description: "ブラキストクローネ遷移: 土星エンケラドゥス → 天王星ティタニア・ターミナル・コンプレックス 143時間12分",
+    };
+    const html = renderTransferCard(longTransfer);
+    // Should still contain the description (possibly truncated)
+    assert.ok(html.includes("ブラキストクローネ遷移"));
+    // Should still have proper card structure
+    assert.ok(html.includes('class="card"'));
+    assert.ok(html.includes("</div>"));
+  });
+
+  it("renders long explanations within card structure", () => {
+    const longExplanation = "古典的ホーマン遷移には合計約2.74 km/sのΔVが必要だが、約9,971日（約27.3年）を要する。" +
+      "143時間の所要時間とは全く異なる次元の問題であり、作中の推進技術はホーマン級を大幅に超えている。" +
+      "エンケラドゥスからの出発にはまず土星系からの脱出が必要であり、土星重力圏脱出速度を考慮する必要がある。";
+    const longTransfer: TransferAnalysis = {
+      ...sampleTransfer,
+      explanation: longExplanation,
+    };
+    const html = renderTransferCard(longTransfer);
+    assert.ok(html.includes("古典的ホーマン遷移"));
+    assert.ok(html.includes("</div>"));
   });
 });

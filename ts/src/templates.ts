@@ -114,7 +114,7 @@ body {
 }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-h1, h2, h3, h4 { color: #f0f6fc; margin: 1.5rem 0 0.5rem; }
+h1, h2, h3, h4 { color: #f0f6fc; margin: 1.5rem 0 0.5rem; overflow-wrap: break-word; }
 h1 { font-size: 1.8rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
 pre {
   background: var(--surface);
@@ -134,6 +134,9 @@ li { margin: 0.25rem 0; }
   border-radius: 6px;
   padding: 1rem 1.5rem;
   margin: 1rem 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow-x: auto;
 }
 .verdict {
   display: inline-block;
@@ -150,11 +153,11 @@ li { margin: 0.25rem 0; }
 .sources-list dt { font-weight: 600; color: var(--fg); margin-top: 0.3rem; }
 .sources-list dd { margin-left: 1rem; }
 .exploration { margin: 1rem 0; }
-.exploration h4 { color: var(--accent); }
-.exploration .boundary { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.85em; color: var(--yellow); margin: 0.5rem 0; }
-.scenario-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.5rem 0; }
+.exploration h4 { color: var(--accent); word-break: break-word; }
+.exploration .boundary { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.85em; color: var(--yellow); margin: 0.5rem 0; overflow-wrap: break-word; }
+.scenario-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.5rem 0; table-layout: auto; }
 .scenario-table th { color: #8b949e; font-weight: normal; font-size: 0.85em; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
-.scenario-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); }
+.scenario-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); word-break: break-word; overflow-wrap: break-word; }
 .scenario-table .feasible { color: var(--green); }
 .scenario-table .infeasible { color: var(--red); }
 nav { margin-bottom: 2rem; }
@@ -223,7 +226,7 @@ footer {
 }
 .dialogue-quote .speaker { color: var(--accent); font-weight: 600; }
 .dialogue-quote .timestamp { color: #8b949e; font-size: 0.85em; margin-left: 0.5rem; }
-.dv-chart { margin: 1rem 0; }
+.dv-chart { margin: 1rem 0; overflow-x: auto; }
 .dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
 .orbital-diagram { text-align: center; }
 .orbital-diagram svg { max-width: 100%; height: auto; }
@@ -359,6 +362,12 @@ export function renderDialogueQuotes(quotes: DialogueQuote[]): string {
  * Each bar has a label, value, and optional color.
  * Values are scaled relative to the maximum value.
  */
+/** Truncate a label to fit within SVG text constraints */
+function truncateLabel(label: string, maxChars: number): string {
+  if (label.length <= maxChars) return label;
+  return label.slice(0, maxChars - 1) + "…";
+}
+
 export function renderBarChart(
   title: string,
   bars: { label: string; value: number; color?: string }[],
@@ -377,14 +386,15 @@ export function renderBarChart(
     const width = maxVal > 0 ? Math.max(1, (b.value / maxVal) * barAreaWidth) : 0;
     const color = b.color || "var(--accent)";
     const displayVal = b.value >= 1000 ? b.value.toExponential(2) : b.value.toFixed(2);
-    return `<text x="${labelWidth - 8}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" text-anchor="end" font-size="11">${escapeHtml(b.label)}</text>
+    const truncatedLabel = truncateLabel(b.label, 20);
+    return `<text x="${labelWidth - 8}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" text-anchor="end" font-size="11">${escapeHtml(truncatedLabel)}</text>
 <rect x="${labelWidth}" y="${y}" width="${width}" height="${barHeight}" rx="3" fill="${color}" opacity="0.85"/>
 <text x="${labelWidth + width + 6}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" font-size="11">${displayVal} ${escapeHtml(unit)}</text>`;
   }).join("\n");
 
   return `<div class="dv-chart card">
 <h4>${escapeHtml(title)}</h4>
-<svg width="${chartWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 ${chartWidth} ${svgHeight}" width="100%" xmlns="http://www.w3.org/2000/svg">
 ${barsSvg}
 </svg>
 </div>`;
@@ -731,7 +741,7 @@ function buildDvChart(transfers: TransferAnalysis[]): string {
   const chartBars = transfers
     .filter(t => t.computedDeltaV > 0)
     .map(t => ({
-      label: t.description.length > 25 ? t.description.slice(0, 22) + "…" : t.description,
+      label: t.description,
       value: t.computedDeltaV,
       color: t.verdict === "plausible" ? "var(--green)" : t.verdict === "implausible" ? "var(--red)" : t.verdict === "conditional" ? "#8957e5" : "var(--yellow)",
     }));
