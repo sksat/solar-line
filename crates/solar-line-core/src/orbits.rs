@@ -1,5 +1,5 @@
 /// Orbital element types and state vectors for 2-body problem.
-use crate::units::{Eccentricity, Km, KmPerSec, Mu, Radians};
+use crate::units::{Eccentricity, Km, KmPerSec, Mu, Radians, Seconds};
 use crate::vec3::Vec3;
 
 /// Classical Keplerian orbital elements.
@@ -88,6 +88,38 @@ pub fn specific_energy(mu: Mu, a: Km) -> f64 {
 /// h = sqrt(μ * a * (1 - e²))
 pub fn specific_angular_momentum(mu: Mu, a: Km, e: Eccentricity) -> f64 {
     (mu.value() * a.value() * (1.0 - e.value().powi(2))).sqrt()
+}
+
+/// Required constant acceleration for a brachistochrone (flip-at-midpoint) transfer.
+///
+/// Model: accelerate for half the distance, flip, decelerate for the other half.
+/// a_required = 4 * d / t²
+///
+/// Returns acceleration in km/s².
+///
+/// Assumption: straight-line path, constant thrust, no gravity, rest-to-rest.
+pub fn brachistochrone_accel(distance: Km, time: Seconds) -> f64 {
+    (4.0 * distance.value()) / (time.value() * time.value())
+}
+
+/// ΔV for a brachistochrone transfer (constant thrust, flip at midpoint).
+///
+/// ΔV = a_required * t = 4 * d / t
+///
+/// Returns ΔV in km/s.
+///
+/// Assumption: straight-line path, constant thrust, no gravity, rest-to-rest.
+pub fn brachistochrone_dv(distance: Km, time: Seconds) -> KmPerSec {
+    KmPerSec((4.0 * distance.value()) / time.value())
+}
+
+/// Maximum reachable distance for a brachistochrone transfer at given acceleration and time.
+///
+/// d_max = a * t² / 4
+///
+/// Returns distance in km.
+pub fn brachistochrone_max_distance(accel_km_s2: f64, time: Seconds) -> Km {
+    Km(accel_km_s2 * time.value() * time.value() / 4.0)
 }
 
 #[cfg(test)]
@@ -200,5 +232,67 @@ mod tests {
 
         assert!((state.radius().value() - 6786.0).abs() < 1e-10);
         assert!((state.speed().value() - 7.66).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_brachistochrone_accel() {
+        // 1 AU in 72 hours (259,200 seconds)
+        // d = 149_597_870.7 km, t = 259200 s
+        // a = 4 * d / t² = 4 * 149597870.7 / 259200² = ~8.91e-3 km/s²
+        let d = Km(149_597_870.7);
+        let t = crate::units::Seconds(259_200.0);
+        let a = brachistochrone_accel(d, t);
+        let expected = 4.0 * 149_597_870.7 / (259_200.0 * 259_200.0);
+        assert!(
+            (a - expected).abs() < 1e-12,
+            "brachistochrone accel = {}, expected = {}",
+            a,
+            expected
+        );
+    }
+
+    #[test]
+    fn test_brachistochrone_dv() {
+        // ΔV = 4 * d / t
+        let d = Km(149_597_870.7);
+        let t = crate::units::Seconds(259_200.0);
+        let dv = brachistochrone_dv(d, t);
+        let expected = 4.0 * 149_597_870.7 / 259_200.0;
+        assert!(
+            (dv.value() - expected).abs() < 1e-8,
+            "brachistochrone ΔV = {} km/s, expected = {} km/s",
+            dv.value(),
+            expected
+        );
+    }
+
+    #[test]
+    fn test_brachistochrone_identity() {
+        // brachistochrone_dv = brachistochrone_accel * time
+        let d = Km(550_630_800.0); // Mars-Jupiter closest
+        let t = crate::units::Seconds(72.0 * 3600.0);
+        let a = brachistochrone_accel(d, t);
+        let dv = brachistochrone_dv(d, t);
+        assert!(
+            (dv.value() - a * t.value()).abs() < 1e-6,
+            "ΔV ({}) should equal a*t ({})",
+            dv.value(),
+            a * t.value()
+        );
+    }
+
+    #[test]
+    fn test_brachistochrone_max_distance() {
+        // Round-trip: max_distance at the computed accel should equal original distance
+        let d = Km(550_630_800.0);
+        let t = crate::units::Seconds(72.0 * 3600.0);
+        let a = brachistochrone_accel(d, t);
+        let d_max = brachistochrone_max_distance(a, t);
+        assert!(
+            (d_max.value() - d.value()).abs() < 1.0,
+            "round-trip distance: {} vs {}",
+            d_max.value(),
+            d.value()
+        );
     }
 }

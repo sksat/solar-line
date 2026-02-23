@@ -142,10 +142,16 @@ export function build(config: BuildConfig): void {
   // .nojekyll tells GitHub Pages to skip Jekyll processing (needed for WASM files)
   fs.writeFileSync(path.join(outDir, ".nojekyll"), "");
 
-  // Copy WASM files if available (for future interactive pages)
-  const wasmPkgDir = path.join(dataDir, "..", "pkg");
+  // Copy WASM files if available (for interactive calculator)
+  // Try multiple candidate locations for the wasm-pack output
+  const wasmCandidates = [
+    path.join(dataDir, "..", "ts", "pkg"),  // from repo root: reports/../ts/pkg
+    path.join(dataDir, "..", "pkg"),         // legacy path
+    path.resolve(path.dirname(import.meta.filename ?? ""), "..", "pkg"), // relative to this file: ts/pkg
+  ];
+  const wasmPkgDir = wasmCandidates.find(d => fs.existsSync(d));
   const wasmOutDir = path.join(outDir, "wasm");
-  if (fs.existsSync(wasmPkgDir)) {
+  if (wasmPkgDir) {
     ensureDir(wasmOutDir);
     const wasmFiles = ["solar_line_wasm_bg.wasm", "solar_line_wasm.js", "solar_line_wasm.d.ts"];
     for (const wf of wasmFiles) {
@@ -154,6 +160,12 @@ export function build(config: BuildConfig): void {
         fs.copyFileSync(src, path.join(wasmOutDir, wf));
       }
     }
+  }
+
+  // Copy calculator JS for interactive episode pages
+  const calcSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "calculator.js");
+  if (fs.existsSync(calcSrc)) {
+    fs.copyFileSync(calcSrc, path.join(outDir, "calculator.js"));
   }
 
   const totalTransfers = episodes.reduce((sum, ep) => sum + ep.transfers.length, 0);

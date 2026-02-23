@@ -7,6 +7,7 @@ import {
   renderIndex,
   renderEpisode,
   renderTransferCard,
+  renderCalculator,
   renderLogsIndex,
   renderLogPage,
 } from "./templates.ts";
@@ -212,6 +213,70 @@ describe("renderEpisode", () => {
   it("uses parent basePath for navigation", () => {
     const html = renderEpisode(sampleEpisodeReport);
     assert.ok(html.includes("../index.html"));
+  });
+});
+
+// --- renderCalculator ---
+
+describe("renderCalculator", () => {
+  it("renders calculator container with id", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="calculator"'));
+  });
+
+  it("includes distance, mass, and time controls", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="calc-distance"'));
+    assert.ok(html.includes('id="calc-mass"'));
+    assert.ok(html.includes('id="calc-time"'));
+  });
+
+  it("includes range sliders paired with number inputs", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="calc-distance-range"'));
+    assert.ok(html.includes('id="calc-mass-range"'));
+    assert.ok(html.includes('id="calc-time-range"'));
+  });
+
+  it("includes preset buttons", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="preset-ep01_canonical"'));
+    assert.ok(html.includes('id="preset-ep01_150h"'));
+    assert.ok(html.includes('id="preset-mass_48t"'));
+    assert.ok(html.includes('id="preset-mass_4800t"'));
+  });
+
+  it("includes result placeholders", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="res-req-accel"'));
+    assert.ok(html.includes('id="res-req-dv"'));
+    assert.ok(html.includes('id="res-ship-accel"'));
+    assert.ok(html.includes('id="res-ship-dv"'));
+    assert.ok(html.includes('id="res-verdict"'));
+  });
+
+  it("includes assumptions disclaimer", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes("straight-line path"));
+    assert.ok(html.includes("no gravity"));
+  });
+
+  it("references calculator.js script", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('src="../calculator.js"'));
+  });
+
+  it("includes engine badge", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="calc-engine-badge"'));
+  });
+});
+
+describe("renderEpisode includes calculator", () => {
+  it("embeds the calculator widget", () => {
+    const html = renderEpisode(sampleEpisodeReport);
+    assert.ok(html.includes('id="calculator"'));
+    assert.ok(html.includes("calculator.js"));
   });
 });
 

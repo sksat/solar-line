@@ -50,6 +50,31 @@ pub fn specific_angular_momentum(mu: f64, a: f64, e: f64) -> Result<f64, JsError
 }
 
 // ---------------------------------------------------------------------------
+// Brachistochrone transfer functions
+// ---------------------------------------------------------------------------
+
+/// Required constant acceleration (km/s²) for a brachistochrone transfer.
+/// distance in km, time in seconds.
+#[wasm_bindgen]
+pub fn brachistochrone_accel(distance: f64, time: f64) -> f64 {
+    orbits::brachistochrone_accel(Km(distance), Seconds(time))
+}
+
+/// ΔV (km/s) for a brachistochrone transfer.
+/// distance in km, time in seconds.
+#[wasm_bindgen]
+pub fn brachistochrone_dv(distance: f64, time: f64) -> f64 {
+    orbits::brachistochrone_dv(Km(distance), Seconds(time)).value()
+}
+
+/// Maximum reachable distance (km) for a brachistochrone transfer.
+/// accel in km/s², time in seconds.
+#[wasm_bindgen]
+pub fn brachistochrone_max_distance(accel: f64, time: f64) -> f64 {
+    orbits::brachistochrone_max_distance(accel, Seconds(time)).value()
+}
+
+// ---------------------------------------------------------------------------
 // Kepler equation solver and anomaly conversions
 // ---------------------------------------------------------------------------
 
@@ -293,6 +318,35 @@ mod tests {
         let n = mean_motion(mu_sun, r_earth);
         let expected = std::f64::consts::TAU / (365.25 * 86400.0);
         assert!((n - expected).abs() / expected < 0.002);
+    }
+
+    #[test]
+    fn test_brachistochrone_accel_72h_mars_jupiter() {
+        // Mars-Jupiter closest: ~550.6M km, 72h = 259200s
+        let d = 550_630_800.0;
+        let t = 72.0 * 3600.0;
+        let a = brachistochrone_accel(d, t);
+        let expected = 4.0 * d / (t * t);
+        assert!((a - expected).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_brachistochrone_dv_identity() {
+        // ΔV = accel * time
+        let d = 550_630_800.0;
+        let t = 72.0 * 3600.0;
+        let a = brachistochrone_accel(d, t);
+        let dv = brachistochrone_dv(d, t);
+        assert!((dv - a * t).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_brachistochrone_max_distance_round_trip() {
+        let d = 550_630_800.0;
+        let t = 72.0 * 3600.0;
+        let a = brachistochrone_accel(d, t);
+        let d_back = brachistochrone_max_distance(a, t);
+        assert!((d_back - d).abs() < 1.0);
     }
 
     // Validation error tests require JsError which only works on wasm targets.

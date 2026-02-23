@@ -7,7 +7,7 @@
  */
 import { describe, it, before } from "node:test";
 import assert from "node:assert/strict";
-import { visViva, hohmannTransferDv, MU } from "./orbital.ts";
+import { visViva, hohmannTransferDv, brachistochroneAccel, brachistochroneDeltaV, MU } from "./orbital.ts";
 
 // The WASM module is loaded dynamically since it's a generated artifact.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -181,6 +181,56 @@ describe("WASM bridge: mean_motion", () => {
     assert.ok(
       Math.abs(n - expected) / expected < 0.002,
       `n=${n}, expected~=${expected}`,
+    );
+  });
+});
+
+describe("WASM bridge: brachistochrone_accel", () => {
+  it("matches TypeScript for Mars-Jupiter 72h transfer", () => {
+    const d = 550_630_800; // km, closest approach
+    const t = 72 * 3600;  // seconds
+    const tsResult = brachistochroneAccel(d, t);
+    const wasmResult = wasm.brachistochrone_accel(d, t);
+    assert.ok(
+      Math.abs(tsResult - wasmResult) < 1e-12,
+      `TS=${tsResult}, WASM=${wasmResult}`,
+    );
+  });
+});
+
+describe("WASM bridge: brachistochrone_dv", () => {
+  it("matches TypeScript for Mars-Jupiter 72h transfer", () => {
+    const d = 550_630_800;
+    const t = 72 * 3600;
+    const tsResult = brachistochroneDeltaV(d, t);
+    const wasmResult = wasm.brachistochrone_dv(d, t);
+    assert.ok(
+      Math.abs(tsResult - wasmResult) < 1e-8,
+      `TS=${tsResult}, WASM=${wasmResult}`,
+    );
+  });
+
+  it("ΔV equals accel * time", () => {
+    const d = 550_630_800;
+    const t = 72 * 3600;
+    const accel = wasm.brachistochrone_accel(d, t);
+    const dv = wasm.brachistochrone_dv(d, t);
+    assert.ok(
+      Math.abs(dv - accel * t) < 1e-6,
+      `dv=${dv}, accel*t=${accel * t}`,
+    );
+  });
+});
+
+describe("WASM bridge: brachistochrone_max_distance", () => {
+  it("round-trips with brachistochrone_accel", () => {
+    const d = 550_630_800;
+    const t = 72 * 3600;
+    const accel = wasm.brachistochrone_accel(d, t);
+    const dBack = wasm.brachistochrone_max_distance(accel, t);
+    assert.ok(
+      Math.abs(dBack - d) < 1.0,
+      `d=${d}, dBack=${dBack}`,
     );
   });
 });

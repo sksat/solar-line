@@ -13,6 +13,7 @@ pub use units::{Eccentricity, Km, KmPerSec, Mu, Radians, Seconds};
 pub use vec3::Vec3;
 pub use constants::mu;
 pub use orbits::{
+    brachistochrone_accel, brachistochrone_dv, brachistochrone_max_distance,
     hohmann_transfer_dv, orbital_period, specific_angular_momentum, specific_energy, vis_viva,
     OrbitalElements, StateVector,
 };
