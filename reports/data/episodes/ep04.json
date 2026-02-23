@@ -100,6 +100,12 @@
       "speaker": "ケストレルAI（ケイ）",
       "text": "少なくとも5隻。おそらくは公安艦隊でしょうね。到着まで33時間",
       "timestamp": "13:18"
+    },
+    {
+      "id": "ep04-quote-15",
+      "speaker": "ゲスト（天王星人）",
+      "text": "480ミリシーベルト。随分と無茶をしてきたのね",
+      "timestamp": "10:17"
     }
   ],
   "transfers": [
@@ -139,6 +145,92 @@
           "sourceType": "external-reference",
           "sourceRef": "NASA Earth Fact Sheet",
           "sourceLabel": "NASA惑星データ"
+        }
+      ]
+    },
+    {
+      "id": "ep04-transfer-04",
+      "episode": 4,
+      "description": "プラズモイド遭遇: 天王星磁気圏内の通過",
+      "timestamp": "02:13",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "天王星の磁軸は自転軸から60°傾斜（Voyager 2実測値: 59.7°）",
+        "プラズモイド通過時間: 最低8分",
+        "磁気シールド残寿命: 14分（余裕: 6分）",
+        "RCSのみでは回避不能、主機使用は減速燃料を消費"
+      ],
+      "verdict": "plausible",
+      "explanation": "天王星の磁軸傾斜60°は実際のVoyager 2観測値（59.7°）に対して差0.3°（相対誤差約0.5%）と高い一致を示す。この極端な傾斜により天王星の磁気圏は「不均一に回転するフットボール」のように振る舞い、プラズモイドの発生位置と挙動が他の惑星と比べて予測困難になる——これは2019年のDiBraccio & Gershmanの研究と完全に整合する。シールド14分の寿命に対し通過8分、余裕6分（43%）という設定は、不確実性を考慮すると「余裕とは言えない」というケイの評価が妥当。実際にシールドコイル1系が脱落し、ピーク時12.6 cSv/min（126 mSv/min）の被曝を受けた描写は、プラズモイドの予測困難性を裏付けている。",
+      "parameters": {
+        "shieldLifeMin": 14,
+        "transitMin": 8,
+        "marginMin": 6,
+        "marginFraction": 0.429,
+        "peakRadiationMsvMin": 126,
+        "totalExposureMSv": 480,
+        "statedMagneticTiltDeg": 60,
+        "realMagneticTiltDeg": 59.7,
+        "tiltAccuracyPercent": 99.5
+      },
+      "evidenceQuoteIds": ["ep04-quote-06", "ep04-quote-07", "ep04-quote-08", "ep04-quote-09", "ep04-quote-15"],
+      "sources": [
+        {
+          "claim": "天王星磁軸傾斜: 60°",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 02:39",
+          "sourceLabel": "Part 4 ケイの磁気圏解説"
+        },
+        {
+          "claim": "天王星磁軸の実測値: 59.7°（自転軸からの傾斜）",
+          "sourceType": "external-reference",
+          "sourceRef": "Voyager 2 magnetometer data, Ness et al. 1986",
+          "sourceLabel": "Voyager 2観測データ"
+        },
+        {
+          "claim": "天王星プラズモイドの観測・分析",
+          "sourceType": "external-reference",
+          "sourceRef": "DiBraccio & Gershman 2019, Geophysical Research Letters",
+          "sourceLabel": "天王星プラズモイド研究"
+        },
+        {
+          "claim": "磁気シールド残寿命14分、プラズモイド通過最低8分",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 02:39",
+          "sourceLabel": "Part 4 プラズモイド遭遇"
+        }
+      ]
+    },
+    {
+      "id": "ep04-transfer-05",
+      "episode": 4,
+      "description": "地球艦隊の接近: 土星軌道方面から33時間",
+      "timestamp": "13:18",
+      "claimedDeltaV": null,
+      "computedDeltaV": null,
+      "assumptions": [
+        "少なくとも5隻の保安艦が土星軌道方面から接近",
+        "到着まで33時間（ケストレルのタイタニア到着まで9h42m → 約23h18mの猶予）",
+        "施設への突入ではなく破壊が目的"
+      ],
+      "verdict": "plausible",
+      "explanation": "地球艦隊が33時間でタイタニアに到達するには、残距離に応じて841〜12,112 km/sの平均速度が必要。残距離1億kmなら841 km/s（光速の0.28%）、土星-天王星間最短距離なら12,112 km/s（光速の4%）。作中世界では高推力ブラキストクローネ航行が確立しているため、大型保安艦がこの速度域に達することは設定上不自然ではない。ケストレルのタイタニア到着（9h42m後）から艦隊到着まで約23時間の猶予があり、応急修理・補給・出発の時間として妥当な制約設定。",
+      "parameters": {
+        "fleetETAHours": 33,
+        "fleetShipCount": 5,
+        "arrivalTimeHours": 9.7,
+        "availableTimeHours": 23.3,
+        "avgSpeedAt100MillionKm": 842,
+        "avgSpeedAtSaturnUranusKms": 12112
+      },
+      "evidenceQuoteIds": ["ep04-quote-14"],
+      "sources": [
+        {
+          "claim": "5隻以上、33時間で到着",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45851569 13:18",
+          "sourceLabel": "Part 4 艦隊検知"
         }
       ]
     },
@@ -226,92 +318,6 @@
           "sourceType": "worldbuilding-doc",
           "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
           "sourceLabel": "ソーラーライン設定資料"
-        }
-      ]
-    },
-    {
-      "id": "ep04-transfer-04",
-      "episode": 4,
-      "description": "プラズモイド遭遇: 天王星磁気圏内の通過",
-      "timestamp": "02:13",
-      "claimedDeltaV": null,
-      "computedDeltaV": null,
-      "assumptions": [
-        "天王星の磁軸は自転軸から60°傾斜（Voyager 2実測値: 59.7°）",
-        "プラズモイド通過時間: 最低8分",
-        "磁気シールド残寿命: 14分（余裕: 6分）",
-        "RCSのみでは回避不能、主機使用は減速燃料を消費"
-      ],
-      "verdict": "plausible",
-      "explanation": "天王星の磁軸傾斜60°は実際のVoyager 2観測値（59.7°）に対して差0.3°（相対誤差約0.5%）と高い一致を示す。この極端な傾斜により天王星の磁気圏は「不均一に回転するフットボール」のように振る舞い、プラズモイドの発生位置と挙動が他の惑星と比べて予測困難になる——これは2019年のDiBraccio & Gershmanの研究と完全に整合する。シールド14分の寿命に対し通過8分、余裕6分（43%）という設定は、不確実性を考慮すると「余裕とは言えない」というケイの評価が妥当。実際にシールドコイル1系が脱落し、ピーク時12.6 cSv/min（126 mSv/min）の被曝を受けた描写は、プラズモイドの予測困難性を裏付けている。",
-      "parameters": {
-        "shieldLifeMin": 14,
-        "transitMin": 8,
-        "marginMin": 6,
-        "marginFraction": 0.429,
-        "peakRadiationMsvMin": 126,
-        "totalExposureMSv": 480,
-        "statedMagneticTiltDeg": 60,
-        "realMagneticTiltDeg": 59.7,
-        "tiltAccuracyPercent": 99.5
-      },
-      "evidenceQuoteIds": ["ep04-quote-06", "ep04-quote-07", "ep04-quote-08", "ep04-quote-09"],
-      "sources": [
-        {
-          "claim": "天王星磁軸傾斜: 60°",
-          "sourceType": "episode-dialogue",
-          "sourceRef": "sm45851569 02:39",
-          "sourceLabel": "Part 4 ケイの磁気圏解説"
-        },
-        {
-          "claim": "天王星磁軸の実測値: 59.7°（自転軸からの傾斜）",
-          "sourceType": "external-reference",
-          "sourceRef": "Voyager 2 magnetometer data, Ness et al. 1986",
-          "sourceLabel": "Voyager 2観測データ"
-        },
-        {
-          "claim": "天王星プラズモイドの観測・分析",
-          "sourceType": "external-reference",
-          "sourceRef": "DiBraccio & Gershman 2019, Geophysical Research Letters",
-          "sourceLabel": "天王星プラズモイド研究"
-        },
-        {
-          "claim": "磁気シールド残寿命14分、プラズモイド通過最低8分",
-          "sourceType": "episode-dialogue",
-          "sourceRef": "sm45851569 02:39",
-          "sourceLabel": "Part 4 プラズモイド遭遇"
-        }
-      ]
-    },
-    {
-      "id": "ep04-transfer-05",
-      "episode": 4,
-      "description": "地球艦隊の接近: 土星軌道方面から33時間",
-      "timestamp": "13:18",
-      "claimedDeltaV": null,
-      "computedDeltaV": null,
-      "assumptions": [
-        "少なくとも5隻の保安艦が土星軌道方面から接近",
-        "到着まで33時間（ケストレルのタイタニア到着まで9h42m → 約23h18mの猶予）",
-        "施設への突入ではなく破壊が目的"
-      ],
-      "verdict": "plausible",
-      "explanation": "地球艦隊が33時間でタイタニアに到達するには、残距離に応じて841〜12,112 km/sの平均速度が必要。残距離1億kmなら841 km/s（光速の0.28%）、土星-天王星間最短距離なら12,112 km/s（光速の4%）。作中世界では高推力ブラキストクローネ航行が確立しているため、大型保安艦がこの速度域に達することは設定上不自然ではない。ケストレルのタイタニア到着（9h42m後）から艦隊到着まで約23時間の猶予があり、応急修理・補給・出発の時間として妥当な制約設定。",
-      "parameters": {
-        "fleetETAHours": 33,
-        "fleetShipCount": 5,
-        "arrivalTimeHours": 9.7,
-        "availableTimeHours": 23.3,
-        "avgSpeedAt100MillionKm": 842,
-        "avgSpeedAtSaturnUranusKms": 12112
-      },
-      "evidenceQuoteIds": ["ep04-quote-14"],
-      "sources": [
-        {
-          "claim": "5隻以上、33時間で到着",
-          "sourceType": "episode-dialogue",
-          "sourceRef": "sm45851569 13:18",
-          "sourceLabel": "Part 4 艦隊検知"
         }
       ]
     }

@@ -1,7 +1,7 @@
 {
   "episode": 5,
   "title": "SOLAR LINE Part 5 END — 天王星→地球 ソーラーライン完結",
-  "summary": "※暫定版: 字幕データ未取得のため、第4話からの継続パラメータと軌道力学計算に基づく予測分析。Episode 5は2026年2月24日にニコニコ動画に投稿（sm45987761）。字幕データ取得後に更新予定。\n\nケストレル号の太陽系横断の最終行程を分析する。天王星タイタニアから地球への帰還は、損傷状態（推力65%、残り点火回数2-3回）での brachistochrone 遷移となる。地球への接近速度と捕捉ΔVが物語上の最大の課題である。",
+  "summary": "※暫定版: 字幕データ未取得のため第4話からの継続パラメータと軌道力学計算に基づく予測分析。ケストレル号の太陽系横断の最終行程——天王星タイタニアから地球への帰還を分析する。損傷状態（推力65%、残り点火回数2-3回）での brachistochrone 遷移と地球捕捉ΔVが物語上の最大の課題。",
   "videoCards": [
     {
       "provider": "niconico",
@@ -449,22 +449,20 @@
           "fromOrbitId": "uranus-orbit",
           "toOrbitId": "earth-orbit",
           "color": "#888888",
-          "style": "hohmann",
-          "startTime": 0,
-          "endTime": 8
+          "style": "hohmann"
         },
         {
-          "label": "Brachistochrone（8-105日）",
+          "label": "Brachistochrone（8.3日 @300t）",
           "fromOrbitId": "uranus-orbit",
           "toOrbitId": "earth-orbit",
           "color": "#ff4444",
           "style": "brachistochrone",
           "startTime": 0,
-          "endTime": 5
+          "endTime": 717120
         }
       ],
       "animation": {
-        "durationSeconds": 10
+        "durationSeconds": 717120
       }
     },
     {
@@ -518,7 +516,7 @@
         }
       ],
       "animation": {
-        "durationSeconds": 8
+        "durationSeconds": 86400
       }
     }
   ]
