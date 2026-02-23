@@ -284,6 +284,12 @@ describe("renderEpisode", () => {
     const html = renderEpisode(sampleEpisodeReport);
     assert.ok(html.includes("../index.html"));
   });
+
+  it("includes OGP description from episode summary", () => {
+    const html = renderEpisode(sampleEpisodeReport);
+    assert.ok(html.includes('<meta property="og:description"'));
+    assert.ok(html.includes("The crew departs Earth orbit."));
+  });
 });
 
 // --- renderCalculator ---
@@ -1446,6 +1452,34 @@ describe("layoutHtml with summaryPages", () => {
     // Only standard nav links
     assert.ok(html.includes("トップ"));
     assert.ok(html.includes("セッションログ"));
+  });
+});
+
+// --- OGP meta tags ---
+
+describe("layoutHtml OGP meta tags", () => {
+  it("includes OGP meta tags with default description", () => {
+    const html = layoutHtml("テスト", "<p>x</p>");
+    assert.ok(html.includes('<meta property="og:title"'));
+    assert.ok(html.includes('<meta property="og:description"'));
+    assert.ok(html.includes('<meta property="og:type" content="article">'));
+    assert.ok(html.includes('<meta property="og:site_name" content="SOLAR LINE 考察">'));
+    assert.ok(html.includes('<meta name="description"'));
+  });
+
+  it("uses default description when none provided", () => {
+    const html = layoutHtml("テスト", "<p>x</p>");
+    assert.ok(html.includes("SFアニメ「SOLAR LINE」の軌道遷移をΔV計算で検証する考察プロジェクト"));
+  });
+
+  it("uses custom description when provided", () => {
+    const html = layoutHtml("テスト", "<p>x</p>", ".", undefined, "カスタム説明文");
+    assert.ok(html.includes('content="カスタム説明文"'));
+  });
+
+  it("escapes description HTML", () => {
+    const html = layoutHtml("テスト", "<p>x</p>", ".", undefined, 'A "quoted" <desc>');
+    assert.ok(html.includes("A &quot;quoted&quot; &lt;desc&gt;"));
   });
 });
 

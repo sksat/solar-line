@@ -305,16 +305,25 @@ footer {
 `;
 
 /** Wrap content in the common HTML layout */
-export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"]): string {
+export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"], description?: string): string {
   const summaryNav = summaryPages && summaryPages.length > 0
     ? summaryPages.map(p => ` <a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`).join("")
     : "";
+  const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考察`;
+  const ogDescription = description
+    ? escapeHtml(description)
+    : "SFアニメ「SOLAR LINE」の軌道遷移をΔV計算で検証する考察プロジェクト";
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(title)} — SOLAR LINE 考察</title>
+<title>${fullTitle}</title>
+<meta property="og:title" content="${fullTitle}">
+<meta property="og:description" content="${ogDescription}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SOLAR LINE 考察">
+<meta name="description" content="${ogDescription}">
 <style>${REPORT_CSS}</style>
 </head>
 <body>
@@ -398,7 +407,7 @@ ${summaryList}
 <p><a href="logs/index.html">すべてのセッションログを見る →</a></p>
 <p><em>生成日時: ${escapeHtml(manifest.generatedAt)}</em></p>`;
 
-  return layoutHtml("トップ", content, ".", manifest.summaryPages);
+  return layoutHtml("トップ", content, ".", manifest.summaryPages, "SFアニメ「SOLAR LINE」の全5話に描かれた軌道遷移をΔV計算・加速度分析で検証する考察プロジェクト");
 }
 
 /** Map verdict to Japanese label */
@@ -1038,7 +1047,8 @@ ${calculator}`;
   const hasAnimatedDiagrams = report.diagrams?.some(d => d.animation) ?? false;
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
 
-  return layoutHtml(`第${report.episode}話`, content + episodeNav + animScript, "..", summaryPages);
+  const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
+  return layoutHtml(`第${report.episode}話`, content + episodeNav + animScript, "..", summaryPages, desc);
 }
 
 /** Render the session logs index page */
@@ -1118,5 +1128,6 @@ ${tableHtml}
 ${markdownToHtml(report.summary)}
 ${sections}`;
 
-  return layoutHtml(report.title, content + animScript, "..", summaryPages);
+  const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
+  return layoutHtml(report.title, content + animScript, "..", summaryPages, desc);
 }
