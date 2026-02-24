@@ -28,7 +28,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 ## Technology Stack
 
-- **Rust**: Orbital mechanics analysis + DAG graph analysis. Compile to WASM for browser-reproducible reports and interactive analysis. `no_std`-compatible crates (e.g., nalgebra) are allowed. Use oracle tests (comparing against trusted implementations) to verify calculation accuracy while keeping the WASM build simple.
+- **Rust**: Orbital mechanics analysis + DAG graph analysis. Compile to WASM for browser-reproducible reports and interactive analysis. `no_std`-compatible crates (e.g., nalgebra) are allowed. Use oracle tests (comparing against trusted implementations) to verify calculation accuracy while keeping the WASM build simple. **Core logic belongs in `solar-line-core`; `solar-line-wasm` is strictly a binding layer** (type conversion, error handling, `#[wasm_bindgen]` annotations only).
 - **TypeScript**: Scripting, data collection, report generation.
 - **uPlot**: Interactive time-series charts (thrust profiles, radiation dose, etc.). Lightweight Canvas-based library.
 - **DuckDB-WASM**: Browser-side data management. SQL queries over JSON data, integration with uPlot for query-driven visualization.
@@ -48,6 +48,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
   - Phase 1 (Extraction): Extract raw dialogue lines with timestamps from subtitles → `epXX_lines.json` (automated)
   - Phase 2 (Attribution): Assign speakers using context → `epXX_dialogue.json` (context-assisted, NOT fully automated)
   - Keeping these in separate files means re-running extraction doesn't lose attribution work
+- **Dialogue as single source of truth**: Dialogue data lives in transcription data files (epXX_dialogue.json). Reports reference dialogue by ID, not by embedding text. Build-time resolution fills in text/timestamps. Static validation checks for broken references before build.
 - Timestamp accuracy matters — cross-reference multiple subtitle tracks where available
 - Properly cite all referenced material
 
@@ -96,12 +97,15 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Burn position alignment**: Ensure acceleration/deceleration points in orbital diagrams match the physical animation position — brachistochrone midpoint flip, Hohmann departure/arrival burns, flyby periapsis burns.
 - **Diagram descriptions**: Orbital diagrams should have not just a title but also a description explaining what analysis the diagram supports, what to look for, and what conclusions can be drawn from it.
 - **Error range visualization**: Visualize uncertainty/error ranges in time-series charts (error bands) and orbital diagrams (uncertainty ellipses, trajectory variation overlays). Distinguish between measurement error, parameter uncertainty, and model approximation.
+- **G-tolerance as SF premise**: When analyzing mass discrepancies, consider the hypothesis that SF-level G-tolerance countermeasures (inertial dampers, etc.) exist. If allowable acceleration is higher than modern human limits, the mass/thrust relationship changes — explore this parameter space.
+- **Cross-validation with trusted simulators**: Validate complex orbital transfers against trusted simulators like Orekit. Compare self-implemented results with established tools and document discrepancies.
 
 ## Report Structure
 
 - **Ship vs infrastructure separation**: Other spacecraft analysis (保安艦隊, 大型船, etc.) and solar system infrastructure analysis (stations, navigation networks, governance) should be separate reports. Ship analysis includes orbital transfer calculations.
 - **Accuracy vs provenance**: Do not conflate "scientific accuracy" (physics law compliance) with "parameter provenance" (source reliability). Real-world observational values matching story parameters is a provenance/citation question, not an accuracy question.
 - **Character naming**: Never fabricate character names not explicitly given in the source material. Use role descriptions for unnamed characters (e.g., "船乗り" not "ライ").
+- **"About this analysis" section**: Group meta-information (session logs, AI cost analysis, ADR, technical meta-commentary) under a dedicated 「この考証について」 navigation category in the site header.
 
 ## Report Review
 
@@ -131,6 +135,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Skill-ize workflows**: Define commonly repeated workflows (subtitle extraction, episode analysis, report review) as Claude Code Skills following Anthropic best practices.
 - **Session log display**: Separate agent-loop stdout summary from conversation log display. In conversation logs, label the assistant as "Assistant (model)". Support sub-agent display where possible. Link each log to its associated commit(s) with GitHub URLs.
 - **GitHub repo link**: The published GitHub Pages site must include a visible link to the source repository.
+- **Interactive component testing**: Each interactive library (uPlot, orbital animation, DAG viewer) should have standalone example HTML pages. Run Playwright E2E tests against these examples to enable unit-test-like verification of interactive components.
+- **Reproducible numerical analysis**: All numerical analyses must be scripted and reproducible. Include reproduction commands in report components. Provide a batch `npm run recalculate` command to re-derive all parameters from scripts in one pass.
 
 ## Context Efficiency
 
