@@ -31,6 +31,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Rust**: Orbital mechanics analysis. Compile to WASM for browser-reproducible reports.
 - **TypeScript**: Scripting, data collection, report generation.
 - **CI**: GitHub Actions. Check CI status regularly to catch regressions.
+- **Pre-commit checks**: Before committing, run quick CI checks locally when relevant (cargo fmt --check, cargo clippy, npm run typecheck). For changes within a specific scope, verify at least the affected checks pass.
 - **Output**: GitHub Pages with session logs and interactive orbital transfer reports.
 
 ## Data Handling
@@ -40,7 +41,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - YouTube subtitle data is collected via scripts; ニコニコ動画 comments are NOT subtitles
 - **YouTube VTT (auto-generated subtitles) accuracy is limited** — especially for VOICEROID/software-talk content. Treat VTT as one data source among many; build OCR and speech-to-text infrastructure as additional subtitle sources
 - Dialogue attribution (who said what) requires contextual understanding of characters and scene changes — do not fully automate this; use Claude/Codex to verify speaker identity
-- **Primary dialogue partner**: きりたん's main conversation partner is ケストレルAI（ケイ）— most dialogue is between these two
+- **Primary dialogue partner**: きりたん's main conversation partner is ケイ（ケストレル号の船載AI、物語上は人間として描写）— most dialogue is between these two
 - **Two-phase dialogue pipeline:**
   - Phase 1 (Extraction): Extract raw dialogue lines with timestamps from subtitles → `epXX_lines.json` (automated)
   - Phase 2 (Attribution): Assign speakers using context → `epXX_dialogue.json` (context-assisted, NOT fully automated)
