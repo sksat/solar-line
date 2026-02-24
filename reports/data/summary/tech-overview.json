@@ -8,6 +8,10 @@
       "markdown": "SOLAR LINE 考察は、SFアニメ「SOLAR LINE」に描かれた軌道遷移を宇宙力学的に検証するプロジェクトです。\n\n全5話に登場する24の軌道遷移について、実際の物理法則に基づくΔV計算・加速度分析を行い、描写の妥当性を考察しています。単に「正しい/間違い」を判定するだけでなく、**どのような条件なら描写が成立するか**をパラメータ空間の探索を通じて明らかにすることを目指しています。\n\n本ページでは、この考察を支える技術的な仕組みを解説します。"
     },
     {
+      "heading": "現状サマリー",
+      "markdown": "### 進捗\n\n| 指標 | 値 |\n|------|------|\n| 完了タスク | 80+ / 87 |\n| 分析済み軌道遷移 | 24 / 24（全話完了） |\n| テスト数 | 1,175（TS 998 + Rust 177、0 failures） |\n| コミット数 | 100+ |\n| ADR（設計意思決定記録） | 14件 |\n| DAGノード | 58（267エッジ） |\n\n### 判定結果\n\n| 判定 | 件数 |\n|------|------|\n| plausible（妥当） | 8 |\n| conditional（条件付き妥当） | 11 |\n| reference（参考） | 5 |\n| implausible（非現実的） | 0 |\n\n24件の軌道遷移で **非現実的な判定はゼロ**。ただし[マージン連鎖分析](/summary/cross-episode.html)によると、条件付き判定の連鎖を考慮した場合の全行程成功確率は約30-46%。\n\n### 今後のタスク\n\n- **姿勢制御精度の分析**: 推力ベクトル指向精度、フリップ機動ダイナミクス\n- **他の宇宙船・係留地の分析**: ケストレル号以外の船舶・インフラの軌道力学\n- **適応積分手法**: シンプレクティック積分、多体問題への拡張\n- **話者分離**: Speaker Diarization によるPhase 2 精度向上\n- **軌道パターンのアニメーション**: 複数パターン比較図\n\n### 設計意思決定（ADR）\n\n14件の[Architecture Decision Records](https://github.com/sksat/solar-line/tree/main/adr)で、プロジェクトの設計ポリシーを文書化しています。"
+    },
+    {
       "heading": "アーキテクチャ全体像",
       "markdown": "システムは3層構成です:\n\n1. **Rust 軌道力学コア** (`solar-line-core`): 軌道計算の正確性を保証\n2. **WASM ブリッジ** (`solar-line-wasm`): ブラウザでも同じ計算を再現\n3. **TypeScript レポート生成** (`ts/`): JSON分析データ → 静的HTMLサイト\n\nこの構成により、レポート上のインタラクティブ計算機で読者が自らパラメータを変更して検証でき、計算結果がRustとTypeScript間で一貫していることが保証されます。"
     },
@@ -29,11 +33,11 @@
     },
     {
       "heading": "テスト戦略",
-      "markdown": "TDD（テスト駆動開発）を原則とし、1138のテストで品質を保証しています。\n\n### テストの内訳\n\n- **Rust ユニットテスト** (177件): 軌道計算の精度検証。エネルギー保存則、角運動量保存、既知解との比較\n- **TypeScript ユニットテスト** (961件): テンプレート出力、データバリデーション（159件）、字幕パーサー、WASM結果との整合性\n- **Playwright E2E テスト** (58件): 実際のブラウザでページレンダリング検証。テーブルの正常表示、JSエラー検出、内部リンク整合性\n\n### CI パイプライン\n\nGitHub Actions で4つの並列ジョブを実行:\n1. **Rust lint + test**: `cargo fmt --check` + `cargo clippy -D warnings` + `cargo test`\n2. **TypeScript typecheck + test**: `tsc --noEmit` + `npm test`\n3. **Playwright E2E**: サイトビルド + ブラウザテスト\n4. **WASM browser build**: `wasm-pack build --target web` の成功を確認"
+      "markdown": "TDD（テスト駆動開発）を原則とし、1,175のテストで品質を保証しています。\n\n### テストの内訳\n\n- **Rust ユニットテスト** (177件): 軌道計算の精度検証。エネルギー保存則、角運動量保存、既知解との比較\n- **TypeScript ユニットテスト** (998件): テンプレート出力、データバリデーション（178件）、DAG操作（23件）、字幕パーサー、WASM結果との整合性\n- **Playwright E2E テスト** (58件): 実際のブラウザでページレンダリング検証。テーブルの正常表示、JSエラー検出、内部リンク整合性\n\n### CI パイプライン\n\nGitHub Actions で4つの並列ジョブを実行:\n1. **Rust lint + test**: `cargo fmt --check` + `cargo clippy -D warnings` + `cargo test`\n2. **TypeScript typecheck + test**: `tsc --noEmit` + `npm test`\n3. **Playwright E2E**: サイトビルド + ブラウザテスト\n4. **WASM browser build**: `wasm-pack build --target web` の成功を確認"
     },
     {
       "heading": "Claude Code エージェントループ",
-      "markdown": "本プロジェクトは[Anthropicが提唱するパターン](https://www.anthropic.com/engineering/building-c-compiler)に基づき、Claude Codeエージェントが自律的に開発しています。\n\n### ワークフロー\n\n1. **タスク取得**: `current_tasks/` から未着手のタスクを選択\n2. **実装**: コード変更、テスト作成、データ更新\n3. **検証**: CI相当のチェックをローカルで実行\n4. **コミット + プッシュ**: 次のセッションへのハンドオフノートとして機能するコミットメッセージ\n5. **セッションログ**: 会話ログを抽出しGitHub Pagesで公開\n\n### 品質管理\n\n- 設計判断時に **Codex（nice-friend skill）** をセカンドオピニオンとして活用\n- **レポートレビュースキル** で可読性・正確性を定期的に検証\n- **コスト分析** でトークン使用量を最適化（キャッシュ効率97.3%）\n\n### タスク管理\n\n73のタスクファイル（`current_tasks/`）でプロジェクトの進行を追跡。各タスクにステータス（TODO/IN_PROGRESS/DONE）と完了内容を記録し、セッション間の連続性を確保しています。"
+      "markdown": "本プロジェクトは[Anthropicが提唱するパターン](https://www.anthropic.com/engineering/building-c-compiler)に基づき、Claude Codeエージェントが自律的に開発しています。\n\n### ワークフロー\n\n1. **タスク取得**: `current_tasks/` から未着手のタスクを選択\n2. **実装**: コード変更、テスト作成、データ更新\n3. **検証**: CI相当のチェックをローカルで実行\n4. **コミット + プッシュ**: 次のセッションへのハンドオフノートとして機能するコミットメッセージ\n5. **セッションログ**: 会話ログを抽出しGitHub Pagesで公開\n\n### 品質管理\n\n- 設計判断時に **Codex（nice-friend skill）** をセカンドオピニオンとして活用\n- **レポートレビュースキル** で可読性・正確性を定期的に検証\n- **コスト分析** でトークン使用量を最適化（キャッシュ効率97.3%）\n\n### タスク管理\n\n87のタスクファイル（`current_tasks/`）でプロジェクトの進行を追跡。各タスクにステータス（TODO/IN_PROGRESS/DONE）と完了内容を記録し、セッション間の連続性を確保。さらに DAG（有向非巡回グラフ）で分析間の依存関係を管理し、前提変更時の影響範囲を自動追跡しています。"
     },
     {
       "heading": "分析依存グラフ（DAG）",

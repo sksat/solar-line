@@ -1,6 +1,6 @@
 # Task 078: 技術解説ページの構造改善
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 
