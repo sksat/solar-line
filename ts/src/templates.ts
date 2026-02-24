@@ -320,7 +320,10 @@ pre code.hljs { background: transparent; padding: 0; }
 .dag-filter-btn:hover { background: var(--border); color: var(--text-primary); }
 .dag-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .dag-node-count { margin-left: auto; font-size: 0.75em; color: var(--text-secondary); }
-.dag-snapshot-select { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.4rem; font-size: 0.75em; color: var(--text-secondary); cursor: pointer; }
+.dag-slider-wrap { display: flex; align-items: center; gap: 0.4rem; margin-left: 0.3rem; border-left: 1px solid var(--border); padding-left: 0.6rem; }
+.dag-slider-label { font-size: 0.8em; color: var(--text-secondary); white-space: nowrap; }
+.dag-temporal-slider { width: 140px; height: 4px; cursor: pointer; accent-color: var(--accent, #58a6ff); }
+.dag-slider-info { font-size: 0.7em; color: var(--text-secondary); white-space: nowrap; min-width: 6em; }
 @keyframes dagPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 0.15; } }
 .bar-chart-container { margin: 1rem 0; overflow-x: auto; }
 .bar-chart-container figure { margin: 0; }

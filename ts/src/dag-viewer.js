@@ -242,52 +242,106 @@
       filterBar.appendChild(btn);
     }
 
-    // Snapshot selector (historical view)
+    // Snapshot temporal slider (historical view)
     if (snapshotManifest.length > 0) {
-      const sep = document.createElement("span");
-      sep.style.cssText = "border-left:1px solid var(--border,#30363d);height:1.2em;margin:0 0.3rem;";
-      filterBar.appendChild(sep);
+      // Sort manifest chronologically (oldest first)
+      const sortedSnapshots = [...snapshotManifest].sort(
+        (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+      );
+
+      const sliderWrap = document.createElement("div");
+      sliderWrap.className = "dag-slider-wrap";
 
       const snapLabel = document.createElement("span");
       snapLabel.textContent = "履歴:";
-      snapLabel.style.cssText = "font-size:0.8em;color:var(--text-secondary,#8b949e);";
-      filterBar.appendChild(snapLabel);
+      snapLabel.className = "dag-slider-label";
+      sliderWrap.appendChild(snapLabel);
 
-      const snapSelect = document.createElement("select");
-      snapSelect.className = "dag-snapshot-select";
-      const currentOpt = document.createElement("option");
-      currentOpt.value = "current";
-      currentOpt.textContent = "最新";
-      snapSelect.appendChild(currentOpt);
-      for (let i = snapshotManifest.length - 1; i >= 0; i--) {
-        const snap = snapshotManifest[i];
-        const opt = document.createElement("option");
-        opt.value = snap.file;
+      // Slider: 0..N where N = sortedSnapshots.length (last position = "current/最新")
+      const slider = document.createElement("input");
+      slider.type = "range";
+      slider.className = "dag-temporal-slider";
+      slider.min = "0";
+      slider.max = String(sortedSnapshots.length);
+      slider.value = String(sortedSnapshots.length); // Start at "current"
+      slider.setAttribute("aria-label", "DAG 履歴スライダー");
+      sliderWrap.appendChild(slider);
+
+      // Info label showing selected snapshot details
+      const infoLabel = document.createElement("span");
+      infoLabel.className = "dag-slider-info";
+      infoLabel.textContent = "最新";
+      sliderWrap.appendChild(infoLabel);
+
+      function formatSnapshotLabel(snap) {
         const d = new Date(snap.timestamp);
-        opt.textContent = `${d.toLocaleDateString("ja-JP")} ${d.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })} (${snap.nodes}N/${snap.edges}E)`;
-        snapSelect.appendChild(opt);
+        return `${d.toLocaleDateString("ja-JP")} ${d.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })} (${snap.nodes}N/${snap.edges}E)`;
       }
-      snapSelect.addEventListener("change", () => {
-        if (snapSelect.value === "current") {
-          dagState = null;
+
+      function updateInfoLabel(idx) {
+        const i = parseInt(idx, 10);
+        if (i >= sortedSnapshots.length) {
+          infoLabel.textContent = "最新";
+        } else {
+          infoLabel.textContent = formatSnapshotLabel(sortedSnapshots[i]);
+        }
+      }
+
+      // Cache fetched snapshots to avoid re-fetching on rapid scrubbing
+      const snapshotCache = {};
+      let sliderDebounce = null;
+
+      function loadSnapshot(idx) {
+        const i = parseInt(idx, 10);
+        if (i >= sortedSnapshots.length) {
+          // Load current state
+          if (snapshotCache["current"]) {
+            dagState = snapshotCache["current"];
+            analysisCache = runAnalysis(dagState);
+            renderFiltered(dagState, currentFilter);
+            return;
+          }
           fetch("../dag-state.json")
             .then((r) => r.json())
             .then((state) => {
+              snapshotCache["current"] = state;
               dagState = state;
               analysisCache = runAnalysis(state);
               renderFiltered(state, currentFilter);
             });
         } else {
-          fetch("../dag-snapshots/" + snapSelect.value)
+          const snap = sortedSnapshots[i];
+          if (snapshotCache[snap.file]) {
+            dagState = snapshotCache[snap.file];
+            analysisCache = runAnalysis(dagState);
+            renderFiltered(dagState, currentFilter);
+            return;
+          }
+          fetch("../dag-snapshots/" + snap.file)
             .then((r) => r.json())
             .then((state) => {
+              snapshotCache[snap.file] = state;
               dagState = state;
               analysisCache = runAnalysis(state);
               renderFiltered(state, currentFilter);
             });
         }
+      }
+
+      // Update label immediately on input; debounce fetch
+      slider.addEventListener("input", () => {
+        updateInfoLabel(slider.value);
+        if (sliderDebounce) clearTimeout(sliderDebounce);
+        sliderDebounce = setTimeout(() => loadSnapshot(slider.value), 150);
       });
-      filterBar.appendChild(snapSelect);
+
+      // Also load on change (mouseup / keyboard) for immediate response
+      slider.addEventListener("change", () => {
+        if (sliderDebounce) clearTimeout(sliderDebounce);
+        loadSnapshot(slider.value);
+      });
+
+      filterBar.appendChild(sliderWrap);
     }
 
     // Node count + engine badge

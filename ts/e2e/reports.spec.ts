@@ -248,3 +248,62 @@ test("body has dark theme background", async ({ page }) => {
   // --bg: #0d1117 → rgb(13, 17, 23)
   expect(bg).toBe("rgb(13, 17, 23)");
 });
+
+// --- DAG Viewer: Temporal Slider ---
+
+test.describe("DAG Viewer Temporal Slider", () => {
+  test("tech-overview page has temporal slider (not dropdown)", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    // Wait for DAG viewer to initialize
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    // Slider should exist
+    const slider = page.locator(".dag-temporal-slider");
+    await expect(slider).toBeVisible();
+
+    // Old dropdown should NOT exist
+    const dropdown = page.locator(".dag-snapshot-select");
+    expect(await dropdown.count()).toBe(0);
+  });
+
+  test("slider info label shows 最新 at max position", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    const infoLabel = page.locator(".dag-slider-info");
+    await expect(infoLabel).toContainText("最新");
+  });
+
+  test("slider updates info label when moved", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    const slider = page.locator(".dag-temporal-slider");
+    const infoLabel = page.locator(".dag-slider-info");
+
+    // Move slider to first position (oldest snapshot)
+    await slider.fill("0");
+    await slider.dispatchEvent("input");
+    await page.waitForTimeout(200);
+
+    // Info label should no longer say 最新
+    const text = await infoLabel.textContent();
+    expect(text).not.toBe("最新");
+    // Should contain date-like text (e.g., "2026/2/24")
+    expect(text).toMatch(/\d/);
+  });
+
+  test("slider has correct range matching snapshot count", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    const slider = page.locator(".dag-temporal-slider");
+    const max = await slider.getAttribute("max");
+    // max should be the number of snapshots (current position = max)
+    expect(Number(max)).toBeGreaterThanOrEqual(1);
+  });
+});
