@@ -311,7 +311,24 @@
           "burnMarkers": [
             {
               "angle": 0.52,
-              "label": "加速反転"
+              "label": "加速",
+              "startTime": 0,
+              "endTime": 129600,
+              "type": "acceleration"
+            },
+            {
+              "angle": 0.52,
+              "label": "加速反転",
+              "startTime": 129600,
+              "endTime": 129600,
+              "type": "midcourse"
+            },
+            {
+              "angle": 0.52,
+              "label": "減速",
+              "startTime": 129600,
+              "endTime": 259200,
+              "type": "deceleration"
             }
           ],
           "startTime": 0,

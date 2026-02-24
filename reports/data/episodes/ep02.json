@@ -352,7 +352,10 @@
           "burnMarkers": [
             {
               "angle": 0.3,
-              "label": "v = 10.3 km/s"
+              "label": "脱出噴射 10.3 km/s",
+              "startTime": 0,
+              "endTime": 3600,
+              "type": "acceleration"
             }
           ],
           "startTime": 0,
@@ -419,7 +422,10 @@
           "burnMarkers": [
             {
               "angle": 1.31,
-              "label": "捕獲 ΔV ≥ 0.61 km/s"
+              "label": "捕獲 ΔV ≥ 0.61 km/s",
+              "startTime": 39258000,
+              "endTime": 39312000,
+              "type": "capture"
             }
           ],
           "startTime": 0,

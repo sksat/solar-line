@@ -126,12 +126,21 @@ export interface OrbitDefinition {
   meanMotion?: number;
 }
 
+/** Burn type for visual styling in animated diagrams */
+export type BurnType = "acceleration" | "deceleration" | "midcourse" | "capture";
+
 /** A burn marker on a transfer arc */
 export interface BurnMarker {
-  /** Angle in radians where the burn occurs */
+  /** Angle in radians where the burn occurs (static position) */
   angle: number;
   /** Label for the burn, e.g. "ΔV₁ = 2.3 km/s" */
   label: string;
+  /** Burn start time in seconds from the parent transfer's startTime. For animated diagrams. */
+  startTime?: number;
+  /** Burn end time in seconds from the parent transfer's startTime. For animated diagrams. */
+  endTime?: number;
+  /** Burn type — determines plume color and visual style in animation */
+  type?: BurnType;
 }
 
 /** A transfer arc connecting two orbits */

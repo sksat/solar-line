@@ -554,11 +554,17 @@
           "burnMarkers": [
             {
               "angle": 3.14,
-              "label": "出発ΔV"
+              "label": "加速（65%推力）",
+              "startTime": 0,
+              "endTime": 4529640,
+              "type": "acceleration"
             },
             {
               "angle": 0,
-              "label": "到着ΔV"
+              "label": "減速（65%推力）",
+              "startTime": 4529640,
+              "endTime": 9059281,
+              "type": "deceleration"
             }
           ],
           "startTime": 0,
@@ -598,6 +604,15 @@
           "toOrbitId": "uranus-surface",
           "color": "#ff6600",
           "style": "hyperbolic",
+          "burnMarkers": [
+            {
+              "angle": 1.2,
+              "label": "脱出噴射 1.51 km/s",
+              "startTime": 0,
+              "endTime": 3600,
+              "type": "acceleration"
+            }
+          ],
           "startTime": 0,
           "endTime": 36000
         }

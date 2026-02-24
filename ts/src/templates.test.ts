@@ -1153,6 +1153,94 @@ describe("renderOrbitalDiagram with animation", () => {
   });
 });
 
+describe("renderOrbitalDiagram burn visualization", () => {
+  const diagramWithBurns: OrbitalDiagram = {
+    ...animatedDiagram,
+    transfers: [
+      {
+        label: "Brachistochrone遷移",
+        fromOrbitId: "mars",
+        toOrbitId: "jupiter",
+        color: "#3fb950",
+        style: "brachistochrone",
+        startTime: 0,
+        endTime: 259200,
+        burnMarkers: [
+          { angle: 0.5, label: "加速", startTime: 0, endTime: 129600, type: "acceleration" },
+          { angle: 0.5, label: "減速", startTime: 129600, endTime: 259200, type: "deceleration" },
+        ],
+      },
+    ],
+  };
+
+  it("animation JSON includes burns array in transfer data", () => {
+    const html = renderOrbitalDiagram(diagramWithBurns);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    assert.ok(data.transfers[0].burns);
+    assert.equal(data.transfers[0].burns.length, 2);
+  });
+
+  it("burn data includes startTime, endTime, type, and label", () => {
+    const html = renderOrbitalDiagram(diagramWithBurns);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    const burn = data.transfers[0].burns[0];
+    assert.equal(burn.startTime, 0);
+    assert.equal(burn.endTime, 129600);
+    assert.equal(burn.type, "acceleration");
+    assert.equal(burn.label, "加速");
+  });
+
+  it("animation JSON includes transfer style", () => {
+    const html = renderOrbitalDiagram(diagramWithBurns);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    assert.equal(data.transfers[0].style, "brachistochrone");
+  });
+
+  it("burns without startTime/endTime are excluded from animation JSON", () => {
+    const diagram: OrbitalDiagram = {
+      ...animatedDiagram,
+      transfers: [
+        {
+          label: "test",
+          fromOrbitId: "mars",
+          toOrbitId: "jupiter",
+          color: "#3fb950",
+          style: "brachistochrone",
+          startTime: 0,
+          endTime: 259200,
+          burnMarkers: [
+            { angle: 0.5, label: "static only" }, // no timing → not included
+          ],
+        },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    assert.equal(data.transfers[0].burns.length, 0);
+  });
+
+  it("transfers without burnMarkers get empty burns array", () => {
+    const html = renderOrbitalDiagram(animatedDiagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch);
+    const data = JSON.parse(jsonMatch[1]);
+    assert.ok(Array.isArray(data.transfers[0].burns));
+    assert.equal(data.transfers[0].burns.length, 0);
+  });
+
+  it("CSS includes burn-plume class", () => {
+    assert.ok(REPORT_CSS.includes(".burn-plume"));
+  });
+});
+
 describe("REPORT_CSS includes animation styles", () => {
   it("includes animation controls styles", () => {
     assert.ok(REPORT_CSS.includes(".orbital-animation-controls"));

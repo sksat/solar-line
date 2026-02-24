@@ -518,11 +518,17 @@
           "burnMarkers": [
             {
               "angle": 3.14,
-              "label": "出発ΔV"
+              "label": "加速",
+              "startTime": 0,
+              "endTime": 257400,
+              "type": "acceleration"
             },
             {
               "angle": 0.4,
-              "label": "到着ΔV"
+              "label": "減速",
+              "startTime": 257400,
+              "endTime": 514800,
+              "type": "deceleration"
             }
           ],
           "startTime": 0,
@@ -569,6 +575,15 @@
           "toOrbitId": "titania",
           "color": "#44ff44",
           "style": "hyperbolic",
+          "burnMarkers": [
+            {
+              "angle": 1.2,
+              "label": "捕獲噴射",
+              "startTime": 39600,
+              "endTime": 43200,
+              "type": "capture"
+            }
+          ],
           "startTime": 0,
           "endTime": 43200
         }

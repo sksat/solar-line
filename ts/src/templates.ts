@@ -279,6 +279,8 @@ footer {
   text-align: right;
 }
 .ship-marker { filter: drop-shadow(0 0 3px rgba(255,255,255,0.6)); }
+.burn-plume { pointer-events: none; }
+.burn-label-text { pointer-events: none; font-family: "SFMono-Regular", Consolas, monospace; }
 .comparison-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 1rem 0; }
 .comparison-table caption { text-align: left; font-weight: 600; color: #f0f6fc; margin-bottom: 0.5rem; font-size: 1em; }
 .comparison-table th { color: #8b949e; font-weight: normal; font-size: 0.85em; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); text-align: left; }
@@ -870,7 +872,16 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
           startTime: t.startTime!,
           endTime: t.endTime!,
           color: t.color,
+          style: t.style,
           pathId: `${t.fromOrbitId}-${t.toOrbitId}-${idx}`,
+          burns: (t.burnMarkers ?? [])
+            .filter(bm => bm.startTime !== undefined && bm.endTime !== undefined)
+            .map(bm => ({
+              startTime: bm.startTime!,
+              endTime: bm.endTime!,
+              type: bm.type ?? "acceleration",
+              label: bm.label,
+            })),
         })),
     };
     animationHtml = `

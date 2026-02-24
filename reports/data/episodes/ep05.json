@@ -481,6 +481,22 @@
           "toOrbitId": "earth-orbit",
           "color": "#ff4444",
           "style": "brachistochrone",
+          "burnMarkers": [
+            {
+              "angle": 3.14,
+              "label": "加速（@300t）",
+              "startTime": 0,
+              "endTime": 358560,
+              "type": "acceleration"
+            },
+            {
+              "angle": 0,
+              "label": "減速（@300t）",
+              "startTime": 358560,
+              "endTime": 717120,
+              "type": "deceleration"
+            }
+          ],
           "startTime": 0,
           "endTime": 717120
         }
