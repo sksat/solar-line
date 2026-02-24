@@ -72,6 +72,9 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **SF tolerance**: This is an SF work — human g-tolerance countermeasures and futuristic propulsion capabilities are acceptable premises. Focus on whether in-story depictions are **narratively consistent** (elapsed time, distances, celestial positions) rather than physically realistic by current standards.
 - **Counterfactual analysis**: Explore IF scenarios — what would happen if characters had made different decisions? (e.g., direct route without Jupiter flyby, low-thrust nozzle conservation path). This deepens the analysis.
 - **Math rendering**: Use KaTeX or MathJax to render formulas readably in reports.
+- **Verdict policy**: Reference calculations (where accuracy cannot be measured against a depicted value) should NOT use the "indeterminate" verdict. Reserve verdicts for claims that can be directly compared to in-story depictions.
+- **External source links**: All external source citations (NASA NTRS, papers, worldbuilding documents) must be rendered as clickable hyperlinks, not plain text.
+- **Orbit propagation validation**: After desk calculations (brachistochrone ΔV, Hohmann transfers), validate with detailed numerical orbit propagation. This is especially important for time-dependent parameters (travel time, planetary positions, arrival conditions).
 
 ## Data Infrastructure
 
