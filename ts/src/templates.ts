@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -446,6 +446,9 @@ footer {
 .orbital-diagram { text-align: center; }
 .orbital-diagram svg { max-width: 100%; height: auto; }
 .diagram-description { text-align: left; font-size: 0.9rem; color: #555; margin: 0.25rem 1rem 0.75rem; line-height: 1.5; }
+.uplot-chart { overflow-x: auto; }
+.uplot-chart .uplot-target { margin: 0 auto; }
+.uplot-chart .u-legend { font-size: 0.85rem; }
 .orbital-animation-controls {
   display: flex;
   align-items: center;
@@ -631,12 +634,14 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/github-dark.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.iife.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}<span class="nav-sep">|</span><a href="${basePath}/transcriptions/index.html">文字起こし</a><span class="nav-sep">|</span><a href="${basePath}/logs/index.html">ログ</a></nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a> | <a href="${basePath}/doc/solar_line_core/index.html">API Docs</a></footer>
-<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}if(typeof hljs!=="undefined"){hljs.highlightAll()}});</script>
+<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}if(typeof hljs!=="undefined"){hljs.highlightAll()}if(typeof uPlot!=="undefined"){document.querySelectorAll(".uplot-chart").forEach(function(el){var dataEl=el.querySelector(".uplot-data");if(!dataEl)return;var cfg=JSON.parse(dataEl.textContent);var series=[{}];cfg.series.forEach(function(s){series.push({label:s.label,stroke:s.color,width:2,dash:s.style==="dashed"?[6,3]:undefined})});var data=[cfg.series[0].x];cfg.series.forEach(function(s){data.push(s.y)});var thresholdPlugin=cfg.thresholds&&cfg.thresholds.length?{hooks:{draw:[function(u){var ctx=u.ctx;cfg.thresholds.forEach(function(t){var yPos=u.valToPos(t.value,"y",true);ctx.save();ctx.strokeStyle=t.color;ctx.lineWidth=1.5;if(t.style==="dashed")ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(u.bbox.left,yPos);ctx.lineTo(u.bbox.left+u.bbox.width,yPos);ctx.stroke();ctx.fillStyle=t.color;ctx.font="11px sans-serif";ctx.textAlign="right";ctx.fillText(t.label,u.bbox.left+u.bbox.width-4,yPos-4);ctx.restore()})}]}}:undefined;var plugins=thresholdPlugin?[thresholdPlugin]:[];var opts={width:cfg.width||600,height:cfg.height||300,plugins:plugins,axes:[{label:cfg.xLabel,stroke:"#aaa",grid:{stroke:"#333"}},{label:cfg.yLabel,stroke:"#aaa",grid:{stroke:"#333"}}],series:series};var target=el.querySelector(".uplot-target");new uPlot(opts,data,target)})}});</script>
 </body>
 </html>`;
 }
@@ -1545,6 +1550,9 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
   if (report.diagrams && report.diagrams.length > 0) {
     tocItems.push('<li><a href="#section-diagrams">軌道遷移図</a></li>');
   }
+  if (report.timeSeriesCharts && report.timeSeriesCharts.length > 0) {
+    tocItems.push('<li><a href="#section-timeseries">時系列グラフ</a></li>');
+  }
   if (report.transfers.length > 0) {
     tocItems.push('<li><a href="#section-transfers">軌道遷移分析</a></li>');
     tocItems.push('<ul>');
@@ -1567,6 +1575,10 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     ? `<h2 id="section-diagrams">軌道遷移図</h2>\n${report.diagrams.map(renderOrbitalDiagram).join("\n")}`
     : "";
 
+  const timeSeriesSectionWithId = report.timeSeriesCharts && report.timeSeriesCharts.length > 0
+    ? `<h2 id="section-timeseries">時系列グラフ</h2>\n${renderTimeSeriesCharts(report.timeSeriesCharts)}`
+    : "";
+
   const content = `
 <h1>第${report.episode}話: ${escapeHtml(report.title)}${provisionalBadge}</h1>
 ${videoSection}
@@ -1579,6 +1591,8 @@ ${dialogueSectionWithId}
 ${dvChart}
 
 ${diagramSectionWithId}
+
+${timeSeriesSectionWithId}
 
 <h2 id="section-transfers">軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}
@@ -1741,6 +1755,32 @@ function renderBarChartFromData(chart: BarChart): string {
   })), chart.unit);
 }
 
+/** Render a time-series chart container with embedded JSON data for uPlot */
+export function renderTimeSeriesChart(chart: TimeSeriesChart): string {
+  const descHtml = chart.description
+    ? `<p class="diagram-description">${escapeHtml(chart.description)}</p>`
+    : "";
+  const jsonData = JSON.stringify({
+    xLabel: chart.xLabel,
+    yLabel: chart.yLabel,
+    series: chart.series,
+    thresholds: chart.thresholds ?? [],
+    width: chart.width ?? 600,
+    height: chart.height ?? 300,
+  });
+  return `<div class="card uplot-chart" id="${escapeHtml(chart.id)}">
+<h4>${escapeHtml(chart.title)}</h4>${descHtml}
+<script type="application/json" class="uplot-data">${jsonData}</script>
+<div class="uplot-target"></div>
+</div>`;
+}
+
+/** Render multiple time-series charts */
+export function renderTimeSeriesCharts(charts: TimeSeriesChart[]): string {
+  if (charts.length === 0) return "";
+  return charts.map(renderTimeSeriesChart).join("\n");
+}
+
 /** Render a custom comparison table (non-episode headers) */
 export function renderCustomComparisonTable(table: { caption: string; headers: string[]; rows: { label: string; values: string[]; highlight?: boolean }[] }): string {
   const headerCells = table.headers.map(h => `<th>${escapeHtml(h)}</th>`).join("");
@@ -1792,12 +1832,14 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const verificationHtml = section.verificationTable ? renderVerificationTable(section.verificationTable) : "";
     const dagHtml = section.dagViewer ? '<div id="dag-viewer" class="dag-viewer-container"></div>' : "";
     const barChartHtml = section.barChart ? renderBarChartFromData(section.barChart) : "";
+    const timeSeriesHtml = section.timeSeriesCharts ? renderTimeSeriesCharts(section.timeSeriesCharts) : "";
     const customTableHtml = section.comparisonTable ? renderCustomComparisonTable(section.comparisonTable) : "";
     return `<div class="summary-section" id="${escapeHtml(sectionId)}">
 <h2>${escapeHtml(section.heading)}</h2>
 ${markdownToHtml(section.markdown, mdOpts)}
 ${diagramHtml}
 ${barChartHtml}
+${timeSeriesHtml}
 ${timelineHtml}
 ${verificationHtml}
 ${tableHtml}

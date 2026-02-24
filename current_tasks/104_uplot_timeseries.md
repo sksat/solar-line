@@ -1,6 +1,6 @@
 # Task 104: uPlot による時系列グラフ基盤
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 

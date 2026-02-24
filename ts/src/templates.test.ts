@@ -30,9 +30,11 @@ import {
   formatTimestamp,
   parseTimestamp,
   timestampLink,
+  renderTimeSeriesChart,
+  renderTimeSeriesCharts,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -849,6 +851,21 @@ describe("renderOrbitalDiagram", () => {
     assert.ok(html.includes("火星→ガニメデ ブラキストクローネ遷移"));
   });
 
+  it("renders description when present", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      description: "火星軌道から木星軌道への遷移を示す",
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes('class="diagram-description"'));
+    assert.ok(html.includes("火星軌道から木星軌道への遷移を示す"));
+  });
+
+  it("omits description when not present", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes("diagram-description"));
+  });
+
   it("renders center body label", () => {
     const html = renderOrbitalDiagram(sampleDiagram);
     assert.ok(html.includes("太陽"));
@@ -1069,6 +1086,123 @@ describe("renderBarChart handles long labels", () => {
     assert.ok(html.includes("<svg"));
     // Large values should use locale-formatted notation (comma separators)
     assert.ok(html.includes("11,165.23"), `Expected comma-formatted number in: ${html.slice(0, 500)}`);
+  });
+});
+
+// --- renderTimeSeriesChart ---
+
+const sampleTimeSeriesChart: TimeSeriesChart = {
+  id: "test-ts-chart-01",
+  title: "テスト時系列グラフ",
+  xLabel: "経過時間 (h)",
+  yLabel: "推力 (MN)",
+  series: [
+    {
+      label: "推力",
+      color: "#ff6644",
+      x: [0, 10, 20, 30],
+      y: [0, 6.37, 6.37, 0],
+      style: "solid",
+    },
+  ],
+};
+
+describe("renderTimeSeriesChart", () => {
+  it("renders a card with uplot-chart class", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(html.includes('class="card uplot-chart"'));
+  });
+
+  it("includes the chart id", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(html.includes('id="test-ts-chart-01"'));
+  });
+
+  it("includes the chart title", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(html.includes("テスト時系列グラフ"));
+  });
+
+  it("embeds JSON data in script tag", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(html.includes('class="uplot-data"'));
+    assert.ok(html.includes('"xLabel":"経過時間 (h)"'));
+    assert.ok(html.includes('"yLabel":"推力 (MN)"'));
+  });
+
+  it("includes uplot-target container", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(html.includes('class="uplot-target"'));
+  });
+
+  it("renders description when present", () => {
+    const chart: TimeSeriesChart = {
+      ...sampleTimeSeriesChart,
+      description: "推力の時間変化を示すグラフ",
+    };
+    const html = renderTimeSeriesChart(chart);
+    assert.ok(html.includes('class="diagram-description"'));
+    assert.ok(html.includes("推力の時間変化を示すグラフ"));
+  });
+
+  it("omits description when not present", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(!html.includes("diagram-description"));
+  });
+
+  it("includes thresholds in JSON data", () => {
+    const chart: TimeSeriesChart = {
+      ...sampleTimeSeriesChart,
+      thresholds: [
+        { value: 0, label: "ゼロライン", color: "#ff0000", style: "dashed" },
+      ],
+    };
+    const html = renderTimeSeriesChart(chart);
+    assert.ok(html.includes('"thresholds":[{"value":0'));
+    assert.ok(html.includes("ゼロライン"));
+  });
+
+  it("uses default width/height when not specified", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(html.includes('"width":600'));
+    assert.ok(html.includes('"height":300'));
+  });
+
+  it("uses custom width/height when specified", () => {
+    const chart: TimeSeriesChart = {
+      ...sampleTimeSeriesChart,
+      width: 800,
+      height: 400,
+    };
+    const html = renderTimeSeriesChart(chart);
+    assert.ok(html.includes('"width":800'));
+    assert.ok(html.includes('"height":400'));
+  });
+
+  it("escapes HTML in title", () => {
+    const chart: TimeSeriesChart = {
+      ...sampleTimeSeriesChart,
+      title: '<script>alert("xss")</script>',
+    };
+    const html = renderTimeSeriesChart(chart);
+    assert.ok(!html.includes("<script>alert"));
+    assert.ok(html.includes("&lt;script&gt;"));
+  });
+});
+
+describe("renderTimeSeriesCharts", () => {
+  it("renders multiple charts", () => {
+    const charts = [
+      sampleTimeSeriesChart,
+      { ...sampleTimeSeriesChart, id: "test-ts-chart-02", title: "第2グラフ" },
+    ];
+    const html = renderTimeSeriesCharts(charts);
+    assert.ok(html.includes("test-ts-chart-01"));
+    assert.ok(html.includes("test-ts-chart-02"));
+  });
+
+  it("returns empty string for empty array", () => {
+    assert.equal(renderTimeSeriesCharts([]), "");
   });
 });
 

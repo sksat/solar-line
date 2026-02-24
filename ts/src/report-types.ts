@@ -255,6 +255,8 @@ export interface EpisodeReport {
   explorations?: ParameterExploration[];
   /** Orbital transfer diagrams */
   diagrams?: OrbitalDiagram[];
+  /** Interactive time-series charts (rendered via uPlot) */
+  timeSeriesCharts?: TimeSeriesChart[];
 }
 
 /** A row in a cross-episode comparison table */
@@ -300,6 +302,54 @@ export interface BarChartItem {
   color?: string;
   /** Optional annotation text shown next to the bar */
   annotation?: string;
+}
+
+/** A time-series chart rendered via uPlot */
+export interface TimeSeriesChart {
+  /** Unique identifier */
+  id: string;
+  /** Chart title */
+  title: string;
+  /** Description explaining what the chart shows */
+  description?: string;
+  /** X-axis label (e.g. "経過時間 (h)", "ミッション時刻 (日)") */
+  xLabel: string;
+  /** Y-axis label (e.g. "推力 (MN)", "速度 (km/s)") */
+  yLabel: string;
+  /** Data series to plot */
+  series: TimeSeriesDatum[];
+  /** Optional threshold/limit lines */
+  thresholds?: TimeSeriesThreshold[];
+  /** Chart width in pixels (default: 600) */
+  width?: number;
+  /** Chart height in pixels (default: 300) */
+  height?: number;
+}
+
+/** A single data series in a time-series chart */
+export interface TimeSeriesDatum {
+  /** Series label shown in legend */
+  label: string;
+  /** CSS color for this series */
+  color: string;
+  /** X values (time axis) */
+  x: number[];
+  /** Y values */
+  y: number[];
+  /** Line style */
+  style?: "solid" | "dashed";
+}
+
+/** A horizontal threshold/limit line on a time-series chart */
+export interface TimeSeriesThreshold {
+  /** Threshold value on Y axis */
+  value: number;
+  /** Label for the threshold line */
+  label: string;
+  /** CSS color */
+  color: string;
+  /** Line style */
+  style?: "solid" | "dashed";
 }
 
 /** An event in a ship/system timeline */
@@ -373,6 +423,8 @@ export interface SummarySection {
   dagViewer?: boolean;
   /** Optional bar chart */
   barChart?: BarChart;
+  /** Optional time-series charts (rendered via uPlot) */
+  timeSeriesCharts?: TimeSeriesChart[];
   /** Optional comparison table with custom headers (for non-episode tables) */
   comparisonTable?: {
     caption: string;
