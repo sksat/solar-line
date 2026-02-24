@@ -416,6 +416,117 @@ function hasTextOverlap(reportText: string, dialogueText: string): boolean {
   return false;
 }
 
+// ---------------------------------------------------------------------------
+// Dialogue lineId integrity
+// ---------------------------------------------------------------------------
+
+describe("report data: dialogue lineId integrity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const dialogue = loadDialogue(epNum);
+    if (!dialogue) continue;
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    it(`${prefix}: all dialogue entries have a lineId`, () => {
+      const missing = dialogue.dialogue.filter(d => !d.lineId);
+      assert.equal(
+        missing.length, 0,
+        `${missing.length} dialogue entries missing lineId (first at ${missing[0]?.startMs}ms)`,
+      );
+    });
+
+    it(`${prefix}: dialogue lineIds are unique`, () => {
+      const ids = dialogue.dialogue.map(d => d.lineId).filter(Boolean);
+      const uniqueIds = new Set(ids);
+      assert.equal(ids.length, uniqueIds.size, `Duplicate lineIds found`);
+    });
+
+    it(`${prefix}: dialogue lineIds follow naming convention`, () => {
+      for (let i = 0; i < dialogue.dialogue.length; i++) {
+        const entry = dialogue.dialogue[i];
+        if (!entry.lineId) continue;
+        assert.ok(
+          entry.lineId.startsWith(prefix),
+          `lineId "${entry.lineId}" should start with "${prefix}"`,
+        );
+        assert.match(
+          entry.lineId,
+          /^ep\d{2}-dl-\d{3}$/,
+          `lineId "${entry.lineId}" should match pattern "epXX-dl-NNN"`,
+        );
+      }
+    });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Referential integrity: dialogueLineId → dialogue data
+// ---------------------------------------------------------------------------
+
+describe("report data: dialogueLineId referential integrity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const dialogue = loadDialogue(epNum);
+    if (!dialogue) continue;
+    if (!report.dialogueQuotes || report.dialogueQuotes.length === 0) continue;
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    // Build lineId lookup
+    const lineIdSet = new Set(dialogue.dialogue.map(d => d.lineId).filter(Boolean));
+    const lineById = new Map(dialogue.dialogue.filter(d => d.lineId).map(d => [d.lineId, d]));
+
+    it(`${prefix}: all dialogueLineId references point to existing dialogue entries`, () => {
+      const broken: string[] = [];
+      for (const quote of report.dialogueQuotes!) {
+        if (!quote.dialogueLineId) continue;
+        if (!lineIdSet.has(quote.dialogueLineId)) {
+          broken.push(`${quote.id} → "${quote.dialogueLineId}" (not found)`);
+        }
+      }
+      assert.equal(broken.length, 0, `Broken dialogueLineId references:\n  ${broken.join("\n  ")}`);
+    });
+
+    it(`${prefix}: dialogueLineId references have consistent speaker names`, () => {
+      const mismatches: string[] = [];
+      for (const quote of report.dialogueQuotes!) {
+        if (!quote.dialogueLineId) continue;
+        const line = lineById.get(quote.dialogueLineId);
+        if (!line) continue; // Already caught by previous test
+        if (line.speakerName !== quote.speaker) {
+          mismatches.push(
+            `${quote.id}: report="${quote.speaker}", dialogue="${line.speakerName}" (via ${quote.dialogueLineId})`,
+          );
+        }
+      }
+      assert.equal(
+        mismatches.length, 0,
+        `Speaker name mismatches via dialogueLineId:\n  ${mismatches.join("\n  ")}`,
+      );
+    });
+
+    it(`${prefix}: dialogueLineId references have overlapping text`, () => {
+      const noOverlap: string[] = [];
+      for (const quote of report.dialogueQuotes!) {
+        if (!quote.dialogueLineId) continue;
+        const line = lineById.get(quote.dialogueLineId);
+        if (!line) continue;
+        if (!hasTextOverlap(quote.text, line.text)) {
+          noOverlap.push(
+            `${quote.id}: report="${quote.text.slice(0, 30)}..." vs dialogue="${line.text.slice(0, 30)}..."`,
+          );
+        }
+      }
+      assert.equal(
+        noOverlap.length, 0,
+        `No text overlap via dialogueLineId:\n  ${noOverlap.join("\n  ")}`,
+      );
+    });
+  }
+});
+
 describe("report data: transcription-report sync", () => {
   const episodes = getAvailableEpisodes();
   /** Tolerance for timestamp matching: ±15 seconds */

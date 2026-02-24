@@ -10,19 +10,28 @@
       "id": "kiritan",
       "nameJa": "きりたん",
       "nameEn": "Kiritan",
-      "aliases": ["キリタン"]
+      "aliases": [
+        "キリタン"
+      ]
     },
     {
       "id": "kestrel-ai",
       "nameJa": "ケイ",
       "nameEn": "Kestrel AI (Kei)",
-      "aliases": ["公案", "コアン", "航案", "ケイ"]
+      "aliases": [
+        "公案",
+        "コアン",
+        "航案",
+        "ケイ"
+      ]
     },
     {
       "id": "guest",
       "nameJa": "ゲスト（天王星人）",
       "nameEn": "Guest (Uranian)",
-      "aliases": ["エスパー"]
+      "aliases": [
+        "エスパー"
+      ]
     }
   ],
   "scenes": [
@@ -96,10 +105,15 @@
       "endMs": 20000,
       "sceneId": "ep04-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["cue-1", "cue-3", "cue-5"],
+      "rawEntryIds": [
+        "cue-1",
+        "cue-3",
+        "cue-5"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの損傷報告。ep04.jsonのep04-quote-01に対応。ASR「例媒」→「冷媒」、「式の」→「炉の」修正。"
+      "note": "AIの損傷報告。ep04.jsonのep04-quote-01に対応。ASR「例媒」→「冷媒」、「式の」→「炉の」修正。",
+      "lineId": "ep04-dl-001"
     },
     {
       "speakerId": "kiritan",
@@ -109,10 +123,13 @@
       "endMs": 22000,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-7"],
+      "rawEntryIds": [
+        "cue-7"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反応。"
+      "note": "きりたんの反応。",
+      "lineId": "ep04-dl-002"
     },
     {
       "speakerId": "kestrel-ai",
@@ -122,10 +139,13 @@
       "endMs": 25470,
       "sceneId": "ep04-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["cue-9"],
+      "rawEntryIds": [
+        "cue-9"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの所要時間報告。ep04.jsonのep04-quote-02に対応。ASR「起動」→「軌道」修正。"
+      "note": "AIの所要時間報告。ep04.jsonのep04-quote-02に対応。ASR「起動」→「軌道」修正。",
+      "lineId": "ep04-dl-003"
     },
     {
       "speakerId": "kiritan",
@@ -135,10 +155,13 @@
       "endMs": 28000,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-11"],
+      "rawEntryIds": [
+        "cue-11"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの評価。"
+      "note": "きりたんの評価。",
+      "lineId": "ep04-dl-004"
     },
     {
       "speakerId": "kestrel-ai",
@@ -148,10 +171,13 @@
       "endMs": 30000,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-13"],
+      "rawEntryIds": [
+        "cue-13"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのいつものツッコミ。"
+      "note": "AIのいつものツッコミ。",
+      "lineId": "ep04-dl-005"
     },
     {
       "speakerId": "kiritan",
@@ -161,10 +187,13 @@
       "endMs": 33000,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-15"],
+      "rawEntryIds": [
+        "cue-15"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの楽観。ASR「完成で」→「慣性で」修正。"
+      "note": "きりたんの楽観。ASR「完成で」→「慣性で」修正。",
+      "lineId": "ep04-dl-006"
     },
     {
       "speakerId": "kestrel-ai",
@@ -174,10 +203,16 @@
       "endMs": 42000,
       "sceneId": "ep04-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["cue-17", "cue-19"],
-      "transferRefs": ["ep04-transfer-02"],
+      "rawEntryIds": [
+        "cue-17",
+        "cue-19"
+      ],
+      "transferRefs": [
+        "ep04-transfer-02"
+      ],
       "mentions": [],
-      "note": "AIの警告。ep04.jsonのep04-quote-03に対応。ASR「天皇星」→「天王星」修正。"
+      "note": "AIの警告。ep04.jsonのep04-quote-03に対応。ASR「天皇星」→「天王星」修正。",
+      "lineId": "ep04-dl-007"
     },
     {
       "speakerId": "kiritan",
@@ -187,10 +222,13 @@
       "endMs": 44000,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-21"],
+      "rawEntryIds": [
+        "cue-21"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの冗談。"
+      "note": "きりたんの冗談。",
+      "lineId": "ep04-dl-008"
     },
     {
       "speakerId": "kestrel-ai",
@@ -200,10 +238,13 @@
       "endMs": 46000,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-23"],
+      "rawEntryIds": [
+        "cue-23"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの返し。"
+      "note": "AIの返し。",
+      "lineId": "ep04-dl-009"
     },
     {
       "speakerId": "kiritan",
@@ -213,10 +254,13 @@
       "endMs": 47670,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-25"],
+      "rawEntryIds": [
+        "cue-25"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。EP03にも同じやりとり。"
+      "note": "きりたんの返し。EP03にも同じやりとり。",
+      "lineId": "ep04-dl-010"
     },
     {
       "speakerId": "kestrel-ai",
@@ -226,10 +270,13 @@
       "endMs": 83230,
       "sceneId": "ep04-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["cue-39"],
+      "rawEntryIds": [
+        "cue-39"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのコイル警告。ep04.jsonのep04-quote-04に対応。ASR「時期ノズル」→「磁気ノズル」修正。"
+      "note": "AIのコイル警告。ep04.jsonのep04-quote-04に対応。ASR「時期ノズル」→「磁気ノズル」修正。",
+      "lineId": "ep04-dl-011"
     },
     {
       "speakerId": "kiritan",
@@ -239,10 +286,13 @@
       "endMs": 87510,
       "sceneId": "ep04-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["cue-41"],
+      "rawEntryIds": [
+        "cue-41"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの確認。ep04.jsonのep04-quote-05に対応。"
+      "note": "きりたんの確認。ep04.jsonのep04-quote-05に対応。",
+      "lineId": "ep04-dl-012"
     },
     {
       "speakerId": "kestrel-ai",
@@ -252,10 +302,14 @@
       "endMs": 94910,
       "sceneId": "ep04-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-43", "cue-45"],
+      "rawEntryIds": [
+        "cue-43",
+        "cue-45"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの返答。"
+      "note": "AIの返答。",
+      "lineId": "ep04-dl-013"
     },
     {
       "speakerId": "kestrel-ai",
@@ -265,10 +319,20 @@
       "endMs": 155000,
       "sceneId": "ep04-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["cue-55", "cue-57", "cue-59", "cue-61", "cue-63", "cue-65"],
-      "transferRefs": ["ep04-transfer-04"],
+      "rawEntryIds": [
+        "cue-55",
+        "cue-57",
+        "cue-59",
+        "cue-61",
+        "cue-63",
+        "cue-65"
+      ],
+      "transferRefs": [
+        "ep04-transfer-04"
+      ],
       "mentions": [],
-      "note": "AIのプラズモイド警告。ep04.jsonのep04-quote-06に対応。ASR「天皇星期圏」→「天王星磁気圏」修正。"
+      "note": "AIのプラズモイド警告。ep04.jsonのep04-quote-06に対応。ASR「天皇星期圏」→「天王星磁気圏」修正。",
+      "lineId": "ep04-dl-014"
     },
     {
       "speakerId": "kiritan",
@@ -278,10 +342,13 @@
       "endMs": 158000,
       "sceneId": "ep04-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-67"],
+      "rawEntryIds": [
+        "cue-67"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの判断。"
+      "note": "きりたんの判断。",
+      "lineId": "ep04-dl-015"
     },
     {
       "speakerId": "kestrel-ai",
@@ -291,10 +358,16 @@
       "endMs": 163000,
       "sceneId": "ep04-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["cue-69", "cue-71"],
-      "transferRefs": ["ep04-transfer-04"],
+      "rawEntryIds": [
+        "cue-69",
+        "cue-71"
+      ],
+      "transferRefs": [
+        "ep04-transfer-04"
+      ],
       "mentions": [],
-      "note": "AIのシールド残寿命報告。ep04.jsonのep04-quote-08に対応。"
+      "note": "AIのシールド残寿命報告。ep04.jsonのep04-quote-08に対応。",
+      "lineId": "ep04-dl-016"
     },
     {
       "speakerId": "kiritan",
@@ -304,10 +377,13 @@
       "endMs": 165000,
       "sceneId": "ep04-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-73"],
+      "rawEntryIds": [
+        "cue-73"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの楽観。"
+      "note": "きりたんの楽観。",
+      "lineId": "ep04-dl-017"
     },
     {
       "speakerId": "kestrel-ai",
@@ -317,10 +393,17 @@
       "endMs": 180000,
       "sceneId": "ep04-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["cue-75", "cue-77", "cue-79"],
-      "transferRefs": ["ep04-transfer-04"],
+      "rawEntryIds": [
+        "cue-75",
+        "cue-77",
+        "cue-79"
+      ],
+      "transferRefs": [
+        "ep04-transfer-04"
+      ],
       "mentions": [],
-      "note": "AIの天王星磁気圏の説明。ep04.jsonのep04-quote-07に対応。Voyager 2のデータ（59.7度）と一致。"
+      "note": "AIの天王星磁気圏の説明。ep04.jsonのep04-quote-07に対応。Voyager 2のデータ（59.7度）と一致。",
+      "lineId": "ep04-dl-018"
     },
     {
       "speakerId": "kiritan",
@@ -330,10 +413,16 @@
       "endMs": 209110,
       "sceneId": "ep04-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["cue-95", "cue-97", "cue-99", "cue-101"],
+      "rawEntryIds": [
+        "cue-95",
+        "cue-97",
+        "cue-99",
+        "cue-101"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの遺言的台詞。父親が嵐の回廊を開いたことへの言及。"
+      "note": "きりたんの遺言的台詞。父親が嵐の回廊を開いたことへの言及。",
+      "lineId": "ep04-dl-019"
     },
     {
       "speakerId": "kestrel-ai",
@@ -343,10 +432,15 @@
       "endMs": 399150,
       "sceneId": "ep04-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["cue-175", "cue-177", "cue-179"],
+      "rawEntryIds": [
+        "cue-175",
+        "cue-177",
+        "cue-179"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの被曝量報告。ep04.jsonのep04-quote-09に対応。ASR「占量」→「被曝量」修正。"
+      "note": "AIの被曝量報告。ep04.jsonのep04-quote-09に対応。ASR「占量」→「被曝量」修正。",
+      "lineId": "ep04-dl-020"
     },
     {
       "speakerId": "guest",
@@ -356,10 +450,13 @@
       "endMs": 472350,
       "sceneId": "ep04-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["cue-193"],
+      "rawEntryIds": [
+        "cue-193"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ゲストが天王星を説明。女性的口調「ね」。ASR「天皇性」→「天王星」修正。"
+      "note": "ゲストが天王星を説明。女性的口調「ね」。ASR「天皇性」→「天王星」修正。",
+      "lineId": "ep04-dl-021"
     },
     {
       "speakerId": "guest",
@@ -369,10 +466,15 @@
       "endMs": 583110,
       "sceneId": "ep04-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["cue-229", "cue-231", "cue-233"],
+      "rawEntryIds": [
+        "cue-229",
+        "cue-231",
+        "cue-233"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ゲストがタイタニアの住民が火星人であることを明かす。ASR「顧問」→「公用語」修正。"
+      "note": "ゲストがタイタニアの住民が火星人であることを明かす。ASR「顧問」→「公用語」修正。",
+      "lineId": "ep04-dl-022"
     },
     {
       "speakerId": "guest",
@@ -382,10 +484,14 @@
       "endMs": 620470,
       "sceneId": "ep04-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-239", "cue-241"],
+      "rawEntryIds": [
+        "cue-239",
+        "cue-241"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ゲストがきりたんの被曝量を見て。女性語「のね」。"
+      "note": "ゲストがきりたんの被曝量を見て。女性語「のね」。",
+      "lineId": "ep04-dl-023"
     },
     {
       "speakerId": "kiritan",
@@ -395,10 +501,13 @@
       "endMs": 623509,
       "sceneId": "ep04-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-243"],
+      "rawEntryIds": [
+        "cue-243"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返答。"
+      "note": "きりたんの返答。",
+      "lineId": "ep04-dl-024"
     },
     {
       "speakerId": "kestrel-ai",
@@ -408,10 +517,16 @@
       "endMs": 797470,
       "sceneId": "ep04-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-291", "cue-293"],
-      "transferRefs": ["ep04-transfer-05"],
+      "rawEntryIds": [
+        "cue-291",
+        "cue-293"
+      ],
+      "transferRefs": [
+        "ep04-transfer-05"
+      ],
       "mentions": [],
-      "note": "AIの艦隊検知。ASR「新宇宙スケ」→「深宇宙スキャナー」修正。"
+      "note": "AIの艦隊検知。ASR「新宇宙スケ」→「深宇宙スキャナー」修正。",
+      "lineId": "ep04-dl-025"
     },
     {
       "speakerId": "kestrel-ai",
@@ -421,10 +536,18 @@
       "endMs": 811000,
       "sceneId": "ep04-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["cue-295", "cue-297", "cue-299", "cue-301"],
-      "transferRefs": ["ep04-transfer-05"],
+      "rawEntryIds": [
+        "cue-295",
+        "cue-297",
+        "cue-299",
+        "cue-301"
+      ],
+      "transferRefs": [
+        "ep04-transfer-05"
+      ],
       "mentions": [],
-      "note": "AIの艦隊分析。ep04.jsonのep04-quote-14に対応。"
+      "note": "AIの艦隊分析。ep04.jsonのep04-quote-14に対応。",
+      "lineId": "ep04-dl-026"
     },
     {
       "speakerId": "kiritan",
@@ -434,10 +557,16 @@
       "endMs": 968870,
       "sceneId": "ep04-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["cue-361", "cue-363", "cue-365", "cue-367"],
+      "rawEntryIds": [
+        "cue-361",
+        "cue-363",
+        "cue-365",
+        "cue-367"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの核心的台詞。ep04.jsonのep04-quote-13に対応。父親の志と、ケイへの信頼。"
+      "note": "きりたんの核心的台詞。ep04.jsonのep04-quote-13に対応。父親の志と、ケイへの信頼。",
+      "lineId": "ep04-dl-027"
     },
     {
       "speakerId": "kiritan",
@@ -447,10 +576,18 @@
       "endMs": 985000,
       "sceneId": "ep04-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["cue-371", "cue-373", "cue-375", "cue-377"],
-      "transferRefs": ["ep04-transfer-03"],
+      "rawEntryIds": [
+        "cue-371",
+        "cue-373",
+        "cue-375",
+        "cue-377"
+      ],
+      "transferRefs": [
+        "ep04-transfer-03"
+      ],
       "mentions": [],
-      "note": "きりたんの「新しいソーラーライン」宣言。ep04.jsonのep04-quote-10に対応。ASR「対応系」→「太陽系」修正。"
+      "note": "きりたんの「新しいソーラーライン」宣言。ep04.jsonのep04-quote-10に対応。ASR「対応系」→「太陽系」修正。",
+      "lineId": "ep04-dl-028"
     },
     {
       "speakerId": "kestrel-ai",
@@ -460,10 +597,31 @@
       "endMs": 1036000,
       "sceneId": "ep04-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["cue-379", "cue-381", "cue-383", "cue-385", "cue-387", "cue-389", "cue-391", "cue-393", "cue-395", "cue-397", "cue-399", "cue-401", "cue-403", "cue-405", "cue-407", "cue-409"],
-      "transferRefs": ["ep04-transfer-02", "ep04-transfer-03"],
+      "rawEntryIds": [
+        "cue-379",
+        "cue-381",
+        "cue-383",
+        "cue-385",
+        "cue-387",
+        "cue-389",
+        "cue-391",
+        "cue-393",
+        "cue-395",
+        "cue-397",
+        "cue-399",
+        "cue-401",
+        "cue-403",
+        "cue-405",
+        "cue-407",
+        "cue-409"
+      ],
+      "transferRefs": [
+        "ep04-transfer-02",
+        "ep04-transfer-03"
+      ],
       "mentions": [],
-      "note": "AIのフルチェックリスト読み上げ。ep04.jsonのep04-quote-11に対応。ASR多数修正。"
+      "note": "AIのフルチェックリスト読み上げ。ep04.jsonのep04-quote-11に対応。ASR多数修正。",
+      "lineId": "ep04-dl-029"
     },
     {
       "speakerId": "kiritan",
@@ -473,10 +631,20 @@
       "endMs": 1065000,
       "sceneId": "ep04-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["cue-415", "cue-417", "cue-419", "cue-421", "cue-423", "cue-425"],
-      "transferRefs": ["ep04-transfer-03"],
+      "rawEntryIds": [
+        "cue-415",
+        "cue-417",
+        "cue-419",
+        "cue-421",
+        "cue-423",
+        "cue-425"
+      ],
+      "transferRefs": [
+        "ep04-transfer-03"
+      ],
       "mentions": [],
-      "note": "きりたんの出発命令。ep04.jsonのep04-quote-12に対応。ASR「露出力」→「出力」、「水力」→「推力」修正。"
+      "note": "きりたんの出発命令。ep04.jsonのep04-quote-12に対応。ASR「露出力」→「出力」、「水力」→「推力」修正。",
+      "lineId": "ep04-dl-030"
     },
     {
       "speakerId": "kestrel-ai",
@@ -486,10 +654,13 @@
       "endMs": 1068000,
       "sceneId": "ep04-scene-09",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-427"],
+      "rawEntryIds": [
+        "cue-427"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの心配。"
+      "note": "AIの心配。",
+      "lineId": "ep04-dl-031"
     },
     {
       "speakerId": "kiritan",
@@ -499,10 +670,13 @@
       "endMs": 1072000,
       "sceneId": "ep04-scene-09",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-429"],
+      "rawEntryIds": [
+        "cue-429"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。"
+      "note": "きりたんの返し。",
+      "lineId": "ep04-dl-032"
     },
     {
       "speakerId": "kestrel-ai",
@@ -512,10 +686,13 @@
       "endMs": 1075000,
       "sceneId": "ep04-scene-09",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-431"],
+      "rawEntryIds": [
+        "cue-431"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIがきりたんの父親を示唆。"
+      "note": "AIがきりたんの父親を示唆。",
+      "lineId": "ep04-dl-033"
     },
     {
       "speakerId": "kiritan",
@@ -525,10 +702,13 @@
       "endMs": 1083669,
       "sceneId": "ep04-scene-09",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-431"],
+      "rawEntryIds": [
+        "cue-431"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。"
+      "note": "きりたんの返し。",
+      "lineId": "ep04-dl-034"
     },
     {
       "speakerId": "kestrel-ai",
@@ -538,10 +718,15 @@
       "endMs": 1097000,
       "sceneId": "ep04-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["cue-433", "cue-435", "cue-437"],
+      "rawEntryIds": [
+        "cue-433",
+        "cue-435",
+        "cue-437"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの自問。AIの存在論的な問い。物語の核心。"
+      "note": "ケイの自問。AIの存在論的な問い。物語の核心。",
+      "lineId": "ep04-dl-035"
     },
     {
       "speakerId": "kiritan",
@@ -551,10 +736,13 @@
       "endMs": 1101390,
       "sceneId": "ep04-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["cue-439"],
+      "rawEntryIds": [
+        "cue-439"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの答え。ケイの名を呼び、存在を肯定する。"
+      "note": "きりたんの答え。ケイの名を呼び、存在を肯定する。",
+      "lineId": "ep04-dl-036"
     },
     {
       "speakerId": "kiritan",
@@ -564,10 +752,15 @@
       "endMs": 1104029,
       "sceneId": "ep04-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["cue-441"],
-      "transferRefs": ["ep04-transfer-03"],
+      "rawEntryIds": [
+        "cue-441"
+      ],
+      "transferRefs": [
+        "ep04-transfer-03"
+      ],
       "mentions": [],
-      "note": "きりたんの出発命令。エピソードのクライマックス。"
+      "note": "きりたんの出発命令。エピソードのクライマックス。",
+      "lineId": "ep04-dl-037"
     },
     {
       "speakerId": "kestrel-ai",
@@ -577,10 +770,16 @@
       "endMs": 1114470,
       "sceneId": "ep04-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["cue-443", "cue-445"],
-      "transferRefs": ["ep04-transfer-03"],
+      "rawEntryIds": [
+        "cue-443",
+        "cue-445"
+      ],
+      "transferRefs": [
+        "ep04-transfer-03"
+      ],
       "mentions": [],
-      "note": "AIのカウントダウン。天王星から地球への出発。"
+      "note": "AIのカウントダウン。天王星から地球への出発。",
+      "lineId": "ep04-dl-038"
     }
   ]
 }

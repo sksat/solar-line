@@ -7,9 +7,9 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { EpisodeReport, SiteManifest, SummaryReport, TranscriptionPageData, VerdictCounts } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, SummaryReport, TranscriptionPageData, VerdictCounts, DialogueQuote } from "./report-types.ts";
 import type { EpisodeLines } from "./dialogue-extraction-types.ts";
-import type { EpisodeDialogue } from "./subtitle-types.ts";
+import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 import { parseSummaryMarkdown } from "./mdx-parser.ts";
 import {
   renderIndex,
@@ -50,6 +50,51 @@ function ensureDir(dir: string): void {
   fs.mkdirSync(dir, { recursive: true });
 }
 
+/** Convert milliseconds to MM:SS or HH:MM:SS timestamp string */
+function msToTimestamp(ms: number): string {
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
+/** Build a lineId → DialogueLine lookup from dialogue data */
+function buildDialogueLookup(dialogue: DialogueLine[]): Map<string, DialogueLine> {
+  const map = new Map<string, DialogueLine>();
+  for (const line of dialogue) {
+    if (line.lineId) map.set(line.lineId, line);
+  }
+  return map;
+}
+
+/** Resolve dialogueLineId references in an episode report's quotes.
+ *  Warns on broken references but does not modify the quote's inline data
+ *  (speaker/text/timestamp remain as authored — the reference is for validation). */
+export function resolveDialogueReferences(
+  report: EpisodeReport,
+  dialogueData: EpisodeDialogue | null,
+): string[] {
+  const warnings: string[] = [];
+  if (!report.dialogueQuotes || !dialogueData) return warnings;
+
+  const lookup = buildDialogueLookup(dialogueData.dialogue);
+
+  for (const quote of report.dialogueQuotes) {
+    if (!quote.dialogueLineId) continue;
+
+    const line = lookup.get(quote.dialogueLineId);
+    if (!line) {
+      warnings.push(
+        `ep${String(report.episode).padStart(2, "0")}.json: quote "${quote.id}" references missing lineId "${quote.dialogueLineId}"`,
+      );
+    }
+  }
+
+  return warnings;
+}
+
 /** Discover episode JSON files in data/episodes/ */
 export function discoverEpisodes(dataDir: string): EpisodeReport[] {
   const episodesDir = path.join(dataDir, "data", "episodes");
@@ -62,7 +107,19 @@ export function discoverEpisodes(dataDir: string): EpisodeReport[] {
   const episodes: EpisodeReport[] = [];
   for (const file of files) {
     const report = readJsonFile<EpisodeReport>(path.join(episodesDir, file));
-    if (report) episodes.push(report);
+    if (!report) continue;
+
+    // Load dialogue data and validate references
+    const epNum = String(report.episode).padStart(2, "0");
+    const dialogueData = readJsonFile<EpisodeDialogue>(
+      path.join(episodesDir, `ep${epNum}_dialogue.json`),
+    );
+    const warnings = resolveDialogueReferences(report, dialogueData);
+    for (const w of warnings) {
+      console.warn(`⚠️  ${w}`);
+    }
+
+    episodes.push(report);
   }
   return episodes;
 }
@@ -215,6 +272,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
         mergeReasons: l.mergeReasons,
       })),
       dialogue: dialogue ? dialogue.dialogue.map(d => ({
+        lineId: d.lineId,
         speakerId: d.speakerId,
         speakerName: d.speakerName,
         text: d.text,

@@ -10,13 +10,17 @@
       "id": "kiritan",
       "nameJa": "きりたん",
       "nameEn": "Kiritan",
-      "aliases": ["キリタン"]
+      "aliases": [
+        "キリタン"
+      ]
     },
     {
       "id": "kestrel-ai",
       "nameJa": "ケイ",
       "nameEn": "Kestrel AI (Kei)",
-      "aliases": ["ケイ"]
+      "aliases": [
+        "ケイ"
+      ]
     },
     {
       "id": "enceladus-keeper",
@@ -126,10 +130,13 @@
       "endMs": 19020,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-001"],
+      "rawEntryIds": [
+        "ep05-line-001"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの損傷報告。Whisper「放り抜く」→省略、「尖閣温度」→「炉心温度」修正。"
+      "note": "AIの損傷報告。Whisper「放り抜く」→省略、「尖閣温度」→「炉心温度」修正。",
+      "lineId": "ep05-dl-001"
     },
     {
       "speakerId": "kiritan",
@@ -139,10 +146,13 @@
       "endMs": 23200,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-002"],
+      "rawEntryIds": [
+        "ep05-line-002"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの短い応答。"
+      "note": "きりたんの短い応答。",
+      "lineId": "ep05-dl-002"
     },
     {
       "speakerId": "kiritan",
@@ -152,10 +162,13 @@
       "endMs": 27460,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-003"],
+      "rawEntryIds": [
+        "ep05-line-003"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの問い。ケイに船の「感覚」を尋ねる。"
+      "note": "きりたんの問い。ケイに船の「感覚」を尋ねる。",
+      "lineId": "ep05-dl-003"
     },
     {
       "speakerId": "kestrel-ai",
@@ -165,10 +178,13 @@
       "endMs": 31420,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-004"],
+      "rawEntryIds": [
+        "ep05-line-004"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイのからかい。敬語＋「あら」はケイの特徴。"
+      "note": "ケイのからかい。敬語＋「あら」はケイの特徴。",
+      "lineId": "ep05-dl-004"
     },
     {
       "speakerId": "kiritan",
@@ -178,10 +194,13 @@
       "endMs": 36000,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-005"],
+      "rawEntryIds": [
+        "ep05-line-005"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの照れ隠し。Whisper合成行を分離。"
+      "note": "きりたんの照れ隠し。Whisper合成行を分離。",
+      "lineId": "ep05-dl-005"
     },
     {
       "speakerId": "kestrel-ai",
@@ -191,10 +210,13 @@
       "endMs": 42660,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-005"],
+      "rawEntryIds": [
+        "ep05-line-005"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの応答。Whisper合成行を分離。"
+      "note": "ケイの応答。Whisper合成行を分離。",
+      "lineId": "ep05-dl-006"
     },
     {
       "speakerId": "kestrel-ai",
@@ -204,10 +226,13 @@
       "endMs": 48540,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-006"],
+      "rawEntryIds": [
+        "ep05-line-006"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの核心的台詞。最終話冒頭と結末で対になる。"
+      "note": "ケイの核心的台詞。最終話冒頭と結末で対になる。",
+      "lineId": "ep05-dl-007"
     },
     {
       "speakerId": "kiritan",
@@ -217,10 +242,13 @@
       "endMs": 52140,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-007"],
+      "rawEntryIds": [
+        "ep05-line-007"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがケイの言い回しに注目。「思う」という不確かさ。"
+      "note": "きりたんがケイの言い回しに注目。「思う」という不確かさ。",
+      "lineId": "ep05-dl-008"
     },
     {
       "speakerId": "kestrel-ai",
@@ -230,10 +258,14 @@
       "endMs": 62540,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-008", "ep05-line-009"],
+      "rawEntryIds": [
+        "ep05-line-008",
+        "ep05-line-009"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの自己認識。Whisper「露震温度」→「炉心温度」修正。"
+      "note": "ケイの自己認識。Whisper「露震温度」→「炉心温度」修正。",
+      "lineId": "ep05-dl-009"
     },
     {
       "speakerId": "kestrel-ai",
@@ -243,10 +275,13 @@
       "endMs": 70500,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-010"],
+      "rawEntryIds": [
+        "ep05-line-010"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの存在論的な告白。EP04の「私は人間なのでしょうか？」と対。"
+      "note": "ケイの存在論的な告白。EP04の「私は人間なのでしょうか？」と対。",
+      "lineId": "ep05-dl-010"
     },
     {
       "speakerId": "kiritan",
@@ -256,10 +291,13 @@
       "endMs": 73400,
       "sceneId": "ep05-scene-01",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-011"],
+      "rawEntryIds": [
+        "ep05-line-011"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反省。"
+      "note": "きりたんの反省。",
+      "lineId": "ep05-dl-011"
     },
     {
       "speakerId": "kestrel-ai",
@@ -269,10 +307,13 @@
       "endMs": 86000,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-012"],
+      "rawEntryIds": [
+        "ep05-line-012"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの言葉。自分が最後の航海であることを示唆。Whisper合成行を分離。"
+      "note": "ケイの言葉。自分が最後の航海であることを示唆。Whisper合成行を分離。",
+      "lineId": "ep05-dl-012"
     },
     {
       "speakerId": "kestrel-ai",
@@ -282,10 +323,15 @@
       "endMs": 96000,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-012"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-012"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "ケイの航路ブリーフィング開始。Whisper合成行を分離。"
+      "note": "ケイの航路ブリーフィング開始。Whisper合成行を分離。",
+      "lineId": "ep05-dl-013"
     },
     {
       "speakerId": "kestrel-ai",
@@ -295,10 +341,15 @@
       "endMs": 105000,
       "sceneId": "ep05-scene-02",
       "confidence": "uncertain",
-      "rawEntryIds": ["ep05-line-012"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-012"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "口調が異なる（「わね」）。タイタニア管制ないし別人の可能性もあるが、文脈上ケイのブリーフィングの一環と判断。"
+      "note": "口調が異なる（「わね」）。タイタニア管制ないし別人の可能性もあるが、文脈上ケイのブリーフィングの一環と判断。",
+      "lineId": "ep05-dl-014"
     },
     {
       "speakerId": "kiritan",
@@ -308,10 +359,13 @@
       "endMs": 107540,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-012"],
+      "rawEntryIds": [
+        "ep05-line-012"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの余裕。EP03の無誘導航行を指す。"
+      "note": "きりたんの余裕。EP03の無誘導航行を指す。",
+      "lineId": "ep05-dl-015"
     },
     {
       "speakerId": "kestrel-ai",
@@ -321,10 +375,13 @@
       "endMs": 114540,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-013"],
+      "rawEntryIds": [
+        "ep05-line-013"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの予測。Whisper「停破」→「停波」修正。「内苑」=太陽系内惑星圏。"
+      "note": "ケイの予測。Whisper「停破」→「停波」修正。「内苑」=太陽系内惑星圏。",
+      "lineId": "ep05-dl-016"
     },
     {
       "speakerId": "kestrel-ai",
@@ -334,10 +391,13 @@
       "endMs": 124540,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-014"],
+      "rawEntryIds": [
+        "ep05-line-014"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの分析。地球の政治的動機。"
+      "note": "ケイの分析。地球の政治的動機。",
+      "lineId": "ep05-dl-017"
     },
     {
       "speakerId": "kestrel-ai",
@@ -347,10 +407,13 @@
       "endMs": 134440,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-015"],
+      "rawEntryIds": [
+        "ep05-line-015"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの解説。航法鍵なし航行の政治的意味。"
+      "note": "ケイの解説。航法鍵なし航行の政治的意味。",
+      "lineId": "ep05-dl-018"
     },
     {
       "speakerId": "kiritan",
@@ -360,10 +423,13 @@
       "endMs": 139000,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-016"],
+      "rawEntryIds": [
+        "ep05-line-016"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの比喩。Whisper合成行を分離。"
+      "note": "きりたんの比喩。Whisper合成行を分離。",
+      "lineId": "ep05-dl-019"
     },
     {
       "speakerId": "kestrel-ai",
@@ -373,10 +439,13 @@
       "endMs": 141440,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-016"],
+      "rawEntryIds": [
+        "ep05-line-016"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの言い直し。「新しいソーラーライン」のテーマ。"
+      "note": "ケイの言い直し。「新しいソーラーライン」のテーマ。",
+      "lineId": "ep05-dl-020"
     },
     {
       "speakerId": "kestrel-ai",
@@ -386,10 +455,16 @@
       "endMs": 155440,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-017", "ep05-line-018"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-017",
+        "ep05-line-018"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "ケイの航法説明。Whisper「航星観測による自立広報」→「恒星観測による自律航法」修正。LEO 400kmが明確に言及。"
+      "note": "ケイの航法説明。Whisper「航星観測による自立広報」→「恒星観測による自律航法」修正。LEO 400kmが明確に言及。",
+      "lineId": "ep05-dl-021"
     },
     {
       "speakerId": "kestrel-ai",
@@ -399,10 +474,15 @@
       "endMs": 158440,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-019"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-019"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "507時間 = 21.1日。300tシナリオ（8.3日）より長いが、中間速度巡航＋複数フライバイを含む航路。"
+      "note": "507時間 = 21.1日。300tシナリオ（8.3日）より長いが、中間速度巡航＋複数フライバイを含む航路。",
+      "lineId": "ep05-dl-022"
     },
     {
       "speakerId": "kiritan",
@@ -412,10 +492,13 @@
       "endMs": 164040,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-020"],
+      "rawEntryIds": [
+        "ep05-line-020"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの皮肉。「6日」は天地創造の比喩。"
+      "note": "きりたんの皮肉。「6日」は天地創造の比喩。",
+      "lineId": "ep05-dl-023"
     },
     {
       "speakerId": "kestrel-ai",
@@ -425,10 +508,13 @@
       "endMs": 170000,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-021"],
+      "rawEntryIds": [
+        "ep05-line-021"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの言い直し。EP04「新しいソーラーライン」への呼応。"
+      "note": "ケイの言い直し。EP04「新しいソーラーライン」への呼応。",
+      "lineId": "ep05-dl-024"
     },
     {
       "speakerId": "kestrel-ai",
@@ -438,10 +524,15 @@
       "endMs": 183040,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-021"],
-      "transferRefs": ["ep05-transfer-04"],
+      "rawEntryIds": [
+        "ep05-line-021"
+      ],
+      "transferRefs": [
+        "ep05-transfer-04"
+      ],
       "mentions": [],
-      "note": "ケイの航路詳細。Whisper「水深炉の磁気のずるに蘇生変形」→「水素炉の磁気ノズルに蘇生変形」修正。「天皇聖剣」→「天王星圏」修正。"
+      "note": "ケイの航路詳細。Whisper「水深炉の磁気のずるに蘇生変形」→「水素炉の磁気ノズルに蘇生変形」修正。「天皇聖剣」→「天王星圏」修正。",
+      "lineId": "ep05-dl-025"
     },
     {
       "speakerId": "kestrel-ai",
@@ -451,10 +542,15 @@
       "endMs": 202000,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-022"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-022"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "土星リングによる航法校正と木星フライバイの説明。Whisper「近房」→「近傍」、「構成」→「校正」修正。"
+      "note": "土星リングによる航法校正と木星フライバイの説明。Whisper「近房」→「近傍」、「構成」→「校正」修正。",
+      "lineId": "ep05-dl-026"
     },
     {
       "speakerId": "kestrel-ai",
@@ -464,10 +560,15 @@
       "endMs": 214540,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-022"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-022"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "オーベルト効果の言及。Whisper「のずる寿命」→「ノズル寿命」修正。1500km/sは重要パラメータ。"
+      "note": "オーベルト効果の言及。Whisper「のずる寿命」→「ノズル寿命」修正。1500km/sは重要パラメータ。",
+      "lineId": "ep05-dl-027"
     },
     {
       "speakerId": "kestrel-ai",
@@ -477,10 +578,16 @@
       "endMs": 234000,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-023"],
-      "transferRefs": ["ep05-transfer-02", "ep05-transfer-04"],
+      "rawEntryIds": [
+        "ep05-line-023"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02",
+        "ep05-transfer-04"
+      ],
       "mentions": [],
-      "note": "点火計画：天王星脱出(1)→木星フライバイ(2、オーベルト)→火星減速(3)→地球投入(4)の4回。Whisper「校舎」→「航舎」、「地球緊縫」→「地球近傍」修正。"
+      "note": "点火計画：天王星脱出(1)→木星フライバイ(2、オーベルト)→火星減速(3)→地球投入(4)の4回。Whisper「校舎」→「航舎」、「地球緊縫」→「地球近傍」修正。",
+      "lineId": "ep05-dl-028"
     },
     {
       "speakerId": "kiritan",
@@ -490,10 +597,13 @@
       "endMs": 237000,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-023"],
+      "rawEntryIds": [
+        "ep05-line-023"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。通常のビーコン誘導50m vs 自律航法1000km。"
+      "note": "きりたんの感想。通常のビーコン誘導50m vs 自律航法1000km。",
+      "lineId": "ep05-dl-029"
     },
     {
       "speakerId": "kiritan",
@@ -503,10 +613,13 @@
       "endMs": 241540,
       "sceneId": "ep05-scene-02",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-025"],
+      "rawEntryIds": [
+        "ep05-line-025"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんのケイへの信頼表明。"
+      "note": "きりたんのケイへの信頼表明。",
+      "lineId": "ep05-dl-030"
     },
     {
       "speakerId": "kestrel-ai",
@@ -516,10 +629,15 @@
       "endMs": 255300,
       "sceneId": "ep05-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-027"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-027"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "天王星脱出成功。Whisper「デルタアブイ」→「ΔV」、「天皇星」→「天王星」修正。"
+      "note": "天王星脱出成功。Whisper「デルタアブイ」→「ΔV」、「天皇星」→「天王星」修正。",
+      "lineId": "ep05-dl-031"
     },
     {
       "speakerId": "kestrel-ai",
@@ -529,10 +647,15 @@
       "endMs": 261000,
       "sceneId": "ep05-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-028"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-028"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "木星までの巡航時間。375時間 = 15.6日。Whisper「式点火」→「点火」修正。"
+      "note": "木星までの巡航時間。375時間 = 15.6日。Whisper「式点火」→「点火」修正。",
+      "lineId": "ep05-dl-032"
     },
     {
       "speakerId": "kiritan",
@@ -542,10 +665,13 @@
       "endMs": 263000,
       "sceneId": "ep05-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-028"],
+      "rawEntryIds": [
+        "ep05-line-028"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。"
+      "note": "きりたんの感想。",
+      "lineId": "ep05-dl-033"
     },
     {
       "speakerId": "kestrel-ai",
@@ -555,10 +681,13 @@
       "endMs": 267020,
       "sceneId": "ep05-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-029"],
+      "rawEntryIds": [
+        "ep05-line-029"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの提案。"
+      "note": "ケイの提案。",
+      "lineId": "ep05-dl-034"
     },
     {
       "speakerId": "kiritan",
@@ -568,10 +697,13 @@
       "endMs": 270100,
       "sceneId": "ep05-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-030"],
+      "rawEntryIds": [
+        "ep05-line-030"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの問い。"
+      "note": "きりたんの問い。",
+      "lineId": "ep05-dl-035"
     },
     {
       "speakerId": "kestrel-ai",
@@ -581,10 +713,13 @@
       "endMs": 275000,
       "sceneId": "ep05-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-031"],
+      "rawEntryIds": [
+        "ep05-line-031"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの返し。"
+      "note": "ケイの返し。",
+      "lineId": "ep05-dl-036"
     },
     {
       "speakerId": "kiritan",
@@ -594,10 +729,13 @@
       "endMs": 276100,
       "sceneId": "ep05-scene-03",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-031"],
+      "rawEntryIds": [
+        "ep05-line-031"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの納得。"
+      "note": "きりたんの納得。",
+      "lineId": "ep05-dl-037"
     },
     {
       "speakerId": "kestrel-ai",
@@ -607,10 +745,13 @@
       "endMs": 319000,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-035"],
+      "rawEntryIds": [
+        "ep05-line-035"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "土星圏到達。Whisper「高腕交差圏」→「港湾交差圏」修正。"
+      "note": "土星圏到達。Whisper「高腕交差圏」→「港湾交差圏」修正。",
+      "lineId": "ep05-dl-038"
     },
     {
       "speakerId": "kiritan",
@@ -620,10 +761,13 @@
       "endMs": 320520,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-035"],
+      "rawEntryIds": [
+        "ep05-line-035"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの確認。"
+      "note": "きりたんの確認。",
+      "lineId": "ep05-dl-039"
     },
     {
       "speakerId": "kestrel-ai",
@@ -633,10 +777,13 @@
       "endMs": 324100,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-036"],
+      "rawEntryIds": [
+        "ep05-line-036"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ビーコン停波の確認。Whisper「体をスキャン」→「帯をスキャン」修正。"
+      "note": "ビーコン停波の確認。Whisper「体をスキャン」→「帯をスキャン」修正。",
+      "lineId": "ep05-dl-040"
     },
     {
       "speakerId": "kestrel-ai",
@@ -646,10 +793,13 @@
       "endMs": 330000,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-037"],
+      "rawEntryIds": [
+        "ep05-line-037"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの感慨。"
+      "note": "ケイの感慨。",
+      "lineId": "ep05-dl-041"
     },
     {
       "speakerId": "kiritan",
@@ -659,10 +809,13 @@
       "endMs": 331460,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-037"],
+      "rawEntryIds": [
+        "ep05-line-037"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの応答。"
+      "note": "きりたんの応答。",
+      "lineId": "ep05-dl-042"
     },
     {
       "speakerId": "kestrel-ai",
@@ -672,10 +825,13 @@
       "endMs": 344000,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-038"],
+      "rawEntryIds": [
+        "ep05-line-038"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの回想。Whisper「高腕交差」→「港湾交差」、「感性」→「管制」、「多線」→「他船」修正。"
+      "note": "ケイの回想。Whisper「高腕交差」→「港湾交差」、「感性」→「管制」、「多線」→「他船」修正。",
+      "lineId": "ep05-dl-043"
     },
     {
       "speakerId": "kiritan",
@@ -685,10 +841,13 @@
       "endMs": 347460,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-038"],
+      "rawEntryIds": [
+        "ep05-line-038"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの比喩。"
+      "note": "きりたんの比喩。",
+      "lineId": "ep05-dl-044"
     },
     {
       "speakerId": "kestrel-ai",
@@ -698,10 +857,13 @@
       "endMs": 352000,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-039"],
+      "rawEntryIds": [
+        "ep05-line-039"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの指摘。地球の意図的停波。"
+      "note": "ケイの指摘。地球の意図的停波。",
+      "lineId": "ep05-dl-045"
     },
     {
       "speakerId": "kiritan",
@@ -711,10 +873,13 @@
       "endMs": 353960,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-039"],
+      "rawEntryIds": [
+        "ep05-line-039"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。"
+      "note": "きりたんの感想。",
+      "lineId": "ep05-dl-046"
     },
     {
       "speakerId": "kestrel-ai",
@@ -724,10 +889,13 @@
       "endMs": 365020,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-040"],
+      "rawEntryIds": [
+        "ep05-line-040"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの分析。太陽系航行700隻。"
+      "note": "ケイの分析。太陽系航行700隻。",
+      "lineId": "ep05-dl-047"
     },
     {
       "speakerId": "kiritan",
@@ -737,10 +905,13 @@
       "endMs": 374140,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-041"],
+      "rawEntryIds": [
+        "ep05-line-041"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの分析。Whisper「外宛」→「外苑」修正。"
+      "note": "きりたんの分析。Whisper「外宛」→「外苑」修正。",
+      "lineId": "ep05-dl-048"
     },
     {
       "speakerId": "kestrel-ai",
@@ -750,10 +921,13 @@
       "endMs": 382000,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-042"],
+      "rawEntryIds": [
+        "ep05-line-042"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの解説。Whisper「交法鍵」→「航法鍵」修正。"
+      "note": "ケイの解説。Whisper「交法鍵」→「航法鍵」修正。",
+      "lineId": "ep05-dl-049"
     },
     {
       "speakerId": "kiritan",
@@ -763,10 +937,13 @@
       "endMs": 383120,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-042"],
+      "rawEntryIds": [
+        "ep05-line-042"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの皮肉。"
+      "note": "きりたんの皮肉。",
+      "lineId": "ep05-dl-050"
     },
     {
       "speakerId": "kestrel-ai",
@@ -776,10 +953,13 @@
       "endMs": 386120,
       "sceneId": "ep05-scene-04",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-043"],
+      "rawEntryIds": [
+        "ep05-line-043"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの同調。"
+      "note": "ケイの同調。",
+      "lineId": "ep05-dl-051"
     },
     {
       "speakerId": "kestrel-ai",
@@ -789,10 +969,14 @@
       "endMs": 398000,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-044", "ep05-line-045"],
+      "rawEntryIds": [
+        "ep05-line-044",
+        "ep05-line-045"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの受信報告。Whisper合成行から分離。"
+      "note": "ケイの受信報告。Whisper合成行から分離。",
+      "lineId": "ep05-dl-052"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -802,10 +986,13 @@
       "endMs": 402140,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-045"],
+      "rawEntryIds": [
+        "ep05-line-045"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人登場。EP02のエンケラドスの人物が再登場。"
+      "note": "エンケラドスの管理人登場。EP02のエンケラドスの人物が再登場。",
+      "lineId": "ep05-dl-053"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -815,10 +1002,13 @@
       "endMs": 407000,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-046"],
+      "rawEntryIds": [
+        "ep05-line-046"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の呼びかけ。"
+      "note": "エンケラドスの管理人の呼びかけ。",
+      "lineId": "ep05-dl-054"
     },
     {
       "speakerId": "kiritan",
@@ -828,10 +1018,13 @@
       "endMs": 409000,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-046"],
+      "rawEntryIds": [
+        "ep05-line-046"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの応答。"
+      "note": "きりたんの応答。",
+      "lineId": "ep05-dl-055"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -841,10 +1034,13 @@
       "endMs": 414220,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-046"],
+      "rawEntryIds": [
+        "ep05-line-046"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の情報。ロックダウン1週間。"
+      "note": "エンケラドスの管理人の情報。ロックダウン1週間。",
+      "lineId": "ep05-dl-056"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -854,10 +1050,13 @@
       "endMs": 427240,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-047"],
+      "rawEntryIds": [
+        "ep05-line-047"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の説明。Whisper「天皇星」→「天王星」、「保安停」→「保安艇」修正。"
+      "note": "エンケラドスの管理人の説明。Whisper「天皇星」→「天王星」、「保安停」→「保安艇」修正。",
+      "lineId": "ep05-dl-057"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -867,10 +1066,13 @@
       "endMs": 439220,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-048"],
+      "rawEntryIds": [
+        "ep05-line-048"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人が状況を説明。Whisper「一石」→「一隻」修正。"
+      "note": "エンケラドスの管理人が状況を説明。Whisper「一石」→「一隻」修正。",
+      "lineId": "ep05-dl-058"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -880,10 +1082,13 @@
       "endMs": 457620,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-049"],
+      "rawEntryIds": [
+        "ep05-line-049"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の行動。Whisper「構成信号」→「校正信号」修正。"
+      "note": "エンケラドスの管理人の行動。Whisper「構成信号」→「校正信号」修正。",
+      "lineId": "ep05-dl-059"
     },
     {
       "speakerId": "kiritan",
@@ -893,10 +1098,13 @@
       "endMs": 460780,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-050"],
+      "rawEntryIds": [
+        "ep05-line-050"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの心配。"
+      "note": "きりたんの心配。",
+      "lineId": "ep05-dl-060"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -906,10 +1114,14 @@
       "endMs": 468220,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-051", "ep05-line-052"],
+      "rawEntryIds": [
+        "ep05-line-051",
+        "ep05-line-052"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の覚悟。「声を出せる」がテーマ。"
+      "note": "エンケラドスの管理人の覚悟。「声を出せる」がテーマ。",
+      "lineId": "ep05-dl-061"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -919,10 +1131,14 @@
       "endMs": 483000,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-053", "ep05-line-054"],
+      "rawEntryIds": [
+        "ep05-line-053",
+        "ep05-line-054"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の決意。外苑コロニーの政治的立場。"
+      "note": "エンケラドスの管理人の決意。外苑コロニーの政治的立場。",
+      "lineId": "ep05-dl-062"
     },
     {
       "speakerId": "kiritan",
@@ -932,10 +1148,13 @@
       "endMs": 485000,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-054"],
+      "rawEntryIds": [
+        "ep05-line-054"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。EP02での会話を示唆。"
+      "note": "きりたんの返し。EP02での会話を示唆。",
+      "lineId": "ep05-dl-063"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -945,10 +1164,14 @@
       "endMs": 501340,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-054", "ep05-line-055"],
+      "rawEntryIds": [
+        "ep05-line-054",
+        "ep05-line-055"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の行動。ケストレルの位置を太陽系全体に公開。"
+      "note": "エンケラドスの管理人の行動。ケストレルの位置を太陽系全体に公開。",
+      "lineId": "ep05-dl-064"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -958,10 +1181,13 @@
       "endMs": 505560,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-056"],
+      "rawEntryIds": [
+        "ep05-line-056"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の問い。"
+      "note": "エンケラドスの管理人の問い。",
+      "lineId": "ep05-dl-065"
     },
     {
       "speakerId": "kiritan",
@@ -971,10 +1197,13 @@
       "endMs": 506880,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-057"],
+      "rawEntryIds": [
+        "ep05-line-057"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの端的な答え。"
+      "note": "きりたんの端的な答え。",
+      "lineId": "ep05-dl-066"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -984,10 +1213,13 @@
       "endMs": 508880,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-058"],
+      "rawEntryIds": [
+        "ep05-line-058"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の反応。"
+      "note": "エンケラドスの管理人の反応。",
+      "lineId": "ep05-dl-067"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -997,10 +1229,13 @@
       "endMs": 513720,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-059"],
+      "rawEntryIds": [
+        "ep05-line-059"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の問い。"
+      "note": "エンケラドスの管理人の問い。",
+      "lineId": "ep05-dl-068"
     },
     {
       "speakerId": "kiritan",
@@ -1010,10 +1245,13 @@
       "endMs": 516880,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-060"],
+      "rawEntryIds": [
+        "ep05-line-060"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの応答。土星圏通過中。"
+      "note": "きりたんの応答。土星圏通過中。",
+      "lineId": "ep05-dl-069"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -1023,10 +1261,13 @@
       "endMs": 520880,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-061"],
+      "rawEntryIds": [
+        "ep05-line-061"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人の問い。"
+      "note": "エンケラドスの管理人の問い。",
+      "lineId": "ep05-dl-070"
     },
     {
       "speakerId": "kiritan",
@@ -1036,10 +1277,13 @@
       "endMs": 526880,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-062"],
+      "rawEntryIds": [
+        "ep05-line-062"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの描写。エンケラドスの夜明け。"
+      "note": "きりたんの描写。エンケラドスの夜明け。",
+      "lineId": "ep05-dl-071"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -1049,10 +1293,13 @@
       "endMs": 530880,
       "sceneId": "ep05-scene-05",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-063"],
+      "rawEntryIds": [
+        "ep05-line-063"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドスの管理人との別れ。"
+      "note": "エンケラドスの管理人との別れ。",
+      "lineId": "ep05-dl-072"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1062,10 +1309,15 @@
       "endMs": 543880,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-064"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-064"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "エンケラドスの管理人の校正信号の効果。Whisper「構成データ」→「校正データ」、「感性交法系」→「慣性航法系」、「禁防通過」→「近傍通過」、「精密交法」→「精密航法」修正。"
+      "note": "エンケラドスの管理人の校正信号の効果。Whisper「構成データ」→「校正データ」、「感性交法系」→「慣性航法系」、「禁防通過」→「近傍通過」、「精密交法」→「精密航法」修正。",
+      "lineId": "ep05-dl-073"
     },
     {
       "speakerId": "kiritan",
@@ -1075,10 +1327,13 @@
       "endMs": 548000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-065"],
+      "rawEntryIds": [
+        "ep05-line-065"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがエンケラドスの管理人を思う。"
+      "note": "きりたんがエンケラドスの管理人を思う。",
+      "lineId": "ep05-dl-074"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1088,10 +1343,13 @@
       "endMs": 551000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-065"],
+      "rawEntryIds": [
+        "ep05-line-065"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの返答。エンケラドスの管理人の発信行動を指す。"
+      "note": "ケイの返答。エンケラドスの管理人の発信行動を指す。",
+      "lineId": "ep05-dl-075"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1101,10 +1359,16 @@
       "endMs": 568100,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-066", "ep05-line-067"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-066",
+        "ep05-line-067"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "土星リングによる航法校正。Whisper「構成観測交法の構成」→「恒星観測航法の校正」修正。"
+      "note": "土星リングによる航法校正。Whisper「構成観測交法の構成」→「恒星観測航法の校正」修正。",
+      "lineId": "ep05-dl-076"
     },
     {
       "speakerId": "kiritan",
@@ -1114,10 +1378,13 @@
       "endMs": 571000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-068"],
+      "rawEntryIds": [
+        "ep05-line-068"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。"
+      "note": "きりたんの感想。",
+      "lineId": "ep05-dl-077"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1127,10 +1394,13 @@
       "endMs": 590000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-069"],
+      "rawEntryIds": [
+        "ep05-line-069"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの航法説明。Whisper「制度」→「精度」修正。"
+      "note": "ケイの航法説明。Whisper「制度」→「精度」修正。",
+      "lineId": "ep05-dl-078"
     },
     {
       "speakerId": "kiritan",
@@ -1140,10 +1410,13 @@
       "endMs": 596000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-069"],
+      "rawEntryIds": [
+        "ep05-line-069"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの冗談。"
+      "note": "きりたんの冗談。",
+      "lineId": "ep05-dl-079"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1153,10 +1426,13 @@
       "endMs": 603020,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-069"],
+      "rawEntryIds": [
+        "ep05-line-069"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの警告＋毒舌。1500km/sでの微小粒子衝突エネルギー。110MJ ≈ TNT 26kg相当。"
+      "note": "ケイの警告＋毒舌。1500km/sでの微小粒子衝突エネルギー。110MJ ≈ TNT 26kg相当。",
+      "lineId": "ep05-dl-080"
     },
     {
       "speakerId": "kiritan",
@@ -1166,10 +1442,13 @@
       "endMs": 604000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-070"],
+      "rawEntryIds": [
+        "ep05-line-070"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。"
+      "note": "きりたんの返し。",
+      "lineId": "ep05-dl-081"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1179,10 +1458,13 @@
       "endMs": 605280,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-070"],
+      "rawEntryIds": [
+        "ep05-line-070"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの冗談。"
+      "note": "ケイの冗談。",
+      "lineId": "ep05-dl-082"
     },
     {
       "speakerId": "kiritan",
@@ -1192,10 +1474,13 @@
       "endMs": 610280,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-071"],
+      "rawEntryIds": [
+        "ep05-line-071"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの問い。Whisper「工法」→「航法」修正。"
+      "note": "きりたんの問い。Whisper「工法」→「航法」修正。",
+      "lineId": "ep05-dl-083"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1205,10 +1490,13 @@
       "endMs": 612280,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-072"],
+      "rawEntryIds": [
+        "ep05-line-072"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの答え。Whisper「東京」→「天王星人」修正（文脈から明確）。EP04のゲスト（天王星人）が教えた航法。"
+      "note": "ケイの答え。Whisper「東京」→「天王星人」修正（文脈から明確）。EP04のゲスト（天王星人）が教えた航法。",
+      "lineId": "ep05-dl-084"
     },
     {
       "speakerId": "kiritan",
@@ -1218,10 +1506,13 @@
       "endMs": 614280,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-073"],
+      "rawEntryIds": [
+        "ep05-line-073"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの応答。Whisper「東京ね」→「天王星人ね」修正。"
+      "note": "きりたんの応答。Whisper「東京ね」→「天王星人ね」修正。",
+      "lineId": "ep05-dl-085"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1231,10 +1522,13 @@
       "endMs": 625000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-074"],
+      "rawEntryIds": [
+        "ep05-line-074"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイが天王星人の航法哲学を語る。Whisper「天皇聖人」→「天王星人」、「地場」→「磁場」修正。"
+      "note": "ケイが天王星人の航法哲学を語る。Whisper「天皇聖人」→「天王星人」、「地場」→「磁場」修正。",
+      "lineId": "ep05-dl-086"
     },
     {
       "speakerId": "kiritan",
@@ -1244,10 +1538,13 @@
       "endMs": 626280,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-074"],
+      "rawEntryIds": [
+        "ep05-line-074"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの指摘。"
+      "note": "きりたんの指摘。",
+      "lineId": "ep05-dl-087"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1257,10 +1554,13 @@
       "endMs": 630280,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-075"],
+      "rawEntryIds": [
+        "ep05-line-075"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの解説。天王星人は船との接続が前提。"
+      "note": "ケイの解説。天王星人は船との接続が前提。",
+      "lineId": "ep05-dl-088"
     },
     {
       "speakerId": "kiritan",
@@ -1270,10 +1570,13 @@
       "endMs": 633000,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-076"],
+      "rawEntryIds": [
+        "ep05-line-076"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの謝罪（ケイの出自に触れたことへの配慮）。"
+      "note": "きりたんの謝罪（ケイの出自に触れたことへの配慮）。",
+      "lineId": "ep05-dl-089"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1283,10 +1586,14 @@
       "endMs": 640900,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-076", "ep05-line-077"],
+      "rawEntryIds": [
+        "ep05-line-076",
+        "ep05-line-077"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの核心的台詞。船と一体であることが、きりたんとの旅を可能にした。"
+      "note": "ケイの核心的台詞。船と一体であることが、きりたんとの旅を可能にした。",
+      "lineId": "ep05-dl-090"
     },
     {
       "speakerId": "kiritan",
@@ -1296,10 +1603,13 @@
       "endMs": 645640,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-078"],
+      "rawEntryIds": [
+        "ep05-line-078"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感謝。"
+      "note": "きりたんの感謝。",
+      "lineId": "ep05-dl-091"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1309,10 +1619,13 @@
       "endMs": 653320,
       "sceneId": "ep05-scene-06",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-079"],
+      "rawEntryIds": [
+        "ep05-line-079"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの返答。"
+      "note": "ケイの返答。",
+      "lineId": "ep05-dl-092"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1322,10 +1635,13 @@
       "endMs": 668000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-080"],
+      "rawEntryIds": [
+        "ep05-line-080"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "木星接近報告。"
+      "note": "木星接近報告。",
+      "lineId": "ep05-dl-093"
     },
     {
       "speakerId": "kiritan",
@@ -1335,10 +1651,13 @@
       "endMs": 669900,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-080"],
+      "rawEntryIds": [
+        "ep05-line-080"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。EP01以来の木星。"
+      "note": "きりたんの感想。EP01以来の木星。",
+      "lineId": "ep05-dl-094"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1348,10 +1667,16 @@
       "endMs": 689000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-081", "ep05-line-082"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-081",
+        "ep05-line-082"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "木星パワードフライバイの説明。Whisper「重力移動」→「重力圏」修正。"
+      "note": "木星パワードフライバイの説明。Whisper「重力移動」→「重力圏」修正。",
+      "lineId": "ep05-dl-095"
     },
     {
       "speakerId": "kiritan",
@@ -1361,10 +1686,13 @@
       "endMs": 691000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-082"],
+      "rawEntryIds": [
+        "ep05-line-082"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。"
+      "note": "きりたんの感想。",
+      "lineId": "ep05-dl-096"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1374,10 +1702,14 @@
       "endMs": 694560,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-082", "ep05-line-083"],
+      "rawEntryIds": [
+        "ep05-line-082",
+        "ep05-line-083"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイのブラックユーモア。Whisper「穴勝ち」→「あながち」修正。"
+      "note": "ケイのブラックユーモア。Whisper「穴勝ち」→「あながち」修正。",
+      "lineId": "ep05-dl-097"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1387,10 +1719,16 @@
       "endMs": 708380,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-084", "ep05-line-085"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-084",
+        "ep05-line-085"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "オーベルト効果の説明。1500km/sでは重力アシストΔVは微小だが、深い重力井戸での噴射で効率向上。"
+      "note": "オーベルト効果の説明。1500km/sでは重力アシストΔVは微小だが、深い重力井戸での噴射で効率向上。",
+      "lineId": "ep05-dl-098"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1400,10 +1738,13 @@
       "endMs": 717380,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-086"],
+      "rawEntryIds": [
+        "ep05-line-086"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "イオ・トーラス通過の説明。Whisper「降降」→「航行」修正。"
+      "note": "イオ・トーラス通過の説明。Whisper「降降」→「航行」修正。",
+      "lineId": "ep05-dl-099"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1413,10 +1754,15 @@
       "endMs": 726380,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-087"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-087"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "最終速度2100km/sの目的。Whisper「格魚雷」→「核魚雷」修正。核魚雷回避が木星フライバイの真の理由。"
+      "note": "最終速度2100km/sの目的。Whisper「格魚雷」→「核魚雷」修正。核魚雷回避が木星フライバイの真の理由。",
+      "lineId": "ep05-dl-100"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1426,10 +1772,13 @@
       "endMs": 746000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-088"],
+      "rawEntryIds": [
+        "ep05-line-088"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "核魚雷回避の物理的根拠。Whisper「新幹」→「信管」、「格魚雷」→「核魚雷」修正。"
+      "note": "核魚雷回避の物理的根拠。Whisper「新幹」→「信管」、「格魚雷」→「核魚雷」修正。",
+      "lineId": "ep05-dl-101"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1439,10 +1788,14 @@
       "endMs": 760000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-088", "ep05-line-089"],
+      "rawEntryIds": [
+        "ep05-line-088",
+        "ep05-line-089"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "核魚雷使用の政治的制約。Whisper「金棒」→「近傍」修正。"
+      "note": "核魚雷使用の政治的制約。Whisper「金棒」→「近傍」修正。",
+      "lineId": "ep05-dl-102"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1452,10 +1805,13 @@
       "endMs": 773000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-089"],
+      "rawEntryIds": [
+        "ep05-line-089"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの戦略分析。"
+      "note": "ケイの戦略分析。",
+      "lineId": "ep05-dl-103"
     },
     {
       "speakerId": "kiritan",
@@ -1465,10 +1821,13 @@
       "endMs": 774000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-089"],
+      "rawEntryIds": [
+        "ep05-line-089"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの皮肉。"
+      "note": "きりたんの皮肉。",
+      "lineId": "ep05-dl-104"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1478,10 +1837,15 @@
       "endMs": 780000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-089"],
-      "transferRefs": ["ep05-transfer-04"],
+      "rawEntryIds": [
+        "ep05-line-089"
+      ],
+      "transferRefs": [
+        "ep05-transfer-04"
+      ],
       "mentions": [],
-      "note": "ノズル寿命問題の提起。Whisper「水深炉の時期のずる」→「水素炉の磁気ノズル」修正。"
+      "note": "ノズル寿命問題の提起。Whisper「水深炉の時期のずる」→「水素炉の磁気ノズル」修正。",
+      "lineId": "ep05-dl-105"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1491,10 +1855,15 @@
       "endMs": 791000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-090"],
-      "transferRefs": ["ep05-transfer-04"],
+      "rawEntryIds": [
+        "ep05-line-090"
+      ],
+      "transferRefs": [
+        "ep05-transfer-04"
+      ],
       "mentions": [],
-      "note": "ノズル残寿命 vs 必要燃焼時間。マージン26分。シリーズ恒例の「ギリギリ」設計。Whisper「のずる」→「ノズル」修正。"
+      "note": "ノズル残寿命 vs 必要燃焼時間。マージン26分。シリーズ恒例の「ギリギリ」設計。Whisper「のずる」→「ノズル」修正。",
+      "lineId": "ep05-dl-106"
     },
     {
       "speakerId": "kiritan",
@@ -1504,10 +1873,13 @@
       "endMs": 793000,
       "sceneId": "ep05-scene-07",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-090"],
+      "rawEntryIds": [
+        "ep05-line-090"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたん。核魚雷の待ち伏せを懸念。"
+      "note": "きりたん。核魚雷の待ち伏せを懸念。",
+      "lineId": "ep05-dl-107"
     },
     {
       "speakerId": "rai",
@@ -1517,10 +1889,13 @@
       "endMs": 800000,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-092"],
+      "rawEntryIds": [
+        "ep05-line-092"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗り登場。EP01のガニメデのパイロットが再登場。可視光通信。"
+      "note": "船乗り登場。EP01のガニメデのパイロットが再登場。可視光通信。",
+      "lineId": "ep05-dl-108"
     },
     {
       "speakerId": "kiritan",
@@ -1530,10 +1905,13 @@
       "endMs": 802580,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-092"],
+      "rawEntryIds": [
+        "ep05-line-092"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんのツッコミ。"
+      "note": "きりたんのツッコミ。",
+      "lineId": "ep05-dl-109"
     },
     {
       "speakerId": "rai",
@@ -1543,10 +1921,13 @@
       "endMs": 810000,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-093"],
+      "rawEntryIds": [
+        "ep05-line-093"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗りの返し。Whisper「法案法」→「航法法」修正。"
+      "note": "船乗りの返し。Whisper「法案法」→「航法法」修正。",
+      "lineId": "ep05-dl-110"
     },
     {
       "speakerId": "rai",
@@ -1556,10 +1937,13 @@
       "endMs": 826300,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-095"],
+      "rawEntryIds": [
+        "ep05-line-095"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗りがエンケラドスの管理人の発信の効果を伝える。Whisper「天皇星」→「天王星」、「公報鍵」→「航法鍵」修正。"
+      "note": "船乗りがエンケラドスの管理人の発信の効果を伝える。Whisper「天皇星」→「天王星」、「公報鍵」→「航法鍵」修正。",
+      "lineId": "ep05-dl-111"
     },
     {
       "speakerId": "rai",
@@ -1569,10 +1953,13 @@
       "endMs": 838300,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-096"],
+      "rawEntryIds": [
+        "ep05-line-096"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗りがガニメデの窮状を伝える。Whisper「落って」→「落ちて」修正。"
+      "note": "船乗りがガニメデの窮状を伝える。Whisper「落って」→「落ちて」修正。",
+      "lineId": "ep05-dl-112"
     },
     {
       "speakerId": "rai",
@@ -1582,10 +1969,13 @@
       "endMs": 843300,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-097"],
+      "rawEntryIds": [
+        "ep05-line-097"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗りの怒り。Whisper「木製の住人を日上がらせて」→「木星の住人を干上がらせて」修正。"
+      "note": "船乗りの怒り。Whisper「木製の住人を日上がらせて」→「木星の住人を干上がらせて」修正。",
+      "lineId": "ep05-dl-113"
     },
     {
       "speakerId": "rai",
@@ -1595,10 +1985,13 @@
       "endMs": 882000,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-099"],
+      "rawEntryIds": [
+        "ep05-line-099"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗りの計画。保安艇2隻が木星圏で待ち伏せ。Whisper「木製券」→「木星圏」修正。"
+      "note": "船乗りの計画。保安艇2隻が木星圏で待ち伏せ。Whisper「木製券」→「木星圏」修正。",
+      "lineId": "ep05-dl-114"
     },
     {
       "speakerId": "rai",
@@ -1608,10 +2001,13 @@
       "endMs": 898000,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-100"],
+      "rawEntryIds": [
+        "ep05-line-100"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗りの欺瞞計画。偽トランスポンダで複数の偽航跡。Whisper「木製」→「木星」、「起走功績」→「欺瞞航跡」修正。"
+      "note": "船乗りの欺瞞計画。偽トランスポンダで複数の偽航跡。Whisper「木製」→「木星」、「起走功績」→「欺瞞航跡」修正。",
+      "lineId": "ep05-dl-115"
     },
     {
       "speakerId": "rai",
@@ -1621,10 +2017,13 @@
       "endMs": 906860,
       "sceneId": "ep05-scene-08",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-100"],
+      "rawEntryIds": [
+        "ep05-line-100"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船乗りの覚悟。EP01ガニメデでの約束。Whisper「起走」→「欺瞞」、「仮目で」→「ガニメデ」修正。"
+      "note": "船乗りの覚悟。EP01ガニメデでの約束。Whisper「起走」→「欺瞞」、「仮目で」→「ガニメデ」修正。",
+      "lineId": "ep05-dl-116"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1634,10 +2033,15 @@
       "endMs": 930000,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-101"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-101"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "イオ・トーラス通過。220 Sv/hは致死的放射線レベル（シールドなしなら即死）。"
+      "note": "イオ・トーラス通過。220 Sv/hは致死的放射線レベル（シールドなしなら即死）。",
+      "lineId": "ep05-dl-117"
     },
     {
       "speakerId": "kiritan",
@@ -1647,10 +2051,13 @@
       "endMs": 932000,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-101"],
+      "rawEntryIds": [
+        "ep05-line-101"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。"
+      "note": "きりたんの感想。",
+      "lineId": "ep05-dl-118"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1660,10 +2067,13 @@
       "endMs": 932860,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-101"],
+      "rawEntryIds": [
+        "ep05-line-101"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの比較。"
+      "note": "ケイの比較。",
+      "lineId": "ep05-dl-119"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1673,10 +2083,16 @@
       "endMs": 970860,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-107", "ep05-line-108"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-107",
+        "ep05-line-108"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "小惑星帯での航法校正。Whisper「称号」→「照合」、「広報誤差」→「航法誤差」修正。"
+      "note": "小惑星帯での航法校正。Whisper「称号」→「照合」、「広報誤差」→「航法誤差」修正。",
+      "lineId": "ep05-dl-120"
     },
     {
       "speakerId": "kiritan",
@@ -1686,10 +2102,13 @@
       "endMs": 978000,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-109"],
+      "rawEntryIds": [
+        "ep05-line-109"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの比較。通常50m vs 自律航法20km。"
+      "note": "きりたんの比較。通常50m vs 自律航法20km。",
+      "lineId": "ep05-dl-121"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1699,10 +2118,13 @@
       "endMs": 985000,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-109"],
+      "rawEntryIds": [
+        "ep05-line-109"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの自負。天王星から自律航法で20km誤差は驚異的精度。"
+      "note": "ケイの自負。天王星から自律航法で20km誤差は驚異的精度。",
+      "lineId": "ep05-dl-122"
     },
     {
       "speakerId": "kiritan",
@@ -1712,10 +2134,13 @@
       "endMs": 985160,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-109"],
+      "rawEntryIds": [
+        "ep05-line-109"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。Whisper「嬉しなきか」→「嬉し泣きか」修正。"
+      "note": "きりたんの返し。Whisper「嬉しなきか」→「嬉し泣きか」修正。",
+      "lineId": "ep05-dl-123"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1725,10 +2150,13 @@
       "endMs": 994060,
       "sceneId": "ep05-scene-09",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-110"],
+      "rawEntryIds": [
+        "ep05-line-110"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの返答。"
+      "note": "ケイの返答。",
+      "lineId": "ep05-dl-124"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1738,10 +2166,15 @@
       "endMs": 1036000,
       "sceneId": "ep05-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-114"],
-      "transferRefs": ["ep05-transfer-02"],
+      "rawEntryIds": [
+        "ep05-line-114"
+      ],
+      "transferRefs": [
+        "ep05-transfer-02"
+      ],
       "mentions": [],
-      "note": "火星での3回目の点火（減速）。"
+      "note": "火星での3回目の点火（減速）。",
+      "lineId": "ep05-dl-125"
     },
     {
       "speakerId": "kiritan",
@@ -1751,10 +2184,13 @@
       "endMs": 1038000,
       "sceneId": "ep05-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-114"],
+      "rawEntryIds": [
+        "ep05-line-114"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感慨。出発地点の火星に帰還。"
+      "note": "きりたんの感慨。出発地点の火星に帰還。",
+      "lineId": "ep05-dl-126"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1764,10 +2200,13 @@
       "endMs": 1042000,
       "sceneId": "ep05-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-114"],
+      "rawEntryIds": [
+        "ep05-line-114"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの問い。"
+      "note": "ケイの問い。",
+      "lineId": "ep05-dl-127"
     },
     {
       "speakerId": "kiritan",
@@ -1777,10 +2216,13 @@
       "endMs": 1046000,
       "sceneId": "ep05-scene-10",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-114"],
+      "rawEntryIds": [
+        "ep05-line-114"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの火星観。"
+      "note": "きりたんの火星観。",
+      "lineId": "ep05-dl-128"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1790,10 +2232,15 @@
       "endMs": 1226040,
       "sceneId": "ep05-scene-11",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-128"],
-      "transferRefs": ["ep05-transfer-04"],
+      "rawEntryIds": [
+        "ep05-line-128"
+      ],
+      "transferRefs": [
+        "ep05-transfer-04"
+      ],
       "mentions": [],
-      "note": "ノズルの最終状態。残り点火1回。Whisper「時期のずる」→「磁気ノズル」修正。"
+      "note": "ノズルの最終状態。残り点火1回。Whisper「時期のずる」→「磁気ノズル」修正。",
+      "lineId": "ep05-dl-129"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1803,10 +2250,15 @@
       "endMs": 1230060,
       "sceneId": "ep05-scene-11",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-129"],
-      "transferRefs": ["ep05-transfer-04"],
+      "rawEntryIds": [
+        "ep05-line-129"
+      ],
+      "transferRefs": [
+        "ep05-transfer-04"
+      ],
       "mentions": [],
-      "note": "ケイが安全基準上の拒否を表明。"
+      "note": "ケイが安全基準上の拒否を表明。",
+      "lineId": "ep05-dl-130"
     },
     {
       "speakerId": "kiritan",
@@ -1816,10 +2268,16 @@
       "endMs": 1234240,
       "sceneId": "ep05-scene-11",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-130", "ep05-line-131"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-130",
+        "ep05-line-131"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "きりたんが手動で点火を決断。EP04同様の「メインアップ」コール。"
+      "note": "きりたんが手動で点火を決断。EP04同様の「メインアップ」コール。",
+      "lineId": "ep05-dl-131"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1829,10 +2287,15 @@
       "endMs": 1243600,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-132"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-132"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "ケイのカウントダウン。安全基準外だが、きりたんの命令に従う。"
+      "note": "ケイのカウントダウン。安全基準外だが、きりたんの命令に従う。",
+      "lineId": "ep05-dl-132"
     },
     {
       "speakerId": "kiritan",
@@ -1842,10 +2305,15 @@
       "endMs": 1245080,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-133"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-133"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "最後の点火命令。"
+      "note": "最後の点火命令。",
+      "lineId": "ep05-dl-133"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1855,10 +2323,15 @@
       "endMs": 1260160,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-134"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-134"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "最終減速中のステータス。"
+      "note": "最終減速中のステータス。",
+      "lineId": "ep05-dl-134"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1868,10 +2341,14 @@
       "endMs": 1275980,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-135", "ep05-line-136"],
+      "rawEntryIds": [
+        "ep05-line-135",
+        "ep05-line-136"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "冷却系の緊急対応。Whisper「カットオーフ」→「カットオフ」修正。"
+      "note": "冷却系の緊急対応。Whisper「カットオーフ」→「カットオフ」修正。",
+      "lineId": "ep05-dl-135"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1881,10 +2358,13 @@
       "endMs": 1282260,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-137"],
+      "rawEntryIds": [
+        "ep05-line-137"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "構造限界に近づく。Whisper「気体容力」→「機体応力」修正。"
+      "note": "構造限界に近づく。Whisper「気体容力」→「機体応力」修正。",
+      "lineId": "ep05-dl-136"
     },
     {
       "speakerId": "seilanders",
@@ -1894,10 +2374,13 @@
       "endMs": 1303160,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-140"],
+      "rawEntryIds": [
+        "ep05-line-140"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "地球側からの通信。Whisper「ホワンテンエシロン」は機構コールサイン。"
+      "note": "地球側からの通信。Whisper「ホワンテンエシロン」は機構コールサイン。",
+      "lineId": "ep05-dl-137"
     },
     {
       "speakerId": "seilanders",
@@ -1907,10 +2390,14 @@
       "endMs": 1320100,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-141", "ep05-line-142"],
+      "rawEntryIds": [
+        "ep05-line-141",
+        "ep05-line-142"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "停船命令。Whisper「任聖」→「認証」、「完成機動」→「管制機動」、「交番法」→「航法法」、「主水進路」→「主推進」修正。"
+      "note": "停船命令。Whisper「任聖」→「認証」、「完成機動」→「管制機動」、「交番法」→「航法法」、「主水進路」→「主推進」修正。",
+      "lineId": "ep05-dl-138"
     },
     {
       "speakerId": "kiritan",
@@ -1920,10 +2407,15 @@
       "endMs": 1324380,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-143"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-143"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "きりたんの返答。物理的に停止不能（停止=捕捉ΔVが足りなくなる）。"
+      "note": "きりたんの返答。物理的に停止不能（停止=捕捉ΔVが足りなくなる）。",
+      "lineId": "ep05-dl-139"
     },
     {
       "speakerId": "seilanders",
@@ -1933,10 +2425,13 @@
       "endMs": 1329040,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-144"],
+      "rawEntryIds": [
+        "ep05-line-144"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "セイランダースの威嚇。"
+      "note": "セイランダースの威嚇。",
+      "lineId": "ep05-dl-140"
     },
     {
       "speakerId": "kiritan",
@@ -1946,10 +2441,13 @@
       "endMs": 1331780,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-145"],
+      "rawEntryIds": [
+        "ep05-line-145"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの冗談。"
+      "note": "きりたんの冗談。",
+      "lineId": "ep05-dl-141"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1959,10 +2457,14 @@
       "endMs": 1347220,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-146", "ep05-line-147"],
+      "rawEntryIds": [
+        "ep05-line-146",
+        "ep05-line-147"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの洞察。「秩序の中に存在しない」がテーマ。Whisper「後方鍵」→「航法鍵」修正。"
+      "note": "ケイの洞察。「秩序の中に存在しない」がテーマ。Whisper「後方鍵」→「航法鍵」修正。",
+      "lineId": "ep05-dl-142"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1972,10 +2474,15 @@
       "endMs": 1355280,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-148"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-148"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "最終局面。Whisper「デルターヴィー」→「ΔV」、「時期のずる」→「磁気ノズル」修正。"
+      "note": "最終局面。Whisper「デルターヴィー」→「ΔV」、「時期のずる」→「磁気ノズル」修正。",
+      "lineId": "ep05-dl-143"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1985,10 +2492,15 @@
       "endMs": 1364220,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-149"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-149"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "7.67km/sは第一宇宙速度（LEO周回速度）。軌道投入の瞬間。"
+      "note": "7.67km/sは第一宇宙速度（LEO周回速度）。軌道投入の瞬間。",
+      "lineId": "ep05-dl-144"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1998,10 +2510,15 @@
       "endMs": 1374720,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-150"],
-      "transferRefs": ["ep05-transfer-03"],
+      "rawEntryIds": [
+        "ep05-line-150"
+      ],
+      "transferRefs": [
+        "ep05-transfer-03"
+      ],
       "mentions": [],
-      "note": "LEO 400km到達。ミッション完了。Whisper「機動速度」→「軌道速度」修正。"
+      "note": "LEO 400km到達。ミッション完了。Whisper「機動速度」→「軌道速度」修正。",
+      "lineId": "ep05-dl-145"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2011,10 +2528,15 @@
       "endMs": 1382220,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-151"],
-      "transferRefs": ["ep05-transfer-04"],
+      "rawEntryIds": [
+        "ep05-line-151"
+      ],
+      "transferRefs": [
+        "ep05-transfer-04"
+      ],
       "mentions": [],
-      "note": "ノズル完全喪失。マージン26分のギリギリで達成。Whisper「時期のずる」→「磁気ノズル」修正。"
+      "note": "ノズル完全喪失。マージン26分のギリギリで達成。Whisper「時期のずる」→「磁気ノズル」修正。",
+      "lineId": "ep05-dl-146"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2024,10 +2546,13 @@
       "endMs": 1396460,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-152"],
+      "rawEntryIds": [
+        "ep05-line-152"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "船の最終状態。Whisper「色彩指導」→「姿勢制御」修正。"
+      "note": "船の最終状態。Whisper「色彩指導」→「姿勢制御」修正。",
+      "lineId": "ep05-dl-147"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2037,10 +2562,13 @@
       "endMs": 1402900,
       "sceneId": "ep05-scene-12",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-153"],
+      "rawEntryIds": [
+        "ep05-line-153"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの宣告。ケストレル号の航海の終わり。"
+      "note": "ケイの宣告。ケストレル号の航海の終わり。",
+      "lineId": "ep05-dl-148"
     },
     {
       "speakerId": "kiritan",
@@ -2050,10 +2578,13 @@
       "endMs": 1411000,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-154"],
+      "rawEntryIds": [
+        "ep05-line-154"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがケイの名を呼ぶ。"
+      "note": "きりたんがケイの名を呼ぶ。",
+      "lineId": "ep05-dl-149"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2063,10 +2594,13 @@
       "endMs": 1412220,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-154"],
+      "rawEntryIds": [
+        "ep05-line-154"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの応答。"
+      "note": "ケイの応答。",
+      "lineId": "ep05-dl-150"
     },
     {
       "speakerId": "kiritan",
@@ -2076,10 +2610,13 @@
       "endMs": 1418480,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-155"],
+      "rawEntryIds": [
+        "ep05-line-155"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの問い。冒頭の「船が壊れていくのはどんな感じなんだ」と対。"
+      "note": "きりたんの問い。冒頭の「船が壊れていくのはどんな感じなんだ」と対。",
+      "lineId": "ep05-dl-151"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2089,10 +2626,13 @@
       "endMs": 1427220,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-156"],
+      "rawEntryIds": [
+        "ep05-line-156"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "冒頭の台詞の反復。「大切なものが少しずつ壊れていく」。"
+      "note": "冒頭の台詞の反復。「大切なものが少しずつ壊れていく」。",
+      "lineId": "ep05-dl-152"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2102,10 +2642,13 @@
       "endMs": 1437960,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-157"],
+      "rawEntryIds": [
+        "ep05-line-157"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの結論。シリーズの核心。"
+      "note": "ケイの結論。シリーズの核心。",
+      "lineId": "ep05-dl-153"
     },
     {
       "speakerId": "kiritan",
@@ -2115,10 +2658,13 @@
       "endMs": 1442560,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-158"],
+      "rawEntryIds": [
+        "ep05-line-158"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの問い。"
+      "note": "きりたんの問い。",
+      "lineId": "ep05-dl-154"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2128,10 +2674,13 @@
       "endMs": 1447220,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-159"],
+      "rawEntryIds": [
+        "ep05-line-159"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの答え。地球低軌道からの景色。シリーズ最後の台詞の一つ。"
+      "note": "ケイの答え。地球低軌道からの景色。シリーズ最後の台詞の一つ。",
+      "lineId": "ep05-dl-155"
     },
     {
       "speakerId": "kiritan",
@@ -2141,10 +2690,13 @@
       "endMs": 1614120,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-161"],
+      "rawEntryIds": [
+        "ep05-line-161"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの問い。エピローグ。次の旅を示唆。"
+      "note": "きりたんの問い。エピローグ。次の旅を示唆。",
+      "lineId": "ep05-dl-156"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2154,10 +2706,14 @@
       "endMs": 1622240,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-162", "ep05-line-163"],
+      "rawEntryIds": [
+        "ep05-line-162",
+        "ep05-line-163"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの答え。EP01の発端（妙な貨物=荷物）への言及。"
+      "note": "ケイの答え。EP01の発端（妙な貨物=荷物）への言及。",
+      "lineId": "ep05-dl-157"
     },
     {
       "speakerId": "kiritan",
@@ -2167,10 +2723,13 @@
       "endMs": 1623800,
       "sceneId": "ep05-scene-13",
       "confidence": "high",
-      "rawEntryIds": ["ep05-line-164"],
+      "rawEntryIds": [
+        "ep05-line-164"
+      ],
       "transferRefs": [],
       "mentions": [],
-      "note": "シリーズ最後の台詞。きりたんらしい返し。"
+      "note": "シリーズ最後の台詞。きりたんらしい返し。",
+      "lineId": "ep05-dl-158"
     }
   ]
 }

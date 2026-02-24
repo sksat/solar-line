@@ -299,6 +299,7 @@ describe("validateEpisodeDialogue", () => {
     ],
     dialogue: [
       {
+        lineId: "ep01-dl-001",
         speakerId: "yukari",
         speakerName: "結月ゆかり",
         text: "ΔVは5km/sです",

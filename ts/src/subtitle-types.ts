@@ -91,6 +91,8 @@ export interface OrbitalMention {
 
 /** A single attributed dialogue line */
 export interface DialogueLine {
+  /** Stable unique ID, e.g. "ep01-dl-001". Used for cross-referencing from reports. */
+  lineId: string;
   /** Canonical speaker ID (references Speaker.id) */
   speakerId: string;
   /** Display name for convenience */

@@ -21,49 +21,57 @@
       "id": "ep02-quote-01",
       "speaker": "ケイ",
       "text": "冷却系圧力 0.04 MPa低下。冷媒が局所的に漏洩している可能性があります。次の加速で冷却余裕はゼロになります",
-      "timestamp": "00:54"
+      "timestamp": "00:54",
+      "dialogueLineId": "ep02-dl-010"
     },
     {
       "id": "ep02-quote-02",
       "speaker": "ケイ",
       "text": "骨格フレーム応力比は114%。少なくとも3点で歪みを検出しています。連続フルバーンは不可です",
-      "timestamp": "01:05"
+      "timestamp": "01:05",
+      "dialogueLineId": "ep02-dl-012"
     },
     {
       "id": "ep02-quote-03",
       "speaker": "ケイ",
       "text": "高度50RJ、木星基準速度10.3 km/s。遷移面の中心線に投入。スラストはトリムのみ",
-      "timestamp": "09:08"
+      "timestamp": "09:08",
+      "dialogueLineId": "ep02-dl-078"
     },
     {
       "id": "ep02-quote-04",
       "speaker": "ケイ",
       "text": "放射線シールドの残寿命42分。このままでは航路の途中でコア放射圏に焼かれます",
-      "timestamp": "07:44"
+      "timestamp": "07:44",
+      "dialogueLineId": "ep02-dl-070"
     },
     {
       "id": "ep02-quote-05",
       "speaker": "ケイ",
       "text": "外縁軌道投入のための推進シークエンスを開始。転化ウィンドウまで残り5時間",
-      "timestamp": "16:07"
+      "timestamp": "16:07",
+      "dialogueLineId": "ep02-dl-122"
     },
     {
       "id": "ep02-quote-06",
       "speaker": "ケイ",
       "text": "外縁軌道は修正機動を許容しません。一度外せば帰還の可能性は消えます",
-      "timestamp": "16:15"
+      "timestamp": "16:15",
+      "dialogueLineId": "ep02-dl-122"
     },
     {
       "id": "ep02-quote-07",
       "speaker": "ケイ",
       "text": "軌道交差警告。衝突の危険あり。相対速度0.12 km/s",
-      "timestamp": "16:38"
+      "timestamp": "16:38",
+      "dialogueLineId": "ep02-dl-124"
     },
     {
       "id": "ep02-quote-08",
       "speaker": "きりたん",
       "text": "私の船の10倍以上だ。地球か火星の船しかありえない",
-      "timestamp": "17:51"
+      "timestamp": "17:51",
+      "dialogueLineId": "ep02-dl-130"
     }
   ],
   "transfers": [
@@ -309,7 +317,7 @@
           "radius": 5.9,
           "color": "#d29922",
           "angle": 1.57,
-          "meanMotion": 4.109e-05
+          "meanMotion": 0.00004109
         },
         {
           "id": "europa",
@@ -317,7 +325,7 @@
           "radius": 9.4,
           "color": "#8b949e",
           "angle": 2.36,
-          "meanMotion": 2.048e-05
+          "meanMotion": 0.00002048
         },
         {
           "id": "ganymede",
@@ -325,7 +333,7 @@
           "radius": 15,
           "color": "#58a6ff",
           "angle": 3.14,
-          "meanMotion": 1.017e-05
+          "meanMotion": 0.00001017
         },
         {
           "id": "callisto",
@@ -333,7 +341,7 @@
           "radius": 26.3,
           "color": "#6e7681",
           "angle": 4.19,
-          "meanMotion": 4.358e-06
+          "meanMotion": 0.000004358
         },
         {
           "id": "escape-point",
@@ -381,7 +389,7 @@
           "label": "火星",
           "radius": 1.524,
           "color": "#f85149",
-          "meanMotion": 1.059e-07
+          "meanMotion": 1.059e-7
         },
         {
           "id": "jupiter",
@@ -389,7 +397,7 @@
           "radius": 5.203,
           "color": "#d29922",
           "angle": 2.997,
-          "meanMotion": 1.678e-08
+          "meanMotion": 1.678e-8
         },
         {
           "id": "saturn",
@@ -397,14 +405,14 @@
           "radius": 9.537,
           "color": "#c9d1d9",
           "angle": 2.2198,
-          "meanMotion": 6.761e-09
+          "meanMotion": 6.761e-9
         },
         {
           "id": "uranus",
           "label": "天王星",
           "radius": 19.19,
           "color": "#58a6ff",
-          "meanMotion": 2.37e-09
+          "meanMotion": 2.37e-9
         }
       ],
       "transfers": [
@@ -464,7 +472,7 @@
           "radius": 185539,
           "color": "#8b949e",
           "angle": 0.78,
-          "meanMotion": 7.72e-05
+          "meanMotion": 0.0000772
         },
         {
           "id": "enceladus",
@@ -472,7 +480,7 @@
           "radius": 238042,
           "color": "#58a6ff",
           "angle": 2.09,
-          "meanMotion": 5.308e-05
+          "meanMotion": 0.00005308
         },
         {
           "id": "tethys",
@@ -480,7 +488,7 @@
           "radius": 294619,
           "color": "#8b949e",
           "angle": 3.67,
-          "meanMotion": 3.852e-05
+          "meanMotion": 0.00003852
         },
         {
           "id": "dione",
@@ -488,7 +496,7 @@
           "radius": 377396,
           "color": "#8b949e",
           "angle": 5.24,
-          "meanMotion": 2.657e-05
+          "meanMotion": 0.00002657
         },
         {
           "id": "rhea",
@@ -496,7 +504,7 @@
           "radius": 527108,
           "color": "#8b949e",
           "angle": 1.31,
-          "meanMotion": 1.61e-05
+          "meanMotion": 0.0000161
         },
         {
           "id": "titan",
@@ -504,7 +512,7 @@
           "radius": 1221870,
           "color": "#d29922",
           "angle": 4.19,
-          "meanMotion": 4.561e-06
+          "meanMotion": 0.000004561
         },
         {
           "id": "approach-point",

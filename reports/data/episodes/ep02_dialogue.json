@@ -34,7 +34,10 @@
       "id": "guest-esper",
       "nameJa": "ゲスト（エスパー）",
       "nameEn": "Guest (Esper)",
-      "aliases": ["エスパー", "リンボ"]
+      "aliases": [
+        "エスパー",
+        "リンボ"
+      ]
     },
     {
       "id": "unknown-vessel",
@@ -115,7 +118,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ASR誤認識多数。AIによるEVA条件報告。"
+      "note": "ASR誤認識多数。AIによるEVA条件報告。",
+      "lineId": "ep02-dl-001"
     },
     {
       "speakerId": "kiritan",
@@ -130,7 +134,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの不満。ぞんざいな口調。"
+      "note": "きりたんの不満。ぞんざいな口調。",
+      "lineId": "ep02-dl-002"
     },
     {
       "speakerId": "kestrel-ai",
@@ -145,7 +150,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの警告。「あなた」「ますよ」はAI的表現。"
+      "note": "AIの警告。「あなた」「ますよ」はAI的表現。",
+      "lineId": "ep02-dl-003"
     },
     {
       "speakerId": "kiritan",
@@ -160,7 +166,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの冗談返し。「なよ」口調。"
+      "note": "きりたんの冗談返し。「なよ」口調。",
+      "lineId": "ep02-dl-004"
     },
     {
       "speakerId": "kestrel-ai",
@@ -175,7 +182,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの再確認。「繰り返します」はAI的。"
+      "note": "AIの再確認。「繰り返します」はAI的。",
+      "lineId": "ep02-dl-005"
     },
     {
       "speakerId": "kiritan",
@@ -190,7 +198,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの了承。「よ」「取っとく」はカジュアル。"
+      "note": "きりたんの了承。「よ」「取っとく」はカジュアル。",
+      "lineId": "ep02-dl-006"
     },
     {
       "speakerId": "kestrel-ai",
@@ -205,7 +214,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "「ください」丁寧語。AI。"
+      "note": "「ください」丁寧語。AI。",
+      "lineId": "ep02-dl-007"
     },
     {
       "speakerId": "kiritan",
@@ -220,7 +230,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの軽口。"
+      "note": "きりたんの軽口。",
+      "lineId": "ep02-dl-008"
     },
     {
       "speakerId": "kestrel-ai",
@@ -235,7 +246,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの提案。「じゃないですか」はAI特有の丁寧な反論。ASR「つげて」→「つけて」修正。"
+      "note": "AIの提案。「じゃないですか」はAI特有の丁寧な反論。ASR「つげて」→「つけて」修正。",
+      "lineId": "ep02-dl-009"
     },
     {
       "speakerId": "kestrel-ai",
@@ -254,7 +266,8 @@
         "ep02-transfer-02"
       ],
       "mentions": [],
-      "note": "AIによる損傷報告。ep02.jsonのep02-quote-01に対応。ASR「虹霊媒」→「冷媒」修正。"
+      "note": "AIによる損傷報告。ep02.jsonのep02-quote-01に対応。ASR「虹霊媒」→「冷媒」修正。",
+      "lineId": "ep02-dl-010"
     },
     {
       "speakerId": "kiritan",
@@ -269,7 +282,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。「な」口調。"
+      "note": "きりたんの感想。「な」口調。",
+      "lineId": "ep02-dl-011"
     },
     {
       "speakerId": "kestrel-ai",
@@ -288,7 +302,8 @@
         "ep02-transfer-02"
       ],
       "mentions": [],
-      "note": "AIの構造損傷報告。ep02.jsonのep02-quote-02に対応。ASR「王力費」→「応力比」修正。"
+      "note": "AIの構造損傷報告。ep02.jsonのep02-quote-02に対応。ASR「王力費」→「応力比」修正。",
+      "lineId": "ep02-dl-012"
     },
     {
       "speakerId": "kiritan",
@@ -303,7 +318,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの皮肉。"
+      "note": "きりたんの皮肉。",
+      "lineId": "ep02-dl-013"
     },
     {
       "speakerId": "kestrel-ai",
@@ -318,7 +334,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの率直な返答。"
+      "note": "AIの率直な返答。",
+      "lineId": "ep02-dl-014"
     },
     {
       "speakerId": "kestrel-ai",
@@ -333,7 +350,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの追加コメント。AIならではのユーモア。"
+      "note": "AIの追加コメント。AIならではのユーモア。",
+      "lineId": "ep02-dl-015"
     },
     {
       "speakerId": "kiritan",
@@ -348,7 +366,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。「よ」口調。"
+      "note": "きりたんの返し。「よ」口調。",
+      "lineId": "ep02-dl-016"
     },
     {
       "speakerId": "kestrel-ai",
@@ -364,7 +383,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのステータス報告。ASR「累積量5.6cm」→「累積被曝量5.6 mSv」修正。"
+      "note": "AIのステータス報告。ASR「累積量5.6cm」→「累積被曝量5.6 mSv」修正。",
+      "lineId": "ep02-dl-017"
     },
     {
       "speakerId": "kestrel-ai",
@@ -379,7 +399,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの確認。「ますか」丁寧語。"
+      "note": "AIの確認。「ますか」丁寧語。",
+      "lineId": "ep02-dl-018"
     },
     {
       "speakerId": "kiritan",
@@ -394,7 +415,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返答。ぞんざい。"
+      "note": "きりたんの返答。ぞんざい。",
+      "lineId": "ep02-dl-019"
     },
     {
       "speakerId": "kiritan",
@@ -409,7 +431,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感慨。"
+      "note": "きりたんの感慨。",
+      "lineId": "ep02-dl-020"
     },
     {
       "speakerId": "kestrel-ai",
@@ -425,7 +448,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの技術的補足。ASR「資格的」→「視覚的」、「最近節」→「最接近」修正。"
+      "note": "AIの技術的補足。ASR「資格的」→「視覚的」、「最近節」→「最接近」修正。",
+      "lineId": "ep02-dl-021"
     },
     {
       "speakerId": "kestrel-ai",
@@ -442,7 +466,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの生存確率分析。ASR「安全件」→「安全圏」修正。"
+      "note": "AIの生存確率分析。ASR「安全件」→「安全圏」修正。",
+      "lineId": "ep02-dl-022"
     },
     {
       "speakerId": "kiritan",
@@ -457,7 +482,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんが諦めの返答。"
+      "note": "きりたんが諦めの返答。",
+      "lineId": "ep02-dl-023"
     },
     {
       "speakerId": "kiritan",
@@ -472,7 +498,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんが船に語りかけ。「くれよ」口調。"
+      "note": "きりたんが船に語りかけ。「くれよ」口調。",
+      "lineId": "ep02-dl-024"
     },
     {
       "speakerId": "kestrel-ai",
@@ -487,7 +514,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのユーモア。「です」丁寧語。"
+      "note": "AIのユーモア。「です」丁寧語。",
+      "lineId": "ep02-dl-025"
     },
     {
       "speakerId": "kestrel-ai",
@@ -502,7 +530,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "繰り返しギャグ。ep02-line-005と同じ構造。"
+      "note": "繰り返しギャグ。ep02-line-005と同じ構造。",
+      "lineId": "ep02-dl-026"
     },
     {
       "speakerId": "kiritan",
@@ -517,7 +546,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの独白。「だよな」口調。"
+      "note": "きりたんの独白。「だよな」口調。",
+      "lineId": "ep02-dl-027"
     },
     {
       "speakerId": "kiritan",
@@ -532,7 +562,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがビーコンを発見。ASR「光案」→「航案」修正。"
+      "note": "きりたんがビーコンを発見。ASR「光案」→「航案」修正。",
+      "lineId": "ep02-dl-028"
     },
     {
       "speakerId": "kestrel-ai",
@@ -547,7 +578,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのビーコン情報。ASR「年前。現行のコ路関係」→「数年前。現行の航路関係」修正。"
+      "note": "AIのビーコン情報。ASR「年前。現行のコ路関係」→「数年前。現行の航路関係」修正。",
+      "lineId": "ep02-dl-029"
     },
     {
       "speakerId": "kiritan",
@@ -562,7 +594,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの疑問。「だが」はきりたん的。"
+      "note": "きりたんの疑問。「だが」はきりたん的。",
+      "lineId": "ep02-dl-030"
     },
     {
       "speakerId": "kestrel-ai",
@@ -580,7 +613,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのビーコン分析。ASR「阻止」→「素子」修正。"
+      "note": "AIのビーコン分析。ASR「阻止」→「素子」修正。",
+      "lineId": "ep02-dl-031"
     },
     {
       "speakerId": "kiritan",
@@ -596,7 +630,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの気づき。偶然にしては出来すぎていることを指摘。"
+      "note": "きりたんの気づき。偶然にしては出来すぎていることを指摘。",
+      "lineId": "ep02-dl-032"
     },
     {
       "speakerId": "kiritan",
@@ -611,7 +646,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの質問。「のか」口調。"
+      "note": "きりたんの質問。「のか」口調。",
+      "lineId": "ep02-dl-033"
     },
     {
       "speakerId": "kestrel-ai",
@@ -627,7 +663,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの技術報告。「ですが」丁寧語。"
+      "note": "AIの技術報告。「ですが」丁寧語。",
+      "lineId": "ep02-dl-034"
     },
     {
       "speakerId": "kiritan",
@@ -642,7 +679,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。「だな」口調。"
+      "note": "きりたんの感想。「だな」口調。",
+      "lineId": "ep02-dl-035"
     },
     {
       "speakerId": "kestrel-ai",
@@ -657,7 +695,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの解説。ASR「権は」→「木星圏は」、「減に」→「減衰に」修正。"
+      "note": "AIの解説。ASR「権は」→「木星圏は」、「減に」→「減衰に」修正。",
+      "lineId": "ep02-dl-036"
     },
     {
       "speakerId": "kiritan",
@@ -672,7 +711,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの軽口。「だな」「するよ」口調。"
+      "note": "きりたんの軽口。「だな」「するよ」口調。",
+      "lineId": "ep02-dl-037"
     },
     {
       "speakerId": "kestrel-ai",
@@ -687,7 +727,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの皮肉。「ですね」丁寧語。"
+      "note": "AIの皮肉。「ですね」丁寧語。",
+      "lineId": "ep02-dl-038"
     },
     {
       "speakerId": "kiritan",
@@ -702,7 +743,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがルートを理解。ASR「時期圏」→「磁気圏」修正。"
+      "note": "きりたんがルートを理解。ASR「時期圏」→「磁気圏」修正。",
+      "lineId": "ep02-dl-039"
     },
     {
       "speakerId": "kestrel-ai",
@@ -718,7 +760,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのルート解説。ASR多数誤認識を修正。"
+      "note": "AIのルート解説。ASR多数誤認識を修正。",
+      "lineId": "ep02-dl-040"
     },
     {
       "speakerId": "kiritan",
@@ -733,7 +776,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの分析。ASR「霞めれば」→「掠めれば」修正。"
+      "note": "きりたんの分析。ASR「霞めれば」→「掠めれば」修正。",
+      "lineId": "ep02-dl-041"
     },
     {
       "speakerId": "kestrel-ai",
@@ -748,7 +792,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの追加分析。ASR修正。"
+      "note": "AIの追加分析。ASR修正。",
+      "lineId": "ep02-dl-042"
     },
     {
       "speakerId": "kiritan",
@@ -764,7 +809,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの不快感。「な」口調。"
+      "note": "きりたんの不快感。「な」口調。",
+      "lineId": "ep02-dl-043"
     },
     {
       "speakerId": "kestrel-ai",
@@ -780,7 +826,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの皮肉。ASR「コ路の視点」→「航路の視点」修正。"
+      "note": "AIの皮肉。ASR「コ路の視点」→「航路の視点」修正。",
+      "lineId": "ep02-dl-044"
     },
     {
       "speakerId": "kiritan",
@@ -795,7 +842,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反論。ASR「あんなにを受けてない」→「あんな目に遭ってない」修正。"
+      "note": "きりたんの反論。ASR「あんなにを受けてない」→「あんな目に遭ってない」修正。",
+      "lineId": "ep02-dl-045"
     },
     {
       "speakerId": "kestrel-ai",
@@ -810,7 +858,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの弁明。"
+      "note": "AIの弁明。",
+      "lineId": "ep02-dl-046"
     },
     {
       "speakerId": "kiritan",
@@ -829,7 +878,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの分析。「なよ」口調。"
+      "note": "きりたんの分析。「なよ」口調。",
+      "lineId": "ep02-dl-047"
     },
     {
       "speakerId": "kestrel-ai",
@@ -844,7 +894,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの推理。ASR「待ち構まえていた」→「待ち構えていた」修正。"
+      "note": "AIの推理。ASR「待ち構まえていた」→「待ち構えていた」修正。",
+      "lineId": "ep02-dl-048"
     },
     {
       "speakerId": "kiritan",
@@ -859,7 +910,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反応。"
+      "note": "きりたんの反応。",
+      "lineId": "ep02-dl-049"
     },
     {
       "speakerId": "kestrel-ai",
@@ -874,7 +926,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのビーコン分析。ASR多数修正。"
+      "note": "AIのビーコン分析。ASR多数修正。",
+      "lineId": "ep02-dl-050"
     },
     {
       "speakerId": "kiritan",
@@ -889,7 +942,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの推理。EP01のダイレクトエントリーを振り返る。ASR「改」→「回廊」修正。"
+      "note": "きりたんの推理。EP01のダイレクトエントリーを振り返る。ASR「改」→「回廊」修正。",
+      "lineId": "ep02-dl-051"
     },
     {
       "speakerId": "kiritan",
@@ -904,7 +958,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反応。"
+      "note": "きりたんの反応。",
+      "lineId": "ep02-dl-052"
     },
     {
       "speakerId": "kestrel-ai",
@@ -924,7 +979,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの暗号分析。タイタニアへの伏線。ASR「天皇星」→「天王星」、「早起」→「想起」修正。"
+      "note": "AIの暗号分析。タイタニアへの伏線。ASR「天皇星」→「天王星」、「早起」→「想起」修正。",
+      "lineId": "ep02-dl-053"
     },
     {
       "speakerId": "kiritan",
@@ -939,7 +995,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの作戦案。ASR「を漂流」→修正。"
+      "note": "きりたんの作戦案。ASR「を漂流」→修正。",
+      "lineId": "ep02-dl-054"
     },
     {
       "speakerId": "kiritan",
@@ -956,7 +1013,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの職業倫理。ASR修正。"
+      "note": "きりたんの職業倫理。ASR修正。",
+      "lineId": "ep02-dl-055"
     },
     {
       "speakerId": "kestrel-ai",
@@ -971,7 +1029,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの提案。「どうでしょうか」丁寧語。"
+      "note": "AIの提案。「どうでしょうか」丁寧語。",
+      "lineId": "ep02-dl-056"
     },
     {
       "speakerId": "kiritan",
@@ -986,7 +1045,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反発。「のか」口調。"
+      "note": "きりたんの反発。「のか」口調。",
+      "lineId": "ep02-dl-057"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1002,7 +1062,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの合理的分析。"
+      "note": "AIの合理的分析。",
+      "lineId": "ep02-dl-058"
     },
     {
       "speakerId": "kiritan",
@@ -1017,7 +1078,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反論。「だろう」口調。"
+      "note": "きりたんの反論。「だろう」口調。",
+      "lineId": "ep02-dl-059"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1034,7 +1096,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの技術的反論。ASR「射兵」→「遮蔽」修正。"
+      "note": "AIの技術的反論。ASR「射兵」→「遮蔽」修正。",
+      "lineId": "ep02-dl-060"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1049,7 +1112,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの結論。「べきです」丁寧語。"
+      "note": "AIの結論。「べきです」丁寧語。",
+      "lineId": "ep02-dl-061"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1065,7 +1129,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの推理。"
+      "note": "AIの推理。",
+      "lineId": "ep02-dl-062"
     },
     {
       "speakerId": "kiritan",
@@ -1081,7 +1146,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの決意。ASR「天皇政権」→「天王星圏」修正。"
+      "note": "きりたんの決意。ASR「天皇政権」→「天王星圏」修正。",
+      "lineId": "ep02-dl-063"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1098,7 +1164,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのステータス報告。ASR修正。"
+      "note": "AIのステータス報告。ASR修正。",
+      "lineId": "ep02-dl-064"
     },
     {
       "speakerId": "kiritan",
@@ -1113,7 +1180,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの皮肉。"
+      "note": "きりたんの皮肉。",
+      "lineId": "ep02-dl-065"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1128,7 +1196,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの解説。ASR「椅に」→「旋回に」修正。"
+      "note": "AIの解説。ASR「椅に」→「旋回に」修正。",
+      "lineId": "ep02-dl-066"
     },
     {
       "speakerId": "kiritan",
@@ -1143,7 +1212,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。"
+      "note": "きりたんの感想。",
+      "lineId": "ep02-dl-067"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1159,7 +1229,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの冷却系報告。ASR多数修正。「時期のずる」→「磁気ノズル」、「霊媒」→「冷媒」。"
+      "note": "AIの冷却系報告。ASR多数修正。「時期のずる」→「磁気ノズル」、「霊媒」→「冷媒」。",
+      "lineId": "ep02-dl-068"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1175,7 +1246,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの警告。ASR「路は」→「炉は」、「主は」→「主機は」修正。"
+      "note": "AIの警告。ASR「路は」→「炉は」、「主は」→「主機は」修正。",
+      "lineId": "ep02-dl-069"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1193,7 +1265,8 @@
         "ep02-transfer-02"
       ],
       "mentions": [],
-      "note": "AIの放射線警告。ep02.jsonのep02-quote-04に対応。ASR「コ路」→「航路」修正。"
+      "note": "AIの放射線警告。ep02.jsonのep02-quote-04に対応。ASR「コ路」→「航路」修正。",
+      "lineId": "ep02-dl-070"
     },
     {
       "speakerId": "kiritan",
@@ -1208,7 +1281,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの皮肉。"
+      "note": "きりたんの皮肉。",
+      "lineId": "ep02-dl-071"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1225,7 +1299,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの対策提案。ASR「時期シールド」→「磁気シールド」修正。"
+      "note": "AIの対策提案。ASR「時期シールド」→「磁気シールド」修正。",
+      "lineId": "ep02-dl-072"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1240,7 +1315,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの注意事項。"
+      "note": "AIの注意事項。",
+      "lineId": "ep02-dl-073"
     },
     {
       "speakerId": "kiritan",
@@ -1255,7 +1331,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの決断。ASR「いさ」→「よし」修正。"
+      "note": "きりたんの決断。ASR「いさ」→「よし」修正。",
+      "lineId": "ep02-dl-074"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1270,7 +1347,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのユーモア。"
+      "note": "AIのユーモア。",
+      "lineId": "ep02-dl-075"
     },
     {
       "speakerId": "kiritan",
@@ -1285,7 +1363,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。「ねえよな」口調。"
+      "note": "きりたんの返し。「ねえよな」口調。",
+      "lineId": "ep02-dl-076"
     },
     {
       "speakerId": "kiritan",
@@ -1300,7 +1379,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたん、コンテナの中身を入れ替えた後の独白。「だろうな」口調。"
+      "note": "きりたん、コンテナの中身を入れ替えた後の独白。「だろうな」口調。",
+      "lineId": "ep02-dl-077"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1318,7 +1398,8 @@
         "ep02-transfer-02"
       ],
       "mentions": [],
-      "note": "AIの脱出パラメータ報告。ep02.jsonのep02-quote-03に対応。ASR「コ度」→「高度」修正。"
+      "note": "AIの脱出パラメータ報告。ep02.jsonのep02-quote-03に対応。ASR「コ度」→「高度」修正。",
+      "lineId": "ep02-dl-078"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1334,7 +1415,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの冷却モード報告。ASR「クラズマ」→「プラズマ」修正。"
+      "note": "AIの冷却モード報告。ASR「クラズマ」→「プラズマ」修正。",
+      "lineId": "ep02-dl-079"
     },
     {
       "speakerId": "kiritan",
@@ -1350,7 +1432,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "パラメータの復唱。きりたんかAIか不明確。"
+      "note": "パラメータの復唱。きりたんかAIか不明確。",
+      "lineId": "ep02-dl-080"
     },
     {
       "speakerId": "kiritan",
@@ -1366,7 +1449,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの決意表明。「んだよ」「な」口調。ASR「釣り針り」→「釣り針」修正。"
+      "note": "きりたんの決意表明。「んだよ」「な」口調。ASR「釣り針り」→「釣り針」修正。",
+      "lineId": "ep02-dl-081"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1383,7 +1467,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの覚醒報告。コールドスリープからの目覚め。ASR「大カ音」→「大減速」修正。"
+      "note": "AIの覚醒報告。コールドスリープからの目覚め。ASR「大カ音」→「大減速」修正。",
+      "lineId": "ep02-dl-082"
     },
     {
       "speakerId": "kiritan",
@@ -1398,7 +1483,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの独白。コールドスリープ中のゲストを気遣う。"
+      "note": "きりたんの独白。コールドスリープ中のゲストを気遣う。",
+      "lineId": "ep02-dl-083"
     },
     {
       "speakerId": "kiritan",
@@ -1413,7 +1499,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがゲストの覚醒に驚く。"
+      "note": "きりたんがゲストの覚醒に驚く。",
+      "lineId": "ep02-dl-084"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1428,7 +1515,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの挨拶。「ようで」丁寧。"
+      "note": "AIの挨拶。「ようで」丁寧。",
+      "lineId": "ep02-dl-085"
     },
     {
       "speakerId": "guest-esper",
@@ -1444,7 +1532,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "コールドスリープから覚醒直後の混乱。直前にケイが「目覚めはよろしいようで」と呼びかけ、直後にケイが「エスパー」について説明。話者はゲスト（エスパー）と判断。（Task 089 再レビューで修正）"
+      "note": "コールドスリープから覚醒直後の混乱。直前にケイが「目覚めはよろしいようで」と呼びかけ、直後にケイが「エスパー」について説明。話者はゲスト（エスパー）と判断。（Task 089 再レビューで修正）",
+      "lineId": "ep02-dl-086"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1460,7 +1549,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの説明。ゲストがエスパー（天王星圏出身者）であることが判明。ASR「顧問」→「故問」修正推測。"
+      "note": "AIの説明。ゲストがエスパー（天王星圏出身者）であることが判明。ASR「顧問」→「故問」修正推測。",
+      "lineId": "ep02-dl-087"
     },
     {
       "speakerId": "kiritan",
@@ -1476,7 +1566,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。ASR「天皇星後か」→「天王星圏か」、「中立き取りな」→「中立的な」修正。"
+      "note": "きりたんの感想。ASR「天皇星後か」→「天王星圏か」、「中立き取りな」→「中立的な」修正。",
+      "lineId": "ep02-dl-088"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1492,7 +1583,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの質問。「ですよ」丁寧語。"
+      "note": "AIの質問。「ですよ」丁寧語。",
+      "lineId": "ep02-dl-089"
     },
     {
       "speakerId": "kiritan",
@@ -1507,7 +1599,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの反応。「なよ」口調。"
+      "note": "きりたんの反応。「なよ」口調。",
+      "lineId": "ep02-dl-090"
     },
     {
       "speakerId": "kiritan",
@@ -1523,7 +1616,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ASR不明瞭。ゲストとの会話。「ミスダ」は固有名詞の可能性。"
+      "note": "ASR不明瞭。ゲストとの会話。「ミスダ」は固有名詞の可能性。",
+      "lineId": "ep02-dl-091"
     },
     {
       "speakerId": "kiritan",
@@ -1538,7 +1632,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがゲストについてAIに話す。「だぞ」口調。"
+      "note": "きりたんがゲストについてAIに話す。「だぞ」口調。",
+      "lineId": "ep02-dl-092"
     },
     {
       "speakerId": "guest-esper",
@@ -1553,7 +1648,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "Scene 6（覚醒）内でエンケラドス到着前（Scene 7は760000ms〜）。女性的口調「の」。時系列上ゲスト（エスパー）と判断。（Task 089 再レビューで修正）"
+      "note": "Scene 6（覚醒）内でエンケラドス到着前（Scene 7は760000ms〜）。女性的口調「の」。時系列上ゲスト（エスパー）と判断。（Task 089 再レビューで修正）",
+      "lineId": "ep02-dl-093"
     },
     {
       "speakerId": "kiritan",
@@ -1568,7 +1664,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの軽口。「なよ」口調。"
+      "note": "きりたんの軽口。「なよ」口調。",
+      "lineId": "ep02-dl-094"
     },
     {
       "speakerId": "guest-esper",
@@ -1583,7 +1680,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "Scene 6（覚醒）内でエンケラドス到着前。女性的口調「のね」。きりたんに対する感謝の言葉。時系列上ゲスト（エスパー）と判断。（Task 089 再レビューで修正）"
+      "note": "Scene 6（覚醒）内でエンケラドス到着前。女性的口調「のね」。きりたんに対する感謝の言葉。時系列上ゲスト（エスパー）と判断。（Task 089 再レビューで修正）",
+      "lineId": "ep02-dl-095"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1598,7 +1696,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの進捗報告。ASR「天皇政権」→「天王星圏」修正。"
+      "note": "AIの進捗報告。ASR「天皇政権」→「天王星圏」修正。",
+      "lineId": "ep02-dl-096"
     },
     {
       "speakerId": "kiritan",
@@ -1614,7 +1713,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの質問。「だ」「か」口調。"
+      "note": "きりたんの質問。「だ」「か」口調。",
+      "lineId": "ep02-dl-097"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1629,7 +1729,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの報告。「ええ」は了解の意。"
+      "note": "AIの報告。「ええ」は了解の意。",
+      "lineId": "ep02-dl-098"
     },
     {
       "speakerId": "kiritan",
@@ -1644,7 +1745,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返答。"
+      "note": "きりたんの返答。",
+      "lineId": "ep02-dl-099"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1660,7 +1762,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの分析。コンテナの人物の生死について。"
+      "note": "AIの分析。コンテナの人物の生死について。",
+      "lineId": "ep02-dl-100"
     },
     {
       "speakerId": "kiritan",
@@ -1677,7 +1780,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感慨。「だな」口調。ASR「天皇星」→「天王星」修正。"
+      "note": "きりたんの感慨。「だな」口調。ASR「天皇星」→「天王星」修正。",
+      "lineId": "ep02-dl-101"
     },
     {
       "speakerId": "kiritan",
@@ -1693,7 +1797,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがエンケラドスステーションの状態に驚く。「じゃねえか」口調。"
+      "note": "きりたんがエンケラドスステーションの状態に驚く。「じゃねえか」口調。",
+      "lineId": "ep02-dl-102"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1709,7 +1814,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの反論。「ますね」丁寧語。"
+      "note": "AIの反論。「ますね」丁寧語。",
+      "lineId": "ep02-dl-103"
     },
     {
       "speakerId": "kiritan",
@@ -1724,7 +1830,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの観察。「だが」口調。"
+      "note": "きりたんの観察。「だが」口調。",
+      "lineId": "ep02-dl-104"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1739,7 +1846,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの返し。ASR「静かなきか」→「静かな方がいいか」修正。"
+      "note": "AIの返し。ASR「静かなきか」→「静かな方がいいか」修正。",
+      "lineId": "ep02-dl-105"
     },
     {
       "speakerId": "kiritan",
@@ -1755,7 +1863,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの分析。ASR「離レ基地」→「離れ基地」修正。"
+      "note": "きりたんの分析。ASR「離レ基地」→「離れ基地」修正。",
+      "lineId": "ep02-dl-106"
     },
     {
       "speakerId": "kiritan",
@@ -1770,7 +1879,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがエンケラドスの管理人に質問。"
+      "note": "きりたんがエンケラドスの管理人に質問。",
+      "lineId": "ep02-dl-107"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -1786,7 +1896,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "エンケラドス管理人の初登場。女性的で親しみのある口調。ep02.jsonのタイムスタンプ13:45に対応。"
+      "note": "エンケラドス管理人の初登場。女性的で親しみのある口調。ep02.jsonのタイムスタンプ13:45に対応。",
+      "lineId": "ep02-dl-108"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -1801,7 +1912,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "管理人の身の上話。土星圏の孤立した状況を説明。"
+      "note": "管理人の身の上話。土星圏の孤立した状況を説明。",
+      "lineId": "ep02-dl-109"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -1816,7 +1928,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "管理人が理由を語る。「の」女性的口調。ASR「霊下」→「零下」修正。"
+      "note": "管理人が理由を語る。「の」女性的口調。ASR「霊下」→「零下」修正。",
+      "lineId": "ep02-dl-110"
     },
     {
       "speakerId": "enceladus-keeper",
@@ -1836,7 +1949,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "管理人による内園・外園の格差の説明。世界観の核心。ASR「証人」→「承認」、「仕様」→「使用」修正。"
+      "note": "管理人による内園・外園の格差の説明。世界観の核心。ASR「証人」→「承認」、「仕様」→「使用」修正。",
+      "lineId": "ep02-dl-111"
     },
     {
       "speakerId": "kiritan",
@@ -1851,7 +1965,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの共感。「だな」口調。"
+      "note": "きりたんの共感。「だな」口調。",
+      "lineId": "ep02-dl-112"
     },
     {
       "speakerId": "kiritan",
@@ -1866,7 +1981,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの持論。世界観。「だ」口調。"
+      "note": "きりたんの持論。世界観。「だ」口調。",
+      "lineId": "ep02-dl-113"
     },
     {
       "speakerId": "kiritan",
@@ -1881,7 +1997,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。"
+      "note": "きりたんの感想。",
+      "lineId": "ep02-dl-114"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1898,7 +2015,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの修理完了報告。ASR「霊媒」→「冷媒」、「外格」→「外殻」、「直期」→「磁気」修正。"
+      "note": "AIの修理完了報告。ASR「霊媒」→「冷媒」、「外格」→「外殻」、「直期」→「磁気」修正。",
+      "lineId": "ep02-dl-115"
     },
     {
       "speakerId": "kiritan",
@@ -1914,7 +2032,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。ASR「点敵」→「点滴」修正。"
+      "note": "きりたんの感想。ASR「点敵」→「点滴」修正。",
+      "lineId": "ep02-dl-116"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1929,7 +2048,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの返し。ASR「天敵」→「点滴」、「天皇政権」→「天王星圏」修正。"
+      "note": "AIの返し。ASR「天敵」→「点滴」、「天皇政権」→「天王星圏」修正。",
+      "lineId": "ep02-dl-117"
     },
     {
       "speakerId": "kiritan",
@@ -1945,7 +2065,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの管理人への思い。「んだ」口調。ASR「として」→「そして」修正。"
+      "note": "きりたんの管理人への思い。「んだ」口調。ASR「として」→「そして」修正。",
+      "lineId": "ep02-dl-118"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1963,7 +2084,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの政治・経済解説。「ありません」「ものです」丁寧語。ASR「政権」→「圏」修正。"
+      "note": "AIの政治・経済解説。「ありません」「ものです」丁寧語。ASR「政権」→「圏」修正。",
+      "lineId": "ep02-dl-119"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1978,7 +2100,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの結論。"
+      "note": "AIの結論。",
+      "lineId": "ep02-dl-120"
     },
     {
       "speakerId": "kiritan",
@@ -1993,7 +2116,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの感想。木星と土星の発展格差。「か」口調。"
+      "note": "きりたんの感想。木星と土星の発展格差。「か」口調。",
+      "lineId": "ep02-dl-121"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2013,7 +2137,8 @@
         "ep02-transfer-03"
       ],
       "mentions": [],
-      "note": "AIの外縁軌道投入宣言。ep02.jsonのep02-quote-05/06に対応。ASR「外炎コ路」→「外縁軌道」修正。"
+      "note": "AIの外縁軌道投入宣言。ep02.jsonのep02-quote-05/06に対応。ASR「外炎コ路」→「外縁軌道」修正。",
+      "lineId": "ep02-dl-122"
     },
     {
       "speakerId": "kiritan",
@@ -2028,7 +2153,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの決意。"
+      "note": "きりたんの決意。",
+      "lineId": "ep02-dl-123"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2046,7 +2172,8 @@
         "ep02-transfer-05"
       ],
       "mentions": [],
-      "note": "AIの警告。ep02.jsonのep02-quote-07に対応。ASR「起動」→「軌道」修正。"
+      "note": "AIの警告。ep02.jsonのep02-quote-07に対応。ASR「起動」→「軌道」修正。",
+      "lineId": "ep02-dl-124"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2063,7 +2190,8 @@
         "ep02-transfer-05"
       ],
       "mentions": [],
-      "note": "AIの識別報告。ASR「調合」→「照合」修正。"
+      "note": "AIの識別報告。ASR「調合」→「照合」修正。",
+      "lineId": "ep02-dl-125"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2078,7 +2206,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの確認。ASR「系もに」→「全系統に」、「主は」→「主機は」修正。"
+      "note": "AIの確認。ASR「系もに」→「全系統に」、「主は」→「主機は」修正。",
+      "lineId": "ep02-dl-126"
     },
     {
       "speakerId": "kiritan",
@@ -2093,7 +2222,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの分析。「やがったか」口調。"
+      "note": "きりたんの分析。「やがったか」口調。",
+      "lineId": "ep02-dl-127"
     },
     {
       "speakerId": "kiritan",
@@ -2108,7 +2238,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの苦い認識。"
+      "note": "きりたんの苦い認識。",
+      "lineId": "ep02-dl-128"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2129,7 +2260,8 @@
         "ep02-transfer-05"
       ],
       "mentions": [],
-      "note": "AIの分析。大型船の待ち伏せを解析。ASR「光の消失」→「星の消失」、「構成」→「恒星」修正。"
+      "note": "AIの分析。大型船の待ち伏せを解析。ASR「光の消失」→「星の消失」、「構成」→「恒星」修正。",
+      "lineId": "ep02-dl-129"
     },
     {
       "speakerId": "kiritan",
@@ -2148,7 +2280,8 @@
         "ep02-transfer-05"
       ],
       "mentions": [],
-      "note": "きりたんの分析と報告。ep02.jsonのep02-quote-08に対応。ASR「無闘」→「無灯」修正。一部はAIの報告が混在する可能性。"
+      "note": "きりたんの分析と報告。ep02.jsonのep02-quote-08に対応。ASR「無闘」→「無灯」修正。一部はAIの報告が混在する可能性。",
+      "lineId": "ep02-dl-130"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2166,7 +2299,8 @@
         "ep02-transfer-05"
       ],
       "mentions": [],
-      "note": "AIの識別結果。ASR「戦績」→「船籍」修正。"
+      "note": "AIの識別結果。ASR「戦績」→「船籍」修正。",
+      "lineId": "ep02-dl-131"
     },
     {
       "speakerId": "kiritan",
@@ -2181,7 +2315,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの了解。"
+      "note": "きりたんの了解。",
+      "lineId": "ep02-dl-132"
     },
     {
       "speakerId": "kiritan",
@@ -2196,7 +2331,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの推理と指示。"
+      "note": "きりたんの推理と指示。",
+      "lineId": "ep02-dl-133"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2211,7 +2347,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIの応答。"
+      "note": "AIの応答。",
+      "lineId": "ep02-dl-134"
     },
     {
       "speakerId": "unknown-vessel",
@@ -2226,7 +2363,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "大型船からの通信。ASR「罪にを」→「荷を」修正。"
+      "note": "大型船からの通信。ASR「罪にを」→「荷を」修正。",
+      "lineId": "ep02-dl-135"
     },
     {
       "speakerId": "kiritan",
@@ -2241,7 +2379,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの応答。ASR「期の」→「貴船の」修正。"
+      "note": "きりたんの応答。ASR「期の」→「貴船の」修正。",
+      "lineId": "ep02-dl-136"
     },
     {
       "speakerId": "unknown-vessel",
@@ -2256,7 +2395,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "大型船の繰り返し。ASR「罪を」→「荷を」修正。"
+      "note": "大型船の繰り返し。ASR「罪を」→「荷を」修正。",
+      "lineId": "ep02-dl-137"
     },
     {
       "speakerId": "kestrel-ai",
@@ -2271,7 +2411,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIのステータス確認。エピソード終盤。"
+      "note": "AIのステータス確認。エピソード終盤。",
+      "lineId": "ep02-dl-138"
     },
     {
       "speakerId": "kiritan",
@@ -2286,7 +2427,8 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの最後の台詞。土星圏から見る太陽への感慨。エピソードのタイトル「SOLAR LINE」に繋がる象徴的な台詞。"
+      "note": "きりたんの最後の台詞。土星圏から見る太陽への感慨。エピソードのタイトル「SOLAR LINE」に繋がる象徴的な台詞。",
+      "lineId": "ep02-dl-139"
     }
   ]
 }

@@ -21,6 +21,10 @@ export interface VideoCard {
 export interface DialogueQuote {
   /** Unique identifier, e.g. "ep01-quote-01" */
   id: string;
+  /** Reference to DialogueLine.lineId in the dialogue data file.
+   *  When present, speaker/text/timestamp can be resolved at build time
+   *  from the canonical dialogue source (epXX_dialogue.json). */
+  dialogueLineId?: string;
   /** Speaker name (e.g. "きりたん") */
   speaker: string;
   /** The quoted text */
@@ -478,6 +482,8 @@ export interface TranscriptionPageData {
   }[];
   /** Phase 2 attributed dialogue (null if Phase 2 not done) */
   dialogue: {
+    /** Stable unique ID for cross-referencing from reports */
+    lineId?: string;
     speakerId: string;
     speakerName: string;
     text: string;

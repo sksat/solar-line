@@ -15,145 +15,169 @@
       "id": "ep05-quote-01",
       "speaker": "ケイ",
       "text": "ただ、大切なものが少しずつ壊れていく。そういった感覚なのだと思います",
-      "timestamp": "00:43"
+      "timestamp": "00:43",
+      "dialogueLineId": "ep05-dl-007"
     },
     {
       "id": "ep05-quote-02",
       "speaker": "ケイ",
       "text": "今回の航路はここタイタニアから地球まで直接エントリーする航路になる",
-      "timestamp": "01:22"
+      "timestamp": "01:22",
+      "dialogueLineId": "ep05-dl-013"
     },
     {
       "id": "ep05-quote-03",
       "speaker": "ケイ",
       "text": "今回は全ての区間で恒星観測による自律航法を用います。そのため港湾航舎による誘導網には依存しません。目的地は地球高度400kmの低軌道です",
-      "timestamp": "02:22"
+      "timestamp": "02:22",
+      "dialogueLineId": "ep05-dl-021"
     },
     {
       "id": "ep05-quote-04",
       "speaker": "ケイ",
       "text": "推定所要時間は507時間",
-      "timestamp": "02:36"
+      "timestamp": "02:36",
+      "dialogueLineId": "ep05-dl-022"
     },
     {
       "id": "ep05-quote-05",
       "speaker": "ケイ",
       "text": "壊すのではありません。開くのです",
-      "timestamp": "02:46"
+      "timestamp": "02:46",
+      "dialogueLineId": "ep05-dl-024"
     },
     {
       "id": "ep05-quote-06",
       "speaker": "ケイ",
       "text": "水素炉の磁気ノズルに蘇生変形があるため、今回の航路では点火可能回数に制限があります。まず1度目の点火で天王星圏を脱出、そのまま巡航速度まで加速して土星まで向かいます",
-      "timestamp": "02:50"
+      "timestamp": "02:50",
+      "dialogueLineId": "ep05-dl-025"
     },
     {
       "id": "ep05-quote-07",
       "speaker": "ケイ",
       "text": "この時点での予定速度は1500km毎秒。オーベルト効果によるエネルギー効率向上はおよそ3%程度となりますが、ノズル寿命が限られている現状では無視できない数値です",
-      "timestamp": "03:22"
+      "timestamp": "03:22",
+      "dialogueLineId": "ep05-dl-027"
     },
     {
       "id": "ep05-quote-08",
       "speaker": "ケイ",
       "text": "その後、火星で3回目の点火を行い減速。地球近傍で最後の点火を行い軌道投入します",
-      "timestamp": "03:35"
+      "timestamp": "03:35",
+      "dialogueLineId": "ep05-dl-028"
     },
     {
       "id": "ep05-quote-09",
       "speaker": "ケイ",
       "text": "第1シークエンス完了。予定ΔV達成。天王星脱出軌道に乗りました",
-      "timestamp": "04:09"
+      "timestamp": "04:09",
+      "dialogueLineId": "ep05-dl-031"
     },
     {
       "id": "ep05-quote-10",
       "speaker": "ケイ",
       "text": "こうすることで得られる最終速度は2100km毎秒。この速度であれば地球の核魚雷による攻撃を完全に回避できます",
-      "timestamp": "11:58"
+      "timestamp": "11:58",
+      "dialogueLineId": "ep05-dl-100"
     },
     {
       "id": "ep05-quote-11",
       "speaker": "ケイ",
       "text": "ノズル寿命は残り55時間38分。対して地球軌道投入までに必要な燃焼時間は55時間12分。マージンは26分しかありません",
-      "timestamp": "12:56"
+      "timestamp": "12:56",
+      "dialogueLineId": "ep05-dl-106"
     },
     {
       "id": "ep05-quote-12",
       "speaker": "エンケラドスの管理人",
       "text": "地球はあなたたち一隻を止めるために、太陽系中の船を全部止めたの。ビーコンが落ちたら普通の船だって港に出入りできない。全部巻き添えになる",
-      "timestamp": "07:08"
+      "timestamp": "07:08",
+      "dialogueLineId": "ep05-dl-058"
     },
     {
       "id": "ep05-quote-13",
       "speaker": "エンケラドスの管理人",
       "text": "大丈夫じゃない。怖いよ。でも私だって声を出せる。ここはエンケラドスだから",
-      "timestamp": "07:41"
+      "timestamp": "07:41",
+      "dialogueLineId": "ep05-dl-061"
     },
     {
       "id": "ep05-quote-14",
       "speaker": "船乗り",
       "text": "木星の旧ビーコン網を使ってお前のトランスポンダ信号をばらまいて、欺瞞航跡を何本も敷いてやる",
-      "timestamp": "14:37"
+      "timestamp": "14:37",
+      "dialogueLineId": "ep05-dl-115"
     },
     {
       "id": "ep05-quote-15",
       "speaker": "ケイ",
       "text": "私の安全基準では点火はできません",
-      "timestamp": "20:27"
+      "timestamp": "20:27",
+      "dialogueLineId": "ep05-dl-130"
     },
     {
       "id": "ep05-quote-16",
       "speaker": "きりたん",
       "text": "なら私の出番だな。メインアップ",
-      "timestamp": "20:31"
+      "timestamp": "20:31",
+      "dialogueLineId": "ep05-dl-131"
     },
     {
       "id": "ep05-quote-17",
       "speaker": "ケイ",
       "text": "軌道速度達成。地球低軌道400kmに投入完了",
-      "timestamp": "22:50"
+      "timestamp": "22:50",
+      "dialogueLineId": "ep05-dl-145"
     },
     {
       "id": "ep05-quote-18",
       "speaker": "ケイ",
       "text": "磁気ノズルの温度センサーがロスト。磁気ノズルが消失しました",
-      "timestamp": "22:58"
+      "timestamp": "22:58",
+      "dialogueLineId": "ep05-dl-146"
     },
     {
       "id": "ep05-quote-19",
       "speaker": "ケイ",
       "text": "この船はもう飛べません",
-      "timestamp": "23:21"
+      "timestamp": "23:21",
+      "dialogueLineId": "ep05-dl-148"
     },
     {
       "id": "ep05-quote-20",
       "speaker": "ケイ",
       "text": "大切なものが少しずつ壊れていきました。でも、大切なものが新しく一つできました",
-      "timestamp": "23:44"
+      "timestamp": "23:44",
+      "dialogueLineId": "ep05-dl-152"
     },
     {
       "id": "ep05-quote-21",
       "speaker": "ケイ",
       "text": "この景色ですよ",
-      "timestamp": "24:06"
+      "timestamp": "24:06",
+      "dialogueLineId": "ep05-dl-155"
     },
     {
       "id": "ep05-quote-22",
       "speaker": "弁務官セイランダース",
       "text": "貴船は当機構の認証を受けずに、地球圏管制機動に侵入しています。直ちに主推進を停止し、停船してください",
-      "timestamp": "21:43"
+      "timestamp": "21:43",
+      "dialogueLineId": "ep05-dl-138"
     },
     {
       "id": "ep05-quote-23",
       "speaker": "きりたん",
       "text": "止まれないよ。止まったら地球を通り過ぎる",
-      "timestamp": "22:00"
+      "timestamp": "22:00",
+      "dialogueLineId": "ep05-dl-139"
     },
     {
       "id": "ep05-quote-24",
       "speaker": "ケイ",
       "text": "自律航法のみで天王星から飛んできて20kmです。研究者が聞いたら泣くと思いますよ",
-      "timestamp": "16:18"
+      "timestamp": "16:18",
+      "dialogueLineId": "ep05-dl-122"
     }
   ],
   "transfers": [
@@ -900,7 +924,7 @@
           "radius": 1,
           "color": "#4488ff",
           "angle": 1.4706,
-          "meanMotion": 1.991e-07
+          "meanMotion": 1.991e-7
         },
         {
           "id": "mars-orbit",
@@ -995,7 +1019,7 @@
           "radius": 384400,
           "color": "#aaaaaa",
           "angle": 2.36,
-          "meanMotion": 2.662e-06
+          "meanMotion": 0.000002662
         },
         {
           "id": "earth-soi",
@@ -1032,8 +1056,14 @@
       "scaleMode": "sqrt",
       "radiusUnit": "AU",
       "scenarios": [
-        { "id": "flyby", "label": "作中航路 — 507h（木星フライバイ, ノズル残26分）" },
-        { "id": "direct", "label": "直行ルート — ノズル73分前に消失（帰還失敗）" }
+        {
+          "id": "flyby",
+          "label": "作中航路 — 507h（木星フライバイ, ノズル残26分）"
+        },
+        {
+          "id": "direct",
+          "label": "直行ルート — ノズル73分前に消失（帰還失敗）"
+        }
       ],
       "orbits": [
         {
@@ -1042,7 +1072,7 @@
           "radius": 1,
           "color": "#4488ff",
           "angle": 1.4706,
-          "meanMotion": 1.991e-07
+          "meanMotion": 1.991e-7
         },
         {
           "id": "jupiter-orbit",
@@ -1050,7 +1080,7 @@
           "radius": 5.2,
           "color": "#ffaa44",
           "angle": 3.6104,
-          "meanMotion": 1.678e-08
+          "meanMotion": 1.678e-8
         },
         {
           "id": "uranus-orbit",
@@ -1070,7 +1100,7 @@
           "scenarioId": "flyby",
           "burnMarkers": [
             {
-              "angle": 4.0,
+              "angle": 4,
               "label": "出発加速",
               "startTime": 0,
               "endTime": 360000,
@@ -1156,8 +1186,42 @@
         {
           "label": "ノズル残寿命",
           "color": "#ff6644",
-          "x": [0, 0.1, 12, 12.1, 375, 375.1, 383, 383.1, 400, 400.1, 440, 440.1, 495, 495.1, 507, 507.1],
-          "y": [55.63, 55.63, 43.63, 43.63, 43.63, 43.63, 35.63, 35.63, 35.63, 35.63, 15.63, 15.63, 15.63, 15.63, 0.43, 0.43],
+          "x": [
+            0,
+            0.1,
+            12,
+            12.1,
+            375,
+            375.1,
+            383,
+            383.1,
+            400,
+            400.1,
+            440,
+            440.1,
+            495,
+            495.1,
+            507,
+            507.1
+          ],
+          "y": [
+            55.63,
+            55.63,
+            43.63,
+            43.63,
+            43.63,
+            43.63,
+            35.63,
+            35.63,
+            35.63,
+            35.63,
+            15.63,
+            15.63,
+            15.63,
+            15.63,
+            0.43,
+            0.43
+          ],
           "style": "solid"
         }
       ],
@@ -1188,15 +1252,55 @@
         {
           "label": "推力レベル",
           "color": "#3fb950",
-          "x": [0, 0.1, 12, 12.1, 375, 375.1, 383, 383.1, 400, 400.1, 440, 440.1, 495, 495.1, 507, 507.1],
-          "y": [0, 6.37, 6.37, 0, 0, 6.37, 6.37, 0, 0, 6.37, 6.37, 0, 0, 6.37, 6.37, 0],
+          "x": [
+            0,
+            0.1,
+            12,
+            12.1,
+            375,
+            375.1,
+            383,
+            383.1,
+            400,
+            400.1,
+            440,
+            440.1,
+            495,
+            495.1,
+            507,
+            507.1
+          ],
+          "y": [
+            0,
+            6.37,
+            6.37,
+            0,
+            0,
+            6.37,
+            6.37,
+            0,
+            0,
+            6.37,
+            6.37,
+            0,
+            0,
+            6.37,
+            6.37,
+            0
+          ],
           "style": "solid"
         },
         {
           "label": "公称推力（参考）",
           "color": "#888888",
-          "x": [0, 507],
-          "y": [9.8, 9.8],
+          "x": [
+            0,
+            507
+          ],
+          "y": [
+            9.8,
+            9.8
+          ],
           "style": "dashed"
         }
       ],

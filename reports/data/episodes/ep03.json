@@ -21,19 +21,22 @@
       "id": "ep03-quote-01",
       "speaker": "ケイ",
       "text": "外縁航路は土星圏での航路とは根本的に異なります。まして、この船は内縁輸送向けに設計されたものです。計算上航行は可能ですが、保証はできません",
-      "timestamp": "02:19"
+      "timestamp": "02:19",
+      "dialogueLineId": "ep03-dl-008"
     },
     {
       "id": "ep03-quote-02",
       "speaker": "ケイ",
       "text": "航路の目的地はウラヌス3、タイタニア集合複合施設、天王星自治有効機構宇宙港です",
-      "timestamp": "02:57"
+      "timestamp": "02:57",
+      "dialogueLineId": "ep03-dl-012"
     },
     {
       "id": "ep03-quote-03",
       "speaker": "ケイ",
       "text": "所要時間は143時間12分",
-      "timestamp": "03:11"
+      "timestamp": "03:11",
+      "dialogueLineId": "ep03-dl-016"
     },
     {
       "id": "ep03-quote-04",
@@ -51,31 +54,36 @@
       "id": "ep03-quote-06",
       "speaker": "ケイ",
       "text": "現在位置は太陽基準で14.72AU。速度は巡航速度でおよそ3000km毎秒。背景恒星観測と慣性航法系はそれぞれ違うコースにナビゲートしています。この2つの差は角度にして1.23度になります",
-      "timestamp": "13:58"
+      "timestamp": "13:58",
+      "dialogueLineId": "ep03-dl-033"
     },
     {
       "id": "ep03-quote-07",
       "speaker": "ケイ",
       "text": "この誤差は天王星交点面でおよそ1436万km。一方のコースは天王星に交差し、もう一方は太陽系の外縁を超えるコースです",
-      "timestamp": "14:17"
+      "timestamp": "14:17",
+      "dialogueLineId": "ep03-dl-034"
     },
     {
       "id": "ep03-quote-08",
       "speaker": "きりたん",
       "text": "星は嘘をつかないか……私にはそうは見えないけどな。慣性航法系のコースへ",
-      "timestamp": "16:12"
+      "timestamp": "16:12",
+      "dialogueLineId": "ep03-dl-039"
     },
     {
       "id": "ep03-quote-09",
       "speaker": "ケイ",
       "text": "天王星へのエントリー減速完了。間もなく天王星磁気圏に突入します。現在高度は25RU",
-      "timestamp": "16:33"
+      "timestamp": "16:33",
+      "dialogueLineId": "ep03-dl-040"
     },
     {
       "id": "ep03-quote-10",
       "speaker": "ケイ",
       "text": "ええ、外していれば今頃太陽系の暗闇に向けて飛び続けているところでした",
-      "timestamp": "17:03"
+      "timestamp": "17:03",
+      "dialogueLineId": "ep03-dl-043"
     }
   ],
   "transfers": [
