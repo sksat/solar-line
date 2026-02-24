@@ -70,6 +70,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Screenshot citations**: When video analysis produces findings, screenshots may be cited in reports. Follow fair-use citation requirements — do not overuse.
 - **VTT/transcription accuracy**: VTT and other transcriptions are not always perfect — correct text from context when actually using it in reports
 - **Report navigation**: Source citations must be clickable links. Reports should link to other episode reports and summary pages. Use section anchors and a table of contents for intra-page navigation.
+- **Transcription-report sync**: When transcription corrections change speaker names or dialogue text, update the corresponding dialogue quotes in episode reports (epXX.json) to maintain consistency.
 
 ## Analysis Perspective
 
