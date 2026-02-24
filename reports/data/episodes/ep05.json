@@ -180,7 +180,9 @@
         "arrival_dv_kms": 11.28,
         "transfer_time_years": 16.05
       },
-      "evidenceQuoteIds": ["ep05-quote-04"],
+      "evidenceQuoteIds": [
+        "ep05-quote-04"
+      ],
       "sources": [
         {
           "claim": "天王星軌道半径",
@@ -222,7 +224,14 @@
         "mass_48000t_time_days": 105,
         "mass_48000t_dv_kms": 1202
       },
-      "evidenceQuoteIds": ["ep05-quote-02", "ep05-quote-03", "ep05-quote-04", "ep05-quote-06", "ep05-quote-07", "ep05-quote-08"],
+      "evidenceQuoteIds": [
+        "ep05-quote-02",
+        "ep05-quote-03",
+        "ep05-quote-04",
+        "ep05-quote-06",
+        "ep05-quote-07",
+        "ep05-quote-08"
+      ],
       "sources": [
         {
           "claim": "推力65%、6.37 MN",
@@ -263,7 +272,13 @@
         "dv_capture_geo_v0_kms": 1.27,
         "dv_capture_moon_v0_kms": 0.42
       },
-      "evidenceQuoteIds": ["ep05-quote-03", "ep05-quote-15", "ep05-quote-16", "ep05-quote-17", "ep05-quote-18"],
+      "evidenceQuoteIds": [
+        "ep05-quote-03",
+        "ep05-quote-15",
+        "ep05-quote-16",
+        "ep05-quote-17",
+        "ep05-quote-18"
+      ],
       "sources": [
         {
           "claim": "地球重力パラメータ",
@@ -308,7 +323,15 @@
         "radiation_icrp_limit_msv": 500,
         "radiation_nasa_limit_msv": 600
       },
-      "evidenceQuoteIds": ["ep05-quote-06", "ep05-quote-08", "ep05-quote-11", "ep05-quote-15", "ep05-quote-16", "ep05-quote-18", "ep05-quote-19"],
+      "evidenceQuoteIds": [
+        "ep05-quote-06",
+        "ep05-quote-08",
+        "ep05-quote-11",
+        "ep05-quote-15",
+        "ep05-quote-16",
+        "ep05-quote-18",
+        "ep05-quote-19"
+      ],
       "sources": [
         {
           "claim": "残り点火回数3-4回",
@@ -350,7 +373,13 @@
         "brachistochrone_legs": 3,
         "ballistic_legs": 1
       },
-      "evidenceQuoteIds": ["ep05-quote-04", "ep05-quote-09", "ep05-quote-10", "ep05-quote-17", "ep05-quote-19"],
+      "evidenceQuoteIds": [
+        "ep05-quote-04",
+        "ep05-quote-09",
+        "ep05-quote-10",
+        "ep05-quote-17",
+        "ep05-quote-19"
+      ],
       "sources": [
         {
           "claim": "各惑星軌道半径",
@@ -679,6 +708,115 @@
         }
       ],
       "summary": "巡航速度1500 km/sにおける古典的Oberth効果（速度増幅）はv_escⱼ/v∞ ≈ 59.5/1500 ≈ 4%の比から≪1%であり、「3%」という数値とは整合しない。しかし、ケイの「エネルギー効率向上はおよそ3%程度」は、木星フライバイの複合効果——重力アシストによる軌道角度変更、深い重力井戸でのOberth燃焼、軌道ジオメトリの最適化——を総合したミッションレベルの推進剤節約率として解釈できる。\n\nこの3%の意味はノズル寿命の文脈で決定的に重要: 必要燃焼時間の3%は約99分であり、ノズル寿命マージン26分の3.8倍に相当する。Oberth効果なしでは55h12mの燃焼時間が3%増の56h51mに膨らみ、ノズル寿命55h38mを73分超過する。つまり**木星フライバイなしではLEO到達は不可能**であり、ケイが「無視できない数値」と述べた理由が物理的に裏付けられる。"
+    },
+    {
+      "id": "ep05-exploration-06",
+      "transferId": "ep05-transfer-02",
+      "question": "木星フライバイを行わず直行した場合、帰還は可能だったか？（IF分析）",
+      "boundaryCondition": "ノズル寿命55h38m（200,280s）が絶対的制約。木星オーベルト効果による99分の燃焼短縮が帰還成否を分ける",
+      "scenarios": [
+        {
+          "label": "作中航路（木星フライバイあり）",
+          "variedParam": "木星フライバイ",
+          "variedValue": 1,
+          "variedUnit": "（あり）",
+          "results": {
+            "燃焼時間": "55h12m",
+            "ノズルマージン": "26分 (0.78%)",
+            "結果": "LEO投入成功"
+          },
+          "feasible": true,
+          "note": "マージン0.78%——シリーズ最小。きりたんの手動点火により達成"
+        },
+        {
+          "label": "木星フライバイなし（直行ルート）",
+          "variedParam": "木星フライバイ",
+          "variedValue": 0,
+          "variedUnit": "（なし）",
+          "results": {
+            "燃焼時間": "56h51m",
+            "ノズル超過": "73分",
+            "残余速度": "93 km/s"
+          },
+          "feasible": false,
+          "note": "ノズルは地球到達73分前に消失。残余速度93 km/s（LEO脱出速度の8.6倍）で地球を通過——捕捉不可能"
+        },
+        {
+          "label": "フライバイなし＋月軌道投入に変更",
+          "variedParam": "木星フライバイ",
+          "variedValue": 0,
+          "variedUnit": "（なし+月軌道）",
+          "results": {
+            "燃焼時間": "56h49m",
+            "節約": "2.2分",
+            "残余速度": "90 km/s"
+          },
+          "feasible": false,
+          "note": "月軌道に変更しても節約はわずか2.2分。73分の赤字を解消するには全く不十分"
+        }
+      ],
+      "summary": "**木星フライバイは選択ではなく必須だった。** オーベルト効果による99分の燃焼短縮がなければ、ケストレル号は地球に到達できなかった。ケイが航路計画に木星フライバイを組み込んだのは、ノズル寿命というハードリミットを計算した上での唯一の解であり、「3%」の効率向上は数値としては小さいが、生死を分ける差であった。このIF分析は、作品の「ギリギリ」設計の頂点——第5話のノズルマージン0.78%——が単なる演出ではなく、物理的制約の帰結であることを裏付ける。"
+    },
+    {
+      "id": "ep05-exploration-07",
+      "transferId": "ep05-transfer-04",
+      "question": "ノズルを温存する安全な航路は存在したか？（IF分析）",
+      "boundaryCondition": "ΔV = 加速度 × 時間のため、推力低減はノズル延命に寄与しない。唯一の解は総ΔV（≒航路時間の逆数）の削減",
+      "scenarios": [
+        {
+          "label": "作中航路 507h（フライバイあり）",
+          "variedParam": "航路時間",
+          "variedValue": 507,
+          "variedUnit": "時間",
+          "results": {
+            "ΔV": "4,219 km/s",
+            "燃焼時間": "55h12m",
+            "マージン": "26分 (0.78%)"
+          },
+          "feasible": true,
+          "note": "きりたんの手動点火で達成"
+        },
+        {
+          "label": "低推力（50%出力）で延命",
+          "variedParam": "推力",
+          "variedValue": 50,
+          "variedUnit": "%",
+          "results": {
+            "ΔV": "4,219 km/s（同一）",
+            "燃焼時間": "110h24m",
+            "マージン": "−54h47m"
+          },
+          "feasible": false,
+          "note": "推力を下げると同じΔVに2倍の時間が必要で、むしろ状況は悪化"
+        },
+        {
+          "label": "800h（33日）航路",
+          "variedParam": "航路時間",
+          "variedValue": 800,
+          "variedUnit": "時間",
+          "results": {
+            "ΔV": "3,782 km/s",
+            "燃焼時間": "49h30m",
+            "マージン": "370分 (10.9%)"
+          },
+          "feasible": true,
+          "note": "十分に安全だが、507hより12日長く核魚雷の追撃が問題"
+        },
+        {
+          "label": "700h（29日）航路",
+          "variedParam": "航路時間",
+          "variedValue": 700,
+          "variedUnit": "時間",
+          "results": {
+            "ΔV": "4,322 km/s",
+            "燃焼時間": "56h30m",
+            "マージン": "−54分"
+          },
+          "feasible": false,
+          "note": "フライバイなしの700hルートでも不足。安全域は800h以上"
+        }
+      ],
+      "summary": "**安全な航路は存在したが、時間的に許容できなかった。** 800h航路なら370分（10.9%）のマージンで安全だが、507hより12日長い。作中では核魚雷からの逃走が時間制約であり、速度を落とすこと = 追いつかれるリスクがある。また、直感に反して推力低減はノズル延命に全く寄与しない。ノズル寿命は燃焼「時間」で制約されるため、同じΔVを低推力で生成すると逆効果。「65%出力」がすでに致命的境界線上であったことを示す。"
     }
   ],
   "diagrams": [
@@ -695,7 +833,7 @@
           "radius": 1,
           "color": "#4488ff",
           "angle": 1.4706,
-          "meanMotion": 1.991e-7
+          "meanMotion": 1.991e-07
         },
         {
           "id": "mars-orbit",
@@ -789,7 +927,7 @@
           "radius": 384400,
           "color": "#aaaaaa",
           "angle": 2.36,
-          "meanMotion": 0.000002662
+          "meanMotion": 2.662e-06
         },
         {
           "id": "earth-soi",

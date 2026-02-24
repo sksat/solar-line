@@ -308,7 +308,7 @@
           "radius": 5.9,
           "color": "#d29922",
           "angle": 1.57,
-          "meanMotion": 0.00004109
+          "meanMotion": 4.109e-05
         },
         {
           "id": "europa",
@@ -316,7 +316,7 @@
           "radius": 9.4,
           "color": "#8b949e",
           "angle": 2.36,
-          "meanMotion": 0.00002048
+          "meanMotion": 2.048e-05
         },
         {
           "id": "ganymede",
@@ -324,7 +324,7 @@
           "radius": 15,
           "color": "#58a6ff",
           "angle": 3.14,
-          "meanMotion": 0.00001017
+          "meanMotion": 1.017e-05
         },
         {
           "id": "callisto",
@@ -332,7 +332,7 @@
           "radius": 26.3,
           "color": "#6e7681",
           "angle": 4.19,
-          "meanMotion": 0.000004358
+          "meanMotion": 4.358e-06
         },
         {
           "id": "escape-point",
@@ -379,7 +379,7 @@
           "label": "火星",
           "radius": 1.524,
           "color": "#f85149",
-          "meanMotion": 1.059e-7
+          "meanMotion": 1.059e-07
         },
         {
           "id": "jupiter",
@@ -387,7 +387,7 @@
           "radius": 5.203,
           "color": "#d29922",
           "angle": 2.997,
-          "meanMotion": 1.678e-8
+          "meanMotion": 1.678e-08
         },
         {
           "id": "saturn",
@@ -395,14 +395,14 @@
           "radius": 9.537,
           "color": "#c9d1d9",
           "angle": 2.2198,
-          "meanMotion": 6.761e-9
+          "meanMotion": 6.761e-09
         },
         {
           "id": "uranus",
           "label": "天王星",
           "radius": 19.19,
           "color": "#58a6ff",
-          "meanMotion": 2.37e-9
+          "meanMotion": 2.37e-09
         }
       ],
       "transfers": [
@@ -461,7 +461,7 @@
           "radius": 185539,
           "color": "#8b949e",
           "angle": 0.78,
-          "meanMotion": 7.72e-5
+          "meanMotion": 7.72e-05
         },
         {
           "id": "enceladus",
@@ -469,7 +469,7 @@
           "radius": 238042,
           "color": "#58a6ff",
           "angle": 2.09,
-          "meanMotion": 5.308e-5
+          "meanMotion": 5.308e-05
         },
         {
           "id": "tethys",
@@ -477,7 +477,7 @@
           "radius": 294619,
           "color": "#8b949e",
           "angle": 3.67,
-          "meanMotion": 3.852e-5
+          "meanMotion": 3.852e-05
         },
         {
           "id": "dione",
@@ -485,7 +485,7 @@
           "radius": 377396,
           "color": "#8b949e",
           "angle": 5.24,
-          "meanMotion": 2.657e-5
+          "meanMotion": 2.657e-05
         },
         {
           "id": "rhea",
@@ -493,7 +493,7 @@
           "radius": 527108,
           "color": "#8b949e",
           "angle": 1.31,
-          "meanMotion": 1.61e-5
+          "meanMotion": 1.61e-05
         },
         {
           "id": "titan",
@@ -501,7 +501,7 @@
           "radius": 1221870,
           "color": "#d29922",
           "angle": 4.19,
-          "meanMotion": 4.561e-6
+          "meanMotion": 4.561e-06
         },
         {
           "id": "approach-point",
@@ -701,6 +701,71 @@
         }
       ],
       "summary": "「修正機動を許容しない」という制約は、太陽系脱出速度とのマージンが約0.53 km/sしかないことを考慮すると非常に合理的である。0.6 km/s以上の速度誤差があれば土星に到達できない。損傷した船でトリム推力のみの状態では、大きな修正機動は物理的にも困難であり、一発勝負の投入が求められるという緊迫した状況の描写は、軌道力学的にも裏付けられている。\n\n【シリーズを貫く「ギリギリ」設計】この0.53 km/sのマージンは、シリーズ全体に共通する「物理的にギリギリ」の設計パターンの最初の例である。第3話では14.72 AUで1.23°の航法誤差が天王星への到達可否を分ける。第4話ではシールド残寿命14分に対し通過8分（余裕6分 = 43%）。第5話ではノズル寿命55h38m vs 必要燃焼55h12m（マージンわずか26分＝0.8%）。いずれも失敗すれば致命的だが、物理的には達成可能な範囲に収まるという、軌道力学の制約を最大限に活用したドラマ構成となっている。"
+    },
+    {
+      "id": "ep02-exploration-04",
+      "transferId": "ep02-transfer-04",
+      "question": "エンケラドス以外の衛星軌道で土星に捕捉されていた場合、ΔVはどう変わったか？（IF分析）",
+      "boundaryCondition": "v∞ = 4.69 km/s での土星捕捉。最小ΔV = v_hyp − v_esc（近点でオーベルト効果が最大化）",
+      "scenarios": [
+        {
+          "label": "エンケラドス捕捉（作中選択）",
+          "variedParam": "捕捉軌道",
+          "variedValue": 238020,
+          "variedUnit": "km",
+          "results": {
+            "最小ΔV": "0.61 km/s",
+            "円軌道ΔV": "5.83 km/s",
+            "脱出速度": "17.85 km/s",
+            "周期": "1.4日"
+          },
+          "feasible": true,
+          "note": "全候補中最低の最小捕捉ΔV。オーベルト効果が最大。損傷状態の最適解"
+        },
+        {
+          "label": "タイタン軌道捕捉",
+          "variedParam": "捕捉軌道",
+          "variedValue": 1221870,
+          "variedUnit": "km",
+          "results": {
+            "最小ΔV": "1.29 km/s",
+            "円軌道ΔV": "3.60 km/s",
+            "脱出速度": "7.88 km/s",
+            "周期": "15.9日"
+          },
+          "feasible": true,
+          "note": "最小捕捉ΔVはエンケラドスの2.1倍。円軌道化は安い（3.60 vs 5.83）が、損傷船には最小ΔVが重要"
+        },
+        {
+          "label": "レア軌道捕捉",
+          "variedParam": "捕捉軌道",
+          "variedValue": 527108,
+          "variedUnit": "km",
+          "results": {
+            "最小ΔV": "0.88 km/s",
+            "円軌道ΔV": "4.40 km/s",
+            "脱出速度": "12.00 km/s",
+            "周期": "4.5日"
+          },
+          "feasible": true,
+          "note": "エンケラドスの1.4倍。中間的な選択肢"
+        },
+        {
+          "label": "SOI境界付近（6×10⁷ km）",
+          "variedParam": "捕捉軌道",
+          "variedValue": 60000000,
+          "variedUnit": "km",
+          "results": {
+            "最小ΔV": "3.70 km/s",
+            "円軌道ΔV": "4.03 km/s",
+            "脱出速度": "1.12 km/s",
+            "周期": "5,488日"
+          },
+          "feasible": true,
+          "note": "オーベルト効果ほぼゼロ。最小ΔV 3.70 km/s（エンケラドスの6倍）"
+        }
+      ],
+      "summary": "**エンケラドスは物語上の選択であると同時に、物理的にも最適解だった。** 最小捕捉ΔV 0.61 km/sは全主要衛星軌道の中で最低値。オーベルト効果の帰結——重力井戸が深いほど「束縛化」に必要なΔVが小さくなる。逆説的に、「より近い」（低い）軌道への捕捉の方が容易であり、SOI境界付近での捕捉はΔVが6倍。損傷状態のケストレル号にとって、エンケラドスは「最も低コストな港」であった。ミューズとの通信接続という物語上の動機と、軌道力学の最適解が一致している点は、作品の科学的整合性の高さを示す。"
     }
   ]
 }
