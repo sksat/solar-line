@@ -40,6 +40,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - YouTube subtitle data is collected via scripts; ニコニコ動画 comments are NOT subtitles
 - **YouTube VTT (auto-generated subtitles) accuracy is limited** — especially for VOICEROID/software-talk content. Treat VTT as one data source among many; build OCR and speech-to-text infrastructure as additional subtitle sources
 - Dialogue attribution (who said what) requires contextual understanding of characters and scene changes — do not fully automate this; use Claude/Codex to verify speaker identity
+- **Primary dialogue partner**: きりたん's main conversation partner is ケストレルAI（ケイ）— most dialogue is between these two
 - **Two-phase dialogue pipeline:**
   - Phase 1 (Extraction): Extract raw dialogue lines with timestamps from subtitles → `epXX_lines.json` (automated)
   - Phase 2 (Attribution): Assign speakers using context → `epXX_dialogue.json` (context-assisted, NOT fully automated)
@@ -53,6 +54,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - Reports include per-transfer analysis and session logs
 - Session logs should be collected from Claude Code conversation logs (not just stdout)
 - Not everything needs to be interactive — include static analysis graphs/charts in reports where appropriate
+- **Concrete values need visualization**: When analyzing specific numerical values (ΔV, acceleration, travel time), include charts or diagrams to make the analysis more intuitive
 - **Orbital transfer diagrams**: Include graphs showing planetary orbits, celestial body positions, and transfer trajectories to make the analysis more visually understandable
 - Each episode report should embed the YouTube and Niconico video at the top (use a video card component)
 - Quote character dialogue with timestamps in analysis, e.g. きりたん「~~~」(10:05)
@@ -64,6 +66,25 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Report review**: Periodically have other Claude Code sessions or Codex review reports for readability/clarity
 - **VTT/transcription accuracy**: VTT and other transcriptions are not always perfect — correct text from context when actually using it in reports
 - **Report navigation**: Source citations must be clickable links. Reports should link to other episode reports and summary pages. Use section anchors and a table of contents for intra-page navigation.
+
+## Analysis Perspective
+
+- **SF tolerance**: This is an SF work — human g-tolerance countermeasures and futuristic propulsion capabilities are acceptable premises. Focus on whether in-story depictions are **narratively consistent** (elapsed time, distances, celestial positions) rather than physically realistic by current standards.
+- **Counterfactual analysis**: Explore IF scenarios — what would happen if characters had made different decisions? (e.g., direct route without Jupiter flyby, low-thrust nozzle conservation path). This deepens the analysis.
+- **Math rendering**: Use KaTeX or MathJax to render formulas readably in reports.
+
+## Data Infrastructure
+
+- **Whisper model tracking**: Record STT generation conditions (model size, language, thresholds) structurally. YouTube VTT and other sources should be managed with the same metadata discipline.
+- **Alternative STT**: Consider non-Whisper STT (Google, Azure) when accuracy is insufficient.
+- **Speaker diarization**: May improve Phase 2 attribution accuracy — investigate and apply where beneficial.
+- **Video analysis**: Downloaded video (gitignored) may be used for frame-by-frame OCR, subtitle extraction, and visual analysis.
+- **Transcription data on Pages**: Make subtitle/transcription data browsable on GitHub Pages.
+
+## Quality Assurance
+
+- **Playwright E2E tests**: Add browser-based rendering tests to catch broken markdown tables, layout issues, and visual regressions. Use Playwright CLI.
+- **Skill-ize workflows**: Define commonly repeated workflows (subtitle extraction, episode analysis, report review) as Claude Code Skills following Anthropic best practices.
 
 ## Key Principles
 

@@ -1,6 +1,6 @@
 # Task 051: Add Episode Cross-Links in Summary Pages
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Motivation
 CLAUDE.md requires: "Reports should link to other episode reports and summary pages."
