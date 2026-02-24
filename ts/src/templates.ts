@@ -490,7 +490,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <body>
 <nav><a href="${basePath}/index.html">トップ</a>${summaryNav} <a href="${basePath}/logs/index.html">セッションログ</a></nav>
 ${content}
-<footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成</footer>
+<footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a></footer>
 <script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}});</script>
 </body>
 </html>`;

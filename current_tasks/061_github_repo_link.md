@@ -1,6 +1,6 @@
 # Task 061: GitHub Repo Link on Pages
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 Human directive: Pages で GitHub repo を明示すること

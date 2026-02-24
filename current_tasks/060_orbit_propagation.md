@@ -1,6 +1,6 @@
 # Task 060: Detailed Orbit Propagation Validation
 
-## Status: TODO
+## Status: IN PROGRESS (Session 2026-02-24)
 
 ## Motivation
 Human directive: 大雑把な机上計算による分析の後に詳細な軌道伝搬も行ってみて検証するとよい。特に時間経過などの細かいパラメータについては。
