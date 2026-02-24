@@ -458,7 +458,7 @@
           "sourceLabel": "第4話 損傷状態Brachistochrone分析（300tなら8.3日）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: full route\""
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Oberth effect\""
     }
   ],
   "explorations": [
@@ -1308,7 +1308,7 @@
           "label": "ウンブリエル",
           "radius": 266000,
           "color": "#8888aa",
-          "angle": 4.0,
+          "angle": 4,
           "meanMotion": 0.00001516
         },
         {
@@ -1332,7 +1332,7 @@
           "label": "脱出点 (25 RU)",
           "radius": 638975,
           "color": "#ff444444",
-          "angle": 5.0
+          "angle": 5
         }
       ],
       "transfers": [

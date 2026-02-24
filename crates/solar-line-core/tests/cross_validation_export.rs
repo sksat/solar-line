@@ -1,9 +1,9 @@
-/// Export orbital mechanics calculation results from the Rust implementation
-/// as JSON for cross-validation with external Python implementation.
-///
-/// Usage: cargo test --test cross_validation_export -- --nocapture > cross_validation/rust_values.json
-///
-/// This is run as part of `npm run cross-validate`.
+//! Export orbital mechanics calculation results from the Rust implementation
+//! as JSON for cross-validation with external Python implementation.
+//!
+//! Usage: cargo test --test cross_validation_export -- --nocapture > cross_validation/rust_values.json
+//!
+//! This is run as part of `npm run cross-validate`.
 
 #[cfg(test)]
 mod export {
@@ -12,7 +12,7 @@ mod export {
     use solar_line_core::kepler;
     use solar_line_core::orbits;
     use solar_line_core::propagation::*;
-    use solar_line_core::units::{Eccentricity, Km, KmPerSec, Mu, Radians, Seconds};
+    use solar_line_core::units::{Eccentricity, Km, KmPerSec, Radians, Seconds};
     use solar_line_core::vec3::Vec3;
 
     #[test]
