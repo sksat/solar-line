@@ -27,5 +27,6 @@
       "heading": "プロジェクト全体のコスト見積もり",
       "markdown": "### 推定パラメータ\n\nプロジェクト全体（87+タスク、100+コミット）で:\n\n- 1回のVMブートあたり約58セッション\n- 1回のVMブートあたり約$6.50（Haikuサブエージェント分）\n- Opus使用分: $0（Maxサブスクリプション）\n- 複数回のVMブート × $6.50\n\n### コスト効率の評価\n\nキャッシュヒット率 **97.3%** は非常に優秀です。これは Claude Code のコンテキスト管理が効果的に機能していることを示しています。\n\n主な最適化ポイントは:\n- 不要なコンテキスト更新の削減（TodoWrite頻度）\n- ストリーミング出力によるセッション膨張の防止\n- サブエージェントの適切なモデル選択\n\n### 更新方法\n\n```\n# ccusageでコストデータを取得:\nbunx ccusage@17 session --offline --json --timezone Asia/Tokyo | \\\n  npm run analyze-costs -- --mode session\n\n# 日別サマリー:\nbunx ccusage@17 daily --offline --json --timezone Asia/Tokyo | \\\n  npm run analyze-costs -- --mode daily\n```"
     }
-  ]
+  ],
+  "category": "meta"
 }

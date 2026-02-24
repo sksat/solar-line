@@ -249,11 +249,20 @@ export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summa
       description: log.description,
       path: `logs/${log.filename}.html`,
     })),
-    summaryPages: summaries.length > 0 ? summaries.map(s => ({
-      title: s.title,
-      slug: s.slug,
-      path: `summary/${s.slug}.html`,
-    })) : undefined,
+    summaryPages: summaries.filter(s => s.category !== "meta").length > 0
+      ? summaries.filter(s => s.category !== "meta").map(s => ({
+          title: s.title,
+          slug: s.slug,
+          path: `summary/${s.slug}.html`,
+        }))
+      : undefined,
+    metaPages: summaries.filter(s => s.category === "meta").length > 0
+      ? summaries.filter(s => s.category === "meta").map(s => ({
+          title: s.title,
+          slug: s.slug,
+          path: `summary/${s.slug}.html`,
+        }))
+      : undefined,
     transcriptionPages: transcriptions.length > 0 ? transcriptions.map(t => ({
       episode: t.episode,
       lineCount: t.lines.length,
@@ -294,24 +303,24 @@ export function build(config: BuildConfig): void {
   // Generate episode pages
   for (const ep of episodes) {
     const filename = `ep-${String(ep.episode).padStart(3, "0")}.html`;
-    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages, episodes.length, navEpisodes));
+    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages, episodes.length, navEpisodes, manifest.metaPages));
   }
 
   // Generate summary pages (with episode nav strip and auto-linking)
   for (const summary of summaries) {
     fs.writeFileSync(
       path.join(outDir, "summary", `${summary.slug}.html`),
-      renderSummaryPage(summary, manifest.summaryPages, manifest.episodes, navEpisodes),
+      renderSummaryPage(summary, manifest.summaryPages, manifest.episodes, navEpisodes, manifest.metaPages),
     );
   }
 
   // Generate log pages
   const logManifest = manifest.logs;
-  fs.writeFileSync(path.join(outDir, "logs", "index.html"), renderLogsIndex(logManifest, manifest.summaryPages, navEpisodes));
+  fs.writeFileSync(path.join(outDir, "logs", "index.html"), renderLogsIndex(logManifest, manifest.summaryPages, navEpisodes, manifest.metaPages));
   for (const log of logs) {
     fs.writeFileSync(
       path.join(outDir, "logs", `${log.filename}.html`),
-      renderLogPage(log.filename, log.date, log.content, manifest.summaryPages, navEpisodes),
+      renderLogPage(log.filename, log.date, log.content, manifest.summaryPages, navEpisodes, manifest.metaPages),
     );
   }
 
@@ -320,13 +329,13 @@ export function build(config: BuildConfig): void {
     ensureDir(path.join(outDir, "transcriptions"));
     fs.writeFileSync(
       path.join(outDir, "transcriptions", "index.html"),
-      renderTranscriptionIndex(transcriptions, manifest.summaryPages, navEpisodes),
+      renderTranscriptionIndex(transcriptions, manifest.summaryPages, navEpisodes, manifest.metaPages),
     );
     for (const tr of transcriptions) {
       const filename = `ep-${String(tr.episode).padStart(3, "0")}.html`;
       fs.writeFileSync(
         path.join(outDir, "transcriptions", filename),
-        renderTranscriptionPage(tr, manifest.summaryPages, navEpisodes),
+        renderTranscriptionPage(tr, manifest.summaryPages, navEpisodes, manifest.metaPages),
       );
     }
   }

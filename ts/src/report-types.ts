@@ -441,6 +441,9 @@ export interface SummaryReport {
   title: string;
   /** Brief summary of the page content */
   summary: string;
+  /** Navigation category: "analysis" (総合分析) or "meta" (この考証について).
+   *  Defaults to "analysis" if not specified. */
+  category?: "analysis" | "meta";
   /** Structured sections */
   sections: SummarySection[];
 }
@@ -543,8 +546,17 @@ export interface SiteManifest {
     /** Relative path to the log page */
     path: string;
   }[];
-  /** List of summary/cross-episode pages */
+  /** List of summary/cross-episode pages (analysis category) */
   summaryPages?: {
+    /** Page title */
+    title: string;
+    /** URL slug */
+    slug: string;
+    /** Relative path to the page */
+    path: string;
+  }[];
+  /** List of meta pages under「この考証について」(meta category) */
+  metaPages?: {
     /** Page title */
     title: string;
     /** URL slug */
