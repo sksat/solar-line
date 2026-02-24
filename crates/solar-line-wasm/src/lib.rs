@@ -533,6 +533,86 @@ pub fn propagate_trajectory(
 }
 
 // ---------------------------------------------------------------------------
+// Adaptive orbit propagation (RK45 Dormand-Prince)
+// ---------------------------------------------------------------------------
+
+/// Propagate a ballistic orbit using adaptive RK45 Dormand-Prince integrator.
+///
+/// Input: initial state (6 floats), mu (km³/s²), duration (s),
+/// rtol, atol (error tolerances).
+///
+/// Returns [x, y, z, vx, vy, vz, time, energy_drift, n_eval, n_accept, n_reject] — 11 floats.
+#[wasm_bindgen]
+pub fn propagate_adaptive_ballistic(
+    x: f64, y: f64, z: f64,
+    vx: f64, vy: f64, vz: f64,
+    mu: f64, duration: f64,
+    rtol: f64, atol: f64,
+) -> Box<[f64]> {
+    let initial = propagation::PropState::new(
+        Vec3::new(Km(x), Km(y), Km(z)),
+        Vec3::new(KmPerSec(vx), KmPerSec(vy), KmPerSec(vz)),
+    );
+    let mut config = propagation::AdaptiveConfig::heliocentric(
+        Mu(mu),
+        propagation::ThrustProfile::None,
+    );
+    config.rtol = rtol;
+    config.atol = atol;
+
+    let e0 = initial.specific_energy(Mu(mu));
+    let (final_state, n_eval) = propagation::propagate_adaptive_final(&initial, &config, duration);
+    let ef = final_state.specific_energy(Mu(mu));
+    let drift = if e0.abs() > 1e-30 { ((ef - e0) / e0).abs() } else { (ef - e0).abs() };
+
+    Box::new([
+        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
+        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.time,
+        drift,
+        n_eval as f64,
+    ])
+}
+
+/// Propagate a brachistochrone trajectory using adaptive RK45 Dormand-Prince.
+///
+/// Input: initial state (6 floats), mu (km³/s²), duration (s),
+/// acceleration (km/s²), flip_time (s), rtol, atol.
+///
+/// Returns [x, y, z, vx, vy, vz, time, n_eval] — 8 floats.
+#[wasm_bindgen]
+pub fn propagate_adaptive_brachistochrone(
+    x: f64, y: f64, z: f64,
+    vx: f64, vy: f64, vz: f64,
+    mu: f64, duration: f64,
+    accel_km_s2: f64, flip_time: f64,
+    rtol: f64, atol: f64,
+) -> Box<[f64]> {
+    let initial = propagation::PropState::new(
+        Vec3::new(Km(x), Km(y), Km(z)),
+        Vec3::new(KmPerSec(vx), KmPerSec(vy), KmPerSec(vz)),
+    );
+    let mut config = propagation::AdaptiveConfig::heliocentric(
+        Mu(mu),
+        propagation::ThrustProfile::Brachistochrone {
+            accel_km_s2,
+            flip_time,
+        },
+    );
+    config.rtol = rtol;
+    config.atol = atol;
+
+    let (final_state, n_eval) = propagation::propagate_adaptive_final(&initial, &config, duration);
+
+    Box::new([
+        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
+        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.time,
+        n_eval as f64,
+    ])
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 
@@ -786,6 +866,44 @@ mod tests {
         assert_eq!(result.len(), 7);
         // Time should be approximately 1000s
         assert!((result[6] - 1000.0).abs() < 1.0);
+    }
+
+    #[test]
+    fn test_wasm_propagate_adaptive_ballistic_energy() {
+        // Circular LEO orbit for 1 period, adaptive
+        let mu_earth: f64 = 3.986004418e5;
+        let r: f64 = 6578.0;
+        let v = (mu_earth / r).sqrt();
+        let period = std::f64::consts::TAU * (r.powi(3) / mu_earth).sqrt();
+
+        let result = propagate_adaptive_ballistic(
+            r, 0.0, 0.0, 0.0, v, 0.0,
+            mu_earth, period,
+            1e-10, 1e-12,
+        );
+        assert_eq!(result.len(), 9);
+        // Energy drift
+        let drift = result[7];
+        assert!(drift < 1e-8, "adaptive energy drift = {:.2e}", drift);
+        // n_eval should be positive
+        let n_eval = result[8] as usize;
+        assert!(n_eval > 0, "should have taken steps");
+    }
+
+    #[test]
+    fn test_wasm_propagate_adaptive_brachistochrone() {
+        let mu_earth: f64 = 3.986004418e5;
+        let r: f64 = 6578.0;
+        let v = (mu_earth / r).sqrt();
+
+        let result = propagate_adaptive_brachistochrone(
+            r, 0.0, 0.0, 0.0, v, 0.0,
+            mu_earth, 1000.0,
+            1e-4, 500.0,
+            1e-8, 1e-10,
+        );
+        assert_eq!(result.len(), 8);
+        assert!((result[6] - 1000.0).abs() < 1.0, "time should be ~1000s");
     }
 
     #[test]

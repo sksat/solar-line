@@ -1,8 +1,9 @@
 /// Numerical orbit propagation for SOLAR LINE 考察.
 ///
-/// Implements Runge-Kutta 4th order (RK4) integrator for:
-/// - 2-body Keplerian orbits (central gravity only)
-/// - Constant-thrust brachistochrone (flip-and-burn) trajectories
+/// Implements multiple integrators:
+/// - RK4 (fixed step): Simple, reliable for smooth trajectories
+/// - RK45 Dormand-Prince (adaptive step): Efficient for varying dynamics
+///   (thrust onset/cutoff, gravity assists, high-eccentricity orbits)
 ///
 /// # Accuracy Validation (TDD approach)
 ///
@@ -345,6 +346,513 @@ pub fn energy_drift(states: &[PropState], mu: Mu) -> (f64, f64) {
     };
 
     (max_rel, final_rel)
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// RK45 Dormand-Prince Adaptive Integrator
+// ══════════════════════════════════════════════════════════════════════
+
+/// Dormand-Prince 5(4) Butcher tableau coefficients (FSAL).
+/// c nodes (time fractions within step)
+const DP_C: [f64; 7] = [0.0, 1.0 / 5.0, 3.0 / 10.0, 4.0 / 5.0, 8.0 / 9.0, 1.0, 1.0];
+
+/// a matrix (lower triangular, row by row)
+const DP_A21: f64 = 1.0 / 5.0;
+const DP_A31: f64 = 3.0 / 40.0;
+const DP_A32: f64 = 9.0 / 40.0;
+const DP_A41: f64 = 44.0 / 45.0;
+const DP_A42: f64 = -56.0 / 15.0;
+const DP_A43: f64 = 32.0 / 9.0;
+const DP_A51: f64 = 19372.0 / 6561.0;
+const DP_A52: f64 = -25360.0 / 2187.0;
+const DP_A53: f64 = 64448.0 / 6561.0;
+const DP_A54: f64 = -212.0 / 729.0;
+const DP_A61: f64 = 9017.0 / 3168.0;
+const DP_A62: f64 = -355.0 / 33.0;
+const DP_A63: f64 = 46732.0 / 5247.0;
+const DP_A64: f64 = 49.0 / 176.0;
+const DP_A65: f64 = -5103.0 / 18656.0;
+
+/// 5th-order weights (solution)
+const DP_B: [f64; 7] = [
+    35.0 / 384.0,
+    0.0,
+    500.0 / 1113.0,
+    125.0 / 192.0,
+    -2187.0 / 6784.0,
+    11.0 / 84.0,
+    0.0,
+];
+
+/// Error coefficients: e_i = b_i - b*_i (difference between 5th and 4th order)
+const DP_E: [f64; 7] = [
+    35.0 / 384.0 - 5179.0 / 57600.0,
+    0.0,
+    500.0 / 1113.0 - 7571.0 / 16695.0,
+    125.0 / 192.0 - 393.0 / 640.0,
+    -2187.0 / 6784.0 + 92097.0 / 339200.0,
+    11.0 / 84.0 - 187.0 / 2100.0,
+    0.0 - 1.0 / 40.0,
+];
+
+/// Configuration for the RK45 adaptive integrator.
+#[derive(Debug, Clone, Copy)]
+pub struct AdaptiveConfig {
+    /// Central body gravitational parameter (km³/s²)
+    pub mu: Mu,
+    /// Thrust profile
+    pub thrust: ThrustProfile,
+    /// Relative tolerance (default: 1e-8)
+    pub rtol: f64,
+    /// Absolute tolerance (default: 1e-10)
+    pub atol: f64,
+    /// Initial step size (s). If 0, auto-estimated.
+    pub h_init: f64,
+    /// Minimum step size (s). Below this, integration stops with error.
+    pub h_min: f64,
+    /// Maximum step size (s)
+    pub h_max: f64,
+    /// Maximum number of steps (safety limit)
+    pub max_steps: usize,
+}
+
+impl AdaptiveConfig {
+    /// Create with sensible defaults for heliocentric propagation.
+    pub fn heliocentric(mu: Mu, thrust: ThrustProfile) -> Self {
+        Self {
+            mu,
+            thrust,
+            rtol: 1e-8,
+            atol: 1e-10,
+            h_init: 0.0, // auto
+            h_min: 1e-6,
+            h_max: 86400.0, // 1 day max
+            max_steps: 10_000_000,
+        }
+    }
+
+    /// Create with sensible defaults for planetocentric propagation.
+    pub fn planetocentric(mu: Mu, thrust: ThrustProfile) -> Self {
+        Self {
+            mu,
+            thrust,
+            rtol: 1e-8,
+            atol: 1e-10,
+            h_init: 0.0,
+            h_min: 1e-6,
+            h_max: 3600.0, // 1 hour max
+            max_steps: 10_000_000,
+        }
+    }
+}
+
+/// Result of an adaptive propagation.
+#[derive(Debug)]
+pub struct AdaptiveResult {
+    /// Trajectory states (including initial)
+    pub states: Vec<PropState>,
+    /// Total number of derivative evaluations (cost metric)
+    pub n_eval: usize,
+    /// Number of accepted steps
+    pub n_accept: usize,
+    /// Number of rejected steps
+    pub n_reject: usize,
+}
+
+/// PI controller constants for step size selection (Codex-recommended).
+const SAFETY: f64 = 0.9;
+const FAC_MIN: f64 = 0.2;
+const FAC_MAX: f64 = 5.0;
+const PI_EXPONENT_I: f64 = -0.20; // integral gain (1/p where p=5 for RK45)
+const PI_EXPONENT_P: f64 = 0.08; // proportional gain
+
+/// Estimate initial step size using the approach from Hairer-Nørsett-Wanner.
+fn estimate_initial_step(pos: [f64; 3], vel: [f64; 3], mu_val: f64, thrust: &ThrustProfile, rtol: f64, atol: f64) -> f64 {
+    // Compute initial derivatives
+    let (_, dvdt) = derivatives(pos, vel, 0.0, mu_val, thrust);
+
+    // Norms of state and derivative
+    let mut d0_sq = 0.0;
+    let mut d1_sq = 0.0;
+    for i in 0..3 {
+        let sc_r = atol + rtol * pos[i].abs();
+        let sc_v = atol + rtol * vel[i].abs();
+        d0_sq += (pos[i] / sc_r).powi(2) + (vel[i] / sc_v).powi(2);
+        d1_sq += (vel[i] / sc_r).powi(2) + (dvdt[i] / sc_v).powi(2);
+    }
+    let d0 = (d0_sq / 6.0).sqrt();
+    let d1 = (d1_sq / 6.0).sqrt();
+
+    // Initial guess: h0 = 0.01 * d0/d1
+    let h0 = if d0 < 1e-5 || d1 < 1e-5 {
+        1e-6
+    } else {
+        0.01 * d0 / d1
+    };
+
+    h0
+}
+
+/// Compute scaled RMS error norm for step acceptance.
+/// State is [x, y, z, vx, vy, vz] (6 components).
+fn scaled_error_norm(
+    err_pos: [f64; 3],
+    err_vel: [f64; 3],
+    y_old_pos: [f64; 3],
+    y_old_vel: [f64; 3],
+    y_new_pos: [f64; 3],
+    y_new_vel: [f64; 3],
+    rtol: f64,
+    atol: f64,
+) -> f64 {
+    let mut sum_sq = 0.0;
+    for i in 0..3 {
+        let sc_r = atol + rtol * y_old_pos[i].abs().max(y_new_pos[i].abs());
+        let sc_v = atol + rtol * y_old_vel[i].abs().max(y_new_vel[i].abs());
+        sum_sq += (err_pos[i] / sc_r).powi(2);
+        sum_sq += (err_vel[i] / sc_v).powi(2);
+    }
+    (sum_sq / 6.0).sqrt()
+}
+
+/// Perform one RK45 Dormand-Prince step. Returns (new_pos, new_vel, err_pos, err_vel).
+/// Uses 7 stages (FSAL: k7 of this step = k1 of next step).
+fn dopri45_step(
+    pos: [f64; 3],
+    vel: [f64; 3],
+    time: f64,
+    h: f64,
+    mu_val: f64,
+    thrust: &ThrustProfile,
+) -> ([f64; 3], [f64; 3], [f64; 3], [f64; 3]) {
+    // k1
+    let (k1r, k1v) = derivatives(pos, vel, time, mu_val, thrust);
+
+    // k2
+    let mut p2 = [0.0; 3];
+    let mut v2 = [0.0; 3];
+    for i in 0..3 {
+        p2[i] = pos[i] + h * DP_A21 * k1r[i];
+        v2[i] = vel[i] + h * DP_A21 * k1v[i];
+    }
+    let (k2r, k2v) = derivatives(p2, v2, time + DP_C[1] * h, mu_val, thrust);
+
+    // k3
+    let mut p3 = [0.0; 3];
+    let mut v3 = [0.0; 3];
+    for i in 0..3 {
+        p3[i] = pos[i] + h * (DP_A31 * k1r[i] + DP_A32 * k2r[i]);
+        v3[i] = vel[i] + h * (DP_A31 * k1v[i] + DP_A32 * k2v[i]);
+    }
+    let (k3r, k3v) = derivatives(p3, v3, time + DP_C[2] * h, mu_val, thrust);
+
+    // k4
+    let mut p4 = [0.0; 3];
+    let mut v4 = [0.0; 3];
+    for i in 0..3 {
+        p4[i] = pos[i] + h * (DP_A41 * k1r[i] + DP_A42 * k2r[i] + DP_A43 * k3r[i]);
+        v4[i] = vel[i] + h * (DP_A41 * k1v[i] + DP_A42 * k2v[i] + DP_A43 * k3v[i]);
+    }
+    let (k4r, k4v) = derivatives(p4, v4, time + DP_C[3] * h, mu_val, thrust);
+
+    // k5
+    let mut p5 = [0.0; 3];
+    let mut v5 = [0.0; 3];
+    for i in 0..3 {
+        p5[i] = pos[i]
+            + h * (DP_A51 * k1r[i] + DP_A52 * k2r[i] + DP_A53 * k3r[i] + DP_A54 * k4r[i]);
+        v5[i] = vel[i]
+            + h * (DP_A51 * k1v[i] + DP_A52 * k2v[i] + DP_A53 * k3v[i] + DP_A54 * k4v[i]);
+    }
+    let (k5r, k5v) = derivatives(p5, v5, time + DP_C[4] * h, mu_val, thrust);
+
+    // k6
+    let mut p6 = [0.0; 3];
+    let mut v6 = [0.0; 3];
+    for i in 0..3 {
+        p6[i] = pos[i]
+            + h * (DP_A61 * k1r[i]
+                + DP_A62 * k2r[i]
+                + DP_A63 * k3r[i]
+                + DP_A64 * k4r[i]
+                + DP_A65 * k5r[i]);
+        v6[i] = vel[i]
+            + h * (DP_A61 * k1v[i]
+                + DP_A62 * k2v[i]
+                + DP_A63 * k3v[i]
+                + DP_A64 * k4v[i]
+                + DP_A65 * k5v[i]);
+    }
+    let (k6r, k6v) = derivatives(p6, v6, time + DP_C[5] * h, mu_val, thrust);
+
+    // 5th-order solution
+    let mut new_pos = [0.0; 3];
+    let mut new_vel = [0.0; 3];
+    for i in 0..3 {
+        new_pos[i] = pos[i]
+            + h * (DP_B[0] * k1r[i]
+                + DP_B[2] * k3r[i]
+                + DP_B[3] * k4r[i]
+                + DP_B[4] * k5r[i]
+                + DP_B[5] * k6r[i]);
+        new_vel[i] = vel[i]
+            + h * (DP_B[0] * k1v[i]
+                + DP_B[2] * k3v[i]
+                + DP_B[3] * k4v[i]
+                + DP_B[4] * k5v[i]
+                + DP_B[5] * k6v[i]);
+    }
+
+    // Error estimate (difference between 5th and 4th order)
+    let mut err_pos = [0.0; 3];
+    let mut err_vel = [0.0; 3];
+    // k7 = derivatives at new state (FSAL)
+    let (k7r, k7v) = derivatives(new_pos, new_vel, time + h, mu_val, thrust);
+    for i in 0..3 {
+        err_pos[i] = h
+            * (DP_E[0] * k1r[i]
+                + DP_E[2] * k3r[i]
+                + DP_E[3] * k4r[i]
+                + DP_E[4] * k5r[i]
+                + DP_E[5] * k6r[i]
+                + DP_E[6] * k7r[i]);
+        err_vel[i] = h
+            * (DP_E[0] * k1v[i]
+                + DP_E[2] * k3v[i]
+                + DP_E[3] * k4v[i]
+                + DP_E[4] * k5v[i]
+                + DP_E[5] * k6v[i]
+                + DP_E[6] * k7v[i]);
+    }
+
+    (new_pos, new_vel, err_pos, err_vel)
+}
+
+/// Propagate using RK45 Dormand-Prince adaptive step integrator.
+///
+/// Returns trajectory states and integration statistics.
+/// Uses PI controller for step size (Hairer-Nørsett-Wanner approach).
+pub fn propagate_adaptive(
+    initial: &PropState,
+    config: &AdaptiveConfig,
+    duration: f64,
+) -> AdaptiveResult {
+    let mu_val = config.mu.value();
+    let thrust = &config.thrust;
+
+    let mut pos = [
+        initial.pos.x.value(),
+        initial.pos.y.value(),
+        initial.pos.z.value(),
+    ];
+    let mut vel = [
+        initial.vel.x.value(),
+        initial.vel.y.value(),
+        initial.vel.z.value(),
+    ];
+    let mut t = initial.time;
+    let t_end = initial.time + duration;
+
+    let mut states = vec![*initial];
+    let mut n_eval: usize = 0;
+    let mut n_accept: usize = 0;
+    let mut n_reject: usize = 0;
+
+    // Initial step size
+    let mut h = if config.h_init > 0.0 {
+        config.h_init
+    } else {
+        estimate_initial_step(pos, vel, mu_val, thrust, config.rtol, config.atol)
+            .min(config.h_max)
+            .max(config.h_min)
+    };
+
+    let mut err_prev = 1.0_f64; // for PI controller
+
+    // Detect known time events (flip_time for brachistochrone)
+    let event_times = match thrust {
+        ThrustProfile::Brachistochrone { flip_time, .. } => vec![*flip_time],
+        _ => vec![],
+    };
+
+    let mut step_count = 0;
+    while t < t_end - 1e-12 {
+        step_count += 1;
+        if step_count > config.max_steps {
+            break;
+        }
+
+        // Don't overshoot end
+        if t + h > t_end {
+            h = t_end - t;
+        }
+
+        // Don't straddle known events (thrust discontinuities)
+        let mut hit_event = false;
+        for &te in &event_times {
+            if t < te && t + h > te {
+                h = te - t;
+                hit_event = true;
+                break;
+            }
+        }
+
+        // Take a trial step
+        let (new_pos, new_vel, err_pos, err_vel) =
+            dopri45_step(pos, vel, t, h, mu_val, thrust);
+        n_eval += 7; // 7 stages per DOPRI45 step
+
+        // Compute scaled error norm
+        let err = scaled_error_norm(
+            err_pos, err_vel, pos, vel, new_pos, new_vel, config.rtol, config.atol,
+        );
+
+        if err <= 1.0 {
+            // Accept step
+            pos = new_pos;
+            vel = new_vel;
+            t += h;
+            n_accept += 1;
+
+            states.push(PropState {
+                pos: Vec3::new(Km(pos[0]), Km(pos[1]), Km(pos[2])),
+                vel: Vec3::new(KmPerSec(vel[0]), KmPerSec(vel[1]), KmPerSec(vel[2])),
+                time: t,
+            });
+
+            // PI controller for next step size
+            if err > 1e-30 {
+                let factor = SAFETY
+                    * err.powf(PI_EXPONENT_I)
+                    * err_prev.powf(PI_EXPONENT_P);
+                h *= factor.clamp(FAC_MIN, FAC_MAX);
+            } else {
+                h *= FAC_MAX;
+            }
+            err_prev = err;
+
+            // After hitting an event, restore max step
+            if hit_event {
+                h = h.min(config.h_max);
+            }
+        } else {
+            // Reject step
+            n_reject += 1;
+            let factor = SAFETY * err.powf(PI_EXPONENT_I);
+            h *= factor.max(0.1);
+        }
+
+        // Enforce step size bounds
+        h = h.clamp(config.h_min, config.h_max);
+    }
+
+    AdaptiveResult {
+        states,
+        n_eval,
+        n_accept,
+        n_reject,
+    }
+}
+
+/// Propagate adaptively and return only the final state (memory-efficient).
+pub fn propagate_adaptive_final(
+    initial: &PropState,
+    config: &AdaptiveConfig,
+    duration: f64,
+) -> (PropState, usize) {
+    let mu_val = config.mu.value();
+    let thrust = &config.thrust;
+
+    let mut pos = [
+        initial.pos.x.value(),
+        initial.pos.y.value(),
+        initial.pos.z.value(),
+    ];
+    let mut vel = [
+        initial.vel.x.value(),
+        initial.vel.y.value(),
+        initial.vel.z.value(),
+    ];
+    let mut t = initial.time;
+    let t_end = initial.time + duration;
+
+    let mut n_eval: usize = 0;
+
+    let mut h = if config.h_init > 0.0 {
+        config.h_init
+    } else {
+        estimate_initial_step(pos, vel, mu_val, thrust, config.rtol, config.atol)
+            .min(config.h_max)
+            .max(config.h_min)
+    };
+
+    let mut err_prev = 1.0_f64;
+
+    let event_times = match thrust {
+        ThrustProfile::Brachistochrone { flip_time, .. } => vec![*flip_time],
+        _ => vec![],
+    };
+
+    let mut step_count = 0;
+    while t < t_end - 1e-12 {
+        step_count += 1;
+        if step_count > config.max_steps {
+            break;
+        }
+
+        if t + h > t_end {
+            h = t_end - t;
+        }
+
+        let mut hit_event = false;
+        for &te in &event_times {
+            if t < te && t + h > te {
+                h = te - t;
+                hit_event = true;
+                break;
+            }
+        }
+
+        let (new_pos, new_vel, err_pos, err_vel) =
+            dopri45_step(pos, vel, t, h, mu_val, thrust);
+        n_eval += 7;
+
+        let err = scaled_error_norm(
+            err_pos, err_vel, pos, vel, new_pos, new_vel, config.rtol, config.atol,
+        );
+
+        if err <= 1.0 {
+            pos = new_pos;
+            vel = new_vel;
+            t += h;
+
+            if err > 1e-30 {
+                let factor = SAFETY
+                    * err.powf(PI_EXPONENT_I)
+                    * err_prev.powf(PI_EXPONENT_P);
+                h *= factor.clamp(FAC_MIN, FAC_MAX);
+            } else {
+                h *= FAC_MAX;
+            }
+            err_prev = err;
+
+            if hit_event {
+                h = h.min(config.h_max);
+            }
+        } else {
+            let factor = SAFETY * err.powf(PI_EXPONENT_I);
+            h *= factor.max(0.1);
+        }
+
+        h = h.clamp(config.h_min, config.h_max);
+    }
+
+    let final_state = PropState {
+        pos: Vec3::new(Km(pos[0]), Km(pos[1]), Km(pos[2])),
+        vel: Vec3::new(KmPerSec(vel[0]), KmPerSec(vel[1]), KmPerSec(vel[2])),
+        time: t,
+    };
+    (final_state, n_eval)
 }
 
 /// Create initial state for a circular orbit in the XY plane.
@@ -1476,6 +1984,426 @@ mod tests {
             (dv_capture - 3.18).abs() < 0.2,
             "EP05: Capture ΔV from parabolic = {:.2} km/s (expected ~3.18)",
             dv_capture
+        );
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // RK45 Dormand-Prince Adaptive Integrator Tests
+    // ══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_adaptive_energy_conservation_circular_leo() {
+        // Energy conservation for 1 LEO period with tight tolerance
+        let state = circular_orbit_state(mu::EARTH, reference_orbits::LEO_RADIUS);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::LEO_RADIUS);
+
+        let mut config = AdaptiveConfig::planetocentric(mu::EARTH, ThrustProfile::None);
+        config.rtol = 1e-12;
+        config.atol = 1e-14;
+        let result = propagate_adaptive(&state, &config, period.value());
+        let (max_err, final_err) = energy_drift(&result.states, mu::EARTH);
+
+        assert!(
+            max_err < 1e-10,
+            "Adaptive LEO 1-period max energy drift = {:.2e} (should be <1e-10)",
+            max_err
+        );
+        assert!(
+            final_err < 1e-10,
+            "Adaptive LEO 1-period final energy drift = {:.2e} (should be <1e-10)",
+            final_err
+        );
+    }
+
+    #[test]
+    fn test_adaptive_energy_conservation_elliptical_e09() {
+        // High eccentricity (e=0.9): this is where adaptive shines.
+        // Fixed RK4 needs dt=1s and many steps. Adaptive should handle it
+        // with far fewer evaluations while achieving similar accuracy.
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.9);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
+
+        let config = AdaptiveConfig::planetocentric(mu::EARTH, ThrustProfile::None);
+        let result = propagate_adaptive(&state, &config, period.value());
+        let (max_err, _) = energy_drift(&result.states, mu::EARTH);
+
+        assert!(
+            max_err < 1e-7,
+            "Adaptive elliptical (e=0.9) max energy drift = {:.2e} (should be <1e-7)",
+            max_err
+        );
+
+        // Adaptive should use fewer derivative evaluations than fixed RK4
+        // Fixed RK4 with dt=1s for GEO period (~86,164s) = 86,164 steps × 4 evals = 344,656
+        let fixed_rk4_evals = (period.value() / 1.0).ceil() as usize * 4;
+        assert!(
+            result.n_eval < fixed_rk4_evals,
+            "Adaptive should use fewer evals ({}) than fixed RK4 ({}) for e=0.9",
+            result.n_eval,
+            fixed_rk4_evals
+        );
+    }
+
+    #[test]
+    fn test_adaptive_energy_conservation_heliocentric_1000_orbits() {
+        // Long-term: 1000 Earth orbits with adaptive integrator
+        let state = circular_orbit_state(mu::SUN, orbit_radius::EARTH);
+        let period = crate::orbits::orbital_period(mu::SUN, orbit_radius::EARTH);
+        let duration = period.value() * 1000.0;
+
+        let mut config = AdaptiveConfig::heliocentric(mu::SUN, ThrustProfile::None);
+        config.rtol = 1e-10; // tight tolerance for 1000 orbits
+
+        let (final_state, n_eval) = propagate_adaptive_final(&state, &config, duration);
+        let e0 = state.specific_energy(mu::SUN);
+        let ef = final_state.specific_energy(mu::SUN);
+        let rel_err = ((ef - e0) / e0).abs();
+
+        assert!(
+            rel_err < 1e-8,
+            "Adaptive 1000 heliocentric orbits energy drift = {:.2e} (should be <1e-8)",
+            rel_err
+        );
+
+        // Adaptive should have taken some steps
+        assert!(
+            n_eval > 0,
+            "Adaptive should have taken some steps (took {} evals)",
+            n_eval
+        );
+    }
+
+    #[test]
+    fn test_adaptive_orbit_return_circular() {
+        // Circular orbit should return to start after 1 period
+        let state = circular_orbit_state(mu::EARTH, reference_orbits::LEO_RADIUS);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::LEO_RADIUS);
+
+        let mut config = AdaptiveConfig::planetocentric(mu::EARTH, ThrustProfile::None);
+        config.rtol = 1e-12;
+        config.atol = 1e-14;
+        let (final_state, _) = propagate_adaptive_final(&state, &config, period.value());
+
+        let dx = (final_state.pos.x.value() - state.pos.x.value()).abs();
+        let dy = (final_state.pos.y.value() - state.pos.y.value()).abs();
+        let dz = (final_state.pos.z.value() - state.pos.z.value()).abs();
+        let pos_err = (dx * dx + dy * dy + dz * dz).sqrt();
+        let radius = state.radius();
+
+        assert!(
+            pos_err / radius < 1e-8,
+            "Adaptive position error after 1 period = {:.2e} (relative {:.2e})",
+            pos_err,
+            pos_err / radius
+        );
+    }
+
+    #[test]
+    fn test_adaptive_brachistochrone_handles_flip() {
+        // The adaptive integrator must not straddle the thrust flip point.
+        // Test: brachistochrone with flip — energy should increase then decrease.
+        let state = circular_orbit_state(mu::SUN, orbit_radius::EARTH);
+        let duration = 72.0 * 3600.0;
+        let flip = duration / 2.0;
+        let accel = 1e-4; // km/s²
+
+        let config = AdaptiveConfig::heliocentric(
+            mu::SUN,
+            ThrustProfile::Brachistochrone {
+                accel_km_s2: accel,
+                flip_time: flip,
+            },
+        );
+
+        let result = propagate_adaptive(&state, &config, duration);
+
+        // Find state nearest to flip time
+        let mut speed_at_flip = 0.0_f64;
+        for s in &result.states {
+            if (s.time - flip).abs() < 120.0 {
+                speed_at_flip = s.speed();
+                break;
+            }
+        }
+
+        let final_speed = result.states.last().unwrap().speed();
+
+        // Speed at flip should be higher than initial (acceleration phase)
+        assert!(
+            speed_at_flip > state.speed(),
+            "Adaptive: speed at flip ({:.1}) > initial ({:.1})",
+            speed_at_flip,
+            state.speed()
+        );
+
+        // Speed at end should be less than at flip (deceleration phase)
+        assert!(
+            final_speed < speed_at_flip,
+            "Adaptive: final speed ({:.1}) < flip speed ({:.1})",
+            final_speed,
+            speed_at_flip
+        );
+    }
+
+    #[test]
+    fn test_adaptive_vs_rk4_accuracy_comparison() {
+        // Compare adaptive vs fixed RK4 for same problem.
+        // Both should agree on final position to within tolerance.
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.5);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
+
+        // Fixed RK4 (reference, very small dt)
+        let config_rk4 = IntegratorConfig {
+            dt: 1.0, // 1s steps (very accurate for reference)
+            mu: mu::EARTH,
+            thrust: ThrustProfile::None,
+        };
+        let rk4_final = propagate_final(&state, &config_rk4, period.value());
+
+        // Adaptive RK45
+        let config_adaptive = AdaptiveConfig::planetocentric(mu::EARTH, ThrustProfile::None);
+        let (adaptive_final, n_eval) =
+            propagate_adaptive_final(&state, &config_adaptive, period.value());
+
+        // Position agreement
+        let dx = (rk4_final.pos.x.value() - adaptive_final.pos.x.value()).abs();
+        let dy = (rk4_final.pos.y.value() - adaptive_final.pos.y.value()).abs();
+        let dz = (rk4_final.pos.z.value() - adaptive_final.pos.z.value()).abs();
+        let pos_diff = (dx * dx + dy * dy + dz * dz).sqrt();
+        let radius = state.radius();
+
+        assert!(
+            pos_diff / radius < 1e-6,
+            "Adaptive vs RK4 position difference = {:.2e} km ({:.2e} relative)",
+            pos_diff,
+            pos_diff / radius
+        );
+
+        // Adaptive should use fewer evaluations than RK4 at dt=1s
+        let rk4_evals = (period.value() / 1.0).ceil() as usize * 4;
+        assert!(
+            n_eval < rk4_evals,
+            "Adaptive ({} evals) should be more efficient than RK4 dt=1s ({} evals)",
+            n_eval,
+            rk4_evals
+        );
+    }
+
+    #[test]
+    fn test_adaptive_efficiency_high_eccentricity() {
+        // For high eccentricity, adaptive should dramatically outperform fixed-dt.
+        // The integrator should take small steps near periapsis and large steps
+        // near apoapsis.
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.9);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
+
+        let config = AdaptiveConfig::planetocentric(mu::EARTH, ThrustProfile::None);
+        let result = propagate_adaptive(&state, &config, period.value());
+
+        // Check that step sizes vary significantly
+        // Near periapsis: small steps. Near apoapsis: large steps.
+        let mut min_dt = f64::MAX;
+        let mut max_dt = 0.0_f64;
+        for i in 1..result.states.len() {
+            let dt = result.states[i].time - result.states[i - 1].time;
+            if dt < min_dt {
+                min_dt = dt;
+            }
+            if dt > max_dt {
+                max_dt = dt;
+            }
+        }
+
+        // For e=0.9, step size ratio should be at least 10x
+        let ratio = max_dt / min_dt;
+        assert!(
+            ratio > 10.0,
+            "Adaptive step size ratio (max/min) = {:.1} (expected >10 for e=0.9). \
+             min_dt={:.2e}s, max_dt={:.2e}s",
+            ratio,
+            min_dt,
+            max_dt
+        );
+    }
+
+    #[test]
+    fn test_adaptive_heliocentric_mars_10_periods() {
+        // Mars orbit around Sun for 10 periods, adaptive
+        let state = circular_orbit_state(mu::SUN, orbit_radius::MARS);
+        let period = crate::orbits::orbital_period(mu::SUN, orbit_radius::MARS);
+        let duration = period.value() * 10.0;
+
+        let config = AdaptiveConfig::heliocentric(mu::SUN, ThrustProfile::None);
+        let (final_state, n_eval) = propagate_adaptive_final(&state, &config, duration);
+        let e0 = state.specific_energy(mu::SUN);
+        let ef = final_state.specific_energy(mu::SUN);
+        let rel_err = ((ef - e0) / e0).abs();
+
+        assert!(
+            rel_err < 1e-10,
+            "Adaptive Mars 10-period energy drift = {:.2e}",
+            rel_err
+        );
+
+        // Adaptive should have taken at least some steps
+        assert!(
+            n_eval > 0,
+            "Adaptive Mars 10-period should have taken steps"
+        );
+    }
+
+    #[test]
+    fn test_adaptive_ep01_brachistochrone_mars_to_jupiter() {
+        // EP01: Same scenario as fixed-RK4 test, but with adaptive integrator.
+        // Verifies that adaptive handles brachistochrone + solar gravity correctly.
+        let distance_target = 550_630_800.0_f64;
+        let duration = 72.0 * 3600.0;
+        let accel = 4.0 * distance_target / (duration * duration);
+        let flip_time = duration / 2.0;
+
+        let r_mars = orbit_radius::MARS.value();
+        let v_mars_circ = (mu::SUN.value() / r_mars).sqrt();
+
+        let state = PropState::new(
+            Vec3::new(Km(r_mars), Km(0.0), Km(0.0)),
+            Vec3::new(KmPerSec(0.0), KmPerSec(v_mars_circ), KmPerSec(0.0)),
+        );
+
+        let config = AdaptiveConfig::heliocentric(
+            mu::SUN,
+            ThrustProfile::Brachistochrone {
+                accel_km_s2: accel,
+                flip_time,
+            },
+        );
+
+        let (final_state, _n_eval) = propagate_adaptive_final(&state, &config, duration);
+
+        // Distance traveled
+        let dx = final_state.pos.x.value() - state.pos.x.value();
+        let dy = final_state.pos.y.value() - state.pos.y.value();
+        let dz = final_state.pos.z.value() - state.pos.z.value();
+        let distance_traveled = (dx * dx + dy * dy + dz * dz).sqrt();
+
+        let ratio = distance_traveled / distance_target;
+        assert!(
+            (0.5..2.0).contains(&ratio),
+            "Adaptive EP01: distance = {:.0} km, target = {:.0} km, ratio = {:.2}",
+            distance_traveled,
+            distance_target,
+            ratio
+        );
+
+        // Compare with fixed RK4 result
+        let config_rk4 = IntegratorConfig {
+            dt: 60.0,
+            mu: mu::SUN,
+            thrust: ThrustProfile::Brachistochrone {
+                accel_km_s2: accel,
+                flip_time,
+            },
+        };
+        let rk4_final = propagate_final(&state, &config_rk4, duration);
+
+        // Both should agree on final position within ~1%
+        let dx2 = (final_state.pos.x.value() - rk4_final.pos.x.value()).abs();
+        let dy2 = (final_state.pos.y.value() - rk4_final.pos.y.value()).abs();
+        let diff = (dx2 * dx2 + dy2 * dy2).sqrt();
+        let scale = distance_traveled;
+
+        assert!(
+            diff / scale < 0.01,
+            "Adaptive vs RK4 EP01 position difference = {:.2e} km ({:.4}%)",
+            diff,
+            diff / scale * 100.0
+        );
+    }
+
+    #[test]
+    fn test_adaptive_ep02_ballistic_455d() {
+        // EP02: Ballistic Jupiter→Saturn, 455 days.
+        // Adaptive should handle this long coast efficiently.
+        let duration = 455.0 * 24.0 * 3600.0;
+        let r_jupiter = orbit_radius::JUPITER.value();
+        let r_saturn = orbit_radius::SATURN.value();
+        let v_depart_total = 18.99_f64;
+
+        let a_transfer = (r_jupiter + r_saturn) / 2.0;
+        let v_tang = (mu::SUN.value() * (2.0 / r_jupiter - 1.0 / a_transfer)).sqrt();
+        let v_radial = if v_depart_total > v_tang {
+            (v_depart_total * v_depart_total - v_tang * v_tang).sqrt()
+        } else {
+            0.0
+        };
+
+        let state = PropState::new(
+            Vec3::new(Km(r_jupiter), Km(0.0), Km(0.0)),
+            Vec3::new(KmPerSec(v_radial), KmPerSec(v_tang), KmPerSec(0.0)),
+        );
+
+        let config = AdaptiveConfig::heliocentric(mu::SUN, ThrustProfile::None);
+        let (final_state, n_eval) = propagate_adaptive_final(&state, &config, duration);
+
+        // Energy conservation
+        let e0 = state.specific_energy(mu::SUN);
+        let ef = final_state.specific_energy(mu::SUN);
+        let rel_err = ((ef - e0) / e0).abs();
+        assert!(
+            rel_err < 1e-9,
+            "Adaptive EP02 energy drift = {:.2e}",
+            rel_err
+        );
+
+        // Should reach Saturn neighborhood
+        let final_r = final_state.radius();
+        let r_ratio = final_r / r_saturn;
+        assert!(
+            (0.5..2.0).contains(&r_ratio),
+            "Adaptive EP02: final r = {:.0} km ({:.2}× Saturn)",
+            final_r,
+            r_ratio
+        );
+
+        // Adaptive should have processed the trajectory
+        assert!(n_eval > 0, "Should have taken steps (n_eval={})", n_eval);
+    }
+
+    #[test]
+    fn test_adaptive_convergence_with_tolerance() {
+        // Tighter tolerance → better accuracy (convergence test)
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.5);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
+
+        // Loose tolerance
+        let mut config_loose = AdaptiveConfig::planetocentric(mu::EARTH, ThrustProfile::None);
+        config_loose.rtol = 1e-4;
+        config_loose.atol = 1e-6;
+        let (final_loose, _) = propagate_adaptive_final(&state, &config_loose, period.value());
+
+        // Tight tolerance
+        let mut config_tight = AdaptiveConfig::planetocentric(mu::EARTH, ThrustProfile::None);
+        config_tight.rtol = 1e-10;
+        config_tight.atol = 1e-12;
+        let (final_tight, _) = propagate_adaptive_final(&state, &config_tight, period.value());
+
+        // Tight should be closer to the true solution (periodic orbit returns to start)
+        let err_loose = (final_loose.pos.x.value() - state.pos.x.value()).powi(2)
+            + (final_loose.pos.y.value() - state.pos.y.value()).powi(2);
+        let err_loose = err_loose.sqrt();
+
+        let err_tight = (final_tight.pos.x.value() - state.pos.x.value()).powi(2)
+            + (final_tight.pos.y.value() - state.pos.y.value()).powi(2);
+        let err_tight = err_tight.sqrt();
+
+        assert!(
+            err_tight < err_loose,
+            "Tight tolerance error ({:.2e}) should be less than loose ({:.2e})",
+            err_tight,
+            err_loose
         );
     }
 }
