@@ -435,6 +435,105 @@
       "animation": {
         "durationSeconds": 39312000
       }
+    },
+    {
+      "id": "ep02-diagram-03",
+      "title": "土星中心座標: エンケラドス捕獲",
+      "centerLabel": "土星",
+      "scaleMode": "sqrt",
+      "radiusUnit": "km",
+      "orbits": [
+        {
+          "id": "rings-inner",
+          "label": "環内縁 (D環)",
+          "radius": 66900,
+          "color": "#c9a84422"
+        },
+        {
+          "id": "rings-outer",
+          "label": "環外縁 (F環)",
+          "radius": 140180,
+          "color": "#c9a84422"
+        },
+        {
+          "id": "mimas",
+          "label": "ミマス",
+          "radius": 185539,
+          "color": "#8b949e",
+          "angle": 0.78,
+          "meanMotion": 7.72e-5
+        },
+        {
+          "id": "enceladus",
+          "label": "エンケラドス",
+          "radius": 238042,
+          "color": "#58a6ff",
+          "angle": 2.09,
+          "meanMotion": 5.308e-5
+        },
+        {
+          "id": "tethys",
+          "label": "テティス",
+          "radius": 294619,
+          "color": "#8b949e",
+          "angle": 3.67,
+          "meanMotion": 3.852e-5
+        },
+        {
+          "id": "dione",
+          "label": "ディオネ",
+          "radius": 377396,
+          "color": "#8b949e",
+          "angle": 5.24,
+          "meanMotion": 2.657e-5
+        },
+        {
+          "id": "rhea",
+          "label": "レア",
+          "radius": 527108,
+          "color": "#8b949e",
+          "angle": 1.31,
+          "meanMotion": 1.61e-5
+        },
+        {
+          "id": "titan",
+          "label": "タイタン",
+          "radius": 1221870,
+          "color": "#d29922",
+          "angle": 4.19,
+          "meanMotion": 4.561e-6
+        },
+        {
+          "id": "approach-point",
+          "label": "接近点 (30 RS)",
+          "radius": 1808040,
+          "color": "#f8514944",
+          "angle": 5.5
+        }
+      ],
+      "transfers": [
+        {
+          "label": "双曲線接近・捕獲軌道 (v∞=4.69 km/s)",
+          "fromOrbitId": "approach-point",
+          "toOrbitId": "enceladus",
+          "color": "#3fb950",
+          "style": "hyperbolic",
+          "burnMarkers": [
+            {
+              "angle": 2.09,
+              "label": "捕獲噴射 ΔV≥0.61 km/s",
+              "startTime": 192800,
+              "endTime": 200000,
+              "type": "capture"
+            }
+          ],
+          "startTime": 0,
+          "endTime": 200000
+        }
+      ],
+      "animation": {
+        "durationSeconds": 200000
+      }
     }
   ],
   "explorations": [
