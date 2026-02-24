@@ -15,6 +15,7 @@ import type {
   ToolUseContent,
   TextContent,
   SubAgentSummary,
+  TodoItem,
 } from "./session-log-types.ts";
 
 /** Patterns that should be redacted from public logs */
@@ -108,6 +109,23 @@ export function extractSubAgent(input: Record<string, unknown>): SubAgentSummary
   };
 }
 
+/** Extract todo items from a TodoWrite tool call's input */
+export function extractTodoItems(input: Record<string, unknown>): TodoItem[] {
+  const todos = input.todos;
+  if (!Array.isArray(todos)) return [];
+  return todos
+    .filter((t: unknown) => typeof t === "object" && t !== null && "content" in t && "status" in t)
+    .map((t: unknown) => {
+      const item = t as Record<string, unknown>;
+      return {
+        content: String(item.content ?? ""),
+        status: (item.status === "completed" || item.status === "in_progress" || item.status === "pending")
+          ? item.status
+          : "pending" as const,
+      };
+    });
+}
+
 /** Detect git commit hashes from text (git commit output pattern) */
 export function extractCommitHashes(text: string): string[] {
   const hashes: string[] = [];
@@ -159,6 +177,9 @@ export function processEntry(entry: JournalEntry): ProcessedMessage | null {
           };
           if (tu.name === "Task") {
             tc.subAgent = extractSubAgent(tu.input);
+          }
+          if (tu.name === "TodoWrite") {
+            tc.todoItems = extractTodoItems(tu.input);
           }
           toolCalls.push(tc);
           break;
@@ -361,6 +382,15 @@ export function renderSessionMarkdown(session: ParsedSession, title: string, opt
             // Render sub-agent invocation with details
             const modelNote = tc.subAgent.model ? ` [${tc.subAgent.model}]` : "";
             lines.push(`- 🔀 **サブエージェント** (${tc.subAgent.subagentType}${modelNote}) — ${tc.subAgent.description}`);
+          } else if (tc.todoItems && tc.todoItems.length > 0) {
+            // Render TodoWrite as a task checklist
+            lines.push(`- 📋 **タスク更新**`);
+            for (const item of tc.todoItems) {
+              const icon = item.status === "completed" ? "✅" : item.status === "in_progress" ? "🔄" : "⬜";
+              lines.push(`  - ${icon} ${item.content}`);
+            }
+          } else if (tc.name === "Skill") {
+            lines.push(`- 🛠️ **スキル**: ${tc.brief}`);
           } else {
             const brief = tc.brief ? ` — ${tc.brief}` : "";
             lines.push(`- \`${tc.name}\`${brief}`);

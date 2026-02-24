@@ -5,6 +5,7 @@ import {
   parseJournalEntry,
   summarizeToolInput,
   extractSubAgent,
+  extractTodoItems,
   extractCommitHashes,
   processEntry,
   parseSession,
@@ -201,6 +202,43 @@ describe("extractSubAgent", () => {
     });
     assert.equal(result.subagentType, "Bash");
     assert.equal(result.model, undefined);
+  });
+});
+
+// --- extractTodoItems ---
+
+describe("extractTodoItems", () => {
+  it("extracts todo items from TodoWrite input", () => {
+    const result = extractTodoItems({
+      todos: [
+        { content: "Task A", status: "completed", activeForm: "Completing A" },
+        { content: "Task B", status: "in_progress", activeForm: "Working on B" },
+        { content: "Task C", status: "pending", activeForm: "Starting C" },
+      ],
+    });
+    assert.equal(result.length, 3);
+    assert.equal(result[0].content, "Task A");
+    assert.equal(result[0].status, "completed");
+    assert.equal(result[1].status, "in_progress");
+    assert.equal(result[2].status, "pending");
+  });
+
+  it("handles missing todos array", () => {
+    const result = extractTodoItems({});
+    assert.equal(result.length, 0);
+  });
+
+  it("filters invalid items", () => {
+    const result = extractTodoItems({
+      todos: [
+        { content: "Valid", status: "completed" },
+        "invalid",
+        42,
+        null,
+      ],
+    });
+    assert.equal(result.length, 1);
+    assert.equal(result[0].content, "Valid");
   });
 });
 
@@ -600,6 +638,50 @@ describe("renderSessionMarkdown", () => {
     assert.ok(md.includes("サブエージェント"));
     assert.ok(md.includes("Explore"));
     assert.ok(md.includes("[haiku]"));
+  });
+
+  it("renders TodoWrite as task checklist", () => {
+    const session: ParsedSession = {
+      ...minimalSession,
+      messages: [{
+        role: "assistant",
+        timestamp: "2026-02-23T18:05:00Z",
+        text: "",
+        toolCalls: [{
+          name: "TodoWrite",
+          brief: "update task list",
+          todoItems: [
+            { content: "Implement feature A", status: "completed" },
+            { content: "Write tests for B", status: "in_progress" },
+            { content: "Deploy to staging", status: "pending" },
+          ],
+        }],
+      }],
+    };
+    const md = renderSessionMarkdown(session, "Test");
+    assert.ok(md.includes("📋 **タスク更新**"));
+    assert.ok(md.includes("✅ Implement feature A"));
+    assert.ok(md.includes("🔄 Write tests for B"));
+    assert.ok(md.includes("⬜ Deploy to staging"));
+    assert.ok(!md.includes("`TodoWrite`"));
+  });
+
+  it("renders Skill invocations with icon", () => {
+    const session: ParsedSession = {
+      ...minimalSession,
+      messages: [{
+        role: "assistant",
+        timestamp: "2026-02-23T18:05:00Z",
+        text: "",
+        toolCalls: [{
+          name: "Skill",
+          brief: "nice-friend",
+        }],
+      }],
+    };
+    const md = renderSessionMarkdown(session, "Test");
+    assert.ok(md.includes("🛠️ **スキル**: nice-friend"));
+    assert.ok(!md.includes("`Skill`"));
   });
 
   it("renders commit hashes as plain code without repoUrl", () => {

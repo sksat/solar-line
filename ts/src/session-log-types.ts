@@ -62,6 +62,12 @@ export interface JournalEntry {
   message?: ConversationMessage;
 }
 
+/** A TodoWrite task item */
+export interface TodoItem {
+  content: string;
+  status: "pending" | "in_progress" | "completed";
+}
+
 /** Summary of a tool call for the rendered log */
 export interface ToolCallSummary {
   name: string;
@@ -69,6 +75,8 @@ export interface ToolCallSummary {
   brief: string;
   /** For Task tool calls: sub-agent details */
   subAgent?: SubAgentSummary;
+  /** For TodoWrite tool calls: the task list */
+  todoItems?: TodoItem[];
 }
 
 /** A processed message ready for rendering */
