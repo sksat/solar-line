@@ -23,7 +23,8 @@
     "recalculate": "node --experimental-strip-types src/recalculate.ts",
     "update-diagram-angles": "node --experimental-strip-types src/update-diagram-angles.ts",
     "dag": "node --experimental-strip-types src/dag-cli.ts",
-    "dag:seed": "node --experimental-strip-types src/dag-seed.ts"
+    "dag:seed": "node --experimental-strip-types src/dag-seed.ts",
+    "analyze-3d": "node --experimental-strip-types src/orbital-3d-analysis.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",

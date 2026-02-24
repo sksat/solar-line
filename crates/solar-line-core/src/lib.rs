@@ -6,6 +6,7 @@ pub mod ephemeris;
 pub mod flyby;
 pub mod kepler;
 pub mod mass_timeline;
+pub mod orbital_3d;
 pub mod orbits;
 pub mod plasmoid;
 pub mod propagation;

@@ -91,15 +91,28 @@ describe("planetPosition", () => {
     );
   });
 
-  it("returns consistent x, y, longitude, and distance", () => {
+  it("returns consistent 3D coordinates, longitude, latitude, and distance", () => {
     const pos = planetPosition("earth", J2000_JD);
-    const computedDist = Math.sqrt(pos.x ** 2 + pos.y ** 2);
+    // 3D distance should match reported distance
+    const computedDist = Math.sqrt(pos.x ** 2 + pos.y ** 2 + pos.z ** 2);
     assert.ok(
       Math.abs(computedDist - pos.distance) / pos.distance < 1e-10,
+      `3D distance ${computedDist} vs reported ${pos.distance}`,
     );
+    // Longitude from x, y
     let computedLon = Math.atan2(pos.y, pos.x);
     if (computedLon < 0) computedLon += 2 * Math.PI;
     assert.ok(Math.abs(computedLon - pos.longitude) < 1e-10);
+    // Latitude should be bounded by inclination
+    assert.ok(
+      Math.abs(pos.latitude) <= Math.abs(pos.inclination) + 0.01,
+      `latitude ${pos.latitude} exceeds inclination ${pos.inclination}`,
+    );
+    // Earth z should be near zero (ecliptic reference)
+    assert.ok(
+      Math.abs(pos.z / AU_KM) < 0.001,
+      `Earth z = ${pos.z / AU_KM} AU, should be ~0`,
+    );
   });
 
   it("computes all planets without errors", () => {

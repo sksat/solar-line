@@ -230,6 +230,74 @@ pub fn oberth_dv_gain(mu: Mu, r_periapsis: Km, v_inf: KmPerSec, burn_dv: KmPerSe
     KmPerSec((v_inf_after - v_inf_val) - burn)
 }
 
+/// Convert classical Keplerian orbital elements to a Cartesian state vector.
+///
+/// Uses the standard rotation sequence: perifocal → inertial via (Ω, i, ω).
+/// The central body's gravitational parameter μ is needed to compute velocity.
+pub fn elements_to_state_vector(mu: Mu, elements: &OrbitalElements) -> StateVector {
+    let a = elements.semi_major_axis.value();
+    let e = elements.eccentricity.value();
+    let i = elements.inclination.value();
+    let raan = elements.raan.value();
+    let w = elements.arg_periapsis.value();
+    let nu = elements.true_anomaly.value();
+
+    // Semi-latus rectum
+    let p = a * (1.0 - e * e);
+
+    // Distance
+    let r = p / (1.0 + e * nu.cos());
+
+    // Position in perifocal frame (PQW)
+    let x_pqw = r * nu.cos();
+    let y_pqw = r * nu.sin();
+
+    // Velocity in perifocal frame
+    let mu_over_p = (mu.value() / p).sqrt();
+    let vx_pqw = -mu_over_p * nu.sin();
+    let vy_pqw = mu_over_p * (e + nu.cos());
+
+    // Rotation matrix elements (Ω, i, ω → ecliptic inertial)
+    let cos_w = w.cos();
+    let sin_w = w.sin();
+    let cos_i = i.cos();
+    let sin_i = i.sin();
+    let cos_raan = raan.cos();
+    let sin_raan = raan.sin();
+
+    // Column 1 of rotation matrix (P direction)
+    let r11 = cos_raan * cos_w - sin_raan * sin_w * cos_i;
+    let r21 = sin_raan * cos_w + cos_raan * sin_w * cos_i;
+    let r31 = sin_w * sin_i;
+
+    // Column 2 of rotation matrix (Q direction)
+    let r12 = -cos_raan * sin_w - sin_raan * cos_w * cos_i;
+    let r22 = -sin_raan * sin_w + cos_raan * cos_w * cos_i;
+    let r32 = cos_w * sin_i;
+
+    let pos = Vec3::new(
+        Km(r11 * x_pqw + r12 * y_pqw),
+        Km(r21 * x_pqw + r22 * y_pqw),
+        Km(r31 * x_pqw + r32 * y_pqw),
+    );
+
+    let vel = Vec3::new(
+        KmPerSec(r11 * vx_pqw + r12 * vy_pqw),
+        KmPerSec(r21 * vx_pqw + r22 * vy_pqw),
+        KmPerSec(r31 * vx_pqw + r32 * vy_pqw),
+    );
+
+    StateVector::new(pos, vel)
+}
+
+/// Compute the out-of-plane ΔV required for a simple plane change maneuver.
+///
+/// For a velocity `v` and plane change angle `delta_i` (radians),
+/// ΔV = 2 * v * sin(Δi / 2).
+pub fn plane_change_dv(v: KmPerSec, delta_i: Radians) -> KmPerSec {
+    KmPerSec(2.0 * v.value() * (delta_i.value() / 2.0).sin().abs())
+}
+
 /// Fractional Oberth efficiency: (Δv_inf / burn_dv) - 1.
 ///
 /// Returns the fractional improvement in v_inf change relative to the burn magnitude.
@@ -739,6 +807,195 @@ mod tests {
             eff > 0.10,
             "Oberth efficiency at low v_inf should be large, got {}",
             eff
+        );
+    }
+
+    // ── elements_to_state_vector tests ─────────────────────────────────
+
+    #[test]
+    fn test_elements_to_state_circular_equatorial() {
+        // Circular equatorial orbit: e=0, i=0, Ω=0, ω=0, ν=0
+        // Position should be along x-axis, velocity along y-axis
+        let e = Eccentricity::elliptical(0.0).unwrap();
+        let elements = OrbitalElements {
+            semi_major_axis: Km(6778.0), // ~400 km LEO
+            eccentricity: e,
+            inclination: Radians(0.0),
+            raan: Radians(0.0),
+            arg_periapsis: Radians(0.0),
+            true_anomaly: Radians(0.0),
+        };
+
+        let sv = elements_to_state_vector(mu::EARTH, &elements);
+
+        // Position should be at (6778, 0, 0)
+        assert!(
+            (sv.position.x.value() - 6778.0).abs() < 1e-6,
+            "x = {}, expected 6778",
+            sv.position.x.value()
+        );
+        assert!(
+            sv.position.y.value().abs() < 1e-6,
+            "y = {}, expected 0",
+            sv.position.y.value()
+        );
+        assert!(
+            sv.position.z.value().abs() < 1e-6,
+            "z = {}, expected 0",
+            sv.position.z.value()
+        );
+
+        // Velocity should be (0, v_circular, 0)
+        let v_circ = (mu::EARTH.value() / 6778.0).sqrt();
+        assert!(
+            sv.velocity.x.value().abs() < 1e-6,
+            "vx = {}, expected 0",
+            sv.velocity.x.value()
+        );
+        assert!(
+            (sv.velocity.y.value() - v_circ).abs() < 1e-4,
+            "vy = {}, expected {}",
+            sv.velocity.y.value(),
+            v_circ
+        );
+        assert!(
+            sv.velocity.z.value().abs() < 1e-6,
+            "vz = {}, expected 0",
+            sv.velocity.z.value()
+        );
+    }
+
+    #[test]
+    fn test_elements_to_state_inclined_orbit() {
+        // 90° inclination: orbit is perpendicular to equatorial plane
+        let e = Eccentricity::elliptical(0.0).unwrap();
+        let elements = OrbitalElements {
+            semi_major_axis: Km(7000.0),
+            eccentricity: e,
+            inclination: Radians(std::f64::consts::FRAC_PI_2), // 90°
+            raan: Radians(0.0),
+            arg_periapsis: Radians(0.0),
+            true_anomaly: Radians(std::f64::consts::FRAC_PI_2), // 90° true anomaly
+        };
+
+        let sv = elements_to_state_vector(mu::EARTH, &elements);
+
+        // At ν=90° in a polar orbit (i=90°, Ω=0, ω=0):
+        // Position should be at (0, 0, r) — over the pole
+        assert!(
+            sv.position.x.value().abs() < 1e-4,
+            "x = {}, expected ~0",
+            sv.position.x.value()
+        );
+        assert!(
+            sv.position.y.value().abs() < 1e-4,
+            "y = {}, expected ~0",
+            sv.position.y.value()
+        );
+        assert!(
+            (sv.position.z.value() - 7000.0).abs() < 1e-4,
+            "z = {}, expected ~7000",
+            sv.position.z.value()
+        );
+    }
+
+    #[test]
+    fn test_elements_to_state_energy_conservation() {
+        // Verify that specific energy computed from state vector matches
+        // specific energy computed from semi-major axis
+        let e = Eccentricity::elliptical(0.1).unwrap();
+        let elements = OrbitalElements {
+            semi_major_axis: Km(10000.0),
+            eccentricity: e,
+            inclination: Radians(0.5),
+            raan: Radians(1.0),
+            arg_periapsis: Radians(2.0),
+            true_anomaly: Radians(1.5),
+        };
+
+        let sv = elements_to_state_vector(mu::EARTH, &elements);
+        let r = sv.radius().value();
+        let v = sv.speed().value();
+
+        // Specific energy from state vector: ε = v²/2 - μ/r
+        let eps_sv = v * v / 2.0 - mu::EARTH.value() / r;
+        // Specific energy from elements: ε = -μ/(2a)
+        let eps_elem = specific_energy(mu::EARTH, elements.semi_major_axis);
+
+        assert!(
+            (eps_sv - eps_elem).abs() / eps_elem.abs() < 1e-10,
+            "energy mismatch: state_vector = {:.6}, elements = {:.6}",
+            eps_sv,
+            eps_elem
+        );
+    }
+
+    #[test]
+    fn test_elements_to_state_angular_momentum() {
+        // Angular momentum magnitude should match h = sqrt(μ * p)
+        let e_val = 0.2;
+        let e = Eccentricity::elliptical(e_val).unwrap();
+        let a = Km(8000.0);
+        let elements = OrbitalElements {
+            semi_major_axis: a,
+            eccentricity: e,
+            inclination: Radians(0.3),
+            raan: Radians(0.7),
+            arg_periapsis: Radians(1.2),
+            true_anomaly: Radians(0.8),
+        };
+
+        let sv = elements_to_state_vector(mu::EARTH, &elements);
+
+        // h = |r × v|
+        let h_vec = sv.position.cross_raw_with(sv.velocity);
+        let h_magnitude = h_vec.norm_raw();
+
+        // Expected: h = sqrt(μ * a * (1 - e²))
+        let h_expected = specific_angular_momentum(mu::EARTH, a, e);
+
+        assert!(
+            (h_magnitude - h_expected).abs() / h_expected < 1e-10,
+            "angular momentum: computed = {:.6}, expected = {:.6}",
+            h_magnitude,
+            h_expected
+        );
+    }
+
+    // ── plane_change_dv tests ──────────────────────────────────────────
+
+    #[test]
+    fn test_plane_change_dv_zero() {
+        let dv = plane_change_dv(KmPerSec(10.0), Radians(0.0));
+        assert!(dv.value().abs() < 1e-15, "zero plane change = zero ΔV");
+    }
+
+    #[test]
+    fn test_plane_change_dv_90_degrees() {
+        // 90° plane change at 7 km/s: ΔV = 2 * 7 * sin(45°) ≈ 9.899 km/s
+        let dv = plane_change_dv(KmPerSec(7.0), Radians(std::f64::consts::FRAC_PI_2));
+        let expected = 2.0 * 7.0 * (std::f64::consts::FRAC_PI_4).sin();
+        assert!(
+            (dv.value() - expected).abs() < 1e-10,
+            "90° plane change: {} km/s, expected {} km/s",
+            dv.value(),
+            expected
+        );
+    }
+
+    #[test]
+    fn test_plane_change_dv_small_angle() {
+        // Small angle approximation: ΔV ≈ v * Δi for small Δi
+        let v = KmPerSec(30.0);
+        let di = Radians(0.01); // ~0.57°
+        let dv = plane_change_dv(v, di);
+        // For small angle: 2*v*sin(Δi/2) ≈ v*Δi
+        let approx = v.value() * di.value();
+        assert!(
+            (dv.value() - approx).abs() / approx < 0.001,
+            "small angle: exact = {}, approx = {}",
+            dv.value(),
+            approx
         );
     }
 }

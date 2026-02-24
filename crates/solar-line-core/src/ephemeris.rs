@@ -275,29 +275,34 @@ pub fn jd_to_calendar(jd: f64) -> (i32, u32, f64) {
     (year as i32, month as u32, day)
 }
 
-/// Heliocentric position of a planet in the ecliptic plane.
+/// Heliocentric position of a planet in ecliptic coordinates.
 ///
-/// Returns (x, y) coordinates in km, where:
+/// Coordinates in km, where:
 /// - x-axis points toward vernal equinox
 /// - y-axis is 90° counter-clockwise in the ecliptic
-///
-/// For this analysis (coplanar approximation), we project onto the
-/// ecliptic plane, which is sufficient for transfer analysis.
+/// - z-axis points toward ecliptic north pole
 #[derive(Debug, Clone, Copy)]
 pub struct PlanetPosition {
     /// Heliocentric ecliptic longitude (radians, 0 = vernal equinox)
     pub longitude: Radians,
+    /// Heliocentric ecliptic latitude (radians, 0 = ecliptic plane)
+    pub latitude: Radians,
     /// Heliocentric distance (km)
     pub distance: Km,
-    /// X coordinate in ecliptic plane (km)
+    /// X coordinate in ecliptic frame (km)
     pub x: f64,
-    /// Y coordinate in ecliptic plane (km)
+    /// Y coordinate in ecliptic frame (km)
     pub y: f64,
+    /// Z coordinate in ecliptic frame (km, positive = ecliptic north)
+    pub z: f64,
+    /// Orbital inclination at epoch (radians)
+    pub inclination: Radians,
 }
 
 /// Compute heliocentric position of a planet at a given Julian Date.
 ///
 /// Uses mean Keplerian elements with secular perturbations.
+/// Returns full 3D ecliptic coordinates (x, y, z).
 /// Accuracy: ~1° for outer planets, ~2° for inner planets over centuries.
 pub fn planet_position(planet: Planet, jd: f64) -> PlanetPosition {
     let elem = mean_elements(planet);
@@ -306,10 +311,14 @@ pub fn planet_position(planet: Planet, jd: f64) -> PlanetPosition {
     // Compute elements at epoch
     let a_au = elem.a0 + elem.a_dot * t;
     let e = elem.e0 + elem.e_dot * t;
-    let _i_deg = elem.i0 + elem.i_dot * t;
+    let i_deg = elem.i0 + elem.i_dot * t;
     let l_deg = elem.l0 + elem.l_dot * t;
     let w_bar_deg = elem.w_bar0 + elem.w_bar_dot * t;
     let omega_deg = elem.omega0 + elem.omega_dot * t;
+
+    // Convert angles to radians
+    let i_rad = i_deg.to_radians();
+    let omega_rad = omega_deg.to_radians();
 
     // Mean anomaly M = L - ω̃
     let m_deg = l_deg - w_bar_deg;
@@ -328,18 +337,38 @@ pub fn planet_position(planet: Planet, jd: f64) -> PlanetPosition {
     let a_km = a_au * AU_KM;
     let r_km = a_km * (1.0 - e * e) / (1.0 + e * true_anomaly.cos());
 
-    // Ecliptic longitude (simplified: coplanar approximation)
-    // λ = ω + ν + Ω  (true longitude in ecliptic)
-    let lambda = Radians(w_rad + true_anomaly.value() + omega_deg.to_radians()).normalize();
+    // Argument of latitude u = ω + ν
+    let u = w_rad + true_anomaly.value();
 
-    let x = r_km * lambda.cos();
-    let y = r_km * lambda.sin();
+    // Position in orbital plane (perifocal-like)
+    let x_orb = r_km * u.cos();
+    let y_orb = r_km * u.sin();
+
+    // Rotate to ecliptic frame:
+    //   x = cos(Ω)·x' - sin(Ω)·cos(i)·y'
+    //   y = sin(Ω)·x' + cos(Ω)·cos(i)·y'
+    //   z = sin(i)·y'
+    let cos_omega = omega_rad.cos();
+    let sin_omega = omega_rad.sin();
+    let cos_i = i_rad.cos();
+    let sin_i = i_rad.sin();
+
+    let x = cos_omega * x_orb - sin_omega * cos_i * y_orb;
+    let y = sin_omega * x_orb + cos_omega * cos_i * y_orb;
+    let z = sin_i * y_orb;
+
+    // Ecliptic longitude and latitude from 3D coordinates
+    let longitude = Radians(y.atan2(x)).normalize();
+    let latitude = Radians((z / r_km).asin());
 
     PlanetPosition {
-        longitude: lambda,
+        longitude,
+        latitude,
         distance: Km(r_km),
         x,
         y,
+        z,
+        inclination: Radians(i_rad),
     }
 }
 

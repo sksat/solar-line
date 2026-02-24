@@ -39,7 +39,8 @@ pub fn round_trip_light_time(distance: Km) -> f64 {
 pub fn distance_between_positions(pos1: &PlanetPosition, pos2: &PlanetPosition) -> Km {
     let dx = pos1.x - pos2.x;
     let dy = pos1.y - pos2.y;
-    Km((dx * dx + dy * dy).sqrt())
+    let dz = pos1.z - pos2.z;
+    Km((dx * dx + dy * dy + dz * dz).sqrt())
 }
 
 /// Light delay between two planets at a given Julian Date.
@@ -413,15 +414,21 @@ mod tests {
     fn test_distance_between_positions() {
         let pos1 = PlanetPosition {
             longitude: crate::units::Radians(0.0),
+            latitude: crate::units::Radians(0.0),
             distance: Km(AU_KM),
             x: AU_KM,
             y: 0.0,
+            z: 0.0,
+            inclination: crate::units::Radians(0.0),
         };
         let pos2 = PlanetPosition {
             longitude: crate::units::Radians(std::f64::consts::PI),
+            latitude: crate::units::Radians(0.0),
             distance: Km(AU_KM),
             x: -AU_KM,
             y: 0.0,
+            z: 0.0,
+            inclination: crate::units::Radians(0.0),
         };
         let dist = distance_between_positions(&pos1, &pos2);
         assert!(

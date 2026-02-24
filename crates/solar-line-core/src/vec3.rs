@@ -98,6 +98,36 @@ impl<T: Copy + AsF64> Vec3<T> {
     pub fn norm_raw(self) -> f64 {
         self.dot_raw(self).sqrt()
     }
+
+    /// Cross product with same type, returning Vec3<f64> (units are T²).
+    pub fn cross_raw(self, rhs: Self) -> Vec3<f64> {
+        Vec3 {
+            x: self.y.as_f64() * rhs.z.as_f64() - self.z.as_f64() * rhs.y.as_f64(),
+            y: self.z.as_f64() * rhs.x.as_f64() - self.x.as_f64() * rhs.z.as_f64(),
+            z: self.x.as_f64() * rhs.y.as_f64() - self.y.as_f64() * rhs.x.as_f64(),
+        }
+    }
+
+    /// Cross product with a different type, returning Vec3<f64> (units are T·U).
+    pub fn cross_raw_with<U: Copy + AsF64>(self, rhs: Vec3<U>) -> Vec3<f64> {
+        Vec3 {
+            x: self.y.as_f64() * rhs.z.as_f64() - self.z.as_f64() * rhs.y.as_f64(),
+            y: self.z.as_f64() * rhs.x.as_f64() - self.x.as_f64() * rhs.z.as_f64(),
+            z: self.x.as_f64() * rhs.y.as_f64() - self.y.as_f64() * rhs.x.as_f64(),
+        }
+    }
+}
+
+impl Vec3<f64> {
+    /// Normalize to unit vector. Returns zero vector if norm is zero.
+    pub fn normalize(self) -> Self {
+        let n = self.norm_raw();
+        if n < 1e-15 {
+            Self::new(0.0, 0.0, 0.0)
+        } else {
+            self.scale(1.0 / n)
+        }
+    }
 }
 
 impl<T: fmt::Display> fmt::Display for Vec3<T> {
@@ -172,5 +202,43 @@ mod tests {
         let v = Vec3::new(Km(1.0), Km(-2.0), Km(3.0));
         let neg_v = -v;
         assert_eq!(neg_v, Vec3::new(Km(-1.0), Km(2.0), Km(-3.0)));
+    }
+
+    #[test]
+    fn test_vec3_cross_product() {
+        // x × y = z
+        let x = Vec3::new(Km(1.0), Km(0.0), Km(0.0));
+        let y = Vec3::new(Km(0.0), Km(1.0), Km(0.0));
+        let z = x.cross_raw(y);
+        assert!((z.x - 0.0).abs() < 1e-15);
+        assert!((z.y - 0.0).abs() < 1e-15);
+        assert!((z.z - 1.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn test_vec3_cross_product_anticommutative() {
+        let a = Vec3::new(Km(1.0), Km(2.0), Km(3.0));
+        let b = Vec3::new(Km(4.0), Km(5.0), Km(6.0));
+        let ab = a.cross_raw(b);
+        let ba = b.cross_raw(a);
+        assert!((ab.x + ba.x).abs() < 1e-10);
+        assert!((ab.y + ba.y).abs() < 1e-10);
+        assert!((ab.z + ba.z).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_vec3_normalize() {
+        let v = Vec3::new(3.0_f64, 4.0, 0.0);
+        let n = v.normalize();
+        assert!((n.norm_raw() - 1.0).abs() < 1e-15);
+        assert!((n.x - 0.6).abs() < 1e-15);
+        assert!((n.y - 0.8).abs() < 1e-15);
+    }
+
+    #[test]
+    fn test_vec3_normalize_zero() {
+        let v = Vec3::new(0.0_f64, 0.0, 0.0);
+        let n = v.normalize();
+        assert!((n.norm_raw()).abs() < 1e-15);
     }
 }

@@ -206,12 +206,18 @@ function eccentricToTrue(E: number, e: number): number {
 export interface PlanetPosition {
   /** Ecliptic longitude (radians, 0 = vernal equinox) */
   longitude: number;
+  /** Ecliptic latitude (radians, 0 = ecliptic plane) */
+  latitude: number;
   /** Heliocentric distance (km) */
   distance: number;
-  /** X coordinate in ecliptic plane (km) */
+  /** X coordinate in ecliptic frame (km) */
   x: number;
-  /** Y coordinate in ecliptic plane (km) */
+  /** Y coordinate in ecliptic frame (km) */
   y: number;
+  /** Z coordinate in ecliptic frame (km, positive = ecliptic north) */
+  z: number;
+  /** Orbital inclination at epoch (radians) */
+  inclination: number;
 }
 
 /** Convert calendar date to Julian Date */
@@ -264,9 +270,14 @@ export function planetPosition(planet: PlanetName, jd: number): PlanetPosition {
 
   const aAU = elem.a0 + elem.aDot * t;
   const e = elem.e0 + elem.eDot * t;
+  const iDeg = elem.i0 + elem.iDot * t;
   const lDeg = elem.l0 + elem.lDot * t;
   const wBarDeg = elem.wBar0 + elem.wBarDot * t;
   const omegaDeg = elem.omega0 + elem.omegaDot * t;
+
+  // Convert angles to radians
+  const iRad = iDeg * (Math.PI / 180);
+  const omegaRad = omegaDeg * (Math.PI / 180);
 
   // Mean anomaly M = L - ω̃
   const mRad = normalizeRadians((lDeg - wBarDeg) * (Math.PI / 180));
@@ -283,16 +294,35 @@ export function planetPosition(planet: PlanetName, jd: number): PlanetPosition {
   const aKm = aAU * AU_KM;
   const rKm = (aKm * (1 - e * e)) / (1 + e * Math.cos(trueAnomaly));
 
-  // Ecliptic longitude (coplanar approximation)
-  const lambda = normalizeRadians(
-    wRad + trueAnomaly + omegaDeg * (Math.PI / 180),
-  );
+  // Argument of latitude u = ω + ν
+  const u = wRad + trueAnomaly;
+
+  // Position in orbital plane
+  const xOrb = rKm * Math.cos(u);
+  const yOrb = rKm * Math.sin(u);
+
+  // Rotate to ecliptic frame
+  const cosOmega = Math.cos(omegaRad);
+  const sinOmega = Math.sin(omegaRad);
+  const cosI = Math.cos(iRad);
+  const sinI = Math.sin(iRad);
+
+  const x = cosOmega * xOrb - sinOmega * cosI * yOrb;
+  const y = sinOmega * xOrb + cosOmega * cosI * yOrb;
+  const z = sinI * yOrb;
+
+  // Ecliptic longitude and latitude from 3D coordinates
+  const longitude = normalizeRadians(Math.atan2(y, x));
+  const latitude = Math.asin(z / rKm);
 
   return {
-    longitude: lambda,
+    longitude,
+    latitude,
     distance: rKm,
-    x: rKm * Math.cos(lambda),
-    y: rKm * Math.sin(lambda),
+    x,
+    y,
+    z,
+    inclination: iRad,
   };
 }
 

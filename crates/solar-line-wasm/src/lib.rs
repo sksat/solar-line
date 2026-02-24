@@ -340,7 +340,7 @@ pub fn jd_to_date_string(jd: f64) -> String {
 }
 
 /// Compute heliocentric position of a planet at a given Julian Date.
-/// Returns { longitude (rad), distance (km), x (km), y (km) }.
+/// Returns { longitude (rad), latitude (rad), distance (km), x (km), y (km), z (km), inclination (rad) }.
 #[wasm_bindgen]
 pub fn planet_position(planet: &str, jd: f64) -> Result<JsValue, JsError> {
     let p = parse_planet(planet)?;
@@ -349,16 +349,22 @@ pub fn planet_position(planet: &str, jd: f64) -> Result<JsValue, JsError> {
     #[derive(Serialize)]
     struct PosResult {
         longitude: f64,
+        latitude: f64,
         distance: f64,
         x: f64,
         y: f64,
+        z: f64,
+        inclination: f64,
     }
 
     let result = PosResult {
         longitude: pos.longitude.value(),
+        latitude: pos.latitude.value(),
         distance: pos.distance.value(),
         x: pos.x,
         y: pos.y,
+        z: pos.z,
+        inclination: pos.inclination.value(),
     };
     serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
 }
@@ -1520,6 +1526,211 @@ pub fn uranus_plasmoid_scenarios() -> Result<JsValue, JsError> {
         })
         .collect();
     serde_wasm_bindgen::to_value(&scenarios).map_err(|e| JsError::new(&e.to_string()))
+}
+
+// ---------------------------------------------------------------------------
+// 3D orbital analysis
+// ---------------------------------------------------------------------------
+
+/// Compute ecliptic z-height of a planet at a given Julian Date (km).
+#[wasm_bindgen]
+pub fn ecliptic_z_height(planet: &str, jd: f64) -> Result<f64, JsError> {
+    let p = parse_planet(planet)?;
+    Ok(solar_line_core::orbital_3d::ecliptic_z_height(p, jd).value())
+}
+
+/// Maximum ecliptic z-height a planet can reach (km).
+#[wasm_bindgen]
+pub fn max_ecliptic_z_height(planet: &str) -> Result<f64, JsError> {
+    let p = parse_planet(planet)?;
+    Ok(solar_line_core::orbital_3d::max_ecliptic_z_height(p).value())
+}
+
+/// Out-of-plane distance between two planets at a given Julian Date (km).
+#[wasm_bindgen]
+pub fn out_of_plane_distance(planet1: &str, planet2: &str, jd: f64) -> Result<f64, JsError> {
+    let p1 = parse_planet(planet1)?;
+    let p2 = parse_planet(planet2)?;
+    Ok(solar_line_core::orbital_3d::out_of_plane_distance(p1, p2, jd).value())
+}
+
+/// ΔV penalty for inclination change (km/s).
+/// Given a transfer velocity and the inclination difference between two planets.
+#[wasm_bindgen]
+pub fn plane_change_dv(velocity_km_s: f64, delta_inclination_rad: f64) -> f64 {
+    orbits::plane_change_dv(KmPerSec(velocity_km_s), Radians(delta_inclination_rad)).value()
+}
+
+/// Transfer inclination penalty between two planets.
+/// Returns { delta_i_rad, dv_penalty_km_s }.
+#[wasm_bindgen]
+pub fn transfer_inclination_penalty(
+    departure: &str,
+    arrival: &str,
+    jd: f64,
+    transfer_velocity_km_s: f64,
+) -> Result<JsValue, JsError> {
+    let dep = parse_planet(departure)?;
+    let arr = parse_planet(arrival)?;
+    let (delta_i, dv) = solar_line_core::orbital_3d::transfer_inclination_penalty(
+        dep,
+        arr,
+        jd,
+        transfer_velocity_km_s,
+    );
+
+    #[derive(Serialize)]
+    struct InclinationResult {
+        delta_i_rad: f64,
+        delta_i_deg: f64,
+        dv_penalty_km_s: f64,
+    }
+
+    let result = InclinationResult {
+        delta_i_rad: delta_i.value(),
+        delta_i_deg: delta_i.value().to_degrees(),
+        dv_penalty_km_s: dv,
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Compute Saturn ring plane normal vector in ecliptic coordinates.
+/// Returns [x, y, z].
+#[wasm_bindgen]
+pub fn saturn_ring_plane_normal(jd: f64) -> Box<[f64]> {
+    let n = solar_line_core::orbital_3d::saturn_ring_plane_normal(jd);
+    Box::new([n.x, n.y, n.z])
+}
+
+/// Compute Uranus spin axis direction in ecliptic coordinates.
+/// Returns [x, y, z].
+#[wasm_bindgen]
+pub fn uranus_spin_axis_ecliptic() -> Box<[f64]> {
+    let a = solar_line_core::orbital_3d::uranus_spin_axis_ecliptic();
+    Box::new([a.x, a.y, a.z])
+}
+
+/// Analyze Saturn ring plane crossing.
+/// Returns JSON with crossing analysis.
+#[wasm_bindgen]
+pub fn saturn_ring_crossing(
+    pos_x: f64,
+    pos_y: f64,
+    pos_z: f64,
+    vel_x: f64,
+    vel_y: f64,
+    vel_z: f64,
+    jd: f64,
+) -> Result<JsValue, JsError> {
+    let pos = Vec3::new(pos_x, pos_y, pos_z);
+    let vel = Vec3::new(vel_x, vel_y, vel_z);
+    let result = solar_line_core::orbital_3d::saturn_ring_crossing(pos, vel, jd);
+
+    #[derive(Serialize)]
+    struct RingCrossingResult {
+        crosses_ring_plane: bool,
+        crossing_distance_km: Option<f64>,
+        within_rings: bool,
+        z_offset_at_closest_km: f64,
+        approach_angle_to_ring_plane_deg: f64,
+    }
+
+    let js_result = RingCrossingResult {
+        crosses_ring_plane: result.crosses_ring_plane,
+        crossing_distance_km: result.crossing_distance_km,
+        within_rings: result.within_rings,
+        z_offset_at_closest_km: result.z_offset_at_closest_km,
+        approach_angle_to_ring_plane_deg: result.approach_angle_to_ring_plane.value().to_degrees(),
+    };
+    serde_wasm_bindgen::to_value(&js_result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Analyze approach geometry to Uranus.
+/// Returns JSON with approach analysis.
+#[wasm_bindgen]
+pub fn uranus_approach_analysis(
+    approach_x: f64,
+    approach_y: f64,
+    approach_z: f64,
+    closest_approach_km: f64,
+) -> Result<JsValue, JsError> {
+    let approach = Vec3::new(approach_x, approach_y, approach_z);
+    let result =
+        solar_line_core::orbital_3d::uranus_approach_analysis(approach, closest_approach_km);
+
+    #[derive(Serialize)]
+    struct UranusApproachResult {
+        equatorial_ecliptic_angle_deg: f64,
+        spin_axis_ecliptic: [f64; 3],
+        is_polar_approach: bool,
+        is_equatorial_approach: bool,
+        approach_to_equatorial_deg: f64,
+        ring_clearance_km: f64,
+    }
+
+    let js_result = UranusApproachResult {
+        equatorial_ecliptic_angle_deg: result.equatorial_ecliptic_angle.value().to_degrees(),
+        spin_axis_ecliptic: [
+            result.spin_axis_ecliptic.x,
+            result.spin_axis_ecliptic.y,
+            result.spin_axis_ecliptic.z,
+        ],
+        is_polar_approach: result.is_polar_approach,
+        is_equatorial_approach: result.is_equatorial_approach,
+        approach_to_equatorial_deg: result.approach_to_equatorial.value().to_degrees(),
+        ring_clearance_km: result.ring_clearance_km,
+    };
+    serde_wasm_bindgen::to_value(&js_result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Convert orbital elements to state vector.
+/// Returns JSON with position [x,y,z] in km and velocity [vx,vy,vz] in km/s.
+#[wasm_bindgen]
+pub fn elements_to_state_vector(
+    mu: f64,
+    semi_major_axis_km: f64,
+    eccentricity: f64,
+    inclination_rad: f64,
+    raan_rad: f64,
+    arg_periapsis_rad: f64,
+    true_anomaly_rad: f64,
+) -> Result<JsValue, JsError> {
+    let e = Eccentricity::elliptical(eccentricity)
+        .ok_or_else(|| JsError::new(&format!("Invalid eccentricity: {}", eccentricity)))?;
+    let elements = solar_line_core::OrbitalElements {
+        semi_major_axis: Km(semi_major_axis_km),
+        eccentricity: e,
+        inclination: Radians(inclination_rad),
+        raan: Radians(raan_rad),
+        arg_periapsis: Radians(arg_periapsis_rad),
+        true_anomaly: Radians(true_anomaly_rad),
+    };
+
+    let sv = orbits::elements_to_state_vector(Mu(mu), &elements);
+
+    #[derive(Serialize)]
+    struct StateVectorResult {
+        position: [f64; 3],
+        velocity: [f64; 3],
+        radius_km: f64,
+        speed_km_s: f64,
+    }
+
+    let result = StateVectorResult {
+        position: [
+            sv.position.x.value(),
+            sv.position.y.value(),
+            sv.position.z.value(),
+        ],
+        velocity: [
+            sv.velocity.x.value(),
+            sv.velocity.y.value(),
+            sv.velocity.z.value(),
+        ],
+        radius_km: sv.radius().value(),
+        speed_km_s: sv.speed().value(),
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
 }
 
 // ---------------------------------------------------------------------------
