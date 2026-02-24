@@ -112,6 +112,8 @@ export interface TransferAnalysis {
   evidenceQuoteIds?: string[];
   /** Source citations for parameters used in this analysis */
   sources?: SourceCitation[];
+  /** Command to reproduce the numerical analysis, e.g. "npm run recalculate -- --episode 1" */
+  reproductionCommand?: string;
 }
 
 /** A single orbit in an orbital diagram */
@@ -435,6 +437,8 @@ export interface SummarySection {
     headers: string[];
     rows: { label: string; values: string[]; highlight?: boolean }[];
   };
+  /** Command to reproduce the numerical analysis for this section */
+  reproductionCommand?: string;
 }
 
 /** A cross-episode or summary report page */

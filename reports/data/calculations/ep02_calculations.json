@@ -1,0 +1,161 @@
+{
+  "_meta": {
+    "generatedAt": "2026-02-24T16:17:53.448Z",
+    "reproductionCommand": "npm run recalculate -- --episode 2",
+    "durationMs": 1
+  },
+  "hohmann": {
+    "departureDv": 1.8076602726468902,
+    "arrivalDv": 1.5491053302937523,
+    "totalDv": 3.3567656029406425,
+    "transferTimeSec": 317216811.6811852,
+    "transferTimeDays": 3671.4908759396435,
+    "transferTimeYears": 10.051994184639682
+  },
+  "jupiterEscape": {
+    "altitudeKm": 3574600,
+    "altitudeRJ": 50,
+    "velocityKms": 10.3,
+    "escapeVelocityKms": 8.419116120684334,
+    "hyperbolicExcessKms": 5.933673714186953,
+    "isUnbound": true,
+    "jupiterOrbitalVKms": 13.055905091999508,
+    "heliocentricBestKms": 18.98957880618646,
+    "heliocentricWorstKms": 7.122231377812555,
+    "saturnOrbitalVKms": 9.62171356727013
+  },
+  "heliocentricTransfer": {
+    "vHelioKms": 18.98957880618646,
+    "vEscSunKms": 18.463838050161655,
+    "semiMajorAxisKm": -6739823825.483523,
+    "isHyperbolic": true,
+    "solarVInfKms": 4.43743030297589,
+    "reachesSaturn": true,
+    "arrivalVKms": 14.31242577744768,
+    "saturnOrbitalVKms": 9.62171356727013,
+    "vInfAtSaturnKms": 4.690712210177551,
+    "estimatedTransitDays": 455.2612162741054,
+    "estimatedTransitYears": 1.2464372793267773
+  },
+  "saturnArrivalVInf": {
+    "reachesSaturn": true,
+    "vInfSaturnKms": 4.690712210177551,
+    "isHyperbolic": true,
+    "estimatedTransitDays": 455.2612162741054,
+    "estimatedTransitYears": 1.2464372793267773
+  },
+  "additionalDvNeeded": {
+    "additionalDvKms": 0,
+    "naturallyReaches": true,
+    "isHyperbolic": true
+  },
+  "saturnCapture": {
+    "rCaptureKm": 238020,
+    "approachVInfKms": 4.690712210177551,
+    "vEscAtCaptureKms": 17.85280614270892,
+    "vCircAtCaptureKms": 12.62384028671833,
+    "vPeriKms": 18.45875045087977,
+    "dvCircularCaptureKms": 5.834910164161439,
+    "dvMinCaptureKms": 0.605944308170848
+  },
+  "enceladusInfo": {
+    "orbitalRadiusKm": 238020,
+    "orbitalVelocityKms": 12.62384028671833,
+    "orbitalPeriodSec": 118468.2103740128,
+    "orbitalPeriodHours": 32.907836215003556
+  },
+  "brachistochrone30d": [
+    {
+      "scenario": "closest",
+      "distanceKm": 654960000,
+      "distanceAU": 4.378137181600941,
+      "accelMs2": 0.38994627343392774,
+      "accelG": 0.03976345372109005,
+      "deltaVKms": 1010.7407407407408
+    },
+    {
+      "scenario": "mid",
+      "distanceKm": 1631312203.6569211,
+      "distanceAU": 10.904648548964415,
+      "accelMs2": 0.9712411668243939,
+      "accelG": 0.09903903645224352,
+      "deltaVKms": 2517.457104408829
+    },
+    {
+      "scenario": "farthest",
+      "distanceKm": 2212100000,
+      "distanceAU": 14.78697517317003,
+      "accelMs2": 1.317027225270538,
+      "accelG": 0.1342994014541702,
+      "deltaVKms": 3413.7345679012346
+    }
+  ],
+  "brachistochrone90d": [
+    {
+      "scenario": "closest",
+      "distanceKm": 654960000,
+      "distanceAU": 4.378137181600941,
+      "accelMs2": 0.04332736371488086,
+      "accelG": 0.0044181615245655614,
+      "deltaVKms": 336.91358024691357
+    },
+    {
+      "scenario": "mid",
+      "distanceKm": 1631312203.6569211,
+      "distanceAU": 10.904648548964415,
+      "accelMs2": 0.10791568520271043,
+      "accelG": 0.011004337383582613,
+      "deltaVKms": 839.1523681362763
+    },
+    {
+      "scenario": "farthest",
+      "distanceKm": 2212100000,
+      "distanceAU": 14.78697517317003,
+      "accelMs2": 0.14633635836339312,
+      "accelG": 0.014922155717130021,
+      "deltaVKms": 1137.9115226337449
+    }
+  ],
+  "damagedThrust": [
+    {
+      "label": "通常推力（9.8 MN）",
+      "fraction": 1,
+      "thrustN": 9800000,
+      "thrustMN": 9.8,
+      "accelMs2": 32.666666666666664,
+      "accelG": 3.3310729623945656,
+      "minTimeClosestHours": 78.66516774773983,
+      "minTimeClosestDays": 3.277715322822493
+    },
+    {
+      "label": "50%推力（4.9 MN）",
+      "fraction": 0.5,
+      "thrustN": 4900000,
+      "thrustMN": 4.9,
+      "accelMs2": 16.333333333333332,
+      "accelG": 1.6655364811972828,
+      "minTimeClosestHours": 111.24934711520824,
+      "minTimeClosestDays": 4.635389463133676
+    },
+    {
+      "label": "25%推力（2.45 MN）",
+      "fraction": 0.25,
+      "thrustN": 2450000,
+      "thrustMN": 2.45,
+      "accelMs2": 8.166666666666666,
+      "accelG": 0.8327682405986414,
+      "minTimeClosestHours": 157.33033549547966,
+      "minTimeClosestDays": 6.555430645644986
+    },
+    {
+      "label": "トリムのみ（推定1%、98 kN）",
+      "fraction": 0.01,
+      "thrustN": 98000,
+      "thrustMN": 0.098,
+      "accelMs2": 0.32666666666666666,
+      "accelG": 0.033310729623945656,
+      "minTimeClosestHours": 786.6516774773982,
+      "minTimeClosestDays": 32.777153228224925
+    }
+  ]
+}

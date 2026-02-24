@@ -340,6 +340,10 @@ li { margin: 0.25rem 0; }
 .collapsed-scenarios { margin-top: 0.5rem; }
 .collapsed-scenarios summary { cursor: pointer; color: #8b949e; font-size: 0.85em; }
 .collapsed-scenarios summary:hover { color: var(--accent); }
+.reproduction-command { margin-top: 0.5rem; font-size: 0.8em; }
+.reproduction-command summary { cursor: pointer; color: #8b949e; }
+.reproduction-command summary:hover { color: var(--accent); }
+.reproduction-command pre { background: #161b22; padding: 0.5rem; border-radius: 4px; overflow-x: auto; }
 nav { margin-bottom: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0; }
 nav a { padding: 0.3rem 0.6rem; border-radius: 4px; white-space: nowrap; }
 nav a:hover { background: var(--surface); text-decoration: none; }
@@ -806,6 +810,10 @@ export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQ
   const sourcesHtml = t.sources && t.sources.length > 0 ? renderSources(t.sources) : "";
   const tsHtml = timestampLink(t.timestamp, videoCards);
 
+  const reproHtml = t.reproductionCommand
+    ? `<details class="reproduction-command"><summary>再現コマンド</summary><pre><code>${escapeHtml(t.reproductionCommand)}</code></pre></details>`
+    : "";
+
   return `<div class="card" id="${escapeHtml(t.id)}">
 <h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
 <p>第${t.episode}話 @ ${tsHtml}</p>
@@ -814,6 +822,7 @@ ${citationsHtml}
 ${assumptionsList}
 ${markdownToHtml(t.explanation)}
 ${sourcesHtml}
+${reproHtml}
 </div>`;
 }
 
@@ -1850,8 +1859,12 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const barChartHtml = section.barChart ? renderBarChartFromData(section.barChart) : "";
     const timeSeriesHtml = section.timeSeriesCharts ? renderTimeSeriesCharts(section.timeSeriesCharts) : "";
     const customTableHtml = section.comparisonTable ? renderCustomComparisonTable(section.comparisonTable) : "";
+    const reproHtml = section.reproductionCommand
+      ? `<details class="reproduction-command"><summary>再現コマンド</summary><pre><code>${escapeHtml(section.reproductionCommand)}</code></pre></details>`
+      : "";
     return `<div class="summary-section" id="${escapeHtml(sectionId)}">
 <h2>${escapeHtml(section.heading)}</h2>
+${reproHtml}
 ${markdownToHtml(section.markdown, mdOpts)}
 ${diagramHtml}
 ${barChartHtml}

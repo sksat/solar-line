@@ -403,6 +403,6 @@ export function generateCrossEpisodeReport(): SummaryReport {
 
 結論: 質量の謎を除けば、SOLAR LINE は **宇宙力学的にきわめて丁寧に設計されたSF作品** である。全5話で太陽系を約35.9 AU横断する壮大な航路が、一貫した物理法則の下で描かれている。`,
       },
-    ],
+    ].map(s => ({ ...s, reproductionCommand: "npm run recalculate" })),
   };
 }

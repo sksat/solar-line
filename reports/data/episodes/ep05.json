@@ -220,7 +220,8 @@
           "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
           "sourceLabel": "NASA Earth Fact Sheet"
         }
-      ]
+      ],
+      "reproductionCommand": "npm run recalculate -- --episode 5"
     },
     {
       "id": "ep05-transfer-02",
@@ -269,7 +270,8 @@
           "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
           "sourceLabel": "ソーラーラインのよもやま話"
         }
-      ]
+      ],
+      "reproductionCommand": "npm run recalculate -- --episode 5"
     },
     {
       "id": "ep05-transfer-03",
@@ -316,7 +318,8 @@
           "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
           "sourceLabel": "NASA Moon Fact Sheet"
         }
-      ]
+      ],
+      "reproductionCommand": "npm run recalculate -- --episode 5"
     },
     {
       "id": "ep05-transfer-04",
@@ -375,7 +378,8 @@
           "sourceRef": "https://www.icrp.org/publication.asp?id=ICRP+Publication+103",
           "sourceLabel": "ICRP 2007勧告"
         }
-      ]
+      ],
+      "reproductionCommand": "npm run recalculate -- --episode 5"
     },
     {
       "id": "ep05-transfer-05",
@@ -435,7 +439,8 @@
           "sourceRef": "ep04-transfer-03",
           "sourceLabel": "第4話 損傷状態Brachistochrone分析（300tなら8.3日）"
         }
-      ]
+      ],
+      "reproductionCommand": "npm run recalculate -- --episode 5"
     }
   ],
   "explorations": [

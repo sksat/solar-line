@@ -1,0 +1,166 @@
+{
+  "_meta": {
+    "generatedAt": "2026-02-24T16:17:53.449Z",
+    "reproductionCommand": "npm run recalculate -- --episode 4",
+    "durationMs": 0
+  },
+  "hohmann": {
+    "departureDv": 4.658453824517666,
+    "arrivalDv": 11.281425508281583,
+    "totalDv": 15.939879332799249,
+    "transferTimeSec": 506527769.53677225,
+    "transferTimeDays": 5862.589925194124,
+    "transferTimeYears": 16.05089644132546,
+    "semiMajorAxisKm": 1511029011.5
+  },
+  "uranusDeparture": {
+    "vEscUranusKms": 5.1558887876319845,
+    "vCircTitaniaKms": 3.6457639247782634,
+    "dvEscapeFromTitaniaKms": 1.5101248628537212,
+    "uranusOrbitalVKms": 6.797180803702068,
+    "accelAtFullMassMs2": 0.13270833333333334,
+    "accelAtFullMassG": 0.013532483909727925
+  },
+  "brachistochrone": [
+    {
+      "scenario": "closest",
+      "distanceKm": 2722861977,
+      "distanceAU": 18.2012081071686,
+      "accelMs2": 0.13270833333333334,
+      "accelG": 0.013532483909727925,
+      "deltaVKms": 1202.2420303156514,
+      "timeSec": 9059280.605204282,
+      "timeHours": 2516.4668347789675,
+      "timeDays": 104.85278478245696
+    },
+    {
+      "scenario": "mid",
+      "distanceKm": 2876352902.5635066,
+      "distanceAU": 19.227231571575484,
+      "accelMs2": 0.13270833333333334,
+      "accelG": 0.013532483909727925,
+      "deltaVKms": 1235.6633842235494,
+      "timeSec": 9311121.262595033,
+      "timeHours": 2586.422572943065,
+      "timeDays": 107.76760720596103
+    },
+    {
+      "scenario": "farthest",
+      "distanceKm": 3022058023,
+      "distanceAU": 20.20121014329384,
+      "accelMs2": 0.13270833333333334,
+      "accelG": 0.013532483909727925,
+      "deltaVKms": 1266.5737775099535,
+      "timeSec": 9544041.023622883,
+      "timeHours": 2651.122506561912,
+      "timeDays": 110.463437773413
+    }
+  ],
+  "massFeasibility": [
+    {
+      "targetDays": 30,
+      "timeSec": 2592000,
+      "accelMs2": 1.6211217188928897,
+      "accelG": 0.1653084099965727,
+      "maxMassKg": 3929377.98918039,
+      "maxMassT": 3929.3779891803897,
+      "deltaVKms": 4201.94749537037
+    },
+    {
+      "targetDays": 60,
+      "timeSec": 5184000,
+      "accelMs2": 0.4052804297232224,
+      "accelG": 0.041327102499143176,
+      "maxMassKg": 15717511.95672156,
+      "maxMassT": 15717.511956721559,
+      "deltaVKms": 2100.973747685185
+    },
+    {
+      "targetDays": 90,
+      "timeSec": 7776000,
+      "accelMs2": 0.1801246354325433,
+      "accelG": 0.018367601110730304,
+      "maxMassKg": 35364401.902623504,
+      "maxMassT": 35364.401902623504,
+      "deltaVKms": 1400.649165123457
+    },
+    {
+      "targetDays": 180,
+      "timeSec": 15552000,
+      "accelMs2": 0.04503115885813583,
+      "accelG": 0.004591900277682576,
+      "maxMassKg": 141457607.61049402,
+      "maxMassT": 141457.60761049401,
+      "deltaVKms": 700.3245825617284
+    },
+    {
+      "targetDays": 365,
+      "timeSec": 31536000,
+      "accelMs2": 0.01095146967163521,
+      "accelG": 0.0011167391180102492,
+      "maxMassKg": 581657091.787286,
+      "maxMassT": 581657.091787286,
+      "deltaVKms": 345.365547564688
+    }
+  ],
+  "plasmoid": {
+    "shieldLifeSec": 840,
+    "shieldLifeMin": 14,
+    "transitSec": 480,
+    "transitMin": 8,
+    "marginSec": 360,
+    "marginMin": 6,
+    "marginFraction": 0.42857142857142855,
+    "peakRadiationMsvMin": 126,
+    "worstCaseExposureMSv": 1008,
+    "totalExposureMSv": 480,
+    "cumulativeEnRouteMSv": 48,
+    "statedMagneticTiltDeg": 60,
+    "realMagneticTiltDeg": 59.7,
+    "tiltAccuracyPercent": 99.49748743718594
+  },
+  "fleetIntercept": {
+    "fleetETASec": 118800,
+    "fleetETAHours": 33,
+    "fleetShipCount": 5,
+    "arrivalTimeSec": 34920,
+    "arrivalTimeHours": 9.7,
+    "availableTimeSec": 83880,
+    "availableTimeHours": 23.3,
+    "scenarios": [
+      {
+        "label": "100 million km",
+        "distKm": 100000000,
+        "avgSpeedKms": 841.7508417508418,
+        "avgSpeedCFraction": 0.002807778579109024
+      },
+      {
+        "label": "500 million km",
+        "distKm": 500000000,
+        "avgSpeedKms": 4208.754208754209,
+        "avgSpeedCFraction": 0.014038892895545121
+      },
+      {
+        "label": "Saturn-Uranus closest",
+        "distKm": 1438930000,
+        "avgSpeedKms": 12112.205387205388,
+        "avgSpeedCFraction": 0.04040196830837348
+      }
+    ]
+  },
+  "damageAssessment": {
+    "thrustFraction": 0.65,
+    "effectiveThrustN": 6370000,
+    "effectiveThrustMN": 6.37,
+    "normalThrustMN": 9.8,
+    "availableBurns": {
+      "min": 3,
+      "max": 4
+    },
+    "thermalMargin": 0.78,
+    "coolingPressure1MPa": 1.87,
+    "coolingPressure2MPa": 0.96,
+    "totalExposureMSv": 480,
+    "shieldStatus": "coil system 2 only"
+  }
+}

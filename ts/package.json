@@ -20,6 +20,7 @@
     "compare-transcriptions": "node --experimental-strip-types src/compare-transcriptions.ts",
     "analyze-costs": "node --experimental-strip-types src/analyze-costs.ts",
     "test:e2e": "npx playwright test",
+    "recalculate": "node --experimental-strip-types src/recalculate.ts",
     "dag": "node --experimental-strip-types src/dag-cli.ts",
     "dag:seed": "node --experimental-strip-types src/dag-seed.ts"
   },

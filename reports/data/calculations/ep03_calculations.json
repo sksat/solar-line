@@ -1,0 +1,128 @@
+{
+  "_meta": {
+    "generatedAt": "2026-02-24T16:17:53.448Z",
+    "reproductionCommand": "npm run recalculate -- --episode 3",
+    "durationMs": 0
+  },
+  "hohmann": {
+    "departureDv": 1.4919669562752116,
+    "arrivalDv": 1.2507869667407334,
+    "totalDv": 2.742753923015945,
+    "transferTimeSec": 861506557.4612254,
+    "transferTimeDays": 9971.140711356775,
+    "transferTimeYears": 27.299495445193088
+  },
+  "saturnDeparture": {
+    "vEscSaturnKms": 17.85280614270892,
+    "vCircEnceladusKms": 12.62384028671833,
+    "dvEscapeFromEnceladusKms": 5.228965855990591,
+    "saturnOrbitalVKms": 9.62171356727013
+  },
+  "brachistochrone": [
+    {
+      "scenario": "closest",
+      "distanceKm": 1438930000,
+      "distanceAU": 9.618652947845735,
+      "accelMs2": 21.657514860396844,
+      "accelG": 2.2084519035957078,
+      "deltaVKms": 11164.882060831782,
+      "requiredThrustN": 1039560713.2990485,
+      "requiredThrustMN": 1039.5607132990485,
+      "thrustRatio": 106.07762380602536
+    },
+    {
+      "scenario": "mid",
+      "distanceKm": 3210301342.942746,
+      "distanceAU": 21.459539015636178,
+      "accelMs2": 48.318645827896056,
+      "accelG": 4.927130653984394,
+      "deltaVKms": 24909.228297196976,
+      "requiredThrustN": 2319294999.739011,
+      "requiredThrustMN": 2319.294999739011,
+      "thrustRatio": 236.66275507540928
+    },
+    {
+      "scenario": "farthest",
+      "distanceKm": 4305990000,
+      "distanceAU": 28.783765302616708,
+      "accelMs2": 64.80999243446186,
+      "accelG": 6.608780004839764,
+      "deltaVKms": 33410.84729981378,
+      "requiredThrustN": 3110879636.8541694,
+      "requiredThrustMN": 3110.8796368541693,
+      "thrustRatio": 317.43669763818053
+    }
+  ],
+  "navCrisis": {
+    "positionAU": 14.72,
+    "positionKm": 2202080656.704,
+    "angleDeg": 1.23,
+    "angleRad": 0.021467549799530253,
+    "remainingDistAU": 4.481209125231219,
+    "remainingDistKm": 670379343.296,
+    "computedErrorKm": 14393613.130911691,
+    "statedErrorKm": 14360000,
+    "computedVsStatedRatio": 1.0023407472779728,
+    "uranusSOIKm": 51793934.52653752,
+    "errorVsSOI": 0.2779015199846784,
+    "errorMarginKm": 18,
+    "errorMagnitudeRatio": 797777.7777777778,
+    "stellarNavConfidence": 0.923,
+    "inertialNavConfidence": 0.917
+  },
+  "cruiseVelocity": {
+    "candidates": [
+      {
+        "label": "30 km/s",
+        "vKms": 30
+      },
+      {
+        "label": "300 km/s",
+        "vKms": 300
+      },
+      {
+        "label": "3000 km/s",
+        "vKms": 3000
+      }
+    ],
+    "brachistochrone": {
+      "closestDistKm": 1438930000,
+      "deltaVKms": 11164.882060831782,
+      "peakVelocityKms": 5582.441030415891,
+      "averageVelocityKms": 2791.2205152079455
+    },
+    "heliocentric": {
+      "solarVEscAt14AUKms": 10.978783068791758,
+      "solarVCircAt14AUKms": 7.763171957118706,
+      "saturnOrbitalVKms": 9.62171356727013,
+      "uranusOrbitalVKms": 6.797180803702068
+    }
+  },
+  "uranusCapture": {
+    "approachRU": 25,
+    "approachKm": 638975,
+    "rCaptureKm": 435910,
+    "approachVInfKms": 5575.643849612189,
+    "vEscAtTitaniaKms": 5.1558887876319845,
+    "vCircAtTitaniaKms": 3.6457639247782634,
+    "vEscAt25RUKms": 4.258533066362582,
+    "vPeriKms": 5575.6462334788985,
+    "dvCircularCaptureKms": 5572.00046955412,
+    "dvMinCaptureKms": 5570.490344691267,
+    "titaniaPeriodHours": 208.68232006632758,
+    "titaniaPeriodDays": 8.695096669430317
+  },
+  "massFeasibility": {
+    "aReqMs2": 21.657514860396844,
+    "aReqG": 2.2084519035957078,
+    "maxMassKg": 452498.8237648809,
+    "maxMassT": 452.4988237648809
+  },
+  "minTransferTime": {
+    "accelMs2": 0.20416666666666666,
+    "accelG": 0.020819206014966035,
+    "timeSec": 5309546.273708617,
+    "timeHours": 1474.8739649190604,
+    "timeDays": 61.45308187162752
+  }
+}

@@ -304,6 +304,6 @@ export function generateShipKestrelReport(): SummaryReport {
 
 唯一の未解決問題は**公称質量48,000t**の解釈であるが、これは作品の意図的な設定と考えられ、物理的「バグ」ではない。`,
       },
-    ],
+    ].map(s => ({ ...s, reproductionCommand: "npm run recalculate" })),
   };
 }

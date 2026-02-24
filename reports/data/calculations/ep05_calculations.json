@@ -1,0 +1,609 @@
+{
+  "_meta": {
+    "generatedAt": "2026-02-24T16:17:53.450Z",
+    "reproductionCommand": "npm run recalculate -- --episode 5",
+    "durationMs": 1
+  },
+  "hohmann": {
+    "departureDvKms": 4.658453824517666,
+    "arrivalDvKms": 11.281425508281583,
+    "totalDvKms": 15.939879332799249,
+    "transferTimeSec": 506527769.53677225,
+    "transferTimeDays": 5862.589925194124,
+    "transferTimeYears": 16.05089644132546,
+    "semiMajorAxisKm": 1511029011.5,
+    "semiMajorAxisAU": 10.10060507164692
+  },
+  "brachistochroneByMass": [
+    {
+      "label": "300t（ep01境界値相当）",
+      "massKg": 300000,
+      "distanceKm": 2722861977,
+      "distanceAU": 18.2012081071686,
+      "accelMs2": 21.233333333333334,
+      "accelG": 2.165197425556468,
+      "deltaVKms": 15207.292458330641,
+      "peakVelocityKms": 7603.646229165321,
+      "peakVelocityCFraction": 0.02536303374638371,
+      "timeSec": 716199.0168758543,
+      "timeHours": 198.94417135440398,
+      "timeDays": 8.289340473100166
+    },
+    {
+      "label": "500t（ep03境界値相当）",
+      "massKg": 500000,
+      "distanceKm": 2722861977,
+      "distanceAU": 18.2012081071686,
+      "accelMs2": 12.74,
+      "accelG": 1.2991184553338806,
+      "deltaVKms": 11779.518086404045,
+      "peakVelocityKms": 5889.759043202022,
+      "peakVelocityCFraction": 0.019646121461808164,
+      "timeSec": 924608.9549767695,
+      "timeHours": 256.8358208268804,
+      "timeDays": 10.701492534453351
+    },
+    {
+      "label": "1,000t",
+      "massKg": 1000000,
+      "distanceKm": 2722861977,
+      "distanceAU": 18.2012081071686,
+      "accelMs2": 6.37,
+      "accelG": 0.6495592276669403,
+      "deltaVKms": 8329.377118005883,
+      "peakVelocityKms": 4164.6885590029415,
+      "peakVelocityCFraction": 0.01389190570965912,
+      "timeSec": 1307594.524019762,
+      "timeHours": 363.22070111660054,
+      "timeDays": 15.134195879858355
+    },
+    {
+      "label": "3,929t（ep04 30日境界）",
+      "massKg": 3929000,
+      "distanceKm": 2722861977,
+      "distanceAU": 18.2012081071686,
+      "accelMs2": 1.6212776787986765,
+      "accelG": 0.16532431348102325,
+      "deltaVKms": 4202.149614547172,
+      "peakVelocityKms": 2101.074807273586,
+      "peakVelocityCFraction": 0.0070084311703184545,
+      "timeSec": 2591875.3274028,
+      "timeHours": 719.965368723,
+      "timeDays": 29.998557030125
+    },
+    {
+      "label": "48,000t（公称質量）",
+      "massKg": 48000000,
+      "distanceKm": 2722861977,
+      "distanceAU": 18.2012081071686,
+      "accelMs2": 0.13270833333333334,
+      "accelG": 0.013532483909727925,
+      "deltaVKms": 1202.2420303156514,
+      "peakVelocityKms": 601.1210151578257,
+      "peakVelocityCFraction": 0.0020051238752571477,
+      "timeSec": 9059280.605204282,
+      "timeHours": 2516.4668347789675,
+      "timeDays": 104.85278478245696
+    }
+  ],
+  "earthApproach": {
+    "vCircEarthKms": 29.784676672948645,
+    "vEscSunAtEarthKms": 42.12189370178153,
+    "vEscEarthAtSOIKms": 0.9288549504888365,
+    "hohmannArrival": {
+      "vArrivalKms": 41.06610218123023,
+      "vInfKms": 11.281425508281583,
+      "dvCaptureLEOKms": 7.980135986090377,
+      "dvCaptureMoonOrbitKms": 10.354666525628458
+    },
+    "brachistochroneArrival": {
+      "note": "Ideal brachistochrone arrives with v_inf ≈ 0 (deceleration phase cancels approach velocity). Capture ΔV is minimal.",
+      "dvCaptureLEOKms": 7.672598648385013,
+      "dvCaptureMoonOrbitKms": 1.0183034106336974
+    },
+    "earthSOIRadiusKm": 924000,
+    "leoAltitudeKm": 400,
+    "leoRadiusKm": 6771,
+    "moonOrbitRadiusKm": 384400
+  },
+  "burnBudget": {
+    "burnsAvailable": {
+      "min": 2,
+      "max": 3
+    },
+    "brachistochrone": {
+      "burnsNeeded": 2,
+      "feasible": true
+    },
+    "earthCapture": {
+      "burnsNeeded": 1,
+      "feasible": true
+    },
+    "totalMinBurnsNeeded": 3,
+    "hasCorrectionMargin": false,
+    "thermalAnalysis": {
+      "initialMargin": 0.78,
+      "estimatedLossPerBurn": 0.05,
+      "estimatedFinalMargin": 0.63,
+      "thermalRisk": "moderate"
+    },
+    "radiationBudget": {
+      "currentMSv": 480,
+      "icrpLimitMSv": 500,
+      "nasaLimitMSv": 600,
+      "remainingToICRPMSv": 20,
+      "remainingToNASAMSv": 120
+    }
+  },
+  "fullRoute": {
+    "legs": [
+      {
+        "ep": 1,
+        "from": "火星",
+        "to": "ガニメデ",
+        "distAU": 3.680739554804372,
+        "method": "brachistochrone"
+      },
+      {
+        "ep": 2,
+        "from": "木星圏",
+        "to": "エンケラドス",
+        "distAU": 4.378137181600941,
+        "method": "ballistic"
+      },
+      {
+        "ep": 3,
+        "from": "エンケラドス",
+        "to": "タイタニア",
+        "distAU": 9.618652947845735,
+        "method": "brachistochrone"
+      },
+      {
+        "ep": "4-5",
+        "from": "タイタニア",
+        "to": "地球",
+        "distAU": 18.2012081071686,
+        "method": "brachistochrone"
+      }
+    ],
+    "totalDistAU": 35.87873779141965,
+    "furthestPointAU": 19.20120912523122,
+    "routeDescription": "火星 → ガニメデ → 木星脱出 → エンケラドス → タイタニア → 地球",
+    "isRoundTrip": false,
+    "startBody": "火星",
+    "endBody": "地球"
+  },
+  "earthCapture": {
+    "scenarios": [
+      {
+        "label": "LEO直接投入（高度400km）",
+        "targetRadiusKm": 6771,
+        "vCircKms": 7.672598648385013,
+        "note": "最も効率的だが精密な減速が必要"
+      },
+      {
+        "label": "GEO投入（高度35,786km）",
+        "targetRadiusKm": 42157,
+        "vCircKms": 3.0749215415063538,
+        "note": "静止軌道 — 減速要件が低い"
+      },
+      {
+        "label": "月軌道捕捉（384,400km）",
+        "targetRadiusKm": 384400,
+        "vCircKms": 1.0183034106336974,
+        "note": "最も低いΔV — 月のアシストも可能"
+      }
+    ],
+    "captureTable": [
+      {
+        "vInfKms": 0,
+        "captures": [
+          {
+            "target": "LEO直接投入（高度400km）",
+            "dvCaptureKms": 3.178094418806549
+          },
+          {
+            "target": "GEO投入（高度35,786km）",
+            "dvCaptureKms": 1.2736742057251154
+          },
+          {
+            "target": "月軌道捕捉（384,400km）",
+            "dvCaptureKms": 0.4217950832952564
+          }
+        ]
+      },
+      {
+        "vInfKms": 1,
+        "captures": [
+          {
+            "target": "LEO直接投入（高度400km）",
+            "dvCaptureKms": 3.224076993222341
+          },
+          {
+            "target": "GEO投入（高度35,786km）",
+            "dvCaptureKms": 1.3871726947060128
+          },
+          {
+            "target": "月軌道捕捉（384,400km）",
+            "dvCaptureKms": 0.7349460502863512
+          }
+        ]
+      },
+      {
+        "vInfKms": 3,
+        "captures": [
+          {
+            "target": "LEO直接投入（高度400km）",
+            "dvCaptureKms": 3.5851782208906906
+          },
+          {
+            "target": "GEO投入（高度35,786km）",
+            "dvCaptureKms": 2.2080970059567933
+          },
+          {
+            "target": "月軌道捕捉（384,400km）",
+            "dvCaptureKms": 2.3094411216608774
+          }
+        ]
+      },
+      {
+        "vInfKms": 5,
+        "captures": [
+          {
+            "target": "LEO直接投入（高度400km）",
+            "dvCaptureKms": 4.274683052420365
+          },
+          {
+            "target": "GEO投入（高度35,786km）",
+            "dvCaptureKms": 3.551562063909087
+          },
+          {
+            "target": "月軌道捕捉（384,400km）",
+            "dvCaptureKms": 4.184953614751119
+          }
+        ]
+      },
+      {
+        "vInfKms": 10,
+        "captures": [
+          {
+            "target": "LEO直接投入（高度400km）",
+            "dvCaptureKms": 7.083333719256113
+          },
+          {
+            "target": "GEO投入（高度35,786km）",
+            "dvCaptureKms": 7.8296777162765565
+          },
+          {
+            "target": "月軌道捕捉（384,400km）",
+            "dvCaptureKms": 9.084858652414507
+          }
+        ]
+      }
+    ],
+    "earthEscapeVelocityAtLEOKms": 10.850693067191562,
+    "earthEscapeVelocityAtMoonOrbitKms": 1.4400984939289538
+  },
+  "nozzleLifespan": {
+    "nozzleLifetimeSec": 200280,
+    "nozzleLifetimeHours": 55.63333333333333,
+    "requiredBurnTimeSec": 198720,
+    "requiredBurnTimeHours": 55.2,
+    "marginSec": 1560,
+    "marginMinutes": 26,
+    "marginFraction": 0.007789095266626723,
+    "marginPercent": 0.7789095266626722,
+    "statedMarginMinutes": 26,
+    "marginConsistency": true,
+    "sensitivityScenarios": [
+      {
+        "label": "計画通り (55h12m)",
+        "burnTimeSec": 198720,
+        "marginSec": 1560
+      },
+      {
+        "label": "5%増加 (57h58m)",
+        "burnTimeSec": 208656,
+        "marginSec": -8376
+      },
+      {
+        "label": "3%増加 (56h51m)",
+        "burnTimeSec": 204681.6,
+        "marginSec": -4401.600000000006
+      },
+      {
+        "label": "1%増加 (55h45m)",
+        "burnTimeSec": 200707.2,
+        "marginSec": -427.20000000001164
+      },
+      {
+        "label": "5%減少 (52h24m)",
+        "burnTimeSec": 188784,
+        "marginSec": 11496
+      }
+    ],
+    "seriesMargins": [
+      {
+        "episode": 2,
+        "constraint": "太陽脱出速度",
+        "margin": 0.53,
+        "unit": "km/s",
+        "note": "v_helio 18.99 vs v_esc 18.46"
+      },
+      {
+        "episode": 3,
+        "constraint": "航法精度",
+        "margin": 1.23,
+        "unit": "°",
+        "note": "0.2%以内のコース維持が必要"
+      },
+      {
+        "episode": 4,
+        "constraint": "シールドマージン",
+        "margin": 43,
+        "unit": "%",
+        "note": "6分/14分"
+      },
+      {
+        "episode": 5,
+        "constraint": "ノズル寿命マージン",
+        "margin": 0.7789095266626722,
+        "unit": "%",
+        "note": "26分/56h"
+      }
+    ],
+    "nozzleDestroyed": true
+  },
+  "oberthEffect": {
+    "vInfKms": 1500,
+    "muJupiter": 126686534,
+    "jupiterRadiusKm": 71492,
+    "vEscJupiterSurfaceKms": 59.532141005328725,
+    "gravityWellFraction": 0.039688094003552485,
+    "gravityWellPercent": 3.9688094003552483,
+    "efficiencyMatrix": [
+      {
+        "label": "1 RJ (71,492 km)",
+        "rPeriKm": 71492,
+        "vEscAtPeri": 59.532141005328725,
+        "results": [
+          {
+            "burnDvKms": 10,
+            "vPeriKms": 1501.1808937675294,
+            "vInfAfterKms": 1510.0078204682752,
+            "deltaVInfKms": 10.007820468275213,
+            "gainKms": 0.007820468275212988,
+            "efficiencyPercent": 0.07820468275212544
+          },
+          {
+            "burnDvKms": 30,
+            "vPeriKms": 1501.1808937675294,
+            "vInfAfterKms": 1530.0231546045477,
+            "deltaVInfKms": 30.0231546045477,
+            "gainKms": 0.02315460454769891,
+            "efficiencyPercent": 0.07718201515900525
+          },
+          {
+            "burnDvKms": 50,
+            "vPeriKms": 1501.1808937675294,
+            "vInfAfterKms": 1550.0380928792533,
+            "deltaVInfKms": 50.03809287925333,
+            "gainKms": 0.03809287925332683,
+            "efficiencyPercent": 0.07618575850665277
+          },
+          {
+            "burnDvKms": 100,
+            "vPeriKms": 1501.1808937675294,
+            "vInfAfterKms": 1600.0738041582663,
+            "deltaVInfKms": 100.07380415826628,
+            "gainKms": 0.0738041582662845,
+            "efficiencyPercent": 0.0738041582662774
+          },
+          {
+            "burnDvKms": 200,
+            "vPeriKms": 1501.1808937675294,
+            "vInfAfterKms": 1700.1389230021798,
+            "deltaVInfKms": 200.1389230021798,
+            "gainKms": 0.13892300217980846,
+            "efficiencyPercent": 0.0694615010899069
+          }
+        ]
+      },
+      {
+        "label": "2 RJ (142,984 km)",
+        "rPeriKm": 142984,
+        "vEscAtPeri": 42.09558060342167,
+        "results": [
+          {
+            "burnDvKms": 10,
+            "vPeriKms": 1500.590563047209,
+            "vInfAfterKms": 1510.0039110084929,
+            "deltaVInfKms": 10.003911008492878,
+            "gainKms": 0.003911008492877954,
+            "efficiencyPercent": 0.039110084928783984
+          },
+          {
+            "burnDvKms": 30,
+            "vPeriKms": 1500.590563047209,
+            "vInfAfterKms": 1530.0115796237728,
+            "deltaVInfKms": 30.011579623772832,
+            "gainKms": 0.011579623772831837,
+            "efficiencyPercent": 0.03859874590943502
+          },
+          {
+            "burnDvKms": 50,
+            "vPeriKms": 1500.590563047209,
+            "vInfAfterKms": 1550.0190503038086,
+            "deltaVInfKms": 50.019050303808626,
+            "gainKms": 0.019050303808626268,
+            "efficiencyPercent": 0.03810060761724188
+          },
+          {
+            "burnDvKms": 100,
+            "vPeriKms": 1500.590563047209,
+            "vInfAfterKms": 1600.0369097647222,
+            "deltaVInfKms": 100.03690976472217,
+            "gainKms": 0.03690976472216789,
+            "efficiencyPercent": 0.03690976472217056
+          },
+          {
+            "burnDvKms": 200,
+            "vPeriKms": 1500.590563047209,
+            "vInfAfterKms": 1700.0694765858493,
+            "deltaVInfKms": 200.06947658584932,
+            "gainKms": 0.0694765858493156,
+            "efficiencyPercent": 0.03473829292466313
+          }
+        ]
+      },
+      {
+        "label": "3 RJ (214,476 km)",
+        "rPeriKm": 214476,
+        "vEscAtPeri": 34.370897634861294,
+        "results": [
+          {
+            "burnDvKms": 10,
+            "vPeriKms": 1500.3937345257832,
+            "vInfAfterKms": 1510.0026075111646,
+            "deltaVInfKms": 10.00260751116457,
+            "gainKms": 0.002607511164569587,
+            "efficiencyPercent": 0.02607511164569587
+          },
+          {
+            "burnDvKms": 30,
+            "vPeriKms": 1500.3937345257832,
+            "vInfAfterKms": 1530.0077202653415,
+            "deltaVInfKms": 30.007720265341504,
+            "gainKms": 0.007720265341504273,
+            "efficiencyPercent": 0.025734217805006843
+          },
+          {
+            "burnDvKms": 50,
+            "vPeriKms": 1500.3937345257832,
+            "vInfAfterKms": 1550.0127010616973,
+            "deltaVInfKms": 50.01270106169727,
+            "gainKms": 0.012701061697271143,
+            "efficiencyPercent": 0.025402123394546727
+          },
+          {
+            "burnDvKms": 100,
+            "vPeriKms": 1500.3937345257832,
+            "vInfAfterKms": 1600.0246082186227,
+            "deltaVInfKms": 100.02460821862269,
+            "gainKms": 0.024608218622688582,
+            "efficiencyPercent": 0.02460821862269036
+          },
+          {
+            "burnDvKms": 200,
+            "vPeriKms": 1500.3937345257832,
+            "vInfAfterKms": 1700.0463210778444,
+            "deltaVInfKms": 200.04632107784437,
+            "gainKms": 0.04632107784436812,
+            "efficiencyPercent": 0.0231605389221734
+          }
+        ]
+      },
+      {
+        "label": "5 RJ (357,460 km)",
+        "rPeriKm": 357460,
+        "vEscAtPeri": 26.62358282680354,
+        "results": [
+          {
+            "burnDvKms": 10,
+            "vPeriKms": 1500.236253115667,
+            "vInfAfterKms": 1510.0015645893595,
+            "deltaVInfKms": 10.001564589359532,
+            "gainKms": 0.0015645893595319649,
+            "efficiencyPercent": 0.01564589359532853
+          },
+          {
+            "burnDvKms": 30,
+            "vPeriKms": 1500.236253115667,
+            "vInfAfterKms": 1530.00463240702,
+            "deltaVInfKms": 30.004632407019926,
+            "gainKms": 0.004632407019926177,
+            "efficiencyPercent": 0.015441356733081335
+          },
+          {
+            "burnDvKms": 50,
+            "vPeriKms": 1500.236253115667,
+            "vInfAfterKms": 1550.0076210495117,
+            "deltaVInfKms": 50.00762104951173,
+            "gainKms": 0.007621049511726596,
+            "efficiencyPercent": 0.015242099023460298
+          },
+          {
+            "burnDvKms": 100,
+            "vPeriKms": 1500.236253115667,
+            "vInfAfterKms": 1600.0147657515956,
+            "deltaVInfKms": 100.01476575159563,
+            "gainKms": 0.014765751595632537,
+            "efficiencyPercent": 0.014765751595624543
+          },
+          {
+            "burnDvKms": 200,
+            "vPeriKms": 1500.236253115667,
+            "vInfAfterKms": 1700.0277942569842,
+            "deltaVInfKms": 200.02779425698418,
+            "gainKms": 0.02779425698417981,
+            "efficiencyPercent": 0.013897128492090793
+          }
+        ]
+      },
+      {
+        "label": "10 RJ (714,920 km)",
+        "rPeriKm": 714920,
+        "vEscAtPeri": 18.825715956314497,
+        "results": [
+          {
+            "burnDvKms": 10,
+            "vPeriKms": 1500.1181312087617,
+            "vInfAfterKms": 1510.000782325683,
+            "deltaVInfKms": 10.000782325683076,
+            "gainKms": 0.0007823256830761238,
+            "efficiencyPercent": 0.007823256830752356
+          },
+          {
+            "burnDvKms": 30,
+            "vPeriKms": 1500.1181312087617,
+            "vInfAfterKms": 1530.0023162964576,
+            "deltaVInfKms": 30.002316296457593,
+            "gainKms": 0.0023162964575931255,
+            "efficiencyPercent": 0.007720988191972644
+          },
+          {
+            "burnDvKms": 50,
+            "vPeriKms": 1500.1181312087617,
+            "vInfAfterKms": 1550.0038106794693,
+            "deltaVInfKms": 50.003810679469325,
+            "gainKms": 0.0038106794693248958,
+            "efficiencyPercent": 0.007621358938658673
+          },
+          {
+            "burnDvKms": 100,
+            "vPeriKms": 1500.1181312087617,
+            "vInfAfterKms": 1600.0073831835127,
+            "deltaVInfKms": 100.00738318351273,
+            "gainKms": 0.007383183512729374,
+            "efficiencyPercent": 0.007383183512721381
+          },
+          {
+            "burnDvKms": 200,
+            "vPeriKms": 1500.1181312087617,
+            "vInfAfterKms": 1700.013897732458,
+            "deltaVInfKms": 200.01389773245796,
+            "gainKms": 0.013897732457962775,
+            "efficiencyPercent": 0.006948866228984052
+          }
+        ]
+      }
+    ],
+    "bestCaseVelocityEfficiencyPercent": 0.0694615010899069,
+    "energyEfficiencyPercent": 0.07743565688718146,
+    "claimedEfficiencyPercent": 3,
+    "threePercentBurnSavingMinutes": 99.36,
+    "burnSavingExceedsMargin": true,
+    "interpretation": "mission-level-composite"
+  },
+  "preliminary": false
+}

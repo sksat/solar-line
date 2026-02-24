@@ -1,0 +1,181 @@
+{
+  "_meta": {
+    "generatedAt": "2026-02-24T16:17:53.446Z",
+    "reproductionCommand": "npm run recalculate -- --episode 1",
+    "durationMs": 0
+  },
+  "hohmann": {
+    "departureDv": 5.883049112579144,
+    "arrivalDv": 4.269269453120785,
+    "totalDv": 10.152318565699929,
+    "transferTimeSec": 97358906.06955828,
+    "transferTimeDays": 1126.8391906198874
+  },
+  "shipAcceleration": {
+    "accelNormalMs2": 0.20416666666666666,
+    "accelPeakMs2": 0.22291666666666668,
+    "accelNormalG": 0.020819206014966035,
+    "accelPeakG": 0.022731173914299654,
+    "dvNormal72hMs": 52920,
+    "dvPeak72hMs": 57780,
+    "dvNormal72hKms": 52.92,
+    "dvPeak72hKms": 57.78
+  },
+  "brachistochrone72h": [
+    {
+      "scenario": "closest",
+      "distanceKm": 550630800,
+      "distanceAU": 3.680739554804372,
+      "accelMs2": 32.78313614540466,
+      "accelG": 3.3429495439731878,
+      "deltaVKms": 8497.388888888889,
+      "deltaVMs": 8497388.888888888
+    },
+    {
+      "scenario": "mid",
+      "distanceKm": 811250592.4784523,
+      "distanceAU": 5.4228752634141095,
+      "accelMs2": 48.29976568920827,
+      "accelG": 4.925205415632074,
+      "deltaVKms": 12519.299266642784,
+      "deltaVMs": 12519299.266642783
+    },
+    {
+      "scenario": "farthest",
+      "distanceKm": 1006509200,
+      "distanceAU": 6.728098436764716,
+      "accelMs2": 59.92495903825636,
+      "accelG": 6.110645229334826,
+      "deltaVKms": 15532.54938271605,
+      "deltaVMs": 15532549.38271605
+    }
+  ],
+  "brachistochrone150h": [
+    {
+      "scenario": "closest",
+      "distanceKm": 550630800,
+      "distanceAU": 3.680739554804372,
+      "accelMs2": 7.553234567901234,
+      "accelG": 0.7702155749314226,
+      "deltaVKms": 4078.7466666666664,
+      "deltaVMs": 4078746.6666666665
+    },
+    {
+      "scenario": "mid",
+      "distanceKm": 811250592.4784523,
+      "distanceAU": 5.4228752634141095,
+      "accelMs2": 11.128266014793585,
+      "accelG": 1.1347673277616297,
+      "deltaVKms": 6009.263647988536,
+      "deltaVMs": 6009263.647988535
+    },
+    {
+      "scenario": "farthest",
+      "distanceKm": 1006509200,
+      "distanceAU": 6.728098436764716,
+      "accelMs2": 13.806710562414265,
+      "accelG": 1.4078926608387436,
+      "deltaVKms": 7455.6237037037035,
+      "deltaVMs": 7455623.703703703
+    }
+  ],
+  "reachableWithShipThrust": {
+    "distanceKm": 3429215.9999999995,
+    "distanceAU": 0.02292289311307691
+  },
+  "massSensitivity": [
+    {
+      "label": "48,000 t (48M kg) — as stated",
+      "massKg": 48000000,
+      "accelNormalMs2": 0.20416666666666666,
+      "accelPeakMs2": 0.22291666666666668,
+      "accelNormalG": 0.020819206014966035,
+      "accelPeakG": 0.022731173914299654,
+      "dvNormal72hMs": 52920,
+      "dvPeak72hMs": 57780,
+      "dvNormal72hKms": 52.92,
+      "dvPeak72hKms": 57.78,
+      "reachable72h": {
+        "distanceKm": 3429215.9999999995,
+        "distanceAU": 0.02292289311307691
+      }
+    },
+    {
+      "label": "4,800 t (4.8M kg) — possible typo",
+      "massKg": 4800000,
+      "accelNormalMs2": 2.0416666666666665,
+      "accelPeakMs2": 2.2291666666666665,
+      "accelNormalG": 0.20819206014966035,
+      "accelPeakG": 0.22731173914299652,
+      "dvNormal72hMs": 529200,
+      "dvPeak72hMs": 577800,
+      "dvNormal72hKms": 529.2,
+      "dvPeak72hKms": 577.8,
+      "reachable72h": {
+        "distanceKm": 34292159.99999999,
+        "distanceAU": 0.22922893113076906
+      }
+    },
+    {
+      "label": "480 t (480K kg) — small freighter",
+      "massKg": 480000,
+      "accelNormalMs2": 20.416666666666668,
+      "accelPeakMs2": 22.291666666666668,
+      "accelNormalG": 2.081920601496604,
+      "accelPeakG": 2.2731173914299654,
+      "dvNormal72hMs": 5292000,
+      "dvPeak72hMs": 5778000,
+      "dvNormal72hKms": 5292,
+      "dvPeak72hKms": 5778,
+      "reachable72h": {
+        "distanceKm": 342921600,
+        "distanceAU": 2.292289311307691
+      }
+    },
+    {
+      "label": "48 t (48K kg) — very light",
+      "massKg": 48000,
+      "accelNormalMs2": 204.16666666666666,
+      "accelPeakMs2": 222.91666666666666,
+      "accelNormalG": 20.819206014966035,
+      "accelPeakG": 22.73117391429965,
+      "dvNormal72hMs": 52920000,
+      "dvPeak72hMs": 57780000,
+      "dvNormal72hKms": 52920,
+      "dvPeak72hKms": 57780,
+      "reachable72h": {
+        "distanceKm": 3429216000,
+        "distanceAU": 22.92289311307691
+      }
+    }
+  ],
+  "boundaries": {
+    "massBoundary72h": {
+      "aReqMs2": 32.78313614540466,
+      "aReqG": 3.3429495439731878,
+      "maxMassKg": 298934.18239589944,
+      "maxMassT": 298.9341823958994
+    },
+    "thrustBoundary72h": {
+      "aReqMs2": 32.78313614540466,
+      "aReqG": 3.3429495439731878,
+      "thrustN": 1573590534.9794238,
+      "thrustMN": 1573.5905349794239,
+      "thrustRatioToKestrel": 160.57046275300243
+    },
+    "minTimeAtCanonicalMass": {
+      "accelMs2": 0.20416666666666666,
+      "accelG": 0.020819206014966035,
+      "timeSec": 3284489.113194604,
+      "timeHours": 912.3580869985011,
+      "timeDays": 38.01492029160421
+    },
+    "minTimeAt299t": {
+      "accelMs2": 32.77591973244147,
+      "accelG": 3.3422136746433773,
+      "timeSec": 259228.5330100269,
+      "timeHours": 72.00792583611859,
+      "timeDays": 3.0003302431716077
+    }
+  }
+}
