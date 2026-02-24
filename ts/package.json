@@ -18,6 +18,7 @@
     "extract-dialogue-whisper": "node --experimental-strip-types src/extract-dialogue-from-whisper.ts",
     "process-whisper": "node --experimental-strip-types src/process-whisper-output.ts",
     "compare-transcriptions": "node --experimental-strip-types src/compare-transcriptions.ts",
+    "analyze-costs": "node --experimental-strip-types src/analyze-costs.ts",
     "test:e2e": "npx playwright test"
   },
   "devDependencies": {

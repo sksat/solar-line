@@ -92,6 +92,15 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Session log display**: Separate agent-loop stdout summary from conversation log display. In conversation logs, label the assistant as "Assistant (model)". Support sub-agent display where possible. Link each log to its associated commit(s) with GitHub URLs.
 - **GitHub repo link**: The published GitHub Pages site must include a visible link to the source repository.
 
+## Context Efficiency
+
+- **TodoWrite discipline**: Only update the todo list on state transitions (task start, task complete). Do not update between every tool call.
+- **Background long commands**: Use `run_in_background` for Bash commands that take >30s (yt-dlp, Whisper, cargo build on first run). Check with TaskOutput later.
+- **Subagent model selection**: Default to Haiku for exploration/research subagents. Reserve Sonnet/Opus for complex review or multi-step reasoning tasks.
+- **Subagent scope limits**: Set `max_turns` on Task calls when the exploration scope is bounded (e.g., "find this function" → max_turns: 5).
+- **Prefer dedicated tools in subagents**: Subagent prompts should explicitly prefer Read/Grep/Glob over Bash for file operations. This produces more structured output and uses fewer tokens.
+- **Cost analysis**: Run `npm run analyze-costs` periodically (see `ts/src/analyze-costs.ts`) to track token usage patterns. Keep `ideas/cost_efficiency_analysis.md` updated.
+
 ## Key Principles
 
 - **Document assumptions.** Every analysis depends on assumptions about parameters, data sources, and orbital conditions. Make these explicit in code comments and reports.
