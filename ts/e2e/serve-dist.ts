@@ -8,6 +8,7 @@ import * as path from "node:path";
 
 const PORT = Number(process.env.PORT ?? 3123);
 const ROOT = path.resolve(import.meta.dirname, "..", "..", "dist");
+const TS_ROOT = path.resolve(import.meta.dirname, "..");
 
 const MIME: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -20,7 +21,14 @@ const MIME: Record<string, string> = {
 
 const server = http.createServer((req, res) => {
   let urlPath = decodeURIComponent(new URL(req.url ?? "/", `http://localhost:${PORT}`).pathname);
-  let filePath = path.join(ROOT, urlPath);
+
+  // Serve examples/ and src/ from ts/ directory (for standalone example pages)
+  let filePath: string;
+  if (urlPath.startsWith("/examples/") || urlPath.startsWith("/src/")) {
+    filePath = path.join(TS_ROOT, urlPath);
+  } else {
+    filePath = path.join(ROOT, urlPath);
+  }
 
   // Serve index.html for directories
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {

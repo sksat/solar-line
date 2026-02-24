@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id": "param.ship_mass", "type": "param", "label": "Ship Mass", "status": "valid"},
+    {"id": "param.thrust", "type": "param", "label": "Thrust", "status": "valid"},
+    {"id": "calc.ep01_dv", "type": "calc", "label": "EP01 ΔV", "status": "valid"},
+    {"id": "calc.ep01_time", "type": "calc", "label": "EP01 Transit Time", "status": "valid"},
+    {"id": "report.ep01", "type": "report", "label": "EP01 Report", "status": "stale"}
+  ],
+  "edges": [
+    {"from": "param.ship_mass", "to": "calc.ep01_dv"},
+    {"from": "param.thrust", "to": "calc.ep01_dv"},
+    {"from": "param.ship_mass", "to": "calc.ep01_time"},
+    {"from": "param.thrust", "to": "calc.ep01_time"},
+    {"from": "calc.ep01_dv", "to": "report.ep01"},
+    {"from": "calc.ep01_time", "to": "report.ep01"}
+  ]
+}

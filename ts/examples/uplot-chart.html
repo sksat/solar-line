@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>uPlot Chart Example</title>
+<style>
+body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+.uplot-chart { overflow-x: auto; }
+.uplot-chart .uplot-target { margin: 0 auto; }
+.uplot-chart .u-legend { font-size: 0.85rem; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin: 16px 0; }
+h2 { color: #58a6ff; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.iife.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<h1>uPlot Chart Example</h1>
+
+<h2>Basic Time-Series Chart</h2>
+<div class="card uplot-chart" id="basic-chart">
+<h3>テスト: 推力プロファイル</h3>
+<p>Test thrust profile over time.</p>
+<div class="uplot-data" style="display:none">
+{
+  "xLabel": "経過時間 (h)",
+  "yLabel": "推力 (MN)",
+  "series": [
+    {
+      "label": "実際の推力",
+      "color": "#3fb950",
+      "x": [0, 0.1, 12, 12.1, 24, 24.1, 36],
+      "y": [0, 6.37, 6.37, 0, 0, 6.37, 6.37],
+      "style": "solid"
+    },
+    {
+      "label": "公称推力",
+      "color": "#888888",
+      "x": [0, 36],
+      "y": [9.8, 9.8],
+      "style": "dashed"
+    }
+  ],
+  "thresholds": [
+    {
+      "value": 9.8,
+      "label": "定格 9.8 MN",
+      "color": "#ffaa00",
+      "style": "dashed"
+    }
+  ],
+  "width": 600,
+  "height": 300
+}
+</div>
+<div class="uplot-target"></div>
+</div>
+
+<h2>Chart with Multiple Thresholds</h2>
+<div class="card uplot-chart" id="threshold-chart">
+<h3>ノズル残寿命（テスト）</h3>
+<div class="uplot-data" style="display:none">
+{
+  "xLabel": "経過時間 (h)",
+  "yLabel": "残寿命 (h)",
+  "series": [
+    {
+      "label": "残寿命",
+      "color": "#ff6644",
+      "x": [0, 10, 20, 30, 40, 50],
+      "y": [55, 45, 35, 25, 15, 5],
+      "style": "solid"
+    }
+  ],
+  "thresholds": [
+    {
+      "value": 0,
+      "label": "消失",
+      "color": "#ff0000",
+      "style": "dashed"
+    },
+    {
+      "value": 10,
+      "label": "警告域",
+      "color": "#ffaa00",
+      "style": "dashed"
+    }
+  ],
+  "width": 600,
+  "height": 250
+}
+</div>
+<div class="uplot-target"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (typeof uPlot === "undefined") return;
+  document.querySelectorAll(".uplot-chart").forEach(function(el) {
+    var dataEl = el.querySelector(".uplot-data");
+    if (!dataEl) return;
+    var cfg = JSON.parse(dataEl.textContent);
+    var series = [{}];
+    cfg.series.forEach(function(s) {
+      series.push({ label: s.label, stroke: s.color, width: 2, dash: s.style === "dashed" ? [6, 3] : undefined });
+    });
+    var data = [cfg.series[0].x];
+    cfg.series.forEach(function(s) { data.push(s.y); });
+    var thresholdPlugin = cfg.thresholds && cfg.thresholds.length ? {
+      hooks: { draw: [function(u) {
+        var ctx = u.ctx;
+        cfg.thresholds.forEach(function(t) {
+          var yPos = u.valToPos(t.value, "y", true);
+          ctx.save();
+          ctx.strokeStyle = t.color;
+          ctx.lineWidth = 1.5;
+          if (t.style === "dashed") ctx.setLineDash([6, 3]);
+          ctx.beginPath();
+          ctx.moveTo(u.bbox.left, yPos);
+          ctx.lineTo(u.bbox.left + u.bbox.width, yPos);
+          ctx.stroke();
+          ctx.fillStyle = t.color;
+          ctx.font = "11px sans-serif";
+          ctx.textAlign = "right";
+          ctx.fillText(t.label, u.bbox.left + u.bbox.width - 4, yPos - 4);
+          ctx.restore();
+        });
+      }] }
+    } : undefined;
+    var plugins = thresholdPlugin ? [thresholdPlugin] : [];
+    var opts = {
+      width: cfg.width || 600,
+      height: cfg.height || 300,
+      plugins: plugins,
+      axes: [
+        { label: cfg.xLabel, stroke: "#aaa", grid: { stroke: "#333" } },
+        { label: cfg.yLabel, stroke: "#aaa", grid: { stroke: "#333" } }
+      ],
+      series: series
+    };
+    var target = el.querySelector(".uplot-target");
+    new uPlot(opts, data, target);
+  });
+});
+</script>
+</body>
+</html>

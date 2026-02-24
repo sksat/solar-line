@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Bar Chart Example</title>
+<style>
+body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin: 16px 0; }
+.bar-chart { margin: 16px 0; }
+.bar-row { display: flex; align-items: center; margin: 6px 0; gap: 8px; }
+.bar-label { width: 200px; text-align: right; font-size: 0.9em; }
+.bar-container { flex: 1; height: 24px; background: #21262d; border-radius: 3px; position: relative; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.bar-value { font-size: 0.85em; color: #8b949e; min-width: 60px; }
+.bar-annotation { font-size: 0.8em; color: #8b949e; }
+h2 { color: #58a6ff; }
+</style>
+</head>
+<body>
+<h1>Bar Chart Example</h1>
+
+<h2>Linear Scale Bar Chart</h2>
+<div class="card" id="linear-chart">
+<h3>マージン縮小の系列</h3>
+<div class="bar-chart">
+  <div class="bar-row">
+    <span class="bar-label">EP02 脱出速度</span>
+    <div class="bar-container"><div class="bar-fill" style="width:2.9%;background:#3fb950"></div></div>
+    <span class="bar-value">2.9%</span>
+    <span class="bar-annotation">0.53 km/s余裕</span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-label">EP03 航法精度</span>
+    <div class="bar-container"><div class="bar-fill" style="width:1.23%;background:#58a6ff"></div></div>
+    <span class="bar-value">1.23%</span>
+    <span class="bar-annotation">1.23°偏差</span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-label">EP04 シールド時間</span>
+    <div class="bar-container"><div class="bar-fill" style="width:43%;background:#f0883e"></div></div>
+    <span class="bar-value">43%</span>
+    <span class="bar-annotation">6分余裕/14分</span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-label">EP05 ノズル寿命</span>
+    <div class="bar-container"><div class="bar-fill" style="width:0.78%;background:#f85149"></div></div>
+    <span class="bar-value">0.78%</span>
+    <span class="bar-annotation">26分余裕/55h38m</span>
+  </div>
+</div>
+</div>
+
+<h2>Log Scale Bar Chart</h2>
+<div class="card" id="log-chart">
+<h3>各話の主要遷移時間</h3>
+<div class="bar-chart">
+  <div class="bar-row">
+    <span class="bar-label">EP01 火星→ガニメデ</span>
+    <div class="bar-container"><div class="bar-fill" style="width:45%;background:#58a6ff"></div></div>
+    <span class="bar-value">72 h</span>
+    <span class="bar-annotation">3日</span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-label">EP03 エンケラドス→タイタニア</span>
+    <div class="bar-container"><div class="bar-fill" style="width:52%;background:#f0883e"></div></div>
+    <span class="bar-value">143 h</span>
+    <span class="bar-annotation">6日</span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-label">EP04-05 天王星→地球</span>
+    <div class="bar-container"><div class="bar-fill" style="width:65%;background:#f85149"></div></div>
+    <span class="bar-value">507 h</span>
+    <span class="bar-annotation">21日</span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-label">EP02 木星→土星（弾道）</span>
+    <div class="bar-container"><div class="bar-fill" style="width:100%;background:#3fb950"></div></div>
+    <span class="bar-value">10920 h</span>
+    <span class="bar-annotation">455日</span>
+  </div>
+</div>
+</div>
+</body>
+</html>

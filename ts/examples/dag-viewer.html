@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>DAG Viewer Example</title>
+<style>
+body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin: 16px 0; }
+.dag-section { margin: 16px 0; }
+.dag-section svg { display: block; margin: 0 auto; background: #0d1117; }
+.dag-controls { margin: 8px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.dag-controls button { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 12px; cursor: pointer; border-radius: 4px; font-size: 0.85em; }
+.dag-controls button:hover { background: #30363d; }
+.dag-controls button.active { background: #58a6ff; color: #0d1117; }
+.dag-tooltip { position: absolute; background: #161b22; border: 1px solid #58a6ff; padding: 8px 12px; border-radius: 4px; font-size: 0.85em; display: none; pointer-events: none; z-index: 10; }
+h2 { color: #58a6ff; }
+</style>
+</head>
+<body>
+<h1>DAG Viewer Example</h1>
+
+<h2>Minimal DAG</h2>
+<div class="card">
+<p>A small dependency graph for testing the DAG viewer rendering and interaction.</p>
+<div class="dag-section" id="test-dag"
+     data-dag-url="dag-test-data.json"
+     data-dag-snapshots-url="">
+</div>
+</div>
+
+<div class="dag-tooltip" id="dag-tooltip"></div>
+
+<script src="../src/dag-viewer.js"></script>
+</body>
+</html>
