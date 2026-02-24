@@ -613,6 +613,130 @@ pub fn propagate_adaptive_brachistochrone(
 }
 
 // ---------------------------------------------------------------------------
+// Communications analysis
+// ---------------------------------------------------------------------------
+
+/// Speed of light in km/s (exact, per SI definition).
+#[wasm_bindgen]
+pub fn speed_of_light() -> f64 {
+    solar_line_core::comms::C_KM_S
+}
+
+/// One-way light time (seconds) for a given distance in km.
+#[wasm_bindgen]
+pub fn light_time_seconds(distance_km: f64) -> f64 {
+    solar_line_core::comms::light_time_seconds(Km(distance_km))
+}
+
+/// One-way light time (minutes) for a given distance in km.
+#[wasm_bindgen]
+pub fn light_time_minutes(distance_km: f64) -> f64 {
+    solar_line_core::comms::light_time_minutes(Km(distance_km))
+}
+
+/// Round-trip light time (seconds) for a given distance in km.
+#[wasm_bindgen]
+pub fn round_trip_light_time(distance_km: f64) -> f64 {
+    solar_line_core::comms::round_trip_light_time(Km(distance_km))
+}
+
+/// One-way light delay (seconds) between two planets at a given Julian Date.
+#[wasm_bindgen]
+pub fn planet_light_delay(planet1: &str, planet2: &str, jd: f64) -> Result<f64, JsError> {
+    let p1 = parse_planet(planet1)?;
+    let p2 = parse_planet(planet2)?;
+    Ok(solar_line_core::comms::planet_light_delay(p1, p2, jd))
+}
+
+/// One-way light delay (seconds) between a ship at (x,y) heliocentric km and a planet.
+#[wasm_bindgen]
+pub fn ship_planet_light_delay(
+    ship_x: f64,
+    ship_y: f64,
+    planet: &str,
+    jd: f64,
+) -> Result<f64, JsError> {
+    let p = parse_planet(planet)?;
+    Ok(solar_line_core::comms::ship_planet_light_delay(ship_x, ship_y, p, jd))
+}
+
+/// Distance range (min, max in km) between two planets.
+/// Returns [min_km, max_km].
+#[wasm_bindgen]
+pub fn planet_distance_range(planet1: &str, planet2: &str) -> Result<Box<[f64]>, JsError> {
+    let p1 = parse_planet(planet1)?;
+    let p2 = parse_planet(planet2)?;
+    let (min, max) = solar_line_core::comms::planet_distance_range(p1, p2);
+    Ok(Box::new([min.value(), max.value()]))
+}
+
+/// Light delay range (min, max in seconds) between two planets.
+/// Returns [min_s, max_s].
+#[wasm_bindgen]
+pub fn planet_light_delay_range(planet1: &str, planet2: &str) -> Result<Box<[f64]>, JsError> {
+    let p1 = parse_planet(planet1)?;
+    let p2 = parse_planet(planet2)?;
+    let (min, max) = solar_line_core::comms::planet_light_delay_range(p1, p2);
+    Ok(Box::new([min, max]))
+}
+
+/// Free-space path loss in dB.
+/// distance_km in km, freq_hz in Hz.
+#[wasm_bindgen]
+pub fn free_space_path_loss_db(distance_km: f64, freq_hz: f64) -> f64 {
+    solar_line_core::comms::free_space_path_loss_db(distance_km, freq_hz)
+}
+
+/// Classify communication feasibility based on one-way delay (seconds).
+/// Returns a Japanese label string.
+#[wasm_bindgen]
+pub fn comm_feasibility_label(one_way_delay_s: f64) -> String {
+    solar_line_core::comms::CommFeasibility::classify(one_way_delay_s)
+        .label_ja()
+        .to_string()
+}
+
+/// Compute communication timeline along a linear route between two planets.
+/// Returns a flat array: [jd, elapsed_s, ship_x, ship_y, delay_to_earth_s, feasibility_code, ...]
+/// feasibility_code: 0=RealTime, 1=NearRealTime, 2=Delayed, 3=DeepSpace
+#[wasm_bindgen]
+pub fn comm_timeline_linear(
+    departure: &str,
+    arrival: &str,
+    departure_jd: f64,
+    travel_time_s: f64,
+    n_steps: usize,
+) -> Result<Box<[f64]>, JsError> {
+    use solar_line_core::comms::CommFeasibility;
+
+    let dep = parse_planet(departure)?;
+    let arr = parse_planet(arrival)?;
+    let entries = solar_line_core::comms::comm_timeline_linear(
+        dep,
+        arr,
+        departure_jd,
+        travel_time_s,
+        n_steps,
+    );
+
+    let mut result = Vec::with_capacity(entries.len() * 6);
+    for e in &entries {
+        result.push(e.jd);
+        result.push(e.elapsed_s);
+        result.push(e.ship_x);
+        result.push(e.ship_y);
+        result.push(e.delay_to_earth_s);
+        result.push(match e.feasibility {
+            CommFeasibility::RealTime => 0.0,
+            CommFeasibility::NearRealTime => 1.0,
+            CommFeasibility::Delayed => 2.0,
+            CommFeasibility::DeepSpace => 3.0,
+        });
+    }
+    Ok(result.into_boxed_slice())
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 
@@ -920,5 +1044,47 @@ mod tests {
         // Should have multiple 4-float tuples (t, x, y, z)
         assert!(result.len() >= 8, "trajectory should have at least 2 points");
         assert_eq!(result.len() % 4, 0, "trajectory should be [t,x,y,z] tuples");
+    }
+
+    // ── Communications WASM tests ───────────────────────────────────
+
+    #[test]
+    fn test_wasm_speed_of_light() {
+        let c = speed_of_light();
+        assert!((c - 299_792.458).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_wasm_light_time_1au() {
+        let au = 149_597_870.7;
+        let delay = light_time_seconds(au);
+        assert!((delay - 499.0).abs() < 0.5, "1 AU delay = {:.1}s", delay);
+    }
+
+    #[test]
+    fn test_wasm_light_time_minutes() {
+        let au = 149_597_870.7;
+        let mins = light_time_minutes(au);
+        assert!((mins - 8.317).abs() < 0.01, "1 AU = {:.3} min", mins);
+    }
+
+    #[test]
+    fn test_wasm_comm_feasibility_label() {
+        let label = comm_feasibility_label(1.0);
+        assert!(label.contains("リアルタイム"));
+        let label2 = comm_feasibility_label(3600.0);
+        assert!(label2.contains("深宇宙"));
+    }
+
+    #[test]
+    fn test_wasm_comm_timeline_format() {
+        let jd = 2_451_545.0; // J2000
+        let result = comm_timeline_linear("mars", "jupiter", jd, 72.0 * 3600.0, 5).unwrap();
+        // 6 entries * 6 floats each = 36
+        assert_eq!(result.len(), 36, "timeline length = {}", result.len());
+        // First entry elapsed should be 0
+        assert!((result[1] - 0.0).abs() < 1e-10);
+        // Last entry elapsed should be travel time
+        assert!((result[31] - 72.0 * 3600.0).abs() < 1e-6);
     }
 }
