@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "description": "Cross-reference of EP02 on-screen navigation data with existing analysis and worldbuilding context",
+    "source": "reports/data/episodes/ep02_onscreen_data.json (Task 148)",
+    "date": "2026-02-24"
+  },
+  "subtitleVsHud": {
+    "jupiterDepartureVelocity": {
+      "subtitle": "木星基準速度10.3キロメートル毎秒 (09:11)",
+      "hud": "No direct HUD display (location label scene, not navigation display)",
+      "dialogue": "ep02-dl-078: 高度50RJ、木星基準速度10.3 km/s",
+      "verdict": "Subtitle and dialogue match. No HUD display to compare — the 10.3 km/s parameter comes from dialogue/subtitle, not an instrument panel."
+    },
+    "orbitalCrossVelocity": {
+      "subtitle": "相対速度0.12キロメートル毎秒 (16:40)",
+      "hud": "RELATIVE VELOCITY: -0.12 km/s (NAVIGATION OVERVIEW, 16:37)",
+      "dialogue": "ep02-dl-124: 軌道交差警告。衝突の危険あり。相対速度0.12 km/s",
+      "comparison": {
+        "match": true,
+        "signDifference": "HUD shows -0.12 (negative = approaching), subtitle/dialogue shows unsigned 0.12",
+        "verdict": "EXACT MATCH — HUD display, subtitle, and dialogue all report 0.12 km/s. The negative sign on the HUD indicates closing velocity (approaching)."
+      }
+    }
+  },
+  "navigationOverviewAnalysis": {
+    "timestamp": "16:37-16:40",
+    "displayElements": {
+      "systemHeader": "NAVIGATION OVERVIEW",
+      "operatingAuthority": {
+        "name": "MARS PORT AUTHORITY",
+        "abbreviation": "MPA",
+        "interpretation": "火星港湾公社 — ケストレル号が火星系の管轄船であることを示す。火星自治連邦の港湾管理組織。"
+      },
+      "shipIdentification": {
+        "fullId": "MTS-9907/EXT-P17",
+        "breakdown": {
+          "MTS": "Mars Transport Ship（火星輸送船）— 推定",
+          "9907": "登録番号",
+          "EXT-P17": "外縁パス17（Exterior Path 17）— 推定。外縁航路の航行許可番号の可能性"
+        }
+      },
+      "alertSystem": {
+        "name": "COIAS",
+        "type": "ORBITAL CROSS ALERT",
+        "realWorldAnalogue": "COIAS（Comet & Object Identification & Analysis System）は日本のすばる望遠鏡で使用される小天体検出システムの名称と一致。作品世界では軌道交差警報システムとして転用されている。"
+      },
+      "orbitalDiagram": {
+        "center": "SATURN",
+        "visibleOrbits": ["CELADUS ORBIT (= Enceladus)"],
+        "visibleBodies": ["S2-ENCELADUS"],
+        "maneuverLabel": "OVERS BURN",
+        "interpretation": "OVERS BURNは「overshoot burn」（オーバーシュート修正噴射）の略と推定。EP01のPERIJOVE OVERSHOT CORRECTIONと概念的に対応する。エンケラドス軌道通過後の軌道修正噴射を示す。"
+      },
+      "vesselIds": {
+        "kestrel": "MTS-9907/EXT-P17",
+        "unknownShip": {
+          "displayedAs": "MPA-MC-SCV-02814",
+          "breakdown": {
+            "MPA": "Mars Port Authority — 同じ管轄下の船",
+            "MC": "不明（Military Command? Marine Corps? Mass Carrier?）",
+            "SCV": "不明（Supply Carrier Vessel? Security Control Vessel?）",
+            "02814": "登録番号"
+          },
+          "implication": "大型船もMPAの管轄下にあるIDを持つ。つまり火星系の船であり、きりたんの「地球か火星の船しかありえない」という推定と一致する。ただし、意図的に偽装IDを使用している可能性も否定できない。"
+        }
+      }
+    }
+  },
+  "locationLabelsAnalysis": {
+    "labels": [
+      {
+        "location": "木星離脱航路 (イオ・トーラス外縁スカート付近)",
+        "jurisdiction": "木星港湾公社 / 木星圏",
+        "timestamp": "06:58",
+        "physicalContext": "イオ・プラズマトーラスの外縁。イオの火山活動により木星磁気圏内に形成される環状のプラズマ帯。外縁スカートは約8-12 RJに位置し、放射線環境は比較的穏やか。"
+      },
+      {
+        "location": "木星離脱航路 (木星磁気圏縁ゲート)",
+        "jurisdiction": "木星港湾公社 / 木星圏",
+        "timestamp": "09:07",
+        "physicalContext": "木星磁気圏の境界（magnetopause）付近。約50-100 RJに位置。50 RJという高度はこの境界域の内側に相当し、「ゲート」は磁気圏を出入りする際のチェックポイントを示唆。"
+      },
+      {
+        "location": "エンケラドゥス・リレー",
+        "jurisdiction": "国際連合・火星自治連邦保護領 / 土星圏",
+        "timestamp": "13:27",
+        "physicalContext": "エンケラドスの軌道上または近傍の中継基地。「保護領」は国際連合と火星自治連邦の共同管轄を示し、土星圏が辺境であることを示唆。"
+      }
+    ],
+    "jurisdictionImplications": "木星圏は「木星港湾公社」が管轄（火星系の機関と推定）。土星圏は「国際連合・火星自治連邦保護領」。保護領という表現は、人口の希薄な辺境宙域であることを示す。地球圏・火星圏の船が木星圏に存在するのは管轄権の行使と整合する。"
+  },
+  "detectionMethodAnalysis": {
+    "method": "背景恒星観測による恒星掩蔽検知",
+    "realWorldAnalogue": "恒星掩蔽（stellar occultation）は実際の天文学で広く使用される。矮小惑星の発見、惑星環の発見（天王星の環はバウエール掩蔽で発見）、大気組成の分析に使われる。作中では、トランスポンダと航法灯を切った暗い船を、背景恒星の遮蔽パターンから検知する。",
+    "physicalPlausibility": "高い。恒星掩蔽は受動的検出法であり、電磁波を発しない物体でも検出可能。ただし、3 kmの距離で50万t級（推定数百メートル規模）の船の掩蔽を天文モニターで検出するには、高精度の恒星追尾カメラが必要。SF的に合理的な設定。"
+  }
+}

@@ -785,6 +785,21 @@
       "summary": "**エンケラドスは物語上の選択であると同時に、物理的にも最適解だった。** 最小捕捉ΔV 0.61 km/sは全主要衛星軌道の中で最低値。オーベルト効果の帰結——重力井戸が深いほど「束縛化」に必要なΔVが小さくなる。逆説的に、「より近い」（低い）軌道への捕捉の方が容易であり、SOI境界付近での捕捉はΔVが6倍。損傷状態のケストレル号にとって、エンケラドスは「最も低コストな港」であった。エンケラドスの管理人との再会という物語上の動機と、軌道力学の最適解が一致している点は、作品の科学的整合性の高さを示す。"
     }
   ],
+  "onScreenDataExploration": {
+    "id": "ep02-exploration-05",
+    "transferId": "ep02-transfer-05",
+    "question": "NAVIGATION OVERVIEW画面から読み取れる船舶運航インフラとは？",
+    "summary": "EP02 16:37のNAVIGATION OVERVIEW画面は、SOLAR LINE世界の宇宙船舶運航インフラを初めて具体的に描写している。火星港湾公社（MARS PORT AUTHORITY）がケストレルの運航管理を担い、COIAS軌道交差警報システムが衝突回避を自動監視する。ケストレルの船籍番号MTS-9907/EXT-P17は「火星輸送船9907号/外縁パス17」と解読でき、大型船のID MPA-MC-SCV-02814も火星港湾公社の管轄IDであることから、待ち伏せした船が火星系の船であることが裏付けられる。恒星掩蔽による暗船検知は実天文学で使用される手法であり、作品の科学的ディテールの深さを示す。",
+    "keyFindings": [
+      "ケストレル船籍番号: MTS-9907/EXT-P17（MTS = Mars Transport Ship推定）",
+      "運航管理: MARS PORT AUTHORITY（火星港湾公社）",
+      "衝突回避: COIASシステム（実在のすばる望遠鏡小天体検出システムと同名）",
+      "大型船ID: MPA-MC-SCV-02814（MPA = Mars Port Authority管轄）",
+      "OVERS BURN: オーバーシュート修正噴射（EP01のPERIJOVE OVERSHOT CORRECTIONに対応）",
+      "字幕とHUD表示の二重確認: 相対速度0.12 km/sが完全一致",
+      "恒星掩蔽検知: 実天文学の手法を宇宙船検知に応用"
+    ]
+  },
   "timeSeriesCharts": [
     {
       "id": "ep02-chart-velocity-profile",
