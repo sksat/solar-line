@@ -620,6 +620,31 @@ footer {
 .transfer-summary { border-left: 3px solid var(--accent); }
 .transfer-summary .detail-link { font-weight: 600; }
 .detail-badge { display: inline-block; background: #1f2937; color: #8b949e; font-size: 0.75rem; padding: 0.1em 0.5em; border-radius: 10px; margin-left: 0.3em; vertical-align: middle; }
+.explorer-status { padding: 0.5rem 1rem; border-radius: 4px; background: #1f2937; color: #58a6ff; font-size: 0.9rem; }
+.explorer-status.explorer-error { color: #f85149; background: #2d1518; }
+.explorer-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.preset-btn { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 4px; padding: 0.4rem 0.8rem; cursor: pointer; font-size: 0.85rem; transition: border-color 0.15s; }
+.preset-btn:hover { border-color: #58a6ff; color: #58a6ff; }
+.explorer-query { width: 100%; background: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 4px; padding: 0.75rem; font-family: monospace; font-size: 0.9rem; resize: vertical; box-sizing: border-box; }
+.explorer-query:focus { outline: none; border-color: #58a6ff; }
+.explorer-input-wrap { display: flex; flex-direction: column; gap: 0.5rem; }
+.explorer-actions { display: flex; gap: 0.5rem; }
+.explorer-btn { background: #238636; color: #fff; border: 1px solid #2ea043; border-radius: 4px; padding: 0.4rem 1rem; cursor: pointer; font-size: 0.85rem; }
+.explorer-btn:hover { background: #2ea043; }
+.explorer-btn-secondary { background: #21262d; color: #c9d1d9; border-color: #30363d; }
+.explorer-btn-secondary:hover { background: #30363d; }
+.explorer-tables dt { font-weight: 600; margin-top: 0.5rem; }
+.explorer-tables dd { margin-left: 1rem; color: #8b949e; font-size: 0.9rem; }
+.explorer-table-wrap { overflow-x: auto; max-height: 500px; overflow-y: auto; }
+.explorer-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.explorer-table th { background: #161b22; position: sticky; top: 0; padding: 0.4rem 0.6rem; border-bottom: 2px solid #30363d; text-align: left; white-space: nowrap; }
+.explorer-table td { padding: 0.3rem 0.6rem; border-bottom: 1px solid #21262d; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.explorer-table tr:hover td { background: #161b22; }
+.explorer-result-meta { color: #8b949e; font-size: 0.85rem; margin-bottom: 0.5rem; }
+.explorer-empty { color: #8b949e; font-style: italic; }
+.explorer-truncated { color: #d29922; font-size: 0.85rem; }
+.null-val { color: #484f58; font-style: italic; }
+.explorer-chart-area { margin: 1rem 0; }
 `;
 
 /** Wrap content in the common HTML layout */
@@ -643,6 +668,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
     `<a href="${basePath}/meta/tasks.html">タスク状況</a>`,
     `<a href="${basePath}/meta/adr/index.html">ADR</a>`,
     `<a href="${basePath}/meta/ideas/index.html">アイデア</a>`,
+    `<a href="${basePath}/explorer/index.html">データ探索</a>`,
   ];
   const metaNav = `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">この考証について</button><span class="nav-dropdown-menu">${metaLinks.join("")}</span></span>`;
   const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考察`;
@@ -2572,4 +2598,53 @@ export function renderIdeaPage(idea: IdeaRenderEntry, summaryPages?: SiteManifes
 <div class="card">${markdownToHtml(idea.content)}</div>`;
 
   return layoutHtml(idea.title, content, "../..", summaryPages, idea.title, navEpisodes, metaPages);
+}
+
+/** Render the DuckDB-WASM data explorer page */
+export function renderExplorerPage(summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const content = `
+<h1>データエクスプローラー</h1>
+<p>DuckDB-WASM を使用して、SOLAR LINE 考察の全データを SQL で探索できます。</p>
+
+<div class="card">
+<div id="explorer-status" class="explorer-status">初期化中…</div>
+</div>
+
+<div class="card">
+<h3>プリセットクエリ</h3>
+<div id="explorer-presets" class="explorer-presets"></div>
+</div>
+
+<div class="card">
+<h3>SQL クエリ</h3>
+<div class="explorer-input-wrap">
+<textarea id="explorer-query" class="explorer-query" rows="4" placeholder="SELECT * FROM transfers LIMIT 10">SELECT episode, id, description, computedDeltaV AS dv_km_s, verdict FROM transfers ORDER BY episode, id</textarea>
+<div class="explorer-actions">
+<button id="explorer-exec" class="explorer-btn">実行 (Ctrl+Enter)</button>
+<button id="explorer-schema" class="explorer-btn explorer-btn-secondary">スキーマ表示</button>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h3>テーブル一覧</h3>
+<dl class="explorer-tables">
+<dt><code>transfers</code></dt>
+<dd>全エピソードの軌道遷移データ（id, episode, description, computedDeltaV, verdict, param_* 等）</dd>
+<dt><code>dialogue</code></dt>
+<dd>話者帰属済みの台詞データ（episode, speakerName, text, startMs, endMs 等）</dd>
+<dt><code>dag_nodes</code></dt>
+<dd>分析依存グラフのノード（id, label, type, status）</dd>
+<dt><code>dag_edges</code></dt>
+<dd>分析依存グラフのエッジ（from, to）</dd>
+</dl>
+</div>
+
+<div id="explorer-chart" class="explorer-chart-area"></div>
+<div id="explorer-result" class="explorer-result"></div>
+
+<meta name="base-path" content="..">
+<script defer src="../duckdb-explorer.js"></script>`;
+
+  return layoutHtml("データエクスプローラー", content, "..", summaryPages, "DuckDB-WASM によるデータ探索ツール", navEpisodes, metaPages);
 }

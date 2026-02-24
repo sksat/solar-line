@@ -26,8 +26,10 @@ import {
   renderADRPage,
   renderIdeasIndex,
   renderIdeaPage,
+  renderExplorerPage,
   type NavEpisode,
 } from "./templates.ts";
+import { generateExplorerData } from "./generate-explorer-data.ts";
 
 export interface BuildConfig {
   /** Directory containing reports/data/ and reports/logs/ */
@@ -666,6 +668,21 @@ export function build(config: BuildConfig): void {
         renderIdeaPage(idea, manifest.summaryPages, navEpisodes, manifest.metaPages),
       );
     }
+  }
+
+  // Generate data explorer page and data
+  ensureDir(path.join(outDir, "explorer"));
+  fs.writeFileSync(
+    path.join(outDir, "explorer", "index.html"),
+    renderExplorerPage(manifest.summaryPages, navEpisodes, manifest.metaPages),
+  );
+  const explorerData = generateExplorerData(dataDir);
+  fs.writeFileSync(path.join(outDir, "explorer-data.json"), JSON.stringify(explorerData));
+
+  // Copy DuckDB explorer JS
+  const explorerSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "duckdb-explorer.js");
+  if (fs.existsSync(explorerSrc)) {
+    fs.copyFileSync(explorerSrc, path.join(outDir, "duckdb-explorer.js"));
   }
 
   // Write manifest JSON (useful for WASM-interactive pages later)

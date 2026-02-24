@@ -1,6 +1,6 @@
 # Task 105: DuckDB-WASM によるデータ管理基盤
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 

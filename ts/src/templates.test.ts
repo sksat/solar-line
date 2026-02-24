@@ -35,6 +35,7 @@ import {
   timestampLink,
   renderTimeSeriesChart,
   renderTimeSeriesCharts,
+  renderExplorerPage,
   REPORT_CSS,
 } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart } from "./report-types.ts";
@@ -3644,5 +3645,41 @@ describe("renderEpisode with detailPages", () => {
     const html = renderEpisode(normalReport);
     assert.ok(!html.includes('class="card transfer-summary"'), "should not have summary card elements");
     assert.ok(!html.includes("詳細ページ"), "should not have detail badges in TOC");
+  });
+});
+
+// --- renderExplorerPage ---
+
+describe("renderExplorerPage", () => {
+  it("renders page with all required elements", () => {
+    const html = renderExplorerPage();
+    assert.ok(html.includes("データエクスプローラー"), "should have title");
+    assert.ok(html.includes("explorer-status"), "should have status element");
+    assert.ok(html.includes("explorer-query"), "should have query textarea");
+    assert.ok(html.includes("explorer-exec"), "should have execute button");
+    assert.ok(html.includes("explorer-schema"), "should have schema button");
+    assert.ok(html.includes("explorer-presets"), "should have presets container");
+    assert.ok(html.includes("explorer-result"), "should have result container");
+    assert.ok(html.includes("explorer-chart"), "should have chart container");
+    assert.ok(html.includes("duckdb-explorer.js"), "should load explorer script");
+  });
+
+  it("documents all tables", () => {
+    const html = renderExplorerPage();
+    assert.ok(html.includes("transfers"), "should document transfers table");
+    assert.ok(html.includes("dialogue"), "should document dialogue table");
+    assert.ok(html.includes("dag_nodes"), "should document dag_nodes table");
+    assert.ok(html.includes("dag_edges"), "should document dag_edges table");
+  });
+
+  it("includes base-path meta tag", () => {
+    const html = renderExplorerPage();
+    assert.ok(html.includes('name="base-path"'), "should have base-path meta tag");
+  });
+
+  it("nav link to explorer appears in layout", () => {
+    const html = layoutHtml("Test", "<p>content</p>");
+    assert.ok(html.includes("データ探索"), "nav should include explorer link");
+    assert.ok(html.includes("explorer/index.html"), "nav should link to explorer page");
   });
 });
