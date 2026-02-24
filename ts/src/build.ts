@@ -382,6 +382,15 @@ export function build(config: BuildConfig): void {
   if (fs.existsSync(dagStateSrc)) {
     fs.copyFileSync(dagStateSrc, path.join(outDir, "dag-state.json"));
   }
+  // Copy DAG snapshots for historical viewer
+  const dagSnapshotDir = path.resolve(path.dirname(import.meta.filename ?? ""), "../../dag/log/snapshots");
+  if (fs.existsSync(dagSnapshotDir)) {
+    const snapshotOutDir = path.join(outDir, "dag-snapshots");
+    fs.mkdirSync(snapshotOutDir, { recursive: true });
+    for (const f of fs.readdirSync(dagSnapshotDir)) {
+      fs.copyFileSync(path.join(dagSnapshotDir, f), path.join(snapshotOutDir, f));
+    }
+  }
 
   // Copy rustdoc if available
   const rustdocCandidates = [

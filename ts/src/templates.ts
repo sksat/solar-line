@@ -291,6 +291,12 @@ pre code.hljs { background: transparent; padding: 0; }
 .dag-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 0.8em; padding: 0.5rem; }
 .dag-legend-item { display: flex; align-items: center; gap: 0.3rem; }
 .dag-legend-item .swatch { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--border); }
+.dag-filter-bar { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+.dag-filter-btn { background: transparent; border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.6rem; font-size: 0.8em; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; }
+.dag-filter-btn:hover { background: var(--border); color: var(--text-primary); }
+.dag-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.dag-node-count { margin-left: auto; font-size: 0.75em; color: var(--text-secondary); }
+.dag-snapshot-select { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.4rem; font-size: 0.75em; color: var(--text-secondary); cursor: pointer; }
 code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
 p code { background: var(--surface); padding: 0.2em 0.4em; border-radius: 3px; }
 ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }

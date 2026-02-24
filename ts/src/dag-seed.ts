@@ -22,6 +22,7 @@ import {
 } from "./dag.ts";
 
 const STATE_FILE = path.resolve(import.meta.dirname ?? ".", "../../dag/state.json");
+const SNAPSHOT_DIR = path.resolve(import.meta.dirname ?? ".", "../../dag/log/snapshots");
 
 function seed(): DagState {
   const dag = createEmptyDag();
@@ -161,10 +162,28 @@ const dag = seed();
 fs.mkdirSync(path.dirname(STATE_FILE), { recursive: true });
 fs.writeFileSync(STATE_FILE, JSON.stringify(dag, null, 2) + "\n");
 
+// Save timestamped snapshot
+fs.mkdirSync(SNAPSHOT_DIR, { recursive: true });
+const now = new Date();
+const ts = now.toISOString().replace(/[:.]/g, "-").slice(0, 19);
+const nodeCount = Object.keys(dag.nodes).length;
+const edgeCount = Object.values(dag.nodes).reduce((s, n) => s + n.dependsOn.length, 0);
+const snapshotFile = path.join(SNAPSHOT_DIR, `${ts}.json`);
+fs.writeFileSync(snapshotFile, JSON.stringify(dag) + "\n");
+
+// Update snapshot manifest
+const manifestFile = path.join(SNAPSHOT_DIR, "manifest.json");
+const manifest: Array<{ timestamp: string; file: string; nodes: number; edges: number }> = fs.existsSync(manifestFile)
+  ? JSON.parse(fs.readFileSync(manifestFile, "utf-8"))
+  : [];
+manifest.push({ timestamp: now.toISOString(), file: `${ts}.json`, nodes: nodeCount, edges: edgeCount });
+fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2) + "\n");
+
 console.log(summarize(dag));
 const issues = validate(dag);
 if (issues.length > 0) {
   console.log("\nValidation issues:");
   for (const i of issues) console.log(`  ${i}`);
 }
-console.log("\nDAG seeded successfully → dag/state.json");
+console.log(`\nDAG seeded successfully → dag/state.json`);
+console.log(`Snapshot saved → ${path.relative(process.cwd(), snapshotFile)}`);

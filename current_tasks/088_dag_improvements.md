@@ -1,6 +1,6 @@
 # Task 088: DAG Viewer & Management Improvements
 
-## Status: IN_PROGRESS (Phases 3-4 done)
+## Status: DONE
 
 ## Motivation
 
@@ -11,6 +11,23 @@ Human directives:
 - DAGの依存関係を張り替えるような操作もやりやすくしておくこと
 
 ## Completed
+
+### Phase 1: DAG Type Separation (viewer) ✅
+- Filter bar with tabs: 全体, EP01-05, 横断分析
+- Per-episode filter shows episode nodes + their parameter/source dependencies
+- 横断分析 (cross-cutting) shows shared params, cross-episode analyses, summary reports
+- "開発タスク" tab auto-appears when task-type nodes exist in the DAG
+- Episode background grouping in 全体 view: colored regions with EP labels
+- Node/edge count shown in filter bar
+- Legend adapts to visible node types and statuses
+
+### Phase 2: Historical DAG Viewer ✅
+- Timestamped snapshots saved on each `npm run dag:seed` invocation
+- Snapshots stored in `dag/log/snapshots/` with `manifest.json` index
+- Build copies snapshots to `dist/dag-snapshots/` for browser access
+- Dropdown selector in viewer: "履歴" → date/time (Nodes/Edges) options
+- Selecting a historical snapshot re-renders the graph with that state
+- "最新" option returns to current state
 
 ### Phase 3: Comprehensive DAG Review ✅
 Audit findings and fixes:
@@ -25,18 +42,6 @@ Audit findings and fixes:
 - Added `rewire` CLI command: `npm run dag -- rewire <node> --from <old-dep> --to <new-dep>`
 - Both commands log events to `dag/log/events.jsonl`
 - Error handling: throws if dependency doesn't exist
-
-## Remaining
-
-### Phase 1: DAG Type Separation (viewer)
-- Add visual grouping/filtering in dag-viewer.js to separate:
-  - **Analysis DAG**: data_source → parameter → analysis → report nodes
-  - **Development DAG**: task nodes, tool/infrastructure dependencies
-- Toggle or tab UI to switch between views
-
-### Phase 2: Historical DAG Viewer
-- Store DAG state snapshots in `dag/log/` (or use events.jsonl to reconstruct)
-- Add time slider or commit-linked state selector to dag-viewer.js
 
 ## Dependencies
 - Task 085 (DAG foundation — DONE)
