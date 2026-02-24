@@ -294,3 +294,21 @@
 {"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.133","detail":"各解析ごとの再現コマンド（解析テスト）"}
 {"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.133","detail":"pending → valid"}
 {"timestamp":"2026-02-24T19:16:34.180Z","action":"dependency_added","nodeId":"task.023","detail":"→ task.036"}
+{"timestamp":"2026-02-24T20:12:43.135Z","action":"status_changed","nodeId":"task.002","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:43.342Z","action":"status_changed","nodeId":"task.003","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:43.531Z","action":"status_changed","nodeId":"task.005","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:43.742Z","action":"status_changed","nodeId":"task.006","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:43.925Z","action":"status_changed","nodeId":"task.007","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:44.112Z","action":"status_changed","nodeId":"task.052","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:44.300Z","action":"status_changed","nodeId":"task.066","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:44.489Z","action":"status_changed","nodeId":"task.069","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:44.661Z","action":"status_changed","nodeId":"task.085","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:44.842Z","action":"status_changed","nodeId":"task.086","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:45.026Z","action":"status_changed","nodeId":"task.098","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:45.215Z","action":"status_changed","nodeId":"task.101","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:45.398Z","action":"status_changed","nodeId":"task.116","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:45.591Z","action":"status_changed","nodeId":"task.125","detail":"pending → valid"}
+{"timestamp":"2026-02-24T20:12:45.772Z","action":"status_changed","nodeId":"task.118","detail":"active → valid"}
+{"timestamp":"2026-02-24T20:12:50.151Z","action":"node_added","nodeId":"task.138","detail":"プロジェクト健全化・DAGクリーンアップ"}
+{"timestamp":"2026-02-24T20:12:53.372Z","action":"status_changed","nodeId":"task.138","detail":"pending → active"}
+{"timestamp":"2026-02-24T20:22:51.990Z","action":"status_changed","nodeId":"task.138","detail":"active → valid"}

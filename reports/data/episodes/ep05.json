@@ -22,7 +22,7 @@
       "id": "ep05-quote-02",
       "speaker": "ケイ",
       "text": "今回の航路はここタイタニアから地球まで直接エントリーする航路になる",
-      "timestamp": "01:22",
+      "timestamp": "01:26",
       "dialogueLineId": "ep05-dl-013"
     },
     {
@@ -269,6 +269,24 @@
           "sourceType": "worldbuilding-doc",
           "sourceRef": "https://note.com/yuepicos/n/n4da939fc40ed",
           "sourceLabel": "ソーラーラインのよもやま話"
+        },
+        {
+          "claim": "推定所要時間507時間",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45987761 02:36",
+          "sourceLabel": "Part 5 02:36 ケイの航路説明"
+        },
+        {
+          "claim": "巡航速度1500 km/s",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45987761 03:22",
+          "sourceLabel": "Part 5 03:22 木星到達時の予定速度"
+        },
+        {
+          "claim": "最終速度2100 km/s",
+          "sourceType": "episode-dialogue",
+          "sourceRef": "sm45987761 11:58",
+          "sourceLabel": "Part 5 11:58 核魚雷回避のための最終速度"
         }
       ],
       "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: brachistochrone by mass\""
@@ -440,7 +458,7 @@
           "sourceLabel": "第4話 損傷状態Brachistochrone分析（300tなら8.3日）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Oberth effect\""
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: full route\""
     }
   ],
   "explorations": [

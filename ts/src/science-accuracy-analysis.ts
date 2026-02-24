@@ -108,13 +108,13 @@ export function buildVerificationScorecard(): VerificationTable {
       status: "verified",
     },
     {
-      claim: "地球捕捉ΔV（月軌道）",
+      claim: "地球捕捉ΔV（LEO 400km）",
       episode: 5,
-      depicted: "※暫定",
-      reference: "≈0.42 km/s（v∞=0の場合）",
-      source: "vis-viva方程式",
-      accuracyPercent: null,
-      status: "unverified",
+      depicted: "7.67 km/s（軌道速度達成）",
+      reference: "≈7.67 km/s（LEO 400km円軌道速度）",
+      source: "vis-viva方程式 + ep05 22:36",
+      accuracyPercent: 100.0,
+      status: "verified",
     },
   ];
   return { caption: "科学的精度の検証スコアカード", rows };
@@ -133,7 +133,7 @@ export function buildTransferComparisonTable(): ComparisonTable {
           2: "弾道（太陽系双曲線）",
           3: "Brachistochrone",
           4: "Brachistochrone",
-          5: "Brachistochrone ※暫定",
+          5: "複合ルート（Brachistochrone＋木星フライバイ）",
         },
         status: "ok",
         note: "第2話のみ損傷により弾道遷移",
@@ -157,7 +157,7 @@ export function buildTransferComparisonTable(): ComparisonTable {
           2: "≈455日",
           3: "143時間",
           4: "8.3日（300t）",
-          5: "8.3日（300t）※暫定",
+          5: "507時間（≈21日）",
         },
         status: "ok",
         note: "Brachistochroneでホーマンの数百〜数千倍短縮",
@@ -169,7 +169,7 @@ export function buildTransferComparisonTable(): ComparisonTable {
           2: "8×（弾道でも短縮）",
           3: "1,674×",
           4: "708×（300t想定）",
-          5: "708× ※暫定",
+          5: "278×",
         },
         status: "ok",
         note: "連続推力によるドラマチックな時間短縮",
@@ -177,9 +177,9 @@ export function buildTransferComparisonTable(): ComparisonTable {
       {
         metric: "ホーマンΔV (km/s)",
         values: {
-          1: "5.64",
+          1: "10.15",
           2: "—（弾道）",
-          3: "5.20",
+          3: "2.74",
           4: "15.94",
           5: "15.94",
         },
@@ -193,7 +193,7 @@ export function buildTransferComparisonTable(): ComparisonTable {
           2: "—",
           3: "11,165",
           4: "15,207（300t）",
-          5: "15,207 ※暫定",
+          5: "—（複合航路）",
         },
         status: "ok",
         note: "時間短縮の代償として桁違いのΔVが必要",
@@ -220,13 +220,11 @@ export function generateScienceAccuracyReport(): SummaryReport {
   return {
     slug: "science-accuracy",
     title: "科学的精度の検証",
-    summary: `SOLAR LINE に登場する科学的数値・物理現象を実データと照合し、作品の科学的信頼性を評価する。検証${total}項目中、${verified}項目が検証済、${approximate}項目が近似一致。`,
+    summary: `SOLAR LINE 全5話に登場する科学的数値・物理現象を実データと照合し、作品の科学的信頼性を評価する。検証${total}項目中、${verified}項目が検証済、${approximate}項目が近似一致。`,
     sections: [
       {
         heading: "検証方法",
         markdown: `本分析では、SOLAR LINE 全5話に登場する定量的な科学的主張を以下の基準で検証する。
-
-※第5話は暫定分析（字幕データ未取得）。
 
 **検証ステータスの定義:**
 - **検証済（verified）**: 実測データや確立された物理法則と高精度（≥95%）で一致
@@ -318,8 +316,6 @@ Brachistochrone遷移はホーマン遷移（最小エネルギー軌道）と�
       {
         heading: "総合評価",
         markdown: `SOLAR LINE は**科学的に極めて誠実なSF作品**である。
-
-※第5話は暫定分析。
 
 **定量評価:**
 - 検証可能な${total}項目中、${verified}件が高精度で実データと一致

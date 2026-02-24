@@ -1202,8 +1202,9 @@
       "type": "task",
       "title": "Rust Core Types, Units, and Constants",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:43.135Z"
     },
     "task.003": {
       "id": "task.003",
@@ -1212,8 +1213,9 @@
       "dependsOn": [
         "task.002"
       ],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:43.342Z"
     },
     "task.004": {
       "id": "task.004",
@@ -1233,8 +1235,9 @@
       "dependsOn": [
         "task.001"
       ],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:43.531Z"
     },
     "task.006": {
       "id": "task.006",
@@ -1245,11 +1248,12 @@
         "task.004",
         "task.005"
       ],
-      "status": "pending",
-      "version": 1,
+      "status": "valid",
+      "version": 2,
       "tags": [
         "episode:01"
-      ]
+      ],
+      "lastValidated": "2026-02-24T20:12:43.742Z"
     },
     "task.007": {
       "id": "task.007",
@@ -1261,11 +1265,12 @@
         "task.005",
         "task.006"
       ],
-      "status": "pending",
-      "version": 1,
+      "status": "valid",
+      "version": 2,
       "tags": [
         "episode:01"
-      ]
+      ],
+      "lastValidated": "2026-02-24T20:12:43.925Z"
     },
     "task.008": {
       "id": "task.008",
@@ -1927,15 +1932,16 @@
       "type": "task",
       "title": "Math Formula Rendering (KaTeX)",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1,
+      "status": "valid",
+      "version": 2,
       "tags": [
         "episode:01",
         "episode:02",
         "episode:03",
         "episode:04",
         "episode:05"
-      ]
+      ],
+      "lastValidated": "2026-02-24T20:12:44.112Z"
     },
     "task.053": {
       "id": "task.053",
@@ -2096,8 +2102,9 @@
       "type": "task",
       "title": "ccusage Cost Analysis and Efficiency Optimization",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:44.300Z"
     },
     "task.067": {
       "id": "task.067",
@@ -2126,8 +2133,9 @@
       "type": "task",
       "title": "レスポンシブ対応",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:44.489Z"
     },
     "task.070": {
       "id": "task.070",
@@ -2289,23 +2297,25 @@
       "type": "task",
       "title": "タスク・分析の DAG 管理構造",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1,
+      "status": "valid",
+      "version": 2,
       "tags": [
         "episode:01",
         "episode:02",
         "episode:03",
         "episode:04",
         "episode:05"
-      ]
+      ],
+      "lastValidated": "2026-02-24T20:12:44.661Z"
     },
     "task.086": {
       "id": "task.086",
       "type": "task",
       "title": "ADR (Architecture Decision Records)",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:44.842Z"
     },
     "task.087": {
       "id": "task.087",
@@ -2459,14 +2469,15 @@
       "type": "task",
       "title": "3D Orbital Analysis",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1,
+      "status": "valid",
+      "version": 2,
       "tags": [
         "episode:02",
         "episode:03",
         "episode:04",
         "episode:01"
-      ]
+      ],
+      "lastValidated": "2026-02-24T20:12:45.025Z"
     },
     "task.099": {
       "id": "task.099",
@@ -2499,8 +2510,9 @@
       "type": "task",
       "title": "DAG Historical Temporal Slider",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:45.215Z"
     },
     "task.102": {
       "id": "task.102",
@@ -2692,8 +2704,9 @@
       "type": "task",
       "title": "CI 安定性の改善",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:45.398Z"
     },
     "task.117": {
       "id": "task.117",
@@ -2721,8 +2734,9 @@
         "task.088",
         "task.103"
       ],
-      "status": "active",
-      "version": 1
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:12:45.772Z"
     },
     "task.119": {
       "id": "task.119",
@@ -2796,11 +2810,12 @@
       "type": "task",
       "title": "Orekit等の信頼できるシミュレータによる検算",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1,
+      "status": "valid",
+      "version": 2,
       "tags": [
         "episode:01"
-      ]
+      ],
+      "lastValidated": "2026-02-24T20:12:45.591Z"
     },
     "task.126": {
       "id": "task.126",
@@ -2895,6 +2910,15 @@
         "episode:05"
       ],
       "lastValidated": "2026-02-24T19:16:34.179Z"
+    },
+    "task.138": {
+      "id": "task.138",
+      "type": "task",
+      "title": "プロジェクト健全化・DAGクリーンアップ",
+      "dependsOn": [],
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-24T20:22:51.989Z"
     }
   },
   "schemaVersion": 1
