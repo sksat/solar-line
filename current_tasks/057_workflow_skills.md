@@ -1,6 +1,6 @@
 # Task 057: Workflow Skills
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 Human directive: よくやるような作業パターンは skill 化しておくとよい。
@@ -15,6 +15,13 @@ Human directive: よくやるような作業パターンは skill 化してお�
 3. Follow Anthropic best practices for Skill definition
 4. Place skills in `.claude/skills/`
 
-## Notes
-- nice-friend skill already exists as example
-- Skills should encapsulate multi-step workflows
+## Created Skills
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `episode-analysis` | `.claude/skills/episode-analysis/SKILL.md` | Full 4-phase pipeline: data collection → analysis → report → validation |
+| `subtitle-extraction` | `.claude/skills/subtitle-extraction/SKILL.md` | YouTube VTT + Whisper STT + dialogue extraction |
+| `report-review` | `.claude/skills/report-review/SKILL.md` | 6-category quality checklist (data, Japanese, mechanics, structure, nav, build) |
+| `cost-analysis` | `.claude/skills/cost-analysis/SKILL.md` | ccusage integration for token/cost analysis |
+
+All skills incorporate efficiency guidelines from Task 066 (background long commands, Haiku subagents, etc.).
