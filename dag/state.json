@@ -1985,11 +1985,12 @@
       "type": "task",
       "title": "Speaker Diarization Investigation",
       "dependsOn": [],
-      "status": "pending",
-      "version": 1,
+      "status": "valid",
+      "version": 2,
       "tags": [
         "episode:01"
-      ]
+      ],
+      "lastValidated": "2026-02-24T23:29:26.363Z"
     },
     "task.057": {
       "id": "task.057",
