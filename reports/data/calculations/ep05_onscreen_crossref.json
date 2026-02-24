@@ -1,0 +1,340 @@
+{
+  "_meta": {
+    "description": "Cross-reference of EP05 on-screen instrument/HUD data with existing orbital analysis",
+    "source": "reports/data/episodes/ep05_onscreen_data.json (Task 154)",
+    "date": "2026-02-24"
+  },
+  "routeBurnVerification": {
+    "description": "映像内4回点火シーケンスの各ΔV・噴射時間と、brachistochrone計算との照合",
+    "burns": [
+      {
+        "name": "Uranus Escape",
+        "onScreen": {
+          "deltaV_km_s": 1500,
+          "missionTime": "T+00:00",
+          "burnDuration": "25:26:00",
+          "burnDuration_s": 91560,
+          "source": "frame 004 (03:03)"
+        },
+        "computed": {
+          "acceleration_ms2": 16.38,
+          "acceleration_G": 1.670,
+          "impliedMass_t_damaged": 388.8,
+          "impliedMass_t_full": 598.2,
+          "note": "F_damaged = 6.37 MN (65%), F_full = 9.8 MN"
+        },
+        "interpretation": "加速度16.4 m/s²は1.67Gに相当。SF前提のG耐性技術を考慮すると問題なし。損傷推力(65%)想定で質量389t、全推力では598t。EP04出発時の質量推定(400-600t)と整合"
+      },
+      {
+        "name": "Jupiter Flyby",
+        "onScreen": {
+          "deltaV_km_s": 600,
+          "missionTime": "T+375:00",
+          "burnDuration": "12:12:00",
+          "burnDuration_s": 43920,
+          "source": "frame 005 (03:22)"
+        },
+        "computed": {
+          "acceleration_ms2": 13.66,
+          "acceleration_G": 1.393,
+          "impliedMass_t_damaged": 466.3,
+          "impliedMass_t_full": 717.4,
+          "note": "加速度が天王星脱出より低い → 推力低下、またはスロットル調整の可能性"
+        },
+        "interpretation": "天王星脱出より低い加速度は一見矛盾。推進剤消費で質量減少するなら加速度は増加するはず。スロットル調整（ノズル寿命温存）か、天王星脱出時の加速度を高くする運用上の理由がある可能性"
+      },
+      {
+        "name": "Mars Deceleration",
+        "onScreen": {
+          "deltaV_km_s": -600,
+          "missionTime": "T+450:00",
+          "burnDuration": "15:16:00",
+          "burnDuration_s": 54960,
+          "source": "frame 005 (03:22)"
+        },
+        "computed": {
+          "acceleration_ms2": 10.92,
+          "acceleration_G": 1.113,
+          "impliedMass_t_damaged": 583.5,
+          "impliedMass_t_full": 897.7,
+          "note": "4回の噴射中で最も低い加速度"
+        },
+        "interpretation": "最も低い加速度(10.9 m/s²)。損傷推力で583t、全推力で898t。もし等推力なら質量が天王星脱出時から増加していることになり物理的に不整合。ノズル劣化による段階的推力低下を示唆"
+      },
+      {
+        "name": "Earth Capture / LEO Insert",
+        "onScreen": {
+          "deltaV_km_s": -1500,
+          "missionTime": "T+479:00",
+          "burnDuration": "27:44:00",
+          "burnDuration_s": 99840,
+          "source": "frame 006 (03:35)"
+        },
+        "computed": {
+          "acceleration_ms2": 15.02,
+          "acceleration_G": 1.532,
+          "impliedMass_t_damaged": 423.9,
+          "impliedMass_t_full": 652.3,
+          "note": "火星減速より高い加速度に回復 → コンテナ投棄またはスロットルアップ"
+        },
+        "interpretation": "火星減速(10.9)から地球捕捉(15.0)で加速度が回復。推進剤消費で軽くなったか、コンテナ投棄による軽量化の可能性。残りΔv=10km/sでLEO投入に成功"
+      }
+    ],
+    "totalBurnVerification": {
+      "onScreen_hours": 80.633,
+      "computed_hours": 80.633,
+      "computed_s": 290280,
+      "match": "完全一致",
+      "breakdown": "25.433 + 12.200 + 15.267 + 27.733 = 80.633h"
+    }
+  },
+  "accelerationEvolution": {
+    "description": "4回噴射の加速度変化パターンから、推力・質量の変化を推定",
+    "pattern": {
+      "burn1_uranus": 16.38,
+      "burn2_jupiter": 13.66,
+      "burn3_mars": 10.92,
+      "burn4_earth": 15.02,
+      "unit": "m/s²"
+    },
+    "analysis": {
+      "trend": "non-monotonic",
+      "description": "Burn 1→3で加速度が低下（16.38→10.92）、Burn 4で回復（15.02）",
+      "possibleExplanations": [
+        {
+          "hypothesis": "ノズル段階的劣化",
+          "detail": "天王星脱出(100%)→木星(83%)→火星(67%)→地球(92%回復?). 冷却期間で一部性能回復の可能性"
+        },
+        {
+          "hypothesis": "スロットル制御",
+          "detail": "ノズル寿命温存のため中間噴射を低推力で運用し、最終噴射で全推力投入"
+        },
+        {
+          "hypothesis": "質量変化+推力変化の複合",
+          "detail": "推進剤消費(質量↓=加速度↑)とノズル劣化(推力↓=加速度↓)の競合。質量変化だけでは説明不可"
+        }
+      ]
+    },
+    "massImplications": {
+      "note": "等推力仮定(6.37 MN)での逆算質量が非単調増加するため、推力は一定ではない",
+      "constantThrustContradiction": "Burn 1(389t)→Burn 3(584t)で質量「増加」は推進剤消費と矛盾",
+      "bestFitModel": "段階的ノズル劣化 + 燃焼間コンテナ投棄の複合効果"
+    }
+  },
+  "nozzleLifespanMargin": {
+    "description": "ノズル熱限界マージン+0:26:00の既存分析との照合",
+    "onScreen": {
+      "marginDisplay": "+0:26:00",
+      "marginMinutes": 26,
+      "source": "frame 006 (03:35)"
+    },
+    "existingAnalysis": {
+      "nozzleLifetime_hours": 55.633,
+      "requiredBurnTime_hours": 55.200,
+      "marginMinutes": 26,
+      "marginFraction": 0.0078,
+      "marginPercent": 0.78,
+      "source": "ep05_calculations.json → nozzleLifespan"
+    },
+    "crossReference": {
+      "match": "完全一致",
+      "detail": "映像内表示の+0:26:00は既存分析の26分マージンと完全に一致。この0.78%マージンはシリーズ全体で最もタイトな制約",
+      "finalOutcome": "LEO投入後にノズル破壊 — マージン全消費"
+    },
+    "seriesComparison": {
+      "ep02_margin": "0.53 km/s（太陽脱出速度余裕）",
+      "ep03_margin": "1.23°（航法精度余裕）",
+      "ep04_margin": "43%（シールドマージン、6分/14分）",
+      "ep05_margin": "0.78%（26分/55h）— シリーズ最小",
+      "escalation": "話数が進むにつれマージンが縮小する傾向。物語上の緊張感と整合"
+    }
+  },
+  "oberthEffectVerification": {
+    "description": "映像内「オーベルト効果によるエネルギー効率向上 およそ3%」の物理的検証",
+    "onScreen": {
+      "claimedGain": "~3%",
+      "context": "ノズル寿命が限られている現状では無視できない数値",
+      "source": "frame 006 (03:35), subtitle text"
+    },
+    "physicsCalculation": {
+      "scenario": "木星近点(1 RJ)での600 km/s powered burn at v_inf = 1500 km/s",
+      "v_esc_jupiter_surface_km_s": 59.53,
+      "v_inf_km_s": 1500,
+      "gravityWellFraction": "(v_esc/v_inf)² = 0.00158",
+      "singleBurnOberthGain_percent": 0.08,
+      "discrepancyFactor": "約37倍"
+    },
+    "existingAnalysis": {
+      "bestCaseVelocityEfficiency": 0.069,
+      "energyEfficiency": 0.077,
+      "interpretation": "mission-level-composite",
+      "threePercentBurnSaving_min": 99.36,
+      "source": "ep05_calculations.json → oberthEffect"
+    },
+    "resolution": {
+      "verdict": "「3%」はOberth効果単体ではなくミッションレベル複合値",
+      "detail": "純粋なOberth効果は0.08%以下（v_inf >> v_esc のため重力井戸の効果が極めて小さい）。ケイの言う「3%」は木星フライバイ経由ルート全体のエネルギー効率向上（軌道修正＋タイミング最適化＋微小Oberth効果の累積）を指す。燃焼時間にして99分の節約はノズル26分マージンの3.8倍に相当し、「無視できない」とする評価は物語上正当"
+    }
+  },
+  "jupiterFlybyExitVector": {
+    "description": "木星パワードフライバイ出口パラメータの物理的整合性",
+    "onScreen": {
+      "exitVelocity_km_s": 2100,
+      "inclination_deg": 31.47,
+      "azimuth_deg": 261.88,
+      "corridorExit": "INNER SYSTEM",
+      "target": "MARS DECEL BURN",
+      "ioTorusExposure_min_max": 6,
+      "source": "frame 012 (11:58)"
+    },
+    "velocityCheck": {
+      "entryVelocity_km_s": 1500,
+      "flybyDeltaV_km_s": 600,
+      "expectedExit_km_s": 2100,
+      "match": "完全一致",
+      "note": "v_inf = 1500 km/s >> v_esc_Jupiter ≈ 60 km/s なので、パワードフライバイのΔVは近似的にco-linear加算。重力アシスト成分は無視可能"
+    },
+    "inclinationAnalysis": {
+      "value_deg": 31.47,
+      "interpretation": "木星軌道面(黄道面に対し傾斜1.3°)から31.47°傾いた脱出方向。天王星(傾斜0.77°)からの到着ベクトルを火星(傾斜1.85°)方向に偏向するため、大きな面外成分が必要",
+      "physicalPlausibility": "powered flybyでは近点で推力方向を選べるため、面外方向への偏向は可能。ただし31.47°は大きな面外角で、3D軌道遷移の必要性を示唆"
+    },
+    "ioTorusExposure": {
+      "maxExposure_min": 6,
+      "atSpeed_km_s": 2100,
+      "traversedDistance_km": 756000,
+      "ioTorusDiameter_km": "~700,000 (内縁〜外縁)",
+      "consistency": "整合 — 2100 km/sで6分間の横断距離はイオトーラスの直径と概ね一致"
+    }
+  },
+  "saturnRingIceParticle": {
+    "description": "土星リング近傍での1cm氷粒衝突エネルギー110 MJの検証",
+    "onScreen": {
+      "speed_km_s": 1500,
+      "particleSize_cm": 1,
+      "impactEnergy_MJ": 110,
+      "source": "frame 010 (09:56), dialogue"
+    },
+    "physicsVerification": {
+      "assumption1_solidIceSphere": {
+        "diameter_cm": 1,
+        "radius_m": 0.005,
+        "volume_m3": 5.236e-7,
+        "density_kg_m3": 917,
+        "mass_kg": 4.801e-4,
+        "kineticEnergy_J": 5.401e8,
+        "kineticEnergy_MJ": 540.1
+      },
+      "discrepancy": "計算値540 MJは表示値110 MJの約4.9倍",
+      "particleSizeFor110MJ": {
+        "requiredMass_kg": 9.778e-5,
+        "requiredDiameter_cm": 0.585,
+        "note": "110 MJに対応する氷球直径は約5.9mm"
+      },
+      "alternativeExplanation": {
+        "porosIce": "リング氷粒は多孔質(密度 ≈ 100-500 kg/m³)の場合、直径1cmでも質量は1/2〜1/9に減少 → 60-270 MJ",
+        "irregularShape": "球体ではなく薄片状の場合、体積は大幅に小さくなる",
+        "effectiveImpact": "シールドで一部吸収される実効衝突エネルギーの可能性"
+      },
+      "verdict": "多孔質氷(密度 ≈ 200 kg/m³)を仮定すれば118 MJとなり110 MJに概ね一致。ケイの計算は「おおよそ」と前置きしており、桁は正確。物語上の説得力あり"
+    }
+  },
+  "missionTimelineVerification": {
+    "description": "507時間ミッションタイムラインの内部整合性検証",
+    "onScreen": {
+      "totalTime_hours": 507,
+      "navMode": "STELLAR-INS — AUTONOMOUS (FULL ROUTE)",
+      "source": "frame 003 (02:36)"
+    },
+    "burnTimeline": [
+      {"event": "Uranus Escape (start)", "missionTime_hours": 0, "note": "出発即座に点火"},
+      {"event": "Uranus Escape (end)", "missionTime_hours": 25.433, "note": "コースト開始"},
+      {"event": "Saturn Ring Calibration", "missionTime_hours": 260, "note": "土星リング近傍通過"},
+      {"event": "Jupiter Flyby (start)", "missionTime_hours": 375, "note": "木星近点接近"},
+      {"event": "Jupiter Flyby (end)", "missionTime_hours": 387.2, "note": "内太陽系方向へ"},
+      {"event": "Mars Deceleration (start)", "missionTime_hours": 450, "note": "減速開始"},
+      {"event": "Mars Deceleration (end)", "missionTime_hours": 465.267, "note": "減速完了"},
+      {"event": "Earth Capture (start)", "missionTime_hours": 479, "note": "LEO投入噴射開始"},
+      {"event": "Earth Capture (end)", "missionTime_hours": 506.733, "note": "LEO 400km達成、ノズル破壊"},
+      {"event": "Mission End", "missionTime_hours": 507, "note": "表示上のETA"}
+    ],
+    "coastPhases": [
+      {"from": "Uranus Escape end", "to": "Jupiter Flyby start", "duration_hours": 349.567, "note": "最長コースト — 天王星→木星"},
+      {"from": "Jupiter Flyby end", "to": "Mars Decel start", "duration_hours": 62.8, "note": "木星→火星"},
+      {"from": "Mars Decel end", "to": "Earth Capture start", "duration_hours": 13.733, "note": "火星→地球、最短コースト"}
+    ],
+    "coastFraction": {
+      "totalCoast_hours": 426.367,
+      "totalBurn_hours": 80.633,
+      "coastPercent": 84.1,
+      "note": "507時間中84.1%がコースト — 純粋brachistochroneの50%より大幅に高く、複合航路の特徴"
+    },
+    "etaConsistency": {
+      "lastBurnEnd_hours": 506.733,
+      "statedETA_hours": 507,
+      "gap_minutes": 16,
+      "note": "最終噴射終了からETA表示まで約16分。軌道微調整またはLEO周回開始までの時間"
+    }
+  },
+  "jurisdictionalProgression": {
+    "description": "天王星→地球の管轄区域遷移 — 全5区域の整合性",
+    "zones": [
+      {
+        "location": "天王星離脱軌道",
+        "jurisdiction": "天王星自由港機構",
+        "region": "天王星圏",
+        "missionTime_approx_hours": 0,
+        "note": "出発地点。自由港=中立・非政府管轄"
+      },
+      {
+        "location": "オービタルカーテン外縁",
+        "jurisdiction": "国際連合・火星自治連邦保護領",
+        "region": "土星圏",
+        "missionTime_approx_hours": 250,
+        "note": "EP02と同じ管轄。オービタルカーテン=軌道帯の境界"
+      },
+      {
+        "location": "土星リング面",
+        "jurisdiction": "国際連合・火星自治連邦保護領",
+        "region": "土星圏",
+        "missionTime_approx_hours": 260,
+        "note": "土星リング近傍通過。同管轄内"
+      },
+      {
+        "location": "イオトーラス外縁",
+        "jurisdiction": "木星軌道連合",
+        "region": "木星圏",
+        "missionTime_approx_hours": 375,
+        "note": "EP01-02と同じ管轄。フライバイ中の高放射線帯域"
+      },
+      {
+        "location": "小惑星帯",
+        "jurisdiction": "地球軌道港湾機構",
+        "region": "自由圏",
+        "missionTime_approx_hours": 420,
+        "note": "新カテゴリ「自由圏」— 保護領でも自治圏でもない第三の区分"
+      }
+    ],
+    "newDiscovery": "「自由圏」はEP05で初出。天王星の「自由港」とは異なる概念（自由港=港湾、自由圏=領域全体）。地球圏の政治的位置づけを示唆",
+    "crossEpisodeConsistency": "木星軌道連合(EP01-02-05)、国際連合・火星自治連邦(EP02-03-05)の管轄表記が一貫"
+  },
+  "navigationAutonomy": {
+    "description": "STELLAR-INS AUTONOMOUS航法の分析的含意",
+    "onScreen": {
+      "navMode": "STELLAR-INS — AUTONOMOUS (FULL ROUTE)",
+      "availableReferences": ["STELLAR-INS", "EARTH-REF", "MARS-REF", "JUPITER-REF", "SATURN-REF"],
+      "beaconStatus": "ALL UNAVAILABLE",
+      "source": "frame 003 (02:36)"
+    },
+    "interpretation": {
+      "stellarINS": "恒星慣性航法 — 星の位置と慣性計測装置の組み合わせ",
+      "referenceFrames": "5つの参照系（恒星慣性、地球、火星、木星、土星）はルート上の各領域で最適な参照系を切り替える設計",
+      "beaconUnavailable": "全ビーコン誘導が利用不可 = 航路管制機関の支援なし。ケストレル号は事実上の「追放された船」として航行",
+      "narrativeSignificance": "自律航法という制約が物語全体のテーマ（独立、自己決定）と一致"
+    },
+    "accuracyImplication": {
+      "ep03Reference": "EP03では99.8%航法精度が言及。STELLAR-INSのみで507時間航行する場合、累積誤差はLEO投入精度に影響",
+      "requirement": "400km LEO円軌道への直接投入には高精度が必要 — 恒星慣性航法のみでの達成は高度な技術力を示唆"
+    }
+  }
+}

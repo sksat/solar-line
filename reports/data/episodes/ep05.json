@@ -933,10 +933,11 @@
     }
   ],
   "onScreenDataExploration": {
-    "id": "ep05-exploration-04",
+    "id": "ep05-exploration-onscreen",
     "title": "映像内表示データ分析: 航路計画ディスプレイと管轄区域",
     "description": "EP05映像フレームから抽出した航路計画表示、木星パワードフライバイ表示、管轄区域ラベルの体系的分析。23フレーム中7フレームに計器データ、5フレームに管轄区域ラベルを確認。",
     "dataFile": "ep05_onscreen_data.json",
+    "crossReferenceFile": "ep05_onscreen_crossref.json",
     "keyFindings": [
       {
         "finding": "完全航路計画: 4回の点火シーケンスが全てディスプレイに表示",
@@ -977,6 +978,31 @@
         "finding": "地球低軌道到達: フィリピン/東南アジア上空でLEO 400km達成",
         "detail": "残りΔv 10km/s→軌道速度達成→磁気ノズル消失。フィリピン/ミンダナオ島が地表から確認可能。ケストレル号は小さなシルエットとして地球をバックに描画",
         "source": "frames 020-022 (22:36-22:58)"
+      },
+      {
+        "finding": "【照合】加速度進化パターン: 4噴射で非単調変化（16.4→13.7→10.9→15.0 m/s²）",
+        "detail": "等推力仮定で逆算した質量がBurn 1(389t)→3(584t)で「増加」し物理的に矛盾。ノズル段階的劣化またはスロットル制御（ノズル寿命温存）を示唆。Burn 3→4での加速度回復はコンテナ投棄による軽量化の可能性",
+        "source": "cross-reference: ep05_onscreen_crossref.json → accelerationEvolution"
+      },
+      {
+        "finding": "【照合】氷粒110 MJ検証: 多孔質氷(密度≈200 kg/m³)で118 MJと概ね一致",
+        "detail": "固体氷球(917 kg/m³)では540 MJとなり4.9倍の乖離。しかしリング粒子の多孔質構造(密度100-500 kg/m³)を考慮すると110 MJは密度≈200 kg/m³に対応。ケイの「およそ」は桁精度で正確",
+        "source": "cross-reference: ep05_onscreen_crossref.json → saturnRingIceParticle"
+      },
+      {
+        "finding": "【照合】ノズルマージン26分 = 既存分析の0.78%と完全一致",
+        "detail": "ノズル寿命55.633h、必要噴射55.200h、マージン0.433h=26分。EP02(0.53 km/s) → EP03(1.23°) → EP04(43%) → EP05(0.78%)と話数進行でマージン縮小の傾向を確認",
+        "source": "cross-reference: ep05_onscreen_crossref.json → nozzleLifespanMargin"
+      },
+      {
+        "finding": "【照合】Oberth効果「3%」: 純粋Oberth(0.08%)との50倍乖離はmission-level composite解釈で整合",
+        "detail": "v_inf=1500 km/sでは(v_esc/v_inf)²≈0.16%と微小。「3%」は木星フライバイ経由ルート全体のエネルギー効率改善を指す。燃焼時間換算で99分節約=ノズルマージン26分の3.8倍。「無視できない」評価は物語上正当",
+        "source": "cross-reference: ep05_onscreen_crossref.json → oberthEffectVerification"
+      },
+      {
+        "finding": "【照合】イオトーラス6分通過: 2100 km/sでの横断距離756,000 kmはトーラス直径(~700,000 km)と整合",
+        "detail": "出口速度2100 km/sで6分間=756,000 km横断。イオトーラスの径方向幅(内縁~外縁)は約700,000 kmで概ね一致。高放射線帯域の最小通過時間としてフライバイ軌道が最適化されている",
+        "source": "cross-reference: ep05_onscreen_crossref.json → jupiterFlybyExitVector"
       }
     ]
   },
