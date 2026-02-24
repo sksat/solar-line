@@ -1,6 +1,6 @@
 # Task 041: Report Navigation and Source Link Improvements
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Motivation
 Human directive: "分析レポートページの分かりやすさを適宜確認して改善すること。例えば今出典のリンクが無く出典元にジャンプできない。別レポートや別セクションにもジャンプ可能であってほしい。"

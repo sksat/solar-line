@@ -1840,3 +1840,131 @@ describe("SVG marker IDs are unique per transfer index", () => {
     assert.ok(html.includes('id="arrow-a-b-1"'));
   });
 });
+
+// --- Task 041: Report navigation and source link improvements ---
+
+describe("source citations render as clickable links", () => {
+  it("renders URL source citations as links", () => {
+    const transfer: TransferAnalysis = {
+      ...sampleTransfer,
+      sources: [{
+        claim: "船の質量: 約48000 t",
+        sourceType: "worldbuilding-doc",
+        sourceRef: "https://note.com/yuepicos/n/n4da939fc40ed",
+        sourceLabel: "世界設定資料「ソーラーラインのよもやま話」",
+      }],
+    };
+    const html = renderTransferCard(transfer);
+    assert.ok(html.includes('href="https://note.com/yuepicos/n/n4da939fc40ed"'));
+    assert.ok(html.includes('target="_blank"'));
+    assert.ok(html.includes("世界設定資料「ソーラーラインのよもやま話」"));
+  });
+
+  it("renders Niconico source refs as links", () => {
+    const transfer: TransferAnalysis = {
+      ...sampleTransfer,
+      sources: [{
+        claim: "72時間の期限",
+        sourceType: "episode-dialogue",
+        sourceRef: "sm45280425 01:14",
+        sourceLabel: "Part 1 01:14「72時間以内に届けてほしい」",
+      }],
+    };
+    const html = renderTransferCard(transfer);
+    assert.ok(html.includes('href="https://www.nicovideo.jp/watch/sm45280425"'));
+    assert.ok(html.includes("Part 1 01:14"));
+  });
+
+  it("renders plain text for non-URL non-Niconico refs", () => {
+    const transfer: TransferAnalysis = {
+      ...sampleTransfer,
+      sources: [{
+        claim: "火星軌道半径",
+        sourceType: "external-reference",
+        sourceRef: "NASA JPL Solar System Dynamics",
+        sourceLabel: "NASA/JPL 太陽系力学データ",
+      }],
+    };
+    const html = renderTransferCard(transfer);
+    assert.ok(html.includes("NASA/JPL 太陽系力学データ"));
+    assert.ok(!html.includes('href="NASA'));
+  });
+});
+
+describe("markdownToHtml supports links", () => {
+  it("converts markdown links to HTML anchor tags", () => {
+    const html = markdownToHtml("See [the docs](https://example.com) for details.");
+    assert.ok(html.includes('<a href="https://example.com">the docs</a>'));
+  });
+
+  it("converts inline links in list items", () => {
+    const html = markdownToHtml("- [Link A](https://a.com)\n- [Link B](https://b.com)");
+    assert.ok(html.includes('<a href="https://a.com">Link A</a>'));
+    assert.ok(html.includes('<a href="https://b.com">Link B</a>'));
+  });
+});
+
+describe("renderEpisode table of contents", () => {
+  it("renders TOC with transfer links", () => {
+    const html = renderEpisode(sampleEpisodeReport, undefined, 5);
+    assert.ok(html.includes("目次"));
+    assert.ok(html.includes(`href="#${sampleTransfer.id}"`));
+    assert.ok(html.includes("Earth to Mars Hohmann Transfer"));
+  });
+
+  it("renders TOC with section links", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      dialogueQuotes: [sampleQuote],
+      diagrams: [sampleDiagram],
+    };
+    const html = renderEpisode(report, undefined, 5);
+    assert.ok(html.includes('href="#section-dialogue"'));
+    assert.ok(html.includes('href="#section-diagrams"'));
+    assert.ok(html.includes('href="#section-transfers"'));
+    assert.ok(html.includes('href="#calculator"'));
+  });
+
+  it("adds id attributes to section headings", () => {
+    const report: EpisodeReport = {
+      ...sampleEpisodeReport,
+      dialogueQuotes: [sampleQuote],
+      diagrams: [sampleDiagram],
+    };
+    const html = renderEpisode(report, undefined, 5);
+    assert.ok(html.includes('id="section-dialogue"'));
+    assert.ok(html.includes('id="section-diagrams"'));
+    assert.ok(html.includes('id="section-transfers"'));
+  });
+
+  it("includes verdict badges in TOC", () => {
+    const html = renderEpisode(sampleEpisodeReport, undefined, 5);
+    assert.ok(html.includes("verdict-plausible"));
+  });
+});
+
+describe("renderSummaryPage section anchors", () => {
+  it("adds id attributes to summary sections", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes('id="セクション1"'));
+    assert.ok(html.includes('id="セクション2"'));
+  });
+
+  it("renders TOC for multi-section summary", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(html.includes("目次"));
+    assert.ok(html.includes('href="#セクション1"'));
+    assert.ok(html.includes('href="#セクション2"'));
+  });
+
+  it("does not render TOC for single-section summary", () => {
+    const report: SummaryReport = {
+      slug: "single",
+      title: "テスト",
+      summary: "テスト",
+      sections: [{ heading: "唯一", markdown: "テスト" }],
+    };
+    const html = renderSummaryPage(report);
+    assert.ok(!html.includes("目次"));
+  });
+});

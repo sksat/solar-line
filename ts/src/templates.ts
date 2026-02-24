@@ -91,13 +91,15 @@ export function markdownToHtml(md: string): string {
   return output.join("\n");
 }
 
-/** Apply inline formatting: bold, inline code */
+/** Apply inline formatting: bold, inline code, links */
 function inlineFormat(text: string): string {
   let result = escapeHtml(text);
   // Inline code (must come before bold to avoid conflicts)
   result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
   // Bold
   result = result.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  // Links [text](url) — only after escaping so we restore the brackets
+  result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
   return result;
 }
 
@@ -295,6 +297,11 @@ footer {
 .stats-grid .stat-count { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
 .episode-card h3 { margin-top: 0; }
 .episode-card .episode-meta { font-size: 0.9em; color: #8b949e; margin-top: 0.5rem; }
+.toc { font-size: 0.9em; }
+.toc h3 { margin: 0 0 0.5rem; font-size: 1em; }
+.toc ul { list-style: none; padding-left: 0; }
+.toc ul ul { padding-left: 1.2rem; }
+.toc li { margin: 0.2rem 0; }
 @media (max-width: 600px) {
   .calc-control { grid-template-columns: 1fr; gap: 0.25rem; }
   .comparison-table { font-size: 0.8em; }
@@ -420,11 +427,26 @@ function verdictLabel(v: TransferAnalysis["verdict"]): string {
   }
 }
 
+/** Render a source reference as a link if it looks like a URL or Niconico ID */
+function renderSourceRef(ref: string, label: string): string {
+  if (/^https?:\/\//.test(ref)) {
+    return `<a href="${escapeHtml(ref)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+  }
+  // Niconico video refs like "sm45280425 01:14" — link to the video
+  const nicoMatch = ref.match(/^(sm\d+)/);
+  if (nicoMatch) {
+    const nicoUrl = `https://www.nicovideo.jp/watch/${nicoMatch[1]}`;
+    return `<a href="${escapeHtml(nicoUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+  }
+  // NASA JPL or other plain-text refs
+  return escapeHtml(label);
+}
+
 /** Render source citations */
 function renderSources(sources: SourceCitation[]): string {
   if (sources.length === 0) return "";
   const items = sources.map(s =>
-    `<dt>${escapeHtml(s.claim)}</dt><dd>${escapeHtml(s.sourceLabel)}</dd>`
+    `<dt>${escapeHtml(s.claim)}</dt><dd>${renderSourceRef(s.sourceRef, s.sourceLabel)}</dd>`
   ).join("\n");
   return `<dl class="sources-list"><dt style="color:var(--accent);margin-bottom:0.2rem">出典</dt>${items}</dl>`;
 }
@@ -957,9 +979,6 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
   const videoSection = report.videoCards && report.videoCards.length > 0
     ? renderVideoCards(report.videoCards)
     : "";
-  const dialogueSection = report.dialogueQuotes && report.dialogueQuotes.length > 0
-    ? renderDialogueQuotes(report.dialogueQuotes)
-    : "";
 
   // Group explorations by transferId for nested rendering
   const explorationsByTransfer = new Map<string, ParameterExploration[]>();
@@ -1002,9 +1021,6 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     ? `<h2>その他のパラメータ探索</h2>\n${unlinkedExplorations.map(renderExploration).join("\n")}`
     : "";
 
-  const diagramSection = report.diagrams && report.diagrams.length > 0
-    ? renderOrbitalDiagrams(report.diagrams)
-    : "";
   const calculator = renderCalculator();
 
   const isProvisional = report.summary.includes("暫定");
@@ -1012,18 +1028,50 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     ? ' <span class="verdict verdict-indeterminate" style="font-size:0.6em;vertical-align:middle">暫定分析</span>'
     : "";
 
+  // Build table of contents
+  const tocItems: string[] = [];
+  if (report.dialogueQuotes && report.dialogueQuotes.length > 0) {
+    tocItems.push('<li><a href="#section-dialogue">主要な台詞</a></li>');
+  }
+  if (report.diagrams && report.diagrams.length > 0) {
+    tocItems.push('<li><a href="#section-diagrams">軌道遷移図</a></li>');
+  }
+  if (report.transfers.length > 0) {
+    tocItems.push('<li><a href="#section-transfers">軌道遷移分析</a></li>');
+    tocItems.push('<ul>');
+    for (const t of report.transfers) {
+      const badge = verdictBadge(t.verdict);
+      tocItems.push(`<li><a href="#${escapeHtml(t.id)}">${escapeHtml(t.description)}</a> ${badge}</li>`);
+    }
+    tocItems.push('</ul>');
+  }
+  tocItems.push('<li><a href="#calculator">Brachistochrone 計算機</a></li>');
+  const toc = tocItems.length > 0
+    ? `<nav class="toc card"><h3>目次</h3><ul>${tocItems.join("\n")}</ul></nav>`
+    : "";
+
+  const dialogueSectionWithId = report.dialogueQuotes && report.dialogueQuotes.length > 0
+    ? `<h2 id="section-dialogue">主要な台詞</h2>\n${report.dialogueQuotes.map(renderDialogueQuote).join("\n")}`
+    : "";
+
+  const diagramSectionWithId = report.diagrams && report.diagrams.length > 0
+    ? `<h2 id="section-diagrams">軌道遷移図</h2>\n${report.diagrams.map(renderOrbitalDiagram).join("\n")}`
+    : "";
+
   const content = `
 <h1>第${report.episode}話: ${escapeHtml(report.title)}${provisionalBadge}</h1>
 ${videoSection}
 ${markdownToHtml(report.summary)}
 
-${dialogueSection}
+${toc}
+
+${dialogueSectionWithId}
 
 ${dvChart}
 
-${diagramSection}
+${diagramSectionWithId}
 
-<h2>軌道遷移分析</h2>
+<h2 id="section-transfers">軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}
 
 ${unlinkedSection}
@@ -1104,18 +1152,38 @@ ${rows}
 </table>`;
 }
 
+/** Generate a URL-safe slug from a heading string */
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[\s　]+/g, "-")
+    .replace(/[^\w\u3000-\u9fff\u30a0-\u30ff\u3040-\u309f-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 /** Render a summary report page */
 export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteManifest["summaryPages"]): string {
   const sections = report.sections.map(section => {
+    const sectionId = slugify(section.heading);
     const tableHtml = section.table ? renderComparisonTable(section.table) : "";
     const diagramHtml = section.orbitalDiagrams ? renderOrbitalDiagrams(section.orbitalDiagrams) : "";
-    return `<div class="summary-section">
+    return `<div class="summary-section" id="${escapeHtml(sectionId)}">
 <h2>${escapeHtml(section.heading)}</h2>
 ${markdownToHtml(section.markdown)}
 ${diagramHtml}
 ${tableHtml}
 </div>`;
   }).join("\n");
+
+  // Build TOC for summary page
+  const summaryTocItems = report.sections.map(section => {
+    const sectionId = slugify(section.heading);
+    return `<li><a href="#${escapeHtml(sectionId)}">${escapeHtml(section.heading)}</a></li>`;
+  });
+  const summaryToc = summaryTocItems.length > 1
+    ? `<nav class="toc card"><h3>目次</h3><ul>${summaryTocItems.join("\n")}</ul></nav>`
+    : "";
 
   // Include animation script if any section has animated diagrams
   const hasAnimatedDiagrams = report.sections.some(
@@ -1126,6 +1194,7 @@ ${tableHtml}
   const content = `
 <h1>${escapeHtml(report.title)}</h1>
 ${markdownToHtml(report.summary)}
+${summaryToc}
 ${sections}`;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
