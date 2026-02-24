@@ -1,6 +1,6 @@
 # Task 079: 文字起こし修正時のレポート連動更新
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 

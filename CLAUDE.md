@@ -62,6 +62,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - Quote character dialogue with timestamps in analysis, e.g. きりたん「~~~」(10:05) — timestamps should be clickable links to the video at that point
 - **Markdown tables**: The markdownToHtml converter supports tables (|...|...|). Use E2E tests to catch broken table rendering.
 - **Dialogue citations should be natural** — don't create a separate "evidence quotes" section that feels intrusive. Weave quotes naturally into the analysis text.
+- **Transcription-report sync**: When transcription corrections are made (speaker names, dialogue text, timestamps), update corresponding dialogue quotes in episode reports. Run validation to check consistency between dialogue data files and report citations.
 - **Nested analysis structure**: Each transfer analysis (problem) should contain its related parameter explorations (scenarios) as nested sub-sections, not as separate flat sections
 - **Scenario ordering**: Present the most plausible scenario first, then alternatives. Collapse implausible scenarios by default (use `<details>`)
 - **Terminology**: Prefer "brachistochrone" (English/formula notation) over カタカナ「ブラキストクローネ」 — the latter is rarely used in Japanese technical writing
