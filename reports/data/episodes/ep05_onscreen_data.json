@@ -1,0 +1,572 @@
+{
+  "episode": 5,
+  "title": "EP05 On-Screen Data Extraction",
+  "description": "天王星→地球帰還ルート（507時間複合航路）における映像内表示データの体系的抽出。航路計画ディスプレイ、木星パワードフライバイ表示、管轄区域ラベル、速度・エネルギー値を含む。",
+  "extractionDate": "2026-02-24",
+  "videoSource": "sm45987761",
+  "totalFrames": 23,
+  "framesWithInstrumentData": 7,
+  "framesWithLocationLabels": 5,
+  "framesWithDialogueOnly": 11,
+  "frames": [
+    {
+      "index": 0,
+      "timestampSec": 2,
+      "timestampFormatted": "00:02",
+      "filename": "frame_000_2s.jpg",
+      "description": "天王星離脱軌道 — 管轄区域ラベル + 骨格フレーム亀裂報告",
+      "category": "locationLabel",
+      "locationLabel": {
+        "location": "天王星離脱軌道",
+        "jurisdiction": "天王星自由港機構",
+        "region": "天王星圏"
+      },
+      "subtitleText": "骨格フレーム5番に0.3マイクロメートルの亀裂… フレーム7番にも0.2マイクロメートル",
+      "instrumentData": null,
+      "notes": "Opening shot. Location label establishes Uranus Free Port Authority jurisdiction. Structural damage from EP04 plasmoid encounter visible in subtitle."
+    },
+    {
+      "index": 1,
+      "timestampSec": 86,
+      "timestampFormatted": "01:26",
+      "filename": "frame_001_86s.jpg",
+      "description": "天王星クローズアップ — 感情的対話シーン",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "「次の船」には もっと優しくしてあげてくださいね",
+      "instrumentData": null,
+      "notes": "Uranus visible as dark sphere against starfield. Emotional farewell dialogue. No HUD data."
+    },
+    {
+      "index": 2,
+      "timestampSec": 142,
+      "timestampFormatted": "02:22",
+      "filename": "frame_002_142s.jpg",
+      "description": "ケストレル号外観 — 自律航法の説明",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "降ろされたのではなく レールの無い場所を行くのです",
+      "instrumentData": null,
+      "notes": "Kestrel viewed from below, きりたん visible through bridge window. Establishes autonomous navigation theme."
+    },
+    {
+      "index": 3,
+      "timestampSec": 156,
+      "timestampFormatted": "02:36",
+      "filename": "frame_003_156s.jpg",
+      "description": "NAVIGATION OVERVIEW — 目的地・ETA・航法モード表示",
+      "category": "instrumentDisplay",
+      "locationLabel": null,
+      "subtitleText": null,
+      "instrumentData": {
+        "displayType": "NAVIGATION OVERVIEW",
+        "parameters": {
+          "destination": "EARTH LOW ORBIT (400km CIRC)",
+          "arrivalETA": "T+507:00:00 (SHIP TIME)",
+          "navMode": "STELLAR-INS — AUTONOMOUS (FULL ROUTE)",
+          "navModeBar": ["STELLAR-INS", "EARTH-REF", "MARS-REF", "JUPITER-REF", "SATURN-REF"],
+          "beaconGuidedModes": "ALL UNAVAILABLE",
+          "legalWarning": "No port authority guidance. Proceeding with this route constitutes acceptance of..."
+        }
+      },
+      "notes": "MAJOR: Complete navigation overview display. Destination confirmed as Earth LEO 400km circular orbit. Ship time 507h matches dialogue. Stellar-inertial autonomous mode because all beacon-guided modes are unavailable — Kestrel has no port authority support. Nav mode bar shows reference frames available for each region of the route."
+    },
+    {
+      "index": 4,
+      "timestampSec": 183,
+      "timestampFormatted": "03:03",
+      "filename": "frame_004_183s.jpg",
+      "description": "航路図（右側）— 天王星脱出 + リングキャリブレーション",
+      "category": "instrumentDisplay",
+      "locationLabel": null,
+      "subtitleText": null,
+      "instrumentData": {
+        "displayType": "ROUTE DIAGRAM (right portion)",
+        "routeElements": {
+          "uranusEscape": {
+            "label": "Uranus Escape",
+            "deltaV_km_s": 1500,
+            "deltaV_display": "Δv=1.50*10^3 km/s",
+            "missionTime": "T+00:00",
+            "burnDuration": "D=25:26:00"
+          },
+          "ringProximityCalibration": {
+            "label": "Ring Proximity Calibration",
+            "missionTime": "T+260:00",
+            "minAltitude_km": 5
+          },
+          "visibleLabels": ["SATURN", "URANUS III. TITANIA TTC", "ORBITAL CURTAIN"]
+        }
+      },
+      "notes": "MAJOR: Route diagram right section. Uranus escape burn: 1500 km/s over 25h26m from T+0. Ring Proximity Calibration at T+260h with minimum altitude 5km from Saturn's rings. TITANIA TTC = Titania Transit/Traffic Control."
+    },
+    {
+      "index": 5,
+      "timestampSec": 202,
+      "timestampFormatted": "03:22",
+      "filename": "frame_005_202s.jpg",
+      "description": "航路図（中央）— 木星フライバイ + 火星減速",
+      "category": "instrumentDisplay",
+      "locationLabel": null,
+      "subtitleText": "その後木星フライバイにより 軌道修正と追加加速を実施します",
+      "instrumentData": {
+        "displayType": "ROUTE DIAGRAM (middle portion)",
+        "routeElements": {
+          "jupiterFlyby": {
+            "label": "Jupiter Flyby",
+            "deltaV_km_s": 600,
+            "deltaV_display": "Δv=6.00*10^2 km/s",
+            "missionTime": "T+375:00",
+            "burnDuration": "D=12:12:00"
+          },
+          "marsDeceleration": {
+            "label": "Mars Deceleration",
+            "deltaV_km_s": -600,
+            "deltaV_display": "Δv=-6.00*10^2 km/s",
+            "missionTime": "T+450:00",
+            "burnDuration": "D=15:16:00"
+          },
+          "ringProximityCalibration": {
+            "missionTime": "T+260:00",
+            "minAltitude_km": 5
+          },
+          "partiallyVisible": {
+            "ioTorusTransit": "EST T+515:00:00",
+            "ioExposure": "EXPOSURE: <6 MIN"
+          },
+          "visibleLabels": ["JUPITER I. IO", "SATURN", "ORBITAL CURTAIN"]
+        }
+      },
+      "notes": "MAJOR: Middle section reveals Jupiter Flyby (+600 km/s) and Mars Deceleration (-600 km/s). Flyby provides both orbital correction and additional acceleration. Partially visible Io Torus transit time and exposure limit (<6 min)."
+    },
+    {
+      "index": 6,
+      "timestampSec": 215,
+      "timestampFormatted": "03:35",
+      "filename": "frame_006_215s.jpg",
+      "description": "航路図（全景・左側）— 地球キャプチャ + ノズル限界マージン",
+      "category": "instrumentDisplay",
+      "locationLabel": null,
+      "subtitleText": "オーベルト効果によるエネルギー効率向上は　およそ3％程度となりますが ノズル寿命が限られている現状では　無視できない数値です",
+      "instrumentData": {
+        "displayType": "ROUTE DIAGRAM (full view, left portion)",
+        "routeElements": {
+          "earthCapture": {
+            "label": "Earth Capture / LEO Insert",
+            "deltaV_km_s": -1500,
+            "deltaV_display": "Δv=-1.50*10^3 km/s",
+            "missionTime": "T+479:00",
+            "burnDuration": "D=27:44:00"
+          },
+          "marsDeceleration": {
+            "deltaV_km_s": -600,
+            "deltaV_display": "Δv=-6.00*10^2 km/s",
+            "missionTime": "T+450:00",
+            "burnDuration": "D=15:16:00"
+          },
+          "jupiterFlyby": {
+            "deltaV_km_s": 600,
+            "deltaV_display": "Δv=6.00*10^2 km/s",
+            "missionTime": "T+375:00",
+            "burnDuration": "D=12:12:00"
+          },
+          "ringProximityCalibration": {
+            "missionTime": "T+260:00",
+            "minAltitude_km": 5
+          },
+          "nozzleThermalLimit": {
+            "margin": "+0:26:00",
+            "marginMinutes": 26
+          }
+        },
+        "visibleLabels": ["LEO-400", "MARS", "JUPITER I. IO", "SATURN", "ORBITAL CURTAIN"],
+        "oberthEffect": "~3% energy efficiency gain"
+      },
+      "notes": "MAJOR: Complete route overview from Earth to Saturn. Earth capture burn: -1500 km/s over 27h44m starting T+479h. NOZZLE THERMAL LIMIT MARGIN: +0:26:00 — only 26 minutes of margin between nozzle life and required burn time. This is the tightest constraint in the entire series. Oberth effect at Jupiter provides ~3% gain, described as 'not negligible given limited nozzle life'."
+    },
+    {
+      "index": 7,
+      "timestampSec": 249,
+      "timestampFormatted": "04:09",
+      "filename": "frame_007_249s.jpg",
+      "description": "天王星シルエット — 第1シークエンス完了",
+      "category": "visual",
+      "locationLabel": null,
+      "subtitleText": null,
+      "instrumentData": null,
+      "notes": "Uranus as dark silhouette against Milky Way. No HUD or subtitle. Corresponds to first sequence completion — Uranus escape achieved."
+    },
+    {
+      "index": 8,
+      "timestampSec": 313,
+      "timestampFormatted": "05:13",
+      "filename": "frame_008_313s.jpg",
+      "description": "オービタルカーテン外縁 — 管轄区域ラベル（土星圏）",
+      "category": "locationLabel",
+      "locationLabel": {
+        "location": "オービタルカーテン外縁",
+        "jurisdiction": "国際連合・火星自治連邦保護領",
+        "region": "土星圏"
+      },
+      "subtitleText": null,
+      "instrumentData": null,
+      "notes": "Kestrel exterior with engine glow crossing Orbital Curtain boundary. Jurisdiction changes to United Nations / Mars Autonomous Federation Protectorate / Saturn sphere. きりたん visible through bridge."
+    },
+    {
+      "index": 9,
+      "timestampSec": 554,
+      "timestampFormatted": "09:14",
+      "filename": "frame_009_554s.jpg",
+      "description": "土星リング面 — スポーク帯域接近、距離88km",
+      "category": "locationLabel",
+      "locationLabel": {
+        "location": "土星リング面",
+        "jurisdiction": "国際連合・火星自治連邦保護領",
+        "region": "土星圏"
+      },
+      "subtitleText": "土星リング面スポーク帯域に接近中… 現在距離88キロメートル",
+      "instrumentData": {
+        "displayType": "dialogue-derived",
+        "parameters": {
+          "saturnRingDistance_km": 88,
+          "region": "spoke zone"
+        }
+      },
+      "notes": "Stunning visual of Kestrel flying along Saturn's ring plane with red engine glow. Ring surface visible as flat ice sheet. Spoke zone approach at 88 km distance. Ring Proximity Calibration sequence — the display said MIN ALT: 5km, so they will get much closer."
+    },
+    {
+      "index": 10,
+      "timestampSec": 596,
+      "timestampFormatted": "09:56",
+      "filename": "frame_010_596s.jpg",
+      "description": "現在速度1500km/s — 1cm氷粒110MJ運動エネルギー",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "現在速度は1500キロメートル毎秒… 1センチメートルの氷の粒が衝突しただけでも 運動エネルギーはおよそ110メガジュールほどになります",
+      "instrumentData": {
+        "displayType": "dialogue-derived",
+        "parameters": {
+          "currentSpeed_km_s": 1500,
+          "iceParticleSize_cm": 1,
+          "impactEnergy_MJ": 110
+        }
+      },
+      "notes": "Character scene with きりたん and ケイ. Critical speed data: 1500 km/s at Saturn ring passage. The 110 MJ calculation for 1cm ice particle impact can be cross-verified: ½mv² where m≈0.5g (ice sphere), v=1.5×10⁶ m/s → ½×0.0005×(1.5e6)² = 562 GJ. The stated 110 MJ is for 1cm = much smaller particle or density assumption differs. Needs cross-reference."
+    },
+    {
+      "index": 11,
+      "timestampSec": 671,
+      "timestampFormatted": "11:11",
+      "filename": "frame_011_671s.jpg",
+      "description": "ブリッジ全景 — JUPITER POWERED FLYBY 表示（遠景）",
+      "category": "instrumentDisplay",
+      "locationLabel": null,
+      "subtitleText": null,
+      "instrumentData": {
+        "displayType": "JUPITER POWERED FLYBY (distant view)",
+        "parameters": {
+          "readable": false,
+          "displayLayout": "Route diagram with text boxes and orbital illustration"
+        }
+      },
+      "notes": "Bridge wide shot showing きりたん and ケイ viewing large navigation display. JUPITER POWERED FLYBY header visible but details too small to read at this distance. Display includes route lines, text boxes, and what appears to be Jupiter orbital diagram."
+    },
+    {
+      "index": 12,
+      "timestampSec": 718,
+      "timestampFormatted": "11:58",
+      "filename": "frame_012_718s.jpg",
+      "description": "JUPITER POWERED FLYBY 表示 — 出口速度2100km/s、傾斜31.47°",
+      "category": "instrumentDisplay",
+      "locationLabel": null,
+      "subtitleText": "本来であれば迂回したいところですが… イオのトーラス外縁を掠め 高放射線帯域の中を 最大で6分間航行することになります",
+      "instrumentData": {
+        "displayType": "JUPITER POWERED FLYBY (close-up)",
+        "parameters": {
+          "corridorExit": "INNER SYSTEM",
+          "exitVector": {
+            "inclination_deg": 31.47,
+            "azimuth_deg": 261.88
+          },
+          "exitVelocity_km_s": 2100,
+          "target": "MARS DECEL BURN",
+          "ioTorusExposure_min_max": 6
+        },
+        "partiallyVisible": {
+          "leftSide": ["...BOLT TRANSIT", "...EXPOSURE", "...DIUS: 40 KM"]
+        },
+        "visibleLabels": ["J1-IO"]
+      },
+      "notes": "MAJOR: Jupiter Powered Flyby display close-up. Exit velocity 2100 km/s — this is 600 km/s higher than the 1500 km/s approach speed, matching the Jupiter Flyby Δv=600 km/s from the route diagram. Exit vector INC 31.47° / AZM 261.88° defines post-flyby trajectory toward Mars. Io Torus outer edge transit with max 6 min in high-radiation zone. Partially visible '40 KM' may refer to nuclear torpedo effective kill radius (from EP05 dialogue about 核魚雷実効殺傷半径40km)."
+    },
+    {
+      "index": 13,
+      "timestampSec": 776,
+      "timestampFormatted": "12:56",
+      "filename": "frame_013_776s.jpg",
+      "description": "磁気ノズル寿命問題の説明",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "…ただ代償として 推進炉の磁気ノズル寿命の問題があります",
+      "instrumentData": null,
+      "notes": "Character scene. Nozzle lifespan problem — the cost of the Jupiter powered flyby route. Connects to the 26-minute margin shown on the route diagram."
+    },
+    {
+      "index": 14,
+      "timestampSec": 871,
+      "timestampFormatted": "14:31",
+      "filename": "frame_014_871s.jpg",
+      "description": "保安艇2隻待ち伏せ通報",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "…本題だ 地球の保安艇が2隻 お前の予測軌道上で待ってる… 木星圏でお前を落とす気だろうな",
+      "instrumentData": null,
+      "notes": "きりたん close-up. Intelligence report: 2 Earth security boats waiting on predicted trajectory in Jupiter sphere. Tactical threat for the flyby."
+    },
+    {
+      "index": 15,
+      "timestampSec": 908,
+      "timestampFormatted": "15:08",
+      "filename": "frame_015_908s.jpg",
+      "description": "イオトーラス外縁 — 管轄区域ラベル（木星圏）",
+      "category": "locationLabel",
+      "locationLabel": {
+        "location": "イオトーラス外縁",
+        "jurisdiction": "木星軌道連合",
+        "region": "木星圏"
+      },
+      "subtitleText": "…ガニメデの約束は まだ生きてるからな",
+      "instrumentData": null,
+      "notes": "Spectacular visual: Kestrel glowing blue (magnetic shield) passing through Io Torus. Jupiter visible right, Io visible lower-right, red Io Torus plasma glow on left. Jurisdiction: Jupiter Orbital Alliance / Jupiter Sphere. Dialogue references promise at Ganymede (from EP01)."
+    },
+    {
+      "index": 16,
+      "timestampSec": 959,
+      "timestampFormatted": "15:59",
+      "filename": "frame_016_959s.jpg",
+      "description": "小惑星帯 — 管轄区域ラベル（自由圏）",
+      "category": "locationLabel",
+      "locationLabel": {
+        "location": "小惑星帯",
+        "jurisdiction": "地球軌道港湾機構",
+        "region": "自由圏"
+      },
+      "subtitleText": null,
+      "instrumentData": null,
+      "notes": "Milky Way panorama at asteroid belt. Jurisdiction: Earth Orbital Port Authority / Free Zone. New jurisdictional category: 自由圏 (Free Zone) — distinct from both 保護領 (Protectorate) and 自治圏 (Autonomous Zone). Marks inner solar system entry."
+    },
+    {
+      "index": 17,
+      "timestampSec": 1026,
+      "timestampFormatted": "17:06",
+      "filename": "frame_017_1026s.jpg",
+      "description": "火星接近 — 減速噴射中",
+      "category": "visual",
+      "locationLabel": null,
+      "subtitleText": null,
+      "instrumentData": null,
+      "notes": "Mars visible as red sphere. Kestrel decelerating with blue engine glow directed toward Mars. No HUD, no subtitle, no location label. Corresponds to Mars Deceleration burn (T+450:00, Δv=-600 km/s)."
+    },
+    {
+      "index": 18,
+      "timestampSec": 1236,
+      "timestampFormatted": "20:36",
+      "filename": "frame_018_1236s.jpg",
+      "description": "主機アームド — ケストレルブリッジ外観",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "主機アームド 衝撃に備えてください",
+      "instrumentData": null,
+      "notes": "Kestrel bridge exterior view. きりたん (white dress) and ケイ (dark uniform) visible through glass, plus small pink creature (mascot/pet?). Final engine arming before Earth capture burn."
+    },
+    {
+      "index": 19,
+      "timestampSec": 1348,
+      "timestampFormatted": "22:28",
+      "filename": "frame_019_1348s.jpg",
+      "description": "「秩序の中に…私たちは存在しない」",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "彼女たちが知っている秩序の中に… 私たちは存在しないのです",
+      "instrumentData": null,
+      "notes": "ケイ close-up with ship visible in background. Philosophical dialogue about existing outside known order. Thematic climax of the series."
+    },
+    {
+      "index": 20,
+      "timestampSec": 1356,
+      "timestampFormatted": "22:36",
+      "filename": "frame_020_1356s.jpg",
+      "description": "残りΔv 10km/s — 最終減速中",
+      "category": "dialogue",
+      "locationLabel": null,
+      "subtitleText": "残りΔv… 10キロメートル毎秒",
+      "instrumentData": {
+        "displayType": "dialogue-derived",
+        "parameters": {
+          "remainingDeltaV_km_s": 10
+        }
+      },
+      "notes": "きりたん on bridge, Earth's blue glow visible through window. Remaining Δv only 10 km/s — approaching orbital velocity. Almost home."
+    },
+    {
+      "index": 21,
+      "timestampSec": 1370,
+      "timestampFormatted": "22:50",
+      "filename": "frame_021_1370s.jpg",
+      "description": "地球低軌道到達 — フィリピン/東南アジア上空",
+      "category": "visual",
+      "locationLabel": null,
+      "subtitleText": null,
+      "instrumentData": {
+        "displayType": "visual-derived",
+        "parameters": {
+          "orbitalAltitude_km": 400,
+          "visibleLandmass": "Philippines / Southeast Asia",
+          "kestrelVisible": true,
+          "kestrelAppearance": "tiny dark silhouette against Earth"
+        }
+      },
+      "notes": "LEO 400km achieved! Earth surface clearly visible — Philippines/Mindanao archipelago identifiable. Kestrel visible as tiny dark speck against the planet. The journey from Uranus is complete."
+    },
+    {
+      "index": 22,
+      "timestampSec": 1378,
+      "timestampFormatted": "22:58",
+      "filename": "frame_022_1378s.jpg",
+      "description": "地球低軌道 — 磁気ノズル消失後",
+      "category": "visual",
+      "locationLabel": null,
+      "subtitleText": null,
+      "instrumentData": {
+        "displayType": "visual-derived",
+        "parameters": {
+          "orbitalAltitude_km": 400,
+          "visibleLandmass": "Philippines / Southeast Asia (wider view)",
+          "kestrelVisible": true,
+          "nozzleStatus": "destroyed"
+        }
+      },
+      "notes": "Same orbital view, slightly wider. Kestrel still visible as dark dot. This is after nozzle destruction — the magnetic nozzle is gone, temperature sensors lost. Ship achieved orbit with 26-minute margin then the nozzle gave out."
+    }
+  ],
+  "summary": {
+    "routePlan": {
+      "description": "Complete 4-burn composite route from Uranus to Earth LEO, with Saturn ring calibration and Jupiter powered flyby",
+      "destination": "Earth Low Orbit 400km circular",
+      "totalTime_hours": 507,
+      "navMode": "STELLAR-INS — AUTONOMOUS (FULL ROUTE)",
+      "beaconGuidance": "ALL UNAVAILABLE",
+      "burns": [
+        {
+          "sequence": 1,
+          "name": "Uranus Escape",
+          "deltaV_km_s": 1500,
+          "sign": "positive",
+          "missionTime_hours": 0,
+          "burnDuration": "25:26:00",
+          "burnDuration_hours": 25.433
+        },
+        {
+          "sequence": 2,
+          "name": "Jupiter Flyby",
+          "deltaV_km_s": 600,
+          "sign": "positive",
+          "missionTime_hours": 375,
+          "burnDuration": "12:12:00",
+          "burnDuration_hours": 12.2
+        },
+        {
+          "sequence": 3,
+          "name": "Mars Deceleration",
+          "deltaV_km_s": 600,
+          "sign": "negative",
+          "missionTime_hours": 450,
+          "burnDuration": "15:16:00",
+          "burnDuration_hours": 15.267
+        },
+        {
+          "sequence": 4,
+          "name": "Earth Capture / LEO Insert",
+          "deltaV_km_s": 1500,
+          "sign": "negative",
+          "missionTime_hours": 479,
+          "burnDuration": "27:44:00",
+          "burnDuration_hours": 27.733
+        }
+      ],
+      "totalBurnTime_hours": 80.633,
+      "totalCoastTime_hours": 426.367,
+      "coastFraction": 0.841,
+      "totalDeltaV_km_s": 4200,
+      "nozzleThermalLimitMargin_minutes": 26,
+      "oberthEffectGain": "~3%"
+    },
+    "saturnRingCalibration": {
+      "missionTime_hours": 260,
+      "minAltitude_km": 5,
+      "approachDistance_km": 88,
+      "spokeZone": true,
+      "speed_km_s": 1500,
+      "iceParticle1cm_energy_MJ": 110
+    },
+    "jupiterPoweredFlyby": {
+      "corridorExit": "INNER SYSTEM",
+      "exitVector": {
+        "inclination_deg": 31.47,
+        "azimuth_deg": 261.88
+      },
+      "exitVelocity_km_s": 2100,
+      "entryVelocity_km_s": 1500,
+      "deltaV_km_s": 600,
+      "target": "MARS DECEL BURN",
+      "ioTorusExposure_min_max": 6
+    },
+    "jurisdictionalZones": [
+      {
+        "location": "天王星離脱軌道",
+        "jurisdiction": "天王星自由港機構",
+        "region": "天王星圏",
+        "timestampSec": 2
+      },
+      {
+        "location": "オービタルカーテン外縁",
+        "jurisdiction": "国際連合・火星自治連邦保護領",
+        "region": "土星圏",
+        "timestampSec": 313
+      },
+      {
+        "location": "土星リング面",
+        "jurisdiction": "国際連合・火星自治連邦保護領",
+        "region": "土星圏",
+        "timestampSec": 554
+      },
+      {
+        "location": "イオトーラス外縁",
+        "jurisdiction": "木星軌道連合",
+        "region": "木星圏",
+        "timestampSec": 908
+      },
+      {
+        "location": "小惑星帯",
+        "jurisdiction": "地球軌道港湾機構",
+        "region": "自由圏",
+        "timestampSec": 959
+      }
+    ],
+    "finalApproach": {
+      "remainingDeltaV_km_s": 10,
+      "orbitalAltitude_km": 400,
+      "landmassVisible": "Philippines / Southeast Asia",
+      "nozzleDestroyed": true,
+      "marginUsed": "26 minutes"
+    },
+    "crossReferenceTargets": [
+      "EP05 report: route analysis transfers",
+      "EP05 report: nozzle lifespan margin (0.78%)",
+      "EP05 report: Oberth effect (3%)",
+      "EP01 dialogue: Ganymede promise callback",
+      "infrastructure report: jurisdictional zones evolution",
+      "cross-episode report: Δv budget consistency"
+    ]
+  }
+}
