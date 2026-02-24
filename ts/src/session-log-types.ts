@@ -67,6 +67,8 @@ export interface ToolCallSummary {
   name: string;
   /** Brief description derived from tool input (e.g., file path, command) */
   brief: string;
+  /** For Task tool calls: sub-agent details */
+  subAgent?: SubAgentSummary;
 }
 
 /** A processed message ready for rendering */
@@ -77,6 +79,18 @@ export interface ProcessedMessage {
   text: string;
   /** Tool calls made in this message */
   toolCalls: ToolCallSummary[];
+  /** Model name for assistant messages (e.g., "claude-opus-4-6") */
+  model?: string;
+}
+
+/** A sub-agent invocation extracted from Task tool calls */
+export interface SubAgentSummary {
+  /** Description from the Task tool call */
+  description: string;
+  /** Sub-agent type (e.g., "Explore", "Bash", "Plan") */
+  subagentType: string;
+  /** Model specified, if any */
+  model?: string;
 }
 
 /** Extracted session metadata */
@@ -88,6 +102,8 @@ export interface SessionMetadata {
   version: string;
   messageCount: number;
   toolCallCount: number;
+  /** Git commit hashes made during this session (detected from Bash git commit output) */
+  commitHashes: string[];
 }
 
 /** Complete parsed session ready for rendering */

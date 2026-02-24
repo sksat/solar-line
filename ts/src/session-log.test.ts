@@ -4,6 +4,8 @@ import {
   redactSensitive,
   parseJournalEntry,
   summarizeToolInput,
+  extractSubAgent,
+  extractCommitHashes,
   processEntry,
   parseSession,
   renderSessionMarkdown,
@@ -178,6 +180,62 @@ describe("summarizeToolInput", () => {
   });
 });
 
+// --- extractSubAgent ---
+
+describe("extractSubAgent", () => {
+  it("extracts sub-agent details from Task input", () => {
+    const result = extractSubAgent({
+      description: "Explore codebase",
+      subagent_type: "Explore",
+      model: "haiku",
+    });
+    assert.equal(result.description, "Explore codebase");
+    assert.equal(result.subagentType, "Explore");
+    assert.equal(result.model, "haiku");
+  });
+
+  it("handles missing model", () => {
+    const result = extractSubAgent({
+      description: "Run tests",
+      subagent_type: "Bash",
+    });
+    assert.equal(result.subagentType, "Bash");
+    assert.equal(result.model, undefined);
+  });
+});
+
+// --- extractCommitHashes ---
+
+describe("extractCommitHashes", () => {
+  it("extracts commit hash from git output", () => {
+    const text = '[main abc1234] Add feature X\n 3 files changed';
+    const result = extractCommitHashes(text);
+    assert.deepEqual(result, ["abc1234"]);
+  });
+
+  it("extracts multiple commit hashes", () => {
+    const text = '[main abc1234] First commit\n[main def5678] Second commit';
+    const result = extractCommitHashes(text);
+    assert.deepEqual(result, ["abc1234", "def5678"]);
+  });
+
+  it("deduplicates hashes", () => {
+    const text = '[main abc1234] Commit\n[main abc1234] Same commit';
+    const result = extractCommitHashes(text);
+    assert.deepEqual(result, ["abc1234"]);
+  });
+
+  it("returns empty for text without commits", () => {
+    const text = "Just some regular text";
+    assert.deepEqual(extractCommitHashes(text), []);
+  });
+
+  it("handles branch names with slashes", () => {
+    const text = '[feature/foo abc1234] Commit on branch';
+    assert.deepEqual(extractCommitHashes(text), ["abc1234"]);
+  });
+});
+
 // --- processEntry ---
 
 describe("processEntry", () => {
@@ -276,6 +334,41 @@ describe("processEntry", () => {
     const result = processEntry({ type: "user", uuid: "x", sessionId: "s", timestamp: "t" } as JournalEntry);
     assert.equal(result, null);
   });
+
+  it("includes model in processed message", () => {
+    const result = processEntry(makeEntry({
+      type: "assistant",
+      message: {
+        role: "assistant",
+        content: [{ type: "text", text: "Hello" }],
+        model: "claude-opus-4-6",
+      },
+    }));
+    assert.ok(result);
+    assert.equal(result!.model, "claude-opus-4-6");
+  });
+
+  it("extracts sub-agent details from Task tool calls", () => {
+    const result = processEntry(makeEntry({
+      type: "assistant",
+      message: {
+        role: "assistant",
+        content: [
+          { type: "tool_use", id: "t1", name: "Task", input: {
+            description: "Explore codebase",
+            subagent_type: "Explore",
+            model: "haiku",
+            prompt: "Find all test files",
+          } },
+        ],
+      },
+    }));
+    assert.ok(result);
+    assert.equal(result!.toolCalls.length, 1);
+    assert.ok(result!.toolCalls[0].subAgent);
+    assert.equal(result!.toolCalls[0].subAgent!.subagentType, "Explore");
+    assert.equal(result!.toolCalls[0].subAgent!.model, "haiku");
+  });
 });
 
 // --- parseSession ---
@@ -370,6 +463,24 @@ describe("parseSession", () => {
     const result = parseSession("");
     assert.equal(result.messages.length, 0);
     assert.equal(result.metadata.sessionId, "unknown");
+    assert.deepEqual(result.metadata.commitHashes, []);
+  });
+
+  it("extracts commit hashes from assistant text", () => {
+    const lines = [
+      JSON.stringify({
+        type: "assistant",
+        uuid: "a1",
+        sessionId: "s",
+        timestamp: "2026-02-23T18:00:00Z",
+        message: {
+          role: "assistant",
+          content: [{ type: "text", text: "[main abc1234] Add feature X\n 3 files changed" }],
+        },
+      }),
+    ];
+    const result = parseSession(lines.join("\n"));
+    assert.deepEqual(result.metadata.commitHashes, ["abc1234"]);
   });
 });
 
@@ -385,6 +496,7 @@ describe("renderSessionMarkdown", () => {
       version: "2.1.50",
       messageCount: 3,
       toolCallCount: 2,
+      commitHashes: [],
     },
     messages: [
       {
@@ -397,6 +509,7 @@ describe("renderSessionMarkdown", () => {
         role: "assistant",
         timestamp: "2026-02-23T18:01:00Z",
         text: "Starting analysis.",
+        model: "claude-opus-4-6",
         toolCalls: [
           { name: "Read", brief: "/workspace/reports/ep01.json" },
           { name: "Bash", brief: "Run tests" },
@@ -406,6 +519,7 @@ describe("renderSessionMarkdown", () => {
         role: "assistant",
         timestamp: "2026-02-23T18:30:00Z",
         text: "Analysis complete.",
+        model: "claude-opus-4-6",
         toolCalls: [],
       },
     ],
@@ -439,12 +553,69 @@ describe("renderSessionMarkdown", () => {
     assert.ok(md.includes("Analyze episode 1"));
   });
 
-  it("renders assistant messages with tool calls", () => {
+  it("renders assistant messages with model label", () => {
     const md = renderSessionMarkdown(minimalSession, "Test");
-    assert.ok(md.includes("### [18:01] アシスタント"));
+    assert.ok(md.includes("### [18:01] アシスタント (claude-opus-4-6)"));
     assert.ok(md.includes("Starting analysis."));
     assert.ok(md.includes("- `Read` — /workspace/reports/ep01.json"));
     assert.ok(md.includes("- `Bash` — Run tests"));
+  });
+
+  it("renders assistant without model if not set", () => {
+    const session: ParsedSession = {
+      ...minimalSession,
+      messages: [{
+        role: "assistant",
+        timestamp: "2026-02-23T18:01:00Z",
+        text: "No model info",
+        toolCalls: [],
+      }],
+    };
+    const md = renderSessionMarkdown(session, "Test");
+    assert.ok(md.includes("### [18:01] アシスタント\n"));
+    assert.ok(!md.includes("アシスタント ("));
+  });
+
+  it("renders sub-agent invocations specially", () => {
+    const session: ParsedSession = {
+      ...minimalSession,
+      messages: [{
+        role: "assistant",
+        timestamp: "2026-02-23T18:05:00Z",
+        text: "",
+        toolCalls: [{
+          name: "Task",
+          brief: "Explore codebase",
+          subAgent: { description: "Explore codebase", subagentType: "Explore", model: "haiku" },
+        }],
+      }],
+    };
+    const md = renderSessionMarkdown(session, "Test");
+    assert.ok(md.includes("サブエージェント"));
+    assert.ok(md.includes("Explore"));
+    assert.ok(md.includes("[haiku]"));
+  });
+
+  it("renders commit hashes as plain code without repoUrl", () => {
+    const session: ParsedSession = {
+      ...minimalSession,
+      metadata: { ...minimalSession.metadata, commitHashes: ["abc1234", "def5678"] },
+    };
+    const md = renderSessionMarkdown(session, "Test");
+    assert.ok(md.includes("コミット"));
+    assert.ok(md.includes("`abc1234`"));
+    assert.ok(md.includes("`def5678`"));
+  });
+
+  it("renders commit hashes as links with repoUrl", () => {
+    const session: ParsedSession = {
+      ...minimalSession,
+      metadata: { ...minimalSession.metadata, commitHashes: ["abc1234"] },
+    };
+    const md = renderSessionMarkdown(session, "Test", {
+      repoUrl: "https://github.com/owner/repo",
+    });
+    assert.ok(md.includes("[`abc1234`](https://github.com/owner/repo/commit/abc1234)"));
   });
 
   it("handles session with no tool calls", () => {

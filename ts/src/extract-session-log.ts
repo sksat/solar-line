@@ -9,6 +9,7 @@
  *   --slug <slug>     URL-safe slug for the filename (default: auto from first user message)
  *   --title <title>   Session title in Japanese (default: auto from first user message)
  *   --out-dir <dir>   Output directory (default: ../reports/logs)
+ *   --repo-url <url>  GitHub repo URL for commit links (e.g., https://github.com/owner/repo)
  *   --dry-run         Print markdown to stdout instead of writing file
  */
 
@@ -38,6 +39,7 @@ function main(): void {
   let slug = "";
   let title = "";
   let outDir = path.resolve("..", "reports", "logs");
+  let repoUrl = "";
   let dryRun = false;
 
   for (let i = 0; i < args.length; i++) {
@@ -47,6 +49,8 @@ function main(): void {
       title = args[++i];
     } else if (args[i] === "--out-dir" && args[i + 1]) {
       outDir = path.resolve(args[++i]);
+    } else if (args[i] === "--repo-url" && args[i + 1]) {
+      repoUrl = args[++i];
     } else if (args[i] === "--dry-run") {
       dryRun = true;
     } else if (!args[i].startsWith("--") && !inputPath) {
@@ -91,7 +95,8 @@ function main(): void {
   }
 
   const filename = generateFilename(session.metadata.startTime, slug);
-  const markdown = renderSessionMarkdown(session, title);
+  const renderOptions = repoUrl ? { repoUrl } : undefined;
+  const markdown = renderSessionMarkdown(session, title, renderOptions);
 
   if (dryRun) {
     console.log(markdown);
@@ -109,8 +114,11 @@ function main(): void {
 
   fs.writeFileSync(outputPath, markdown, "utf-8");
   console.log(`Wrote session log: ${outputPath}`);
+  const commitInfo = session.metadata.commitHashes.length > 0
+    ? `, Commits: ${session.metadata.commitHashes.join(", ")}`
+    : "";
   console.log(
-    `  Messages: ${session.metadata.messageCount}, Tool calls: ${session.metadata.toolCallCount}`,
+    `  Messages: ${session.metadata.messageCount}, Tool calls: ${session.metadata.toolCallCount}${commitInfo}`,
   );
 }
 

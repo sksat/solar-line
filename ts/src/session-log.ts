@@ -14,6 +14,7 @@ import type {
   MessageContent,
   ToolUseContent,
   TextContent,
+  SubAgentSummary,
 } from "./session-log-types.ts";
 
 /** Patterns that should be redacted from public logs */
@@ -98,6 +99,29 @@ export function summarizeToolInput(name: string, input: Record<string, unknown>)
   }
 }
 
+/** Extract sub-agent details from a Task tool call's input */
+export function extractSubAgent(input: Record<string, unknown>): SubAgentSummary {
+  return {
+    description: String(input.description ?? "").slice(0, 60),
+    subagentType: String(input.subagent_type ?? "unknown"),
+    model: input.model ? String(input.model) : undefined,
+  };
+}
+
+/** Detect git commit hashes from text (git commit output pattern) */
+export function extractCommitHashes(text: string): string[] {
+  const hashes: string[] = [];
+  // Match git commit output: "[branch hash] message"
+  const commitPattern = /\[[\w/.-]+ ([0-9a-f]{7,40})\]/g;
+  let match;
+  while ((match = commitPattern.exec(text)) !== null) {
+    if (!hashes.includes(match[1])) {
+      hashes.push(match[1]);
+    }
+  }
+  return hashes;
+}
+
 /** Process a single journal entry into a processed message */
 export function processEntry(entry: JournalEntry): ProcessedMessage | null {
   const message = entry.message;
@@ -129,10 +153,14 @@ export function processEntry(entry: JournalEntry): ProcessedMessage | null {
           break;
         case "tool_use": {
           const tu = item as ToolUseContent;
-          toolCalls.push({
+          const tc: ToolCallSummary = {
             name: tu.name,
             brief: summarizeToolInput(tu.name, tu.input),
-          });
+          };
+          if (tu.name === "Task") {
+            tc.subAgent = extractSubAgent(tu.input);
+          }
+          toolCalls.push(tc);
           break;
         }
         case "tool_result":
@@ -155,6 +183,7 @@ export function processEntry(entry: JournalEntry): ProcessedMessage | null {
     timestamp: entry.timestamp,
     text: redactSensitive(text),
     toolCalls,
+    model: message.model,
   };
 }
 
@@ -162,6 +191,7 @@ export function processEntry(entry: JournalEntry): ProcessedMessage | null {
 export function parseSession(jsonlContent: string): ParsedSession {
   const lines = jsonlContent.split("\n");
   const messages: ProcessedMessage[] = [];
+  const commitHashes: string[] = [];
   let model = "unknown";
   let version = "unknown";
   let sessionId = "unknown";
@@ -176,7 +206,18 @@ export function parseSession(jsonlContent: string): ParsedSession {
     if (model === "unknown" && entry.message?.model) model = entry.message.model;
 
     const processed = processEntry(entry);
-    if (processed) messages.push(processed);
+    if (processed) {
+      messages.push(processed);
+
+      // Scan for git commit hashes in text
+      if (processed.text) {
+        for (const hash of extractCommitHashes(processed.text)) {
+          if (!commitHashes.includes(hash)) {
+            commitHashes.push(hash);
+          }
+        }
+      }
+    }
   }
 
   // Compute metadata
@@ -194,6 +235,7 @@ export function parseSession(jsonlContent: string): ParsedSession {
       version,
       messageCount: messages.length,
       toolCallCount,
+      commitHashes,
     },
     messages,
   };
@@ -226,8 +268,14 @@ function formatDuration(start: string, end: string): string {
   }
 }
 
+/** Render options for session markdown */
+export interface RenderOptions {
+  /** GitHub repository URL for commit links (e.g., "https://github.com/owner/repo") */
+  repoUrl?: string;
+}
+
 /** Render a ParsedSession to markdown for reports/logs/ */
-export function renderSessionMarkdown(session: ParsedSession, title: string): string {
+export function renderSessionMarkdown(session: ParsedSession, title: string, options?: RenderOptions): string {
   const { metadata, messages } = session;
   const lines: string[] = [];
 
@@ -241,6 +289,20 @@ export function renderSessionMarkdown(session: ParsedSession, title: string): st
   lines.push(`- **メッセージ数**: ${metadata.messageCount}`);
   lines.push(`- **ツール呼出**: ${metadata.toolCallCount}回`);
   lines.push(`- **バージョン**: Claude Code ${metadata.version}`);
+
+  // Commit linkage
+  if (metadata.commitHashes.length > 0) {
+    const repoUrl = options?.repoUrl;
+    if (repoUrl) {
+      const commitLinks = metadata.commitHashes
+        .map((h) => `[\`${h}\`](${repoUrl}/commit/${h})`)
+        .join(", ");
+      lines.push(`- **コミット**: ${commitLinks}`);
+    } else {
+      const commitCodes = metadata.commitHashes.map((h) => `\`${h}\``).join(", ");
+      lines.push(`- **コミット**: ${commitCodes}`);
+    }
+  }
   lines.push("");
 
   // Tool call summary table
@@ -274,16 +336,24 @@ export function renderSessionMarkdown(session: ParsedSession, title: string): st
       lines.push(msg.text);
       lines.push("");
     } else if (msg.role === "assistant") {
+      // Label with model name if available
+      const modelLabel = msg.model ? ` (${msg.model})` : "";
       if (msg.text) {
-        lines.push(`### [${time}] アシスタント`);
+        lines.push(`### [${time}] アシスタント${modelLabel}`);
         lines.push("");
         lines.push(msg.text);
         lines.push("");
       }
       if (msg.toolCalls.length > 0) {
         for (const tc of msg.toolCalls) {
-          const brief = tc.brief ? ` — ${tc.brief}` : "";
-          lines.push(`- \`${tc.name}\`${brief}`);
+          if (tc.subAgent) {
+            // Render sub-agent invocation with details
+            const modelNote = tc.subAgent.model ? ` [${tc.subAgent.model}]` : "";
+            lines.push(`- 🔀 **サブエージェント** (${tc.subAgent.subagentType}${modelNote}) — ${tc.subAgent.description}`);
+          } else {
+            const brief = tc.brief ? ` — ${tc.brief}` : "";
+            lines.push(`- \`${tc.name}\`${brief}`);
+          }
         }
         lines.push("");
       }

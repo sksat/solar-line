@@ -1,6 +1,6 @@
 # Task 062: Session Log Display Improvements
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 Human directive: Claude Code session log は agent-loop の標準出力のサマリー的なやつと conversation log は分けて表示すること。
