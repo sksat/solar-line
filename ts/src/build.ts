@@ -178,11 +178,11 @@ export function build(config: BuildConfig): void {
     fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages, episodes.length));
   }
 
-  // Generate summary pages
+  // Generate summary pages (with episode nav strip and auto-linking)
   for (const summary of summaries) {
     fs.writeFileSync(
       path.join(outDir, "summary", `${summary.slug}.html`),
-      renderSummaryPage(summary, manifest.summaryPages),
+      renderSummaryPage(summary, manifest.summaryPages, manifest.episodes),
     );
   }
 

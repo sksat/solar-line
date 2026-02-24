@@ -23,6 +23,8 @@ import {
   renderEventTimeline,
   renderVerificationTable,
   formatNumericValue,
+  autoLinkEpisodeRefs,
+  renderEpisodeNav,
   REPORT_CSS,
 } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
@@ -2473,5 +2475,189 @@ describe("formatNumericValue", () => {
   it("handles negative numbers", () => {
     const result = formatNumericValue(-1500);
     assert.ok(!result.includes("e"), `Expected no exponential for -1500 but got: ${result}`);
+  });
+});
+
+// --- autoLinkEpisodeRefs ---
+
+describe("autoLinkEpisodeRefs", () => {
+  it("links 第N話 to episode page", () => {
+    const result = autoLinkEpisodeRefs("第1話のデータ", "../episodes");
+    assert.ok(result.includes('<a href="../episodes/ep-001.html"'));
+    assert.ok(result.includes("第1話</a>"));
+  });
+
+  it("links multiple episode references", () => {
+    const result = autoLinkEpisodeRefs("第1話と第3話を比較", "../episodes");
+    assert.ok(result.includes('ep-001.html'));
+    assert.ok(result.includes('ep-003.html'));
+  });
+
+  it("handles episode 5", () => {
+    const result = autoLinkEpisodeRefs("第5話の最終分析", "../episodes");
+    assert.ok(result.includes('ep-005.html'));
+  });
+
+  it("does not link inside <a> tags", () => {
+    const result = autoLinkEpisodeRefs('<a href="foo">第1話</a>', "../episodes");
+    // Should not double-wrap with another <a>
+    assert.ok(!result.includes('ep-autolink'));
+  });
+
+  it("does not link inside <code> tags", () => {
+    const result = autoLinkEpisodeRefs('<code>第2話</code>', "../episodes");
+    assert.ok(!result.includes('ep-autolink'));
+  });
+
+  it("links text outside <code> but not inside", () => {
+    const result = autoLinkEpisodeRefs('第1話のコード<code>第2話</code>と第3話', "../episodes");
+    assert.ok(result.includes('ep-001.html'));
+    assert.ok(!result.includes('ep-002.html') || result.includes('<code>第2話</code>'));
+    assert.ok(result.includes('ep-003.html'));
+  });
+
+  it("does not match 第0話 or 第10話", () => {
+    const result = autoLinkEpisodeRefs("第0話と第10話", "../episodes");
+    assert.ok(!result.includes('ep-autolink'));
+  });
+
+  it("uses custom basePath", () => {
+    const result = autoLinkEpisodeRefs("第4話", "./eps");
+    assert.ok(result.includes('./eps/ep-004.html'));
+  });
+
+  it("adds ep-autolink class", () => {
+    const result = autoLinkEpisodeRefs("第1話", "../episodes");
+    assert.ok(result.includes('class="ep-autolink"'));
+  });
+});
+
+// --- markdownToHtml with autoLinkEpisodes ---
+
+describe("markdownToHtml with autoLinkEpisodes", () => {
+  it("auto-links episode references when enabled", () => {
+    const html = markdownToHtml("第1話では火星→ガニメデ遷移を分析した。", { autoLinkEpisodes: true });
+    assert.ok(html.includes('ep-001.html'));
+    assert.ok(html.includes('ep-autolink'));
+  });
+
+  it("does not auto-link when disabled (default)", () => {
+    const html = markdownToHtml("第1話では火星→ガニメデ遷移を分析した。");
+    assert.ok(!html.includes('ep-autolink'));
+  });
+
+  it("does not auto-link inside code blocks", () => {
+    const html = markdownToHtml("```\n第1話\n```", { autoLinkEpisodes: true });
+    assert.ok(!html.includes('ep-autolink'));
+  });
+
+  it("uses custom episodeBasePath", () => {
+    const html = markdownToHtml("第2話", { autoLinkEpisodes: true, episodeBasePath: "./ep" });
+    assert.ok(html.includes('./ep/ep-002.html'));
+  });
+
+  it("auto-links in headings", () => {
+    const html = markdownToHtml("## 第3話の分析", { autoLinkEpisodes: true });
+    assert.ok(html.includes('ep-003.html'));
+  });
+
+  it("auto-links in list items", () => {
+    const html = markdownToHtml("- 第1話: 火星\n- 第2話: 木星", { autoLinkEpisodes: true });
+    assert.ok(html.includes('ep-001.html'));
+    assert.ok(html.includes('ep-002.html'));
+  });
+});
+
+// --- renderEpisodeNav ---
+
+describe("renderEpisodeNav", () => {
+  const sampleEpisodes: SiteManifest["episodes"] = [
+    { episode: 1, title: "SOLAR LINE Part 1 — 火星→ガニメデ", transferCount: 4, path: "episodes/ep-001.html" },
+    { episode: 2, title: "SOLAR LINE Part 2 — 木星脱出", transferCount: 5, path: "episodes/ep-002.html" },
+    { episode: 3, title: "SOLAR LINE Part 3 — タイタニア", transferCount: 5, path: "episodes/ep-003.html" },
+  ];
+
+  it("renders episode navigation chips", () => {
+    const html = renderEpisodeNav(sampleEpisodes);
+    assert.ok(html.includes("ep-nav-strip"));
+    assert.ok(html.includes("第1話"));
+    assert.ok(html.includes("第2話"));
+    assert.ok(html.includes("第3話"));
+  });
+
+  it("links to correct episode pages", () => {
+    const html = renderEpisodeNav(sampleEpisodes);
+    assert.ok(html.includes('../episodes/ep-001.html'));
+    assert.ok(html.includes('../episodes/ep-002.html'));
+    assert.ok(html.includes('../episodes/ep-003.html'));
+  });
+
+  it("includes episode label", () => {
+    const html = renderEpisodeNav(sampleEpisodes);
+    assert.ok(html.includes("エピソード:"));
+  });
+
+  it("returns empty string for empty episodes", () => {
+    assert.equal(renderEpisodeNav([]), "");
+  });
+
+  it("uses custom basePath", () => {
+    const html = renderEpisodeNav(sampleEpisodes, "./ep");
+    assert.ok(html.includes('./ep/ep-001.html'));
+  });
+
+  it("strips SOLAR LINE Part prefix from titles", () => {
+    const html = renderEpisodeNav(sampleEpisodes);
+    // Should show the route part, not the full "SOLAR LINE Part N —" prefix
+    assert.ok(html.includes("火星→ガニメデ"));
+    assert.ok(!html.includes("SOLAR LINE Part 1"));
+  });
+});
+
+// --- renderSummaryPage with episodes ---
+
+describe("renderSummaryPage with episode cross-links", () => {
+  const sampleReport: SummaryReport = {
+    slug: "test-summary",
+    title: "テスト総合分析",
+    summary: "第1話から第5話を横断した分析。",
+    sections: [
+      {
+        heading: "テストセクション",
+        markdown: "第1話では72時間の遷移を行った。第3話ではタイタニアへ向かった。",
+      },
+    ],
+  };
+
+  const sampleEpisodes: SiteManifest["episodes"] = [
+    { episode: 1, title: "火星→ガニメデ", transferCount: 4, path: "episodes/ep-001.html" },
+    { episode: 2, title: "木星脱出", transferCount: 5, path: "episodes/ep-002.html" },
+  ];
+
+  it("includes episode nav strip when episodes provided", () => {
+    const html = renderSummaryPage(sampleReport, undefined, sampleEpisodes);
+    assert.ok(html.includes('class="ep-nav-strip'));
+    assert.ok(html.includes("第1話"));
+    assert.ok(html.includes("第2話"));
+  });
+
+  it("auto-links episode references in section markdown", () => {
+    const html = renderSummaryPage(sampleReport, undefined, sampleEpisodes);
+    assert.ok(html.includes('ep-001.html'));
+    assert.ok(html.includes('ep-003.html'));
+    assert.ok(html.includes('ep-autolink'));
+  });
+
+  it("auto-links episode references in summary", () => {
+    const html = renderSummaryPage(sampleReport);
+    // Even without episodes passed, auto-linking should still work
+    assert.ok(html.includes('ep-001.html'));
+    assert.ok(html.includes('ep-005.html'));
+  });
+
+  it("omits episode nav strip when no episodes provided", () => {
+    const html = renderSummaryPage(sampleReport);
+    // CSS will always contain "ep-nav-strip", so check for the actual nav element
+    assert.ok(!html.includes('class="ep-nav-strip'));
   });
 });

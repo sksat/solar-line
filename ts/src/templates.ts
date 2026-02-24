@@ -21,11 +21,19 @@ export function escapeHtml(text: string): string {
  * unordered lists (- ), ordered lists (1. ), and code blocks (```).
  * This is intentionally minimal — not a full Markdown parser.
  */
-export function markdownToHtml(md: string): string {
+export interface MarkdownOptions {
+  /** Auto-link 第N話 references to episode pages */
+  autoLinkEpisodes?: boolean;
+  /** Base path for episode links (default: "../episodes") */
+  episodeBasePath?: string;
+}
+
+export function markdownToHtml(md: string, options?: MarkdownOptions): string {
   const lines = md.split("\n");
   const output: string[] = [];
   let inCodeBlock = false;
   let listType: "ul" | "ol" | null = null;
+  const inlineOpts = options?.autoLinkEpisodes ? { autoLinkEpisodes: true, episodeBasePath: options.episodeBasePath } : undefined;
 
   function closeList(): void {
     if (listType) { output.push(`</${listType}>`); listType = null; }
@@ -62,27 +70,27 @@ export function markdownToHtml(md: string): string {
     if (headingMatch) {
       closeList();
       const level = headingMatch[1].length;
-      output.push(`<h${level}>${inlineFormat(headingMatch[2])}</h${level}>`);
+      output.push(`<h${level}>${inlineFormat(headingMatch[2], inlineOpts)}</h${level}>`);
       continue;
     }
 
     // Unordered list items
     if (line.match(/^[-*]\s+/)) {
       if (listType !== "ul") { closeList(); output.push("<ul>"); listType = "ul"; }
-      output.push(`<li>${inlineFormat(line.replace(/^[-*]\s+/, ""))}</li>`);
+      output.push(`<li>${inlineFormat(line.replace(/^[-*]\s+/, ""), inlineOpts)}</li>`);
       continue;
     }
 
     // Ordered list items
     if (line.match(/^\d+\.\s+/)) {
       if (listType !== "ol") { closeList(); output.push("<ol>"); listType = "ol"; }
-      output.push(`<li>${inlineFormat(line.replace(/^\d+\.\s+/, ""))}</li>`);
+      output.push(`<li>${inlineFormat(line.replace(/^\d+\.\s+/, ""), inlineOpts)}</li>`);
       continue;
     }
 
     // Paragraph
     closeList();
-    output.push(`<p>${inlineFormat(line)}</p>`);
+    output.push(`<p>${inlineFormat(line, inlineOpts)}</p>`);
   }
 
   closeList();
@@ -92,7 +100,7 @@ export function markdownToHtml(md: string): string {
 }
 
 /** Apply inline formatting: bold, inline code, links */
-function inlineFormat(text: string): string {
+function inlineFormat(text: string, options?: { autoLinkEpisodes?: boolean; episodeBasePath?: string }): string {
   let result = escapeHtml(text);
   // Inline code (must come before bold to avoid conflicts)
   result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -100,7 +108,40 @@ function inlineFormat(text: string): string {
   result = result.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   // Links [text](url) — only after escaping so we restore the brackets
   result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  // Auto-link episode references (第N話) — skip inside <code> and <a> tags
+  if (options?.autoLinkEpisodes) {
+    result = autoLinkEpisodeRefs(result, options.episodeBasePath ?? "../episodes");
+  }
   return result;
+}
+
+/**
+ * Auto-link 第N話 references to episode pages.
+ * Skips references already inside <a> or <code> tags.
+ */
+export function autoLinkEpisodeRefs(html: string, basePath: string): string {
+  // Split on tags to avoid linking inside <a> or <code>
+  const parts = html.split(/(<[^>]+>)/);
+  let insideA = false;
+  let insideCode = false;
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (part.startsWith("<")) {
+      if (/<a[\s>]/i.test(part)) insideA = true;
+      else if (/<\/a>/i.test(part)) insideA = false;
+      else if (/<code[\s>]|<code>/i.test(part)) insideCode = true;
+      else if (/<\/code>/i.test(part)) insideCode = false;
+      continue;
+    }
+    if (insideA || insideCode) continue;
+    // Match 第N話 where N is 1-9 (our episodes are 1-5, but allow up to 9)
+    parts[i] = part.replace(/第([1-9])話/g, (_match, n) => {
+      const ep = parseInt(n, 10);
+      const filename = `ep-${String(ep).padStart(3, "0")}.html`;
+      return `<a href="${basePath}/${filename}" class="ep-autolink">第${n}話</a>`;
+    });
+  }
+  return parts.join("");
 }
 
 /** CSS styles for all report pages */
@@ -178,6 +219,18 @@ li { margin: 0.25rem 0; }
 .collapsed-scenarios summary:hover { color: var(--accent); }
 nav { margin-bottom: 2rem; }
 nav a { margin-right: 1rem; }
+.ep-nav-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1rem 0; padding: 0.75rem 1rem; }
+.ep-nav-label { font-weight: 600; color: #8b949e; font-size: 0.85em; margin-right: 0.25rem; }
+.ep-nav-chip {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.25rem 0.6rem; border-radius: 1rem;
+  background: var(--bg); border: 1px solid var(--border);
+  font-size: 0.85em; color: var(--accent); transition: border-color 0.15s;
+}
+.ep-nav-chip:hover { border-color: var(--accent); text-decoration: none; }
+.ep-nav-title { color: #8b949e; font-size: 0.85em; }
+a.ep-autolink { border-bottom: 1px dotted var(--accent); }
+a.ep-autolink:hover { text-decoration: none; border-bottom-style: solid; }
 footer {
   margin-top: 3rem;
   padding-top: 1rem;
@@ -1367,8 +1420,19 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/** Render episode navigation strip for summary pages */
+export function renderEpisodeNav(episodes: SiteManifest["episodes"], basePath: string = "../episodes"): string {
+  if (episodes.length === 0) return "";
+  const cards = episodes.map(ep => {
+    const href = `${basePath}/ep-${String(ep.episode).padStart(3, "0")}.html`;
+    return `<a href="${href}" class="ep-nav-chip">第${ep.episode}話<span class="ep-nav-title">${escapeHtml(ep.title.replace(/^SOLAR LINE Part\s*\d+\s*(END\s*)?[—–-]\s*/, ""))}</span></a>`;
+  }).join("");
+  return `<nav class="ep-nav-strip card"><span class="ep-nav-label">エピソード:</span>${cards}</nav>`;
+}
+
 /** Render a summary report page */
-export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteManifest["summaryPages"]): string {
+export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteManifest["summaryPages"], episodes?: SiteManifest["episodes"]): string {
+  const mdOpts: MarkdownOptions = { autoLinkEpisodes: true, episodeBasePath: "../episodes" };
   const sections = report.sections.map(section => {
     const sectionId = slugify(section.heading);
     const tableHtml = section.table ? renderComparisonTable(section.table) : "";
@@ -1377,7 +1441,7 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const verificationHtml = section.verificationTable ? renderVerificationTable(section.verificationTable) : "";
     return `<div class="summary-section" id="${escapeHtml(sectionId)}">
 <h2>${escapeHtml(section.heading)}</h2>
-${markdownToHtml(section.markdown)}
+${markdownToHtml(section.markdown, mdOpts)}
 ${diagramHtml}
 ${timelineHtml}
 ${verificationHtml}
@@ -1394,6 +1458,9 @@ ${tableHtml}
     ? `<nav class="toc card"><h3>目次</h3><ul>${summaryTocItems.join("\n")}</ul></nav>`
     : "";
 
+  // Episode navigation strip
+  const episodeNav = episodes ? renderEpisodeNav(episodes) : "";
+
   // Include animation script if any section has animated diagrams
   const hasAnimatedDiagrams = report.sections.some(
     s => s.orbitalDiagrams?.some(d => d.animation) ?? false
@@ -1402,7 +1469,8 @@ ${tableHtml}
 
   const content = `
 <h1>${escapeHtml(report.title)}</h1>
-${markdownToHtml(report.summary)}
+${markdownToHtml(report.summary, mdOpts)}
+${episodeNav}
 ${summaryToc}
 ${sections}`;
 
