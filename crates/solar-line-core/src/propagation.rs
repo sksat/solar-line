@@ -900,6 +900,169 @@ pub fn elliptical_orbit_state_at_periapsis(
     )
 }
 
+// ── Störmer-Verlet Symplectic Integrator ─────────────────────────────
+//
+// Second-order symplectic integrator for Hamiltonian systems (ballistic only).
+// Key property: energy oscillates around true value without secular drift,
+// making it superior to RK4 for long-term orbit propagation (thousands of periods).
+//
+// The leapfrog/Störmer-Verlet scheme:
+//   v_{1/2} = v_n + (dt/2) * a(r_n)
+//   r_{n+1} = r_n + dt * v_{1/2}
+//   v_{n+1} = v_{1/2} + (dt/2) * a(r_{n+1})
+//
+// This is time-reversible and symplectic: preserves phase-space volume exactly.
+
+/// Compute gravitational acceleration at a position (km/s²).
+fn gravity_accel(pos: [f64; 3], mu_val: f64) -> [f64; 3] {
+    let r_sq = pos[0] * pos[0] + pos[1] * pos[1] + pos[2] * pos[2];
+    let r = r_sq.sqrt();
+    let r_cubed = r * r_sq;
+    let factor = -mu_val / r_cubed;
+    [factor * pos[0], factor * pos[1], factor * pos[2]]
+}
+
+/// Result of a symplectic Störmer-Verlet propagation.
+#[derive(Debug, Clone)]
+pub struct SymplecticResult {
+    /// Trajectory states at each timestep
+    pub states: Vec<PropState>,
+    /// Number of steps taken
+    pub n_steps: usize,
+}
+
+/// Propagate a ballistic (thrust-free) orbit using the Störmer-Verlet symplectic integrator.
+///
+/// Returns the full trajectory. For ballistic orbits only — thrust is not supported
+/// because symplectic integrators lose their conservation guarantees with non-conservative forces.
+///
+/// # Arguments
+/// * `initial` — Initial state
+/// * `mu` — Central body gravitational parameter
+/// * `dt` — Fixed timestep (seconds)
+/// * `duration` — Total propagation time (seconds)
+pub fn propagate_symplectic(
+    initial: &PropState,
+    mu: Mu,
+    dt: f64,
+    duration: f64,
+) -> SymplecticResult {
+    let n_steps = (duration / dt).ceil() as usize;
+    let mu_val = mu.value();
+
+    let mut states = Vec::with_capacity(n_steps + 1);
+
+    let mut pos = [
+        initial.pos.x.value(),
+        initial.pos.y.value(),
+        initial.pos.z.value(),
+    ];
+    let mut vel = [
+        initial.vel.x.value(),
+        initial.vel.y.value(),
+        initial.vel.z.value(),
+    ];
+    let mut time = initial.time;
+
+    states.push(*initial);
+
+    for step in 0..n_steps {
+        let h = if step == n_steps - 1 {
+            // Last step: use remaining time to land exactly on duration
+            duration - (step as f64) * dt
+        } else {
+            dt
+        };
+
+        // Störmer-Verlet leapfrog:
+        // Half-step velocity
+        let a = gravity_accel(pos, mu_val);
+        let half_h = 0.5 * h;
+        vel[0] += half_h * a[0];
+        vel[1] += half_h * a[1];
+        vel[2] += half_h * a[2];
+
+        // Full-step position
+        pos[0] += h * vel[0];
+        pos[1] += h * vel[1];
+        pos[2] += h * vel[2];
+
+        // Half-step velocity (using new position)
+        let a2 = gravity_accel(pos, mu_val);
+        vel[0] += half_h * a2[0];
+        vel[1] += half_h * a2[1];
+        vel[2] += half_h * a2[2];
+
+        time += h;
+
+        states.push(PropState {
+            pos: Vec3::new(Km(pos[0]), Km(pos[1]), Km(pos[2])),
+            vel: Vec3::new(KmPerSec(vel[0]), KmPerSec(vel[1]), KmPerSec(vel[2])),
+            time,
+        });
+    }
+
+    SymplecticResult {
+        n_steps,
+        states,
+    }
+}
+
+/// Propagate a ballistic orbit using Störmer-Verlet and return only the final state.
+/// Memory-efficient variant.
+pub fn propagate_symplectic_final(
+    initial: &PropState,
+    mu: Mu,
+    dt: f64,
+    duration: f64,
+) -> PropState {
+    let n_steps = (duration / dt).ceil() as usize;
+    let mu_val = mu.value();
+
+    let mut pos = [
+        initial.pos.x.value(),
+        initial.pos.y.value(),
+        initial.pos.z.value(),
+    ];
+    let mut vel = [
+        initial.vel.x.value(),
+        initial.vel.y.value(),
+        initial.vel.z.value(),
+    ];
+    let mut time = initial.time;
+
+    for step in 0..n_steps {
+        let h = if step == n_steps - 1 {
+            duration - (step as f64) * dt
+        } else {
+            dt
+        };
+
+        let a = gravity_accel(pos, mu_val);
+        let half_h = 0.5 * h;
+        vel[0] += half_h * a[0];
+        vel[1] += half_h * a[1];
+        vel[2] += half_h * a[2];
+
+        pos[0] += h * vel[0];
+        pos[1] += h * vel[1];
+        pos[2] += h * vel[2];
+
+        let a2 = gravity_accel(pos, mu_val);
+        vel[0] += half_h * a2[0];
+        vel[1] += half_h * a2[1];
+        vel[2] += half_h * a2[2];
+
+        time += h;
+    }
+
+    PropState {
+        pos: Vec3::new(Km(pos[0]), Km(pos[1]), Km(pos[2])),
+        vel: Vec3::new(KmPerSec(vel[0]), KmPerSec(vel[1]), KmPerSec(vel[2])),
+        time,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -2416,6 +2579,184 @@ mod tests {
             "Tight tolerance error ({:.2e}) should be less than loose ({:.2e})",
             err_tight,
             err_loose
+        );
+    }
+
+    // ── Störmer-Verlet Symplectic Integrator Tests ────────────────────────
+
+    #[test]
+    fn test_symplectic_energy_conservation_circular_leo() {
+        // Symplectic integrator should conserve energy with bounded oscillation (no secular drift)
+        let state = circular_orbit_state(mu::EARTH, reference_orbits::LEO_RADIUS);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::LEO_RADIUS);
+
+        let result = propagate_symplectic(&state, mu::EARTH, 1.0, period.value());
+        let (max_err, _) = energy_drift(&result.states, mu::EARTH);
+
+        assert!(
+            max_err < 1e-10,
+            "Symplectic LEO 1-period max energy drift = {:.2e} (should be <1e-10)",
+            max_err
+        );
+    }
+
+    #[test]
+    fn test_symplectic_energy_no_secular_drift_1000_orbits() {
+        // The key advantage of symplectic integrators: no secular energy drift
+        // over very long integration times (1000 orbits).
+        // The maximum energy error should remain bounded (not grow linearly with time).
+        let state = circular_orbit_state(mu::EARTH, reference_orbits::LEO_RADIUS);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::LEO_RADIUS);
+
+        let total = period.value() * 1000.0;
+        let result = propagate_symplectic(&state, mu::EARTH, 10.0, total);
+        let (max_err, _) = energy_drift(&result.states, mu::EARTH);
+
+        // For dt=10s over 1000 LEO orbits (~5.5 million seconds), symplectic should
+        // keep energy bounded (not linearly growing). Max error should stay small.
+        assert!(
+            max_err < 1e-8,
+            "Symplectic 1000-orbit max energy drift = {:.2e} (should be <1e-8)",
+            max_err
+        );
+    }
+
+    #[test]
+    fn test_symplectic_orbit_return_circular() {
+        // After one period, should return close to initial position
+        let state = circular_orbit_state(mu::EARTH, reference_orbits::LEO_RADIUS);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::LEO_RADIUS);
+
+        let final_state = propagate_symplectic_final(&state, mu::EARTH, 1.0, period.value());
+
+        let dx = (final_state.pos.x.value() - state.pos.x.value()).abs();
+        let dy = (final_state.pos.y.value() - state.pos.y.value()).abs();
+        let pos_err_km = (dx * dx + dy * dy).sqrt();
+        let rel_err = pos_err_km / state.radius();
+
+        assert!(
+            rel_err < 1e-5,
+            "Symplectic 1-period position return error: {:.2e} relative (should be <1e-5)",
+            rel_err
+        );
+    }
+
+    #[test]
+    fn test_symplectic_elliptical_high_eccentricity() {
+        // High eccentricity orbit (e=0.9) — fixed-step symplectic is penalized near periapsis.
+        // Use dt=0.1s to maintain accuracy for the fast periapsis passage.
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.9);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
+
+        let result = propagate_symplectic(&state, mu::EARTH, 0.1, period.value());
+        let (max_err, _) = energy_drift(&result.states, mu::EARTH);
+
+        assert!(
+            max_err < 1e-6,
+            "Symplectic e=0.9 1-period max energy drift = {:.2e} (should be <1e-6)",
+            max_err
+        );
+    }
+
+    #[test]
+    fn test_symplectic_vs_rk4_energy_comparison() {
+        // Compare symplectic vs RK4 energy drift over many orbits
+        // Symplectic should show bounded oscillation vs RK4's secular drift
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.5);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
+        let total = period.value() * 100.0;
+        let dt = 10.0;
+
+        // RK4
+        let config_rk4 = IntegratorConfig {
+            dt,
+            mu: mu::EARTH,
+            thrust: ThrustProfile::None,
+        };
+        let rk4_states = propagate(&state, &config_rk4, total);
+        let (rk4_max_err, _) = energy_drift(&rk4_states, mu::EARTH);
+
+        // Symplectic
+        let symp_result = propagate_symplectic(&state, mu::EARTH, dt, total);
+        let (symp_max_err, _) = energy_drift(&symp_result.states, mu::EARTH);
+
+        // Both should work for 100 orbits, but symplectic should be competitive or better
+        assert!(
+            symp_max_err < 1e-4,
+            "Symplectic e=0.5 100-orbit max energy drift = {:.2e}",
+            symp_max_err
+        );
+        assert!(
+            rk4_max_err < 1e-4,
+            "RK4 e=0.5 100-orbit max energy drift = {:.2e}",
+            rk4_max_err
+        );
+
+        // Log comparison for diagnostics (not a strict assertion since dt favors may vary)
+        eprintln!(
+            "100 orbits (e=0.5, dt=10s): Symplectic={:.2e}, RK4={:.2e}",
+            symp_max_err, rk4_max_err
+        );
+    }
+
+    #[test]
+    fn test_symplectic_ep02_ballistic_455d() {
+        // EP02 ballistic transfer: Jupiter→Saturn, 455 days
+        // Symplectic should conserve energy over this long integration
+        let r_jup = orbit_radius::JUPITER.value();
+        let v_jup = (mu::SUN.value() / r_jup).sqrt();
+
+        // Add departure velocity for hyperbolic escape (~2 km/s excess)
+        let v_dep = v_jup + 2.0;
+        let state = PropState::new(
+            Vec3::new(Km(r_jup), Km(0.0), Km(0.0)),
+            Vec3::new(KmPerSec(0.0), KmPerSec(v_dep), KmPerSec(0.0)),
+        );
+
+        let duration = 455.0 * 86400.0; // 455 days
+        let result = propagate_symplectic(&state, mu::SUN, 60.0, duration);
+        let (max_err, _) = energy_drift(&result.states, mu::SUN);
+
+        assert!(
+            max_err < 1e-9,
+            "Symplectic EP02 455d max energy drift = {:.2e} (should be <1e-9)",
+            max_err
+        );
+
+        // Should reach Saturn-ish distance
+        let final_r = result.states.last().unwrap().radius();
+        let r_saturn = orbit_radius::SATURN.value();
+        let r_ratio = final_r / r_saturn;
+        assert!(
+            r_ratio > 0.5 && r_ratio < 2.0,
+            "Symplectic EP02: final r = {:.0} km ({:.2}× Saturn)",
+            final_r,
+            r_ratio
+        );
+    }
+
+    #[test]
+    fn test_symplectic_final_matches_full() {
+        // Verify that propagate_symplectic_final gives same result as full trajectory
+        let state = circular_orbit_state(mu::EARTH, reference_orbits::LEO_RADIUS);
+        let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::LEO_RADIUS);
+
+        let full = propagate_symplectic(&state, mu::EARTH, 1.0, period.value());
+        let final_only = propagate_symplectic_final(&state, mu::EARTH, 1.0, period.value());
+
+        let full_last = full.states.last().unwrap();
+        let dx = (full_last.pos.x.value() - final_only.pos.x.value()).abs();
+        let dy = (full_last.pos.y.value() - final_only.pos.y.value()).abs();
+        let dz = (full_last.pos.z.value() - final_only.pos.z.value()).abs();
+
+        assert!(
+            dx < 1e-10 && dy < 1e-10 && dz < 1e-10,
+            "Final-only should match full trajectory: dx={:.2e}, dy={:.2e}, dz={:.2e}",
+            dx,
+            dy,
+            dz
         );
     }
 }

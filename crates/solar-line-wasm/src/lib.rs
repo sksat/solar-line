@@ -673,6 +673,132 @@ pub fn propagate_adaptive_brachistochrone(
 }
 
 // ---------------------------------------------------------------------------
+// Symplectic (Störmer-Verlet) integrator
+// ---------------------------------------------------------------------------
+
+/// Propagate a ballistic orbit using the Störmer-Verlet symplectic integrator.
+/// Returns final-state-only for efficiency.
+///
+/// Input: initial state (6 floats), mu (km³/s²), dt (s), duration (s).
+/// Returns [x, y, z, vx, vy, vz, time, energy_drift, n_steps] — 9 floats.
+#[wasm_bindgen]
+pub fn propagate_symplectic_ballistic(
+    x: f64,
+    y: f64,
+    z: f64,
+    vx: f64,
+    vy: f64,
+    vz: f64,
+    mu: f64,
+    dt: f64,
+    duration: f64,
+) -> Box<[f64]> {
+    let initial = propagation::PropState::new(
+        Vec3::new(Km(x), Km(y), Km(z)),
+        Vec3::new(KmPerSec(vx), KmPerSec(vy), KmPerSec(vz)),
+    );
+
+    let e0 = initial.specific_energy(Mu(mu));
+    let final_state = propagation::propagate_symplectic_final(&initial, Mu(mu), dt, duration);
+    let ef = final_state.specific_energy(Mu(mu));
+    let drift = if e0.abs() > 1e-30 {
+        ((ef - e0) / e0).abs()
+    } else {
+        (ef - e0).abs()
+    };
+    let n_steps = (duration / dt).ceil() as f64;
+
+    Box::new([
+        final_state.pos.x.value(),
+        final_state.pos.y.value(),
+        final_state.pos.z.value(),
+        final_state.vel.x.value(),
+        final_state.vel.y.value(),
+        final_state.vel.z.value(),
+        final_state.time,
+        drift,
+        n_steps,
+    ])
+}
+
+// ---------------------------------------------------------------------------
+// Gravity assist / flyby
+// ---------------------------------------------------------------------------
+
+/// Sphere of influence radius (km) for a planet.
+///
+/// Input: planet orbital radius (km), planet mu (km³/s²), sun mu (km³/s²).
+/// Returns SOI radius in km.
+#[wasm_bindgen]
+pub fn soi_radius(planet_orbit_radius: f64, mu_planet: f64, mu_sun: f64) -> f64 {
+    solar_line_core::flyby::soi_radius(Km(planet_orbit_radius), Mu(mu_planet), Mu(mu_sun)).value()
+}
+
+/// Compute an unpowered hyperbolic flyby.
+///
+/// Input: mu_planet, v_inf_in [3], r_periapsis, flyby_plane_normal [3].
+/// Returns [turn_angle_rad, v_periapsis, v_inf_out, out_dir_x, out_dir_y, out_dir_z] — 6 floats.
+#[wasm_bindgen]
+pub fn unpowered_flyby(
+    mu_planet: f64,
+    v_inf_x: f64,
+    v_inf_y: f64,
+    v_inf_z: f64,
+    r_periapsis: f64,
+    normal_x: f64,
+    normal_y: f64,
+    normal_z: f64,
+) -> Box<[f64]> {
+    let result = solar_line_core::flyby::unpowered_flyby(
+        Mu(mu_planet),
+        [v_inf_x, v_inf_y, v_inf_z],
+        Km(r_periapsis),
+        [normal_x, normal_y, normal_z],
+    );
+    Box::new([
+        result.turn_angle_rad,
+        result.v_periapsis,
+        result.v_inf_out,
+        result.v_inf_out_dir[0],
+        result.v_inf_out_dir[1],
+        result.v_inf_out_dir[2],
+    ])
+}
+
+/// Compute a powered flyby (burn at periapsis — Oberth effect).
+///
+/// Input: mu_planet, v_inf_in [3], r_periapsis, burn_dv, flyby_plane_normal [3].
+/// Returns [turn_angle_rad, v_periapsis, v_inf_out, out_dir_x, out_dir_y, out_dir_z] — 6 floats.
+#[wasm_bindgen]
+pub fn powered_flyby(
+    mu_planet: f64,
+    v_inf_x: f64,
+    v_inf_y: f64,
+    v_inf_z: f64,
+    r_periapsis: f64,
+    burn_dv: f64,
+    normal_x: f64,
+    normal_y: f64,
+    normal_z: f64,
+) -> Box<[f64]> {
+    let result = solar_line_core::flyby::powered_flyby(
+        Mu(mu_planet),
+        [v_inf_x, v_inf_y, v_inf_z],
+        Km(r_periapsis),
+        KmPerSec(burn_dv),
+        [normal_x, normal_y, normal_z],
+    );
+    Box::new([
+        result.turn_angle_rad,
+        result.v_periapsis,
+        result.v_inf_out,
+        result.v_inf_out_dir[0],
+        result.v_inf_out_dir[1],
+        result.v_inf_out_dir[2],
+    ])
+}
+
+// ---------------------------------------------------------------------------
 // Communications analysis
 // ---------------------------------------------------------------------------
 
@@ -1192,5 +1318,59 @@ mod tests {
         assert!((result[1] - 0.0).abs() < 1e-10);
         // Last entry elapsed should be travel time
         assert!((result[31] - 72.0 * 3600.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_wasm_propagate_symplectic_ballistic() {
+        let mu_earth: f64 = 3.986004418e5;
+        let r: f64 = 6578.0;
+        let v = (mu_earth / r).sqrt();
+        let period = std::f64::consts::TAU * (r.powi(3) / mu_earth).sqrt();
+
+        let result =
+            propagate_symplectic_ballistic(r, 0.0, 0.0, 0.0, v, 0.0, mu_earth, 1.0, period);
+        assert_eq!(result.len(), 9);
+        // Energy drift
+        let drift = result[7];
+        assert!(drift < 1e-8, "symplectic energy drift = {:.2e}", drift);
+        // n_steps should match ceil(period/dt)
+        let n_steps = result[8] as usize;
+        assert!(n_steps > 0, "should have taken steps");
+        assert_eq!(n_steps, (period / 1.0).ceil() as usize);
+    }
+
+    #[test]
+    fn test_wasm_soi_radius_jupiter() {
+        let mu_jup = 1.267e8; // km³/s²
+        let mu_sun = 1.327e11; // km³/s²
+        let r_jup = 7.783e8; // km
+
+        let r_soi = soi_radius(r_jup, mu_jup, mu_sun);
+        let r_soi_mkm = r_soi / 1e6;
+        assert!(
+            r_soi_mkm > 40.0 && r_soi_mkm < 55.0,
+            "Jupiter SOI: {:.1} Mkm",
+            r_soi_mkm
+        );
+    }
+
+    #[test]
+    fn test_wasm_unpowered_flyby() {
+        let mu_jup = 1.267e8;
+        let result = unpowered_flyby(mu_jup, 10.0, 0.0, 0.0, 200_000.0, 0.0, 0.0, 1.0);
+        assert_eq!(result.len(), 6);
+        // v_inf_out should equal v_inf_in for unpowered
+        assert!((result[2] - 10.0).abs() < 1e-6, "v_inf conserved");
+        // Turn angle should be positive
+        assert!(result[0] > 0.0, "turn angle > 0");
+    }
+
+    #[test]
+    fn test_wasm_powered_flyby() {
+        let mu_jup = 1.267e8;
+        let result = powered_flyby(mu_jup, 10.0, 0.0, 0.0, 200_000.0, 1.0, 0.0, 0.0, 1.0);
+        assert_eq!(result.len(), 6);
+        // v_inf_out should be > v_inf_in for powered flyby
+        assert!(result[2] > 10.0, "powered flyby increases v_inf: {:.4}", result[2]);
     }
 }
