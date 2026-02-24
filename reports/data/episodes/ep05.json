@@ -553,9 +553,9 @@
           "variedValue": 1,
           "variedUnit": "km/s",
           "results": {
-            "LEO捕捉ΔV": "3.23 km/s",
-            "GEO捕捉ΔV": "1.50 km/s",
-            "月軌道捕捉ΔV": "0.83 km/s"
+            "LEO捕捉ΔV": "3.22 km/s",
+            "GEO捕捉ΔV": "1.39 km/s",
+            "月軌道捕捉ΔV": "0.73 km/s"
           },
           "feasible": true,
           "note": "わずかな超過。月軌道でも1 km/s未満で捕捉可能。"
@@ -566,9 +566,9 @@
           "variedValue": 3,
           "variedUnit": "km/s",
           "results": {
-            "LEO捕捉ΔV": "3.76 km/s",
-            "GEO捕捉ΔV": "2.35 km/s",
-            "月軌道捕捉ΔV": "2.38 km/s"
+            "LEO捕捉ΔV": "3.59 km/s",
+            "GEO捕捉ΔV": "2.21 km/s",
+            "月軌道捕捉ΔV": "2.31 km/s"
           },
           "feasible": true,
           "note": "中程度の超過。LEO以外でもΔVが増大する。"
@@ -579,9 +579,9 @@
           "variedValue": 10,
           "variedUnit": "km/s",
           "results": {
-            "LEO捕捉ΔV": "6.50 km/s",
-            "GEO捕捉ΔV": "8.40 km/s",
-            "月軌道捕捉ΔV": "9.35 km/s"
+            "LEO捕捉ΔV": "7.08 km/s",
+            "GEO捕捉ΔV": "7.83 km/s",
+            "月軌道捕捉ΔV": "9.08 km/s"
           },
           "feasible": false,
           "note": "大幅な減速不足。損傷状態での捕捉は困難。大気制動が必要。",
