@@ -45,6 +45,7 @@
         {
           "id": "other-ships-fleet-saturn-uranus",
           "title": "地球保安艦隊 土星→タイタニア遷移（第4話、33時間 Brachistochrone）",
+          "description": "地球保安艦隊が土星軌道方面から天王星系タイタニアへ33時間で接近するbrachistochrone遷移。ケストレルが同区間（EP3）を143時間かけた航路と比較すると約4.3倍高速であり、艦隊が民間貨物船を大きく上回る推進能力を持つことを示唆する。必要ΔV≥50 km/sの見積もりから、軍用艦艇としての高性能が整合的であることを確認できる。",
           "scaleMode": "sqrt",
           "centerLabel": "太陽",
           "orbits": [

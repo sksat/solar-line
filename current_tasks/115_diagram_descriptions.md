@@ -1,6 +1,6 @@
 # Task 115: 軌道遷移図に description フィールド追加
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 

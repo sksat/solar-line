@@ -445,6 +445,7 @@ footer {
 .dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
 .orbital-diagram { text-align: center; }
 .orbital-diagram svg { max-width: 100%; height: auto; }
+.diagram-description { text-align: left; font-size: 0.9rem; color: #555; margin: 0.25rem 1rem 0.75rem; line-height: 1.5; }
 .orbital-animation-controls {
   display: flex;
   align-items: center;
@@ -1285,8 +1286,11 @@ ${items}
   }
 
   const animAttr = diagram.animation ? ' data-animated="true"' : "";
+  const descHtml = diagram.description
+    ? `\n<p class="diagram-description">${escapeHtml(diagram.description)}</p>`
+    : "";
   return `<div class="card orbital-diagram" id="${escapeHtml(diagram.id)}"${animAttr}>
-<h4>${escapeHtml(diagram.title)}</h4>
+<h4>${escapeHtml(diagram.title)}</h4>${descHtml}
 ${svg}${animationHtml}${timelineBarHtml}
 </div>`;
 }

@@ -213,6 +213,8 @@ export interface OrbitalDiagram {
   id: string;
   /** Diagram title */
   title: string;
+  /** Description explaining the analysis purpose, key observations, and conclusions */
+  description?: string;
   /** Label for the central body, e.g. "太陽" or "木星" */
   centerLabel: string;
   /** Scale mode for mapping orbital radii to pixel radii */
