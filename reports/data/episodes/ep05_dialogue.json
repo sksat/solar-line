@@ -19,9 +19,9 @@
       "aliases": ["ケイ"]
     },
     {
-      "id": "muse",
-      "nameJa": "ミューズ",
-      "nameEn": "Muse",
+      "id": "enceladus-keeper",
+      "nameJa": "エンケラドスの管理人",
+      "nameEn": "Enceladus Keeper",
       "aliases": []
     },
     {
@@ -66,7 +66,7 @@
       "id": "ep05-scene-05",
       "startMs": 390000,
       "endMs": 532000,
-      "description": "エンケラドスのミューズ — 構成信号の発信、「声を出せる」"
+      "description": "エンケラドスの管理人 — 校正信号の発信、「声を出せる」"
     },
     {
       "id": "ep05-scene-06",
@@ -795,8 +795,8 @@
       "note": "ケイの受信報告。Whisper合成行から分離。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "もしもし、聞こえてるかな？",
       "startMs": 398000,
       "endMs": 402140,
@@ -805,11 +805,11 @@
       "rawEntryIds": ["ep05-line-045"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズ登場。EP02のエンケラドスの人物が再登場。"
+      "note": "エンケラドスの管理人登場。EP02のエンケラドスの人物が再登場。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "可視光通信は久々だから、届いてたら返事して",
       "startMs": 402940,
       "endMs": 407000,
@@ -818,7 +818,7 @@
       "rawEntryIds": ["ep05-line-046"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの呼びかけ。"
+      "note": "エンケラドスの管理人の呼びかけ。"
     },
     {
       "speakerId": "kiritan",
@@ -834,8 +834,8 @@
       "note": "きりたんの応答。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "よかった。1週間前から港湾航舎の航路がロックダウンになってる。本当に全部",
       "startMs": 409000,
       "endMs": 414220,
@@ -844,11 +844,11 @@
       "rawEntryIds": ["ep05-line-046"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの情報。ロックダウン1週間。"
+      "note": "エンケラドスの管理人の情報。ロックダウン1週間。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "地球から全局に停波命令が出てるの。「重大な保安上の事件のため」ってすぐにあなたたちのことだって分かった。だって地球の保安艇があなたたちを追って天王星へ向かったから",
       "startMs": 415100,
       "endMs": 427240,
@@ -857,11 +857,11 @@
       "rawEntryIds": ["ep05-line-047"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの説明。Whisper「天皇星」→「天王星」、「保安停」→「保安艇」修正。"
+      "note": "エンケラドスの管理人の説明。Whisper「天皇星」→「天王星」、「保安停」→「保安艇」修正。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "地球はあなたたち一隻を止めるために、太陽系中の船を全部止めたの。ビーコンが落ちたら普通の船だって港に出入りできない。全部巻き添えになる",
       "startMs": 428840,
       "endMs": 439220,
@@ -870,11 +870,11 @@
       "rawEntryIds": ["ep05-line-048"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズが状況を説明。Whisper「一石」→「一隻」修正。"
+      "note": "エンケラドスの管理人が状況を説明。Whisper「一石」→「一隻」修正。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "だからこのリレー基地の送信設備を使って、校正信号を出してる。エンケラドスリレーの位置情報と現在時刻、あとは分かる限りの放射線密度も。港湾航舎の正規ビーコンじゃないから精度は落ちるけど、何もないよりマシだと思って",
       "startMs": 440340,
       "endMs": 457620,
@@ -883,7 +883,7 @@
       "rawEntryIds": ["ep05-line-049"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの行動。Whisper「構成信号」→「校正信号」修正。"
+      "note": "エンケラドスの管理人の行動。Whisper「構成信号」→「校正信号」修正。"
     },
     {
       "speakerId": "kiritan",
@@ -899,8 +899,8 @@
       "note": "きりたんの心配。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "大丈夫じゃない。怖いよ。でも私だって声を出せる。ここはエンケラドスだから",
       "startMs": 461340,
       "endMs": 468220,
@@ -909,11 +909,11 @@
       "rawEntryIds": ["ep05-line-051", "ep05-line-052"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの覚悟。「声を出せる」がテーマ。"
+      "note": "エンケラドスの管理人の覚悟。「声を出せる」がテーマ。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "ずっと黙ってた。地球にも火星にも、私たちは何も言えなかった。太陽の光だって、ここにはあまり届かない。でもそれでも言い出さなきゃ、何も変わらないんだよね",
       "startMs": 469780,
       "endMs": 483000,
@@ -922,7 +922,7 @@
       "rawEntryIds": ["ep05-line-053", "ep05-line-054"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの決意。外苑コロニーの政治的立場。"
+      "note": "エンケラドスの管理人の決意。外苑コロニーの政治的立場。"
     },
     {
       "speakerId": "kiritan",
@@ -938,8 +938,8 @@
       "note": "きりたんの返し。EP02での会話を示唆。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "そうだっけ。でもいいんだ。あなたたちの位置情報を太陽系全体に発信してる。出力が許す限り最大で。あの船が天王星から帰ってきてるって、全部流してる。地球が止められない船が内苑に向かっているって",
       "startMs": 485000,
       "endMs": 501340,
@@ -948,11 +948,11 @@
       "rawEntryIds": ["ep05-line-054", "ep05-line-055"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの行動。ケストレルの位置を太陽系全体に公開。"
+      "note": "エンケラドスの管理人の行動。ケストレルの位置を太陽系全体に公開。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "ねぇ、あなたたちはどこに向かってるの？",
       "startMs": 502800,
       "endMs": 505560,
@@ -961,7 +961,7 @@
       "rawEntryIds": ["ep05-line-056"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの問い。"
+      "note": "エンケラドスの管理人の問い。"
     },
     {
       "speakerId": "kiritan",
@@ -977,8 +977,8 @@
       "note": "きりたんの端的な答え。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "そっか",
       "startMs": 507640,
       "endMs": 508880,
@@ -987,11 +987,11 @@
       "rawEntryIds": ["ep05-line-058"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの反応。"
+      "note": "エンケラドスの管理人の反応。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "あのさ、そこからエンケラドスは見えるかな？",
       "startMs": 510600,
       "endMs": 513720,
@@ -1000,7 +1000,7 @@
       "rawEntryIds": ["ep05-line-059"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの問い。"
+      "note": "エンケラドスの管理人の問い。"
     },
     {
       "speakerId": "kiritan",
@@ -1016,8 +1016,8 @@
       "note": "きりたんの応答。土星圏通過中。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "そこからどう見える、エンケラドスは？",
       "startMs": 518160,
       "endMs": 520880,
@@ -1026,7 +1026,7 @@
       "rawEntryIds": ["ep05-line-061"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズの問い。"
+      "note": "エンケラドスの管理人の問い。"
     },
     {
       "speakerId": "kiritan",
@@ -1042,8 +1042,8 @@
       "note": "きりたんの描写。エンケラドスの夜明け。"
     },
     {
-      "speakerId": "muse",
-      "speakerName": "ミューズ",
+      "speakerId": "enceladus-keeper",
+      "speakerName": "エンケラドスの管理人",
       "text": "ありがとう。安全な航海を",
       "startMs": 528240,
       "endMs": 530880,
@@ -1052,7 +1052,7 @@
       "rawEntryIds": ["ep05-line-063"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ミューズとの別れ。"
+      "note": "エンケラドスの管理人との別れ。"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1065,7 +1065,7 @@
       "rawEntryIds": ["ep05-line-064"],
       "transferRefs": ["ep05-transfer-02"],
       "mentions": [],
-      "note": "ミューズの校正信号の効果。Whisper「構成データ」→「校正データ」、「感性交法系」→「慣性航法系」、「禁防通過」→「近傍通過」、「精密交法」→「精密航法」修正。"
+      "note": "エンケラドスの管理人の校正信号の効果。Whisper「構成データ」→「校正データ」、「感性交法系」→「慣性航法系」、「禁防通過」→「近傍通過」、「精密交法」→「精密航法」修正。"
     },
     {
       "speakerId": "kiritan",
@@ -1078,7 +1078,7 @@
       "rawEntryIds": ["ep05-line-065"],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがミューズを思う。"
+      "note": "きりたんがエンケラドスの管理人を思う。"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1091,7 +1091,7 @@
       "rawEntryIds": ["ep05-line-065"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ケイの返答。ミューズの発信行動を指す。"
+      "note": "ケイの返答。エンケラドスの管理人の発信行動を指す。"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1559,7 +1559,7 @@
       "rawEntryIds": ["ep05-line-095"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライがミューズの発信の効果を伝える。Whisper「天皇星」→「天王星」、「公報鍵」→「航法鍵」修正。"
+      "note": "ライがエンケラドスの管理人の発信の効果を伝える。Whisper「天皇星」→「天王星」、「公報鍵」→「航法鍵」修正。"
     },
     {
       "speakerId": "rai",

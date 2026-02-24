@@ -1,6 +1,6 @@
 # Task 099: Enceladus Speaker Correction + Transcription Data Layers
 
-## Status: TODO
+## Status: IN_PROGRESS (speaker correction done, transcription layers TODO)
 
 ## Motivation
 Human directives:
@@ -21,4 +21,9 @@ Human directives:
 ## Notes
 - The existing multi-source tab UI (Task 070) already shows corrected vs VTT vs Whisper
 - This extends that to show processing stages within each source
-- EP05 dialogue says ミューズ on Enceladus — need to verify against video content
+- ~~EP05 dialogue says ミューズ on Enceladus — need to verify against video content~~
+- **DONE**: ミューズ → エンケラドスの管理人 (EP02 consistent naming)
+  - Speaker ID: muse → enceladus-keeper
+  - Updated: ep05_dialogue.json, ep05_speakers.json, ep05.json, ep02.json, infrastructure.json, attitude-control.json
+  - Raw transcription data (ep05_lines.json, ep03_lines*.json) NOT modified (Whisper output as-is)
+- Remaining: Whisper model documentation + transcription data layers display
