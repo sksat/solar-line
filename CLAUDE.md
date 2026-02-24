@@ -142,7 +142,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Session log display**: Separate agent-loop stdout summary from conversation log display. In conversation logs, label the assistant as "Assistant (model)". Support sub-agent display where possible. Link each log to its associated commit(s) with GitHub URLs.
 - **GitHub repo link**: The published GitHub Pages site must include a visible link to the source repository.
 - **Interactive component testing**: Each interactive library (uPlot, orbital animation, DAG viewer) should have standalone example HTML pages. Run Playwright E2E tests against these examples to enable unit-test-like verification of interactive components.
-- **Reproducible numerical analysis**: All numerical analyses must be scripted and reproducible. Include reproduction commands in report components. Provide a batch `npm run recalculate` command to re-derive all parameters from scripts in one pass.
+- **Reproducible numerical analysis**: All numerical analyses must be scripted and reproducible. Reproduction commands should be **per-analysis** (not per-report) — each transfer analysis, parameter exploration, or orbital calculation gets its own reproduction command. Treat these like automated tests: TDD-style analysis where the reproduction command is written first, and results are always kept verified. When preconditions change, running these "analysis tests" is more reliable than tracing the DAG. Provide a batch `npm run recalculate` command to re-derive all parameters from scripts in one pass.
 
 ## Context Efficiency
 
