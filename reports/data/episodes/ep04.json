@@ -188,7 +188,14 @@
         "totalExposureMSv": 480,
         "statedMagneticTiltDeg": 60,
         "realMagneticTiltDeg": 59.7,
-        "tiltAccuracyPercent": 99.5
+        "tiltAccuracyPercent": 99.5,
+        "momentumPerturbation": {
+          "nominalDeltaVMs": 7.1e-9,
+          "enhancedDeltaVMs": 1.4e-6,
+          "extremeDeltaVMs": 1.7e-4,
+          "extremeMissDistanceKm": 5.9e-3,
+          "conclusion": "negligible"
+        }
       },
       "evidenceQuoteIds": [
         "ep04-quote-06",
@@ -469,9 +476,28 @@
           },
           "feasible": true,
           "note": "480 mSvはICRP緊急被曝限度（500 mSv）をわずかに下回る。NASAの宇宙飛行士のキャリア限度（600 mSv）以内。急性症状は軽い悪心程度で、作中の描写（「数時間以内に軽い吐き気を催す可能性」）は医学的に正確。"
+        },
+        {
+          "label": "軌道摂動推定（運動量効果 vs 放射線効果）",
+          "variedParam": "プラズモイド密度・磁場強度",
+          "variedValue": 3,
+          "variedUnit": "シナリオ (nominal/enhanced/extreme)",
+          "results": {
+            "nominalDeltaVMs": 7.1e-9,
+            "enhancedDeltaVMs": 1.4e-6,
+            "extremeDeltaVMs": 1.7e-4,
+            "nominalMissDistanceKm": 2.5e-7,
+            "extremeMissDistanceKm": 5.9e-3,
+            "nominalForceN": 7.1e-4,
+            "extremeForceN": 17.0,
+            "correctionToOrbitalRatio": "<1e-6（全シナリオ）",
+            "conclusion": "運動量効果は48,000t船に対し完全に無視可能。放射線効果（480 mSv）が唯一の実質的脅威"
+          },
+          "feasible": true,
+          "note": "DiBraccio & Gershman (2019) のVoyager 2データに基づき、3シナリオ（nominal/enhanced/extreme）でプラズモイドの運動量移送を推定。磁気圧（$B^2/2\\mu_0$）とラム圧（$\\frac{1}{2}\\rho v^2$）の合計を船体有効断面積（磁気シールドstandoff半径50m、約7,854 m²）に作用させ、8分間の通過で得られるインパルスを48,000tの船体質量で除した。\n\n最悪のextremeシナリオ（B=50 nT, n=5 cm⁻³, v=500 km/s）でも速度摂動は0.17 mm/s、タイタニアまでの到達誤差は5.9 mに過ぎない。これは船体の慣性質量が極めて大きいためであり、プラズモイド圧力（~nPa）が全く効かない。放射線効果（480 mSv）は生物学的に深刻であるにもかかわらず、軌道力学的にはプラズモイドは「そよ風」に等しい。作中でケイが回避を「RCSでは不能、主機が必要」と述べたのは放射線・シールド損傷の観点であり、軌道偏向の観点ではない——物理的に正しい判断。"
         }
       ],
-      "summary": "Episode 4のプラズモイド遭遇は科学的に非常に正確。天王星磁軸の60°傾斜（実測値59.7°）、プラズモイドの予測困難性、被曝量と症状の関係——いずれもVoyager 2の観測データおよびICRP/NASAの放射線防護基準と高い整合性を示す。2019年のDiBraccio & Gershman論文で明らかになった天王星プラズモイドの知見が作中に反映されていると考えられる。\n\n【第3話からの伏線】第3話の天王星到着時「間もなく天王星磁気圏に突入します。現在高度は25RU」というケイの報告は、まさにこのプラズモイド遭遇への伏線であった。25RU圏内が天王星磁気圏の影響圏であり、この領域でのプラズモイドの危険性は第4話で初めて具体化する。シリーズの科学的描写は、伏線と回収の両方で一貫した精度を保っている。"
+      "summary": "Episode 4のプラズモイド遭遇は科学的に非常に正確。天王星磁軸の60°傾斜（実測値59.7°）、プラズモイドの予測困難性、被曝量と症状の関係——いずれもVoyager 2の観測データおよびICRP/NASAの放射線防護基準と高い整合性を示す。2019年のDiBraccio & Gershman論文で明らかになった天王星プラズモイドの知見が作中に反映されていると考えられる。\n\n【第3話からの伏線】第3話の天王星到着時「間もなく天王星磁気圏に突入します。現在高度は25RU」というケイの報告は、まさにこのプラズモイド遭遇への伏線であった。25RU圏内が天王星磁気圏の影響圏であり、この領域でのプラズモイドの危険性は第4話で初めて具体化する。シリーズの科学的描写は、伏線と回収の両方で一貫した精度を保っている。\n\n【運動量摂動推定（Task 100追加）】プラズモイドは放射線の脅威としては深刻だが、48,000tのケストレルに対する運動量効果は完全に無視可能。磁気圧とラム圧の和（~nPa）が8分間作用しても、速度変化は最悪0.17 mm/s。「プラズモイドの危険 = 放射線」であり「プラズモイドの危険 ≠ 軌道偏向」という区別が物理的に正確。"
     },
     {
       "id": "ep04-exploration-03",

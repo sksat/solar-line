@@ -330,6 +330,106 @@ export function damageAssessment() {
   };
 }
 
+// ─── Transfer 4b: Plasmoid Momentum Perturbation ───
+
+/** Proton mass (kg) for hydrogen plasma density */
+const PROTON_MASS_KG = 1.672_621_924e-27;
+
+/** Permeability of free space (H/m) */
+const MU_0 = 1.256_637_062e-6;
+
+/**
+ * Plasmoid perturbation scenario parameters.
+ * Based on DiBraccio & Gershman (2019) Voyager 2 observations.
+ */
+export const PLASMOID_SCENARIOS = {
+  /** Typical magnetotail conditions: B ~2 nT, n ~0.05 cm⁻³, v ~150 km/s */
+  nominal: { label: "nominal", bTesla: 2.0e-9, nPerCm3: 0.05, vKmS: 150 },
+  /** Compressed plasmoid: B ~15 nT, n ~0.5 cm⁻³, v ~250 km/s */
+  enhanced: { label: "enhanced", bTesla: 15.0e-9, nPerCm3: 0.5, vKmS: 250 },
+  /** Reconnection-driven fast plasmoid: B ~50 nT, n ~5 cm⁻³, v ~500 km/s */
+  extreme: { label: "extreme", bTesla: 50.0e-9, nPerCm3: 5.0, vKmS: 500 },
+} as const;
+
+/** Kestrel effective cross-section for plasmoid interaction (m²).
+ *  Magnetic shield standoff radius ~50 m → π × 50² ≈ 7854 m² */
+const SHIELD_CROSS_SECTION_M2 = Math.PI * 50 * 50;
+
+export interface PlasmoidPerturbationResult {
+  label: string;
+  magneticPressurePa: number;
+  ramPressurePa: number;
+  totalPressurePa: number;
+  forceN: number;
+  impulseNs: number;
+  velocityPerturbationMs: number;
+  missDistanceKm: number;
+  correctionDvMs: number;
+  /** Ratio of correction ΔV to typical orbital velocity (~5 km/s) */
+  correctionToOrbitalRatio: number;
+}
+
+/**
+ * Compute plasmoid momentum perturbation for a given scenario.
+ *
+ * Key physics:
+ * - Magnetic pressure: B²/(2μ₀)
+ * - Ram pressure: 0.5 × ρ × v²
+ * - Force = (P_mag + P_ram) × cross-section
+ * - Impulse = Force × transit time
+ * - ΔV = Impulse / ship mass
+ */
+export function plasmoidPerturbation(
+  bTesla: number,
+  nPerCm3: number,
+  vKmS: number,
+  transitS: number = EP04_PARAMS.plasmoidTransitSec,
+  shipMassKg: number = KESTREL.massKg,
+  remainingTravelS: number = EP04_PARAMS.titaniaRemainingTimeSec,
+): Omit<PlasmoidPerturbationResult, 'label'> {
+  const nPerM3 = nPerCm3 * 1e6;
+  const vMs = vKmS * 1000;
+  const rhoKgM3 = nPerM3 * PROTON_MASS_KG;
+
+  const pMag = bTesla * bTesla / (2 * MU_0);
+  const pRam = 0.5 * rhoKgM3 * vMs * vMs;
+  const pTotal = pMag + pRam;
+
+  const force = pTotal * SHIELD_CROSS_SECTION_M2;
+  const impulse = force * transitS;
+  const dv = impulse / shipMassKg;
+
+  const missKm = (dv * remainingTravelS) / 1000;
+  const correctionDv = dv;
+  const orbitalVMs = 5000;
+
+  return {
+    magneticPressurePa: pMag,
+    ramPressurePa: pRam,
+    totalPressurePa: pTotal,
+    forceN: force,
+    impulseNs: impulse,
+    velocityPerturbationMs: dv,
+    missDistanceKm: missKm,
+    correctionDvMs: correctionDv,
+    correctionToOrbitalRatio: correctionDv / orbitalVMs,
+  };
+}
+
+/**
+ * Full plasmoid perturbation analysis across all scenarios.
+ *
+ * Key finding: Momentum perturbation is negligible for a 48,000 t ship.
+ * Radiation (480 mSv) is biologically dangerous, but mechanical trajectory
+ * deflection requires effectively zero course-correction ΔV.
+ */
+export function plasmoidPerturbationAnalysis(): PlasmoidPerturbationResult[] {
+  return Object.values(PLASMOID_SCENARIOS).map(scenario => ({
+    label: scenario.label,
+    ...plasmoidPerturbation(scenario.bTesla, scenario.nPerCm3, scenario.vKmS),
+  }));
+}
+
 // ─── Full Analysis ───
 
 /**
@@ -341,6 +441,7 @@ export function analyzeEpisode4() {
   const brach = brachistochroneAnalysis();
   const massFeasibility = massFeasibilityAnalysis(UE_DISTANCE_SCENARIOS.closest);
   const plasmoid = plasmoidAnalysis();
+  const plasmoidMomentum = plasmoidPerturbationAnalysis();
   const fleet = fleetInterceptAnalysis();
   const damage = damageAssessment();
 
@@ -350,6 +451,7 @@ export function analyzeEpisode4() {
     brachistochrone: brach,
     massFeasibility,
     plasmoid,
+    plasmoidMomentum,
     fleetIntercept: fleet,
     damageAssessment: damage,
   };

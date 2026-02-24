@@ -35,6 +35,24 @@ Question: [the user's specific question or $ARGUMENTS]
 "
 ```
 
+## Model selection
+
+Choose the consultation model based on the topic:
+
+- **Design/architecture review** → `codex exec` (Codex CLI, default)
+  - API design, code structure, naming, patterns, trade-offs
+- **Physics/orbital mechanics** → `codex exec -m gpt-5.2` (reasoning model)
+  - Orbital mechanics, perturbation theory, radiation physics, ΔV calculations
+  - Numerical analysis, energy conservation, coordinate system questions
+  - Any domain-specific physics question where chain-of-thought reasoning matters
+
+When the topic involves physics, use:
+```bash
+codex exec -s read-only -m gpt-5.2 "
+You are a physicist specializing in astrodynamics and orbital mechanics.
+..."
+```
+
 ## Guidelines
 
 - Always pass relevant project files as context (pipe file contents or reference them)

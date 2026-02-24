@@ -1428,6 +1428,101 @@ struct JsMassSnapshot {
 }
 
 // ---------------------------------------------------------------------------
+// Plasmoid perturbation analysis
+// ---------------------------------------------------------------------------
+
+/// Magnetic pressure (Pa) from a magnetic field strength in Tesla.
+#[wasm_bindgen]
+pub fn magnetic_pressure_pa(b_tesla: f64) -> f64 {
+    solar_line_core::plasmoid::magnetic_pressure_pa(b_tesla)
+}
+
+/// Ram pressure (Pa) from plasma mass density (kg/m³) and velocity (m/s).
+#[wasm_bindgen]
+pub fn ram_pressure_pa(density_kg_m3: f64, velocity_m_s: f64) -> f64 {
+    solar_line_core::plasmoid::ram_pressure_pa(density_kg_m3, velocity_m_s)
+}
+
+/// Convert plasma number density (particles/m³) to mass density (kg/m³).
+/// Assumes pure hydrogen plasma.
+#[wasm_bindgen]
+pub fn plasma_number_density_to_mass(n_per_m3: f64) -> f64 {
+    solar_line_core::plasmoid::number_density_to_mass(n_per_m3)
+}
+
+/// Full plasmoid perturbation analysis.
+/// Returns JSON: { magnetic_pressure_pa, ram_pressure_pa, total_pressure_pa,
+///   force_n, impulse_ns, velocity_perturbation_m_s, miss_distance_km, correction_dv_m_s }
+#[wasm_bindgen]
+pub fn plasmoid_perturbation(
+    b_tesla: f64,
+    n_density_per_m3: f64,
+    plasma_velocity_m_s: f64,
+    cross_section_m2: f64,
+    transit_duration_s: f64,
+    ship_mass_kg: f64,
+    remaining_travel_s: f64,
+) -> Result<JsValue, JsError> {
+    let result = solar_line_core::plasmoid::plasmoid_perturbation(
+        b_tesla,
+        n_density_per_m3,
+        plasma_velocity_m_s,
+        cross_section_m2,
+        transit_duration_s,
+        ship_mass_kg,
+        remaining_travel_s,
+    );
+
+    #[derive(Serialize)]
+    struct PlasmoidResult {
+        magnetic_pressure_pa: f64,
+        ram_pressure_pa: f64,
+        total_pressure_pa: f64,
+        force_n: f64,
+        impulse_ns: f64,
+        velocity_perturbation_m_s: f64,
+        miss_distance_km: f64,
+        correction_dv_m_s: f64,
+    }
+
+    let r = PlasmoidResult {
+        magnetic_pressure_pa: result.magnetic_pressure_pa,
+        ram_pressure_pa: result.ram_pressure_pa,
+        total_pressure_pa: result.total_pressure_pa,
+        force_n: result.force_n,
+        impulse_ns: result.impulse_ns,
+        velocity_perturbation_m_s: result.velocity_perturbation_m_s,
+        miss_distance_km: result.miss_distance_km,
+        correction_dv_m_s: result.correction_dv_m_s,
+    };
+    serde_wasm_bindgen::to_value(&r).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Get predefined Uranus plasmoid scenarios.
+/// Returns JSON array: [{ label, b_tesla, n_per_m3, velocity_m_s }, ...]
+#[wasm_bindgen]
+pub fn uranus_plasmoid_scenarios() -> Result<JsValue, JsError> {
+    #[derive(Serialize)]
+    struct Scenario {
+        label: String,
+        b_tesla: f64,
+        n_per_m3: f64,
+        velocity_m_s: f64,
+    }
+
+    let scenarios: Vec<Scenario> = solar_line_core::plasmoid::uranus_plasmoid_scenarios()
+        .into_iter()
+        .map(|(label, b, n, v)| Scenario {
+            label: label.to_string(),
+            b_tesla: b,
+            n_per_m3: n,
+            velocity_m_s: v,
+        })
+        .collect();
+    serde_wasm_bindgen::to_value(&scenarios).map_err(|e| JsError::new(&e.to_string()))
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 

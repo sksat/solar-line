@@ -12,6 +12,7 @@ import {
   brachistochroneAnalysis,
   massFeasibilityAnalysis,
   plasmoidAnalysis,
+  plasmoidPerturbationAnalysis,
   fleetInterceptAnalysis,
   damageAssessment,
   analyzeEpisode4,
@@ -284,6 +285,64 @@ describe("EP04 Damage Assessment", () => {
   });
 });
 
+describe("EP04 Plasmoid Momentum Perturbation", () => {
+  it("returns 3 scenarios", () => {
+    const results = plasmoidPerturbationAnalysis();
+    assert.equal(results.length, 3);
+    assert.equal(results[0].label, "nominal");
+    assert.equal(results[1].label, "enhanced");
+    assert.equal(results[2].label, "extreme");
+  });
+
+  it("nominal scenario has negligible velocity perturbation", () => {
+    const results = plasmoidPerturbationAnalysis();
+    const nominal = results.find(r => r.label === "nominal")!;
+    assert.ok(
+      nominal.velocityPerturbationMs < 1e-3,
+      `nominal Δv = ${nominal.velocityPerturbationMs} m/s (should be < 0.001)`,
+    );
+  });
+
+  it("even extreme scenario is negligible for 48,000t ship", () => {
+    const results = plasmoidPerturbationAnalysis();
+    const extreme = results.find(r => r.label === "extreme")!;
+    assert.ok(
+      extreme.velocityPerturbationMs < 0.1,
+      `extreme Δv = ${extreme.velocityPerturbationMs} m/s (should be < 0.1)`,
+    );
+  });
+
+  it("correction ΔV is negligible compared to orbital velocity", () => {
+    const results = plasmoidPerturbationAnalysis();
+    for (const r of results) {
+      assert.ok(
+        r.correctionToOrbitalRatio < 1e-6,
+        `${r.label}: correction/orbital = ${r.correctionToOrbitalRatio}`,
+      );
+    }
+  });
+
+  it("perturbation scales with scenario severity", () => {
+    const results = plasmoidPerturbationAnalysis();
+    const nominal = results.find(r => r.label === "nominal")!;
+    const enhanced = results.find(r => r.label === "enhanced")!;
+    const extreme = results.find(r => r.label === "extreme")!;
+    assert.ok(extreme.forceN > enhanced.forceN);
+    assert.ok(enhanced.forceN > nominal.forceN);
+  });
+
+  it("miss distance is proportional to velocity perturbation", () => {
+    const results = plasmoidPerturbationAnalysis();
+    for (const r of results) {
+      const expectedMiss = (r.velocityPerturbationMs * EP04_PARAMS.titaniaRemainingTimeSec) / 1000;
+      assert.ok(
+        Math.abs(r.missDistanceKm - expectedMiss) < 1e-10,
+        `${r.label}: miss=${r.missDistanceKm} vs expected=${expectedMiss}`,
+      );
+    }
+  });
+});
+
 describe("EP04 Full Analysis", () => {
   it("analyzeEpisode4 returns all expected sections", () => {
     const a = analyzeEpisode4();
@@ -292,6 +351,7 @@ describe("EP04 Full Analysis", () => {
     assert.ok(a.brachistochrone);
     assert.ok(a.massFeasibility);
     assert.ok(a.plasmoid);
+    assert.ok(a.plasmoidMomentum);
     assert.ok(a.fleetIntercept);
     assert.ok(a.damageAssessment);
   });

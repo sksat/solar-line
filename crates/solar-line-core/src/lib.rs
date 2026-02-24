@@ -7,6 +7,7 @@ pub mod flyby;
 pub mod kepler;
 pub mod mass_timeline;
 pub mod orbits;
+pub mod plasmoid;
 pub mod propagation;
 /// solar-line-core: Orbital mechanics analysis for SOLAR LINE 考察.
 ///
