@@ -83,6 +83,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **External source links**: All external source citations (NASA NTRS, papers, worldbuilding documents) must be rendered as clickable hyperlinks, not plain text.
 - **Orbit propagation validation**: After desk calculations (brachistochrone ΔV, Hohmann transfers), validate with detailed numerical orbit propagation. This is especially important for time-dependent parameters (travel time, planetary positions, arrival conditions). Use TDD: estimate and verify numerical integration accuracy (e.g. energy conservation of the full system) as test assertions.
 - **Iterative re-analysis**: Seek overlooked viewpoints from nice-friend (Codex) and prior human feedback. When new perspectives emerge, re-analyze — especially items that weren't clearly plausible or had remaining questions. This iterative cycle (new perspective → re-analysis → new questions) deepens the analysis beyond initial conclusions.
+- **Narrative plausibility review**: Beyond physics validation and cross-episode consistency, check whether computed values (durations, distances, conditions) match the **viewer's experience** of the story. If an analysis produces a result that feels inconsistent with on-screen depiction (e.g., year-long voyage in a show that implies shorter timeframes), flag this as a narrative plausibility concern and explore alternative interpretations.
+- **Source priority**: Anime source material (映像・台詞) takes priority over worldbuilding documents (設定資料). When they conflict, analyze based on the anime depiction and discuss the discrepancy with the worldbuilding source.
 
 ## Data Infrastructure
 
