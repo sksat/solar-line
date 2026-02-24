@@ -167,7 +167,7 @@
               "endTime": 50000,
               "burnMarkers": [
                 {
-                  "angle": 2.96,
+                  "angle": 2.9604,
                   "label": "EP1 加速",
                   "startTime": 0,
                   "endTime": 25000,
@@ -192,7 +192,7 @@
               "endTime": 300000,
               "burnMarkers": [
                 {
-                  "angle": 2.997,
+                  "angle": 2.993,
                   "label": "EP2 木星圏脱出",
                   "startTime": 0,
                   "endTime": 5000,
@@ -217,7 +217,7 @@
               "endTime": 380000,
               "burnMarkers": [
                 {
-                  "angle": 2.51,
+                  "angle": 2.5081,
                   "label": "EP3 加速",
                   "startTime": 0,
                   "endTime": 35000,
@@ -242,14 +242,14 @@
               "endTime": 520000,
               "burnMarkers": [
                 {
-                  "angle": 4.8762,
+                  "angle": 4.8758,
                   "label": "EP5 天王星脱出",
                   "startTime": 0,
                   "endTime": 32500,
                   "type": "acceleration"
                 },
                 {
-                  "angle": 3.14,
+                  "angle": 2.993,
                   "label": "EP5 木星フライバイ",
                   "startTime": 45000,
                   "endTime": 50000,

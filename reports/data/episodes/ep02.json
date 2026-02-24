@@ -365,7 +365,7 @@
           "style": "hyperbolic",
           "burnMarkers": [
             {
-              "angle": 0.3,
+              "angle": 3.14,
               "label": "脱出噴射 10.3 km/s",
               "startTime": 0,
               "endTime": 3600,

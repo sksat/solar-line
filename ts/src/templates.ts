@@ -1143,8 +1143,15 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     const fromPx = orbitPxMap.get(t.fromOrbitId)!;
     const toPx = orbitPxMap.get(t.toOrbitId)!;
     return t.burnMarkers.map(bm => {
-      // Place marker at interpolated radius at specified angle
-      const r = (fromPx + toPx) / 2;
+      // Place marker at appropriate orbit radius based on burn type
+      let r: number;
+      if (bm.type === "acceleration") {
+        r = fromPx; // Departure burn at from-orbit
+      } else if (bm.type === "capture" || bm.type === "deceleration") {
+        r = toPx; // Arrival/capture burn at to-orbit
+      } else {
+        r = (fromPx + toPx) / 2; // Midcourse at midpoint
+      }
       const mx = r * Math.cos(bm.angle);
       const my = -r * Math.sin(bm.angle);
       return `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="3" fill="var(--yellow)" stroke="var(--bg)" stroke-width="1"/>

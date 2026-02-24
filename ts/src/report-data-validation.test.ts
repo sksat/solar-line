@@ -9,7 +9,7 @@ import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { EpisodeReport, TransferAnalysis, DialogueQuote } from "./report-types.ts";
+import type { EpisodeReport, TransferAnalysis, DialogueQuote, SummaryReport, OrbitalDiagram, BurnMarker, TransferArc } from "./report-types.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 
 const REPORTS_DIR = path.resolve(import.meta.dirname ?? ".", "..", "..", "reports");
@@ -635,5 +635,140 @@ describe("report data: transcription-report sync", () => {
         );
       }
     });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Burn marker position and timing validation
+// ---------------------------------------------------------------------------
+
+const SUMMARY_DIR = path.join(REPORTS_DIR, "data", "summary");
+
+/** Load a summary report JSON file */
+function loadSummaryReport(slug: string): SummaryReport {
+  const filePath = path.join(SUMMARY_DIR, `${slug}.json`);
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+}
+
+/** Collect all orbital diagrams from all sources */
+function collectAllDiagrams(): Array<{ source: string; diagram: OrbitalDiagram }> {
+  const results: Array<{ source: string; diagram: OrbitalDiagram }> = [];
+
+  // Episode diagrams
+  for (const epNum of getAvailableEpisodes()) {
+    const report = loadEpisodeReport(epNum);
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+    for (const d of report.diagrams ?? []) {
+      results.push({ source: prefix, diagram: d });
+    }
+  }
+
+  // Cross-episode summary diagram
+  const crossEp = loadSummaryReport("cross-episode");
+  for (const section of crossEp.sections) {
+    for (const d of section.orbitalDiagrams ?? []) {
+      results.push({ source: "cross-episode", diagram: d });
+    }
+  }
+
+  return results;
+}
+
+describe("report data: burn marker angle alignment", () => {
+  const allDiagrams = collectAllDiagrams();
+  /** Maximum allowed angular deviation (radians) between burn marker and orbit */
+  const ANGLE_TOLERANCE = 0.001;
+
+  for (const { source, diagram } of allDiagrams) {
+    const orbitMap = new Map(diagram.orbits.map(o => [o.id, o]));
+
+    for (const arc of diagram.transfers) {
+      if (!arc.burnMarkers || arc.burnMarkers.length === 0) continue;
+
+      const fromOrbit = orbitMap.get(arc.fromOrbitId);
+      const toOrbit = orbitMap.get(arc.toOrbitId);
+
+      for (const bm of arc.burnMarkers) {
+        it(`${source} ${diagram.id ?? diagram.title}: "${bm.label}" angle matches orbit position`, () => {
+          if (bm.type === "acceleration") {
+            // Departure burns should be at the from-orbit angle
+            if (fromOrbit?.angle !== undefined) {
+              const delta = Math.abs(bm.angle - fromOrbit.angle);
+              assert.ok(
+                delta < ANGLE_TOLERANCE,
+                `Acceleration burn "${bm.label}" angle ${bm.angle} differs from departure orbit "${arc.fromOrbitId}" angle ${fromOrbit.angle} by ${delta.toFixed(4)} rad`,
+              );
+            }
+          } else if (bm.type === "deceleration" || bm.type === "capture") {
+            // Arrival/capture burns should be at the to-orbit angle
+            if (toOrbit?.angle !== undefined) {
+              const delta = Math.abs(bm.angle - toOrbit.angle);
+              assert.ok(
+                delta < ANGLE_TOLERANCE,
+                `${bm.type} burn "${bm.label}" angle ${bm.angle} differs from arrival orbit "${arc.toOrbitId}" angle ${toOrbit.angle} by ${delta.toFixed(4)} rad`,
+              );
+            }
+          }
+          // Midcourse burns can be at any angle — no position constraint
+        });
+      }
+    }
+  }
+});
+
+describe("report data: burn marker timing consistency", () => {
+  const allDiagrams = collectAllDiagrams();
+
+  for (const { source, diagram } of allDiagrams) {
+    for (const arc of diagram.transfers) {
+      if (!arc.burnMarkers || arc.burnMarkers.length === 0) continue;
+      if (arc.startTime === undefined || arc.endTime === undefined) continue;
+
+      const arcDuration = arc.endTime - arc.startTime;
+
+      for (const bm of arc.burnMarkers) {
+        if (bm.startTime === undefined || bm.endTime === undefined) continue;
+
+        it(`${source} ${diagram.id ?? diagram.title}: "${bm.label}" timing is relative (within arc duration)`, () => {
+          // Burn times must be relative: 0 ≤ startTime ≤ endTime ≤ arcDuration
+          assert.ok(
+            bm.startTime! >= 0,
+            `Burn "${bm.label}" startTime ${bm.startTime} is negative`,
+          );
+          assert.ok(
+            bm.endTime! <= arcDuration,
+            `Burn "${bm.label}" endTime ${bm.endTime} exceeds arc duration ${arcDuration}`,
+          );
+          assert.ok(
+            bm.startTime! <= bm.endTime!,
+            `Burn "${bm.label}" startTime ${bm.startTime} > endTime ${bm.endTime}`,
+          );
+        });
+      }
+
+      // For brachistochrone arcs: check midpoint symmetry
+      if (arc.style === "brachistochrone" && arc.burnMarkers.length === 2) {
+        const accelBurn = arc.burnMarkers.find(b => b.type === "acceleration");
+        const decelBurn = arc.burnMarkers.find(b => b.type === "deceleration");
+
+        if (accelBurn?.endTime !== undefined && decelBurn?.startTime !== undefined) {
+          it(`${source} ${diagram.id ?? diagram.title}: brachistochrone midpoint flip at 50%`, () => {
+            const midpoint = arcDuration / 2;
+            const accelEnd = accelBurn!.endTime!;
+            const decelStart = decelBurn!.startTime!;
+            // Allow 0.1% tolerance for rounding
+            const tolerance = arcDuration * 0.001;
+            assert.ok(
+              Math.abs(accelEnd - midpoint) <= tolerance,
+              `Acceleration end ${accelEnd} should be at midpoint ${midpoint} (±${tolerance.toFixed(0)})`,
+            );
+            assert.ok(
+              Math.abs(decelStart - midpoint) <= tolerance,
+              `Deceleration start ${decelStart} should be at midpoint ${midpoint} (±${tolerance.toFixed(0)})`,
+            );
+          });
+        }
+      }
+    }
   }
 });

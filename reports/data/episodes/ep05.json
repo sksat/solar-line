@@ -1113,7 +1113,7 @@
               "type": "acceleration"
             },
             {
-              "angle": 3.6214,
+              "angle": 3.6104,
               "label": "木星接近減速",
               "startTime": 360000,
               "endTime": 720000,
@@ -1134,15 +1134,15 @@
             {
               "angle": 3.6104,
               "label": "Oberth加速（+3%）",
-              "startTime": 720000,
-              "endTime": 1200000,
+              "startTime": 0,
+              "endTime": 36000,
               "type": "acceleration"
             },
             {
               "angle": 1.6181,
               "label": "地球捕捉",
-              "startTime": 1200000,
-              "endTime": 1825200,
+              "startTime": 1069200,
+              "endTime": 1105200,
               "type": "capture"
             }
           ],
