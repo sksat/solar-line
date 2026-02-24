@@ -3206,7 +3206,7 @@ describe("renderTranscriptionPage", () => {
     assert.ok(html.includes("Whisper STT"));
     assert.ok(html.includes("2行"));
     assert.ok(html.includes("Phase 1 のみ"));
-    assert.ok(html.includes("Whisper STT（生データ）"));
+    assert.ok(html.includes("Whisper STT（前処理済み）"));
     assert.ok(html.includes("small_gap"));
   });
 
@@ -3270,9 +3270,9 @@ describe("renderTranscriptionPage", () => {
     const html = renderTranscriptionPage(data);
     // Should have tab container with 3 tabs
     assert.ok(html.includes("tab-container"));
-    assert.ok(html.includes("修正版（話者帰属済み）"));
-    assert.ok(html.includes("YouTube 自動字幕（生データ）"));
-    assert.ok(html.includes("Whisper STT（生データ）"));
+    assert.ok(html.includes("Layer 3: 修正版（話者帰属済み）"));
+    assert.ok(html.includes("Layer 2: YouTube 自動字幕（前処理済み）"));
+    assert.ok(html.includes("Layer 2: Whisper STT（前処理済み）"));
     assert.ok(html.includes("Whisperテスト"));
     // Tab switching script
     assert.ok(html.includes("tab-btn"));
@@ -3284,7 +3284,7 @@ describe("renderTranscriptionPage", () => {
     // No tab buttons for single source (CSS class exists in stylesheet but no tab markup)
     assert.ok(!html.includes('<button class="tab-btn'));
     assert.ok(!html.includes('<div class="tab-container'));
-    assert.ok(html.includes("Whisper STT（生データ）"));
+    assert.ok(html.includes("Whisper STT（前処理済み）"));
     assert.ok(html.includes("テスト台詞"));
   });
 
@@ -3292,8 +3292,8 @@ describe("renderTranscriptionPage", () => {
     const html = renderTranscriptionPage(phase2Done);
     // corrected tab + primary raw tab = 2 tabs → tab UI shown
     assert.ok(html.includes("tab-container"));
-    assert.ok(html.includes("修正版（話者帰属済み）"));
-    assert.ok(html.includes("YouTube 自動字幕（生データ）"));
+    assert.ok(html.includes("Layer 3: 修正版（話者帰属済み）"));
+    assert.ok(html.includes("Layer 2: YouTube 自動字幕（前処理済み）"));
   });
 
   it("shows all sources in source info card", () => {
@@ -3310,6 +3310,41 @@ describe("renderTranscriptionPage", () => {
     const html = renderTranscriptionPage(data);
     assert.ok(html.includes("Whisper STT（2行）"));
     assert.ok(html.includes("YouTube 自動字幕（1行）"));
+  });
+
+  it("displays Whisper model info when available", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      sourceInfo: { source: "whisper", language: "ja", whisperModel: "medium" },
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("モデル: medium"));
+    assert.ok(html.includes("[medium]"));
+  });
+
+  it("displays layer legend with 3 tiers", () => {
+    const html = renderTranscriptionPage(phase2Done);
+    assert.ok(html.includes("データレイヤー"));
+    assert.ok(html.includes("Layer 3"));
+    assert.ok(html.includes("Layer 2"));
+    assert.ok(html.includes("Layer 1"));
+    assert.ok(html.includes("layer-badge"));
+  });
+
+  it("shows Whisper model in additional source tab label", () => {
+    const data: TranscriptionPageData = {
+      ...phase2Done,
+      additionalSources: [{
+        source: "whisper",
+        language: "ja",
+        whisperModel: "large-v3",
+        lines: [
+          { lineId: "w1", startMs: 0, endMs: 5000, text: "テスト", mergeReasons: [] },
+        ],
+      }],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("[large-v3]"));
   });
 });
 

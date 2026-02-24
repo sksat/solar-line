@@ -248,6 +248,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       additionalSources.push({
         source: altLines.sourceSubtitle.source,
         language: altLines.sourceSubtitle.language,
+        ...(altLines.sourceSubtitle.whisperModel ? { whisperModel: altLines.sourceSubtitle.whisperModel } : {}),
         lines: altLines.lines.map(l => ({
           lineId: l.lineId,
           startMs: l.startMs,
@@ -264,6 +265,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       sourceInfo: {
         source: lines.sourceSubtitle.source,
         language: lines.sourceSubtitle.language,
+        ...(lines.sourceSubtitle.whisperModel ? { whisperModel: lines.sourceSubtitle.whisperModel } : {}),
       },
       lines: lines.lines.map(l => ({
         lineId: l.lineId,

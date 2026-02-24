@@ -576,6 +576,16 @@ footer {
 .confidence-uncertain { background: var(--red); color: #fff; }
 .phase-done { color: var(--green); font-weight: 600; }
 .phase-partial { color: var(--yellow); font-weight: 600; }
+.meta-note { font-size: 0.85em; color: var(--muted); }
+.layer-legend { background: var(--card-bg); }
+.layer-legend h3 { margin-top: 0; font-size: 1rem; }
+.layer-dl { margin: 0.5rem 0 0; }
+.layer-dl dt { font-weight: 600; margin-top: 0.5rem; }
+.layer-dl dd { margin: 0.2rem 0 0 1.5rem; color: var(--muted); font-size: 0.9em; }
+.layer-badge { display: inline-block; padding: 0.1em 0.5em; border-radius: 3px; font-size: 0.75em; font-weight: 700; margin-right: 0.3em; vertical-align: middle; }
+.layer-3 { background: var(--green); color: #000; }
+.layer-2 { background: var(--yellow); color: #000; }
+.layer-1 { background: var(--muted); color: #fff; }
 .tab-container { margin: 1rem 0; }
 .tab-buttons { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 0; flex-wrap: wrap; }
 .tab-btn { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; color: var(--muted); font-size: 0.9rem; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.2s, border-color 0.2s; }
@@ -2185,20 +2195,28 @@ export function renderTranscriptionPage(data: TranscriptionPageData, summaryPage
   const heading = `文字起こし — ${escapeHtml(epTitle)}`;
 
   // Collect all available sources for the source info card
-  const allSources = [{ label: sourceLabel(data.sourceInfo.source), count: data.lines.length }];
+  const allSources: { label: string; count: number; model?: string }[] = [
+    { label: sourceLabel(data.sourceInfo.source), count: data.lines.length, model: data.sourceInfo.whisperModel },
+  ];
   if (data.additionalSources) {
     for (const src of data.additionalSources) {
-      allSources.push({ label: sourceLabel(src.source), count: src.lines.length });
+      allSources.push({ label: sourceLabel(src.source), count: src.lines.length, model: src.whisperModel });
     }
   }
 
   // Source info
+  const sourceDetailCells = allSources.map(s => {
+    let detail = `${s.label}（${s.count}行）`;
+    if (s.model) detail += `<br><span class="meta-note">モデル: ${escapeHtml(s.model)}</span>`;
+    return detail;
+  }).join("、");
+
   const sourceInfo = `
 <div class="card">
 <h2>ソース情報</h2>
 <table class="meta-table">
 <tr><th>エピソード</th><td>第${data.episode}話</td></tr>
-<tr><th>字幕ソース</th><td>${allSources.map(s => `${s.label}（${s.count}行）`).join("、")}</td></tr>
+<tr><th>字幕ソース</th><td>${sourceDetailCells}</td></tr>
 <tr><th>言語</th><td>${escapeHtml(data.sourceInfo.language)}</td></tr>
 <tr><th>動画ID</th><td>${escapeHtml(data.videoId)}</td></tr>
 ${data.dialogue ? `<tr><th>帰属台詞数</th><td>${data.dialogue.length}行</td></tr>` : ""}
@@ -2207,6 +2225,19 @@ ${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` :
 <tr><th>帰属状態</th><td>${data.dialogue ? "Phase 2 完了（話者帰属済み）" : "Phase 1 のみ（話者未帰属）"}</td></tr>
 </table>
 <p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考察レポートに戻る</a></p>
+</div>
+
+<div class="card layer-legend">
+<h3>データレイヤー</h3>
+<p class="meta-note">文字起こしデータは3層に分けて管理しています。各タブは異なる処理段階のデータを表示します。</p>
+<dl class="layer-dl">
+<dt><span class="layer-badge layer-3">Layer 3</span> 修正版（話者帰属済み）</dt>
+<dd>文脈に基づいて話者を帰属し、テキストを修正したデータ。分析の基礎となる最終版。</dd>
+<dt><span class="layer-badge layer-2">Layer 2</span> 前処理済み（抽出・結合済み）</dt>
+<dd>生データからキュー結合・タイムスタンプ整列等の前処理を行ったデータ。話者情報なし。</dd>
+<dt><span class="layer-badge layer-1">Layer 1</span> 生データ（未加工）</dt>
+<dd>YouTube自動字幕やWhisperの出力をそのまま保存した未加工データ。git管理外のため、Layer 2が最も生に近い表示です。</dd>
+</dl>
 </div>`;
 
   // Speaker registry table
@@ -2247,7 +2278,7 @@ ${rows}
     }
     tabs.push({
       id: "corrected",
-      label: "修正版（話者帰属済み）",
+      label: "Layer 3: 修正版（話者帰属済み）",
       content: `<table class="data-table dialogue-table">
 <thead><tr><th>時刻</th><th>話者</th><th>台詞</th><th>確度</th></tr></thead>
 <tbody>
@@ -2257,20 +2288,22 @@ ${rows.join("\n")}
     });
   }
 
-  // Tab for primary raw source
+  // Tab for primary preprocessed source (Layer 2)
+  const primaryModelNote = data.sourceInfo.whisperModel ? ` [${data.sourceInfo.whisperModel}]` : "";
   tabs.push({
     id: "primary",
-    label: `${sourceLabel(data.sourceInfo.source)}（生データ）`,
+    label: `Layer 2: ${sourceLabel(data.sourceInfo.source)}${primaryModelNote}（前処理済み）`,
     content: renderRawLinesTable(data.lines),
   });
 
-  // Tabs for additional sources
+  // Tabs for additional sources (also Layer 2 — preprocessed from raw)
   if (data.additionalSources) {
     for (let i = 0; i < data.additionalSources.length; i++) {
       const src = data.additionalSources[i];
+      const altModelNote = src.whisperModel ? ` [${src.whisperModel}]` : "";
       tabs.push({
         id: `alt-${i}`,
-        label: `${sourceLabel(src.source)}（生データ）`,
+        label: `Layer 2: ${sourceLabel(src.source)}${altModelNote}（前処理済み）`,
         content: renderRawLinesTable(src.lines),
       });
     }

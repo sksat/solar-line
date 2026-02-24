@@ -61,6 +61,14 @@ export interface EpisodeLines {
     source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
     /** SHA-256 hash of the raw subtitle content */
     rawContentHash: string;
+    /** Whisper model size used (only for source="whisper") */
+    whisperModel?: string;
+    /** Whisper thresholds used for quality filtering */
+    whisperThresholds?: {
+      noSpeechProb: number;
+      avgLogprob: number;
+      compressionRatio: number;
+    };
   };
   /** Extracted lines in chronological order */
   lines: ExtractedLine[];

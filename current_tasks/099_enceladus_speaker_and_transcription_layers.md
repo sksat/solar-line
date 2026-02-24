@@ -1,6 +1,6 @@
 # Task 099: Enceladus Speaker Correction + Transcription Data Layers
 
-## Status: IN_PROGRESS (speaker correction done, transcription layers TODO)
+## Status: DONE
 
 ## Motivation
 Human directives:
@@ -18,12 +18,27 @@ Human directives:
    - Layer 3: Context-corrected data (speaker attribution, text corrections)
 4. **Re-review**: Review speaker attribution across all episodes given this correction
 
-## Notes
-- The existing multi-source tab UI (Task 070) already shows corrected vs VTT vs Whisper
-- This extends that to show processing stages within each source
-- ~~EP05 dialogue says ミューズ on Enceladus — need to verify against video content~~
+## Completed Work
+
+### Speaker Correction (prior session)
 - **DONE**: ミューズ → エンケラドスの管理人 (EP02 consistent naming)
   - Speaker ID: muse → enceladus-keeper
   - Updated: ep05_dialogue.json, ep05_speakers.json, ep05.json, ep02.json, infrastructure.json, attitude-control.json
   - Raw transcription data (ep05_lines.json, ep03_lines*.json) NOT modified (Whisper output as-is)
-- Remaining: Whisper model documentation + transcription data layers display
+
+### Whisper Model Documentation (this session)
+- Added `whisperModel` optional field to `EpisodeLines.sourceSubtitle` in `dialogue-extraction-types.ts`
+- Added `whisperModel` optional field to `TranscriptionPageData.sourceInfo` and `additionalSources` in `report-types.ts`
+- Updated all 5 Whisper-sourced lines files with `"whisperModel": "medium"`
+- `discoverTranscriptions()` in build.ts now passes `whisperModel` through
+- Source info card displays model name
+- Tab labels show `[medium]` for Whisper sources
+- `extract-dialogue-from-whisper.ts` accepts `--whisper-model` flag for future runs
+
+### 3-Tier Transcription Data Layers (this session)
+- Added layer legend card explaining the 3-tier data model on each transcription page
+- Tab labels now prefixed with `Layer 3:` (corrected) or `Layer 2:` (preprocessed)
+- Layer badges with color coding: green (L3), yellow (L2), gray (L1)
+- Layer 1 (raw) explained as git-external; Layer 2 is the closest available view
+- CSS: `.layer-badge`, `.layer-dl`, `.meta-note` styles
+- 15 passing tests including 3 new: model display, layer legend, alt source model

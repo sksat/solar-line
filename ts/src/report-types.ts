@@ -531,6 +531,8 @@ export interface TranscriptionPageData {
   sourceInfo: {
     source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
     language: string;
+    /** Whisper model size (only for source="whisper") */
+    whisperModel?: string;
   };
   /** Phase 1 extracted lines (always present) */
   lines: {
@@ -571,6 +573,8 @@ export interface TranscriptionPageData {
   additionalSources?: {
     source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
     language: string;
+    /** Whisper model size (only for source="whisper") */
+    whisperModel?: string;
     lines: {
       lineId: string;
       startMs: number;

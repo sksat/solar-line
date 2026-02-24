@@ -99,7 +99,7 @@ function main(): void {
 
   if (args.length === 0 || args.includes("--help")) {
     console.log(
-      "Usage: extract-dialogue-whisper <subtitle.json> --episode <num> [--out-dir <dir>]"
+      "Usage: extract-dialogue-whisper <subtitle.json> --episode <num> [--out-dir <dir>] [--whisper-model <model>]"
     );
     process.exit(0);
   }
@@ -108,6 +108,7 @@ function main(): void {
   const episode = parseInt(getArg(args, "--episode") ?? "", 10);
   const outDir =
     getArg(args, "--out-dir") ?? join(process.cwd(), "raw_data", "whisper");
+  const whisperModel = getArg(args, "--whisper-model");
 
   if (!jsonFile || isNaN(episode)) {
     console.error("Error: <subtitle.json> and --episode <num> are required");
@@ -137,6 +138,7 @@ function main(): void {
       language: subtitleFile.language,
       source: subtitleFile.source as EpisodeLines["sourceSubtitle"]["source"],
       rawContentHash: subtitleFile.rawContentHash,
+      ...(whisperModel ? { whisperModel } : {}),
     },
     lines,
     extractedAt: new Date().toISOString(),

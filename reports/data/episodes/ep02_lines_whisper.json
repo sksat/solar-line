@@ -5,7 +5,8 @@
   "sourceSubtitle": {
     "language": "ja",
     "source": "whisper",
-    "rawContentHash": "ecb6a28f4e095a41847cdbb7fdf1fcd89bb7fc001634822f8eaf71bd57ab554e"
+    "rawContentHash": "ecb6a28f4e095a41847cdbb7fdf1fcd89bb7fc001634822f8eaf71bd57ab554e",
+    "whisperModel": "medium"
   },
   "lines": [
     {
