@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -451,6 +451,22 @@ footer {
 .status-discrepancy .verification-badge, .verification-badge.status-discrepancy { background: var(--red); color: #fff; }
 .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.5rem 0; }
 .katex { font-size: 1.1em; }
+/* Transcription pages */
+.meta-table { border-collapse: collapse; margin: 0.5rem 0; }
+.meta-table th { text-align: left; padding: 0.3rem 1rem 0.3rem 0; color: #8b949e; font-weight: normal; }
+.meta-table td { padding: 0.3rem 0; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 1rem 0; }
+.data-table th { color: #8b949e; font-weight: 600; padding: 0.5rem; border-bottom: 2px solid var(--border); text-align: left; }
+.data-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); }
+.data-table .ts { white-space: nowrap; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.85em; color: #8b949e; }
+.data-table .speaker { white-space: nowrap; font-weight: 600; }
+.scene-header td { background: var(--surface); font-weight: 600; color: var(--accent); padding: 0.6rem 0.5rem !important; border-bottom: 2px solid var(--border); }
+.confidence { display: inline-block; padding: 0.1em 0.4em; border-radius: 3px; font-size: 0.8em; }
+.confidence-verified { background: var(--green); color: #000; }
+.confidence-inferred { background: var(--yellow); color: #000; }
+.confidence-uncertain { background: var(--red); color: #fff; }
+.phase-done { color: var(--green); font-weight: 600; }
+.phase-partial { color: var(--yellow); font-weight: 600; }
 @media (max-width: 600px) {
   .calc-control { grid-template-columns: 1fr; gap: 0.25rem; }
   .comparison-table { font-size: 0.8em; }
@@ -459,6 +475,8 @@ footer {
   .stats-grid .stat-number { font-size: 1.4rem; }
   .verification-table { font-size: 0.75em; }
   .timeline-track { padding-left: 1.5rem; }
+  .data-table { font-size: 0.75em; }
+  .dialogue-table .speaker { font-size: 0.8em; }
 }
 `;
 
@@ -488,7 +506,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav><a href="${basePath}/index.html">トップ</a>${summaryNav} <a href="${basePath}/logs/index.html">セッションログ</a></nav>
+<nav><a href="${basePath}/index.html">トップ</a>${summaryNav} <a href="${basePath}/transcriptions/index.html">文字起こし</a> <a href="${basePath}/logs/index.html">セッションログ</a></nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a></footer>
 <script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}});</script>
@@ -564,6 +582,9 @@ ${statsSection}
 <h2>エピソードレポート</h2>
 ${episodeCards}
 ${summaryList}
+
+<h2>文字起こし</h2>
+<p><a href="transcriptions/index.html">全エピソードの文字起こしデータを見る →</a></p>
 
 <h2>セッションログ</h2>
 <p><a href="logs/index.html">すべてのセッションログを見る →</a></p>
@@ -1526,4 +1547,169 @@ ${sections}`;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
   return layoutHtml(report.title, content + animScript, "..", summaryPages, desc);
+}
+
+// ---------------------------------------------------------------------------
+// Transcription pages
+// ---------------------------------------------------------------------------
+
+/** Format milliseconds to MM:SS or HH:MM:SS */
+export function formatTimestamp(ms: number): string {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const mm = String(minutes).padStart(2, "0");
+  const ss = String(seconds).padStart(2, "0");
+  if (hours > 0) return `${hours}:${mm}:${ss}`;
+  return `${mm}:${ss}`;
+}
+
+/** Map source type to Japanese label */
+function sourceLabel(source: string): string {
+  switch (source) {
+    case "youtube-auto": return "YouTube 自動字幕";
+    case "youtube-manual": return "YouTube 手動字幕";
+    case "manual": return "手動入力";
+    case "whisper": return "Whisper STT";
+    default: return source;
+  }
+}
+
+/** Map confidence to Japanese badge */
+function confidenceBadge(confidence: string): string {
+  switch (confidence) {
+    case "verified": return '<span class="confidence confidence-verified">確認済み</span>';
+    case "inferred": return '<span class="confidence confidence-inferred">推定</span>';
+    case "uncertain": return '<span class="confidence confidence-uncertain">不確定</span>';
+    default: return escapeHtml(confidence);
+  }
+}
+
+/** Render a single transcription page for one episode */
+export function renderTranscriptionPage(data: TranscriptionPageData, summaryPages?: SiteManifest["summaryPages"]): string {
+  const epTitle = data.title ?? `第${data.episode}話`;
+  const heading = `文字起こし — ${escapeHtml(epTitle)}`;
+
+  // Source info
+  const sourceInfo = `
+<div class="card">
+<h2>ソース情報</h2>
+<table class="meta-table">
+<tr><th>エピソード</th><td>第${data.episode}話</td></tr>
+<tr><th>字幕ソース</th><td>${sourceLabel(data.sourceInfo.source)}</td></tr>
+<tr><th>言語</th><td>${escapeHtml(data.sourceInfo.language)}</td></tr>
+<tr><th>動画ID</th><td>${escapeHtml(data.videoId)}</td></tr>
+<tr><th>抽出行数</th><td>${data.lines.length}行</td></tr>
+${data.dialogue ? `<tr><th>帰属台詞数</th><td>${data.dialogue.length}行</td></tr>` : ""}
+${data.speakers ? `<tr><th>話者数</th><td>${data.speakers.length}人</td></tr>` : ""}
+${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` : ""}
+<tr><th>帰属状態</th><td>${data.dialogue ? "Phase 2 完了（話者帰属済み）" : "Phase 1 のみ（話者未帰属）"}</td></tr>
+</table>
+<p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考察レポートに戻る</a></p>
+</div>`;
+
+  // Speaker registry table
+  let speakerSection = "";
+  if (data.speakers && data.speakers.length > 0) {
+    const rows = data.speakers.map(s =>
+      `<tr><td>${escapeHtml(s.nameJa)}</td><td>${escapeHtml(s.id)}</td><td>${s.notes ? escapeHtml(s.notes) : "—"}</td></tr>`
+    ).join("\n");
+    speakerSection = `
+<h2>話者一覧</h2>
+<table class="data-table">
+<thead><tr><th>名前</th><th>ID</th><th>備考</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+  }
+
+  // Main dialogue/lines table
+  let dialogueSection: string;
+  if (data.dialogue && data.scenes) {
+    // Phase 2: show attributed dialogue grouped by scene
+    const sceneMap = new Map(data.scenes.map(s => [s.id, s]));
+    let currentScene = "";
+    const rows: string[] = [];
+    for (const d of data.dialogue) {
+      if (d.sceneId !== currentScene) {
+        currentScene = d.sceneId;
+        const scene = sceneMap.get(d.sceneId);
+        const sceneDesc = scene ? escapeHtml(scene.description) : d.sceneId;
+        const sceneTime = scene ? formatTimestamp(scene.startMs) : "";
+        rows.push(`<tr class="scene-header"><td colspan="4">${sceneDesc}${sceneTime ? ` (${sceneTime}〜)` : ""}</td></tr>`);
+      }
+      rows.push(
+        `<tr><td class="ts">${formatTimestamp(d.startMs)}</td><td class="speaker">${escapeHtml(d.speakerName)}</td><td>${escapeHtml(d.text)}</td><td>${confidenceBadge(d.confidence)}</td></tr>`
+      );
+    }
+    dialogueSection = `
+<h2>台詞一覧（話者帰属済み）</h2>
+<table class="data-table dialogue-table">
+<thead><tr><th>時刻</th><th>話者</th><th>台詞</th><th>確度</th></tr></thead>
+<tbody>
+${rows.join("\n")}
+</tbody>
+</table>`;
+  } else {
+    // Phase 1 only: show raw extracted lines
+    const rows = data.lines.map(l =>
+      `<tr><td class="ts">${formatTimestamp(l.startMs)}</td><td>${escapeHtml(l.text)}</td><td>${l.mergeReasons.length > 0 ? escapeHtml(l.mergeReasons.join(", ")) : "—"}</td></tr>`
+    ).join("\n");
+    dialogueSection = `
+<h2>抽出行一覧（話者未帰属）</h2>
+<table class="data-table lines-table">
+<thead><tr><th>時刻</th><th>テキスト</th><th>結合理由</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+  }
+
+  const content = `
+<h1>${heading}</h1>
+${sourceInfo}
+${speakerSection}
+${dialogueSection}`;
+
+  return layoutHtml(`文字起こし 第${data.episode}話`, content, "..", summaryPages, `第${data.episode}話の文字起こし・台詞データ`);
+}
+
+/** Render the transcription index page */
+export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[], summaryPages?: SiteManifest["summaryPages"]): string {
+  const rows = transcriptions.map(t => {
+    const epTitle = t.title ?? `第${t.episode}話`;
+    const link = `ep-${String(t.episode).padStart(3, "0")}.html`;
+    const phase = t.dialogue ? "Phase 2 完了" : "Phase 1 のみ";
+    const phaseClass = t.dialogue ? "phase-done" : "phase-partial";
+    return `<tr>
+<td><a href="${link}">第${t.episode}話</a></td>
+<td>${escapeHtml(epTitle)}</td>
+<td>${sourceLabel(t.sourceInfo.source)}</td>
+<td>${t.lines.length}</td>
+<td>${t.dialogue ? t.dialogue.length : "—"}</td>
+<td>${t.speakers ? t.speakers.length : "—"}</td>
+<td><span class="${phaseClass}">${phase}</span></td>
+</tr>`;
+  }).join("\n");
+
+  const totalLines = transcriptions.reduce((sum, t) => sum + t.lines.length, 0);
+  const totalDialogue = transcriptions.reduce((sum, t) => sum + (t.dialogue?.length ?? 0), 0);
+
+  const content = `
+<h1>文字起こしデータ</h1>
+<p>各エピソードの字幕抽出・話者帰属データの一覧です。</p>
+<div class="card">
+<p>合計: ${transcriptions.length}エピソード / ${totalLines}抽出行 / ${totalDialogue}帰属台詞</p>
+</div>
+
+<table class="data-table">
+<thead><tr><th>話数</th><th>タイトル</th><th>ソース</th><th>抽出行</th><th>帰属台詞</th><th>話者</th><th>状態</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+
+  return layoutHtml("文字起こしデータ", content, "..", summaryPages, "SOLAR LINE 全エピソードの文字起こし・台詞データ一覧");
 }

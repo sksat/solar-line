@@ -6,6 +6,7 @@ import * as os from "node:os";
 import {
   discoverEpisodes,
   discoverLogs,
+  discoverTranscriptions,
   buildManifest,
   countVerdicts,
   build,
@@ -345,5 +346,187 @@ describe("buildManifest verdict statistics", () => {
   it("omits totalVerdicts when no episodes", () => {
     const manifest = buildManifest([], []);
     assert.equal(manifest.totalVerdicts, undefined);
+  });
+});
+
+// --- discoverTranscriptions ---
+
+describe("discoverTranscriptions", () => {
+  let tmpDir: string;
+
+  beforeEach(() => { tmpDir = makeTempDir(); });
+  afterEach(() => { rmDir(tmpDir); });
+
+  it("returns empty array when no episodes dir exists", () => {
+    const result = discoverTranscriptions(tmpDir);
+    assert.deepEqual(result, []);
+  });
+
+  it("discovers lines-only files (Phase 1)", () => {
+    const epDir = path.join(tmpDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    const lines = {
+      schemaVersion: 1,
+      videoId: "test123",
+      episode: 1,
+      sourceSubtitle: { language: "ja", source: "whisper", rawContentHash: "abc" },
+      lines: [
+        { lineId: "ep01-line-001", startMs: 1000, endMs: 2000, text: "テスト台詞", rawEntryIds: ["cue-1"], mergeReasons: [] },
+        { lineId: "ep01-line-002", startMs: 3000, endMs: 4000, text: "二番目", rawEntryIds: ["cue-2"], mergeReasons: ["small_gap"] },
+      ],
+      extractedAt: "2026-02-24T00:00:00Z",
+      mergeConfig: { maxGapMs: 300, minCueDurationMs: 100 },
+    };
+    fs.writeFileSync(path.join(epDir, "ep01_lines.json"), JSON.stringify(lines));
+
+    const result = discoverTranscriptions(tmpDir);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].episode, 1);
+    assert.equal(result[0].videoId, "test123");
+    assert.equal(result[0].sourceInfo.source, "whisper");
+    assert.equal(result[0].lines.length, 2);
+    assert.equal(result[0].dialogue, null);
+    assert.equal(result[0].speakers, null);
+    assert.equal(result[0].scenes, null);
+    assert.equal(result[0].title, null);
+  });
+
+  it("discovers lines + dialogue files (Phase 2)", () => {
+    const epDir = path.join(tmpDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    const lines = {
+      schemaVersion: 1, videoId: "test123", episode: 2,
+      sourceSubtitle: { language: "ja", source: "youtube-auto", rawContentHash: "abc" },
+      lines: [{ lineId: "ep02-line-001", startMs: 0, endMs: 1000, text: "Hello", rawEntryIds: ["cue-1"], mergeReasons: [] }],
+      extractedAt: "2026-02-24T00:00:00Z",
+      mergeConfig: { maxGapMs: 300, minCueDurationMs: 100 },
+    };
+    const dialogue = {
+      schemaVersion: 1, videoId: "test123", episode: 2,
+      title: "テストエピソード", sourceUrl: "https://example.com",
+      language: "ja",
+      speakers: [{ id: "kiritan", nameJa: "きりたん", aliases: [] }],
+      scenes: [{ id: "ep02-scene-01", startMs: 0, endMs: 5000, description: "冒頭" }],
+      dialogue: [{ speakerId: "kiritan", speakerName: "きりたん", text: "Hello", startMs: 0, endMs: 1000, sceneId: "ep02-scene-01", confidence: "verified", rawEntryIds: ["cue-1"], transferRefs: [], mentions: [] }],
+      attributionNotes: "test", reviewedBy: "test", reviewedAt: "2026-02-24T00:00:00Z", rawContentHash: "abc",
+    };
+    const speakers = {
+      schemaVersion: 1, episode: 2, videoId: "test123",
+      speakers: [{ id: "kiritan", nameJa: "きりたん", nameEn: "Kiritan", aliases: [], notes: "主人公" }],
+    };
+
+    fs.writeFileSync(path.join(epDir, "ep02_lines.json"), JSON.stringify(lines));
+    fs.writeFileSync(path.join(epDir, "ep02_dialogue.json"), JSON.stringify(dialogue));
+    fs.writeFileSync(path.join(epDir, "ep02_speakers.json"), JSON.stringify(speakers));
+
+    const result = discoverTranscriptions(tmpDir);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].episode, 2);
+    assert.equal(result[0].title, "テストエピソード");
+    assert.ok(result[0].dialogue);
+    assert.equal(result[0].dialogue!.length, 1);
+    assert.equal(result[0].dialogue![0].speakerName, "きりたん");
+    assert.ok(result[0].speakers);
+    assert.equal(result[0].speakers![0].notes, "主人公");
+    assert.ok(result[0].scenes);
+    assert.equal(result[0].scenes![0].description, "冒頭");
+  });
+
+  it("sorts by episode number", () => {
+    const epDir = path.join(tmpDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    for (const n of [3, 1]) {
+      const lines = {
+        schemaVersion: 1, videoId: `test${n}`, episode: n,
+        sourceSubtitle: { language: "ja", source: "whisper", rawContentHash: "abc" },
+        lines: [{ lineId: `ep0${n}-line-001`, startMs: 0, endMs: 1000, text: "test", rawEntryIds: ["cue-1"], mergeReasons: [] }],
+        extractedAt: "2026-02-24T00:00:00Z",
+        mergeConfig: { maxGapMs: 300, minCueDurationMs: 100 },
+      };
+      fs.writeFileSync(path.join(epDir, `ep0${n}_lines.json`), JSON.stringify(lines));
+    }
+
+    const result = discoverTranscriptions(tmpDir);
+    assert.equal(result.length, 2);
+    assert.equal(result[0].episode, 1);
+    assert.equal(result[1].episode, 3);
+  });
+});
+
+// --- buildManifest with transcriptions ---
+
+describe("buildManifest with transcriptions", () => {
+  it("includes transcription pages in manifest", () => {
+    const transcriptions = [{
+      episode: 1, videoId: "test", sourceInfo: { source: "whisper" as const, language: "ja" },
+      lines: [{ lineId: "l1", startMs: 0, endMs: 1000, text: "test", mergeReasons: [] }],
+      dialogue: null, speakers: null, scenes: null, title: null,
+    }];
+    const manifest = buildManifest([], [], [], transcriptions);
+    assert.ok(manifest.transcriptionPages);
+    assert.equal(manifest.transcriptionPages!.length, 1);
+    assert.equal(manifest.transcriptionPages![0].episode, 1);
+    assert.equal(manifest.transcriptionPages![0].lineCount, 1);
+    assert.equal(manifest.transcriptionPages![0].hasDialogue, false);
+    assert.equal(manifest.transcriptionPages![0].path, "transcriptions/ep-001.html");
+  });
+
+  it("omits transcriptionPages when no transcriptions", () => {
+    const manifest = buildManifest([], []);
+    assert.equal(manifest.transcriptionPages, undefined);
+  });
+});
+
+// --- build integration with transcriptions ---
+
+describe("build with transcriptions (integration)", () => {
+  let dataDir: string;
+  let outDir: string;
+
+  beforeEach(() => {
+    dataDir = makeTempDir();
+    outDir = makeTempDir();
+  });
+  afterEach(() => {
+    rmDir(dataDir);
+    rmDir(outDir);
+  });
+
+  it("generates transcription pages", () => {
+    const epDir = path.join(dataDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    const lines = {
+      schemaVersion: 1, videoId: "test123", episode: 1,
+      sourceSubtitle: { language: "ja", source: "whisper", rawContentHash: "abc" },
+      lines: [{ lineId: "ep01-line-001", startMs: 5000, endMs: 10000, text: "テスト", rawEntryIds: ["cue-1"], mergeReasons: [] }],
+      extractedAt: "2026-02-24T00:00:00Z",
+      mergeConfig: { maxGapMs: 300, minCueDurationMs: 100 },
+    };
+    fs.writeFileSync(path.join(epDir, "ep01_lines.json"), JSON.stringify(lines));
+
+    build({ dataDir, outDir });
+
+    // Transcription index
+    const indexPath = path.join(outDir, "transcriptions", "index.html");
+    assert.ok(fs.existsSync(indexPath), "transcription index should exist");
+    const indexHtml = fs.readFileSync(indexPath, "utf-8");
+    assert.ok(indexHtml.includes("文字起こしデータ"), "index should have title");
+    assert.ok(indexHtml.includes("第1話"), "index should reference episode");
+
+    // Per-episode page
+    const epPath = path.join(outDir, "transcriptions", "ep-001.html");
+    assert.ok(fs.existsSync(epPath), "episode transcription page should exist");
+    const epHtml = fs.readFileSync(epPath, "utf-8");
+    assert.ok(epHtml.includes("テスト"), "should contain dialogue text");
+    assert.ok(epHtml.includes("Whisper STT"), "should show source type");
+    assert.ok(epHtml.includes("00:05"), "should format timestamp");
+
+    // Main index should link to transcriptions
+    const mainIndex = fs.readFileSync(path.join(outDir, "index.html"), "utf-8");
+    assert.ok(mainIndex.includes("文字起こし"), "main index should link to transcriptions");
   });
 });

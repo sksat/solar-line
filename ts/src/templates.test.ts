@@ -25,9 +25,12 @@ import {
   formatNumericValue,
   autoLinkEpisodeRefs,
   renderEpisodeNav,
+  renderTranscriptionPage,
+  renderTranscriptionIndex,
+  formatTimestamp,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -2713,5 +2716,166 @@ describe("renderSummaryPage with episode cross-links", () => {
     const html = renderSummaryPage(sampleReport);
     // CSS will always contain "ep-nav-strip", so check for the actual nav element
     assert.ok(!html.includes('class="ep-nav-strip'));
+  });
+});
+
+// --- formatTimestamp ---
+
+describe("formatTimestamp", () => {
+  it("formats seconds to MM:SS", () => {
+    assert.equal(formatTimestamp(5000), "00:05");
+    assert.equal(formatTimestamp(65000), "01:05");
+    assert.equal(formatTimestamp(0), "00:00");
+  });
+
+  it("formats hours to HH:MM:SS", () => {
+    assert.equal(formatTimestamp(3661000), "1:01:01");
+    assert.equal(formatTimestamp(7200000), "2:00:00");
+  });
+
+  it("formats sub-hour correctly", () => {
+    assert.equal(formatTimestamp(599000), "09:59");
+  });
+});
+
+// --- renderTranscriptionPage ---
+
+describe("renderTranscriptionPage", () => {
+  const phase1Only: TranscriptionPageData = {
+    episode: 1,
+    videoId: "test123",
+    sourceInfo: { source: "whisper", language: "ja" },
+    lines: [
+      { lineId: "ep01-line-001", startMs: 5000, endMs: 10000, text: "テスト台詞", mergeReasons: [] },
+      { lineId: "ep01-line-002", startMs: 15000, endMs: 20000, text: "二番目の台詞", mergeReasons: ["small_gap"] },
+    ],
+    dialogue: null,
+    speakers: null,
+    scenes: null,
+    title: null,
+  };
+
+  const phase2Done: TranscriptionPageData = {
+    episode: 2,
+    videoId: "test456",
+    sourceInfo: { source: "youtube-auto", language: "ja" },
+    lines: [
+      { lineId: "ep02-line-001", startMs: 0, endMs: 5000, text: "Hello", mergeReasons: [] },
+    ],
+    dialogue: [
+      { speakerId: "kiritan", speakerName: "きりたん", text: "こんにちは", startMs: 0, endMs: 3000, confidence: "verified", sceneId: "ep02-scene-01" },
+      { speakerId: "kestrel-ai", speakerName: "ケストレルAI", text: "了解です", startMs: 3000, endMs: 5000, confidence: "inferred", sceneId: "ep02-scene-01" },
+    ],
+    speakers: [
+      { id: "kiritan", nameJa: "きりたん", notes: "船長" },
+      { id: "kestrel-ai", nameJa: "ケストレルAI", notes: "AI" },
+    ],
+    scenes: [
+      { id: "ep02-scene-01", startMs: 0, endMs: 10000, description: "冒頭シーン" },
+    ],
+    title: "テストエピソード",
+  };
+
+  it("renders Phase 1 page with raw lines", () => {
+    const html = renderTranscriptionPage(phase1Only);
+    assert.ok(html.includes("文字起こし"));
+    assert.ok(html.includes("第1話"));
+    assert.ok(html.includes("テスト台詞"));
+    assert.ok(html.includes("二番目の台詞"));
+    assert.ok(html.includes("00:05"));
+    assert.ok(html.includes("Whisper STT"));
+    assert.ok(html.includes("2行"));
+    assert.ok(html.includes("Phase 1 のみ"));
+    assert.ok(html.includes("抽出行一覧"));
+    assert.ok(html.includes("small_gap"));
+  });
+
+  it("renders Phase 2 page with attributed dialogue", () => {
+    const html = renderTranscriptionPage(phase2Done);
+    assert.ok(html.includes("テストエピソード"));
+    assert.ok(html.includes("きりたん"));
+    assert.ok(html.includes("ケストレルAI"));
+    assert.ok(html.includes("こんにちは"));
+    assert.ok(html.includes("了解です"));
+    assert.ok(html.includes("Phase 2 完了"));
+    assert.ok(html.includes("台詞一覧"));
+    assert.ok(html.includes("話者一覧"));
+    assert.ok(html.includes("船長"));
+    assert.ok(html.includes("冒頭シーン"));
+    assert.ok(html.includes("確認済み"));
+    assert.ok(html.includes("推定"));
+  });
+
+  it("renders source info correctly", () => {
+    const html = renderTranscriptionPage(phase2Done);
+    assert.ok(html.includes("YouTube 自動字幕"));
+    assert.ok(html.includes("test456"));
+  });
+
+  it("includes back link to episode analysis", () => {
+    const html = renderTranscriptionPage(phase1Only);
+    assert.ok(html.includes("ep-001.html"));
+    assert.ok(html.includes("考察レポートに戻る"));
+  });
+
+  it("includes navigation", () => {
+    const html = renderTranscriptionPage(phase1Only);
+    assert.ok(html.includes("トップ"));
+    assert.ok(html.includes("文字起こし"));
+    assert.ok(html.includes("セッションログ"));
+  });
+
+  it("escapes HTML in dialogue text", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      lines: [{ lineId: "l1", startMs: 0, endMs: 1000, text: '<script>alert("xss")</script>', mergeReasons: [] }],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(!html.includes("<script>alert"));
+    assert.ok(html.includes("&lt;script&gt;"));
+  });
+});
+
+// --- renderTranscriptionIndex ---
+
+describe("renderTranscriptionIndex", () => {
+  it("renders index with episode list", () => {
+    const transcriptions: TranscriptionPageData[] = [
+      {
+        episode: 1, videoId: "v1", sourceInfo: { source: "whisper", language: "ja" },
+        lines: [{ lineId: "l1", startMs: 0, endMs: 1000, text: "test", mergeReasons: [] }],
+        dialogue: null, speakers: null, scenes: null, title: null,
+      },
+      {
+        episode: 2, videoId: "v2", sourceInfo: { source: "youtube-auto", language: "ja" },
+        lines: [
+          { lineId: "l1", startMs: 0, endMs: 1000, text: "a", mergeReasons: [] },
+          { lineId: "l2", startMs: 1000, endMs: 2000, text: "b", mergeReasons: [] },
+        ],
+        dialogue: [
+          { speakerId: "k", speakerName: "きりたん", text: "a", startMs: 0, endMs: 1000, confidence: "verified", sceneId: "s1" },
+        ],
+        speakers: [{ id: "k", nameJa: "きりたん" }],
+        scenes: [{ id: "s1", startMs: 0, endMs: 5000, description: "scene" }],
+        title: "Second",
+      },
+    ];
+    const html = renderTranscriptionIndex(transcriptions);
+    assert.ok(html.includes("文字起こしデータ"));
+    assert.ok(html.includes("第1話"));
+    assert.ok(html.includes("第2話"));
+    assert.ok(html.includes("ep-001.html"));
+    assert.ok(html.includes("ep-002.html"));
+    assert.ok(html.includes("Phase 1 のみ"));
+    assert.ok(html.includes("Phase 2 完了"));
+    assert.ok(html.includes("2エピソード"));
+    assert.ok(html.includes("3抽出行"));
+    assert.ok(html.includes("1帰属台詞"));
+  });
+
+  it("renders empty transcription list gracefully", () => {
+    const html = renderTranscriptionIndex([]);
+    assert.ok(html.includes("文字起こしデータ"));
+    assert.ok(html.includes("0エピソード"));
   });
 });

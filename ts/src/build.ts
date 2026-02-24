@@ -7,13 +7,17 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { EpisodeReport, SiteManifest, SummaryReport, VerdictCounts } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, SummaryReport, TranscriptionPageData, VerdictCounts } from "./report-types.ts";
+import type { EpisodeLines } from "./dialogue-extraction-types.ts";
+import type { EpisodeDialogue } from "./subtitle-types.ts";
 import {
   renderIndex,
   renderEpisode,
   renderLogsIndex,
   renderLogPage,
   renderSummaryPage,
+  renderTranscriptionPage,
+  renderTranscriptionIndex,
 } from "./templates.ts";
 
 export interface BuildConfig {
@@ -102,6 +106,81 @@ export function discoverSummaries(dataDir: string): SummaryReport[] {
   return summaries;
 }
 
+/** Speaker registry entry from epXX_speakers.json */
+interface SpeakerEntry {
+  id: string;
+  nameJa: string;
+  nameEn?: string;
+  aliases: string[];
+  notes?: string;
+}
+
+/** Speakers file schema */
+interface SpeakersFile {
+  schemaVersion: number;
+  episode: number;
+  videoId: string;
+  speakers: SpeakerEntry[];
+}
+
+/** Discover transcription data by reading lines, dialogue, and speakers files */
+export function discoverTranscriptions(dataDir: string): TranscriptionPageData[] {
+  const episodesDir = path.join(dataDir, "data", "episodes");
+  if (!fs.existsSync(episodesDir)) return [];
+
+  const files = fs.readdirSync(episodesDir)
+    .filter(f => /^ep\d+_lines\.json$/.test(f))
+    .sort();
+
+  const transcriptions: TranscriptionPageData[] = [];
+  for (const file of files) {
+    const epNum = file.match(/^ep(\d+)_lines\.json$/)![1];
+    const lines = readJsonFile<EpisodeLines>(path.join(episodesDir, file));
+    if (!lines) continue;
+
+    const dialogue = readJsonFile<EpisodeDialogue>(path.join(episodesDir, `ep${epNum}_dialogue.json`));
+    const speakersFile = readJsonFile<SpeakersFile>(path.join(episodesDir, `ep${epNum}_speakers.json`));
+
+    transcriptions.push({
+      episode: lines.episode,
+      videoId: lines.videoId,
+      sourceInfo: {
+        source: lines.sourceSubtitle.source,
+        language: lines.sourceSubtitle.language,
+      },
+      lines: lines.lines.map(l => ({
+        lineId: l.lineId,
+        startMs: l.startMs,
+        endMs: l.endMs,
+        text: l.text,
+        mergeReasons: l.mergeReasons,
+      })),
+      dialogue: dialogue ? dialogue.dialogue.map(d => ({
+        speakerId: d.speakerId,
+        speakerName: d.speakerName,
+        text: d.text,
+        startMs: d.startMs,
+        endMs: d.endMs,
+        confidence: d.confidence,
+        sceneId: d.sceneId,
+      })) : null,
+      speakers: speakersFile ? speakersFile.speakers.map(s => ({
+        id: s.id,
+        nameJa: s.nameJa,
+        notes: s.notes,
+      })) : null,
+      scenes: dialogue ? dialogue.scenes.map(s => ({
+        id: s.id,
+        startMs: s.startMs,
+        endMs: s.endMs,
+        description: s.description,
+      })) : null,
+      title: dialogue ? dialogue.title : null,
+    });
+  }
+  return transcriptions;
+}
+
 /** Count verdict types in an episode's transfers */
 export function countVerdicts(ep: EpisodeReport): VerdictCounts {
   const counts: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0, reference: 0 };
@@ -125,7 +204,7 @@ function sumVerdicts(all: VerdictCounts[]): VerdictCounts {
 }
 
 /** Generate the site manifest from discovered data */
-export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summaries: SummaryReport[] = []): SiteManifest {
+export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summaries: SummaryReport[] = [], transcriptions: TranscriptionPageData[] = []): SiteManifest {
   const episodeVerdicts = episodes.map(ep => countVerdicts(ep));
   return {
     title: "SOLAR LINE 考察",
@@ -150,6 +229,12 @@ export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summa
       slug: s.slug,
       path: `summary/${s.slug}.html`,
     })) : undefined,
+    transcriptionPages: transcriptions.length > 0 ? transcriptions.map(t => ({
+      episode: t.episode,
+      lineCount: t.lines.length,
+      hasDialogue: t.dialogue !== null,
+      path: `transcriptions/ep-${String(t.episode).padStart(3, "0")}.html`,
+    })) : undefined,
   };
 }
 
@@ -161,7 +246,8 @@ export function build(config: BuildConfig): void {
   const episodes = discoverEpisodes(dataDir);
   const logs = discoverLogs(dataDir);
   const summaries = discoverSummaries(dataDir);
-  const manifest = buildManifest(episodes, logs, summaries);
+  const transcriptions = discoverTranscriptions(dataDir);
+  const manifest = buildManifest(episodes, logs, summaries, transcriptions);
 
   // Ensure output directories
   ensureDir(path.join(outDir, "episodes"));
@@ -195,6 +281,22 @@ export function build(config: BuildConfig): void {
       path.join(outDir, "logs", `${log.filename}.html`),
       renderLogPage(log.filename, log.date, log.content, manifest.summaryPages),
     );
+  }
+
+  // Generate transcription pages
+  if (transcriptions.length > 0) {
+    ensureDir(path.join(outDir, "transcriptions"));
+    fs.writeFileSync(
+      path.join(outDir, "transcriptions", "index.html"),
+      renderTranscriptionIndex(transcriptions, manifest.summaryPages),
+    );
+    for (const tr of transcriptions) {
+      const filename = `ep-${String(tr.episode).padStart(3, "0")}.html`;
+      fs.writeFileSync(
+        path.join(outDir, "transcriptions", filename),
+        renderTranscriptionPage(tr, manifest.summaryPages),
+      );
+    }
   }
 
   // Write manifest JSON (useful for WASM-interactive pages later)
@@ -241,7 +343,7 @@ export function build(config: BuildConfig): void {
 
   const totalTransfers = episodes.reduce((sum, ep) => sum + ep.transfers.length, 0);
   console.log(
-    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${summaries.length} summaries, ${logs.length} logs → ${outDir}`,
+    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${summaries.length} summaries, ${transcriptions.length} transcriptions, ${logs.length} logs → ${outDir}`,
   );
 }
 

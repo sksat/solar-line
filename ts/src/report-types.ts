@@ -355,6 +355,52 @@ export interface VerdictCounts {
   reference: number;
 }
 
+/** Per-episode transcription page data — assembled from lines, dialogue, and speakers files */
+export interface TranscriptionPageData {
+  /** Episode number */
+  episode: number;
+  /** Video ID (YouTube or Niconico) */
+  videoId: string;
+  /** Source subtitle info */
+  sourceInfo: {
+    source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
+    language: string;
+  };
+  /** Phase 1 extracted lines (always present) */
+  lines: {
+    lineId: string;
+    startMs: number;
+    endMs: number;
+    text: string;
+    mergeReasons: string[];
+  }[];
+  /** Phase 2 attributed dialogue (null if Phase 2 not done) */
+  dialogue: {
+    speakerId: string;
+    speakerName: string;
+    text: string;
+    startMs: number;
+    endMs: number;
+    confidence: "verified" | "inferred" | "uncertain";
+    sceneId: string;
+  }[] | null;
+  /** Speaker registry (null if Phase 2 not done) */
+  speakers: {
+    id: string;
+    nameJa: string;
+    notes?: string;
+  }[] | null;
+  /** Scene structure (null if Phase 2 not done) */
+  scenes: {
+    id: string;
+    startMs: number;
+    endMs: number;
+    description: string;
+  }[] | null;
+  /** Episode title from dialogue file (null if Phase 2 not done) */
+  title: string | null;
+}
+
 /** Site-wide manifest listing all available reports */
 export interface SiteManifest {
   /** Project title */
@@ -393,6 +439,17 @@ export interface SiteManifest {
     /** URL slug */
     slug: string;
     /** Relative path to the page */
+    path: string;
+  }[];
+  /** List of transcription pages */
+  transcriptionPages?: {
+    /** Episode number */
+    episode: number;
+    /** Line count (Phase 1) */
+    lineCount: number;
+    /** Whether Phase 2 attribution is done */
+    hasDialogue: boolean;
+    /** Relative path to the transcription page */
     path: string;
   }[];
 }
