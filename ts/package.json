@@ -27,7 +27,10 @@
     "dag:seed": "node --experimental-strip-types src/dag-seed.ts",
     "dag:sync": "node --experimental-strip-types src/dag-task-sync.ts",
     "analyze-3d": "node --experimental-strip-types src/orbital-3d-analysis.ts",
-    "cross-validate": "bash ../cross_validation/run.sh"
+    "cross-validate": "bash ../cross_validation/run.sh",
+    "diarize": "python3 src/diarize.py",
+    "diarize:evaluate": "python3 src/diarize-evaluate.py",
+    "diarize:pitch": "python3 src/diarize-pitch.py"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",

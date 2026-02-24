@@ -26,6 +26,15 @@ are synthetic speech not well-handled by YouTube's speech recognition.
 4. **Human correction pass**: Use ASR as starting point, correct against video
 5. **Multiple ASR engines**: Cross-reference YouTube auto-subs with Whisper output
 
+## Speaker Diarization Investigation (Task 056)
+
+Tested speaker diarization tools on VOICEROID content:
+- **Resemblyzer embeddings**: きりたん-ケイ cosine similarity 0.983 (near-identical)
+- **Pitch analysis**: F0 difference only 28.8 Hz with ~100 Hz std overlap
+- **Best accuracy**: 80.3% binary (embedding nearest-centroid), insufficient for production use
+- **Conclusion**: General-purpose speaker diarization is NOT viable for VOICEROID content
+- Non-VOICEROID speakers (管制, 船乗り) have distinct pitch and ARE separable
+
 ## Recommendation
 For now, use YouTube auto-subs as structural scaffolding (timing, line breaks)
 but treat the text content as unreliable. Speaker attribution and quote

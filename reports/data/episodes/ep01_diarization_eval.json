@@ -1,0 +1,43 @@
+{
+  "episode": 1,
+  "speakers": {
+    "kiritan": {
+      "numEmbeddings": 63
+    },
+    "kestrel-ai": {
+      "numEmbeddings": 69
+    },
+    "client": {
+      "numEmbeddings": 1
+    },
+    "mars-control": {
+      "numEmbeddings": 2
+    },
+    "rai": {
+      "numEmbeddings": 14
+    },
+    "ganymede-control": {
+      "numEmbeddings": 2
+    }
+  },
+  "interSpeakerSimilarity": {
+    "client_vs_ganymede-control": 0.6554173827171326,
+    "client_vs_kestrel-ai": 0.9354737997055054,
+    "client_vs_kiritan": 0.9218777418136597,
+    "client_vs_mars-control": 0.8384904861450195,
+    "client_vs_rai": 0.8810272812843323,
+    "ganymede-control_vs_kestrel-ai": 0.6957443952560425,
+    "ganymede-control_vs_kiritan": 0.6801592111587524,
+    "ganymede-control_vs_mars-control": 0.6508055329322815,
+    "ganymede-control_vs_rai": 0.6846647262573242,
+    "kestrel-ai_vs_kiritan": 0.9829866886138916,
+    "kestrel-ai_vs_mars-control": 0.8800905346870422,
+    "kestrel-ai_vs_rai": 0.9330952167510986,
+    "kiritan_vs_mars-control": 0.8581734895706177,
+    "kiritan_vs_rai": 0.9277464747428894,
+    "mars-control_vs_rai": 0.8566403985023499
+  },
+  "nearestCentroidAccuracy": 0.6887417218543046,
+  "binaryAccuracy_kiritan_kei": 0.803030303030303,
+  "conclusion": "high_similarity"
+}

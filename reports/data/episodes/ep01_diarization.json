@@ -1,0 +1,2300 @@
+{
+  "schemaVersion": 1,
+  "episode": 1,
+  "audioFile": "ep01_CQ_OkDjEwRk.wav",
+  "durationMs": 1160554,
+  "numClusters": 6,
+  "numSegments": 436,
+  "segments": [
+    {
+      "startMs": 240,
+      "endMs": 6120,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 9930,
+      "endMs": 10800,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 11340,
+      "endMs": 11880,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 13350,
+      "endMs": 13860,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 16260,
+      "endMs": 16830,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 19530,
+      "endMs": 20340,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 21120,
+      "endMs": 21720,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 23880,
+      "endMs": 24480,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 25980,
+      "endMs": 26520,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 29400,
+      "endMs": 29940,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 31140,
+      "endMs": 31920,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 31980,
+      "endMs": 32910,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 36420,
+      "endMs": 36960,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 38460,
+      "endMs": 40050,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 40260,
+      "endMs": 41700,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 44490,
+      "endMs": 45120,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 47130,
+      "endMs": 47820,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 50910,
+      "endMs": 51420,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 53220,
+      "endMs": 53940,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 54060,
+      "endMs": 54990,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 57810,
+      "endMs": 58350,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 66600,
+      "endMs": 67770,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 69600,
+      "endMs": 71040,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 72210,
+      "endMs": 73710,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 74010,
+      "endMs": 76200,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 76410,
+      "endMs": 83490,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 83820,
+      "endMs": 84360,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 84750,
+      "endMs": 87240,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 87300,
+      "endMs": 89370,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 89550,
+      "endMs": 94140,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 94590,
+      "endMs": 96600,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 96870,
+      "endMs": 98430,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 98460,
+      "endMs": 99210,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 99330,
+      "endMs": 100620,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 100650,
+      "endMs": 101580,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 102390,
+      "endMs": 106230,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 106320,
+      "endMs": 110610,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 110670,
+      "endMs": 112620,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 112650,
+      "endMs": 114420,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 114570,
+      "endMs": 115140,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 116130,
+      "endMs": 117900,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 117930,
+      "endMs": 121860,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 121980,
+      "endMs": 126060,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 126180,
+      "endMs": 128940,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 129270,
+      "endMs": 131310,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 131340,
+      "endMs": 132600,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 132780,
+      "endMs": 133410,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 133650,
+      "endMs": 135840,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 136020,
+      "endMs": 138720,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 140610,
+      "endMs": 142530,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 142590,
+      "endMs": 143160,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 143430,
+      "endMs": 145950,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 146130,
+      "endMs": 147330,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 147390,
+      "endMs": 149790,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 149820,
+      "endMs": 154620,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 154710,
+      "endMs": 155460,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 155490,
+      "endMs": 156240,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 156270,
+      "endMs": 157080,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 157170,
+      "endMs": 158580,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 159360,
+      "endMs": 160440,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 160830,
+      "endMs": 163440,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 163590,
+      "endMs": 166530,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 166560,
+      "endMs": 167460,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 167670,
+      "endMs": 169230,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 170610,
+      "endMs": 171630,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 171990,
+      "endMs": 172530,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 172590,
+      "endMs": 173280,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 173340,
+      "endMs": 175080,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 175320,
+      "endMs": 178320,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 179340,
+      "endMs": 181710,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 181890,
+      "endMs": 182520,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 183240,
+      "endMs": 187950,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 187980,
+      "endMs": 189780,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 190050,
+      "endMs": 194850,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 195150,
+      "endMs": 202470,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 202830,
+      "endMs": 205050,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 205830,
+      "endMs": 207690,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 207720,
+      "endMs": 214050,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 214080,
+      "endMs": 217650,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 219390,
+      "endMs": 220140,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 222150,
+      "endMs": 222870,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 222990,
+      "endMs": 223530,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 224340,
+      "endMs": 224970,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 225540,
+      "endMs": 226170,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 226200,
+      "endMs": 227040,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 227340,
+      "endMs": 228180,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 228360,
+      "endMs": 229560,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 230100,
+      "endMs": 230640,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 231090,
+      "endMs": 231810,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 234840,
+      "endMs": 235800,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 237090,
+      "endMs": 238560,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 239670,
+      "endMs": 240210,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 241110,
+      "endMs": 241710,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 241770,
+      "endMs": 242790,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 243210,
+      "endMs": 243720,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 244410,
+      "endMs": 246180,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 246720,
+      "endMs": 247560,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 247980,
+      "endMs": 249120,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 250950,
+      "endMs": 251520,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 252270,
+      "endMs": 253740,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 254130,
+      "endMs": 254790,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 254970,
+      "endMs": 256140,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 256170,
+      "endMs": 257040,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 260100,
+      "endMs": 261869,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 262170,
+      "endMs": 262800,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 265890,
+      "endMs": 266550,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 267060,
+      "endMs": 267870,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 268860,
+      "endMs": 270300,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 271350,
+      "endMs": 271980,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 272100,
+      "endMs": 272700,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 277320,
+      "endMs": 278130,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 278790,
+      "endMs": 279690,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 280650,
+      "endMs": 281580,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 282060,
+      "endMs": 282930,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 283200,
+      "endMs": 284730,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 285300,
+      "endMs": 287160,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 287340,
+      "endMs": 288120,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 288630,
+      "endMs": 289140,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 289320,
+      "endMs": 290580,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 290880,
+      "endMs": 291600,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 292560,
+      "endMs": 293070,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 294720,
+      "endMs": 295560,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 295680,
+      "endMs": 297990,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 298200,
+      "endMs": 298920,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 299700,
+      "endMs": 300810,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 300840,
+      "endMs": 303300,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 303330,
+      "endMs": 305580,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 305610,
+      "endMs": 307710,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 308130,
+      "endMs": 309270,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 309330,
+      "endMs": 310170,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 310230,
+      "endMs": 311730,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 311760,
+      "endMs": 313290,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 314160,
+      "endMs": 315720,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 315780,
+      "endMs": 317040,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 317340,
+      "endMs": 318660,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 319080,
+      "endMs": 319830,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 319920,
+      "endMs": 320730,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 320760,
+      "endMs": 321690,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 321720,
+      "endMs": 322260,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 322680,
+      "endMs": 326190,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 330270,
+      "endMs": 332640,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 333030,
+      "endMs": 334200,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 334860,
+      "endMs": 335670,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 335970,
+      "endMs": 336810,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 338340,
+      "endMs": 338970,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 339660,
+      "endMs": 340170,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 340350,
+      "endMs": 341040,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 341340,
+      "endMs": 343620,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 343650,
+      "endMs": 345240,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 349890,
+      "endMs": 351060,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 351300,
+      "endMs": 352800,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 353340,
+      "endMs": 353910,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 353940,
+      "endMs": 354750,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 354780,
+      "endMs": 355650,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 356880,
+      "endMs": 359220,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 359610,
+      "endMs": 361560,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 361680,
+      "endMs": 363090,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 363330,
+      "endMs": 364770,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 366450,
+      "endMs": 368250,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 368700,
+      "endMs": 369750,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 372690,
+      "endMs": 373560,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 374640,
+      "endMs": 375330,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 375360,
+      "endMs": 375990,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 377670,
+      "endMs": 378270,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 378900,
+      "endMs": 379440,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 383580,
+      "endMs": 384150,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 393930,
+      "endMs": 395400,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 397320,
+      "endMs": 397920,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 398190,
+      "endMs": 398850,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 399750,
+      "endMs": 400260,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 400470,
+      "endMs": 401370,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 403380,
+      "endMs": 404070,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 405120,
+      "endMs": 406110,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 406380,
+      "endMs": 407040,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 407370,
+      "endMs": 409080,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 409110,
+      "endMs": 412500,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 413310,
+      "endMs": 415410,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 415680,
+      "endMs": 419370,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 419610,
+      "endMs": 424380,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 424410,
+      "endMs": 425400,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 425910,
+      "endMs": 427260,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 427440,
+      "endMs": 429210,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 429300,
+      "endMs": 431310,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 431550,
+      "endMs": 432480,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 432510,
+      "endMs": 434100,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 434280,
+      "endMs": 438600,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 439260,
+      "endMs": 440430,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 440640,
+      "endMs": 442380,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 442410,
+      "endMs": 443160,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 443340,
+      "endMs": 447000,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 447150,
+      "endMs": 448530,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 448620,
+      "endMs": 450240,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 451260,
+      "endMs": 453390,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 454380,
+      "endMs": 457200,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 457740,
+      "endMs": 460800,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 461700,
+      "endMs": 462420,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 462450,
+      "endMs": 463290,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 463860,
+      "endMs": 465540,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 465870,
+      "endMs": 467460,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 467490,
+      "endMs": 468300,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 468750,
+      "endMs": 470910,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 471630,
+      "endMs": 472200,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 472230,
+      "endMs": 472950,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 473250,
+      "endMs": 475200,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 476280,
+      "endMs": 476790,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 476820,
+      "endMs": 477750,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 478290,
+      "endMs": 481110,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 482640,
+      "endMs": 483390,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 483420,
+      "endMs": 484770,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 487920,
+      "endMs": 488790,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 491250,
+      "endMs": 492030,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 492060,
+      "endMs": 492840,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 493830,
+      "endMs": 495600,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 495630,
+      "endMs": 496260,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 496890,
+      "endMs": 498120,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 498690,
+      "endMs": 499380,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 499980,
+      "endMs": 501750,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 504360,
+      "endMs": 505140,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 506370,
+      "endMs": 507480,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 507810,
+      "endMs": 509490,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 509670,
+      "endMs": 510720,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 510750,
+      "endMs": 511830,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 512400,
+      "endMs": 515220,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 515460,
+      "endMs": 524189,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 524220,
+      "endMs": 526080,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 526710,
+      "endMs": 527400,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 527430,
+      "endMs": 528540,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 528570,
+      "endMs": 529380,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 530820,
+      "endMs": 531630,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 533040,
+      "endMs": 533550,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 534720,
+      "endMs": 535380,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 536280,
+      "endMs": 537360,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 543750,
+      "endMs": 544560,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 544710,
+      "endMs": 545850,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 546720,
+      "endMs": 547320,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 547620,
+      "endMs": 548220,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 548790,
+      "endMs": 550260,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 550710,
+      "endMs": 551280,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 551760,
+      "endMs": 552660,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 553710,
+      "endMs": 555510,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 556650,
+      "endMs": 557190,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 557220,
+      "endMs": 558810,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 559350,
+      "endMs": 560220,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 560490,
+      "endMs": 561420,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 561510,
+      "endMs": 562260,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 563790,
+      "endMs": 564900,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 564930,
+      "endMs": 566580,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 566730,
+      "endMs": 567870,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 567900,
+      "endMs": 568650,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 569610,
+      "endMs": 570360,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 574560,
+      "endMs": 575130,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 577230,
+      "endMs": 577860,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 584880,
+      "endMs": 585690,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 586890,
+      "endMs": 587490,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 589380,
+      "endMs": 590010,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 591510,
+      "endMs": 592200,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 595710,
+      "endMs": 596280,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 597300,
+      "endMs": 598260,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 599910,
+      "endMs": 600420,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 603330,
+      "endMs": 604050,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 605550,
+      "endMs": 606150,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 606870,
+      "endMs": 607470,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 613350,
+      "endMs": 613950,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 621000,
+      "endMs": 621720,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 621870,
+      "endMs": 622470,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 623550,
+      "endMs": 624120,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 624930,
+      "endMs": 625650,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 641400,
+      "endMs": 643230,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 643260,
+      "endMs": 643800,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 643830,
+      "endMs": 644490,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 647820,
+      "endMs": 648390,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 653040,
+      "endMs": 653550,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 653850,
+      "endMs": 654810,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 654840,
+      "endMs": 655680,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 658470,
+      "endMs": 659190,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 660600,
+      "endMs": 661350,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 661380,
+      "endMs": 662070,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 663030,
+      "endMs": 663690,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 666900,
+      "endMs": 667500,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 668430,
+      "endMs": 669120,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 669780,
+      "endMs": 670350,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 670470,
+      "endMs": 670980,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 679410,
+      "endMs": 681030,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 681060,
+      "endMs": 681720,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 682260,
+      "endMs": 684120,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 684150,
+      "endMs": 685380,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 686040,
+      "endMs": 686670,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 686730,
+      "endMs": 687660,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 688080,
+      "endMs": 688950,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 688980,
+      "endMs": 689670,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 689760,
+      "endMs": 690300,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 690510,
+      "endMs": 691440,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 692070,
+      "endMs": 692820,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 693060,
+      "endMs": 693840,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 694650,
+      "endMs": 695190,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 696690,
+      "endMs": 697710,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 701550,
+      "endMs": 702090,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 708510,
+      "endMs": 710040,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 710550,
+      "endMs": 711390,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 712590,
+      "endMs": 714420,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 715140,
+      "endMs": 716580,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 717210,
+      "endMs": 718140,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 719250,
+      "endMs": 720570,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 721290,
+      "endMs": 722340,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 723660,
+      "endMs": 724500,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 724860,
+      "endMs": 726690,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 726930,
+      "endMs": 727530,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 732570,
+      "endMs": 733620,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 733920,
+      "endMs": 734820,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 736770,
+      "endMs": 737280,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 737580,
+      "endMs": 738570,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 749580,
+      "endMs": 750090,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 752160,
+      "endMs": 752970,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 775470,
+      "endMs": 776130,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 776490,
+      "endMs": 779040,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 779400,
+      "endMs": 780090,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 780630,
+      "endMs": 781320,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 782220,
+      "endMs": 783330,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 784620,
+      "endMs": 787380,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 788610,
+      "endMs": 789150,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 790440,
+      "endMs": 791100,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 794430,
+      "endMs": 794940,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 801300,
+      "endMs": 801840,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 819660,
+      "endMs": 820170,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 821130,
+      "endMs": 823440,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 823770,
+      "endMs": 824940,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 825600,
+      "endMs": 826410,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 826710,
+      "endMs": 827520,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 827910,
+      "endMs": 828840,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 828930,
+      "endMs": 829740,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 830490,
+      "endMs": 831210,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 832080,
+      "endMs": 833220,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 838950,
+      "endMs": 842910,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 847050,
+      "endMs": 850890,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 853710,
+      "endMs": 854280,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 854610,
+      "endMs": 855270,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 856380,
+      "endMs": 856890,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 856920,
+      "endMs": 858120,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 858180,
+      "endMs": 858930,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 860130,
+      "endMs": 860670,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 861090,
+      "endMs": 862260,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 862320,
+      "endMs": 863190,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 867150,
+      "endMs": 868380,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 869820,
+      "endMs": 870510,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 872250,
+      "endMs": 872820,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 874260,
+      "endMs": 874890,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 877260,
+      "endMs": 878340,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 878880,
+      "endMs": 879630,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 879660,
+      "endMs": 880230,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 881550,
+      "endMs": 882120,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 882150,
+      "endMs": 882660,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 898260,
+      "endMs": 898860,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 900030,
+      "endMs": 901530,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 901920,
+      "endMs": 902430,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 905100,
+      "endMs": 905610,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 937380,
+      "endMs": 940500,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 940560,
+      "endMs": 941340,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 941580,
+      "endMs": 942750,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 942870,
+      "endMs": 943620,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 944310,
+      "endMs": 944910,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 944970,
+      "endMs": 945570,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 945630,
+      "endMs": 947070,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 947160,
+      "endMs": 948060,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 948270,
+      "endMs": 951150,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 951570,
+      "endMs": 954030,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 954840,
+      "endMs": 955440,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 956010,
+      "endMs": 958500,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 958530,
+      "endMs": 959400,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 959430,
+      "endMs": 960810,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 961200,
+      "endMs": 961830,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 961860,
+      "endMs": 962850,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 963030,
+      "endMs": 963780,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 964170,
+      "endMs": 968460,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 968490,
+      "endMs": 969540,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 969570,
+      "endMs": 971280,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 979920,
+      "endMs": 982620,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 982650,
+      "endMs": 984300,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 984330,
+      "endMs": 985440,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 985470,
+      "endMs": 986430,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 986490,
+      "endMs": 990300,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 990390,
+      "endMs": 992070,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 992280,
+      "endMs": 993360,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1000260,
+      "endMs": 1000860,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1001550,
+      "endMs": 1002240,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1004010,
+      "endMs": 1004610,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1005390,
+      "endMs": 1006050,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1006080,
+      "endMs": 1007100,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1007250,
+      "endMs": 1008060,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1015860,
+      "endMs": 1016610,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1019760,
+      "endMs": 1020270,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1020690,
+      "endMs": 1021230,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1021770,
+      "endMs": 1022400,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1026569,
+      "endMs": 1027080,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1029990,
+      "endMs": 1030590,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1031190,
+      "endMs": 1031760,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1032060,
+      "endMs": 1032660,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1033920,
+      "endMs": 1034490,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1035329,
+      "endMs": 1036230,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1037369,
+      "endMs": 1038810,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1050330,
+      "endMs": 1051410,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 1051470,
+      "endMs": 1052010,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1053000,
+      "endMs": 1053720,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1053750,
+      "endMs": 1054620,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1055340,
+      "endMs": 1056000,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1056030,
+      "endMs": 1056690,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1057230,
+      "endMs": 1057830,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1057920,
+      "endMs": 1058700,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1058730,
+      "endMs": 1059450,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1067250,
+      "endMs": 1067940,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1068630,
+      "endMs": 1070040,
+      "speakerCluster": 2
+    },
+    {
+      "startMs": 1072020,
+      "endMs": 1072710,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1075110,
+      "endMs": 1075680,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1083660,
+      "endMs": 1084260,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1085940,
+      "endMs": 1086450,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1089540,
+      "endMs": 1090440,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1092600,
+      "endMs": 1093260,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1095060,
+      "endMs": 1095570,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1099920,
+      "endMs": 1101090,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1103610,
+      "endMs": 1104120,
+      "speakerCluster": 5
+    },
+    {
+      "startMs": 1112190,
+      "endMs": 1112730,
+      "speakerCluster": 1
+    },
+    {
+      "startMs": 1113390,
+      "endMs": 1114050,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1114830,
+      "endMs": 1115400,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1120080,
+      "endMs": 1120920,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1121760,
+      "endMs": 1122600,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1122990,
+      "endMs": 1124460,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 1125780,
+      "endMs": 1126620,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1127520,
+      "endMs": 1128870,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1129290,
+      "endMs": 1130400,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 1130820,
+      "endMs": 1131330,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1132020,
+      "endMs": 1132710,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1133550,
+      "endMs": 1134330,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1134420,
+      "endMs": 1135440,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1135770,
+      "endMs": 1136910,
+      "speakerCluster": 4
+    },
+    {
+      "startMs": 1137000,
+      "endMs": 1137630,
+      "speakerCluster": 0
+    },
+    {
+      "startMs": 1140510,
+      "endMs": 1141020,
+      "speakerCluster": 3
+    },
+    {
+      "startMs": 1144590,
+      "endMs": 1145130,
+      "speakerCluster": 5
+    }
+  ],
+  "clusterStats": {
+    "2": {
+      "count": 84,
+      "totalMs": 211138
+    },
+    "3": {
+      "count": 91,
+      "totalMs": 74970
+    },
+    "5": {
+      "count": 76,
+      "totalMs": 53280
+    },
+    "1": {
+      "count": 78,
+      "totalMs": 55080
+    },
+    "4": {
+      "count": 57,
+      "totalMs": 93180
+    },
+    "0": {
+      "count": 50,
+      "totalMs": 62643
+    }
+  },
+  "parameters": {
+    "numSpeakersRequested": 6,
+    "vadAggressiveness": 3,
+    "minSegmentMs": 500,
+    "maxSegmentMs": 10000,
+    "embeddingModel": "resemblyzer",
+    "clusteringMethod": "spectral"
+  },
+  "generatedAt": "2026-02-24T21:37:53Z",
+  "comparison": {
+    "clusterMapping": {
+      "2": {
+        "majoritySpeaker": "kestrel-ai",
+        "purity": 0.563,
+        "totalSegments": 71,
+        "speakerBreakdown": {
+          "kiritan": 25,
+          "kestrel-ai": 40,
+          "client": 2,
+          "mars-control": 1,
+          "rai": 3
+        }
+      },
+      "5": {
+        "majoritySpeaker": "kestrel-ai",
+        "purity": 0.485,
+        "totalSegments": 66,
+        "speakerBreakdown": {
+          "kestrel-ai": 32,
+          "client": 2,
+          "mars-control": 4,
+          "kiritan": 11,
+          "rai": 17
+        }
+      },
+      "3": {
+        "majoritySpeaker": "kiritan",
+        "purity": 0.589,
+        "totalSegments": 73,
+        "speakerBreakdown": {
+          "kiritan": 43,
+          "kestrel-ai": 25,
+          "rai": 5
+        }
+      },
+      "1": {
+        "majoritySpeaker": "kestrel-ai",
+        "purity": 0.853,
+        "totalSegments": 75,
+        "speakerBreakdown": {
+          "kiritan": 9,
+          "kestrel-ai": 64,
+          "rai": 2
+        }
+      },
+      "4": {
+        "majoritySpeaker": "kestrel-ai",
+        "purity": 0.731,
+        "totalSegments": 52,
+        "speakerBreakdown": {
+          "kestrel-ai": 38,
+          "client": 1,
+          "mars-control": 2,
+          "kiritan": 9,
+          "rai": 1,
+          "ganymede-control": 1
+        }
+      },
+      "0": {
+        "majoritySpeaker": "kestrel-ai",
+        "purity": 0.725,
+        "totalSegments": 40,
+        "speakerBreakdown": {
+          "kiritan": 8,
+          "kestrel-ai": 29,
+          "ganymede-control": 3
+        }
+      }
+    },
+    "accuracy": 0.653,
+    "totalMatches": 377,
+    "correctMatches": 246,
+    "unmatchedDiarization": 59
+  }
+}

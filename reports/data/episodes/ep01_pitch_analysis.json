@@ -1,0 +1,56 @@
+{
+  "episode": 1,
+  "method": "pitch_features",
+  "speakerStats": {
+    "client": {
+      "f0_mean": 303.0860745495489,
+      "f0_mean_std": 0.0,
+      "f0_std_mean": 61.846006750015384,
+      "f0_range_mean": 293.0293149056337,
+      "voiced_ratio_mean": 0.3744292237442922,
+      "n": 1
+    },
+    "ganymede-control": {
+      "f0_mean": 158.25538955279225,
+      "f0_mean_std": 95.30784908237763,
+      "f0_std_mean": 6.875925088633868,
+      "f0_range_mean": 20.97189836148623,
+      "voiced_ratio_mean": 0.4290072343763619,
+      "n": 2
+    },
+    "kestrel-ai": {
+      "f0_mean": 242.36346144663514,
+      "f0_mean_std": 103.31624742108733,
+      "f0_std_mean": 58.073515911360815,
+      "f0_range_mean": 199.35956112639496,
+      "voiced_ratio_mean": 0.6254861592871652,
+      "n": 67
+    },
+    "kiritan": {
+      "f0_mean": 213.55157021821154,
+      "f0_mean_std": 99.27976632214047,
+      "f0_std_mean": 51.711917420336015,
+      "f0_range_mean": 181.04638569200105,
+      "voiced_ratio_mean": 0.6734637001949393,
+      "n": 61
+    },
+    "mars-control": {
+      "f0_mean": 56.52763056665259,
+      "f0_mean_std": 4.113075044618551,
+      "f0_std_mean": 5.115640433964893,
+      "f0_range_mean": 19.663759491757766,
+      "voiced_ratio_mean": 0.6449956508319538,
+      "n": 2
+    },
+    "rai": {
+      "f0_mean": 338.8782909316752,
+      "f0_mean_std": 64.6030936033992,
+      "f0_std_mean": 81.56722822993211,
+      "f0_range_mean": 266.6892609432711,
+      "voiced_ratio_mean": 0.5946141980585045,
+      "n": 14
+    }
+  },
+  "f0ThresholdAccuracy": 0.5625,
+  "randomForestCVAccuracy": 0.6793846153846155
+}
