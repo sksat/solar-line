@@ -5,9 +5,10 @@
 /// Exposes a flat f64 API for use from JavaScript/TypeScript.
 /// All newtype wrapping/unwrapping happens at this boundary.
 /// Units follow the core crate convention: km, km/s, seconds, radians, km³/s².
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
+use solar_line_core::dag;
 use solar_line_core::kepler;
 use solar_line_core::propagation;
 use solar_line_core::units::{Eccentricity, Km, KmPerSec, Mu, Radians, Seconds};
@@ -993,6 +994,279 @@ pub fn gravity_gradient_torque(
 }
 
 // ---------------------------------------------------------------------------
+// DAG analysis
+// ---------------------------------------------------------------------------
+
+/// Input format matching the TypeScript DagState (dag-types.ts).
+#[derive(Deserialize)]
+struct JsDagState {
+    nodes: std::collections::HashMap<String, JsDagNode>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct JsDagNode {
+    #[allow(dead_code)]
+    id: String,
+    #[serde(rename = "type")]
+    node_type: String,
+    #[serde(default)]
+    depends_on: Vec<String>,
+    #[serde(default)]
+    status: String,
+    #[serde(default)]
+    tags: Vec<String>,
+}
+
+/// Layout result returned to JS.
+#[derive(Serialize, Deserialize)]
+struct DagLayoutResult {
+    /// Node IDs in the order they were processed.
+    ids: Vec<String>,
+    /// x positions (same order as ids).
+    x: Vec<f64>,
+    /// y positions (same order as ids).
+    y: Vec<f64>,
+    /// Layer assignment for each node.
+    layers: Vec<usize>,
+    /// Number of edge crossings in the layout.
+    crossings: usize,
+}
+
+/// Impact analysis result returned to JS.
+#[derive(Serialize, Deserialize)]
+struct DagImpactResult {
+    /// IDs of affected nodes (downstream cascade).
+    affected: Vec<String>,
+    /// Cascade count.
+    cascade_count: usize,
+    /// Affected count by type: { data_source, parameter, analysis, report, task }.
+    by_type: DagImpactByType,
+}
+
+#[derive(Serialize, Deserialize)]
+struct DagImpactByType {
+    data_source: usize,
+    parameter: usize,
+    analysis: usize,
+    report: usize,
+    task: usize,
+}
+
+/// General analysis result returned to JS.
+#[derive(Serialize, Deserialize)]
+struct DagAnalysisResult {
+    /// Topological order (node IDs).
+    topo_order: Vec<String>,
+    /// Critical path (node IDs).
+    critical_path: Vec<String>,
+    /// Depth of each node (keyed by id).
+    depths: Vec<DagNodeDepth>,
+    /// Orphan node IDs.
+    orphans: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize)]
+struct DagNodeDepth {
+    id: String,
+    depth: usize,
+}
+
+/// Path-finding result.
+#[derive(Serialize, Deserialize)]
+struct DagPathResult {
+    paths: Vec<Vec<String>>,
+}
+
+/// Convert JS DAG state to internal Rust representation.
+/// Returns (Dag, id_list) where id_list maps index→string ID.
+fn parse_dag_state(state: &JsDagState) -> (dag::Dag, Vec<String>) {
+    // Collect all node IDs and assign stable indices
+    let mut ids: Vec<String> = state.nodes.keys().cloned().collect();
+    ids.sort(); // Stable ordering
+    let id_to_idx: std::collections::HashMap<&str, usize> =
+        ids.iter().enumerate().map(|(i, s)| (s.as_str(), i)).collect();
+
+    let mut nodes = Vec::with_capacity(ids.len());
+    for (i, id) in ids.iter().enumerate() {
+        let js_node = &state.nodes[id];
+        let node_type = dag::NodeType::parse(&js_node.node_type).unwrap_or(dag::NodeType::Task);
+        let status = dag::NodeStatus::parse(&js_node.status).unwrap_or(dag::NodeStatus::Valid);
+        let depends_on: Vec<usize> = js_node
+            .depends_on
+            .iter()
+            .filter_map(|dep| id_to_idx.get(dep.as_str()).copied())
+            .collect();
+        nodes.push(dag::DagNode {
+            id: i,
+            node_type,
+            status,
+            depends_on,
+            tags: js_node.tags.clone(),
+        });
+    }
+
+    (dag::Dag::new(nodes), ids)
+}
+
+/// Compute Sugiyama-style layout for the DAG.
+/// Input: JS DAG state object, width, height.
+/// Returns: { ids, x, y, layers, crossings }.
+#[wasm_bindgen]
+pub fn dag_layout(state: JsValue, width: f64, height: f64) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let positions = d.layout(width, height);
+    let (layer_assign, _) = d.assign_layers();
+    let crossings = d.count_crossings(&positions);
+
+    let result = DagLayoutResult {
+        ids: ids.clone(),
+        x: positions.iter().map(|(x, _)| *x).collect(),
+        y: positions.iter().map(|(_, y)| *y).collect(),
+        layers: layer_assign,
+        crossings,
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Run impact analysis: what happens if a node is invalidated?
+/// Returns affected nodes and cascade statistics.
+#[wasm_bindgen]
+pub fn dag_impact(state: JsValue, node_id: &str) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let idx = ids
+        .iter()
+        .position(|id| id == node_id)
+        .ok_or_else(|| JsError::new(&format!("Node '{}' not found", node_id)))?;
+
+    let impact = d.impact_analysis(idx);
+
+    let result = DagImpactResult {
+        affected: impact.affected_nodes.iter().map(|&i| ids[i].clone()).collect(),
+        cascade_count: impact.cascade_count,
+        by_type: DagImpactByType {
+            data_source: impact.by_type[0],
+            parameter: impact.by_type[1],
+            analysis: impact.by_type[2],
+            report: impact.by_type[3],
+            task: impact.by_type[4],
+        },
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Full DAG analysis: topo order, critical path, depths, orphans.
+#[wasm_bindgen]
+pub fn dag_analyze(state: JsValue) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let topo = d.topological_sort().unwrap_or_default();
+    let crit = d.critical_path();
+    let depths_vec = d.compute_depths();
+    let orphan_indices = d.orphans();
+
+    let result = DagAnalysisResult {
+        topo_order: topo.iter().map(|&i| ids[i].clone()).collect(),
+        critical_path: crit.iter().map(|&i| ids[i].clone()).collect(),
+        depths: ids
+            .iter()
+            .enumerate()
+            .map(|(i, id)| DagNodeDepth {
+                id: id.clone(),
+                depth: depths_vec[i],
+            })
+            .collect(),
+        orphans: orphan_indices.iter().map(|&i| ids[i].clone()).collect(),
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Get all upstream dependencies of a node (transitive).
+#[wasm_bindgen]
+pub fn dag_upstream(state: JsValue, node_id: &str) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let idx = ids
+        .iter()
+        .position(|id| id == node_id)
+        .ok_or_else(|| JsError::new(&format!("Node '{}' not found", node_id)))?;
+
+    let upstream: Vec<String> = d.all_upstream(idx).iter().map(|&i| ids[i].clone()).collect();
+    serde_wasm_bindgen::to_value(&upstream).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Get all downstream dependents of a node (transitive).
+#[wasm_bindgen]
+pub fn dag_downstream(state: JsValue, node_id: &str) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let idx = ids
+        .iter()
+        .position(|id| id == node_id)
+        .ok_or_else(|| JsError::new(&format!("Node '{}' not found", node_id)))?;
+
+    let downstream: Vec<String> = d.all_downstream(idx).iter().map(|&i| ids[i].clone()).collect();
+    serde_wasm_bindgen::to_value(&downstream).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Find all paths between two nodes.
+#[wasm_bindgen]
+pub fn dag_find_paths(
+    state: JsValue,
+    source_id: &str,
+    target_id: &str,
+    max_paths: usize,
+) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let src = ids
+        .iter()
+        .position(|id| id == source_id)
+        .ok_or_else(|| JsError::new(&format!("Source '{}' not found", source_id)))?;
+    let tgt = ids
+        .iter()
+        .position(|id| id == target_id)
+        .ok_or_else(|| JsError::new(&format!("Target '{}' not found", target_id)))?;
+
+    let paths = d.find_paths(src, tgt, max_paths);
+    let result = DagPathResult {
+        paths: paths
+            .iter()
+            .map(|p| p.iter().map(|&i| ids[i].clone()).collect())
+            .collect(),
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Extract a focused subgraph around nodes matching a tag.
+/// Returns node IDs included in the subgraph.
+#[wasm_bindgen]
+pub fn dag_subgraph(state: JsValue, tag: &str, depth: usize) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let tag_str = tag.to_string();
+    let sub = d.subgraph(|n| n.tags.contains(&tag_str), depth);
+    let result: Vec<String> = sub.iter().map(|&i| ids[i].clone()).collect();
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 
@@ -1392,5 +1666,158 @@ mod tests {
             "powered flyby increases v_inf: {:.4}",
             result[2]
         );
+    }
+
+    // ── DAG parsing + analysis tests (pure Rust, no JsValue) ──────
+
+    fn make_test_dag_state() -> JsDagState {
+        let json = r#"{
+            "nodes": {
+                "src.data": {
+                    "id": "src.data",
+                    "type": "data_source",
+                    "dependsOn": [],
+                    "status": "valid",
+                    "tags": ["source"]
+                },
+                "param.mass": {
+                    "id": "param.mass",
+                    "type": "parameter",
+                    "dependsOn": [],
+                    "status": "valid",
+                    "tags": ["parameter"]
+                },
+                "analysis.ep01": {
+                    "id": "analysis.ep01",
+                    "type": "analysis",
+                    "dependsOn": ["src.data", "param.mass"],
+                    "status": "valid",
+                    "tags": ["episode:01"]
+                },
+                "analysis.ep02": {
+                    "id": "analysis.ep02",
+                    "type": "analysis",
+                    "dependsOn": ["src.data", "param.mass"],
+                    "status": "valid",
+                    "tags": ["episode:02"]
+                },
+                "report.ep01": {
+                    "id": "report.ep01",
+                    "type": "report",
+                    "dependsOn": ["analysis.ep01"],
+                    "status": "valid",
+                    "tags": ["episode:01"]
+                },
+                "report.summary": {
+                    "id": "report.summary",
+                    "type": "report",
+                    "dependsOn": ["analysis.ep01", "analysis.ep02"],
+                    "status": "valid",
+                    "tags": ["summary"]
+                }
+            },
+            "schemaVersion": 1
+        }"#;
+        serde_json::from_str(json).unwrap()
+    }
+
+    #[test]
+    fn test_dag_parse_state() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        assert_eq!(d.node_count(), 6);
+        assert_eq!(ids.len(), 6);
+        // IDs should be sorted
+        for i in 0..ids.len() - 1 {
+            assert!(ids[i] < ids[i + 1], "IDs should be sorted: {:?}", ids);
+        }
+    }
+
+    #[test]
+    fn test_dag_layout_via_parse() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        let positions = d.layout(1200.0, 600.0);
+        assert_eq!(positions.len(), 6);
+        assert_eq!(ids.len(), 6);
+        // All positions should be within bounds
+        for (x, y) in &positions {
+            assert!(*x > 0.0 && *x < 1200.0, "x out of bounds: {}", x);
+            assert!(*y > 0.0 && *y < 600.0, "y out of bounds: {}", y);
+        }
+    }
+
+    #[test]
+    fn test_dag_analyze_via_parse() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        let topo = d.topological_sort().unwrap();
+        assert_eq!(topo.len(), 6);
+        let crit = d.critical_path();
+        assert!(!crit.is_empty());
+        let depths = d.compute_depths();
+        assert_eq!(depths.len(), 6);
+        // Verify roots have depth 0
+        for (i, id) in ids.iter().enumerate() {
+            if id == "src.data" || id == "param.mass" {
+                assert_eq!(depths[i], 0, "{} should have depth 0", id);
+            }
+        }
+    }
+
+    #[test]
+    fn test_dag_impact_param_mass_via_parse() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        let idx = ids.iter().position(|id| id == "param.mass").unwrap();
+        let impact = d.impact_analysis(idx);
+        // param.mass → analysis.ep01, analysis.ep02 → report.ep01, report.summary
+        assert_eq!(impact.cascade_count, 4);
+        assert_eq!(impact.by_type[dag::NodeType::Analysis.layer_order()], 2);
+        assert_eq!(impact.by_type[dag::NodeType::Report.layer_order()], 2);
+    }
+
+    #[test]
+    fn test_dag_upstream_report_via_parse() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        let idx = ids.iter().position(|id| id == "report.summary").unwrap();
+        let upstream: Vec<String> = d.all_upstream(idx).iter().map(|&i| ids[i].clone()).collect();
+        assert!(upstream.contains(&"analysis.ep01".to_string()));
+        assert!(upstream.contains(&"analysis.ep02".to_string()));
+        assert!(upstream.contains(&"src.data".to_string()));
+        assert!(upstream.contains(&"param.mass".to_string()));
+    }
+
+    #[test]
+    fn test_dag_downstream_source_via_parse() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        let idx = ids.iter().position(|id| id == "src.data").unwrap();
+        let downstream: Vec<String> = d.all_downstream(idx).iter().map(|&i| ids[i].clone()).collect();
+        assert!(downstream.contains(&"analysis.ep01".to_string()));
+        assert!(downstream.contains(&"analysis.ep02".to_string()));
+    }
+
+    #[test]
+    fn test_dag_find_paths_via_parse() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        let src = ids.iter().position(|id| id == "param.mass").unwrap();
+        let tgt = ids.iter().position(|id| id == "report.summary").unwrap();
+        let paths = d.find_paths(src, tgt, 10);
+        assert_eq!(paths.len(), 2); // via ep01 and via ep02
+    }
+
+    #[test]
+    fn test_dag_subgraph_episode_via_parse() {
+        let state = make_test_dag_state();
+        let (d, ids) = parse_dag_state(&state);
+        let tag = "episode:01".to_string();
+        let sub = d.subgraph(|n| n.tags.contains(&tag), 1);
+        let node_ids: Vec<String> = sub.iter().map(|&i| ids[i].clone()).collect();
+        assert!(node_ids.contains(&"analysis.ep01".to_string()));
+        assert!(node_ids.contains(&"report.ep01".to_string()));
+        assert!(node_ids.contains(&"src.data".to_string()));
     }
 }

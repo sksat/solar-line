@@ -1,6 +1,6 @@
 # Task 103: DAG 分析の Rust モデリング
 
-## Status: TODO
+## Status: IN PROGRESS
 
 ## Motivation
 

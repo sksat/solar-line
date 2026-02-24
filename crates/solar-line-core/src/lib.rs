@@ -1,6 +1,7 @@
 pub mod attitude;
 pub mod comms;
 pub mod constants;
+pub mod dag;
 pub mod ephemeris;
 pub mod flyby;
 pub mod kepler;
