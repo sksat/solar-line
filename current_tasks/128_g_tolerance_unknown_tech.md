@@ -1,6 +1,6 @@
 # Task 128: 耐G超技術の前提を分析に反映
 
-## Status: TODO
+## Status: DONE
 
 ## Description
 人間の耐Gについて作中でまったく言及がないことから、なんらかの超技術で解決済みの
