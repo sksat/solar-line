@@ -1,6 +1,6 @@
 # Task 091: Narrative Plausibility Review Process
 
-## Status: IN_PROGRESS (Phase 1 done)
+## Status: DONE
 
 ## Motivation
 
@@ -12,7 +12,7 @@ Human directive:
 
 The EP02 ballistic transfer of ~455 days feels inconsistent with the show's pacing and depiction. While physically valid, the year-long voyage may not match what's shown on screen. This type of "narrative plausibility" check is different from physics validation — it's about whether our analysis matches the viewer's experience of the story.
 
-## Phase 1 Findings: EP02 455-Day Review
+## Phase 1 Findings: EP02 455-Day Review ✅
 
 ### Evidence from the show:
 - Show does NOT state the transit duration in dialogue
@@ -31,23 +31,35 @@ The EP02 ballistic transfer of ~455 days feels inconsistent with the show's paci
 - The 455-day figure remains the "pure ballistic" analysis but the "trim thrust" alternative is now documented
 - This is a genuine ambiguity in the source material, not an error in our analysis
 
-### Updated CLAUDE.md:
-- Added "Narrative plausibility review" guideline to Analysis Perspective section
+## Phase 2: Review Process Established ✅
 
-## Remaining Work
+- Updated report-review skill with Section 6: Narrative Plausibility
+- Checklist includes: transit durations, distances/conditions, crew experience, ambiguity documentation, time references
+- Key review questions: viewer perception, knowledgeable viewer surprise, constraining dialogue/visual cues
 
-### Phase 2: Establish review process
-- Create a review checklist that includes:
-  - Physics plausibility (existing)
-  - Narrative consistency (existing — cross-episode)
-  - **Viewer experience plausibility** (does our analysis match what the show depicts?)
-- Add to report-review skill
-- Identify any other analyses where computed values feel inconsistent with depiction
+## Phase 3: Systematic Review of All 24 Transfers ✅
 
-### Phase 3: Systematic review
-- Apply the narrative plausibility check to all 24 transfer analyses
-- Flag any where computed duration/distance/conditions seem at odds with on-screen depiction
-- Discuss discrepancies in reports
+### Summary: 24 transfers across 5 episodes reviewed
+
+| Concern Level | Count | Details |
+|---|---|---|
+| None | 19 | Reference calcs, dialogue-explicit, or narratively consistent |
+| Minor | 2 | EP01-t03 (150h speculative mass), EP03-t05 (brief capture treatment) |
+| Significant | 2 | EP01-t02 (mass mystery), EP02-t03 (455-day transit) |
+| N/A | 1 | EP01-t04 (performance spec analysis) |
+
+### Significant findings (already documented):
+1. **EP01-transfer-02 (72h Mars→Ganymede)**: Requires mass ~299t vs stated 48,000t — the core "mass mystery" of the series. Extensively analyzed in mass_mystery and ship_kestrel reports.
+2. **EP02-transfer-03 (455d Jupiter→Saturn)**: Year-long ballistic transit without explicit duration dialogue. Cold sleep provides narrative bridge. "Trim thrust" ambiguity documented in Phase 1.
+
+### Strong narrative plausibility (no concerns):
+- **EP03**: 143h explicitly stated in dialogue, navigation crisis emerges at ~10h (mid-transit) — perfect pacing
+- **EP04**: Plasmoid 14-min shield margin explicit, 33h fleet ETA creates urgency
+- **EP05**: 507h explicitly stated (02:36), nozzle margin 0.78% (26 min) — the tightest and most dramatically-earned constraint in the series
+- **Cross-episode**: Margin contraction pattern (2.9% → 1.23° → 43% → 0.78%) is narratively intentional and physically valid
+
+### Key conclusion:
+SOLAR LINE's later episodes (EP03-EP05) consistently state transit durations in dialogue, eliminating narrative ambiguity. The concerns are concentrated in EP01-EP02 where the show relies more on visual cues (cold sleep, urgency) than explicit time references. This is not an error in our analysis — it reflects the show's storytelling evolution.
 
 ## Dependencies
 - Episode analyses (Tasks 006, 008, 015, 020, 023 — all DONE)

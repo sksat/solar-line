@@ -66,7 +66,22 @@ Then manually check:
 - [ ] Summary page navigation chips present
 - [ ] GitHub repo link in footer
 
-### 6. Build Verification
+### 6. Narrative Plausibility
+
+Check whether our computed values match the viewer's experience of the show:
+
+- [ ] **Transit durations**: Do computed travel times match the show's pacing? (e.g., 455-day ballistic transfer vs cold sleep scene)
+- [ ] **Distances/conditions**: Are computed distances, radiation doses, or temperatures consistent with what's depicted on screen?
+- [ ] **Crew experience**: Do the physical conditions (g-forces, radiation, temperature) match the crew's depicted reactions?
+- [ ] **Ambiguity documentation**: Where the show is ambiguous (e.g., "trim only" thrust), are alternative interpretations documented?
+- [ ] **Time references**: If dialogue mentions specific durations, do our calculations match?
+
+Key questions for each transfer:
+1. Does the viewer watching the episode get a sense of duration consistent with our computed time?
+2. Would a knowledgeable viewer find our numbers surprising or contradictory to what's shown?
+3. Are there dialogue lines or visual cues that constrain the duration more than our physics model assumes?
+
+### 7. Build Verification
 
 ```bash
 cd ts && npm run build
