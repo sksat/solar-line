@@ -54,6 +54,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **All reports published to GitHub Pages must be written in Japanese (日本語)**
 - Reports include per-transfer analysis and session logs
 - Session logs should be collected from Claude Code conversation logs (not just stdout)
+- When processing session log files, copy them to the workspace directory first for easier reference (applies to both Claude Code and Codex logs)
 - Not everything needs to be interactive — include static analysis graphs/charts in reports where appropriate
 - **Concrete values need visualization**: When analyzing specific numerical values (ΔV, acceleration, travel time), include charts or diagrams to make the analysis more intuitive
 - **Orbital transfer diagrams**: Include graphs showing planetary orbits, celestial body positions, and transfer trajectories to make the analysis more visually understandable
@@ -111,6 +112,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 - **Document assumptions.** Every analysis depends on assumptions about parameters, data sources, and orbital conditions. Make these explicit in code comments and reports.
 - **Don't trust unverified data.** Only original source material and parameters from verified institutions are reliable. Everything else must be cross-checked.
+- **Prioritize anime source over worldbuilding docs.** Worldbuilding/setting documents (設定資料) are supplementary references. Parameters and conditions observed in the actual anime episodes take precedence in analysis.
+- **Expand analysis scope.** Beyond the protagonist's ship (Kestrel), analyze other spacecraft, mooring stations, and orbital infrastructure depicted in the series.
 - **Structure for traceability.** Build code and reports so that assumptions and data provenance are easy to inspect.
 - **Explore multiple scenarios.** When an analysis finds a discrepancy, do not simply conclude "implausible" and stop. Instead, explore multiple parameter variations: what mass, thrust, trajectory, or timing would make the depicted scenario work? Discuss boundary conditions and plausible interpretations. The goal is to map the space of possibilities, not to render a single verdict.
 - **Cite evidence for all claims.** Ship specs, orbital parameters, and other values used in analysis must cite their source (episode timestamp, worldbuilding document URL, etc.). Unsourced parameters undermine the analysis.
