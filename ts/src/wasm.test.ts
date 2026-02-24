@@ -2,12 +2,19 @@
  * Round-trip tests: verify WASM bridge produces results consistent with
  * the pure TypeScript implementation and known reference values.
  *
- * These tests require the WASM package to be built first:
+ * These tests require the WASM package to be built first (either target works):
  *   wasm-pack build --target nodejs --out-dir ../../ts/pkg crates/solar-line-wasm
+ *   wasm-pack build --target web --out-dir ../../ts/pkg crates/solar-line-wasm
  */
 import { describe, it, before } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import { visViva, hohmannTransferDv, brachistochroneAccel, brachistochroneDeltaV, MU } from "./orbital.ts";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // The WASM module is loaded dynamically since it's a generated artifact.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,6 +22,12 @@ let wasm: any;
 
 before(async () => {
   wasm = await import("../pkg/solar_line_wasm.js");
+  // --target web builds require explicit initialization; --target nodejs does not.
+  if (typeof wasm.default === "function") {
+    const wasmPath = join(__dirname, "..", "pkg", "solar_line_wasm_bg.wasm");
+    const wasmBytes = readFileSync(wasmPath);
+    wasm.initSync({ module: wasmBytes });
+  }
 });
 
 describe("WASM bridge: vis_viva", () => {
