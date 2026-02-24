@@ -55,7 +55,9 @@ test("index page loads and has episode links", async ({ page }) => {
   const errors = collectConsoleErrors(page);
   await page.goto("/");
   await expect(page.locator("h1")).toContainText("SOLAR LINE");
-  // Should have at least 1 episode card/link
+  // Episode links are in nav dropdown — hover to reveal, then check
+  const episodeDropdown = page.locator('.nav-dropdown').first();
+  await episodeDropdown.hover();
   const episodeLinks = page.locator('a[href*="episodes/"]');
   await expect(episodeLinks.first()).toBeVisible();
   expect(await episodeLinks.count()).toBeGreaterThanOrEqual(5);

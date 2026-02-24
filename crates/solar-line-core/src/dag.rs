@@ -383,7 +383,8 @@ impl Dag {
                 layer_nodes[l].sort_by(|&a, &b| {
                     let bc_a = barycenter(&self.nodes[a].depends_on, &prev_positions);
                     let bc_b = barycenter(&self.nodes[b].depends_on, &prev_positions);
-                    bc_a.partial_cmp(&bc_b).unwrap_or(core::cmp::Ordering::Equal)
+                    bc_a.partial_cmp(&bc_b)
+                        .unwrap_or(core::cmp::Ordering::Equal)
                 });
             }
 
@@ -393,7 +394,8 @@ impl Dag {
                 layer_nodes[l].sort_by(|&a, &b| {
                     let bc_a = barycenter(&self.forward[a], &next_positions);
                     let bc_b = barycenter(&self.forward[b], &next_positions);
-                    bc_a.partial_cmp(&bc_b).unwrap_or(core::cmp::Ordering::Equal)
+                    bc_a.partial_cmp(&bc_b)
+                        .unwrap_or(core::cmp::Ordering::Equal)
                 });
             }
         }
@@ -455,7 +457,12 @@ impl Dag {
         F: Fn(&DagNode) -> bool,
     {
         let mut included = vec![false; self.nodes.len()];
-        let seeds: Vec<usize> = self.nodes.iter().filter(|n| predicate(n)).map(|n| n.id).collect();
+        let seeds: Vec<usize> = self
+            .nodes
+            .iter()
+            .filter(|n| predicate(n))
+            .map(|n| n.id)
+            .collect();
 
         for &seed in &seeds {
             included[seed] = true;
@@ -474,7 +481,13 @@ impl Dag {
         (0..self.nodes.len()).filter(|&i| included[i]).collect()
     }
 
-    fn expand_direction(&self, start: usize, max_depth: usize, upstream: bool, included: &mut [bool]) {
+    fn expand_direction(
+        &self,
+        start: usize,
+        max_depth: usize,
+        upstream: bool,
+        included: &mut [bool],
+    ) {
         let mut frontier = vec![(start, 0usize)];
         while let Some((node, d)) = frontier.pop() {
             if d >= max_depth {
@@ -608,7 +621,11 @@ pub struct ImpactResult {
 
 /// Build a map from node_id → position_index within a layer.
 fn position_map(layer: &[usize]) -> Vec<(usize, usize)> {
-    layer.iter().enumerate().map(|(pos, &id)| (id, pos)).collect()
+    layer
+        .iter()
+        .enumerate()
+        .map(|(pos, &id)| (id, pos))
+        .collect()
 }
 
 /// Barycenter: average position of neighbors in the given position map.
@@ -706,14 +723,14 @@ mod tests {
         //    |   / \     /
         //   r0   r1----/
         Dag::new(vec![
-            make_node(0, NodeType::DataSource, vec![]),    // src0
-            make_node(1, NodeType::DataSource, vec![]),    // src1
-            make_node(2, NodeType::Parameter, vec![]),     // param0
-            make_node(3, NodeType::Analysis, vec![0]),     // a0
-            make_node(4, NodeType::Analysis, vec![0, 1]),  // a1
-            make_node(5, NodeType::Analysis, vec![2]),     // a2
-            make_node(6, NodeType::Report, vec![3, 4]),    // r0
-            make_node(7, NodeType::Report, vec![4, 5]),    // r1
+            make_node(0, NodeType::DataSource, vec![]),   // src0
+            make_node(1, NodeType::DataSource, vec![]),   // src1
+            make_node(2, NodeType::Parameter, vec![]),    // param0
+            make_node(3, NodeType::Analysis, vec![0]),    // a0
+            make_node(4, NodeType::Analysis, vec![0, 1]), // a1
+            make_node(5, NodeType::Analysis, vec![2]),    // a2
+            make_node(6, NodeType::Report, vec![3, 4]),   // r0
+            make_node(7, NodeType::Report, vec![4, 5]),   // r1
         ])
     }
 
@@ -940,7 +957,7 @@ mod tests {
     fn test_impact_complex_param() {
         let dag = make_complex_dag();
         let impact = dag.impact_analysis(2); // param0
-        // param0 → a2 → r1
+                                             // param0 → a2 → r1
         assert_eq!(impact.cascade_count, 2);
     }
 

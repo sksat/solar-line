@@ -1,6 +1,6 @@
 # Task 106: 他船舶分析と太陽系インフラの分離
 
-## Status: TODO
+## Status: IN_PROGRESS
 
 ## Motivation
 

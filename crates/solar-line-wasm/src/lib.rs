@@ -1084,8 +1084,11 @@ fn parse_dag_state(state: &JsDagState) -> (dag::Dag, Vec<String>) {
     // Collect all node IDs and assign stable indices
     let mut ids: Vec<String> = state.nodes.keys().cloned().collect();
     ids.sort(); // Stable ordering
-    let id_to_idx: std::collections::HashMap<&str, usize> =
-        ids.iter().enumerate().map(|(i, s)| (s.as_str(), i)).collect();
+    let id_to_idx: std::collections::HashMap<&str, usize> = ids
+        .iter()
+        .enumerate()
+        .map(|(i, s)| (s.as_str(), i))
+        .collect();
 
     let mut nodes = Vec::with_capacity(ids.len());
     for (i, id) in ids.iter().enumerate() {
@@ -1148,7 +1151,11 @@ pub fn dag_impact(state: JsValue, node_id: &str) -> Result<JsValue, JsError> {
     let impact = d.impact_analysis(idx);
 
     let result = DagImpactResult {
-        affected: impact.affected_nodes.iter().map(|&i| ids[i].clone()).collect(),
+        affected: impact
+            .affected_nodes
+            .iter()
+            .map(|&i| ids[i].clone())
+            .collect(),
         cascade_count: impact.cascade_count,
         by_type: DagImpactByType {
             data_source: impact.by_type[0],
@@ -1201,7 +1208,11 @@ pub fn dag_upstream(state: JsValue, node_id: &str) -> Result<JsValue, JsError> {
         .position(|id| id == node_id)
         .ok_or_else(|| JsError::new(&format!("Node '{}' not found", node_id)))?;
 
-    let upstream: Vec<String> = d.all_upstream(idx).iter().map(|&i| ids[i].clone()).collect();
+    let upstream: Vec<String> = d
+        .all_upstream(idx)
+        .iter()
+        .map(|&i| ids[i].clone())
+        .collect();
     serde_wasm_bindgen::to_value(&upstream).map_err(|e| JsError::new(&e.to_string()))
 }
 
@@ -1217,7 +1228,11 @@ pub fn dag_downstream(state: JsValue, node_id: &str) -> Result<JsValue, JsError>
         .position(|id| id == node_id)
         .ok_or_else(|| JsError::new(&format!("Node '{}' not found", node_id)))?;
 
-    let downstream: Vec<String> = d.all_downstream(idx).iter().map(|&i| ids[i].clone()).collect();
+    let downstream: Vec<String> = d
+        .all_downstream(idx)
+        .iter()
+        .map(|&i| ids[i].clone())
+        .collect();
     serde_wasm_bindgen::to_value(&downstream).map_err(|e| JsError::new(&e.to_string()))
 }
 
@@ -1782,7 +1797,11 @@ mod tests {
         let state = make_test_dag_state();
         let (d, ids) = parse_dag_state(&state);
         let idx = ids.iter().position(|id| id == "report.summary").unwrap();
-        let upstream: Vec<String> = d.all_upstream(idx).iter().map(|&i| ids[i].clone()).collect();
+        let upstream: Vec<String> = d
+            .all_upstream(idx)
+            .iter()
+            .map(|&i| ids[i].clone())
+            .collect();
         assert!(upstream.contains(&"analysis.ep01".to_string()));
         assert!(upstream.contains(&"analysis.ep02".to_string()));
         assert!(upstream.contains(&"src.data".to_string()));
@@ -1794,7 +1813,11 @@ mod tests {
         let state = make_test_dag_state();
         let (d, ids) = parse_dag_state(&state);
         let idx = ids.iter().position(|id| id == "src.data").unwrap();
-        let downstream: Vec<String> = d.all_downstream(idx).iter().map(|&i| ids[i].clone()).collect();
+        let downstream: Vec<String> = d
+            .all_downstream(idx)
+            .iter()
+            .map(|&i| ids[i].clone())
+            .collect();
         assert!(downstream.contains(&"analysis.ep01".to_string()));
         assert!(downstream.contains(&"analysis.ep02".to_string()));
     }
