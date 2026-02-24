@@ -63,6 +63,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Interactive orbital diagrams**: Add time slider to animate orbital transfers, showing how celestial body positions change during the transfer
 - **Report review**: Periodically have other Claude Code sessions or Codex review reports for readability/clarity
 - **VTT/transcription accuracy**: VTT and other transcriptions are not always perfect — correct text from context when actually using it in reports
+- **Report navigation**: Source citations must be clickable links. Reports should link to other episode reports and summary pages. Use section anchors and a table of contents for intra-page navigation.
 
 ## Key Principles
 
