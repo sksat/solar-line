@@ -10,6 +10,8 @@ import {
   buildManifest,
   countVerdicts,
   build,
+  parseTaskFile,
+  discoverTasks,
 } from "./build.ts";
 import type { EpisodeReport, TransferAnalysis } from "./report-types.ts";
 
@@ -477,6 +479,166 @@ describe("buildManifest with transcriptions", () => {
   it("omits transcriptionPages when no transcriptions", () => {
     const manifest = buildManifest([], []);
     assert.equal(manifest.transcriptionPages, undefined);
+  });
+});
+
+// --- parseTaskFile ---
+
+describe("parseTaskFile", () => {
+  it("parses a DONE task", () => {
+    const content = `# Task 001: Minimal Monorepo Scaffold + CI
+
+## Status: DONE
+
+## Goal
+Create the minimal project scaffold.`;
+    const task = parseTaskFile("001_scaffold_and_ci.md", content);
+    assert.ok(task);
+    assert.equal(task.number, 1);
+    assert.equal(task.title, "Minimal Monorepo Scaffold + CI");
+    assert.equal(task.status, "DONE");
+  });
+
+  it("parses a TODO task", () => {
+    const content = `# Task 056: Speaker Diarization Investigation
+
+## Status: TODO
+
+## Motivation
+Human directive: improve speaker attribution.`;
+    const task = parseTaskFile("056_speaker_diarization.md", content);
+    assert.ok(task);
+    assert.equal(task.number, 56);
+    assert.equal(task.title, "Speaker Diarization Investigation");
+    assert.equal(task.status, "TODO");
+  });
+
+  it("parses an IN_PROGRESS task", () => {
+    const content = `# Task 096: Nav Categories + Task Status Dashboard
+
+## Status: IN_PROGRESS
+
+## Motivation
+Build a task dashboard.`;
+    const task = parseTaskFile("096_nav_categories_and_task_dashboard.md", content);
+    assert.ok(task);
+    assert.equal(task.number, 96);
+    assert.equal(task.status, "IN_PROGRESS");
+  });
+
+  it("extracts summary from first content paragraph after status", () => {
+    const content = `# Task 010: Test
+
+## Status: DONE
+
+This is the summary line.
+
+## Details
+More content here.`;
+    const task = parseTaskFile("010_test.md", content);
+    assert.ok(task);
+    assert.equal(task.summary, "This is the summary line.");
+  });
+
+  it("returns null for non-numbered filename", () => {
+    const task = parseTaskFile("readme.md", "# Readme");
+    assert.equal(task, null);
+  });
+
+  it("handles missing status gracefully", () => {
+    const content = `# Task 999: No Status
+
+Just some text.`;
+    const task = parseTaskFile("999_no_status.md", content);
+    assert.ok(task);
+    assert.equal(task.status, "TODO");
+  });
+});
+
+// --- discoverTasks ---
+
+describe("discoverTasks", () => {
+  let tmpDir: string;
+
+  beforeEach(() => { tmpDir = makeTempDir(); });
+  afterEach(() => { rmDir(tmpDir); });
+
+  it("returns empty array when no current_tasks dir exists", () => {
+    const result = discoverTasks(tmpDir);
+    assert.deepEqual(result, []);
+  });
+
+  it("discovers and parses task files", () => {
+    const tasksDir = path.join(tmpDir, "current_tasks");
+    fs.mkdirSync(tasksDir, { recursive: true });
+    fs.writeFileSync(path.join(tasksDir, "001_test.md"), "# Task 001: Test Task\n\n## Status: DONE\n\nA summary.");
+    fs.writeFileSync(path.join(tasksDir, "002_another.md"), "# Task 002: Another\n\n## Status: TODO\n\nAnother summary.");
+
+    const result = discoverTasks(tmpDir);
+    assert.equal(result.length, 2);
+    assert.equal(result[0].number, 1);
+    assert.equal(result[0].status, "DONE");
+    assert.equal(result[1].number, 2);
+    assert.equal(result[1].status, "TODO");
+  });
+
+  it("ignores non-numbered files", () => {
+    const tasksDir = path.join(tmpDir, "current_tasks");
+    fs.mkdirSync(tasksDir, { recursive: true });
+    fs.writeFileSync(path.join(tasksDir, "readme.md"), "# README");
+    fs.writeFileSync(path.join(tasksDir, "001_task.md"), "# Task 001: Real\n\n## Status: DONE");
+
+    const result = discoverTasks(tmpDir);
+    assert.equal(result.length, 1);
+  });
+
+  it("sorts files by filename", () => {
+    const tasksDir = path.join(tmpDir, "current_tasks");
+    fs.mkdirSync(tasksDir, { recursive: true });
+    fs.writeFileSync(path.join(tasksDir, "010_second.md"), "# Task 010: Second\n\n## Status: TODO");
+    fs.writeFileSync(path.join(tasksDir, "002_first.md"), "# Task 002: First\n\n## Status: DONE");
+
+    const result = discoverTasks(tmpDir);
+    assert.equal(result[0].number, 2);
+    assert.equal(result[1].number, 10);
+  });
+});
+
+// --- build integration with task dashboard ---
+
+describe("build with task dashboard (integration)", () => {
+  let dataDir: string;
+  let outDir: string;
+
+  beforeEach(() => {
+    dataDir = makeTempDir();
+    outDir = makeTempDir();
+    // Create current_tasks/ as sibling of dataDir
+    const tasksDir = path.join(dataDir, "..", "current_tasks");
+    fs.mkdirSync(tasksDir, { recursive: true });
+    fs.writeFileSync(path.join(tasksDir, "001_test.md"), "# Task 001: Test\n\n## Status: DONE\n\nDone summary.");
+    fs.writeFileSync(path.join(tasksDir, "002_todo.md"), "# Task 002: Another\n\n## Status: TODO\n\nTodo summary.");
+  });
+  afterEach(() => {
+    rmDir(dataDir);
+    rmDir(outDir);
+    const tasksDir = path.join(dataDir, "..", "current_tasks");
+    if (fs.existsSync(tasksDir)) rmDir(tasksDir);
+  });
+
+  it("generates task dashboard page", () => {
+    build({ dataDir, outDir });
+
+    const dashPath = path.join(outDir, "meta", "tasks.html");
+    assert.ok(fs.existsSync(dashPath), "task dashboard should exist");
+
+    const html = fs.readFileSync(dashPath, "utf-8");
+    assert.ok(html.includes("タスク状況ダッシュボード"), "should have dashboard title");
+    assert.ok(html.includes("合計: 2タスク"), "should show task count");
+    assert.ok(html.includes("完了: 1"), "should show done count");
+    assert.ok(html.includes("未着手: 1"), "should show todo count");
+    assert.ok(html.includes("Test"), "should list task title");
+    assert.ok(html.includes("完了"), "should show status badge");
   });
 });
 

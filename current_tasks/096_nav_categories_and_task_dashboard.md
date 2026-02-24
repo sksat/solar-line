@@ -1,23 +1,24 @@
 # Task 096: Nav Categories + Task Status Dashboard
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 Human directives:
 - AI コスト分析と考察技術解説はカテゴリをまとめてヘッダに足したい
 - current_task の status とサマリーをまとめたものも見られるようにしたい
 
-## Scope
-1. Add new nav dropdown categories:
-   - "AI分析" or similar: AI costs page, cost comparison
-   - "技術解説" or similar: tech overview, science accuracy
-   - Or merge these into existing "総合分析" dropdown with sub-grouping
-2. Create a task status dashboard page on GitHub Pages:
-   - Read current_tasks/*.md files during build
-   - Display status (DONE/TODO/IN_PROGRESS), title, summary
-   - Show progress statistics (completed/total)
-   - Link to related commits/sessions where possible
+## Result
+1. **Nav categories** — completed in Task 121 (3 dropdowns: 各話分析 | 総合分析 | この考証について)
+2. **Task status dashboard** — auto-generated from `current_tasks/*.md` during build:
+   - `parseTaskFile()` + `discoverTasks()` in `build.ts` read task markdown files
+   - `renderTaskDashboard()` in `templates.ts` renders progress bar, stats, and sortable table
+   - Sorted: IN_PROGRESS first, then TODO, then DONE
+   - Shows: task number, title, status badge, summary
+   - Progress bar with SVG: done (green), in-progress (orange)
+   - Nav link: 「この考証について」→「タスク状況」
+   - Output: `meta/tasks.html`
+   - 10 new tests across build.test.ts and templates.test.ts
 
 ## Notes
-- Dashboard should be auto-generated from task files during site build
-- Consider grouping tasks by category/phase
+- Dashboard is auto-generated from task files during site build
+- All 128 tasks discovered and rendered

@@ -27,6 +27,7 @@ import {
   renderEpisodeNav,
   renderTranscriptionPage,
   renderTranscriptionIndex,
+  renderTaskDashboard,
   formatTimestamp,
   parseTimestamp,
   timestampLink,
@@ -3222,5 +3223,54 @@ describe("renderTranscriptionIndex", () => {
     const html = renderTranscriptionIndex([]);
     assert.ok(html.includes("文字起こしデータ"));
     assert.ok(html.includes("0エピソード"));
+  });
+});
+
+// --- renderTaskDashboard ---
+
+describe("renderTaskDashboard", () => {
+  it("renders task dashboard with progress stats", () => {
+    const tasks = [
+      { number: 1, title: "First Task", status: "DONE" as const, summary: "Done." },
+      { number: 2, title: "Second Task", status: "TODO" as const, summary: "Pending." },
+      { number: 3, title: "Third Task", status: "IN_PROGRESS" as const, summary: "Working." },
+    ];
+    const html = renderTaskDashboard(tasks);
+    assert.ok(html.includes("タスク状況ダッシュボード"), "should have title");
+    assert.ok(html.includes("合計: 3タスク"), "should show total count");
+    assert.ok(html.includes("完了: 1"), "should show done count");
+    assert.ok(html.includes("進行中: 1"), "should show in-progress count");
+    assert.ok(html.includes("未着手: 1"), "should show todo count");
+    assert.ok(html.includes("33%"), "should show completion percentage");
+    assert.ok(html.includes("First Task"), "should list task titles");
+    assert.ok(html.includes("完了"), "should show done badge");
+    assert.ok(html.includes("進行中"), "should show in-progress badge");
+    assert.ok(html.includes("未着手"), "should show todo badge");
+  });
+
+  it("sorts in-progress first, then todo, then done", () => {
+    const tasks = [
+      { number: 1, title: "Done Task", status: "DONE" as const, summary: null },
+      { number: 2, title: "IP Task", status: "IN_PROGRESS" as const, summary: null },
+      { number: 3, title: "Todo Task", status: "TODO" as const, summary: null },
+    ];
+    const html = renderTaskDashboard(tasks);
+    const ipPos = html.indexOf("IP Task");
+    const todoPos = html.indexOf("Todo Task");
+    const donePos = html.indexOf("Done Task");
+    assert.ok(ipPos < todoPos, "in-progress should come before todo");
+    assert.ok(todoPos < donePos, "todo should come before done");
+  });
+
+  it("handles empty task list", () => {
+    const html = renderTaskDashboard([]);
+    assert.ok(html.includes("タスク状況ダッシュボード"), "should have title");
+    assert.ok(html.includes("合計: 0タスク"), "should show zero tasks");
+  });
+
+  it("includes nav link to task dashboard", () => {
+    const html = layoutHtml("Test", "<p>content</p>");
+    assert.ok(html.includes("タスク状況"), "nav should include task dashboard link");
+    assert.ok(html.includes("meta/tasks.html"), "nav should link to tasks page");
   });
 });

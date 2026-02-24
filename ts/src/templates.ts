@@ -617,6 +617,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
     ...(metaPages || []).map(p => `<a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`),
     `<a href="${basePath}/transcriptions/index.html">文字起こし</a>`,
     `<a href="${basePath}/logs/index.html">セッションログ</a>`,
+    `<a href="${basePath}/meta/tasks.html">タスク状況</a>`,
   ];
   const metaNav = `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">この考証について</button><span class="nav-dropdown-menu">${metaLinks.join("")}</span></span>`;
   const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考察`;
@@ -2122,4 +2123,78 @@ ${rows}
 </table>`;
 
   return layoutHtml("文字起こしデータ", content, "..", summaryPages, "SOLAR LINE 全エピソードの文字起こし・台詞データ一覧", navEpisodes, metaPages);
+}
+
+/** Task entry for dashboard rendering */
+export interface TaskDashboardEntry {
+  number: number;
+  title: string;
+  status: "DONE" | "TODO" | "IN_PROGRESS";
+  summary: string | null;
+}
+
+/** Render the task status dashboard page */
+export function renderTaskDashboard(tasks: TaskDashboardEntry[], summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const done = tasks.filter(t => t.status === "DONE").length;
+  const todo = tasks.filter(t => t.status === "TODO").length;
+  const inProgress = tasks.filter(t => t.status === "IN_PROGRESS").length;
+  const total = tasks.length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  const statusLabel = (s: string): string =>
+    s === "DONE" ? "完了" : s === "IN_PROGRESS" ? "進行中" : "未着手";
+  const statusClass = (s: string): string =>
+    s === "DONE" ? "verdict-plausible" : s === "IN_PROGRESS" ? "verdict-conditional" : "verdict-indeterminate";
+
+  // Group: IN_PROGRESS first, then TODO, then DONE
+  const sorted = [
+    ...tasks.filter(t => t.status === "IN_PROGRESS"),
+    ...tasks.filter(t => t.status === "TODO"),
+    ...tasks.filter(t => t.status === "DONE"),
+  ];
+
+  const rows = sorted.map(t => {
+    const badge = `<span class="verdict ${statusClass(t.status)}">${statusLabel(t.status)}</span>`;
+    const summaryText = t.summary ? escapeHtml(t.summary) : "—";
+    return `<tr>
+<td>${t.number}</td>
+<td>${escapeHtml(t.title)}</td>
+<td>${badge}</td>
+<td>${summaryText}</td>
+</tr>`;
+  }).join("\n");
+
+  // Progress bar
+  const barWidth = 300;
+  const doneWidth = total > 0 ? Math.round((done / total) * barWidth) : 0;
+  const ipWidth = total > 0 ? Math.round((inProgress / total) * barWidth) : 0;
+
+  const content = `
+<h1>タスク状況ダッシュボード</h1>
+<p>プロジェクトの全タスクの進捗状況を自動集計したダッシュボードです。</p>
+
+<div class="card">
+<h3>進捗概要</h3>
+<p>合計: ${total}タスク / 完了: ${done} / 進行中: ${inProgress} / 未着手: ${todo}</p>
+<p>完了率: ${pct}%</p>
+<svg width="${barWidth + 2}" height="26" style="display:block;margin:8px 0">
+<rect x="1" y="1" width="${barWidth}" height="24" rx="4" fill="#333" stroke="#555"/>
+<rect x="1" y="1" width="${doneWidth}" height="24" rx="4" fill="#4caf50"/>
+${ipWidth > 0 ? `<rect x="${1 + doneWidth}" y="1" width="${ipWidth}" height="24" fill="#ff9800"/>` : ""}
+</svg>
+<p style="font-size:0.85em;color:#aaa">
+<span style="color:#4caf50">■</span> 完了
+<span style="color:#ff9800;margin-left:8px">■</span> 進行中
+<span style="color:#333;margin-left:8px">■</span> 未着手
+</p>
+</div>
+
+<table class="data-table">
+<thead><tr><th>#</th><th>タスク名</th><th>状態</th><th>概要</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+
+  return layoutHtml("タスク状況", content, "..", summaryPages, "SOLAR LINE 考察プロジェクトのタスク進捗ダッシュボード", navEpisodes, metaPages);
 }

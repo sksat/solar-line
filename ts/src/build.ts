@@ -18,6 +18,7 @@ import {
   renderSummaryPage,
   renderTranscriptionPage,
   renderTranscriptionIndex,
+  renderTaskDashboard,
   type NavEpisode,
 } from "./templates.ts";
 
@@ -206,6 +207,68 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
   return transcriptions;
 }
 
+/** A task entry parsed from current_tasks/*.md */
+export interface TaskEntry {
+  /** Task number (e.g. 1, 96, 128) */
+  number: number;
+  /** Task title from first heading */
+  title: string;
+  /** Status: DONE, TODO, or IN_PROGRESS */
+  status: "DONE" | "TODO" | "IN_PROGRESS";
+  /** First paragraph after status as summary (if any) */
+  summary: string | null;
+}
+
+/** Parse a task markdown file into a TaskEntry */
+export function parseTaskFile(filename: string, content: string): TaskEntry | null {
+  const numMatch = filename.match(/^(\d+)/);
+  if (!numMatch) return null;
+  const num = parseInt(numMatch[1], 10);
+
+  const lines = content.split("\n");
+
+  // Extract title from first heading
+  const titleLine = lines.find(l => /^#\s+/.test(l));
+  const title = titleLine ? titleLine.replace(/^#+\s*Task\s+\d+:\s*/, "").replace(/^#+\s*/, "").trim() : filename;
+
+  // Extract status
+  const statusLine = lines.find(l => /Status:\s*(DONE|TODO|IN_PROGRESS)/i.test(l));
+  const statusMatch = statusLine?.match(/Status:\s*(DONE|TODO|IN_PROGRESS)/i);
+  const status = (statusMatch?.[1]?.toUpperCase() ?? "TODO") as TaskEntry["status"];
+
+  // Extract summary: first content paragraph after status heading
+  let summary: string | null = null;
+  let pastStatus = false;
+  for (const line of lines) {
+    if (/Status:/i.test(line)) { pastStatus = true; continue; }
+    if (!pastStatus) continue;
+    if (line.trim() === "") continue;
+    if (line.startsWith("#")) break;
+    summary = line.trim();
+    break;
+  }
+
+  return { number: num, title, status, summary };
+}
+
+/** Discover task files from current_tasks/ directory */
+export function discoverTasks(projectRoot: string): TaskEntry[] {
+  const tasksDir = path.join(projectRoot, "current_tasks");
+  if (!fs.existsSync(tasksDir)) return [];
+
+  const files = fs.readdirSync(tasksDir)
+    .filter(f => /^\d+.*\.md$/.test(f))
+    .sort();
+
+  const tasks: TaskEntry[] = [];
+  for (const file of files) {
+    const content = fs.readFileSync(path.join(tasksDir, file), "utf-8");
+    const task = parseTaskFile(file, content);
+    if (task) tasks.push(task);
+  }
+  return tasks;
+}
+
 /** Count verdict types in an episode's transfers */
 export function countVerdicts(ep: EpisodeReport): VerdictCounts {
   const counts: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0, reference: 0 };
@@ -338,6 +401,17 @@ export function build(config: BuildConfig): void {
         renderTranscriptionPage(tr, manifest.summaryPages, navEpisodes, manifest.metaPages),
       );
     }
+  }
+
+  // Generate task dashboard page (reads current_tasks/ from project root)
+  const projectRoot = path.resolve(dataDir, "..");
+  const tasks = discoverTasks(projectRoot);
+  if (tasks.length > 0) {
+    ensureDir(path.join(outDir, "meta"));
+    fs.writeFileSync(
+      path.join(outDir, "meta", "tasks.html"),
+      renderTaskDashboard(tasks, manifest.summaryPages, navEpisodes, manifest.metaPages),
+    );
   }
 
   // Write manifest JSON (useful for WASM-interactive pages later)
