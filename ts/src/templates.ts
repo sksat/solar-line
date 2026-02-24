@@ -68,6 +68,19 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
       continue;
     }
 
+    // Multi-line display math: $$ on its own line opens a block
+    if (line.trim() === "$$") {
+      closeList();
+      const mathLines: string[] = [];
+      while (i + 1 < lines.length) {
+        i++;
+        if (lines[i].trim() === "$$") break;
+        mathLines.push(lines[i]);
+      }
+      output.push(`<p>$$${mathLines.join(" ")}$$</p>`);
+      continue;
+    }
+
     // Empty line — close list if open
     if (line.trim() === "") {
       closeList();
@@ -171,24 +184,35 @@ function renderMarkdownTable(lines: string[], inlineOpts?: { autoLinkEpisodes: b
  * restore function.
  */
 function extractMath(text: string): { text: string; restore: (html: string) => string } {
-  const placeholders: { key: string; math: string }[] = [];
+  const mathPlaceholders: { key: string; math: string }[] = [];
   let idx = 0;
+  // First, temporarily protect inline code (`...`) from math extraction
+  const codeSlots: { key: string; code: string }[] = [];
+  let result = text.replace(/`([^`]+)`/g, (match) => {
+    const key = `\x00CSLOT${idx++}\x00`;
+    codeSlots.push({ key, code: match });
+    return key;
+  });
   // Replace $$...$$ (display) first, then $...$ (inline)
-  let result = text.replace(/\$\$([^$]+?)\$\$/g, (_match, expr) => {
+  result = result.replace(/\$\$([^$]+?)\$\$/g, (_match, expr) => {
     const key = `\x00MATH${idx++}\x00`;
-    placeholders.push({ key, math: `$$${expr}$$` });
+    mathPlaceholders.push({ key, math: `$$${expr}$$` });
     return key;
   });
   result = result.replace(/\$([^$\n]+?)\$/g, (_match, expr) => {
     const key = `\x00MATH${idx++}\x00`;
-    placeholders.push({ key, math: `$${expr}$` });
+    mathPlaceholders.push({ key, math: `$${expr}$` });
     return key;
   });
+  // Restore code slots back to original backtick form (for inlineFormat code regex)
+  for (const { key, code } of codeSlots) {
+    result = result.replace(key, code);
+  }
   return {
     text: result,
     restore(html: string): string {
       let out = html;
-      for (const { key, math } of placeholders) {
+      for (const { key, math } of mathPlaceholders) {
         out = out.replace(key, math);
       }
       return out;

@@ -267,6 +267,103 @@ describe("markdownToHtml", () => {
     assert.ok(html.includes("<table>"));
     assert.ok(html.includes("$v = \\sqrt{2}$"), "math should be preserved in cells");
   });
+
+  // --- Math rendering regression tests (Task 132) ---
+
+  it("preserves trailing-space math like $expr = $", () => {
+    const html = markdownToHtml("$9.62/3.68 = $ **2.61倍**");
+    assert.ok(html.includes("$9.62/3.68 = $"), "trailing-space math should be preserved");
+    assert.ok(html.includes("<strong>2.61倍</strong>"), "bold after math should render");
+  });
+
+  it("handles adjacent math-then-bold without space", () => {
+    const html = markdownToHtml("$\\Delta V$比: $11{,}165/8{,}497 = $ **1.31倍**");
+    assert.ok(html.includes("$\\Delta V$"), "first inline math");
+    assert.ok(html.includes("$11{,}165/8{,}497 = $"), "second inline math with comma braces");
+    assert.ok(html.includes("<strong>1.31倍</strong>"), "bold after math");
+  });
+
+  it("handles sequential $= $ patterns without cross-matching", () => {
+    const html = markdownToHtml("$= $ 距離比 $= 2.61/1.99 = $ **1.31**");
+    // Should produce two separate math expressions, not one giant span
+    assert.ok(html.includes("$= $"), "first math expression");
+    assert.ok(html.includes("$= 2.61/1.99 = $"), "second math expression");
+    assert.ok(html.includes("距離比"), "Japanese text between math should be present");
+  });
+
+  it("preserves math with nested frac braces", () => {
+    const html = markdownToHtml("$\\frac{F \\cdot t^2}{4d} \\approx 299$");
+    assert.ok(html.includes("$\\frac{F \\cdot t^2}{4d} \\approx 299$"));
+  });
+
+  it("preserves math with sqrt and parentheses", () => {
+    const html = markdownToHtml("$\\sqrt{\\mu/(R+h)} \\approx 7.67$ km/s");
+    assert.ok(html.includes("$\\sqrt{\\mu/(R+h)} \\approx 7.67$"));
+  });
+
+  it("preserves math with thousands separator {,}", () => {
+    const html = markdownToHtml("$m \\leq 3{,}929$ t");
+    assert.ok(html.includes("$m \\leq 3{,}929$"));
+  });
+
+  it("preserves math with \\text{} command", () => {
+    const html = markdownToHtml("$v_{\\text{esc}} = 2.74$ km/s");
+    assert.ok(html.includes("$v_{\\text{esc}} = 2.74$"));
+  });
+
+  it("preserves display math with complex expression", () => {
+    const html = markdownToHtml("$$\\Delta V = \\sqrt{\\frac{2\\mu}{r_1}} \\left(1 - \\sqrt{\\frac{r_1}{r_1 + r_2}}\\right)$$");
+    assert.ok(html.includes("$$\\Delta V = \\sqrt{\\frac{2\\mu}{r_1}}"), "complex display math should be preserved");
+  });
+
+  it("preserves multiple display math blocks separated by text", () => {
+    const html = markdownToHtml("$$a = b$$\n\nSome text\n\n$$c = d$$");
+    assert.ok(html.includes("$$a = b$$"), "first display math");
+    assert.ok(html.includes("$$c = d$$"), "second display math");
+    assert.ok(html.includes("Some text"), "text between");
+  });
+
+  it("handles multi-line display math ($$...\\n...\\n...$$)", () => {
+    // Display math that spans multiple lines
+    const html = markdownToHtml("$$\n\\Delta V = \\sqrt{2}\n$$");
+    // Should contain the math content for KaTeX to render
+    assert.ok(html.includes("\\Delta V = \\sqrt{2}"), "multi-line display math content should be present");
+  });
+
+  it("does not match $ in inline code as math delimiter", () => {
+    const html = markdownToHtml("Use `$variable` in your code and $x = 1$ for math");
+    assert.ok(html.includes("<code>$variable</code>"), "inline code with $ preserved");
+    assert.ok(html.includes("$x = 1$"), "math after code preserved");
+  });
+
+  it("handles math immediately after Japanese text", () => {
+    const html = markdownToHtml("推力$F = 9.8 \\times 10^6$Nで加速");
+    assert.ok(html.includes("$F = 9.8 \\times 10^6$"), "math adjacent to Japanese text");
+  });
+
+  it("preserves math with subscript/superscript notation", () => {
+    const html = markdownToHtml("$v_1 = 13.06$ km/s, $a_{max} = 0.032$ m/s²");
+    assert.ok(html.includes("$v_1 = 13.06$"), "subscript math");
+    assert.ok(html.includes("$a_{max} = 0.032$"), "complex subscript math");
+  });
+
+  it("preserves math with inequality operators that could be HTML", () => {
+    const html = markdownToHtml("$F \\geq 9.8$ MN and $v < 10^3$ km/s");
+    assert.ok(html.includes("$F \\geq 9.8$"), "geq preserved");
+    assert.ok(html.includes("$v < 10^3$"), "less-than in math preserved (not HTML-escaped)");
+  });
+
+  it("does not HTML-escape content inside math delimiters", () => {
+    const html = markdownToHtml("$a < b$ and $c > d$");
+    assert.ok(!html.includes("&lt;"), "< inside math should NOT be HTML-escaped");
+    assert.ok(!html.includes("&gt;"), "> inside math should NOT be HTML-escaped");
+  });
+
+  it("handles display math with aligned environment", () => {
+    const html = markdownToHtml("$$\\begin{aligned} a &= b \\\\ c &= d \\end{aligned}$$");
+    assert.ok(html.includes("\\begin{aligned}"), "aligned environment preserved");
+    assert.ok(html.includes("\\end{aligned}"), "aligned close preserved");
+  });
 });
 
 // --- layoutHtml ---
