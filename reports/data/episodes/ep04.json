@@ -162,7 +162,7 @@
           "sourceLabel": "NASA惑星データ"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4"
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: Hohmann baseline\""
     },
     {
       "id": "ep04-transfer-04",
@@ -191,9 +191,9 @@
         "tiltAccuracyPercent": 99.5,
         "momentumPerturbation": {
           "nominalDeltaVMs": 7.1e-9,
-          "enhancedDeltaVMs": 1.4e-6,
-          "extremeDeltaVMs": 1.7e-4,
-          "extremeMissDistanceKm": 5.9e-3,
+          "enhancedDeltaVMs": 0.0000014,
+          "extremeDeltaVMs": 0.00017,
+          "extremeMissDistanceKm": 0.0059,
           "conclusion": "negligible"
         }
       },
@@ -230,7 +230,7 @@
           "sourceLabel": "Part 4 プラズモイド遭遇"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4"
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: fleet intercept\""
     },
     {
       "id": "ep04-transfer-05",
@@ -265,7 +265,7 @@
           "sourceLabel": "Part 4 艦隊検知"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4"
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: damage assessment\""
     },
     {
       "id": "ep04-transfer-02",
@@ -307,7 +307,7 @@
           "sourceLabel": "Part 4 きりたんの出発準備"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4"
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: plasmoid analysis\""
     },
     {
       "id": "ep04-transfer-03",
@@ -366,7 +366,7 @@
           "sourceLabel": "第1話 05:16 きりたん「炉出力は65%に設定。想定推力は6.3MN」"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4"
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: brachistochrone at 65\""
     }
   ],
   "explorations": [
@@ -484,12 +484,12 @@
           "variedUnit": "シナリオ (nominal/enhanced/extreme)",
           "results": {
             "nominalDeltaVMs": 7.1e-9,
-            "enhancedDeltaVMs": 1.4e-6,
-            "extremeDeltaVMs": 1.7e-4,
+            "enhancedDeltaVMs": 0.0000014,
+            "extremeDeltaVMs": 0.00017,
             "nominalMissDistanceKm": 2.5e-7,
-            "extremeMissDistanceKm": 5.9e-3,
-            "nominalForceN": 7.1e-4,
-            "extremeForceN": 17.0,
+            "extremeMissDistanceKm": 0.0059,
+            "nominalForceN": 0.00071,
+            "extremeForceN": 17,
             "correctionToOrbitalRatio": "<1e-6（全シナリオ）",
             "conclusion": "運動量効果は48,000t船に対し完全に無視可能。放射線効果（480 mSv）が唯一の実質的脅威"
           },
@@ -711,8 +711,34 @@
             480
           ],
           "style": "solid",
-          "yLow": [48, 60, 72, 84, 85.2, 96, 108, 120, 132, 144, 144, 144],
-          "yHigh": [48, 174, 300, 426, 438.6, 552, 678, 804, 930, 1056, 1056, 1056],
+          "yLow": [
+            48,
+            60,
+            72,
+            84,
+            85.2,
+            96,
+            108,
+            120,
+            132,
+            144,
+            144,
+            144
+          ],
+          "yHigh": [
+            48,
+            174,
+            300,
+            426,
+            438.6,
+            552,
+            678,
+            804,
+            930,
+            1056,
+            1056,
+            1056
+          ],
           "errorSource": "parameter"
         },
         {

@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generatedAt": "2026-02-24T16:17:53.449Z",
+    "generatedAt": "2026-02-24T19:05:59.464Z",
     "reproductionCommand": "npm run recalculate -- --episode 4",
-    "durationMs": 0
+    "durationMs": 1
   },
   "hohmann": {
     "departureDv": 4.658453824517666,
@@ -119,6 +119,44 @@
     "realMagneticTiltDeg": 59.7,
     "tiltAccuracyPercent": 99.49748743718594
   },
+  "plasmoidMomentum": [
+    {
+      "label": "nominal",
+      "magneticPressurePa": 1.5915494302045345e-12,
+      "ramPressurePa": 9.4084983225e-13,
+      "totalPressurePa": 2.5323992624545345e-12,
+      "forceN": 1.988941729720844e-8,
+      "impulseNs": 0.00000954692030266005,
+      "velocityPerturbationMs": 1.988941729720844e-13,
+      "missDistanceKm": 6.945384520185187e-12,
+      "correctionDvMs": 1.988941729720844e-13,
+      "correctionToOrbitalRatio": 3.977883459441688e-17
+    },
+    {
+      "label": "enhanced",
+      "magneticPressurePa": 8.952465544900505e-11,
+      "ramPressurePa": 2.61347175625e-11,
+      "totalPressurePa": 1.1565937301150505e-10,
+      "forceN": 9.083865914293646e-7,
+      "impulseNs": 0.00043602556388609503,
+      "velocityPerturbationMs": 9.083865914293647e-12,
+      "missDistanceKm": 3.172085977271341e-10,
+      "correctionDvMs": 9.083865914293647e-12,
+      "correctionToOrbitalRatio": 1.8167731828587293e-15
+    },
+    {
+      "label": "extreme",
+      "magneticPressurePa": 9.947183938778338e-10,
+      "ramPressurePa": 1.0453887025e-9,
+      "totalPressurePa": 2.040107096377834e-9,
+      "forceN": 0.000016022963666292516,
+      "impulseNs": 0.0076910225598204075,
+      "velocityPerturbationMs": 1.6022963666292516e-10,
+      "missDistanceKm": 5.595218912269347e-9,
+      "correctionDvMs": 1.6022963666292516e-10,
+      "correctionToOrbitalRatio": 3.2045927332585033e-14
+    }
+  ],
   "fleetIntercept": {
     "fleetETASec": 118800,
     "fleetETAHours": 33,

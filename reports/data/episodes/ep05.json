@@ -221,7 +221,7 @@
           "sourceLabel": "NASA Earth Fact Sheet"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5"
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Hohmann baseline\""
     },
     {
       "id": "ep05-transfer-02",
@@ -271,7 +271,7 @@
           "sourceLabel": "ソーラーラインのよもやま話"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5"
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: brachistochrone by mass\""
     },
     {
       "id": "ep05-transfer-03",
@@ -319,7 +319,7 @@
           "sourceLabel": "NASA Moon Fact Sheet"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5"
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Earth capture\""
     },
     {
       "id": "ep05-transfer-04",
@@ -379,7 +379,7 @@
           "sourceLabel": "ICRP 2007勧告"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5"
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: nozzle lifespan\""
     },
     {
       "id": "ep05-transfer-05",
@@ -440,7 +440,7 @@
           "sourceLabel": "第4話 損傷状態Brachistochrone分析（300tなら8.3日）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5"
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Oberth effect\""
     }
   ],
   "explorations": [
@@ -1230,8 +1230,42 @@
             0.43
           ],
           "style": "solid",
-          "yLow": [55.63, 55.63, 43.51, 43.51, 43.51, 43.51, 35.43, 35.43, 35.43, 35.43, 15.23, 15.23, 15.23, 15.23, -0.12, -0.12],
-          "yHigh": [55.63, 55.63, 44.23, 44.23, 44.23, 44.23, 36.63, 36.63, 36.63, 36.63, 17.63, 17.63, 17.63, 17.63, 3.19, 3.19],
+          "yLow": [
+            55.63,
+            55.63,
+            43.51,
+            43.51,
+            43.51,
+            43.51,
+            35.43,
+            35.43,
+            35.43,
+            35.43,
+            15.23,
+            15.23,
+            15.23,
+            15.23,
+            -0.12,
+            -0.12
+          ],
+          "yHigh": [
+            55.63,
+            55.63,
+            44.23,
+            44.23,
+            44.23,
+            44.23,
+            36.63,
+            36.63,
+            36.63,
+            36.63,
+            17.63,
+            17.63,
+            17.63,
+            17.63,
+            3.19,
+            3.19
+          ],
           "errorSource": "parameter"
         }
       ],
@@ -1321,14 +1355,24 @@
   "detailPages": [
     {
       "slug": "brachistochrone",
-      "transferIds": ["ep05-transfer-02"],
-      "diagramIds": ["ep05-diagram-01", "ep05-diagram-03"],
+      "transferIds": [
+        "ep05-transfer-02"
+      ],
+      "diagramIds": [
+        "ep05-diagram-01",
+        "ep05-diagram-03"
+      ],
       "title": "Brachistochrone遷移: 天王星→地球（質量別シナリオ）"
     },
     {
       "slug": "ignition-budget",
-      "transferIds": ["ep05-transfer-04"],
-      "chartIds": ["ep05-nozzle-life", "ep05-thrust-profile"],
+      "transferIds": [
+        "ep05-transfer-04"
+      ],
+      "chartIds": [
+        "ep05-nozzle-life",
+        "ep05-thrust-profile"
+      ],
       "title": "点火回数バジェットとノズル寿命分析"
     }
   ]

@@ -19,6 +19,7 @@
     "process-whisper": "node --experimental-strip-types src/process-whisper-output.ts",
     "compare-transcriptions": "node --experimental-strip-types src/compare-transcriptions.ts",
     "analyze-costs": "node --experimental-strip-types src/analyze-costs.ts",
+    "test:analyses": "node --test src/analysis-reproduction.test.ts",
     "test:e2e": "npx playwright test",
     "recalculate": "node --experimental-strip-types src/recalculate.ts",
     "update-diagram-angles": "node --experimental-strip-types src/update-diagram-angles.ts",

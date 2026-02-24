@@ -98,7 +98,7 @@
           "sourceLabel": "NASA/JPL 太陽系力学データ（木星平均軌道半径）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 1"
+      "reproductionCommand": "npm run recalculate -- --episode 1\nnpm run test:analyses -- --test-name-pattern \"EP01 reproduction: Hohmann baseline\""
     },
     {
       "id": "ep01-transfer-02",
@@ -169,7 +169,7 @@
           "sourceLabel": "第3話 Brachistochrone分析（土星→天王星 143h）で質量境界≤452tが独立に導出され、第1話の≤299tと同オーダー"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 1"
+      "reproductionCommand": "npm run recalculate -- --episode 1\nnpm run test:analyses -- --test-name-pattern \"EP01 reproduction: 72h brachistochrone\""
     },
     {
       "id": "ep01-transfer-03",
@@ -209,7 +209,7 @@
           "sourceLabel": "Part 1 03:40「通常なら150時間かかるルートだ」"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 1"
+      "reproductionCommand": "npm run recalculate -- --episode 1\nnpm run test:analyses -- --test-name-pattern \"EP01 reproduction: 72h brachistochrone\""
     },
     {
       "id": "ep01-transfer-04",
@@ -269,7 +269,7 @@
           "sourceLabel": "世界設定資料「ソーラーラインのよもやま話」（積荷情報）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 1"
+      "reproductionCommand": "npm run recalculate -- --episode 1\nnpm run test:analyses -- --test-name-pattern \"EP01 reproduction: mass boundary\""
     }
   ],
   "diagrams": [

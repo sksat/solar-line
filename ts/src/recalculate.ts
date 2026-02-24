@@ -124,10 +124,45 @@ const totalStart = performance.now();
   console.log();
 }
 
-// 2. Stamp reproduction commands on episode report transfers
+// 2. Stamp per-analysis reproduction commands on episode report transfers
+// Each transfer gets a specific test command instead of the blanket recalculate.
+// Format: compute + verify commands for each analysis.
 {
+  /** Map transfer IDs to per-analysis test patterns in analysis-reproduction.test.ts */
+  const transferTestPatterns: Record<string, string> = {
+    // EP01
+    "ep01-transfer-01": "EP01 reproduction: Hohmann baseline",
+    "ep01-transfer-02": "EP01 reproduction: 72h brachistochrone",
+    "ep01-transfer-03": "EP01 reproduction: 72h brachistochrone",
+    "ep01-transfer-04": "EP01 reproduction: mass boundary",
+    // EP02
+    "ep02-transfer-01": "EP02 reproduction: Hohmann baseline",
+    "ep02-transfer-02": "EP02 reproduction: Jupiter escape",
+    "ep02-transfer-03": "EP02 reproduction: heliocentric transfer",
+    "ep02-transfer-04": "EP02 reproduction: Saturn capture",
+    "ep02-transfer-05": "EP02 reproduction: Enceladus orbital",
+    // EP03
+    "ep03-transfer-01": "EP03 reproduction: Hohmann baseline",
+    "ep03-transfer-02": "EP03 reproduction: Hohmann baseline",
+    "ep03-transfer-03": "EP03 reproduction: 143h brachistochrone",
+    "ep03-transfer-04": "EP03 reproduction: navigation crisis",
+    "ep03-transfer-05": "EP03 reproduction: Uranus/Titania capture",
+    // EP04
+    "ep04-transfer-01": "EP04 reproduction: Hohmann baseline",
+    "ep04-transfer-02": "EP04 reproduction: plasmoid analysis",
+    "ep04-transfer-03": "EP04 reproduction: brachistochrone at 65",
+    "ep04-transfer-04": "EP04 reproduction: fleet intercept",
+    "ep04-transfer-05": "EP04 reproduction: damage assessment",
+    // EP05
+    "ep05-transfer-01": "EP05 reproduction: Hohmann baseline",
+    "ep05-transfer-02": "EP05 reproduction: brachistochrone by mass",
+    "ep05-transfer-03": "EP05 reproduction: Earth capture",
+    "ep05-transfer-04": "EP05 reproduction: nozzle lifespan",
+    "ep05-transfer-05": "EP05 reproduction: Oberth effect",
+  };
+
   const episodes = episodeFilter ? [episodeFilter] : [1, 2, 3, 4, 5];
-  console.log("--- Stamp Reproduction Commands ---");
+  console.log("--- Stamp Per-Analysis Reproduction Commands ---");
   for (const ep of episodes) {
     const filename = `ep${String(ep).padStart(2, "0")}.json`;
     const filepath = path.join(episodesDir, filename);
@@ -135,9 +170,12 @@ const totalStart = performance.now();
 
     const report: EpisodeReport = JSON.parse(fs.readFileSync(filepath, "utf-8"));
     let changed = false;
-    const cmd = `npm run recalculate -- --episode ${ep}`;
 
     for (const t of report.transfers ?? []) {
+      const pattern = transferTestPatterns[t.id];
+      const cmd = pattern
+        ? `npm run recalculate -- --episode ${ep}\nnpm run test:analyses -- --test-name-pattern "${pattern}"`
+        : `npm run recalculate -- --episode ${ep}\nnpm run test:analyses -- --test-name-pattern "EP${String(ep).padStart(2, "0")}"`;
       if (t.reproductionCommand !== cmd) {
         t.reproductionCommand = cmd;
         changed = true;
