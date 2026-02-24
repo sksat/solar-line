@@ -25,7 +25,7 @@ import {
   formatNumericValue,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -1262,6 +1262,104 @@ describe("renderOrbitalDiagram burn visualization", () => {
 
   it("CSS includes burn-plume class", () => {
     assert.ok(REPORT_CSS.includes(".burn-plume"));
+  });
+});
+
+// --- Scale Legend ---
+
+describe("renderOrbitalDiagram with scaleLegend", () => {
+  const diagramWithScale: OrbitalDiagram = {
+    ...sampleDiagram,
+    viewRadius: 21,
+    scaleLegend: {
+      label: "√スケール（模式図）",
+      referenceDistances: [
+        { value: 1, label: "1 AU" },
+        { value: 5, label: "5 AU" },
+        { value: 10, label: "10 AU" },
+        { value: 20, label: "20 AU" },
+      ],
+    },
+  };
+
+  it("renders reference distance circles with dashed style", () => {
+    const html = renderOrbitalDiagram(diagramWithScale);
+    // Should have circles for each reference distance
+    assert.ok(html.includes("1 AU"));
+    assert.ok(html.includes("5 AU"));
+    assert.ok(html.includes("10 AU"));
+    assert.ok(html.includes("20 AU"));
+  });
+
+  it("renders scale mode label below legend", () => {
+    const html = renderOrbitalDiagram(diagramWithScale);
+    assert.ok(html.includes("√スケール（模式図）"));
+  });
+
+  it("reference circles have distinct style from orbit circles", () => {
+    const html = renderOrbitalDiagram(diagramWithScale);
+    // Reference circles should use a different dash pattern or opacity
+    assert.ok(html.includes("scale-ref"));
+  });
+
+  it("does NOT render scale legend when scaleLegend is omitted", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes("scale-ref"));
+    // "模式図" appears in transfer style label, so check scale-specific label instead
+    assert.ok(!html.includes("√スケール"));
+  });
+});
+
+// --- Timeline Annotations ---
+
+describe("renderOrbitalDiagram with timelineAnnotations", () => {
+  const diagramWithTimeline: OrbitalDiagram = {
+    ...sampleDiagram,
+    timelineAnnotations: [
+      { missionTime: 0, label: "T+0 火星出発", badge: "①", orbitId: "mars" },
+      { missionTime: 259200, label: "T+72h 木星到着", badge: "②", orbitId: "jupiter" },
+    ],
+  };
+
+  it("renders on-diagram badges near waypoint orbits", () => {
+    const html = renderOrbitalDiagram(diagramWithTimeline);
+    assert.ok(html.includes("①"));
+    assert.ok(html.includes("②"));
+  });
+
+  it("renders timeline bar below the diagram", () => {
+    const html = renderOrbitalDiagram(diagramWithTimeline);
+    assert.ok(html.includes("timeline-bar"));
+  });
+
+  it("timeline bar contains waypoint labels", () => {
+    const html = renderOrbitalDiagram(diagramWithTimeline);
+    assert.ok(html.includes("T+0 火星出発"));
+    assert.ok(html.includes("T+72h 木星到着"));
+  });
+
+  it("does NOT render timeline when annotations are omitted", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes("timeline-bar"));
+  });
+
+  it("does NOT render timeline for empty annotations array", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      timelineAnnotations: [],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(!html.includes("timeline-bar"));
+  });
+});
+
+describe("REPORT_CSS includes scale and timeline styles", () => {
+  it("includes scale-ref styles", () => {
+    assert.ok(REPORT_CSS.includes(".scale-ref"));
+  });
+
+  it("includes timeline-bar styles", () => {
+    assert.ok(REPORT_CSS.includes(".timeline-bar"));
   });
 });
 

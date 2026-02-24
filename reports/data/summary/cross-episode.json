@@ -242,7 +242,48 @@
           ],
           "animation": {
             "durationSeconds": 520000
-          }
+          },
+          "scaleLegend": {
+            "label": "√スケール（模式図・実距離比ではない）",
+            "referenceDistances": [
+              { "value": 1, "label": "1 AU" },
+              { "value": 5, "label": "5 AU" },
+              { "value": 10, "label": "10 AU" },
+              { "value": 20, "label": "20 AU" }
+            ]
+          },
+          "timelineAnnotations": [
+            {
+              "missionTime": 0,
+              "label": "T+0 火星出発",
+              "badge": "①",
+              "orbitId": "mars"
+            },
+            {
+              "missionTime": 259200,
+              "label": "T+72h 木星到着",
+              "badge": "②",
+              "orbitId": "jupiter"
+            },
+            {
+              "missionTime": 45532800,
+              "label": "T+527日 土星到着",
+              "badge": "③",
+              "orbitId": "saturn"
+            },
+            {
+              "missionTime": 46569600,
+              "label": "T+539日 天王星到着",
+              "badge": "④",
+              "orbitId": "uranus"
+            },
+            {
+              "missionTime": 48556800,
+              "label": "T+562日 地球帰還",
+              "badge": "⑤",
+              "orbitId": "earth"
+            }
+          ]
         }
       ],
       "table": {

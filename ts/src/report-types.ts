@@ -169,6 +169,34 @@ export interface AnimationConfig {
   durationSeconds: number;
 }
 
+/** A reference distance for the scale legend */
+export interface ScaleReference {
+  /** Distance value in the diagram's radius unit (e.g. AU) */
+  value: number;
+  /** Display label, e.g. "1 AU" */
+  label: string;
+}
+
+/** Scale legend showing distance markers and scale mode disclaimer */
+export interface ScaleLegend {
+  /** Scale mode label, e.g. "√スケール（模式図）" */
+  label: string;
+  /** Reference distances to draw as concentric circles */
+  referenceDistances: ScaleReference[];
+}
+
+/** A timeline waypoint annotation on an orbital diagram */
+export interface TimelineAnnotation {
+  /** Mission elapsed time in seconds from journey start */
+  missionTime: number;
+  /** Display label, e.g. "T+72h ガニメデ到着" */
+  label: string;
+  /** Short badge text for on-diagram marker, e.g. "①" */
+  badge: string;
+  /** Orbit ID where this waypoint occurs (for spatial positioning) */
+  orbitId: string;
+}
+
 /** An orbital transfer diagram rendered as inline SVG */
 export interface OrbitalDiagram {
   /** Unique identifier, e.g. "ep01-diagram-01" */
@@ -189,6 +217,10 @@ export interface OrbitalDiagram {
   radiusUnit?: string;
   /** Animation configuration. If present, diagram renders with interactive time slider. */
   animation?: AnimationConfig;
+  /** Scale legend with reference distance rings and mode label */
+  scaleLegend?: ScaleLegend;
+  /** Timeline waypoint annotations (rendered as bottom bar + on-diagram badges) */
+  timelineAnnotations?: TimelineAnnotation[];
 }
 
 /** Per-episode report data */

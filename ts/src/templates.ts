@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -281,6 +281,17 @@ footer {
 .ship-marker { filter: drop-shadow(0 0 3px rgba(255,255,255,0.6)); }
 .burn-plume { pointer-events: none; }
 .burn-label-text { pointer-events: none; font-family: "SFMono-Regular", Consolas, monospace; }
+.scale-ref { pointer-events: none; }
+.timeline-badge { pointer-events: none; }
+.timeline-bar {
+  position: relative; height: 3.5rem; margin: 0.5rem auto 0; border-top: 1px solid var(--border);
+}
+.timeline-bar .timeline-item {
+  position: absolute; top: 0.3rem; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; font-size: 0.7em; line-height: 1.3;
+}
+.timeline-bar .timeline-badge-label { font-weight: 600; color: var(--yellow); }
+.timeline-bar .timeline-label { color: #8b949e; white-space: nowrap; }
 .comparison-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 1rem 0; }
 .comparison-table caption { text-align: left; font-weight: 600; color: #f0f6fc; margin-bottom: 0.5rem; font-size: 1em; }
 .comparison-table th { color: #8b949e; font-weight: normal; font-size: 0.85em; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); text-align: left; }
@@ -822,6 +833,33 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     });
   }).join("\n    ");
 
+  // Draw scale reference circles (if scaleLegend provided)
+  let scaleRefCircles = "";
+  if (diagram.scaleLegend && diagram.scaleLegend.referenceDistances.length > 0) {
+    scaleRefCircles = diagram.scaleLegend.referenceDistances.map(ref => {
+      const r = scaleRadius(ref.value, maxOrbitR, maxPlotR, mode);
+      return `<circle class="scale-ref" cx="0" cy="0" r="${r.toFixed(1)}" fill="none" stroke="var(--fg)" stroke-width="0.5" stroke-opacity="0.15" stroke-dasharray="2 4"/>
+    <text class="scale-ref" x="${(r + 2).toFixed(1)}" y="-2" fill="var(--fg)" font-size="8" fill-opacity="0.4">${escapeHtml(ref.label)}</text>`;
+    }).join("\n    ");
+  }
+
+  // Draw timeline annotation badges on diagram (if provided)
+  let timelineBadges = "";
+  const annotations = diagram.timelineAnnotations ?? [];
+  if (annotations.length > 0) {
+    timelineBadges = annotations.map(ann => {
+      const orbit = orbitMap.get(ann.orbitId);
+      if (!orbit) return "";
+      const r = orbitPxMap.get(ann.orbitId)!;
+      const angle = orbit.angle ?? 0;
+      // Place badge slightly outside the orbit
+      const badgeR = r + 20;
+      const bx = badgeR * Math.cos(angle);
+      const by = -badgeR * Math.sin(angle);
+      return `<text class="timeline-badge" x="${bx.toFixed(1)}" y="${by.toFixed(1)}" fill="var(--fg)" font-size="9" text-anchor="middle" dominant-baseline="middle">${escapeHtml(ann.badge)}</text>`;
+    }).filter(s => s.length > 0).join("\n    ");
+  }
+
   // Build legend
   const styles = [...new Set(diagram.transfers.map(t => t.style))];
   const legendItems = styles.map((s, i) => {
@@ -832,12 +870,24 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     <text x="24" y="${y + 10}" fill="var(--fg)" font-size="10">${transferStyleLabel(s)}</text>`;
   }).join("\n    ");
 
-  const legendHeight = styles.length * 18 + 4;
+  // Scale mode label appended to legend
+  let scaleLabelItem = "";
+  let scaleLabelHeight = 0;
+  if (diagram.scaleLegend) {
+    const yOff = styles.length * 18;
+    scaleLabelItem = `<text x="0" y="${yOff + 14}" fill="var(--fg)" font-size="9" fill-opacity="0.6">${escapeHtml(diagram.scaleLegend.label)}</text>`;
+    scaleLabelHeight = 20;
+  }
+
+  const legendHeight = styles.length * 18 + 4 + scaleLabelHeight;
 
   const ariaLabel = `${diagram.title} — ${diagram.centerLabel}中心の軌道図`;
   const svg = `<svg width="${size}" height="${size + legendHeight + 10}" viewBox="${-cx} ${-cy} ${size} ${size + legendHeight + 10}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(ariaLabel)}">
   <style>text { font-family: "SFMono-Regular", Consolas, monospace; }</style>
   <g>
+    <!-- Scale reference circles -->
+    ${scaleRefCircles}
+
     <!-- Central body -->
     <circle cx="0" cy="0" r="6" fill="var(--yellow)"/>
     <text x="0" y="18" fill="var(--yellow)" font-size="11" text-anchor="middle">${escapeHtml(diagram.centerLabel)}</text>
@@ -853,11 +903,15 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
 
     <!-- Burn markers -->
     ${burnMarkersSvg}
+
+    <!-- Timeline badges -->
+    ${timelineBadges}
   </g>
 
   <!-- Legend -->
   <g transform="translate(${-cx + 10}, ${cy + 10})">
     ${legendItems}
+    ${scaleLabelItem}
   </g>
 </svg>`;
 
@@ -905,10 +959,27 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
 </div>`;
   }
 
+  // Build timeline bar (if annotations provided)
+  let timelineBarHtml = "";
+  if (annotations.length > 0) {
+    const maxTime = Math.max(...annotations.map(a => a.missionTime));
+    const barWidth = size; // match SVG width
+    const items = annotations.map(ann => {
+      const pct = maxTime > 0 ? (ann.missionTime / maxTime) * 100 : 0;
+      return `<div class="timeline-item" style="left: ${pct.toFixed(1)}%">
+<span class="timeline-badge-label">${escapeHtml(ann.badge)}</span>
+<span class="timeline-label">${escapeHtml(ann.label)}</span>
+</div>`;
+    }).join("\n");
+    timelineBarHtml = `<div class="timeline-bar" style="max-width: ${barWidth}px" role="list" aria-label="航路タイムライン">
+${items}
+</div>`;
+  }
+
   const animAttr = diagram.animation ? ' data-animated="true"' : "";
   return `<div class="card orbital-diagram" id="${escapeHtml(diagram.id)}"${animAttr}>
 <h4>${escapeHtml(diagram.title)}</h4>
-${svg}${animationHtml}
+${svg}${animationHtml}${timelineBarHtml}
 </div>`;
 }
 
