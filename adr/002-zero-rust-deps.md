@@ -12,6 +12,17 @@ Accepted
 
 **solar-line-core は外部 Rust クレートを一切使用しない。**すべての数学関数（三角関数、ケプラー求解、軌道伝播等）を自前で実装する。wasm-bindgen/serde は WASM ブリッジ（solar-line-wasm）でのみ使用する。
 
+## Alternatives Considered
+
+- **nalgebra / SOFA 等の外部ライブラリ使用**: 精度・機能面で優れるが、WASM ビルドサイズ増大と互換性リスクがある。CLAUDE.md では `no_std` 互換クレートの使用は許容しており、将来的に緩和の余地あり。
+- **C/Fortran バインディング (JPL SPICE 等)**: 高精度だが WASM 互換性が非常に低く却下。
+
+## Assumptions
+
+- JPL 平均軌道要素の ~1° 精度がプロジェクトの分析目的に十分である
+- Orekit 等との検証（Task 125）で精度不足が判明した場合、方針を再検討する可能性がある
+- WASM ビルドサイズの最小化はユーザー体験に直結する
+
 ## Consequences
 
 - WASM バイナリサイズが最小化される

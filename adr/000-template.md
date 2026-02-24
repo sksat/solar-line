@@ -12,6 +12,14 @@ Accepted / Superseded / Deprecated
 
 何を決定したか。
 
+## Alternatives Considered
+
+検討した他の選択肢と、採用しなかった理由。
+
+## Assumptions
+
+この決定の前提となっている仮定。前提が変われば再検討すべき。
+
 ## Consequences
 
 決定によるメリット・デメリット・影響。

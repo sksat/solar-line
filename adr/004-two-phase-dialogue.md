@@ -15,6 +15,18 @@ Accepted
 - **Phase 1 (Extraction):** 生の台詞行をタイムスタンプ付きで抽出 → `epXX_lines.json`（自動化可能）
 - **Phase 2 (Attribution):** コンテキストを考慮した話者判定 → `epXX_dialogue.json` + `epXX_speakers.json`（完全自動化しない）
 
+## Alternatives Considered
+
+- **全自動パイプライン**: ASR + 話者ダイアライゼーション + LLM で完全自動化。VOICEROID 音声の ASR 精度が低く（YouTube VTT で 60-70% 程度）、誤帰属のリスクが高い。
+- **単一ファイル方式**: 抽出と帰属を1ファイルで管理。抽出の再実行で帰属作業が消失するため却下。
+- **手動のみ**: 品質は最高だが、5エピソード × 80-160行のスケールに対応できない。
+
+## Assumptions
+
+- VOICEROID 音声の ASR 精度は今後向上する可能性がある（Whisper 改善、話者ダイアライゼーション導入）
+- 主要キャラクター（きりたん、ケイ）の声質の違いは人間/LLM で判定可能
+- Phase 1 の出力フォーマットが安定していれば、Phase 2 の手法を後から改善できる
+
 ## Consequences
 
 - 台詞抽出を再実行しても話者判定の作業が失われない

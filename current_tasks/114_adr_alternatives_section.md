@@ -1,6 +1,6 @@
 # Task 114: ADR に Alternatives セクション追加
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 
