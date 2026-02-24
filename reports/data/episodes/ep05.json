@@ -928,7 +928,7 @@
           "label": "地球 (1.0 AU)",
           "radius": 1,
           "color": "#4488ff",
-          "angle": 1.4706,
+          "angle": 1.6181,
           "meanMotion": 1.991e-7
         },
         {
@@ -976,14 +976,14 @@
           "style": "brachistochrone",
           "burnMarkers": [
             {
-              "angle": 3.14,
+              "angle": 4.8762,
               "label": "加速（@300t）",
               "startTime": 0,
               "endTime": 358560,
               "type": "acceleration"
             },
             {
-              "angle": 0,
+              "angle": 1.6181,
               "label": "減速（@300t）",
               "startTime": 358560,
               "endTime": 717120,
@@ -996,7 +996,8 @@
       ],
       "animation": {
         "durationSeconds": 717120
-      }
+      },
+      "epochAnnotation": "想定年代: 2242-12-19～2242-12-28"
     },
     {
       "id": "ep05-diagram-02",
@@ -1076,7 +1077,7 @@
           "label": "地球",
           "radius": 1,
           "color": "#4488ff",
-          "angle": 1.4706,
+          "angle": 1.6181,
           "meanMotion": 1.991e-7
         },
         {
@@ -1105,14 +1106,14 @@
           "scenarioId": "flyby",
           "burnMarkers": [
             {
-              "angle": 4,
+              "angle": 4.8762,
               "label": "出発加速",
               "startTime": 0,
               "endTime": 360000,
               "type": "acceleration"
             },
             {
-              "angle": 3.6,
+              "angle": 3.6214,
               "label": "木星接近減速",
               "startTime": 360000,
               "endTime": 720000,
@@ -1131,14 +1132,14 @@
           "scenarioId": "flyby",
           "burnMarkers": [
             {
-              "angle": 2.4,
+              "angle": 3.6104,
               "label": "Oberth加速（+3%）",
               "startTime": 720000,
               "endTime": 1200000,
               "type": "acceleration"
             },
             {
-              "angle": 1.8,
+              "angle": 1.6181,
               "label": "地球捕捉",
               "startTime": 1200000,
               "endTime": 1825200,
@@ -1157,14 +1158,14 @@
           "scenarioId": "direct",
           "burnMarkers": [
             {
-              "angle": 3.14,
+              "angle": 4.8762,
               "label": "加速",
               "startTime": 0,
               "endTime": 717120,
               "type": "acceleration"
             },
             {
-              "angle": 1.57,
+              "angle": 1.6181,
               "label": "減速（ノズル消失 ✕）",
               "startTime": 717120,
               "endTime": 1434240,
@@ -1177,7 +1178,8 @@
       ],
       "animation": {
         "durationSeconds": 1825200
-      }
+      },
+      "epochAnnotation": "想定年代: 2242-12-19～2242-12-28"
     }
   ],
   "timeSeriesCharts": [

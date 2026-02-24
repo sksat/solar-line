@@ -409,7 +409,7 @@
           "label": "土星",
           "radius": 9.537,
           "color": "#c9d1d9",
-          "angle": 2.2198,
+          "angle": 2.5081,
           "meanMotion": 6.761e-9
         },
         {
@@ -436,7 +436,7 @@
           "style": "hyperbolic",
           "burnMarkers": [
             {
-              "angle": 1.31,
+              "angle": 2.5081,
               "label": "捕獲 ΔV ≥ 0.61 km/s",
               "startTime": 39258000,
               "endTime": 39312000,
@@ -449,7 +449,8 @@
       ],
       "animation": {
         "durationSeconds": 39312000
-      }
+      },
+      "epochAnnotation": "想定年代: 2241-09-11～2242-12-10"
     },
     {
       "id": "ep02-diagram-03",

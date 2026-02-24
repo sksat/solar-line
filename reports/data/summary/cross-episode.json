@@ -120,7 +120,7 @@
               "label": "地球 (1.0 AU)",
               "radius": 1,
               "color": "#4488ff",
-              "angle": 2.9604,
+              "angle": 1.6181,
               "meanMotion": 1.991e-7
             },
             {
@@ -136,7 +136,7 @@
               "label": "木星 (5.20 AU)",
               "radius": 5.203,
               "color": "#dd8844",
-              "angle": 2.989,
+              "angle": 2.993,
               "meanMotion": 1.678e-8
             },
             {
@@ -144,7 +144,7 @@
               "label": "土星 (9.58 AU)",
               "radius": 9.58,
               "color": "#daa520",
-              "angle": 2.2198,
+              "angle": 2.5081,
               "meanMotion": 6.761e-9
             },
             {
@@ -152,7 +152,7 @@
               "label": "天王星 (19.2 AU)",
               "radius": 19.19,
               "color": "#66dddd",
-              "angle": 4.8746,
+              "angle": 4.8758,
               "meanMotion": 2.37e-9
             }
           ],
@@ -174,7 +174,7 @@
                   "type": "acceleration"
                 },
                 {
-                  "angle": 2.99,
+                  "angle": 2.993,
                   "label": "EP1 減速",
                   "startTime": 25000,
                   "endTime": 50000,
@@ -192,14 +192,14 @@
               "endTime": 300000,
               "burnMarkers": [
                 {
-                  "angle": 2.99,
+                  "angle": 2.997,
                   "label": "EP2 木星圏脱出",
                   "startTime": 0,
                   "endTime": 5000,
                   "type": "acceleration"
                 },
                 {
-                  "angle": 2.22,
+                  "angle": 2.5081,
                   "label": "EP2 土星捕捉",
                   "startTime": 240000,
                   "endTime": 245000,
@@ -224,7 +224,7 @@
                   "type": "acceleration"
                 },
                 {
-                  "angle": 4.87,
+                  "angle": 4.8758,
                   "label": "EP3 減速",
                   "startTime": 35000,
                   "endTime": 70000,
@@ -242,7 +242,7 @@
               "endTime": 520000,
               "burnMarkers": [
                 {
-                  "angle": 4.88,
+                  "angle": 4.8762,
                   "label": "EP5 天王星脱出",
                   "startTime": 0,
                   "endTime": 32500,
@@ -256,14 +256,14 @@
                   "type": "midcourse"
                 },
                 {
-                  "angle": 1.57,
+                  "angle": 1.6181,
                   "label": "EP5 減速",
                   "startTime": 80000,
                   "endTime": 120000,
                   "type": "deceleration"
                 },
                 {
-                  "angle": 2.96,
+                  "angle": 1.6181,
                   "label": "EP5 地球投入",
                   "startTime": 125000,
                   "endTime": 130000,
@@ -327,7 +327,8 @@
               "badge": "⑤",
               "orbitId": "earth"
             }
-          ]
+          ],
+          "epochAnnotation": "想定年代: 2241-09-05～2242-12-28 (全479日間)"
         }
       ],
       "table": {

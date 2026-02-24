@@ -1,25 +1,32 @@
 /**
- * Update orbital diagram planet angles in episode report JSON files
+ * Update orbital diagram planet angles in episode and summary report JSON files
  * to reflect computed planetary positions from the ephemeris.
  *
- * Usage: node --experimental-strip-types src/update-diagram-angles.ts [--data-dir <path>]
+ * Handles:
+ * - Episode reports (ep01-ep05): per-episode diagrams
+ * - Cross-episode summary: full-route diagram with all 4 transfer legs
+ * - Epoch annotations: adds assumed in-story date to heliocentric diagrams
+ * - Arrival vs departure positions: arrival planet uses arrivalJD
  *
- * This reads the episode JSON files, computes planet longitudes at
- * the timeline dates, and updates the angle fields in the diagrams.
+ * Usage: npm run update-diagram-angles [-- --data-dir <path>]
  */
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { computeTimeline, diagramAngles, type TimelineEvent } from "./timeline-analysis.ts";
-import { calendarToJD, planetLongitude, type PlanetName } from "./ephemeris.ts";
-import type { EpisodeReport, OrbitalDiagram } from "./report-types.ts";
+import { computeTimeline, type TimelineEvent } from "./timeline-analysis.ts";
+import { calendarToJD, planetLongitude, jdToDateString, type PlanetName } from "./ephemeris.ts";
+import type { EpisodeReport, OrbitalDiagram, SummaryReport, TransferArc } from "./report-types.ts";
 
 const args = process.argv.slice(2);
 let dataDir = path.resolve("..", "reports", "data", "episodes");
+let summaryDir = path.resolve("..", "reports", "data", "summary");
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--data-dir" && args[i + 1]) {
     dataDir = path.resolve(args[++i]);
+  }
+  if (args[i] === "--summary-dir" && args[i + 1]) {
+    summaryDir = path.resolve(args[++i]);
   }
 }
 
@@ -28,7 +35,6 @@ const timeline = computeTimeline(calendarToJD(2240, 1, 1));
 
 /** Map orbit ID to PlanetName for angle lookup */
 function orbitIdToPlanet(orbitId: string): PlanetName | null {
-  // Direct planet names
   const directMap: Record<string, PlanetName> = {
     earth: "earth",
     mars: "mars",
@@ -49,7 +55,7 @@ function orbitIdToPlanet(orbitId: string): PlanetName | null {
   return null;
 }
 
-/** Get the relevant timeline event for a diagram */
+/** Get the relevant timeline event for an episode diagram */
 function getEventForDiagram(diagramId: string): TimelineEvent | null {
   const epMatch = diagramId.match(/^ep(\d{2})/);
   if (!epMatch) return null;
@@ -59,8 +65,52 @@ function getEventForDiagram(diagramId: string): TimelineEvent | null {
   return timeline.events.find((e) => e.episode === lookupEp) ?? null;
 }
 
-/** Update angles in a heliocentric diagram */
-function updateDiagramAngles(diagram: OrbitalDiagram): boolean {
+/**
+ * Determine if an orbit is the arrival planet for the given transfer event.
+ * The arrival planet position should be computed at arrivalJD, not departureJD.
+ */
+function isArrivalPlanet(planet: PlanetName, event: TimelineEvent): boolean {
+  return planet === event.arrivalPlanet;
+}
+
+/**
+ * Determine if an orbit is the departure planet for the given transfer event.
+ */
+function isDeparturePlanet(planet: PlanetName, event: TimelineEvent): boolean {
+  return planet === event.departurePlanet;
+}
+
+/**
+ * Compute the appropriate JD for a planet's position in a diagram.
+ * - Departure planet: use departureJD
+ * - Arrival planet: use arrivalJD
+ * - Other reference planets: use departureJD (snapshot at journey start)
+ */
+function getAngleForPlanet(planet: PlanetName, event: TimelineEvent): number {
+  const jd = isArrivalPlanet(planet, event) ? event.arrivalJD : event.departureJD;
+  return planetLongitude(planet, jd);
+}
+
+function setAngle(
+  diagramId: string,
+  orbitId: string,
+  orbit: { angle?: number },
+  newAngle: number,
+): boolean {
+  const rounded = parseFloat(newAngle.toFixed(4));
+  if (orbit.angle !== undefined && Math.abs(rounded - orbit.angle) < 0.001) {
+    return false;
+  }
+  const oldAngle = orbit.angle;
+  orbit.angle = rounded;
+  console.log(
+    `  ${diagramId} / ${orbitId}: ${oldAngle?.toFixed(3) ?? "unset"} → ${rounded.toFixed(3)} rad (${(rounded * 180 / Math.PI).toFixed(1)}°)`,
+  );
+  return true;
+}
+
+/** Update angles in a heliocentric episode diagram */
+function updateEpisodeDiagramAngles(diagram: OrbitalDiagram): boolean {
   const event = getEventForDiagram(diagram.id);
   if (!event) return false;
 
@@ -74,21 +124,132 @@ function updateDiagramAngles(diagram: OrbitalDiagram): boolean {
     const planet = orbitIdToPlanet(orbit.id);
     if (!planet) continue;
 
-    // Use departure JD for the planet position
-    const newAngle = planetLongitude(planet, event.departureJD);
-    if (Math.abs(newAngle - orbit.angle) > 0.001) {
-      console.log(
-        `  ${diagram.id} / ${orbit.id}: ${orbit.angle.toFixed(3)} → ${newAngle.toFixed(3)} rad (${(newAngle * 180 / Math.PI).toFixed(1)}°)`,
-      );
-      orbit.angle = parseFloat(newAngle.toFixed(4));
+    const newAngle = getAngleForPlanet(planet, event);
+    if (setAngle(diagram.id, orbit.id, orbit, newAngle)) {
       updated = true;
     }
+  }
+
+  // Update BurnMarker angles based on planet positions
+  for (const transfer of diagram.transfers) {
+    const fromPlanet = orbitIdToPlanet(transfer.fromOrbitId);
+    const toPlanet = orbitIdToPlanet(transfer.toOrbitId);
+    if (transfer.burnMarkers) {
+      for (const burn of transfer.burnMarkers) {
+        if (burn.type === "acceleration" && fromPlanet) {
+          // Acceleration burn at departure planet position
+          const depAngle = planetLongitude(fromPlanet, event.departureJD);
+          if (setAngle(diagram.id, `burn:${burn.label}`, burn, depAngle)) {
+            updated = true;
+          }
+        } else if ((burn.type === "deceleration" || burn.type === "capture") && toPlanet) {
+          // Deceleration/capture burn at arrival planet position
+          const arrAngle = planetLongitude(toPlanet, event.arrivalJD);
+          if (setAngle(diagram.id, `burn:${burn.label}`, burn, arrAngle)) {
+            updated = true;
+          }
+        }
+        // midcourse burns are not tied to a planet — leave unchanged
+      }
+    }
+  }
+
+  // Set epoch annotation
+  const epochStr = `想定年代: ${event.departureDate}～${event.arrivalDate}`;
+  if (diagram.epochAnnotation !== epochStr) {
+    console.log(`  ${diagram.id} epochAnnotation: "${epochStr}"`);
+    diagram.epochAnnotation = epochStr;
+    updated = true;
   }
 
   return updated;
 }
 
-// Process each episode report
+/** Update the cross-episode full-route diagram using all timeline events */
+function updateCrossEpisodeDiagram(diagram: OrbitalDiagram): boolean {
+  if (diagram.id !== "full-route-diagram") return false;
+  if (diagram.centerLabel !== "太陽") return false;
+
+  const events = timeline.events;
+  if (events.length === 0) return false;
+
+  let updated = false;
+
+  // For the full-route diagram, each planet should be shown at its position
+  // when it is first relevant (departure from or arrival at that body).
+  // Build a map: planet → JD when the ship interacts with it.
+  const planetJDMap = new Map<PlanetName, number>();
+
+  for (const event of events) {
+    // Departure planet at departure time (first interaction takes priority)
+    if (!planetJDMap.has(event.departurePlanet)) {
+      planetJDMap.set(event.departurePlanet, event.departureJD);
+    }
+    // Arrival planet at arrival time
+    if (!planetJDMap.has(event.arrivalPlanet)) {
+      planetJDMap.set(event.arrivalPlanet, event.arrivalJD);
+    }
+  }
+
+  // Update orbit angles
+  for (const orbit of diagram.orbits) {
+    if (orbit.angle === undefined) continue;
+
+    const planet = orbitIdToPlanet(orbit.id);
+    if (!planet) continue;
+
+    const jd = planetJDMap.get(planet);
+    if (jd === undefined) continue;
+
+    const newAngle = planetLongitude(planet, jd);
+    if (setAngle(diagram.id, orbit.id, orbit, newAngle)) {
+      updated = true;
+    }
+  }
+
+  // Update BurnMarker angles for each transfer leg
+  // Map transfer labels to timeline events by matching from/to orbit IDs
+  for (const transfer of diagram.transfers) {
+    const fromPlanet = orbitIdToPlanet(transfer.fromOrbitId);
+    const toPlanet = orbitIdToPlanet(transfer.toOrbitId);
+
+    // Find the matching timeline event
+    const matchingEvent = events.find(
+      (e) => e.departurePlanet === fromPlanet && e.arrivalPlanet === toPlanet,
+    );
+
+    if (matchingEvent && transfer.burnMarkers) {
+      for (const burn of transfer.burnMarkers) {
+        if (burn.type === "acceleration" && fromPlanet) {
+          const depAngle = planetLongitude(fromPlanet, matchingEvent.departureJD);
+          if (setAngle(diagram.id, `burn:${burn.label}`, burn, depAngle)) {
+            updated = true;
+          }
+        } else if ((burn.type === "deceleration" || burn.type === "capture") && toPlanet) {
+          const arrAngle = planetLongitude(toPlanet, matchingEvent.arrivalJD);
+          if (setAngle(diagram.id, `burn:${burn.label}`, burn, arrAngle)) {
+            updated = true;
+          }
+        }
+      }
+    }
+  }
+
+  // Set epoch annotation spanning the full journey
+  const firstEvent = events[0];
+  const lastEvent = events[events.length - 1];
+  const epochStr = `想定年代: ${firstEvent.departureDate}～${lastEvent.arrivalDate} (全${timeline.totalDurationDays.toFixed(0)}日間)`;
+  if (diagram.epochAnnotation !== epochStr) {
+    console.log(`  ${diagram.id} epochAnnotation: "${epochStr}"`);
+    diagram.epochAnnotation = epochStr;
+    updated = true;
+  }
+
+  return updated;
+}
+
+// ---- Process episode reports ----
+console.log("=== Episode Reports ===");
 for (let ep = 1; ep <= 5; ep++) {
   const filename = `ep${String(ep).padStart(2, "0")}.json`;
   const filepath = path.join(dataDir, filename);
@@ -108,7 +269,7 @@ for (let ep = 1; ep <= 5; ep++) {
   let fileUpdated = false;
 
   for (const diagram of report.diagrams) {
-    if (updateDiagramAngles(diagram)) {
+    if (updateEpisodeDiagramAngles(diagram)) {
       fileUpdated = true;
     }
   }
@@ -121,4 +282,33 @@ for (let ep = 1; ep <= 5; ep++) {
   }
 }
 
-console.log("\nDone. Planet angles updated to match computed timeline.");
+// ---- Process cross-episode summary ----
+console.log("\n=== Cross-Episode Summary ===");
+const crossEpisodePath = path.join(summaryDir, "cross-episode.json");
+
+if (fs.existsSync(crossEpisodePath)) {
+  const summary: SummaryReport = JSON.parse(fs.readFileSync(crossEpisodePath, "utf-8"));
+  let fileUpdated = false;
+
+  for (const section of summary.sections) {
+    if (section.orbitalDiagrams) {
+      for (const diagram of section.orbitalDiagrams) {
+        if (updateCrossEpisodeDiagram(diagram)) {
+          fileUpdated = true;
+        }
+      }
+    }
+  }
+
+  if (fileUpdated) {
+    fs.writeFileSync(crossEpisodePath, JSON.stringify(summary, null, 2) + "\n");
+    console.log(`  Updated cross-episode.json`);
+  } else {
+    console.log(`  No changes needed for cross-episode.json`);
+  }
+} else {
+  console.log(`Skipping cross-episode.json (not found)`);
+}
+
+console.log("\nDone. Planet angles and epoch annotations updated to match computed timeline.");
+console.log(`Timeline: ${timeline.events[0].departureDate} → ${timeline.events[timeline.events.length - 1].arrivalDate} (${timeline.totalDurationDays.toFixed(0)} days)`);

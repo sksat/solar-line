@@ -1,6 +1,6 @@
 # Task 097: Epoch-Consistent Orbital Diagrams
 
-## Status: TODO
+## Status: IN_PROGRESS
 
 ## Motivation
 Human directive: 惑星配置などから想定される劇内時間想定から全軌道遷移図などを更新すべき。ありえない惑星配置でのアニメーションになっていると、航路が接続していないように見える。特にクロスエピソード分析では。

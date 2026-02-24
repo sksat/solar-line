@@ -524,7 +524,7 @@
           "label": "地球",
           "radius": 1,
           "color": "#4488ff",
-          "angle": 1.4706,
+          "angle": 1.6181,
           "meanMotion": 1.991e-7
         },
         {
@@ -574,14 +574,14 @@
           "style": "brachistochrone",
           "burnMarkers": [
             {
-              "angle": 3.14,
+              "angle": 4.8762,
               "label": "加速（65%推力）",
               "startTime": 0,
               "endTime": 4529640,
               "type": "acceleration"
             },
             {
-              "angle": 0,
+              "angle": 1.6181,
               "label": "減速（65%推力）",
               "startTime": 4529640,
               "endTime": 9059281,
@@ -594,7 +594,8 @@
       ],
       "animation": {
         "durationSeconds": 9059281
-      }
+      },
+      "epochAnnotation": "想定年代: 2242-12-19～2242-12-28"
     },
     {
       "id": "ep04-diagram-02",

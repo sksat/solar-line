@@ -301,7 +301,7 @@
           "label": "木星",
           "radius": 5.203,
           "color": "#d29922",
-          "angle": 2.989,
+          "angle": 2.993,
           "meanMotion": 1.678e-8
         }
       ],
@@ -321,7 +321,7 @@
           "style": "brachistochrone",
           "burnMarkers": [
             {
-              "angle": 0.52,
+              "angle": 2.9604,
               "label": "加速",
               "startTime": 0,
               "endTime": 129600,
@@ -335,7 +335,7 @@
               "type": "midcourse"
             },
             {
-              "angle": 0.52,
+              "angle": 2.993,
               "label": "減速",
               "startTime": 129600,
               "endTime": 259200,
@@ -348,7 +348,8 @@
       ],
       "animation": {
         "durationSeconds": 259200
-      }
+      },
+      "epochAnnotation": "想定年代: 2241-09-05～2241-09-08"
     },
     {
       "id": "ep01-diagram-02",
@@ -388,7 +389,7 @@
           "label": "木星",
           "radius": 5.203,
           "color": "#d29922",
-          "angle": 2.989,
+          "angle": 2.993,
           "meanMotion": 1.678e-8
         }
       ],
@@ -402,14 +403,14 @@
           "scenarioId": "72h",
           "burnMarkers": [
             {
-              "angle": 0.52,
+              "angle": 2.9604,
               "label": "加速 3.34g",
               "startTime": 0,
               "endTime": 129600,
               "type": "acceleration"
             },
             {
-              "angle": 0.52,
+              "angle": 2.993,
               "label": "減速 3.34g",
               "startTime": 129600,
               "endTime": 259200,
@@ -428,14 +429,14 @@
           "scenarioId": "150h",
           "burnMarkers": [
             {
-              "angle": 0.52,
+              "angle": 2.9604,
               "label": "加速 0.77g",
               "startTime": 0,
               "endTime": 270000,
               "type": "acceleration"
             },
             {
-              "angle": 0.52,
+              "angle": 2.993,
               "label": "減速 0.77g",
               "startTime": 270000,
               "endTime": 540000,
@@ -448,7 +449,8 @@
       ],
       "animation": {
         "durationSeconds": 540000
-      }
+      },
+      "epochAnnotation": "想定年代: 2241-09-05～2241-09-08"
     }
   ],
   "explorations": [

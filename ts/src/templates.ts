@@ -450,6 +450,7 @@ footer {
 .orbital-diagram { text-align: center; }
 .orbital-diagram svg { max-width: 100%; height: auto; }
 .diagram-description { text-align: left; font-size: 0.9rem; color: #555; margin: 0.25rem 1rem 0.75rem; line-height: 1.5; }
+.diagram-epoch { text-align: right; color: #888; margin: 0 1rem 0.5rem; }
 .uplot-chart { overflow-x: auto; }
 .uplot-chart .uplot-target { margin: 0 auto; }
 .uplot-chart .u-legend { font-size: 0.85rem; }
@@ -1319,8 +1320,11 @@ ${items}
   const descHtml = diagram.description
     ? `\n<p class="diagram-description">${escapeHtml(diagram.description)}</p>`
     : "";
+  const epochHtml = diagram.epochAnnotation
+    ? `\n<p class="diagram-epoch"><small>${escapeHtml(diagram.epochAnnotation)}</small></p>`
+    : "";
   return `<div class="card orbital-diagram" id="${escapeHtml(diagram.id)}"${animAttr}>
-<h4>${escapeHtml(diagram.title)}</h4>${descHtml}
+<h4>${escapeHtml(diagram.title)}</h4>${descHtml}${epochHtml}
 ${svg}${animationHtml}${timelineBarHtml}
 </div>`;
 }

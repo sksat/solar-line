@@ -504,7 +504,7 @@
           "label": "天王星",
           "radius": 19.19,
           "color": "#88ccee",
-          "angle": 4.8746,
+          "angle": 4.8758,
           "meanMotion": 2.37e-9
         },
         {
@@ -531,14 +531,14 @@
           "style": "brachistochrone",
           "burnMarkers": [
             {
-              "angle": 3.14,
+              "angle": 2.5093,
               "label": "加速",
               "startTime": 0,
               "endTime": 257400,
               "type": "acceleration"
             },
             {
-              "angle": 0.4,
+              "angle": 4.8758,
               "label": "減速",
               "startTime": 257400,
               "endTime": 514800,
@@ -551,7 +551,8 @@
       ],
       "animation": {
         "durationSeconds": 514800
-      }
+      },
+      "epochAnnotation": "想定年代: 2242-12-12～2242-12-17"
     },
     {
       "id": "ep03-diagram-02",

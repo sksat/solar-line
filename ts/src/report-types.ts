@@ -241,6 +241,8 @@ export interface OrbitalDiagram {
   timelineAnnotations?: TimelineAnnotation[];
   /** Named scenarios for multi-pattern diagrams. When present, transfers are grouped by scenarioId. */
   scenarios?: DiagramScenario[];
+  /** Epoch annotation showing the assumed in-story date, e.g. "想定年代: 2240-06-15" */
+  epochAnnotation?: string;
 }
 
 /** Per-episode report data */
