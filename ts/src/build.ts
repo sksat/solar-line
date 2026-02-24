@@ -20,6 +20,11 @@ import {
   renderTranscriptionPage,
   renderTranscriptionIndex,
   renderTaskDashboard,
+  renderTaskPage,
+  renderADRIndex,
+  renderADRPage,
+  renderIdeasIndex,
+  renderIdeaPage,
   type NavEpisode,
 } from "./templates.ts";
 
@@ -298,6 +303,98 @@ export function discoverTasks(projectRoot: string): TaskEntry[] {
   return tasks;
 }
 
+/** An ADR entry parsed from adr/*.md */
+export interface ADREntry {
+  /** ADR number (e.g. 1, 14) */
+  number: number;
+  /** ADR title */
+  title: string;
+  /** Status: Accepted, Superseded, Proposed, etc. */
+  status: string;
+  /** Full markdown content */
+  content: string;
+  /** Filename without extension */
+  slug: string;
+}
+
+/** Parse an ADR markdown file */
+export function parseADRFile(filename: string, content: string): ADREntry | null {
+  const numMatch = filename.match(/^(\d+)/);
+  if (!numMatch) return null;
+  const num = parseInt(numMatch[1], 10);
+  if (num === 0) return null; // skip template
+
+  const lines = content.split("\n");
+  const titleLine = lines.find(l => /^#\s+/.test(l));
+  const title = titleLine ? titleLine.replace(/^#+\s*/, "").trim() : filename;
+
+  // Extract status
+  let status = "Unknown";
+  let inStatusSection = false;
+  for (const line of lines) {
+    if (/^##\s+Status/i.test(line)) { inStatusSection = true; continue; }
+    if (inStatusSection && line.startsWith("##")) break;
+    if (inStatusSection && line.trim()) {
+      status = line.trim();
+      break;
+    }
+  }
+
+  return {
+    number: num,
+    title,
+    status,
+    content,
+    slug: filename.replace(/\.md$/, ""),
+  };
+}
+
+/** Discover ADR files from adr/ directory */
+export function discoverADRs(projectRoot: string): ADREntry[] {
+  const adrDir = path.join(projectRoot, "adr");
+  if (!fs.existsSync(adrDir)) return [];
+
+  const files = fs.readdirSync(adrDir)
+    .filter(f => /^\d+.*\.md$/.test(f))
+    .sort();
+
+  const adrs: ADREntry[] = [];
+  for (const file of files) {
+    const content = fs.readFileSync(path.join(adrDir, file), "utf-8");
+    const adr = parseADRFile(file, content);
+    if (adr) adrs.push(adr);
+  }
+  return adrs;
+}
+
+/** An idea entry parsed from ideas/*.md */
+export interface IdeaEntry {
+  /** Idea title from first heading */
+  title: string;
+  /** Full markdown content */
+  content: string;
+  /** Filename without extension */
+  slug: string;
+}
+
+/** Discover idea files from ideas/ directory */
+export function discoverIdeas(projectRoot: string): IdeaEntry[] {
+  const ideasDir = path.join(projectRoot, "ideas");
+  if (!fs.existsSync(ideasDir)) return [];
+
+  const files = fs.readdirSync(ideasDir)
+    .filter(f => f.endsWith(".md"))
+    .sort();
+
+  return files.map(file => {
+    const content = fs.readFileSync(path.join(ideasDir, file), "utf-8");
+    const lines = content.split("\n");
+    const titleLine = lines.find(l => /^#\s+/.test(l));
+    const title = titleLine ? titleLine.replace(/^#+\s*/, "").trim() : file.replace(/\.md$/, "");
+    return { title, content, slug: file.replace(/\.md$/, "") };
+  });
+}
+
 /** Count verdict types in an episode's transfers */
 export function countVerdicts(ep: EpisodeReport): VerdictCounts {
   const counts: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0, reference: 0 };
@@ -432,15 +529,60 @@ export function build(config: BuildConfig): void {
     }
   }
 
-  // Generate task dashboard page (reads current_tasks/ from project root)
+  // Generate task dashboard and individual task pages
   const projectRoot = path.resolve(dataDir, "..");
   const tasks = discoverTasks(projectRoot);
   if (tasks.length > 0) {
     ensureDir(path.join(outDir, "meta"));
+    ensureDir(path.join(outDir, "meta", "tasks"));
     fs.writeFileSync(
       path.join(outDir, "meta", "tasks.html"),
       renderTaskDashboard(tasks, manifest.summaryPages, navEpisodes, manifest.metaPages),
     );
+    // Individual task pages (full markdown content)
+    const tasksDir = path.join(projectRoot, "current_tasks");
+    for (const task of tasks) {
+      const taskFiles = fs.readdirSync(tasksDir).filter(f => f.startsWith(String(task.number).padStart(3, "0")));
+      if (taskFiles.length > 0) {
+        const content = fs.readFileSync(path.join(tasksDir, taskFiles[0]), "utf-8");
+        fs.writeFileSync(
+          path.join(outDir, "meta", "tasks", `${String(task.number).padStart(3, "0")}.html`),
+          renderTaskPage(task, content, manifest.summaryPages, navEpisodes, manifest.metaPages),
+        );
+      }
+    }
+  }
+
+  // Generate ADR pages
+  const adrs = discoverADRs(projectRoot);
+  if (adrs.length > 0) {
+    ensureDir(path.join(outDir, "meta", "adr"));
+    fs.writeFileSync(
+      path.join(outDir, "meta", "adr", "index.html"),
+      renderADRIndex(adrs, manifest.summaryPages, navEpisodes, manifest.metaPages),
+    );
+    for (const adr of adrs) {
+      fs.writeFileSync(
+        path.join(outDir, "meta", "adr", `${adr.slug}.html`),
+        renderADRPage(adr, manifest.summaryPages, navEpisodes, manifest.metaPages),
+      );
+    }
+  }
+
+  // Generate ideas pages
+  const ideas = discoverIdeas(projectRoot);
+  if (ideas.length > 0) {
+    ensureDir(path.join(outDir, "meta", "ideas"));
+    fs.writeFileSync(
+      path.join(outDir, "meta", "ideas", "index.html"),
+      renderIdeasIndex(ideas, manifest.summaryPages, navEpisodes, manifest.metaPages),
+    );
+    for (const idea of ideas) {
+      fs.writeFileSync(
+        path.join(outDir, "meta", "ideas", `${idea.slug}.html`),
+        renderIdeaPage(idea, manifest.summaryPages, navEpisodes, manifest.metaPages),
+      );
+    }
   }
 
   // Write manifest JSON (useful for WASM-interactive pages later)
@@ -530,8 +672,14 @@ export function build(config: BuildConfig): void {
 
   const totalTransfers = episodes.reduce((sum, ep) => sum + ep.transfers.length, 0);
   const docStatus = rustdocDir ? " + rustdoc" : "";
+  const devDocs = [
+    tasks.length > 0 ? `${tasks.length} tasks` : "",
+    adrs.length > 0 ? `${adrs.length} ADRs` : "",
+    ideas.length > 0 ? `${ideas.length} ideas` : "",
+  ].filter(Boolean).join(", ");
+  const devDocsStatus = devDocs ? ` + dev(${devDocs})` : "";
   console.log(
-    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${summaries.length} summaries, ${transcriptions.length} transcriptions, ${logs.length} logs${docStatus} → ${outDir}`,
+    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${summaries.length} summaries, ${transcriptions.length} transcriptions, ${logs.length} logs${devDocsStatus}${docStatus} → ${outDir}`,
   );
 }
 

@@ -618,6 +618,8 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
     `<a href="${basePath}/transcriptions/index.html">文字起こし</a>`,
     `<a href="${basePath}/logs/index.html">セッションログ</a>`,
     `<a href="${basePath}/meta/tasks.html">タスク状況</a>`,
+    `<a href="${basePath}/meta/adr/index.html">ADR</a>`,
+    `<a href="${basePath}/meta/ideas/index.html">アイデア</a>`,
   ];
   const metaNav = `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">この考証について</button><span class="nav-dropdown-menu">${metaLinks.join("")}</span></span>`;
   const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考察`;
@@ -2156,9 +2158,10 @@ export function renderTaskDashboard(tasks: TaskDashboardEntry[], summaryPages?: 
   const rows = sorted.map(t => {
     const badge = `<span class="verdict ${statusClass(t.status)}">${statusLabel(t.status)}</span>`;
     const summaryText = t.summary ? escapeHtml(t.summary) : "—";
+    const taskLink = `tasks/${String(t.number).padStart(3, "0")}.html`;
     return `<tr>
 <td>${t.number}</td>
-<td>${escapeHtml(t.title)}</td>
+<td><a href="${taskLink}">${escapeHtml(t.title)}</a></td>
 <td>${badge}</td>
 <td>${summaryText}</td>
 </tr>`;
@@ -2197,4 +2200,96 @@ ${rows}
 </table>`;
 
   return layoutHtml("タスク状況", content, "..", summaryPages, "SOLAR LINE 考察プロジェクトのタスク進捗ダッシュボード", navEpisodes, metaPages);
+}
+
+/** Render an individual task page with full markdown content */
+export function renderTaskPage(task: TaskDashboardEntry, markdownContent: string, summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const statusLabel = task.status === "DONE" ? "完了" : task.status === "IN_PROGRESS" ? "進行中" : "未着手";
+  const statusClass = task.status === "DONE" ? "verdict-plausible" : task.status === "IN_PROGRESS" ? "verdict-conditional" : "verdict-indeterminate";
+
+  const content = `
+<h1>Task ${task.number}: ${escapeHtml(task.title)}</h1>
+<p><span class="verdict ${statusClass}">${statusLabel}</span> <a href="../tasks.html">← タスク一覧</a></p>
+<div class="card">${markdownToHtml(markdownContent)}</div>`;
+
+  return layoutHtml(`Task ${task.number}`, content, "../..", summaryPages, `Task ${task.number}: ${task.title}`, navEpisodes, metaPages);
+}
+
+/** ADR entry for rendering */
+export interface ADRRenderEntry {
+  number: number;
+  title: string;
+  status: string;
+  content: string;
+  slug: string;
+}
+
+/** Render the ADR index page */
+export function renderADRIndex(adrs: ADRRenderEntry[], summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const statusBadge = (status: string): string => {
+    const cls = status.toLowerCase() === "accepted" ? "verdict-plausible"
+      : status.toLowerCase() === "superseded" ? "verdict-indeterminate"
+      : "verdict-conditional";
+    return `<span class="verdict ${cls}">${escapeHtml(status)}</span>`;
+  };
+
+  const rows = adrs.map(a =>
+    `<tr><td>ADR-${String(a.number).padStart(3, "0")}</td><td><a href="${a.slug}.html">${escapeHtml(a.title)}</a></td><td>${statusBadge(a.status)}</td></tr>`
+  ).join("\n");
+
+  const content = `
+<h1>Architecture Decision Records (ADR)</h1>
+<p>プロジェクトの設計判断を記録した ADR 一覧です。各 ADR は特定の設計上の決定とその理由を文書化しています。</p>
+<table class="data-table">
+<thead><tr><th>番号</th><th>タイトル</th><th>状態</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+
+  return layoutHtml("ADR 一覧", content, "../..", summaryPages, "SOLAR LINE 考察プロジェクトの設計判断記録", navEpisodes, metaPages);
+}
+
+/** Render an individual ADR page */
+export function renderADRPage(adr: ADRRenderEntry, summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const content = `
+<p><a href="index.html">← ADR 一覧</a></p>
+<div class="card">${markdownToHtml(adr.content)}</div>`;
+
+  return layoutHtml(`ADR-${String(adr.number).padStart(3, "0")}`, content, "../..", summaryPages, adr.title, navEpisodes, metaPages);
+}
+
+/** Idea entry for rendering */
+export interface IdeaRenderEntry {
+  title: string;
+  content: string;
+  slug: string;
+}
+
+/** Render the ideas index page */
+export function renderIdeasIndex(ideas: IdeaRenderEntry[], summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const rows = ideas.map(i =>
+    `<tr><td><a href="${i.slug}.html">${escapeHtml(i.title)}</a></td></tr>`
+  ).join("\n");
+
+  const content = `
+<h1>アイデア・メモ</h1>
+<p>今後の分析や機能拡張のアイデアを記録したメモ一覧です。</p>
+<table class="data-table">
+<thead><tr><th>タイトル</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+
+  return layoutHtml("アイデア一覧", content, "../..", summaryPages, "SOLAR LINE 考察プロジェクトのアイデア・メモ一覧", navEpisodes, metaPages);
+}
+
+/** Render an individual idea page */
+export function renderIdeaPage(idea: IdeaRenderEntry, summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const content = `
+<p><a href="index.html">← アイデア一覧</a></p>
+<div class="card">${markdownToHtml(idea.content)}</div>`;
+
+  return layoutHtml(idea.title, content, "../..", summaryPages, idea.title, navEpisodes, metaPages);
 }

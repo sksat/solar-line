@@ -1,6 +1,6 @@
 # Task 113: 内部ドキュメントのサイト公開
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 
