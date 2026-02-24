@@ -1016,6 +1016,29 @@ describe("renderExploration with collapsedByDefault", () => {
     assert.ok(html.includes("15,207 km/s"), "should render string result value directly");
   });
 
+  it("escapes HTML in string result values", () => {
+    const exp: ParameterExploration = {
+      id: "exp-escape",
+      transferId: "t1",
+      question: "テスト",
+      scenarios: [
+        {
+          label: "XSSテスト",
+          variedParam: "mass",
+          variedValue: 100,
+          variedUnit: "t",
+          results: { "status": '<img src=x onerror=alert("xss")>' },
+          feasible: true,
+          note: "テスト",
+        },
+      ],
+      summary: "テスト概要",
+    };
+    const html = renderExploration(exp);
+    assert.ok(!html.includes('<img src=x'), "should not contain unescaped HTML tag");
+    assert.ok(html.includes("&lt;img"), "should contain escaped HTML entity");
+  });
+
   it("omits details element when no scenarios are collapsed", () => {
     const exp: ParameterExploration = {
       id: "exp-no-collapse",

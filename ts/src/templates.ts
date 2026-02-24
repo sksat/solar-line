@@ -969,7 +969,7 @@ function renderScenarioRow(s: ExplorationScenario): string {
   const cls = s.feasible ? "feasible" : "infeasible";
   const icon = s.feasible ? "✓" : "✗";
   const resultCells = Object.entries(s.results)
-    .map(([_k, v]) => `<td>${typeof v === "number" ? (v >= 1000 ? v.toExponential(2) : v.toFixed(2)) : v}</td>`)
+    .map(([_k, v]) => `<td>${typeof v === "number" ? (v >= 1000 ? v.toExponential(2) : v.toFixed(2)) : escapeHtml(String(v))}</td>`)
     .join("");
   return `<tr class="${cls}"><td>${icon} ${escapeHtml(s.label)}</td><td>${s.variedValue.toLocaleString()} ${escapeHtml(s.variedUnit)}</td>${resultCells}<td>${escapeHtml(s.note)}</td></tr>`;
 }

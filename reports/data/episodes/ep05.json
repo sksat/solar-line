@@ -202,7 +202,7 @@
       "description": "Brachistochrone遷移: 天王星→地球（質量別シナリオ）",
       "timestamp": "02:22-04:09（航路ブリーフィング〜天王星脱出）",
       "claimedDeltaV": null,
-      "computedDeltaV": null,
+      "computedDeltaV": 15207,
       "assumptions": [
         "天王星→地球最接近距離 18.2 AU を使用",
         "推力65%（6.37 MN）— 第4話からの損傷状態",
@@ -244,7 +244,7 @@
       "description": "地球捕捉: 接近速度とΔV要件",
       "timestamp": "20:27-22:58（最終点火〜LEO投入〜ノズル消失）",
       "claimedDeltaV": null,
-      "computedDeltaV": null,
+      "computedDeltaV": 3.18,
       "assumptions": [
         "brachistochrone減速が正常に完了する場合、v∞ ≈ 0 で地球SOIに到達",
         "減速が不完全な場合、残余v∞に応じた追加ΔVが必要",
