@@ -1,6 +1,6 @@
 # Task 037: Compute Planetary Positions and Solar System Dates for Orbital Transfers
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 Human directive: "軌道遷移の図において、軌道高度を変えるための必要ΔV計算しか行われておらず、実際には目的の位置(目的天体の周辺など)に到達できていないように見える。諸条件から整合する惑星の位置関係を想定し、そこから作中の太陽系日時も計算する"

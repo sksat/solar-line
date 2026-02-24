@@ -83,7 +83,7 @@
       "verdict": "indeterminate",
       "explanation": "古典的ホーマン遷移には合計約3.36 km/sのΔVが必要だが、約3,672日（約10年）を要する。作中のケストレルは損傷した状態で木星圏を脱出し、土星圏に到達しているが、所要時間については明示的な言及がない。ホーマン遷移は最小エネルギーの基準値として参考とする。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "departureRadius": 778570000,
         "arrivalRadius": 1433530000,
         "transferTimeDays": 3671.5,
@@ -112,7 +112,10 @@
       "timestamp": "09:08",
       "claimedDeltaV": null,
       "computedDeltaV": null,
-      "evidenceQuoteIds": ["ep02-quote-03", "ep02-quote-04"],
+      "evidenceQuoteIds": [
+        "ep02-quote-03",
+        "ep02-quote-04"
+      ],
       "assumptions": [
         "木星中心基準での速度: 10.3 km/s",
         "高度: 50木星半径（RJ）= 3,574,600 km（RJ = 71,492 km）",
@@ -162,7 +165,11 @@
       "timestamp": "09:08 - 13:45",
       "claimedDeltaV": null,
       "computedDeltaV": null,
-      "evidenceQuoteIds": ["ep02-quote-03", "ep02-quote-05", "ep02-quote-06"],
+      "evidenceQuoteIds": [
+        "ep02-quote-03",
+        "ep02-quote-05",
+        "ep02-quote-06"
+      ],
       "assumptions": [
         "木星離脱時の双曲線超過速度: 約5.93 km/s（順行方向）",
         "太陽中心速度: 約18.99 km/s → 太陽系脱出軌道（双曲線）",
@@ -203,7 +210,9 @@
       "timestamp": "13:45",
       "claimedDeltaV": null,
       "computedDeltaV": 5.83,
-      "evidenceQuoteIds": ["ep02-quote-05"],
+      "evidenceQuoteIds": [
+        "ep02-quote-05"
+      ],
       "assumptions": [
         "土星圏での超過速度: 約4.69 km/s",
         "エンケラドス軌道半径（238,020 km）での捕獲を仮定",
@@ -245,7 +254,10 @@
       "timestamp": "16:38 - 18:30",
       "claimedDeltaV": null,
       "computedDeltaV": null,
-      "evidenceQuoteIds": ["ep02-quote-07", "ep02-quote-08"],
+      "evidenceQuoteIds": [
+        "ep02-quote-07",
+        "ep02-quote-08"
+      ],
       "assumptions": [
         "対象の推定質量: 50万t級（きりたんの船の10倍以上）",
         "相対速度: 0.12 km/s = 120 m/s",
@@ -290,11 +302,45 @@
       "scaleMode": "sqrt",
       "radiusUnit": "RJ",
       "orbits": [
-        { "id": "io", "label": "イオ", "radius": 5.9, "color": "#d29922", "angle": 1.57, "meanMotion": 4.109e-5 },
-        { "id": "europa", "label": "エウロパ", "radius": 9.4, "color": "#8b949e", "angle": 2.36, "meanMotion": 2.048e-5 },
-        { "id": "ganymede", "label": "ガニメデ", "radius": 15.0, "color": "#58a6ff", "angle": 3.14, "meanMotion": 1.017e-5 },
-        { "id": "callisto", "label": "カリスト", "radius": 26.3, "color": "#6e7681", "angle": 4.19, "meanMotion": 4.358e-6 },
-        { "id": "escape-point", "label": "脱出点 (50 RJ)", "radius": 50.0, "color": "#3fb950", "angle": 0.3 }
+        {
+          "id": "io",
+          "label": "イオ",
+          "radius": 5.9,
+          "color": "#d29922",
+          "angle": 1.57,
+          "meanMotion": 0.00004109
+        },
+        {
+          "id": "europa",
+          "label": "エウロパ",
+          "radius": 9.4,
+          "color": "#8b949e",
+          "angle": 2.36,
+          "meanMotion": 0.00002048
+        },
+        {
+          "id": "ganymede",
+          "label": "ガニメデ",
+          "radius": 15,
+          "color": "#58a6ff",
+          "angle": 3.14,
+          "meanMotion": 0.00001017
+        },
+        {
+          "id": "callisto",
+          "label": "カリスト",
+          "radius": 26.3,
+          "color": "#6e7681",
+          "angle": 4.19,
+          "meanMotion": 0.000004358
+        },
+        {
+          "id": "escape-point",
+          "label": "脱出点 (50 RJ)",
+          "radius": 50,
+          "color": "#3fb950",
+          "angle": 0.3
+        }
       ],
       "transfers": [
         {
@@ -304,7 +350,10 @@
           "color": "#f85149",
           "style": "hyperbolic",
           "burnMarkers": [
-            { "angle": 0.3, "label": "v = 10.3 km/s" }
+            {
+              "angle": 0.3,
+              "label": "v = 10.3 km/s"
+            }
           ],
           "startTime": 0,
           "endTime": 252000
@@ -322,10 +371,36 @@
       "scaleMode": "sqrt",
       "radiusUnit": "AU",
       "orbits": [
-        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149", "meanMotion": 1.059e-7 },
-        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 0, "meanMotion": 1.678e-8 },
-        { "id": "saturn", "label": "土星", "radius": 9.537, "color": "#c9d1d9", "angle": 2.618, "meanMotion": 6.761e-9 },
-        { "id": "uranus", "label": "天王星", "radius": 19.19, "color": "#58a6ff", "meanMotion": 2.370e-9 }
+        {
+          "id": "mars",
+          "label": "火星",
+          "radius": 1.524,
+          "color": "#f85149",
+          "meanMotion": 1.059e-7
+        },
+        {
+          "id": "jupiter",
+          "label": "木星",
+          "radius": 5.203,
+          "color": "#d29922",
+          "angle": 2.997,
+          "meanMotion": 1.678e-8
+        },
+        {
+          "id": "saturn",
+          "label": "土星",
+          "radius": 9.537,
+          "color": "#c9d1d9",
+          "angle": 2.2198,
+          "meanMotion": 6.761e-9
+        },
+        {
+          "id": "uranus",
+          "label": "天王星",
+          "radius": 19.19,
+          "color": "#58a6ff",
+          "meanMotion": 2.37e-9
+        }
       ],
       "transfers": [
         {
@@ -342,7 +417,10 @@
           "color": "#3fb950",
           "style": "hyperbolic",
           "burnMarkers": [
-            { "angle": 1.31, "label": "捕獲 ΔV ≥ 0.61 km/s" }
+            {
+              "angle": 1.31,
+              "label": "捕獲 ΔV ≥ 0.61 km/s"
+            }
           ],
           "startTime": 0,
           "endTime": 39312000

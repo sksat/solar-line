@@ -95,7 +95,7 @@
       "verdict": "indeterminate",
       "explanation": "古典的ホーマン遷移には合計約2.74 km/sのΔVが必要だが、約9,971日（約27.3年）を要する。143時間の所要時間とは全く異なる次元の問題であり、作中の推進技術はホーマン級を大幅に超えている。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "departureRadius": 1433530000,
         "arrivalRadius": 2872460000,
         "departureDeltaV": 1.49,
@@ -139,7 +139,9 @@
         "circularVelocity": 12.62,
         "saturnOrbitalVelocity": 9.62
       },
-      "evidenceQuoteIds": ["ep03-quote-04"],
+      "evidenceQuoteIds": [
+        "ep03-quote-04"
+      ],
       "sources": [
         {
           "claim": "エンケラドス軌道半径: 238,020 km",
@@ -171,7 +173,7 @@
       "verdict": "conditional",
       "explanation": "143時間12分でのBrachistochrone遷移には、最短距離でも約11,165 km/sのΔVと約2.2Gの一定加速が必要。これはケストレルの推力（9.8 MN）では48,000tの質量に対して106倍不足する。ただし、Part 1と同様に質量が約452t以下であれば物理的に可能。Part 1の分析で得られた質量境界（≤299t）と整合する。なお、ASR精度の問題から巡航速度「3000 km/s」は「30 km/s」の誤認の可能性もあり、その場合はBrachistochroneではなく重力アシスト+低推力の長期遷移となる。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "departureRadius": 1433530000,
         "arrivalRadius": 2872460000,
         "distance": 1438930000,
@@ -182,7 +184,10 @@
         "thrustRatio": 106.08,
         "maxFeasibleMassT": 452.5
       },
-      "evidenceQuoteIds": ["ep03-quote-01", "ep03-quote-03"],
+      "evidenceQuoteIds": [
+        "ep03-quote-01",
+        "ep03-quote-03"
+      ],
       "sources": [
         {
           "claim": "所要時間143時間12分",
@@ -230,7 +235,11 @@
         "stellarNavConfidence": 0.923,
         "inertialNavConfidence": 0.917
       },
-      "evidenceQuoteIds": ["ep03-quote-06", "ep03-quote-07", "ep03-quote-08"],
+      "evidenceQuoteIds": [
+        "ep03-quote-06",
+        "ep03-quote-07",
+        "ep03-quote-08"
+      ],
       "sources": [
         {
           "claim": "位置: 太陽基準14.72 AU",
@@ -280,9 +289,12 @@
         "escapeVelocityAt25RU": 4.26,
         "escapeVelocityAtTitania": 5.16,
         "circularVelocityAtTitania": 3.65,
-        "titaniaPeriodDays": 8.70
+        "titaniaPeriodDays": 8.7
       },
-      "evidenceQuoteIds": ["ep03-quote-09", "ep03-quote-10"],
+      "evidenceQuoteIds": [
+        "ep03-quote-09",
+        "ep03-quote-10"
+      ],
       "sources": [
         {
           "claim": "接近高度: 25 RU",
@@ -332,7 +344,7 @@
           "variedUnit": "t",
           "results": {
             "requiredThrustMN": 9.8,
-            "thrustRatio": 1.0,
+            "thrustRatio": 1,
             "requiredAccelG": 2.21
           },
           "feasible": true,
@@ -464,7 +476,7 @@
           "label": "土星",
           "radius": 9.58,
           "color": "#daa520",
-          "angle": 3.14,
+          "angle": 2.5093,
           "meanMotion": 6.761e-9
         },
         {
@@ -472,8 +484,8 @@
           "label": "天王星",
           "radius": 19.19,
           "color": "#88ccee",
-          "angle": 0.4,
-          "meanMotion": 2.370e-9
+          "angle": 4.8746,
+          "meanMotion": 2.37e-9
         },
         {
           "id": "nav-crisis",
@@ -534,7 +546,7 @@
           "radius": 435910,
           "color": "#cc8844",
           "angle": 1.2,
-          "meanMotion": 8.354e-6
+          "meanMotion": 0.000008354
         },
         {
           "id": "approach-25ru",

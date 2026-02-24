@@ -71,7 +71,7 @@
       "verdict": "indeterminate",
       "explanation": "古典的ホーマン遷移には合計約10.15 km/sのΔVが必要だが、約1,127日（約3.1年）を要する。これは最小エネルギーの基準値であり、72時間の期限には遅すぎる。作中の設定はホーマン級を超える推進技術を明確に前提としている。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "departureRadius": 227939200,
         "arrivalRadius": 778570000,
         "transferTimeDays": 1126.84,
@@ -100,7 +100,10 @@
       "timestamp": "00:00 - 19:20（全編）",
       "claimedDeltaV": null,
       "computedDeltaV": 8497.39,
-      "evidenceQuoteIds": ["ep01-quote-01", "ep01-quote-03"],
+      "evidenceQuoteIds": [
+        "ep01-quote-01",
+        "ep01-quote-03"
+      ],
       "assumptions": [
         "直線Brachistochrone: 半分まで加速、半分で減速",
         "最接近の幾何条件: 火星-木星間距離 約5億5,063万km（約3.68 AU）",
@@ -111,7 +114,7 @@
       "verdict": "conditional",
       "explanation": "公称スペック（48,000t、9.8 MN）では72時間での遷移に必要な加速度の約0.6%しか得られず不可能。しかし、質量についての前提条件を置けば成立しうる。境界分析により、9.8 MN推力で72時間遷移を達成するには船の質量が約299t以下である必要がある。48,000tが表記の問題で実際は48tの場合、加速度は約204 m/s²（約21g）となり、最接近距離なら約29時間で到達可能（ただし乗員への負荷は極めて大きい）。また、「嵐の回廊」が木星の重力アシストを含む何らかの省エネルギー経路を意味する可能性もある。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "departureRadius": 227939200,
         "arrivalRadius": 778570000,
         "distanceKm": 550630800,
@@ -161,7 +164,9 @@
       "timestamp": "該当なし（契約上の通常スケジュールとして言及）",
       "claimedDeltaV": null,
       "computedDeltaV": 4078.75,
-      "evidenceQuoteIds": ["ep01-quote-02"],
+      "evidenceQuoteIds": [
+        "ep01-quote-02"
+      ],
       "assumptions": [
         "72時間分析と同じBrachistochroneモデル",
         "最接近の幾何条件（約3.68 AU）",
@@ -171,7 +176,7 @@
       "verdict": "conditional",
       "explanation": "「通常の」150時間ルートでも、最接近距離で約7.55 m/s²（約0.77g）と約4,079 km/sのΔVが必要。これはケストレルの公称加速度の約37倍に相当する。ただし、150時間で成立するには船の質量が約1,297t以下であればよい。世界観は内部的に整合している（72時間は「極端」vs 150時間が「通常」）。もし船の実効質量が数百t〜千数百tの範囲であれば、150時間ルートは0.77gの加速度で成立し、これは有人宇宙船としては合理的な値である。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "distanceKm": 550630800,
         "distanceAU": 3.68,
         "requiredAccelMs2": 7.55,
@@ -205,7 +210,11 @@
         "72時間連続噴射（燃料消費モデルなし — 排気速度/比推力の公式設定なし）",
         "D-He³ 核融合パルスドライブ — 同資料に記載"
       ],
-      "evidenceQuoteIds": ["ep01-quote-03", "ep01-quote-05", "ep01-quote-06"],
+      "evidenceQuoteIds": [
+        "ep01-quote-03",
+        "ep01-quote-05",
+        "ep01-quote-06"
+      ],
       "verdict": "conditional",
       "explanation": "公称スペック（48,000t、9.8 MN）では加速度0.204 m/s²（0.02g）であり、72時間での到達距離は約340万km（0.023 AU）。惑星間遷移には約2桁不足する。しかし、質量解釈を変えると状況が大きく変わる。72時間遷移の成否は質量に強く依存し、約299t以下なら最接近時に72時間で到達可能。この値は42.8m級の小型貨物船としては妥当な範囲内にある。「約48000 t」は表記の曖昧さを含む可能性があり（48,000 kg = 48t の誤記、4,800tの桁違いなど）、確定的な判断には追加情報が必要。排気速度/比推力の設定がないため、ツィオルコフスキーの式による推進剤込みΔV余力は算出不能。",
       "parameters": {
@@ -255,9 +264,29 @@
       "scaleMode": "sqrt",
       "radiusUnit": "AU",
       "orbits": [
-        { "id": "earth", "label": "地球", "radius": 1.0, "color": "#58a6ff", "meanMotion": 1.991e-7 },
-        { "id": "mars", "label": "火星", "radius": 1.524, "color": "#f85149", "angle": 0, "meanMotion": 1.059e-7 },
-        { "id": "jupiter", "label": "木星", "radius": 5.203, "color": "#d29922", "angle": 2.094, "meanMotion": 1.678e-8 }
+        {
+          "id": "earth",
+          "label": "地球",
+          "radius": 1,
+          "color": "#58a6ff",
+          "meanMotion": 1.991e-7
+        },
+        {
+          "id": "mars",
+          "label": "火星",
+          "radius": 1.524,
+          "color": "#f85149",
+          "angle": 2.9604,
+          "meanMotion": 1.059e-7
+        },
+        {
+          "id": "jupiter",
+          "label": "木星",
+          "radius": 5.203,
+          "color": "#d29922",
+          "angle": 2.989,
+          "meanMotion": 1.678e-8
+        }
       ],
       "transfers": [
         {
@@ -274,7 +303,10 @@
           "color": "#3fb950",
           "style": "brachistochrone",
           "burnMarkers": [
-            { "angle": 0.52, "label": "加速反転" }
+            {
+              "angle": 0.52,
+              "label": "加速反転"
+            }
           ],
           "startTime": 0,
           "endTime": 259200
@@ -342,7 +374,7 @@
           "results": {
             "accelMs2": 32.78,
             "accelG": 3.34,
-            "minTimeHours": 72.0,
+            "minTimeHours": 72,
             "reachable72hAU": 3.68
           },
           "feasible": true,
@@ -391,7 +423,7 @@
           "variedUnit": "N",
           "results": {
             "accelMs2": 2.083,
-            "minTimeHours": 286.0
+            "minTimeHours": 286
           },
           "feasible": false,
           "note": "10倍でもまだ不足。最小遷移時間は約286時間。"
@@ -403,7 +435,7 @@
           "variedUnit": "N",
           "results": {
             "accelMs2": 32.79,
-            "minTimeHours": 72.0
+            "minTimeHours": 72
           },
           "feasible": true,
           "note": "48,000tの船体で72時間遷移を達成する境界条件。公称推力の約161倍。"
@@ -425,7 +457,7 @@
           "results": {
             "accelMs2": 7.56,
             "accelG": 0.77,
-            "minTimeHours": 150.0
+            "minTimeHours": 150
           },
           "feasible": true,
           "note": "0.77gの加速度は有人宇宙船として現実的な値。150時間ルートが「通常」と呼ばれることの傍証として、搭乗者に無理のない加速度である点は注目に値する。"

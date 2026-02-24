@@ -200,7 +200,7 @@
       "explanation": "※暫定: 第5話の字幕未確認のため、全航路総括は第4話までの確定値と第5話の予測値を含む。\n\nケストレル号の全航路は火星から天王星まで外側に進み、最終話で地球に帰還する。\n\n**全行程:**\n- 第1話: 火星→ガニメデ（3.68 AU）— brachistochrone 72時間\n- 第2話: 木星圏→エンケラドス（4.38 AU）— 弾道遷移 455日\n- 第3話: エンケラドス→タイタニア（9.62 AU）— brachistochrone 143時間\n- 第4-5話: タイタニア→地球（18.20 AU）— brachistochrone（損傷状態）\n\n**合計距離: 約35.9 AU**（太陽中心距離ベース）\n**最遠点: 天王星軌道 19.2 AU**\n\n太陽系の内側から外縁まで往復する壮大な航路であり、各区間の軌道力学が一貫して設計されている。質量を数百t程度と仮定すれば、全話を通じて物理的に整合する旅程と言える（第5話については暫定分析のため、字幕確認後に更新予定）。",
       "parameters": {
         "total_distance_au": 35.88,
-        "furthest_point_au": 19.20,
+        "furthest_point_au": 19.2,
         "route_legs": 4,
         "brachistochrone_legs": 3,
         "ballistic_legs": 1
@@ -409,9 +409,9 @@
         {
           "id": "earth-orbit",
           "label": "地球 (1.0 AU)",
-          "radius": 1.0,
+          "radius": 1,
           "color": "#4488ff",
-          "angle": 0,
+          "angle": 1.4706,
           "meanMotion": 1.991e-7
         },
         {
@@ -419,28 +419,28 @@
           "label": "火星 (1.52 AU)",
           "radius": 1.52,
           "color": "#ff6644",
-          "angle": 1.05
+          "angle": 1.2154
         },
         {
           "id": "jupiter-orbit",
           "label": "木星 (5.20 AU)",
-          "radius": 5.20,
+          "radius": 5.2,
           "color": "#ffaa44",
-          "angle": 2.09
+          "angle": 3.6104
         },
         {
           "id": "saturn-orbit",
           "label": "土星 (9.58 AU)",
           "radius": 9.58,
           "color": "#ddbb66",
-          "angle": 3.14
+          "angle": 2.5143
         },
         {
           "id": "uranus-orbit",
           "label": "天王星 (19.2 AU)",
           "radius": 19.2,
           "color": "#66dddd",
-          "angle": 4.19
+          "angle": 4.8762
         }
       ],
       "transfers": [
@@ -490,7 +490,7 @@
           "radius": 384400,
           "color": "#aaaaaa",
           "angle": 2.36,
-          "meanMotion": 2.662e-6
+          "meanMotion": 0.000002662
         },
         {
           "id": "earth-soi",

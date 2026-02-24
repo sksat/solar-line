@@ -8,7 +8,7 @@ use wasm_bindgen::prelude::*;
 
 use solar_line_core::kepler;
 use solar_line_core::units::{Eccentricity, Km, Mu, Radians, Seconds};
-use solar_line_core::{constants, orbits};
+use solar_line_core::{constants, ephemeris, orbits};
 
 // ---------------------------------------------------------------------------
 // Orbital mechanics functions
@@ -228,6 +228,123 @@ pub fn get_reference_orbit_constants() -> JsValue {
 }
 
 // ---------------------------------------------------------------------------
+// Ephemeris functions
+// ---------------------------------------------------------------------------
+
+/// Convert planet name string to Planet enum.
+fn parse_planet(name: &str) -> Result<ephemeris::Planet, JsError> {
+    match name.to_lowercase().as_str() {
+        "mercury" => Ok(ephemeris::Planet::Mercury),
+        "venus" => Ok(ephemeris::Planet::Venus),
+        "earth" => Ok(ephemeris::Planet::Earth),
+        "mars" => Ok(ephemeris::Planet::Mars),
+        "jupiter" => Ok(ephemeris::Planet::Jupiter),
+        "saturn" => Ok(ephemeris::Planet::Saturn),
+        "uranus" => Ok(ephemeris::Planet::Uranus),
+        "neptune" => Ok(ephemeris::Planet::Neptune),
+        _ => Err(JsError::new(&format!("Unknown planet: {}", name))),
+    }
+}
+
+/// Convert calendar date (year, month, day) to Julian Date.
+#[wasm_bindgen]
+pub fn calendar_to_jd(year: i32, month: u32, day: f64) -> f64 {
+    ephemeris::calendar_to_jd(year, month, day)
+}
+
+/// Convert Julian Date to calendar date string "YYYY-MM-DD".
+#[wasm_bindgen]
+pub fn jd_to_date_string(jd: f64) -> String {
+    ephemeris::jd_to_date_string(jd)
+}
+
+/// Compute heliocentric position of a planet at a given Julian Date.
+/// Returns { longitude (rad), distance (km), x (km), y (km) }.
+#[wasm_bindgen]
+pub fn planet_position(planet: &str, jd: f64) -> Result<JsValue, JsError> {
+    let p = parse_planet(planet)?;
+    let pos = ephemeris::planet_position(p, jd);
+
+    #[derive(Serialize)]
+    struct PosResult {
+        longitude: f64,
+        distance: f64,
+        x: f64,
+        y: f64,
+    }
+
+    let result = PosResult {
+        longitude: pos.longitude.value(),
+        distance: pos.distance.value(),
+        x: pos.x,
+        y: pos.y,
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Compute ecliptic longitude of a planet at a given Julian Date (radians).
+#[wasm_bindgen]
+pub fn planet_longitude(planet: &str, jd: f64) -> Result<f64, JsError> {
+    let p = parse_planet(planet)?;
+    Ok(ephemeris::planet_longitude(p, jd).value())
+}
+
+/// Compute phase angle from planet1 to planet2 at a given Julian Date.
+/// Returns signed angle in radians, normalized to (-π, π].
+#[wasm_bindgen]
+pub fn phase_angle(planet1: &str, planet2: &str, jd: f64) -> Result<f64, JsError> {
+    let p1 = parse_planet(planet1)?;
+    let p2 = parse_planet(planet2)?;
+    Ok(ephemeris::phase_angle(p1, p2, jd).value())
+}
+
+/// Synodic period between two planets (seconds).
+#[wasm_bindgen]
+pub fn synodic_period(planet1: &str, planet2: &str) -> Result<f64, JsError> {
+    let p1 = parse_planet(planet1)?;
+    let p2 = parse_planet(planet2)?;
+    Ok(ephemeris::synodic_period(p1, p2).value())
+}
+
+/// Required phase angle for a Hohmann transfer (radians).
+#[wasm_bindgen]
+pub fn hohmann_phase_angle(departure: &str, arrival: &str) -> Result<f64, JsError> {
+    let p1 = parse_planet(departure)?;
+    let p2 = parse_planet(arrival)?;
+    Ok(ephemeris::hohmann_phase_angle(p1, p2).value())
+}
+
+/// Hohmann transfer time between two planets (seconds).
+#[wasm_bindgen]
+pub fn hohmann_transfer_time(departure: &str, arrival: &str) -> Result<f64, JsError> {
+    let p1 = parse_planet(departure)?;
+    let p2 = parse_planet(arrival)?;
+    Ok(ephemeris::hohmann_transfer_time(p1, p2).value())
+}
+
+/// Find the next Hohmann transfer launch window after a given Julian Date.
+/// Returns Julian Date of the window, or null if not found within search range.
+#[wasm_bindgen]
+pub fn next_hohmann_window(
+    departure: &str,
+    arrival: &str,
+    after_jd: f64,
+) -> Result<JsValue, JsError> {
+    let p1 = parse_planet(departure)?;
+    let p2 = parse_planet(arrival)?;
+    match ephemeris::next_hohmann_window(p1, p2, after_jd) {
+        Some(jd) => Ok(JsValue::from_f64(jd)),
+        None => Ok(JsValue::NULL),
+    }
+}
+
+/// Get J2000 epoch Julian Date constant.
+#[wasm_bindgen]
+pub fn j2000_jd() -> f64 {
+    ephemeris::J2000_JD
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 
@@ -350,4 +467,21 @@ mod tests {
 
     // Validation error tests require JsError which only works on wasm targets.
     // Error paths are tested via the TS round-trip tests and wasm-bindgen-test.
+
+    #[test]
+    fn test_calendar_to_jd_j2000() {
+        let jd = calendar_to_jd(2000, 1, 1.5);
+        assert!((jd - 2_451_545.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_jd_to_date_string_j2000() {
+        let s = jd_to_date_string(2_451_545.0);
+        assert_eq!(s, "2000-01-01");
+    }
+
+    #[test]
+    fn test_j2000_jd_constant() {
+        assert!((j2000_jd() - 2_451_545.0).abs() < 1e-10);
+    }
 }

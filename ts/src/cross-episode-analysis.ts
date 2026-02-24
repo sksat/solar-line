@@ -7,7 +7,9 @@
  * Human directive: エピソード間の整合性も考察したい
  */
 
-import type { SummaryReport, ComparisonTable, ComparisonRow } from "./report-types.ts";
+import type { SummaryReport, ComparisonTable, ComparisonRow, OrbitalDiagram } from "./report-types.ts";
+import { computeTimeline, type TimelineEvent } from "./timeline-analysis.ts";
+import { calendarToJD, jdToDateString, planetPosition } from "./ephemeris.ts";
 
 /** Ship specifications from worldbuilding + episode depictions */
 export const SHIP_SPECS = {
@@ -229,6 +231,65 @@ export function buildDeltaVScalingTable(): ComparisonTable {
   };
 }
 
+/** Build the planetary positions and timeline table */
+export function buildTimelineTable(): ComparisonTable {
+  // Use 2240 as a representative epoch for the SF timeline
+  const timeline = computeTimeline(calendarToJD(2240, 1, 1));
+
+  const rows: ComparisonRow[] = timeline.events.map((event) => ({
+    metric: `EP${event.episode}: ${event.description.split("→")[0].trim()} → ${event.description.split("→").slice(-1)[0].trim()}`,
+    values: {
+      1: event.episode === 1 ? `${event.departureDate} → ${event.arrivalDate}` : "—",
+      2: event.episode === 2 ? `${event.departureDate} → ${event.arrivalDate}` : "—",
+      3: event.episode === 3 ? `${event.departureDate} → ${event.arrivalDate}` : "—",
+      4: event.episode === 4 ? `${event.departureDate} → ${event.arrivalDate}` : "—",
+      5: "—",
+    },
+    status: "ok" as const,
+    note: event.notes,
+  }));
+
+  return {
+    caption: "推定タイムライン（惑星位置に基づく）",
+    episodes: [1, 2, 3, 4, 5],
+    rows,
+  };
+}
+
+/** Generate timeline Markdown section content */
+export function buildTimelineMarkdown(): string {
+  const timeline = computeTimeline(calendarToJD(2240, 1, 1));
+
+  const AU_KM = 149_597_870.7;
+  const DEG = 180 / Math.PI;
+
+  const eventLines = timeline.events.map((event) => {
+    const phaseDeg = (event.phaseAngleAtDeparture * DEG).toFixed(1);
+    return `- **第${event.episode}話**: ${event.departureDate} 出発 → ${event.arrivalDate} 到着（${event.durationHours < 200 ? event.durationHours + "時間" : (event.durationHours / 24).toFixed(0) + "日"}）\n  - 出発時位相角: ${phaseDeg}° / ${event.notes}`;
+  });
+
+  return `これまでの分析では、各軌道遷移のΔV計算のみを行い、目的天体が到着時にその位置に実際に存在するかを検証していなかった。ここでは、JPLの平均軌道要素から惑星の黄経を計算し、各遷移が成立する惑星配置と太陽系日時を推定する。
+
+**前提**: 作品の時代設定は未特定だが、惑星配置の周期性から複数のエポックで計算可能。ここでは2240年代を代表例として使用する。
+
+### 推定タイムライン（検索開始: ${timeline.searchEpoch}）
+
+${eventLines.join("\n")}
+
+**全行程: ${timeline.totalDurationDays.toFixed(0)}日間** — 第2話の弾道遷移（約455日）が旅程の大部分を占める。
+
+### 惑星配置の整合性
+
+各遷移について、出発時と到着時の惑星位置を計算した結果:
+
+1. **EP01 (火星→木星)**: 火星-木星最接近付近で出発。Brachistochrone遷移では位相角の制約は緩いが、距離が近いほどΔVが小さくなるため、最接近付近が最適。
+2. **EP02 (木星→土星)**: 木星脱出後の弾道遷移では、太陽系双曲線軌道で自然に土星に到達。455日の飛行時間中に土星が適切な位置に移動する必要があり、木星-土星間の位相角が重要。
+3. **EP03 (土星→天王星)**: 143時間のBrachistochrone遷移。土星-天王星間距離は惑星配置によって9.6〜28.5 AUの範囲で変動する。
+4. **EP04-05 (天王星→地球)**: 約18.2 AUの帰還航路。天王星は公転周期84年のため、数日〜数か月の遷移時間中にほとんど移動しない。
+
+${timeline.consistencyNotes.length > 0 ? "\n### 注記\n\n" + timeline.consistencyNotes.map((n) => `- ${n}`).join("\n") : ""}`;
+}
+
 /** Generate the complete cross-episode consistency report */
 export function generateCrossEpisodeReport(): SummaryReport {
   return {
@@ -270,6 +331,11 @@ export function generateCrossEpisodeReport(): SummaryReport {
 
 第2話の弾道遷移（約455日）のみがBrachistochroneではなく、損傷状態での受動的な軌道遷移である点も物語と整合する。全航路の合計距離は約35.9 AU。`,
         table: buildRouteContinuityTable(),
+      },
+      {
+        heading: "惑星配置と太陽系タイムライン",
+        markdown: buildTimelineMarkdown(),
+        table: buildTimelineTable(),
       },
       {
         heading: "Brachistochrone ΔV スケーリング",

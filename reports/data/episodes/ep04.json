@@ -125,7 +125,7 @@
       "verdict": "indeterminate",
       "explanation": "古典的ホーマン遷移には合計約15.94 km/sのΔVが必要で、約16.1年を要する。天王星→地球は太陽系で最も長い内惑星への帰還軌道の一つであり、ΔVの大部分（11.28 km/s）は地球軌道での減速に消費される。作中の描写では巡行加速で「太陽に向かって落ちる」と言及しており、ホーマン遷移よりも高推力のBrachistochrone型遷移を示唆している。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "departureRadius": 2872460000,
         "arrivalRadius": 149598023,
         "departureDeltaV": 4.66,
@@ -174,7 +174,13 @@
         "realMagneticTiltDeg": 59.7,
         "tiltAccuracyPercent": 99.5
       },
-      "evidenceQuoteIds": ["ep04-quote-06", "ep04-quote-07", "ep04-quote-08", "ep04-quote-09", "ep04-quote-15"],
+      "evidenceQuoteIds": [
+        "ep04-quote-06",
+        "ep04-quote-07",
+        "ep04-quote-08",
+        "ep04-quote-09",
+        "ep04-quote-15"
+      ],
       "sources": [
         {
           "claim": "天王星磁軸傾斜: 60°",
@@ -224,7 +230,9 @@
         "avgSpeedAt100MillionKm": 842,
         "avgSpeedAtSaturnUranusKms": 12112
       },
-      "evidenceQuoteIds": ["ep04-quote-14"],
+      "evidenceQuoteIds": [
+        "ep04-quote-14"
+      ],
       "sources": [
         {
           "claim": "5隻以上、33時間で到着",
@@ -253,10 +261,13 @@
         "departureRadius": 435910,
         "escapeVelocity": 5.16,
         "circularVelocity": 3.65,
-        "uranusOrbitalVelocity": 6.80,
+        "uranusOrbitalVelocity": 6.8,
         "damagedThrustMN": 6.37
       },
-      "evidenceQuoteIds": ["ep04-quote-11", "ep04-quote-12"],
+      "evidenceQuoteIds": [
+        "ep04-quote-11",
+        "ep04-quote-12"
+      ],
       "sources": [
         {
           "claim": "タイタニア軌道半径: 435,910 km",
@@ -288,7 +299,7 @@
       "verdict": "conditional",
       "explanation": "48,000 tの設定質量で65%推力の場合、天王星→地球のBrachistochrone遷移には最短距離でも約105日を要し、ΔVは約1,202 km/sとなる。加速度は0.0135G（0.133 m/s²）と非常に低い。ただし、これまでのエピソードと同様に実効質量が数百トンであれば、大幅に短縮される。例えば300 tなら加速度は2.16G（21.2 m/s²）となり、わずか数日で到達可能。さらに65%推力の制限により、以前のエピソードよりも遷移に制約がかかる。",
       "parameters": {
-        "mu": 1.32712440041e11,
+        "mu": 132712440041,
         "departureRadius": 2872460000,
         "arrivalRadius": 149598023,
         "distance": 2722861977,
@@ -299,7 +310,10 @@
         "timeSec": 9059281,
         "timeDays": 104.9
       },
-      "evidenceQuoteIds": ["ep04-quote-10", "ep04-quote-12"],
+      "evidenceQuoteIds": [
+        "ep04-quote-10",
+        "ep04-quote-12"
+      ],
       "sources": [
         {
           "claim": "目的地は地球",
@@ -481,9 +495,9 @@
         {
           "id": "earth",
           "label": "地球",
-          "radius": 1.0,
+          "radius": 1,
           "color": "#4488ff",
-          "angle": 0.0,
+          "angle": 1.4706,
           "meanMotion": 1.991e-7
         },
         {
@@ -491,21 +505,21 @@
           "label": "火星",
           "radius": 1.524,
           "color": "#ff4444",
-          "angle": 1.2
+          "angle": 1.2154
         },
         {
           "id": "jupiter",
           "label": "木星",
           "radius": 5.203,
           "color": "#dd8844",
-          "angle": 2.5
+          "angle": 3.6104
         },
         {
           "id": "saturn",
           "label": "土星",
           "radius": 9.58,
           "color": "#daa520",
-          "angle": 4.0,
+          "angle": 2.5143,
           "meanMotion": 6.761e-9
         },
         {
@@ -513,8 +527,8 @@
           "label": "天王星",
           "radius": 19.19,
           "color": "#88ccee",
-          "angle": 3.14,
-          "meanMotion": 2.370e-9
+          "angle": 4.8762,
+          "meanMotion": 2.37e-9
         }
       ],
       "transfers": [
@@ -537,7 +551,7 @@
               "label": "出発ΔV"
             },
             {
-              "angle": 0.0,
+              "angle": 0,
               "label": "到着ΔV"
             }
           ],
@@ -568,7 +582,7 @@
           "radius": 435910,
           "color": "#cc8844",
           "angle": 1.2,
-          "meanMotion": 8.354e-6
+          "meanMotion": 0.000008354
         }
       ],
       "transfers": [
