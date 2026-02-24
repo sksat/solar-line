@@ -1614,7 +1614,7 @@ describe("renderSummaryPage", () => {
   it("includes navigation links", () => {
     const html = renderSummaryPage(sampleSummaryReport);
     assert.ok(html.includes("トップ"));
-    assert.ok(html.includes("セッションログ"));
+    assert.ok(html.includes("ログ"));
   });
 
   it("includes summary page links in nav when provided", () => {
@@ -1722,7 +1722,7 @@ describe("layoutHtml with summaryPages", () => {
     const html = layoutHtml("テスト", "<p>content</p>", ".");
     // Only standard nav links
     assert.ok(html.includes("トップ"));
-    assert.ok(html.includes("セッションログ"));
+    assert.ok(html.includes("ログ"));
   });
 });
 
@@ -2822,7 +2822,7 @@ describe("renderTranscriptionPage", () => {
     const html = renderTranscriptionPage(phase1Only);
     assert.ok(html.includes("トップ"));
     assert.ok(html.includes("文字起こし"));
-    assert.ok(html.includes("セッションログ"));
+    assert.ok(html.includes("ログ"));
   });
 
   it("escapes HTML in dialogue text", () => {

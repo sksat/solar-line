@@ -260,8 +260,28 @@ li { margin: 0.25rem 0; }
 .collapsed-scenarios { margin-top: 0.5rem; }
 .collapsed-scenarios summary { cursor: pointer; color: #8b949e; font-size: 0.85em; }
 .collapsed-scenarios summary:hover { color: var(--accent); }
-nav { margin-bottom: 2rem; }
-nav a { margin-right: 1rem; }
+nav { margin-bottom: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0; }
+nav a { padding: 0.3rem 0.6rem; border-radius: 4px; white-space: nowrap; }
+nav a:hover { background: var(--surface); text-decoration: none; }
+nav .nav-sep { color: var(--border); margin: 0 0.1rem; user-select: none; }
+.nav-dropdown { position: relative; display: inline-block; }
+.nav-dropdown-btn {
+  background: none; border: none; color: var(--accent); cursor: pointer;
+  font: inherit; padding: 0.3rem 0.6rem; border-radius: 4px; white-space: nowrap;
+}
+.nav-dropdown-btn:hover { background: var(--surface); }
+.nav-dropdown-btn::after { content: " \u25BE"; font-size: 0.7em; }
+.nav-dropdown-menu {
+  display: none; position: absolute; top: 100%; left: 0; z-index: 100;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+  padding: 0.4rem 0; min-width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu { display: block; }
+.nav-dropdown-menu a {
+  display: block; padding: 0.4rem 0.8rem; border-radius: 0; font-size: 0.9em;
+}
+.nav-dropdown-menu a:hover { background: var(--border); }
 .ep-nav-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1rem 0; padding: 0.75rem 1rem; }
 .ep-nav-label { font-weight: 600; color: #8b949e; font-size: 0.85em; margin-right: 0.25rem; }
 .ep-nav-chip {
@@ -468,6 +488,10 @@ footer {
 .phase-done { color: var(--green); font-weight: 600; }
 .phase-partial { color: var(--yellow); font-weight: 600; }
 @media (max-width: 600px) {
+  body { padding: 1rem 0.5rem; }
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.2rem; }
+  .card { padding: 0.75rem; }
   .calc-control { grid-template-columns: 1fr; gap: 0.25rem; }
   .comparison-table { font-size: 0.8em; }
   .comparison-table td, .comparison-table th { padding: 0.3rem; }
@@ -477,13 +501,17 @@ footer {
   .timeline-track { padding-left: 1.5rem; }
   .data-table { font-size: 0.75em; }
   .dialogue-table .speaker { font-size: 0.8em; }
+  .video-card { flex: 1 1 100%; min-width: 0; }
+  .orbital-animation-controls { flex-wrap: wrap; }
+  .ep-nav-strip { gap: 0.3rem; padding: 0.5rem; }
+  pre { font-size: 0.8em; padding: 0.75rem; }
 }
 `;
 
 /** Wrap content in the common HTML layout */
 export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"], description?: string): string {
   const summaryNav = summaryPages && summaryPages.length > 0
-    ? summaryPages.map(p => ` <a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`).join("")
+    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">分析レポート</button><span class="nav-dropdown-menu">${summaryPages.map(p => `<a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`).join("")}</span></span>`
     : "";
   const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考察`;
   const ogDescription = description
@@ -506,7 +534,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav><a href="${basePath}/index.html">トップ</a>${summaryNav} <a href="${basePath}/transcriptions/index.html">文字起こし</a> <a href="${basePath}/logs/index.html">セッションログ</a></nav>
+<nav><a href="${basePath}/index.html">トップ</a>${summaryNav}<span class="nav-sep">|</span><a href="${basePath}/transcriptions/index.html">文字起こし</a><span class="nav-sep">|</span><a href="${basePath}/logs/index.html">ログ</a></nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a></footer>
 <script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}});</script>

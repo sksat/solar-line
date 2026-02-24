@@ -1,6 +1,6 @@
 # Task 067: ケイ表記統一 & ライ検証
 
-## Status: IN_PROGRESS
+## Status: DONE
 
 ## Motivation
 
@@ -8,22 +8,21 @@ Human directives:
 - 「ケイは物語的に人間として描写されているのでケイと表記したい」
 - 「ライなんて人いたっけ」
 
-## Scope
+## Completed
 
 ### ケイ表記
-- Rename "ケストレルAI" / "ケストレルAI（ケイ）" to "ケイ" as primary display name
+- Renamed "ケストレルAI" / "ケストレルAI（ケイ）" → "ケイ" across all 15 JSON files
 - Speaker ID remains `kestrel-ai` for data consistency
-- Update all speaker JSON files, dialogue JSON, episode reports, summary reports
-- Update CLAUDE.md reference from "ケストレルAI（ケイ）" to "ケイ"
+- Updated CLAUDE.md reference
 
-### ライ検証
-- Verify character "ライ" exists in the original source material
-- If incorrect, determine correct name and fix across all data files
-- If correct but obscure, add clarifying notes
+### ライ → 船乗り
+- "ライ" name was fabricated during Phase 2 dialogue attribution (not in raw VTT/Whisper)
+- Character exists in ep01 (~9:09, information about pursuing ships) and ep05 (Ganymede control)
+- Renamed to "船乗り" (unnamed sailor) as descriptive placeholder
+- Added notes documenting the name is unverified
 
-## Files to Update
-- `reports/data/episodes/ep*_speakers.json` (nameJa field)
-- `reports/data/episodes/ep*_dialogue.json` (speakerName fields)
-- `reports/data/episodes/ep*.json` (dialogue quotes)
-- `reports/data/summary/*.json` (any ケストレルAI references)
-- `CLAUDE.md` (character reference)
+## Files Updated
+- `reports/data/episodes/ep*_speakers.json`
+- `reports/data/episodes/ep*_dialogue.json`
+- `reports/data/episodes/ep*.json`
+- `CLAUDE.md`
