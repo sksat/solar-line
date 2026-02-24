@@ -98,6 +98,24 @@ describe("markdownToHtml", () => {
     assert.ok(html.includes("&lt;div&gt;test&lt;/div&gt;"));
   });
 
+  it("extracts language class from fenced code blocks", () => {
+    const html = markdownToHtml("```typescript\nconst x = 1;\n```");
+    assert.ok(html.includes('<code class="language-typescript">'));
+    assert.ok(html.includes("const x = 1;"));
+  });
+
+  it("handles code blocks without language tag", () => {
+    const html = markdownToHtml("```\nplain text\n```");
+    assert.ok(html.includes("<pre><code>"));
+    assert.ok(!html.includes('class="language-'));
+  });
+
+  it("escapes language tag in code blocks", () => {
+    const html = markdownToHtml('```foo<script>\nalert(1)\n```');
+    assert.ok(!html.includes("<script>"));
+    assert.ok(html.includes("&lt;script&gt;"));
+  });
+
   it("handles empty input", () => {
     assert.equal(markdownToHtml(""), "");
   });

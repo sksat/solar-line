@@ -49,7 +49,9 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
         inCodeBlock = false;
       } else {
         closeList();
-        output.push("<pre><code>");
+        const lang = line.slice(3).trim();
+        const langClass = lang ? ` class="language-${escapeHtml(lang)}"` : "";
+        output.push(`<pre><code${langClass}>`);
         inCodeBlock = true;
       }
       continue;
@@ -277,6 +279,7 @@ pre {
   overflow-x: auto;
   margin: 1rem 0;
 }
+pre code.hljs { background: transparent; padding: 0; }
 code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
 p code { background: var(--surface); padding: 0.2em 0.4em; border-radius: 3px; }
 ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }
@@ -605,12 +608,14 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/github-dark.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}<span class="nav-sep">|</span><a href="${basePath}/transcriptions/index.html">文字起こし</a><span class="nav-sep">|</span><a href="${basePath}/logs/index.html">ログ</a></nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a></footer>
-<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}});</script>
+<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}if(typeof hljs!=="undefined"){hljs.highlightAll()}});</script>
 </body>
 </html>`;
 }
