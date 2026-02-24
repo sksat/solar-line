@@ -261,6 +261,7 @@ version = "0.1.0"
 dependencies = [
  "serde",
  "serde-wasm-bindgen",
+ "serde_json",
  "solar-line-core",
  "wasm-bindgen",
  "wasm-bindgen-test",

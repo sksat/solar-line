@@ -1282,6 +1282,152 @@ pub fn dag_subgraph(state: JsValue, tag: &str, depth: usize) -> Result<JsValue, 
 }
 
 // ---------------------------------------------------------------------------
+// Mass timeline analysis
+// ---------------------------------------------------------------------------
+
+/// Compute propellant consumed (kg) during a burn.
+/// pre_burn_mass_kg: total mass before burn, delta_v_km_s: ΔV, isp_s: specific impulse.
+#[wasm_bindgen]
+pub fn mass_propellant_consumed(pre_burn_mass_kg: f64, delta_v_km_s: f64, isp_s: f64) -> f64 {
+    solar_line_core::mass_timeline::propellant_consumed(pre_burn_mass_kg, delta_v_km_s, isp_s)
+}
+
+/// Post-burn mass (kg) after propellant consumption.
+#[wasm_bindgen]
+pub fn mass_post_burn(pre_burn_mass_kg: f64, delta_v_km_s: f64, isp_s: f64) -> f64 {
+    solar_line_core::mass_timeline::post_burn_mass(pre_burn_mass_kg, delta_v_km_s, isp_s)
+}
+
+/// Compute a full mass timeline from events.
+///
+/// Input: JSON object with fields:
+///   name: string, initial_total_kg: number, initial_dry_kg: number,
+///   events: [{ time_h, episode, label, kind: { type, ...params } }, ...]
+///
+/// Output: JSON object with fields:
+///   name, initial_mass_kg, initial_dry_mass_kg, snapshots: [{ time_h, total_mass_kg, dry_mass_kg, propellant_kg, episode }, ...]
+#[wasm_bindgen]
+pub fn mass_compute_timeline(input: JsValue) -> Result<JsValue, JsError> {
+    let req: MassTimelineRequest =
+        serde_wasm_bindgen::from_value(input).map_err(|e| JsError::new(&e.to_string()))?;
+
+    let events: Vec<solar_line_core::mass_timeline::MassEvent> = req
+        .events
+        .iter()
+        .map(|e| solar_line_core::mass_timeline::MassEvent {
+            time_h: e.time_h,
+            kind: match &e.kind {
+                JsMassEventKind::FuelBurn {
+                    delta_v_km_s,
+                    isp_s,
+                    burn_duration_h,
+                } => solar_line_core::mass_timeline::MassEventKind::FuelBurn {
+                    delta_v_km_s: *delta_v_km_s,
+                    isp_s: *isp_s,
+                    burn_duration_h: *burn_duration_h,
+                },
+                JsMassEventKind::ContainerJettison { mass_kg } => {
+                    solar_line_core::mass_timeline::MassEventKind::ContainerJettison {
+                        mass_kg: *mass_kg,
+                    }
+                }
+                JsMassEventKind::DamageEvent { mass_kg } => {
+                    solar_line_core::mass_timeline::MassEventKind::DamageEvent { mass_kg: *mass_kg }
+                }
+                JsMassEventKind::Resupply { mass_kg } => {
+                    solar_line_core::mass_timeline::MassEventKind::Resupply { mass_kg: *mass_kg }
+                }
+            },
+            episode: e.episode,
+            label: e.label.clone(),
+        })
+        .collect();
+
+    let timeline = solar_line_core::mass_timeline::compute_timeline(
+        &req.name,
+        req.initial_total_kg,
+        req.initial_dry_kg,
+        &events,
+    );
+
+    let margin = solar_line_core::mass_timeline::propellant_margin(&timeline);
+    let consumed = solar_line_core::mass_timeline::total_propellant_consumed(&timeline);
+
+    let response = MassTimelineResponse {
+        name: timeline.name,
+        initial_mass_kg: timeline.initial_mass_kg,
+        initial_dry_mass_kg: timeline.initial_dry_mass_kg,
+        propellant_margin: margin,
+        total_consumed_kg: consumed,
+        snapshots: timeline
+            .snapshots
+            .iter()
+            .map(|s| JsMassSnapshot {
+                time_h: s.time_h,
+                total_mass_kg: s.total_mass_kg,
+                dry_mass_kg: s.dry_mass_kg,
+                propellant_kg: s.propellant_kg,
+                episode: s.episode,
+            })
+            .collect(),
+    };
+
+    serde_wasm_bindgen::to_value(&response).map_err(|e| JsError::new(&e.to_string()))
+}
+
+#[derive(Deserialize)]
+struct MassTimelineRequest {
+    name: String,
+    initial_total_kg: f64,
+    initial_dry_kg: f64,
+    events: Vec<JsMassEvent>,
+}
+
+#[derive(Deserialize)]
+struct JsMassEvent {
+    time_h: f64,
+    episode: u8,
+    label: String,
+    kind: JsMassEventKind,
+}
+
+#[derive(Deserialize)]
+#[serde(tag = "type")]
+enum JsMassEventKind {
+    #[serde(rename = "fuel_burn")]
+    FuelBurn {
+        delta_v_km_s: f64,
+        isp_s: f64,
+        burn_duration_h: f64,
+    },
+    #[serde(rename = "container_jettison")]
+    ContainerJettison { mass_kg: f64 },
+    #[serde(rename = "damage")]
+    DamageEvent { mass_kg: f64 },
+    #[serde(rename = "resupply")]
+    Resupply { mass_kg: f64 },
+}
+
+#[derive(Serialize)]
+struct MassTimelineResponse {
+    name: String,
+    initial_mass_kg: f64,
+    initial_dry_mass_kg: f64,
+    propellant_margin: f64,
+    total_consumed_kg: f64,
+    snapshots: Vec<JsMassSnapshot>,
+}
+
+#[derive(Serialize)]
+struct JsMassSnapshot {
+    time_h: f64,
+    total_mass_kg: f64,
+    dry_mass_kg: f64,
+    propellant_kg: f64,
+    episode: u8,
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 
@@ -1842,5 +1988,24 @@ mod tests {
         assert!(node_ids.contains(&"analysis.ep01".to_string()));
         assert!(node_ids.contains(&"report.ep01".to_string()));
         assert!(node_ids.contains(&"src.data".to_string()));
+    }
+
+    // ── Mass timeline WASM tests ──────────────────────────────────
+
+    #[test]
+    fn test_wasm_mass_propellant_consumed() {
+        // 300t ship, ΔV = 1000 km/s, Isp = 10⁶ s
+        let consumed = mass_propellant_consumed(300_000.0, 1000.0, 1_000_000.0);
+        assert!(consumed > 0.0 && consumed < 300_000.0);
+    }
+
+    #[test]
+    fn test_wasm_mass_post_burn() {
+        let pre = 300_000.0;
+        let post = mass_post_burn(pre, 1000.0, 1_000_000.0);
+        assert!(post > 0.0 && post < pre);
+        // Consistency: post = pre - consumed
+        let consumed = mass_propellant_consumed(pre, 1000.0, 1_000_000.0);
+        assert!((post - (pre - consumed)).abs() < 1e-6);
     }
 }
