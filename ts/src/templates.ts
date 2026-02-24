@@ -614,7 +614,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <body>
 <nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}<span class="nav-sep">|</span><a href="${basePath}/transcriptions/index.html">文字起こし</a><span class="nav-sep">|</span><a href="${basePath}/logs/index.html">ログ</a></nav>
 ${content}
-<footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a></footer>
+<footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a> | <a href="${basePath}/doc/solar_line_core/index.html">API Docs</a></footer>
 <script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}if(typeof hljs!=="undefined"){hljs.highlightAll()}});</script>
 </body>
 </html>`;

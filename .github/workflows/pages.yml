@@ -36,6 +36,9 @@ jobs:
       # Build WASM for browser (--target web)
       - run: wasm-pack build --target web --out-dir ../../ts/pkg crates/solar-line-wasm
 
+      # Build rustdoc for API documentation
+      - run: cargo doc --no-deps --document-private-items
+
       - run: npm ci
         working-directory: ts
 

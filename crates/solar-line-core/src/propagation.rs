@@ -98,7 +98,7 @@ pub struct IntegratorConfig {
 }
 
 /// Derivative of state: (velocity, acceleration).
-/// Returns (dr/dt, dv/dt) as raw f64 arrays [x,y,z] each.
+/// Returns (dr/dt, dv/dt) as raw f64 arrays \[x,y,z\] each.
 fn derivatives(
     pos: [f64; 3],
     vel: [f64; 3],
@@ -153,7 +153,7 @@ fn derivatives(
 
 /// Perform one RK4 step.
 ///
-/// Takes position [x,y,z] in km, velocity [vx,vy,vz] in km/s,
+/// Takes position \[x,y,z\] in km, velocity \[vx,vy,vz\] in km/s,
 /// time in seconds, and returns updated (pos, vel).
 fn rk4_step(
     pos: [f64; 3],

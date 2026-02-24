@@ -373,9 +373,34 @@ export function build(config: BuildConfig): void {
     fs.copyFileSync(animSrc, path.join(outDir, "orbital-animation.js"));
   }
 
+  // Copy rustdoc if available
+  const rustdocCandidates = [
+    path.join(dataDir, "..", "target", "doc"),          // from reports/../target/doc
+    path.resolve(path.dirname(import.meta.filename ?? ""), "..", "..", "target", "doc"), // from ts/../../target/doc
+  ];
+  const rustdocDir = rustdocCandidates.find(d => fs.existsSync(d) && fs.existsSync(path.join(d, "solar_line_core")));
+  if (rustdocDir) {
+    const docOutDir = path.join(outDir, "doc");
+    // Copy entire rustdoc output recursively
+    function copyDirRecursive(src: string, dest: string): void {
+      ensureDir(dest);
+      for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        if (entry.isDirectory()) {
+          copyDirRecursive(srcPath, destPath);
+        } else {
+          fs.copyFileSync(srcPath, destPath);
+        }
+      }
+    }
+    copyDirRecursive(rustdocDir, docOutDir);
+  }
+
   const totalTransfers = episodes.reduce((sum, ep) => sum + ep.transfers.length, 0);
+  const docStatus = rustdocDir ? " + rustdoc" : "";
   console.log(
-    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${summaries.length} summaries, ${transcriptions.length} transcriptions, ${logs.length} logs → ${outDir}`,
+    `Built: ${episodes.length} episodes, ${totalTransfers} transfers, ${summaries.length} summaries, ${transcriptions.length} transcriptions, ${logs.length} logs${docStatus} → ${outDir}`,
   );
 }
 
