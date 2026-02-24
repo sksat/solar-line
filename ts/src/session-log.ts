@@ -241,12 +241,23 @@ export function parseSession(jsonlContent: string): ParsedSession {
   };
 }
 
-/** Format an ISO timestamp to HH:MM */
+/** Convert a UTC Date to JST (UTC+9) Date */
+function toJST(d: Date): Date {
+  return new Date(d.getTime() + 9 * 60 * 60 * 1000);
+}
+
+/** Format a JST Date as YYYY-MM-DD */
+function formatDateJST(d: Date): string {
+  const jst = toJST(d);
+  return jst.toISOString().slice(0, 10);
+}
+
+/** Format an ISO timestamp to HH:MM (JST) */
 function formatTime(iso: string): string {
   if (!iso) return "--:--";
   try {
-    const d = new Date(iso);
-    return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
+    const jst = toJST(new Date(iso));
+    return `${String(jst.getUTCHours()).padStart(2, "0")}:${String(jst.getUTCMinutes()).padStart(2, "0")}`;
   } catch {
     return "--:--";
   }
@@ -283,7 +294,7 @@ export function renderSessionMarkdown(session: ParsedSession, title: string, opt
   lines.push("");
   lines.push("## セッション情報");
   lines.push("");
-  lines.push(`- **日時**: ${metadata.startTime ? new Date(metadata.startTime).toISOString().slice(0, 10) : "不明"}`);
+  lines.push(`- **日時**: ${metadata.startTime ? formatDateJST(new Date(metadata.startTime)) : "不明"} (JST)`);
   lines.push(`- **所要時間**: ${formatDuration(metadata.startTime, metadata.endTime)}`);
   lines.push(`- **モデル**: ${metadata.model}`);
   lines.push(`- **メッセージ数**: ${metadata.messageCount}`);
@@ -363,13 +374,13 @@ export function renderSessionMarkdown(session: ParsedSession, title: string, opt
   return lines.join("\n");
 }
 
-/** Generate the output filename in YYYY-MM-DD-slug format */
+/** Generate the output filename in YYYY-MM-DD-slug format (date in JST) */
 export function generateFilename(startTime: string, slug: string): string {
   let date: string;
   try {
-    date = new Date(startTime).toISOString().slice(0, 10);
+    date = formatDateJST(new Date(startTime));
   } catch {
-    date = new Date().toISOString().slice(0, 10);
+    date = formatDateJST(new Date());
   }
 
   // Normalize slug: lowercase, replace non-alphanumeric with hyphens, collapse

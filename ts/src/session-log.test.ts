@@ -530,10 +530,13 @@ describe("renderSessionMarkdown", () => {
     assert.ok(md.startsWith("# Episode 1 分析セッション\n"));
   });
 
-  it("includes session metadata in Japanese", () => {
+  it("includes session metadata in Japanese with JST", () => {
     const md = renderSessionMarkdown(minimalSession, "Test");
     assert.ok(md.includes("セッション情報"));
     assert.ok(md.includes("日時"));
+    assert.ok(md.includes("(JST)"));
+    // 2026-02-23T18:00:00Z = 2026-02-24 JST
+    assert.ok(md.includes("2026-02-24"));
     assert.ok(md.includes("所要時間"));
     assert.ok(md.includes("モデル"));
     assert.ok(md.includes("claude-opus-4-6"));
@@ -547,15 +550,17 @@ describe("renderSessionMarkdown", () => {
     assert.ok(md.includes("| Bash | 1 |"));
   });
 
-  it("renders user messages with timestamp", () => {
+  it("renders user messages with JST timestamp", () => {
     const md = renderSessionMarkdown(minimalSession, "Test");
-    assert.ok(md.includes("### [18:00] ユーザー"));
+    // 2026-02-23T18:00:00Z = 2026-02-24T03:00:00 JST
+    assert.ok(md.includes("### [03:00] ユーザー"));
     assert.ok(md.includes("Analyze episode 1"));
   });
 
   it("renders assistant messages with model label", () => {
     const md = renderSessionMarkdown(minimalSession, "Test");
-    assert.ok(md.includes("### [18:01] アシスタント (claude-opus-4-6)"));
+    // 2026-02-23T18:01:00Z = 2026-02-24T03:01:00 JST
+    assert.ok(md.includes("### [03:01] アシスタント (claude-opus-4-6)"));
     assert.ok(md.includes("Starting analysis."));
     assert.ok(md.includes("- `Read` — /workspace/reports/ep01.json"));
     assert.ok(md.includes("- `Bash` — Run tests"));
@@ -572,7 +577,8 @@ describe("renderSessionMarkdown", () => {
       }],
     };
     const md = renderSessionMarkdown(session, "Test");
-    assert.ok(md.includes("### [18:01] アシスタント\n"));
+    // 2026-02-23T18:01:00Z = 2026-02-24T03:01:00 JST
+    assert.ok(md.includes("### [03:01] アシスタント\n"));
     assert.ok(!md.includes("アシスタント ("));
   });
 
@@ -633,25 +639,33 @@ describe("renderSessionMarkdown", () => {
 // --- generateFilename ---
 
 describe("generateFilename", () => {
-  it("generates date-slug format", () => {
+  it("generates date-slug format in JST", () => {
+    // 2026-02-23T18:00:00Z = 2026-02-24T03:00:00 JST → date is 2026-02-24
     const result = generateFilename("2026-02-23T18:00:00Z", "episode-1-analysis");
-    assert.equal(result, "2026-02-23-episode-1-analysis.md");
+    assert.equal(result, "2026-02-24-episode-1-analysis.md");
   });
 
   it("normalizes slug with special characters", () => {
     const result = generateFilename("2026-02-23T18:00:00Z", "Episode 1 Analysis!");
-    assert.equal(result, "2026-02-23-episode-1-analysis.md");
+    assert.equal(result, "2026-02-24-episode-1-analysis.md");
   });
 
   it("falls back to 'session' for empty slug", () => {
     const result = generateFilename("2026-02-23T18:00:00Z", "");
-    assert.equal(result, "2026-02-23-session.md");
+    assert.equal(result, "2026-02-24-session.md");
+  });
+
+  it("uses JST date before midnight crossing", () => {
+    // 2026-02-23T14:00:00Z = 2026-02-23T23:00:00 JST → still 2026-02-23
+    const result = generateFilename("2026-02-23T14:00:00Z", "test");
+    assert.equal(result, "2026-02-23-test.md");
   });
 
   it("handles invalid date gracefully", () => {
     const result = generateFilename("invalid", "test");
-    // Should use today's date as fallback
-    const today = new Date().toISOString().slice(0, 10);
+    // Should use today's date (JST) as fallback
+    const jst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    const today = jst.toISOString().slice(0, 10);
     assert.equal(result, `${today}-test.md`);
   });
 });
