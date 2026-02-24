@@ -1158,15 +1158,17 @@ function scaleRadius(
  * Generate an SVG path for a Hohmann transfer ellipse arc between two circular orbits.
  * Draws a half-ellipse from departure angle to arrival (180° transfer).
  */
-function hohmannArcPath(r1px: number, r2px: number, fromAngle: number): string {
+function hohmannArcPath(r1px: number, r2px: number, fromAngle: number, toAngle?: number): string {
   // Hohmann is half an ellipse: semi-major axis = (r1+r2)/2
   const a = (r1px + r2px) / 2;
   const b = Math.sqrt(r1px * r2px); // semi-minor for visual approximation
-  // Start at departure orbit, end 180° later at arrival orbit
   const startX = r1px * Math.cos(fromAngle);
   const startY = -r1px * Math.sin(fromAngle);
-  const endX = -r1px * Math.cos(fromAngle) * (r2px / r1px);
-  const endY = r1px * Math.sin(fromAngle) * (r2px / r1px);
+  // When toAngle is provided, end at that angle on the arrival orbit;
+  // otherwise fall back to the classic 180° offset
+  const effectiveToAngle = toAngle ?? (fromAngle + Math.PI);
+  const endX = r2px * Math.cos(effectiveToAngle);
+  const endY = -r2px * Math.sin(effectiveToAngle);
   // Use SVG arc: large-arc-flag=1 for the long way around
   const sweepFlag = r2px >= r1px ? 1 : 0;
   return `M ${startX.toFixed(1)} ${startY.toFixed(1)} A ${a.toFixed(1)} ${b.toFixed(1)} 0 0 ${sweepFlag} ${endX.toFixed(1)} ${endY.toFixed(1)}`;
@@ -1176,16 +1178,17 @@ function hohmannArcPath(r1px: number, r2px: number, fromAngle: number): string {
  * Generate an SVG path for a hyperbolic escape/capture arc.
  * Draws an open curve departing from the inner orbit.
  */
-function hyperbolicArcPath(r1px: number, r2px: number, fromAngle: number): string {
+function hyperbolicArcPath(r1px: number, r2px: number, fromAngle: number, toAngle?: number): string {
   const startX = r1px * Math.cos(fromAngle);
   const startY = -r1px * Math.sin(fromAngle);
-  // End point at the outer orbit, offset by ~60° (schematic)
-  const endAngle = fromAngle + Math.PI * 0.35;
-  const endX = r2px * Math.cos(endAngle);
-  const endY = -r2px * Math.sin(endAngle);
-  // Control point for the open curve
+  // When toAngle is provided, end at that angle on the arrival orbit;
+  // otherwise fall back to the classic ~63° offset
+  const effectiveToAngle = toAngle ?? (fromAngle + Math.PI * 0.35);
+  const endX = r2px * Math.cos(effectiveToAngle);
+  const endY = -r2px * Math.sin(effectiveToAngle);
+  // Control point: midway between start and end angles, at ~70% of total radial span
   const midR = (r1px + r2px) * 0.7;
-  const midAngle = fromAngle + Math.PI * 0.15;
+  const midAngle = (fromAngle + effectiveToAngle) / 2;
   const cpX = midR * Math.cos(midAngle);
   const cpY = -midR * Math.sin(midAngle);
   return `M ${startX.toFixed(1)} ${startY.toFixed(1)} Q ${cpX.toFixed(1)} ${cpY.toFixed(1)} ${endX.toFixed(1)} ${endY.toFixed(1)}`;
@@ -1195,15 +1198,16 @@ function hyperbolicArcPath(r1px: number, r2px: number, fromAngle: number): strin
  * Generate an SVG path for a brachistochrone (constant-thrust) transfer.
  * Drawn as a smooth Bezier arc with a distinct visual style (dashed in CSS).
  */
-function brachistochroneArcPath(r1px: number, r2px: number, fromAngle: number): string {
+function brachistochroneArcPath(r1px: number, r2px: number, fromAngle: number, toAngle?: number): string {
   const startX = r1px * Math.cos(fromAngle);
   const startY = -r1px * Math.sin(fromAngle);
-  // End at arrival orbit, roughly 90° ahead
-  const endAngle = fromAngle + Math.PI * 0.5;
-  const endX = r2px * Math.cos(endAngle);
-  const endY = -r2px * Math.sin(endAngle);
-  // Midpoint "flip" marker position
-  const midAngle = fromAngle + Math.PI * 0.25;
+  // When toAngle is provided, end at that angle on the arrival orbit;
+  // otherwise fall back to the classic ~90° offset
+  const effectiveToAngle = toAngle ?? (fromAngle + Math.PI * 0.5);
+  const endX = r2px * Math.cos(effectiveToAngle);
+  const endY = -r2px * Math.sin(effectiveToAngle);
+  // Control point: midway between start and end angles, at average radius
+  const midAngle = (fromAngle + effectiveToAngle) / 2;
   const midR = (r1px + r2px) / 2;
   const cpX = midR * Math.cos(midAngle);
   const cpY = -midR * Math.sin(midAngle);
@@ -1219,13 +1223,14 @@ function transferArcPath(
   toPx: number,
 ): string {
   const fromAngle = fromOrbit.angle ?? 0;
+  const toAngle = toOrbit.angle;
   switch (style) {
     case "hohmann":
-      return hohmannArcPath(fromPx, toPx, fromAngle);
+      return hohmannArcPath(fromPx, toPx, fromAngle, toAngle);
     case "hyperbolic":
-      return hyperbolicArcPath(fromPx, toPx, fromAngle);
+      return hyperbolicArcPath(fromPx, toPx, fromAngle, toAngle);
     case "brachistochrone":
-      return brachistochroneArcPath(fromPx, toPx, fromAngle);
+      return brachistochroneArcPath(fromPx, toPx, fromAngle, toAngle);
   }
 }
 

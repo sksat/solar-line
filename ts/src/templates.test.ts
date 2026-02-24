@@ -3829,3 +3829,247 @@ describe("renderADRIndex", () => {
     assert.ok(!html.includes("承認待ちの提案"), "should not show proposed section");
   });
 });
+
+// --- Task 131: Orbital animation arrival alignment ---
+
+/**
+ * Helper: extract the last point of an SVG path from rendered HTML.
+ * Matches data-transfer-path paths and parses the endpoint coordinates.
+ */
+function extractPathEndpoint(html: string, pathId: string): { x: number; y: number } | null {
+  // Find the path element with matching data-transfer-path (d= may come before or after)
+  const pathRegex = new RegExp(`<path[^>]*data-transfer-path="${pathId}"[^>]*>`);
+  const pathRegex2 = new RegExp(`<path[^>]*data-transfer-path="${pathId}"[^/]*/>`);
+  const elemMatch = html.match(pathRegex) ?? html.match(pathRegex2);
+  if (!elemMatch) return null;
+
+  const elem = elemMatch[0];
+  const dMatch = elem.match(/d="([^"]+)"/);
+  if (!dMatch) return null;
+
+  const d = dMatch[1];
+
+  // For quadratic Bezier: M x1 y1 Q cx cy x2 y2 — endpoint is the last two numbers
+  const quadMatch = d.match(/Q\s+[\d.e+-]+\s+[\d.e+-]+\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+  if (quadMatch) {
+    return { x: parseFloat(quadMatch[1]), y: parseFloat(quadMatch[2]) };
+  }
+
+  // For SVG arc: M x1 y1 A rx ry rot flag1 flag2 x2 y2 — endpoint is the last two numbers
+  const arcMatch = d.match(/A\s+[\d.e+-]+\s+[\d.e+-]+\s+[\d.e+-]+\s+[\d.e+-]+\s+[\d.e+-]+\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+  if (arcMatch) {
+    return { x: parseFloat(arcMatch[1]), y: parseFloat(arcMatch[2]) };
+  }
+
+  return null;
+}
+
+/**
+ * Helper: extract body dot position from rendered HTML.
+ * Matches the circle element with data-orbit-id.
+ */
+function extractBodyDotPosition(html: string, orbitId: string): { x: number; y: number } | null {
+  // Find the circle with data-orbit-id and r="4" (body dot, not orbit circle)
+  const regex = new RegExp(`<circle[^>]*data-orbit-id="${orbitId}"[^>]*>`);
+  const elems = html.match(new RegExp(regex.source, "g"));
+  if (!elems) return null;
+  // Find the one with r="4" (body dot)
+  for (const elem of elems) {
+    if (!elem.includes('r="4"')) continue;
+    const cxMatch = elem.match(/cx="([\d.e+-]+)"/);
+    const cyMatch = elem.match(/cy="([\d.e+-]+)"/);
+    if (cxMatch && cyMatch) {
+      return { x: parseFloat(cxMatch[1]), y: parseFloat(cyMatch[1]) };
+    }
+  }
+  return null;
+}
+
+describe("Task 131: transfer arc arrival alignment", () => {
+  it("brachistochrone arc endpoint matches destination body position", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-arrival-brach",
+      title: "Arrival alignment test",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "from", label: "出発", radius: 1.5, color: "#f00", angle: 0.5, meanMotion: 1e-7 },
+        { id: "to", label: "到着", radius: 5.0, color: "#0f0", angle: 2.3, meanMotion: 1e-8 },
+      ],
+      transfers: [{
+        label: "Brachistochrone",
+        fromOrbitId: "from",
+        toOrbitId: "to",
+        color: "#00f",
+        style: "brachistochrone",
+        startTime: 0,
+        endTime: 259200,
+      }],
+      animation: { durationSeconds: 259200 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const endpoint = extractPathEndpoint(html, "from-to-0");
+    const bodyPos = extractBodyDotPosition(html, "to");
+    assert.ok(endpoint, "should find transfer path endpoint");
+    assert.ok(bodyPos, "should find destination body dot");
+    // The arc endpoint should be within a small tolerance of the body dot
+    const dist = Math.sqrt((endpoint.x - bodyPos.x) ** 2 + (endpoint.y - bodyPos.y) ** 2);
+    assert.ok(dist < 2, `arc endpoint (${endpoint.x}, ${endpoint.y}) should be near body dot (${bodyPos.x}, ${bodyPos.y}), distance=${dist.toFixed(1)}`);
+  });
+
+  it("hyperbolic arc endpoint matches destination body position", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-arrival-hyper",
+      title: "Hyperbolic arrival test",
+      centerLabel: "木星",
+      scaleMode: "sqrt",
+      radiusUnit: "RJ",
+      orbits: [
+        { id: "inner", label: "内側", radius: 10, color: "#f00", angle: 1.0, meanMotion: 4e-5 },
+        { id: "outer", label: "外側", radius: 50, color: "#0f0", angle: 2.5, meanMotion: 4e-6 },
+      ],
+      transfers: [{
+        label: "Hyperbolic",
+        fromOrbitId: "inner",
+        toOrbitId: "outer",
+        color: "#ff0",
+        style: "hyperbolic",
+        startTime: 0,
+        endTime: 100000,
+      }],
+      animation: { durationSeconds: 100000 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const endpoint = extractPathEndpoint(html, "inner-outer-0");
+    const bodyPos = extractBodyDotPosition(html, "outer");
+    assert.ok(endpoint, "should find transfer path endpoint");
+    assert.ok(bodyPos, "should find destination body dot");
+    const dist = Math.sqrt((endpoint.x - bodyPos.x) ** 2 + (endpoint.y - bodyPos.y) ** 2);
+    assert.ok(dist < 2, `hyperbolic arc endpoint should be near body dot, distance=${dist.toFixed(1)}`);
+  });
+
+  it("hohmann arc endpoint matches destination body position", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-arrival-hohmann",
+      title: "Hohmann arrival test",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "inner", label: "内側", radius: 1.0, color: "#f00", angle: 0, meanMotion: 2e-7 },
+        { id: "outer", label: "外側", radius: 5.2, color: "#0f0", angle: 3.5, meanMotion: 1.7e-8 },
+      ],
+      transfers: [{
+        label: "Hohmann",
+        fromOrbitId: "inner",
+        toOrbitId: "outer",
+        color: "#0ff",
+        style: "hohmann",
+        startTime: 0,
+        endTime: 50000000,
+      }],
+      animation: { durationSeconds: 50000000 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const endpoint = extractPathEndpoint(html, "inner-outer-0");
+    const bodyPos = extractBodyDotPosition(html, "outer");
+    assert.ok(endpoint, "should find transfer path endpoint");
+    assert.ok(bodyPos, "should find destination body dot");
+    const dist = Math.sqrt((endpoint.x - bodyPos.x) ** 2 + (endpoint.y - bodyPos.y) ** 2);
+    assert.ok(dist < 2, `hohmann arc endpoint should be near body dot, distance=${dist.toFixed(1)}`);
+  });
+
+  it("non-animated diagram still renders correctly (no toAngle constraint)", () => {
+    // Non-animated diagrams use the original geometric arc style
+    const diagram: OrbitalDiagram = {
+      id: "test-static",
+      title: "Static diagram",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "mars", label: "火星", radius: 1.5, color: "#f00", angle: 0 },
+        { id: "jupiter", label: "木星", radius: 5.2, color: "#0f0", angle: 2.0 },
+      ],
+      transfers: [{
+        label: "Reference",
+        fromOrbitId: "mars",
+        toOrbitId: "jupiter",
+        color: "#aaa",
+        style: "hohmann",
+        // No startTime/endTime — static reference arc
+      }],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    // Should render without errors
+    assert.ok(html.includes('<path d="M'));
+  });
+
+  it("animated diagram with multiple transfers aligns all endpoints", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-multi-transfer",
+      title: "Multi-transfer alignment",
+      centerLabel: "木星",
+      scaleMode: "sqrt",
+      radiusUnit: "RJ",
+      orbits: [
+        { id: "ganymede", label: "ガニメデ", radius: 15, color: "#f00", angle: 0.8, meanMotion: 1e-5 },
+        { id: "escape", label: "脱出", radius: 50, color: "#0f0", angle: 1.5 },
+      ],
+      transfers: [{
+        label: "Escape",
+        fromOrbitId: "ganymede",
+        toOrbitId: "escape",
+        color: "#ff0",
+        style: "hyperbolic",
+        startTime: 0,
+        endTime: 252000,
+      }],
+      animation: { durationSeconds: 252000 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const endpoint = extractPathEndpoint(html, "ganymede-escape-0");
+    const bodyPos = extractBodyDotPosition(html, "escape");
+    assert.ok(endpoint, "should find transfer path endpoint");
+    assert.ok(bodyPos, "should find destination body dot");
+    const dist = Math.sqrt((endpoint.x - bodyPos.x) ** 2 + (endpoint.y - bodyPos.y) ** 2);
+    assert.ok(dist < 2, `escape arc endpoint should be near body dot, distance=${dist.toFixed(1)}`);
+  });
+
+  it("arc start point matches departure body position", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-departure-align",
+      title: "Departure alignment test",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "from", label: "出発", radius: 1.5, color: "#f00", angle: 0.5, meanMotion: 1e-7 },
+        { id: "to", label: "到着", radius: 5.0, color: "#0f0", angle: 2.3, meanMotion: 1e-8 },
+      ],
+      transfers: [{
+        label: "Brachistochrone",
+        fromOrbitId: "from",
+        toOrbitId: "to",
+        color: "#00f",
+        style: "brachistochrone",
+        startTime: 0,
+        endTime: 259200,
+      }],
+      animation: { durationSeconds: 259200 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    // Extract the M (move-to) point from the path — this should match departure body
+    const pathElem = html.match(/<path[^>]*data-transfer-path="from-to-0"[^>]*>/);
+    assert.ok(pathElem, "should find transfer path element");
+    const match = pathElem![0].match(/d="M\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+    assert.ok(match, "should find path start point");
+    const startX = parseFloat(match![1]);
+    const startY = parseFloat(match![2]);
+    const bodyPos = extractBodyDotPosition(html, "from");
+    assert.ok(bodyPos, "should find departure body dot");
+    const dist = Math.sqrt((startX - bodyPos.x) ** 2 + (startY - bodyPos.y) ** 2);
+    assert.ok(dist < 2, `arc start (${startX}, ${startY}) should be near departure body (${bodyPos.x}, ${bodyPos.y}), distance=${dist.toFixed(1)}`);
+  });
+});
