@@ -19,7 +19,9 @@
     "process-whisper": "node --experimental-strip-types src/process-whisper-output.ts",
     "compare-transcriptions": "node --experimental-strip-types src/compare-transcriptions.ts",
     "analyze-costs": "node --experimental-strip-types src/analyze-costs.ts",
-    "test:e2e": "npx playwright test"
+    "test:e2e": "npx playwright test",
+    "dag": "node --experimental-strip-types src/dag-cli.ts",
+    "dag:seed": "node --experimental-strip-types src/dag-seed.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
