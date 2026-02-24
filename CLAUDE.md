@@ -101,6 +101,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 - **TodoWrite discipline**: Only update the todo list on state transitions (task start, task complete). Do not update between every tool call.
 - **Background long commands**: Use `run_in_background` for Bash commands that take >30s (yt-dlp, Whisper, cargo build on first run). Check with TaskOutput later.
+- **Sonnet delegation**: Use Sonnet (or Haiku) for simple, well-defined tasks (file formatting, mechanical refactors, boilerplate generation) to reduce cost and latency. Always review delegated output. Criteria for delegation: (1) clear, unambiguous specification, (2) no architectural decisions, (3) output is easily validated by tests or visual inspection. When unsure, use Opus.
 - **Subagent model selection**: Default to Haiku for exploration/research subagents. Reserve Sonnet/Opus for complex review or multi-step reasoning tasks.
 - **Subagent scope limits**: Set `max_turns` on Task calls when the exploration scope is bounded (e.g., "find this function" → max_turns: 5).
 - **Prefer dedicated tools in subagents**: Subagent prompts should explicitly prefer Read/Grep/Glob over Bash for file operations. This produces more structured output and uses fewer tokens.
