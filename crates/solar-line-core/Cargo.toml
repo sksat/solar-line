@@ -5,3 +5,6 @@ edition = "2021"
 description = "Orbital mechanics analysis for SOLAR LINE 考察"
 
 [dependencies]
+
+[dev-dependencies]
+nalgebra = "0.33"
