@@ -1,7 +1,7 @@
-/// Attitude control analysis for SOLAR LINE.
-///
-/// Analyzes pointing accuracy requirements, flip maneuver dynamics,
-/// and miss-distance sensitivity for brachistochrone trajectories.
+//! Attitude control analysis for SOLAR LINE.
+//!
+//! Analyzes pointing accuracy requirements, flip maneuver dynamics,
+//! and miss-distance sensitivity for brachistochrone trajectories.
 
 /// Miss distance (km) from pointing error during a constant-thrust burn.
 ///
@@ -79,7 +79,11 @@ pub fn flip_rcs_torque(mass_kg: f64, radius_m: f64, flip_duration_s: f64, ramp_t
 ///
 /// Returns the velocity error (km/s) from a constant pointing offset.
 ///   v_error = a * t * sin(theta)
-pub fn velocity_error_from_pointing(accel_m_s2: f64, burn_time_s: f64, pointing_error_rad: f64) -> f64 {
+pub fn velocity_error_from_pointing(
+    accel_m_s2: f64,
+    burn_time_s: f64,
+    pointing_error_rad: f64,
+) -> f64 {
     let v_error_m_s = accel_m_s2 * burn_time_s * pointing_error_rad.sin();
     v_error_m_s / 1000.0 // m/s → km/s
 }
@@ -140,7 +144,10 @@ mod tests {
         let target_miss = 10.0; // 10 km
         let theta = required_pointing_rad(accel, burn_time, target_miss);
         let actual_miss = miss_distance_km(accel, burn_time, theta);
-        assert!((actual_miss - target_miss).abs() < 0.01, "actual = {actual_miss}");
+        assert!(
+            (actual_miss - target_miss).abs() < 0.01,
+            "actual = {actual_miss}"
+        );
     }
 
     #[test]
@@ -198,10 +205,10 @@ mod tests {
     fn test_gravity_gradient_torque_nonzero() {
         // At 45°, torque is maximum
         let torque = gravity_gradient_torque(
-            3.986e14,  // Earth GM in m³/s²
-            7_000_000.0,  // 7000 km orbit
-            300_000.0,  // 300 t
-            100.0,  // 100 m length
+            3.986e14,    // Earth GM in m³/s²
+            7_000_000.0, // 7000 km orbit
+            300_000.0,   // 300 t
+            100.0,       // 100 m length
             std::f64::consts::FRAC_PI_4,
         );
         // Should be positive and significant

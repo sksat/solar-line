@@ -706,7 +706,7 @@ pub fn propagate_symplectic_ballistic(
     } else {
         (ef - e0).abs()
     };
-    let n_steps = (duration / dt).ceil() as f64;
+    let n_steps = (duration / dt).ceil();
 
     Box::new([
         final_state.pos.x.value(),
@@ -960,8 +960,16 @@ pub fn flip_rcs_torque(mass_kg: f64, radius_m: f64, flip_duration_s: f64, ramp_t
 
 /// Velocity error (km/s) from pointing misalignment.
 #[wasm_bindgen]
-pub fn velocity_error_from_pointing(accel_m_s2: f64, burn_time_s: f64, pointing_error_rad: f64) -> f64 {
-    solar_line_core::attitude::velocity_error_from_pointing(accel_m_s2, burn_time_s, pointing_error_rad)
+pub fn velocity_error_from_pointing(
+    accel_m_s2: f64,
+    burn_time_s: f64,
+    pointing_error_rad: f64,
+) -> f64 {
+    solar_line_core::attitude::velocity_error_from_pointing(
+        accel_m_s2,
+        burn_time_s,
+        pointing_error_rad,
+    )
 }
 
 /// Convert navigation accuracy fraction to pointing error (radians).
@@ -972,8 +980,16 @@ pub fn accuracy_to_pointing_error_rad(accuracy_fraction: f64) -> f64 {
 
 /// Gravity gradient torque on an elongated spacecraft (N·m).
 #[wasm_bindgen]
-pub fn gravity_gradient_torque(gm_m3_s2: f64, distance_m: f64, mass_kg: f64, length_m: f64, angle_rad: f64) -> f64 {
-    solar_line_core::attitude::gravity_gradient_torque(gm_m3_s2, distance_m, mass_kg, length_m, angle_rad)
+pub fn gravity_gradient_torque(
+    gm_m3_s2: f64,
+    distance_m: f64,
+    mass_kg: f64,
+    length_m: f64,
+    angle_rad: f64,
+) -> f64 {
+    solar_line_core::attitude::gravity_gradient_torque(
+        gm_m3_s2, distance_m, mass_kg, length_m, angle_rad,
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -1371,6 +1387,10 @@ mod tests {
         let result = powered_flyby(mu_jup, 10.0, 0.0, 0.0, 200_000.0, 1.0, 0.0, 0.0, 1.0);
         assert_eq!(result.len(), 6);
         // v_inf_out should be > v_inf_in for powered flyby
-        assert!(result[2] > 10.0, "powered flyby increases v_inf: {:.4}", result[2]);
+        assert!(
+            result[2] > 10.0,
+            "powered flyby increases v_inf: {:.4}",
+            result[2]
+        );
     }
 }

@@ -9,7 +9,7 @@
     },
     {
       "heading": "現状サマリー",
-      "markdown": "### 進捗\n\n| 指標 | 値 |\n|------|------|\n| 完了タスク | 80+ / 87 |\n| 分析済み軌道遷移 | 24 / 24（全話完了） |\n| テスト数 | 1,175（TS 998 + Rust 177、0 failures） |\n| コミット数 | 100+ |\n| ADR（設計意思決定記録） | 14件 |\n| DAGノード | 58（267エッジ） |\n\n### 判定結果\n\n| 判定 | 件数 |\n|------|------|\n| plausible（妥当） | 8 |\n| conditional（条件付き妥当） | 11 |\n| reference（参考） | 5 |\n| implausible（非現実的） | 0 |\n\n24件の軌道遷移で **非現実的な判定はゼロ**。ただし[マージン連鎖分析](/summary/cross-episode.html)によると、条件付き判定の連鎖を考慮した場合の全行程成功確率は約30-46%。\n\n### 今後のタスク\n\n- **姿勢制御精度の分析**: 推力ベクトル指向精度、フリップ機動ダイナミクス\n- **他の宇宙船・係留地の分析**: ケストレル号以外の船舶・インフラの軌道力学\n- **適応積分手法**: シンプレクティック積分、多体問題への拡張\n- **話者分離**: Speaker Diarization によるPhase 2 精度向上\n- **軌道パターンのアニメーション**: 複数パターン比較図\n\n### 設計意思決定（ADR）\n\n14件の[Architecture Decision Records](https://github.com/sksat/solar-line/tree/main/adr)で、プロジェクトの設計ポリシーを文書化しています。"
+      "markdown": "### 進捗\n\n| 指標 | 値 |\n|------|------|\n| 完了タスク | 92 / 93 |\n| 分析済み軌道遷移 | 24 / 24（全話完了） |\n| テスト数 | 1,284（TS 1,004 + Rust 206 + E2E 74、0 failures） |\n| コミット数 | 149 |\n| ADR（設計意思決定記録） | 14件 |\n| DAGノード | 64（317エッジ） |\n\n### 判定結果\n\n| 判定 | 件数 |\n|------|------|\n| plausible（妥当） | 10 |\n| conditional（条件付き妥当） | 9 |\n| reference（参考） | 5 |\n| implausible（非現実的） | 0 |\n\n24件の軌道遷移で **非現実的な判定はゼロ**。ただし[マージン連鎖分析](/summary/cross-episode.html)によると、条件付き判定の連鎖を考慮した場合の全行程成功確率は約30-46%。\n\n### 今後のタスク\n\n- **話者分離**: Speaker Diarization によるPhase 2 精度向上\n\n### 完了済みの主要タスク（最近）\n\n- ✅ **姿勢制御精度の分析**: 推力ベクトル指向精度、フリップ機動ダイナミクス（Task 064）\n- ✅ **他の宇宙船・係留地の分析**: 4種の船舶・4つの係留地・統治機構の軌道力学（Task 087）\n- ✅ **適応積分手法**: RK45 Dormand-Prince + Störmer-Verlet シンプレクティック積分（Task 063）\n- ✅ **軌道パターンのアニメーション**: 複数パターン同時比較図（Task 058）\n- ✅ **通信解析**: 光速遅延・リンクバジェット・全5話の通信描写検証（Task 065）\n- ✅ **物語的妥当性レビュー**: 全24遷移の視聴者体験との整合性検証（Task 091）\n\n### 設計意思決定（ADR）\n\n14件の[Architecture Decision Records](https://github.com/sksat/solar-line/tree/main/adr)で、プロジェクトの設計ポリシーを文書化しています。"
     },
     {
       "heading": "アーキテクチャ全体像",
@@ -17,7 +17,7 @@
     },
     {
       "heading": "Rust 軌道力学コア",
-      "markdown": "**ゼロ外部依存**で構築された軌道力学ライブラリです。WASM互換性のために外部クレートを使わず、すべての数学関数を自前で実装しています。\n\n### 主要モジュール\n\n- **`units.rs`**: ニュータイプパターンによる型安全な単位系（Km, KmPerSec, Seconds, Radians）。km と km/s を混同するバグを型レベルで防止\n- **`orbits.rs`**: vis-viva方程式、Hohmann遷移ΔV、Brachistochrone航法（加速度・ΔV・最大距離）、排気速度、質量比、Oberth効果\n- **`kepler.rs`**: Kepler方程式の Newton-Raphson 求解、離心近点角・真近点角の変換\n- **`ephemeris.rs`**: JPL平均軌道要素による惑星位置計算、位相角、会合周期、Hohmannウィンドウ\n- **`propagation.rs`**: RK4 + RK45 Dormand-Prince 適応ステップ軌道伝播。2体問題 + 推力モデル、エネルギー・角運動量保存の検証\n- **`comms.rs`**: 光速遅延、自由空間伝搬損失、通信可能性判定\n\n177のユニットテストで正確性を保証しています。"
+      "markdown": "**ゼロ外部依存**で構築された軌道力学ライブラリです。WASM互換性のために外部クレートを使わず、すべての数学関数を自前で実装しています。\n\n### 主要モジュール\n\n- **`units.rs`**: ニュータイプパターンによる型安全な単位系（Km, KmPerSec, Seconds, Radians）。km と km/s を混同するバグを型レベルで防止\n- **`orbits.rs`**: vis-viva方程式、Hohmann遷移ΔV、Brachistochrone航法（加速度・ΔV・最大距離）、排気速度、質量比、Oberth効果\n- **`kepler.rs`**: Kepler方程式の Newton-Raphson 求解、離心近点角・真近点角の変換\n- **`ephemeris.rs`**: JPL平均軌道要素による惑星位置計算、位相角、会合周期、Hohmannウィンドウ\n- **`propagation.rs`**: RK4 + RK45 Dormand-Prince 適応ステップ + Störmer-Verlet シンプレクティック軌道伝播。2体問題 + 推力モデル、エネルギー・角運動量保存の検証\n- **`flyby.rs`**: パッチドコニック重力アシスト（SOI半径、動力/無動力フライバイ、脱出速度計算）\n- **`attitude.rs`**: 姿勢制御精度（ミス距離、フリップ機動、RCSトルク、重力傾斜トルク）\n- **`comms.rs`**: 光速遅延、自由空間伝搬損失、通信可能性判定\n\n206のユニットテストで正確性を保証しています。"
     },
     {
       "heading": "WASM ブリッジ",
@@ -33,11 +33,11 @@
     },
     {
       "heading": "テスト戦略",
-      "markdown": "TDD（テスト駆動開発）を原則とし、1,175のテストで品質を保証しています。\n\n### テストの内訳\n\n- **Rust ユニットテスト** (177件): 軌道計算の精度検証。エネルギー保存則、角運動量保存、既知解との比較\n- **TypeScript ユニットテスト** (998件): テンプレート出力、データバリデーション（178件）、DAG操作（23件）、字幕パーサー、WASM結果との整合性\n- **Playwright E2E テスト** (58件): 実際のブラウザでページレンダリング検証。テーブルの正常表示、JSエラー検出、内部リンク整合性\n\n### CI パイプライン\n\nGitHub Actions で4つの並列ジョブを実行:\n1. **Rust lint + test**: `cargo fmt --check` + `cargo clippy -D warnings` + `cargo test`\n2. **TypeScript typecheck + test**: `tsc --noEmit` + `npm test`\n3. **Playwright E2E**: サイトビルド + ブラウザテスト\n4. **WASM browser build**: `wasm-pack build --target web` の成功を確認"
+      "markdown": "TDD（テスト駆動開発）を原則とし、1,284のテストで品質を保証しています。\n\n### テストの内訳\n\n- **Rust ユニットテスト** (206件): 軌道計算の精度検証。エネルギー保存則、角運動量保存、既知解との比較、RK45適応積分、シンプレクティック積分、重力アシスト\n- **TypeScript ユニットテスト** (1,004件): テンプレート出力、データバリデーション、DAG操作、字幕パーサー、WASM結果との整合性\n- **Playwright E2E テスト** (74件): 実際のブラウザでページレンダリング検証。テーブルの正常表示、JSエラー検出、内部リンク整合性\n\n### CI パイプライン\n\nGitHub Actions で4つの並列ジョブを実行:\n1. **Rust lint + test**: `cargo fmt --check` + `cargo clippy -D warnings` + `cargo test`\n2. **TypeScript typecheck + test**: `tsc --noEmit` + `npm test`\n3. **Playwright E2E**: サイトビルド + ブラウザテスト\n4. **WASM browser build**: `wasm-pack build --target web` の成功を確認"
     },
     {
       "heading": "Claude Code エージェントループ",
-      "markdown": "本プロジェクトは[Anthropicが提唱するパターン](https://www.anthropic.com/engineering/building-c-compiler)に基づき、Claude Codeエージェントが自律的に開発しています。\n\n### ワークフロー\n\n1. **タスク取得**: `current_tasks/` から未着手のタスクを選択\n2. **実装**: コード変更、テスト作成、データ更新\n3. **検証**: CI相当のチェックをローカルで実行\n4. **コミット + プッシュ**: 次のセッションへのハンドオフノートとして機能するコミットメッセージ\n5. **セッションログ**: 会話ログを抽出しGitHub Pagesで公開\n\n### 品質管理\n\n- 設計判断時に **Codex（nice-friend skill）** をセカンドオピニオンとして活用\n- **レポートレビュースキル** で可読性・正確性を定期的に検証\n- **コスト分析** でトークン使用量を最適化（キャッシュ効率97.3%）\n\n### タスク管理\n\n87のタスクファイル（`current_tasks/`）でプロジェクトの進行を追跡。各タスクにステータス（TODO/IN_PROGRESS/DONE）と完了内容を記録し、セッション間の連続性を確保。さらに DAG（有向非巡回グラフ）で分析間の依存関係を管理し、前提変更時の影響範囲を自動追跡しています。"
+      "markdown": "本プロジェクトは[Anthropicが提唱するパターン](https://www.anthropic.com/engineering/building-c-compiler)に基づき、Claude Codeエージェントが自律的に開発しています。\n\n### ワークフロー\n\n1. **タスク取得**: `current_tasks/` から未着手のタスクを選択\n2. **実装**: コード変更、テスト作成、データ更新\n3. **検証**: CI相当のチェックをローカルで実行\n4. **コミット + プッシュ**: 次のセッションへのハンドオフノートとして機能するコミットメッセージ\n5. **セッションログ**: 会話ログを抽出しGitHub Pagesで公開\n\n### 品質管理\n\n- 設計判断時に **Codex（nice-friend skill）** をセカンドオピニオンとして活用\n- **レポートレビュースキル** で可読性・正確性を定期的に検証\n- **コスト分析** でトークン使用量を最適化（キャッシュ効率97.3%）\n\n### タスク管理\n\n93のタスクファイル（`current_tasks/`）でプロジェクトの進行を追跡。各タスクにステータス（TODO/IN_PROGRESS/DONE）と完了内容を記録し、セッション間の連続性を確保。さらに DAG（有向非巡回グラフ）で分析間の依存関係を管理し、前提変更時の影響範囲を自動追跡しています。"
     },
     {
       "heading": "分析依存グラフ（DAG）",

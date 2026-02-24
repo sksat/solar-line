@@ -12,7 +12,6 @@
 /// 5. Continue heliocentric propagation
 ///
 /// This is the standard patched-conic approximation used in mission design.
-
 use crate::units::{Km, KmPerSec, Mu};
 
 /// Sphere of influence radius (km) using Hill's approximation.
@@ -84,8 +83,8 @@ pub fn unpowered_flyby(
     let v_inf_out_mag = v_inf; // conserved for unpowered flyby
 
     // Normalize the direction
-    let norm = (v_inf_out_dir[0].powi(2) + v_inf_out_dir[1].powi(2) + v_inf_out_dir[2].powi(2))
-        .sqrt();
+    let norm =
+        (v_inf_out_dir[0].powi(2) + v_inf_out_dir[1].powi(2) + v_inf_out_dir[2].powi(2)).sqrt();
 
     FlybyResult {
         turn_angle_rad: turn_angle,
@@ -115,8 +114,7 @@ pub fn powered_flyby(
     let r_p = r_periapsis.value();
     let dv = burn_dv.value();
 
-    let v_inf_mag =
-        (v_inf_in[0].powi(2) + v_inf_in[1].powi(2) + v_inf_in[2].powi(2)).sqrt();
+    let v_inf_mag = (v_inf_in[0].powi(2) + v_inf_in[1].powi(2) + v_inf_in[2].powi(2)).sqrt();
 
     // Semi-major axis (incoming hyperbola)
     let a_in = -mu / (v_inf_mag * v_inf_mag);
@@ -157,8 +155,8 @@ pub fn powered_flyby(
 
     // Rotate incoming v_inf direction by total turn angle
     let v_inf_out_dir = rodrigues_rotate(v_inf_in, flyby_plane_normal, turn_angle);
-    let norm = (v_inf_out_dir[0].powi(2) + v_inf_out_dir[1].powi(2) + v_inf_out_dir[2].powi(2))
-        .sqrt();
+    let norm =
+        (v_inf_out_dir[0].powi(2) + v_inf_out_dir[1].powi(2) + v_inf_out_dir[2].powi(2)).sqrt();
 
     FlybyResult {
         turn_angle_rad: turn_angle,
@@ -199,10 +197,7 @@ fn rodrigues_rotate(v: [f64; 3], k: [f64; 3], theta: f64) -> [f64; 3] {
 /// v_helio_out = v_planet + v_inf_out
 ///
 /// where v_inf_out = |v_inf_out| * v_inf_out_dir from the flyby result.
-pub fn heliocentric_exit_velocity(
-    planet_velocity: [f64; 3],
-    flyby: &FlybyResult,
-) -> [f64; 3] {
+pub fn heliocentric_exit_velocity(planet_velocity: [f64; 3], flyby: &FlybyResult) -> [f64; 3] {
     [
         planet_velocity[0] + flyby.v_inf_out * flyby.v_inf_out_dir[0],
         planet_velocity[1] + flyby.v_inf_out * flyby.v_inf_out_dir[1],

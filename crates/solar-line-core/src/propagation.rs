@@ -1002,10 +1002,7 @@ pub fn propagate_symplectic(
         });
     }
 
-    SymplecticResult {
-        n_steps,
-        states,
-    }
+    SymplecticResult { n_steps, states }
 }
 
 /// Propagate a ballistic orbit using Störmer-Verlet and return only the final state.
