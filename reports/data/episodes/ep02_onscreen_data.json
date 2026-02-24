@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "episode": 2,
+  "videoId": "YXZWJLKD7Oo",
+  "extractionMethod": "manual_frame_reading",
+  "extractedAt": "2026-02-24T23:30:00Z",
+  "extractedBy": "Claude Opus 4.6 (visual analysis of video frames)",
+  "frames": [
+    {
+      "timestampSec": 53,
+      "description": "EVA — ケストレル船体外部点検",
+      "subtitleText": "冷却系圧力は規定内ですが 外郭二次冷却管路で 圧力が0.04メガパスカル低下",
+      "instrumentData": {
+        "coolingPressureDrop_MPa": 0.04,
+        "coolingSystem": "外郭二次冷却管路",
+        "overallStatus": "規定内（局所的低下あり）"
+      },
+      "notes": "きりたんがEVAでケストレル船体外部を点検中。宇宙服姿。木星系背景。"
+    },
+    {
+      "timestampSec": 106,
+      "description": "木星・イオ近傍 — 並走状況",
+      "subtitleText": "視覚的並走です… 実際の相対速度は増加傾向 3時間後に最近接を外れます",
+      "instrumentData": {
+        "relativeVelocityTrend": "増加傾向",
+        "closestApproachRemaining_hours": 3,
+        "visualContext": "木星大気とイオ（推定）が背景に見える。ケストレルが木星表面に対して飛行中"
+      },
+      "notes": "木星の縞模様が画面左半分を占め、右上にイオと思われる衛星が見える。ケストレルは木星に対して並走しているように見えるが、実際は離脱中。"
+    },
+    {
+      "timestampSec": 118,
+      "description": "ケストレル船体全景 — 損傷状態",
+      "subtitleText": "この船… まだ飛ぶか？",
+      "instrumentData": null,
+      "notes": "深宇宙背景にケストレルの全体像。EP01での損傷が船体に残っている。きりたんの独白。"
+    },
+    {
+      "timestampSec": 418,
+      "description": "木星離脱航路 — イオ・トーラス外縁スカート付近（場所テロップ）",
+      "subtitleText": "地球圏・火星圏の船は依然として周回軌道を降下中… 到達まで約13時間",
+      "instrumentData": {
+        "locationLabel": "木星離脱航路 (イオ・トーラス外縁スカート付近)",
+        "jurisdiction": "木星港湾公社 / 木星圏",
+        "pursuitStatus": {
+          "pursuing_ships": "地球圏・火星圏の船",
+          "status": "周回軌道を降下中",
+          "eta_hours": 13
+        }
+      },
+      "notes": "画面左上に場所テロップ。木星大気が画面大部分を占め、イオが右上に見える。ケストレルはイオ・トーラス（イオの火山活動によるプラズマ帯）の外縁を通過中。追手の到達まで13時間という具体的な数値あり。"
+    },
+    {
+      "timestampSec": 420,
+      "description": "木星・イオ近傍（続き）",
+      "subtitleText": "地球圏・火星圏の船は依然として周回軌道を降下中… 到達まで約13時間",
+      "instrumentData": null,
+      "notes": "418sと同じシーン継続。テロップ消え、木星とイオの全景。"
+    },
+    {
+      "timestampSec": 422,
+      "description": "木星・イオ近傍（続き）",
+      "subtitleText": "地球圏・火星圏の船は依然として周回軌道を降下中… 到達まで約13時間",
+      "instrumentData": null,
+      "notes": "同上。ケストレルの小さなシルエットが木星大気の前に見える。"
+    },
+    {
+      "timestampSec": 547,
+      "description": "木星離脱航路 — 木星磁気圏縁ゲート（場所テロップ＋離脱確認）",
+      "subtitleText": "木星圏からの離脱航路に乗りました… 現在高度は50RJ",
+      "instrumentData": {
+        "locationLabel": "木星離脱航路 (木星磁気圏縁ゲート)",
+        "jurisdiction": "木星港湾公社 / 木星圏",
+        "altitude_RJ": 50,
+        "status": "離脱航路投入完了"
+      },
+      "notes": "画面左上に場所テロップ。深宇宙の星空背景。木星磁気圏の縁＝約50 RJは物理的にも概ね正しい（木星磁気圏は約50-100 RJに及ぶ）。"
+    },
+    {
+      "timestampSec": 549,
+      "description": "木星磁気圏縁ゲート（続き） — 速度確認",
+      "subtitleText": "木星圏からの離脱航路に乗りました… 現在高度は50RJ",
+      "instrumentData": null,
+      "notes": "547sの続き。同じテロップと字幕。"
+    },
+    {
+      "timestampSec": 551,
+      "description": "木星磁気圏縁ゲート — 速度・姿勢データ（最重要フレームの一つ）",
+      "subtitleText": "木星基準速度10.3キロメートル毎秒 扇状面の中心線に同調… スラストはトリムのみ",
+      "instrumentData": {
+        "locationLabel": "木星離脱航路 (木星磁気圏縁ゲート)",
+        "jurisdiction": "木星港湾公社 / 木星圏",
+        "jupiterRelativeVelocity_km_s": 10.3,
+        "trajectoryAlignment": "扇状面の中心線に同調",
+        "thrustMode": "トリムのみ（姿勢制御のみ、主推進なし）"
+      },
+      "notes": "最重要の航行パラメータ。木星基準10.3 km/sは50 RJでの脱出速度8.42 km/sを上回り、双曲線超過速度V∞≈5.93 km/sに相当。「扇状面」はイオ・トーラスの平面構造を指すと推定される。"
+    },
+    {
+      "timestampSec": 807,
+      "description": "エンケラドゥス・リレー到着（場所テロップ）",
+      "subtitleText": "電源も生命維持装置も… 人工重力装置もまだ生きています 廃墟と言うには賑やかすぎますね",
+      "instrumentData": {
+        "locationLabel": "エンケラドゥス・リレー",
+        "jurisdiction": "国際連合・火星自治連邦保護領 / 土星圏",
+        "stationSystems": {
+          "power": "稼働中",
+          "lifeSupport": "稼働中",
+          "artificialGravity": "稼働中"
+        }
+      },
+      "notes": "エンケラドス中継基地の内部。産業的な構造物、青い照明。きりたんが基地内を探索中。国際連合・火星自治連邦の保護領として土星圏に位置。"
+    },
+    {
+      "timestampSec": 812,
+      "description": "エンケラドゥス・リレー内部 — きりたんとケイ",
+      "subtitleText": "だが人が住んでいるというには… 静かすぎる",
+      "instrumentData": null,
+      "notes": "きりたんとケイがエンケラドス基地内を歩く。無人だが設備は稼働中という不気味な状況。"
+    },
+    {
+      "timestampSec": 978,
+      "description": "コックピット — 外縁航路投入シークエンス開始",
+      "subtitleText": "外縁航路投入のための推進シークエンスを開始 …点火ウィンドウまで残り5時間",
+      "instrumentData": {
+        "maneuver": "外縁航路投入",
+        "ignitionWindow_hours": 5,
+        "sequenceStatus": "開始"
+      },
+      "notes": "きりたんとケイがコックピットで。外縁航路（土星圏→天王星圏）への遷移を準備中。"
+    },
+    {
+      "timestampSec": 980,
+      "description": "コックピット（続き）",
+      "subtitleText": "外縁航路投入のための推進シークエンスを開始 …点火ウィンドウまで残り5時間",
+      "instrumentData": null,
+      "notes": "978sと同じシーン。"
+    },
+    {
+      "timestampSec": 982,
+      "description": "コックピット（続き）",
+      "subtitleText": "外縁航路投入のための推進シークエンスを開始 …点火ウィンドウまで残り5時間",
+      "instrumentData": null,
+      "notes": "同上。"
+    },
+    {
+      "timestampSec": 997,
+      "description": "NAVIGATION OVERVIEW — COIAS軌道交差警報（最重要フレーム）",
+      "subtitleText": null,
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW",
+        "systemOperator": "MARS PORT AUTHORITY",
+        "shipId": "MTS-9907/EXT-P17",
+        "alert": {
+          "system": "COIAS",
+          "type": "ORBITAL CROSS ALERT",
+          "message": "COURSE INTERSECTION IMMINENT",
+          "relativeVelocity_km_s": -0.12
+        },
+        "orbitalDiagram": {
+          "center": "SATURN",
+          "orbits": ["CELADUS ORBIT"],
+          "bodies": ["S2-ENCELADUS"],
+          "maneuvers": ["OVERS BURN"],
+          "intersection": {
+            "label": "INTERSECTION",
+            "position": "Enceladus orbit外側",
+            "indicator": "赤色ドット"
+          },
+          "vessels": {
+            "kestrel": {
+              "id": "MTS-9907/EXT-P17",
+              "trajectory": "緑色線（Saturn方面からEnceladus軌道を横切る）"
+            },
+            "unknownShip": {
+              "id": "MPA-MC-SCV-02814",
+              "trajectory": "赤色線（Enceladus軌道外から接近）",
+              "label": "MTS-99... (右端で途切れ)"
+            }
+          }
+        }
+      },
+      "notes": "EP02で最も情報量の多いフレーム。EP01の10:54フレームに相当する。NAVIGATION OVERSIEWディスプレイに土星中心の軌道図が表示され、COIASシステムによる軌道交差警報が赤色で重ね表示されている。MARS PORT AUTHORITY（火星港湾公社）のシステムであること、ケストレルの船籍番号MTS-9907/EXT-P17、大型船のIDであるMPA-MC-SCV-02814が初めて判読できた。「OVERS BURN」は「OVERSHOOT BURN」の略と推定され、EP01のPERIJOVE OVERSHOT CORRECTIONに対応する概念。"
+    },
+    {
+      "timestampSec": 1000,
+      "description": "NAVIGATION OVERVIEW（続き） — 字幕付き",
+      "subtitleText": "軌道交差警告 衝突の危険あり 相対速度0.12キロメートル毎秒",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW",
+        "alert": {
+          "system": "COIAS",
+          "relativeVelocity_km_s": 0.12,
+          "subtitleConfirmation": "字幕と画面表示が一致（0.12 km/s）"
+        }
+      },
+      "notes": "997sと同じナビゲーション画面だが、字幕が追加。画面上の「RELATIVE VELOCITY: -0.12 km/s」と字幕の「相対速度0.12キロメートル毎秒」が一致し、このパラメータを二重確認。符号の違い（-0.12 vs 0.12）は接近方向を示す。"
+    },
+    {
+      "timestampSec": 1038,
+      "description": "コックピット — 大型船検知",
+      "subtitleText": "「異常な光の消失」を 天文モニターの背景恒星観測にて検知しました",
+      "instrumentData": {
+        "detectionMethod": "背景恒星観測（天文モニター）",
+        "detectionType": "恒星掩蔽（stellar occultation）",
+        "phenomenon": "異常な光の消失",
+        "cockpitDisplay": "赤色アラート表示（ぼやけて詳細不鮮明）"
+      },
+      "notes": "恒星掩蔽による大型物体の検知。航法灯やトランスポンダをオフにした船を、背景の恒星が遮られることで発見する手法。リアルな天文学的検出方法。"
+    },
+    {
+      "timestampSec": 1048,
+      "description": "コックピット — 大型船の待ち伏せ推定",
+      "subtitleText": "おそらく… 航法灯やトランスポンダを切った上で 相対速度を限りなくゼロに近づけ ただそこに漂って待ち構えていたものと推定されます",
+      "instrumentData": {
+        "unknownVesselTactics": {
+          "navigationLights": "消灯",
+          "transponder": "オフ",
+          "relativeVelocity": "ほぼゼロ",
+          "posture": "漂流待機（ambush drift）"
+        }
+      },
+      "notes": "ケイの分析。大型船は意図的に検知を避けて待ち伏せしていた。相対速度ほぼゼロということは、ケストレルの軌道要素を事前に把握し、同じ軌道に乗っていたことを意味する。"
+    },
+    {
+      "timestampSec": 1051,
+      "description": "コックピット — きりたんとケイのクローズアップ",
+      "subtitleText": null,
+      "instrumentData": null,
+      "notes": "きりたんとケイの表情クローズアップ。字幕なし。大型船接近を受けての緊張シーン。"
+    }
+  ],
+  "summary": {
+    "keyParametersExtracted": {
+      "jupiterDepartureAltitude_RJ": 50,
+      "jupiterRelativeVelocity_km_s": 10.3,
+      "coolingPressureDrop_MPa": 0.04,
+      "pursuitShips_eta_hours": 13,
+      "outerRouteIgnitionWindow_hours": 5,
+      "orbitalCrossRelativeVelocity_km_s": 0.12,
+      "kestrelShipId": "MTS-9907/EXT-P17",
+      "systemOperator": "MARS PORT AUTHORITY",
+      "collisionAlertSystem": "COIAS",
+      "unknownVesselId": "MPA-MC-SCV-02814"
+    },
+    "locationLabels": [
+      {
+        "timestamp": "06:58",
+        "label": "木星離脱航路 (イオ・トーラス外縁スカート付近)",
+        "jurisdiction": "木星港湾公社 / 木星圏"
+      },
+      {
+        "timestamp": "09:07",
+        "label": "木星離脱航路 (木星磁気圏縁ゲート)",
+        "jurisdiction": "木星港湾公社 / 木星圏"
+      },
+      {
+        "timestamp": "13:27",
+        "label": "エンケラドゥス・リレー",
+        "jurisdiction": "国際連合・火星自治連邦保護領 / 土星圏"
+      }
+    ],
+    "parameterSources": {
+      "subtitle": ["Jupiter velocity", "altitude", "cooling pressure", "pursuit ETA", "ignition window", "orbital cross velocity", "detection method", "vessel tactics"],
+      "HUD_display": ["NAVIGATION OVERVIEW", "COIAS alert", "ship IDs", "orbital diagram", "OVERS BURN maneuver", "relative velocity"],
+      "location_label": ["Io torus position", "magnetosphere gate", "Enceladus Relay jurisdiction"]
+    },
+    "analysisImplications": [
+      "木星基準速度10.3 km/s at 50 RJ → V∞≈5.93 km/s（双曲線超過速度）、既存分析と一致",
+      "NAVIGATION OVERVIEW画面にケストレルの船籍番号MTS-9907/EXT-P17が初めて判明",
+      "MARS PORT AUTHORITY（火星港湾公社）のシステムを使用 — 火星自治連邦圏の船舶であることを示唆",
+      "COIAS（軌道交差警報システム）は実在のCOIAS（Comet & Object Identification & Analysis System）を想起させる命名",
+      "大型船ID: MPA-MC-SCV-02814 — MPA=Mars Port Authority、MC=不明、SCV=不明（Service/Supply Carrier Vessel?）",
+      "「OVERS BURN」はエンケラドス軌道への投入修正機動を示し、EP01のPERIJOVE OVERSHOT CORRECTIONと概念的に対応",
+      "恒星掩蔽による大型船検知は実際の天文学で使用される手法であり、作品の科学的リアリティの高さを示す",
+      "相対速度-0.12 km/s（120 m/s）は非常に低く、大型船がケストレルの軌道要素を高精度で把握していたことを意味する"
+    ],
+    "comparisonWithEP01": {
+      "navigationDisplay": "EP01の10:54フレームと同様のNAVIGATION OVERSIEWが存在。EP01は木星直接エントリーのバーンシーケンス中心、EP02は土星/エンケラドス軌道への投入時の軌道交差警報が中心。",
+      "dataRichness": "EP01の方がHUDデータが豊富（V∞、ΔV、バーンシーケンス3段階、方位角など）。EP02は場所テロップと字幕データが中心で、ナビゲーション画面は1シーンのみ。",
+      "newInformation": "EP02ではケストレルの船籍番号、MARS PORT AUTHORITYシステム、COIASアラートシステム、大型船のIDなど、船舶運航インフラに関する新情報が得られた。"
+    }
+  }
+}

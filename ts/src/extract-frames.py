@@ -48,6 +48,24 @@ EP01_KEYFRAMES = [
     (1115, "ガニメデ接近 — 最終アプローチ"),
 ]
 
+# Key timestamps for EP02 — Jupiter escape → Saturn/Enceladus
+EP02_KEYFRAMES = [
+    # (timestamp_seconds, description)
+    (53, "EVA — 冷却系圧力0.04MPa低下"),
+    (106, "木星・イオ近傍 — 相対速度増加、3時間後最近接"),
+    (118, "ケストレル船体全景 — 損傷状態"),
+    (418, "木星離脱航路 — イオ・トーラス外縁スカート付近"),
+    (547, "木星磁気圏縁ゲート — 高度50RJ"),
+    (551, "木星基準速度10.3km/s — 扇状面同調"),
+    (807, "エンケラドゥス・リレー到着"),
+    (978, "外縁航路投入シークエンス開始 — 点火ウィンドウ5時間"),
+    (997, "NAVIGATION OVERVIEW — COIAS軌道交差警報"),
+    (1000, "NAVIGATION OVERVIEW（字幕付き）— 相対速度0.12km/s"),
+    (1038, "大型船検知 — 恒星掩蔽"),
+    (1048, "大型船待ち伏せ推定 — 相対速度ゼロ"),
+    (1051, "きりたん・ケイ — 緊張シーン"),
+]
+
 
 def extract_frame(video_path: str, timestamp_sec: float,
                   output_path: str) -> bool:
@@ -103,8 +121,12 @@ def main():
     Path(out_dir).mkdir(parents=True, exist_ok=True)
 
     # Select keyframes for episode
-    if args.episode == 1:
-        keyframes = EP01_KEYFRAMES
+    episode_keyframes = {
+        1: EP01_KEYFRAMES,
+        2: EP02_KEYFRAMES,
+    }
+    if args.episode in episode_keyframes:
+        keyframes = episode_keyframes[args.episode]
     else:
         print(f"No predefined keyframes for EP{args.episode:02d}. "
               "Use --timestamps to specify.")
