@@ -65,6 +65,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Scenario ordering**: Present the most plausible scenario first, then alternatives. Collapse implausible scenarios by default (use `<details>`)
 - **Terminology**: Prefer "brachistochrone" (English/formula notation) over カタカナ「ブラキストクローネ」 — the latter is rarely used in Japanese technical writing
 - **Interactive orbital diagrams**: Add time slider to animate orbital transfers, showing how celestial body positions change during the transfer
+- **Diagrams and graphs for clarity**: Prioritize visual explanations — readers benefit from seeing data rather than just reading numbers. Add comparison charts, parameter space plots, and schematic diagrams wherever they aid understanding. More figures are better than fewer.
 - **Report review**: Periodically have other Claude Code sessions or Codex review reports for readability/clarity. Consider whether analyses are accessible to readers unfamiliar with SOLAR LINE or orbital mechanics, while keeping detailed analysis as the primary goal.
 - **Screenshot citations**: When video analysis produces findings, screenshots may be cited in reports. Follow fair-use citation requirements — do not overuse.
 - **VTT/transcription accuracy**: VTT and other transcriptions are not always perfect — correct text from context when actually using it in reports
@@ -78,6 +79,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Verdict policy**: Reference calculations (where accuracy cannot be measured against a depicted value) should NOT use the "indeterminate" verdict. Reserve verdicts for claims that can be directly compared to in-story depictions.
 - **External source links**: All external source citations (NASA NTRS, papers, worldbuilding documents) must be rendered as clickable hyperlinks, not plain text.
 - **Orbit propagation validation**: After desk calculations (brachistochrone ΔV, Hohmann transfers), validate with detailed numerical orbit propagation. This is especially important for time-dependent parameters (travel time, planetary positions, arrival conditions). Use TDD: estimate and verify numerical integration accuracy (e.g. energy conservation of the full system) as test assertions.
+- **Iterative re-analysis**: Seek overlooked viewpoints from nice-friend (Codex) and prior human feedback. When new perspectives emerge, re-analyze — especially items that weren't clearly plausible or had remaining questions. This iterative cycle (new perspective → re-analysis → new questions) deepens the analysis beyond initial conclusions.
 
 ## Data Infrastructure
 
