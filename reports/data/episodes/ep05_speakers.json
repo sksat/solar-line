@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "episode": 5,
+  "videoId": "sm45987761",
+  "speakers": [
+    {
+      "id": "kiritan",
+      "nameJa": "きりたん",
+      "nameEn": "Kiritan",
+      "aliases": ["キリタン"],
+      "notes": "ケストレル号の船長兼パイロット。天王星タイタニアから地球へ帰還する最終航海。ケイを「お前」「相棒」と呼ぶ。"
+    },
+    {
+      "id": "kestrel-ai",
+      "nameJa": "ケストレルAI（ケイ）",
+      "nameEn": "Kestrel AI (Kei)",
+      "aliases": ["ケイ"],
+      "notes": "ケストレル号の船載AI。船のステータス報告、航法計算、安全判断を行う。損傷が進行し「大切なものが少しずつ壊れていく」感覚を語る。敬語で話す。"
+    },
+    {
+      "id": "muse",
+      "nameJa": "ミューズ",
+      "nameEn": "Muse",
+      "aliases": [],
+      "notes": "エンケラドスのリレー基地にいる人物。第2話で登場した人物と同一。港湾航舎の航路ロックダウン中にケストレルの位置情報を太陽系全体に発信する。"
+    },
+    {
+      "id": "rai",
+      "nameJa": "ライ",
+      "nameEn": "Rai",
+      "aliases": [],
+      "notes": "ガニメデの船乗り。第1話で登場した人物と同一。木星圏で可視光通信を使ってケストレルに保安艇の位置情報を伝え、偽トランスポンダ信号で欺瞞航路を作る。"
+    },
+    {
+      "id": "seilanders",
+      "nameJa": "弁務官セイランダース",
+      "nameEn": "Commissioner Seilanders",
+      "aliases": [],
+      "notes": "国際連合軌道交番機構の弁務官。地球圏接近時にケストレルに停船命令を出す。"
+    }
+  ],
+  "attributionNotes": "話者判定はWhisper STTによる自動文字起こし（raw_data/whisper/ep05_lines.json）と物語コンテキスト（ニコニコ動画 sm45987761, 全4話の内容蓄積）に基づく。Whisper STTの精度はYouTube自動字幕より高いが、専門用語（航法用語、固有名詞）に誤認識が残る。台詞テキストは文脈から修正済み。きりたんとケイの二人称会話が大半を占めるため、話者判定は比較的明確。",
+  "reviewedBy": "Claude Opus 4.6 (context-assisted, NOT fully automated)",
+  "reviewedAt": "2026-02-24T00:00:00Z"
+}

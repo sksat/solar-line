@@ -1,6 +1,6 @@
 # Task 023: Episode 5 (Finale) Analysis
 
-## Status: PARTIAL (preliminary — awaiting subtitle data)
+## Status: DONE
 
 ## Episode Info
 - **Title**: SOLAR LINE Part5 END（ソーラーライン）【良いソフトウェアトーク劇場】
@@ -12,44 +12,45 @@
 
 ## Progress
 - [x] Identify video IDs and metadata (Niconico API)
-- [x] Add lunar constants (MU.MOON, EARTH_RADIUS, MOON_ORBIT_RADIUS, LEO_ALTITUDE) to orbital.ts
+- [x] Add lunar constants to orbital.ts
 - [x] Create ep05-analysis.ts (6 analysis functions, Codex design review)
 - [x] Write ep05-analysis.test.ts (38 tests, all passing)
 - [x] Build ep05.json report (5 transfers, 3 explorations, 2 orbital diagrams)
 - [x] Update cross-episode consistency analysis for 5 episodes
 - [x] Regenerate cross-episode.json
-- [x] All tests pass (466 TS + 52 Rust = 518 total)
-- [x] Site builds successfully (5 episodes, 24 transfers, 1 summary)
-- [ ] Collect subtitles (VTT from YouTube) — BLOCKED: video not on YouTube yet
-- [ ] Extract dialogue lines (Phase 1) — BLOCKED on subtitles
-- [ ] Speaker attribution (Phase 2) — BLOCKED on Phase 1
-- [ ] Update report with actual dialogue quotes and timestamps
-- [ ] Verify/update analysis parameters from actual episode content
+- [x] Whisper STT extraction: 164 lines (Task 036)
+- [x] Speaker attribution: 5 speakers, 13 scenes, 113 dialogue entries (Task 009)
+- [x] Report updated: 24 dialogue quotes, all 5 transfers linked to evidence
+- [x] Summary updated: removed "暫定" markers, added actual EP05 parameters
+- [x] Verdicts updated: transfer-03 and transfer-04 upgraded from "conditional" to "plausible"
+- [x] All tests pass (830 TS + 79 Rust = 909 total)
+- [x] Site builds: 5 episodes, 24 transfers, 3 summaries, 7 logs
 
-## Key Analysis Results (Preliminary)
-- **Hohmann baseline**: 16.1 years, 15.94 km/s total ΔV
-- **Brachistochrone @300t**: 8.3 days, 15,207 km/s ΔV, 2.17G
-- **Brachistochrone @48,000t**: 105 days, 1,202 km/s ΔV, 0.014G
-- **Earth capture (v∞=0)**: LEO 3.18 km/s, Moon orbit 0.42 km/s
-- **Burn budget**: 3 minimum (brach 2 + capture 1), available 2-3
-- **Full route**: ~35.9 AU total, Mars→Ganymede→Jupiter→Enceladus→Titania→Earth
+## Key Analysis Results (Updated with Dialogue Data)
+- **Route plan**: 4 burns over 507h (21.1 days), not pure brachistochrone
+  - Burn 1: Uranus escape + cruise acceleration → 1500 km/s
+  - Burn 2: Jupiter powered flyby (Oberth effect +3%)
+  - Burn 3: Mars deceleration → Earth entry trajectory
+  - Burn 4: Earth LEO 400km insertion (manual override)
+- **Final speed**: 2100 km/s (nuclear torpedo evasion threshold)
+- **Nozzle lifetime**: 55h38m remaining vs 55h12m needed (26min margin)
+- **Navigation**: Stellar autonomous nav, 20km accuracy (vs 50m with beacons)
+- **Political**: Earth shuts down all solar system navigation (700 ships affected)
+- **Allies**: Muse (Enceladus) provides calibration signal, Rai (Ganymede) creates decoy tracks
+- **Outcome**: LEO achieved, nozzle destroyed, "この船はもう飛べません"
 
 ## Files Created/Modified
 - `ts/src/orbital.ts` — Added MU.MOON, EARTH_RADIUS, MOON_ORBIT_RADIUS, LEO_ALTITUDE
 - `ts/src/ep05-analysis.ts` — 6 analysis functions
 - `ts/src/ep05-analysis.test.ts` — 38 tests
-- `reports/data/episodes/ep05.json` — Episode 5 report (preliminary)
+- `reports/data/episodes/ep05.json` — Episode 5 report (complete)
+- `reports/data/episodes/ep05_speakers.json` — 5 speakers
+- `reports/data/episodes/ep05_dialogue.json` — 113 entries, 13 scenes
 - `ts/src/cross-episode-analysis.ts` — Updated for 5 episodes
-- `ts/src/cross-episode-analysis.test.ts` — Updated episode count
 - `reports/data/summary/cross-episode.json` — Regenerated
-
-## Next Session TODO
-1. Check if YouTube upload has happened → collect subtitles
-2. If subtitles available: extract dialogue, update report with actual quotes
-3. If not: try alternative subtitle sources (manual transcription from video)
-4. Update analysis parameters based on actual ep05 dialogue/events
-5. Remove "暫定" markers from report
 
 ## Depends on
 - Task 020 (Episode 4 analysis) — DONE
 - Task 021 (Cross-episode consistency) — DONE
+- Task 036 (Whisper STT) — DONE
+- Task 009 (Dialogue attribution) — DONE
