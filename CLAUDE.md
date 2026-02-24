@@ -85,6 +85,11 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Iterative re-analysis**: Seek overlooked viewpoints from nice-friend (Codex) and prior human feedback. When new perspectives emerge, re-analyze — especially items that weren't clearly plausible or had remaining questions. This iterative cycle (new perspective → re-analysis → new questions) deepens the analysis beyond initial conclusions.
 - **Narrative plausibility review**: Beyond physics validation and cross-episode consistency, check whether computed values (durations, distances, conditions) match the **viewer's experience** of the story. If an analysis produces a result that feels inconsistent with on-screen depiction (e.g., year-long voyage in a show that implies shorter timeframes), flag this as a narrative plausibility concern and explore alternative interpretations.
 - **Source priority**: Anime source material (映像・台詞) takes priority over worldbuilding documents (設定資料). When they conflict, analyze based on the anime depiction and discuss the discrepancy with the worldbuilding source.
+- **Margin visualization**: Visualize how "ギリギリ" (narrow margin) each situation was — compare actual values against limits with gauge/bar charts and show alternative scenarios for context.
+- **Time-series analysis**: Use time-axis charts (thrust profile, cumulative radiation dose, nozzle remaining life) to make temporal dynamics intuitive.
+- **3D orbital analysis**: After 2D analysis is mature, extend to 3D considering orbital inclination, Saturn ring plane geometry, and Uranus axial tilt effects.
+- **Plasmoid perturbation**: Estimate trajectory perturbations from plasmoid encounters, distinguishing radiation effects from momentum effects.
+- **Physics consultation model**: Use gpt-5.2 or similar reasoning models (not -codex) for physics-specific consultations. Reserve -codex for design/architecture review.
 
 ## Data Infrastructure
 
@@ -93,6 +98,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Speaker diarization**: May improve Phase 2 attribution accuracy — investigate and apply where beneficial.
 - **Video analysis**: Downloaded video (gitignored) may be used for frame-by-frame OCR, subtitle extraction, and visual analysis.
 - **Transcription data on Pages**: Make subtitle/transcription data browsable on GitHub Pages.
+- **Transcription data layers**: Display transcription data in 3 layers: (1) raw data (unmodified VTT/Whisper), (2) preprocessed (alignment, diarization), (3) context-corrected (speaker attribution, text fixes). Clearly distinguish which layer the user is viewing.
 
 ## Quality Assurance
 
