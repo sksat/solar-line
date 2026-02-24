@@ -1,14 +1,18 @@
 # Task 071: README更新
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 
 Human directive: 「READMEなども適宜更新してほしい」
 
-## Scope
+## Completed
 
-- Update README.md with current project state
-- Add links to GitHub Pages, describe project structure
-- Document episode analysis status
-- Add contribution/development setup instructions
+- Rewrote README.md with:
+  - Project overview with GitHub Pages link
+  - Route summary and analysis description
+  - Project structure tree
+  - Technology stack table (Rust, WASM, TypeScript, Playwright, CI)
+  - Local development instructions
+  - Agent loop setup (consolidated)
+  - License/data note
