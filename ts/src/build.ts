@@ -18,6 +18,7 @@ import {
   renderSummaryPage,
   renderTranscriptionPage,
   renderTranscriptionIndex,
+  type NavEpisode,
 } from "./templates.ts";
 
 export interface BuildConfig {
@@ -273,6 +274,13 @@ export function build(config: BuildConfig): void {
   const transcriptions = discoverTranscriptions(dataDir);
   const manifest = buildManifest(episodes, logs, summaries, transcriptions);
 
+  // Build nav episodes list for header dropdown
+  const navEpisodes: NavEpisode[] = manifest.episodes.map(ep => ({
+    episode: ep.episode,
+    title: ep.title,
+    path: ep.path,
+  }));
+
   // Ensure output directories
   ensureDir(path.join(outDir, "episodes"));
   ensureDir(path.join(outDir, "logs"));
@@ -281,29 +289,29 @@ export function build(config: BuildConfig): void {
   }
 
   // Generate index page
-  fs.writeFileSync(path.join(outDir, "index.html"), renderIndex(manifest));
+  fs.writeFileSync(path.join(outDir, "index.html"), renderIndex(manifest, navEpisodes));
 
   // Generate episode pages
   for (const ep of episodes) {
     const filename = `ep-${String(ep.episode).padStart(3, "0")}.html`;
-    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages, episodes.length));
+    fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages, episodes.length, navEpisodes));
   }
 
   // Generate summary pages (with episode nav strip and auto-linking)
   for (const summary of summaries) {
     fs.writeFileSync(
       path.join(outDir, "summary", `${summary.slug}.html`),
-      renderSummaryPage(summary, manifest.summaryPages, manifest.episodes),
+      renderSummaryPage(summary, manifest.summaryPages, manifest.episodes, navEpisodes),
     );
   }
 
   // Generate log pages
   const logManifest = manifest.logs;
-  fs.writeFileSync(path.join(outDir, "logs", "index.html"), renderLogsIndex(logManifest, manifest.summaryPages));
+  fs.writeFileSync(path.join(outDir, "logs", "index.html"), renderLogsIndex(logManifest, manifest.summaryPages, navEpisodes));
   for (const log of logs) {
     fs.writeFileSync(
       path.join(outDir, "logs", `${log.filename}.html`),
-      renderLogPage(log.filename, log.date, log.content, manifest.summaryPages),
+      renderLogPage(log.filename, log.date, log.content, manifest.summaryPages, navEpisodes),
     );
   }
 
@@ -312,13 +320,13 @@ export function build(config: BuildConfig): void {
     ensureDir(path.join(outDir, "transcriptions"));
     fs.writeFileSync(
       path.join(outDir, "transcriptions", "index.html"),
-      renderTranscriptionIndex(transcriptions, manifest.summaryPages),
+      renderTranscriptionIndex(transcriptions, manifest.summaryPages, navEpisodes),
     );
     for (const tr of transcriptions) {
       const filename = `ep-${String(tr.episode).padStart(3, "0")}.html`;
       fs.writeFileSync(
         path.join(outDir, "transcriptions", filename),
-        renderTranscriptionPage(tr, manifest.summaryPages),
+        renderTranscriptionPage(tr, manifest.summaryPages, navEpisodes),
       );
     }
   }

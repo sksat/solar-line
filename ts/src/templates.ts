@@ -573,9 +573,18 @@ footer {
 `;
 
 /** Wrap content in the common HTML layout */
-export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"], description?: string): string {
+export interface NavEpisode {
+  episode: number;
+  title: string;
+  path: string;
+}
+
+export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"], description?: string, episodes?: NavEpisode[]): string {
+  const episodeNav = episodes && episodes.length > 0
+    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">各話分析</button><span class="nav-dropdown-menu">${episodes.map(ep => `<a href="${basePath}/${ep.path}">第${ep.episode}話</a>`).join("")}</span></span>`
+    : "";
   const summaryNav = summaryPages && summaryPages.length > 0
-    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">分析レポート</button><span class="nav-dropdown-menu">${summaryPages.map(p => `<a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`).join("")}</span></span>`
+    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">総合分析</button><span class="nav-dropdown-menu">${summaryPages.map(p => `<a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`).join("")}</span></span>`
     : "";
   const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考察`;
   const ogDescription = description
@@ -598,7 +607,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav><a href="${basePath}/index.html">トップ</a>${summaryNav}<span class="nav-sep">|</span><a href="${basePath}/transcriptions/index.html">文字起こし</a><span class="nav-sep">|</span><a href="${basePath}/logs/index.html">ログ</a></nav>
+<nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}<span class="nav-sep">|</span><a href="${basePath}/transcriptions/index.html">文字起こし</a><span class="nav-sep">|</span><a href="${basePath}/logs/index.html">ログ</a></nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a></footer>
 <script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}});</script>
@@ -613,7 +622,7 @@ function verdictBadge(verdict: string): string {
 }
 
 /** Render the site index page */
-export function renderIndex(manifest: SiteManifest): string {
+export function renderIndex(manifest: SiteManifest, navEpisodes?: NavEpisode[]): string {
   const totalTransfers = manifest.episodes.reduce((sum, ep) => sum + ep.transferCount, 0);
 
   // Project overview section
@@ -682,7 +691,7 @@ ${summaryList}
 <p><a href="logs/index.html">すべてのセッションログを見る →</a></p>
 <p><em>生成日時: ${escapeHtml(manifest.generatedAt)}</em></p>`;
 
-  return layoutHtml("トップ", content, ".", manifest.summaryPages, "SFアニメ「SOLAR LINE」の全5話に描かれた軌道遷移をΔV計算・加速度分析で検証する考察プロジェクト");
+  return layoutHtml("トップ", content, ".", manifest.summaryPages, "SFアニメ「SOLAR LINE」の全5話に描かれた軌道遷移をΔV計算・加速度分析で検証する考察プロジェクト", navEpisodes);
 }
 
 /** Map verdict to Japanese label */
@@ -1353,7 +1362,7 @@ function buildDvChart(transfers: TransferAnalysis[]): string {
 }
 
 /** Render a full episode report page */
-export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest["summaryPages"], totalEpisodes?: number): string {
+export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest["summaryPages"], totalEpisodes?: number, navEpisodes?: NavEpisode[]): string {
   const videoSection = report.videoCards && report.videoCards.length > 0
     ? renderVideoCards(report.videoCards)
     : "";
@@ -1474,11 +1483,11 @@ ${calculator}`;
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(`第${report.episode}話`, content + episodeNav + animScript, "..", summaryPages, desc);
+  return layoutHtml(`第${report.episode}話`, content + episodeNav + animScript, "..", summaryPages, desc, navEpisodes);
 }
 
 /** Render the session logs index page */
-export function renderLogsIndex(logs: SiteManifest["logs"], summaryPages?: SiteManifest["summaryPages"]): string {
+export function renderLogsIndex(logs: SiteManifest["logs"], summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[]): string {
   const logList = logs.length > 0
     ? logs.map(log =>
         `<li><a href="${log.filename}.html">${escapeHtml(log.date)}</a> — ${escapeHtml(log.description)}</li>`
@@ -1492,11 +1501,11 @@ export function renderLogsIndex(logs: SiteManifest["logs"], summaryPages?: SiteM
 ${logList}
 </ul>`;
 
-  return layoutHtml("セッションログ", content, "..", summaryPages);
+  return layoutHtml("セッションログ", content, "..", summaryPages, undefined, navEpisodes);
 }
 
 /** Render a single session log page */
-export function renderLogPage(filename: string, date: string, markdownContent: string, summaryPages?: SiteManifest["summaryPages"]): string {
+export function renderLogPage(filename: string, date: string, markdownContent: string, summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[]): string {
   const htmlContent = markdownToHtml(markdownContent);
   const content = `
 <h1>セッションログ: ${escapeHtml(date)}</h1>
@@ -1504,7 +1513,7 @@ export function renderLogPage(filename: string, date: string, markdownContent: s
 ${htmlContent}
 </div>`;
 
-  return layoutHtml(`ログ ${date}`, content, "..", summaryPages);
+  return layoutHtml(`ログ ${date}`, content, "..", summaryPages, undefined, navEpisodes);
 }
 
 /** Render a comparison table */
@@ -1622,7 +1631,7 @@ export function renderEpisodeNav(episodes: SiteManifest["episodes"], basePath: s
 }
 
 /** Render a summary report page */
-export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteManifest["summaryPages"], episodes?: SiteManifest["episodes"]): string {
+export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteManifest["summaryPages"], episodes?: SiteManifest["episodes"], navEpisodes?: NavEpisode[]): string {
   const mdOpts: MarkdownOptions = { autoLinkEpisodes: true, episodeBasePath: "../episodes" };
   const sections = report.sections.map(section => {
     const sectionId = slugify(section.heading);
@@ -1666,7 +1675,7 @@ ${summaryToc}
 ${sections}`;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(report.title, content + animScript, "..", summaryPages, desc);
+  return layoutHtml(report.title, content + animScript, "..", summaryPages, desc, navEpisodes);
 }
 
 // ---------------------------------------------------------------------------
@@ -1707,7 +1716,7 @@ function confidenceBadge(confidence: string): string {
 }
 
 /** Render a single transcription page for one episode */
-export function renderTranscriptionPage(data: TranscriptionPageData, summaryPages?: SiteManifest["summaryPages"]): string {
+export function renderTranscriptionPage(data: TranscriptionPageData, summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[]): string {
   const epTitle = data.title ?? `第${data.episode}話`;
   const heading = `文字起こし — ${escapeHtml(epTitle)}`;
 
@@ -1845,7 +1854,7 @@ ${sourceInfo}
 ${speakerSection}
 ${dialogueSection}`;
 
-  return layoutHtml(`文字起こし 第${data.episode}話`, content, "..", summaryPages, `第${data.episode}話の文字起こし・台詞データ`);
+  return layoutHtml(`文字起こし 第${data.episode}話`, content, "..", summaryPages, `第${data.episode}話の文字起こし・台詞データ`, navEpisodes);
 }
 
 /** Render a raw lines table (Phase 1 extracted lines) */
@@ -1862,7 +1871,7 @@ ${rows}
 }
 
 /** Render the transcription index page */
-export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[], summaryPages?: SiteManifest["summaryPages"]): string {
+export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[], summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[]): string {
   const rows = transcriptions.map(t => {
     const epTitle = t.title ?? `第${t.episode}話`;
     const link = `ep-${String(t.episode).padStart(3, "0")}.html`;
@@ -1898,5 +1907,5 @@ ${rows}
 </tbody>
 </table>`;
 
-  return layoutHtml("文字起こしデータ", content, "..", summaryPages, "SOLAR LINE 全エピソードの文字起こし・台詞データ一覧");
+  return layoutHtml("文字起こしデータ", content, "..", summaryPages, "SOLAR LINE 全エピソードの文字起こし・台詞データ一覧", navEpisodes);
 }
