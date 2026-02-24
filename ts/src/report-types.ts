@@ -34,7 +34,7 @@ export interface SourceCitation {
   /** The parameter or claim being cited (e.g. "船の質量: 約48000 t") */
   claim: string;
   /** Source type */
-  sourceType: "worldbuilding-doc" | "episode-dialogue" | "episode-visual" | "external-reference";
+  sourceType: "worldbuilding-doc" | "episode-dialogue" | "episode-visual" | "external-reference" | "cross-episode";
   /** Source URL or identifier (e.g. note.com URL, video ID with timestamp) */
   sourceRef: string;
   /** Human-readable description of the source */

@@ -293,7 +293,7 @@ describe("report data: ID naming conventions", () => {
 
 describe("report data: source citations", () => {
   const episodes = getAvailableEpisodes();
-  const validSourceTypes = new Set(["worldbuilding-doc", "episode-dialogue", "episode-visual", "external-reference"]);
+  const validSourceTypes = new Set(["worldbuilding-doc", "episode-dialogue", "episode-visual", "external-reference", "cross-episode"]);
 
   for (const epNum of episodes) {
     const report = loadEpisodeReport(epNum);
