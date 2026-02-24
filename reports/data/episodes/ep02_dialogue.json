@@ -31,6 +31,12 @@
       "aliases": []
     },
     {
+      "id": "guest-esper",
+      "nameJa": "ゲスト（エスパー）",
+      "nameEn": "Guest (Esper)",
+      "aliases": ["エスパー", "リンボ"]
+    },
+    {
       "id": "unknown-vessel",
       "nameJa": "正体不明の大型船",
       "nameEn": "Unknown Vessel",
@@ -1425,20 +1431,20 @@
       "note": "AIの挨拶。「ようで」丁寧。"
     },
     {
-      "speakerId": "kiritan",
-      "speakerName": "きりたん",
+      "speakerId": "guest-esper",
+      "speakerName": "ゲスト（エスパー）",
       "text": "何だ、ここはどこなのか？",
       "startMs": 604600,
       "endMs": 608230,
       "sceneId": "ep02-scene-06",
-      "confidence": "uncertain",
+      "confidence": "inferred",
       "rawEntryIds": [
         "cue-235",
         "cue-237"
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ASR非常に不明瞭。ゲスト（コールドスリープから覚醒した人物）の可能性もあるが、話者不確定。"
+      "note": "コールドスリープから覚醒直後の混乱。直前にケイが「目覚めはよろしいようで」と呼びかけ、直後にケイが「エスパー」について説明。話者はゲスト（エスパー）と判断。（Task 089 再レビューで修正）"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1535,19 +1541,19 @@
       "note": "きりたんがゲストについてAIに話す。「だぞ」口調。"
     },
     {
-      "speakerId": "enceladus-keeper",
-      "speakerName": "エンケラドスの管理人",
+      "speakerId": "guest-esper",
+      "speakerName": "ゲスト（エスパー）",
       "text": "故郷ではいつも星を眺めていたの",
       "startMs": 697000,
       "endMs": 702430,
       "sceneId": "ep02-scene-06",
-      "confidence": "uncertain",
+      "confidence": "inferred",
       "rawEntryIds": [
         "cue-261"
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "女性的口調「の」。ゲスト（コンテナの中の人物）またはエンケラドス管理人の可能性。場面の時系列から判断が難しい。"
+      "note": "Scene 6（覚醒）内でエンケラドス到着前（Scene 7は760000ms〜）。女性的口調「の」。時系列上ゲスト（エスパー）と判断。（Task 089 再レビューで修正）"
     },
     {
       "speakerId": "kiritan",
@@ -1565,19 +1571,19 @@
       "note": "きりたんの軽口。「なよ」口調。"
     },
     {
-      "speakerId": "enceladus-keeper",
-      "speakerName": "エンケラドスの管理人",
+      "speakerId": "guest-esper",
+      "speakerName": "ゲスト（エスパー）",
       "text": "あなたは自由な人だから、私を選んでくれたのね",
       "startMs": 718320,
       "endMs": 723110,
       "sceneId": "ep02-scene-06",
-      "confidence": "uncertain",
+      "confidence": "inferred",
       "rawEntryIds": [
         "cue-265"
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "女性的口調「のね」。ゲストかエンケラドス管理人。"
+      "note": "Scene 6（覚醒）内でエンケラドス到着前。女性的口調「のね」。きりたんに対する感謝の言葉。時系列上ゲスト（エスパー）と判断。（Task 089 再レビューで修正）"
     },
     {
       "speakerId": "kestrel-ai",

@@ -37,3 +37,4 @@
 {"timestamp":"2026-02-24T10:43:52.745Z","action":"status_changed","nodeId":"report.ship_kestrel","detail":"→ stale (caused by param.ship_mass)"}
 {"timestamp":"2026-02-24T10:43:52.745Z","action":"status_changed","nodeId":"report.cross_episode","detail":"→ stale (caused by param.ship_mass)"}
 {"timestamp":"2026-02-24T10:43:52.745Z","action":"status_changed","nodeId":"report.science_accuracy","detail":"→ stale (caused by param.ship_mass)"}
+{"timestamp":"2026-02-24T11:28:00.698Z","action":"dependency_added","nodeId":"report.ai_costs","detail":"→ param.ship_mass"}
