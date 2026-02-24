@@ -10,7 +10,7 @@
       "tags": [
         "source"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.whisper.ep01": {
       "id": "src.whisper.ep01",
@@ -23,7 +23,7 @@
         "source",
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.vtt.ep01": {
       "id": "src.vtt.ep01",
@@ -36,7 +36,7 @@
         "source",
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.dialogue.ep01": {
       "id": "src.dialogue.ep01",
@@ -52,7 +52,7 @@
         "source",
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.whisper.ep02": {
       "id": "src.whisper.ep02",
@@ -65,7 +65,7 @@
         "source",
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.vtt.ep02": {
       "id": "src.vtt.ep02",
@@ -78,7 +78,7 @@
         "source",
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.dialogue.ep02": {
       "id": "src.dialogue.ep02",
@@ -94,7 +94,7 @@
         "source",
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.whisper.ep03": {
       "id": "src.whisper.ep03",
@@ -107,7 +107,7 @@
         "source",
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.vtt.ep03": {
       "id": "src.vtt.ep03",
@@ -120,7 +120,7 @@
         "source",
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.dialogue.ep03": {
       "id": "src.dialogue.ep03",
@@ -136,7 +136,7 @@
         "source",
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.whisper.ep04": {
       "id": "src.whisper.ep04",
@@ -149,7 +149,7 @@
         "source",
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.vtt.ep04": {
       "id": "src.vtt.ep04",
@@ -162,7 +162,7 @@
         "source",
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.dialogue.ep04": {
       "id": "src.dialogue.ep04",
@@ -178,7 +178,7 @@
         "source",
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.whisper.ep05": {
       "id": "src.whisper.ep05",
@@ -191,7 +191,7 @@
         "source",
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.vtt.ep05": {
       "id": "src.vtt.ep05",
@@ -204,7 +204,7 @@
         "source",
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "src.dialogue.ep05": {
       "id": "src.dialogue.ep05",
@@ -220,7 +220,7 @@
         "source",
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "param.ship_mass": {
       "id": "param.ship_mass",
@@ -236,7 +236,7 @@
         "cross-episode"
       ],
       "notes": "All brachistochrone calcs converge on 300-500t for stated performance",
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "param.thrust": {
       "id": "param.thrust",
@@ -251,7 +251,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "param.isp": {
       "id": "param.isp",
@@ -266,7 +266,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "param.nozzle_life": {
       "id": "param.nozzle_life",
@@ -281,7 +281,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "param.propellant_budget": {
       "id": "param.propellant_budget",
@@ -297,7 +297,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep01.t01": {
       "id": "analysis.ep01.t01",
@@ -315,7 +315,7 @@
         "episode:01",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep01.t02": {
       "id": "analysis.ep01.t02",
@@ -333,7 +333,7 @@
         "episode:01",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep01.t03": {
       "id": "analysis.ep01.t03",
@@ -351,7 +351,7 @@
         "episode:01",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep01.t04": {
       "id": "analysis.ep01.t04",
@@ -369,7 +369,7 @@
         "episode:01",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep02.t01": {
       "id": "analysis.ep02.t01",
@@ -387,7 +387,7 @@
         "episode:02",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep02.t02": {
       "id": "analysis.ep02.t02",
@@ -405,7 +405,7 @@
         "episode:02",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep02.t03": {
       "id": "analysis.ep02.t03",
@@ -423,7 +423,7 @@
         "episode:02",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep02.t04": {
       "id": "analysis.ep02.t04",
@@ -441,7 +441,7 @@
         "episode:02",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep02.t05": {
       "id": "analysis.ep02.t05",
@@ -459,7 +459,7 @@
         "episode:02",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep03.t01": {
       "id": "analysis.ep03.t01",
@@ -477,7 +477,7 @@
         "episode:03",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep03.t02": {
       "id": "analysis.ep03.t02",
@@ -495,7 +495,7 @@
         "episode:03",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep03.t03": {
       "id": "analysis.ep03.t03",
@@ -513,7 +513,7 @@
         "episode:03",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep03.t04": {
       "id": "analysis.ep03.t04",
@@ -531,7 +531,7 @@
         "episode:03",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep03.t05": {
       "id": "analysis.ep03.t05",
@@ -549,7 +549,7 @@
         "episode:03",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep04.t01": {
       "id": "analysis.ep04.t01",
@@ -567,7 +567,7 @@
         "episode:04",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep04.t02": {
       "id": "analysis.ep04.t02",
@@ -585,7 +585,7 @@
         "episode:04",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep04.t03": {
       "id": "analysis.ep04.t03",
@@ -603,7 +603,7 @@
         "episode:04",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep04.t04": {
       "id": "analysis.ep04.t04",
@@ -621,7 +621,7 @@
         "episode:04",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep04.t05": {
       "id": "analysis.ep04.t05",
@@ -639,7 +639,7 @@
         "episode:04",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep05.t01": {
       "id": "analysis.ep05.t01",
@@ -658,7 +658,7 @@
         "episode:05",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep05.t02": {
       "id": "analysis.ep05.t02",
@@ -677,7 +677,7 @@
         "episode:05",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep05.t03": {
       "id": "analysis.ep05.t03",
@@ -696,7 +696,7 @@
         "episode:05",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep05.t04": {
       "id": "analysis.ep05.t04",
@@ -715,7 +715,7 @@
         "episode:05",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.ep05.t05": {
       "id": "analysis.ep05.t05",
@@ -735,7 +735,7 @@
         "episode:05",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.mass_mystery": {
       "id": "analysis.mass_mystery",
@@ -750,7 +750,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.propellant_budget": {
       "id": "analysis.propellant_budget",
@@ -788,7 +788,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.nozzle_cumulative": {
       "id": "analysis.nozzle_cumulative",
@@ -826,7 +826,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.margin_cascade": {
       "id": "analysis.margin_cascade",
@@ -864,7 +864,7 @@
         "cross-episode"
       ],
       "notes": "Chain success probability: ~30-46%",
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.communications": {
       "id": "analysis.communications",
@@ -901,7 +901,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "analysis.attitude_control": {
       "id": "analysis.attitude_control",
@@ -941,7 +941,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.ep01": {
       "id": "report.ep01",
@@ -959,7 +959,7 @@
       "tags": [
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.ep02": {
       "id": "report.ep02",
@@ -978,7 +978,7 @@
       "tags": [
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.ep03": {
       "id": "report.ep03",
@@ -997,7 +997,7 @@
       "tags": [
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.ep04": {
       "id": "report.ep04",
@@ -1016,7 +1016,7 @@
       "tags": [
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.ep05": {
       "id": "report.ep05",
@@ -1035,7 +1035,7 @@
       "tags": [
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.cross_episode": {
       "id": "report.cross_episode",
@@ -1055,7 +1055,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.ship_kestrel": {
       "id": "report.ship_kestrel",
@@ -1075,7 +1075,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.science_accuracy": {
       "id": "report.science_accuracy",
@@ -1095,7 +1095,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.attitude_control": {
       "id": "report.attitude_control",
@@ -1114,7 +1114,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.communications": {
       "id": "report.communications",
@@ -1133,7 +1133,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.tech_overview": {
       "id": "report.tech_overview",
@@ -1153,7 +1153,7 @@
         "meta"
       ],
       "notes": "Contains DAG viewer, project metrics, architecture overview",
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.ai_costs": {
       "id": "report.ai_costs",
@@ -1167,7 +1167,7 @@
         "meta"
       ],
       "notes": "Token usage, cost distribution, efficiency metrics",
-      "lastValidated": "2026-02-24T13:26:01.248Z"
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     },
     "report.infrastructure": {
       "id": "report.infrastructure",
@@ -1186,27 +1186,7 @@
         "summary"
       ],
       "notes": "Non-Kestrel ships, stations, navigation infrastructure, governance",
-      "lastValidated": "2026-02-24T13:26:01.248Z"
-    },
-    "report.other-ships": {
-      "id": "report.other-ships",
-      "type": "report",
-      "title": "他船舶分析（軌道遷移込み）",
-      "dependsOn": [
-        "report.infrastructure"
-      ],
-      "status": "pending",
-      "version": 1
-    },
-    "analysis.mass-timeline": {
-      "id": "analysis.mass-timeline",
-      "type": "analysis",
-      "title": "質量時系列分析",
-      "dependsOn": [
-        "param.ship_mass"
-      ],
-      "status": "pending",
-      "version": 1
+      "lastValidated": "2026-02-24T13:54:40.350Z"
     }
   },
   "schemaVersion": 1
