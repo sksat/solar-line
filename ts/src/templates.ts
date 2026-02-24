@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, SummaryReport, ComparisonTable, ComparisonRow } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -302,12 +302,52 @@ footer {
 .toc ul { list-style: none; padding-left: 0; }
 .toc ul ul { padding-left: 1.2rem; }
 .toc li { margin: 0.2rem 0; }
+.event-timeline { margin: 1.5rem 0; }
+.event-timeline h4 { color: var(--accent); margin-bottom: 1rem; }
+.timeline-track { position: relative; padding-left: 2rem; border-left: 2px solid var(--border); margin-left: 0.5rem; }
+.timeline-event { position: relative; margin-bottom: 1.5rem; }
+.timeline-marker {
+  position: absolute;
+  left: -2.35rem;
+  top: 0.3rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+.timeline-label { font-weight: 600; color: #f0f6fc; }
+.timeline-timestamp { color: #8b949e; font-size: 0.85em; }
+.timeline-description { color: var(--fg); font-size: 0.9em; margin-top: 0.2rem; }
+.state-changes { font-size: 0.85em; color: var(--yellow); margin-top: 0.3rem; list-style: none; padding-left: 0; }
+.state-changes li::before { content: "→ "; color: #8b949e; }
+.verification-table-container { overflow-x: auto; margin: 1rem 0; }
+.verification-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+.verification-table caption { text-align: left; font-weight: 600; color: #f0f6fc; margin-bottom: 0.5rem; font-size: 1em; }
+.verification-table th { color: #8b949e; font-weight: normal; font-size: 0.85em; padding: 0.5rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.verification-table td { padding: 0.5rem 0.5rem; border-bottom: 1px solid var(--border); }
+.verification-table td.numeric { text-align: right; font-family: "SFMono-Regular", Consolas, monospace; }
+.verification-table td.source-cell { font-size: 0.85em; color: #8b949e; }
+.verification-badge {
+  display: inline-block;
+  padding: 0.15em 0.5em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.status-verified .verification-badge, .verification-badge.status-verified { background: var(--green); color: #000; }
+.status-approximate .verification-badge, .verification-badge.status-approximate { background: var(--yellow); color: #000; }
+.status-unverified .verification-badge, .verification-badge.status-unverified { background: #8b949e; color: #000; }
+.status-discrepancy .verification-badge, .verification-badge.status-discrepancy { background: var(--red); color: #fff; }
 @media (max-width: 600px) {
   .calc-control { grid-template-columns: 1fr; gap: 0.25rem; }
   .comparison-table { font-size: 0.8em; }
   .comparison-table td, .comparison-table th { padding: 0.3rem; }
   .scenario-table { font-size: 0.8em; }
   .stats-grid .stat-number { font-size: 1.4rem; }
+  .verification-table { font-size: 0.75em; }
+  .timeline-track { padding-left: 1.5rem; }
 }
 `;
 
@@ -1152,6 +1192,77 @@ ${rows}
 </table>`;
 }
 
+/** Render an event timeline as a vertical timeline visualization */
+export function renderEventTimeline(timeline: EventTimeline): string {
+  const events = timeline.events.map(event => {
+    const stateChanges = event.stateChanges?.length
+      ? `<ul class="state-changes">${event.stateChanges.map(c => `<li>${escapeHtml(c)}</li>`).join("")}</ul>`
+      : "";
+    const ts = event.timestamp ? ` <span class="timeline-timestamp">(${escapeHtml(event.timestamp)})</span>` : "";
+    return `<div class="timeline-event" data-episode="${event.episode}">
+<div class="timeline-marker"></div>
+<div class="timeline-content">
+<div class="timeline-label"><strong>第${event.episode}話</strong>${ts} ${escapeHtml(event.label)}</div>
+<div class="timeline-description">${escapeHtml(event.description)}</div>
+${stateChanges}
+</div>
+</div>`;
+  }).join("\n");
+  return `<div class="event-timeline">
+<h4>${escapeHtml(timeline.caption)}</h4>
+<div class="timeline-track">
+${events}
+</div>
+</div>`;
+}
+
+/** Map verification status to Japanese label and CSS class */
+function verificationStatusInfo(status: string): { label: string; cssClass: string } {
+  switch (status) {
+    case "verified": return { label: "検証済", cssClass: "status-verified" };
+    case "approximate": return { label: "近似一致", cssClass: "status-approximate" };
+    case "unverified": return { label: "未検証", cssClass: "status-unverified" };
+    case "discrepancy": return { label: "不一致", cssClass: "status-discrepancy" };
+    default: return { label: status, cssClass: "" };
+  }
+}
+
+/** Render a verification table comparing depicted vs real-world values */
+export function renderVerificationTable(table: VerificationTable): string {
+  const rows = table.rows.map(row => {
+    const { label, cssClass } = verificationStatusInfo(row.status);
+    const accuracy = row.accuracyPercent !== null ? `${row.accuracyPercent.toFixed(1)}%` : "—";
+    return `<tr class="${cssClass}">
+<td>${escapeHtml(row.claim)}</td>
+<td class="numeric">第${row.episode}話</td>
+<td>${escapeHtml(row.depicted)}</td>
+<td>${escapeHtml(row.reference)}</td>
+<td class="numeric">${accuracy}</td>
+<td><span class="verification-badge ${cssClass}">${label}</span></td>
+<td class="source-cell">${escapeHtml(row.source)}</td>
+</tr>`;
+  }).join("\n");
+  return `<div class="verification-table-container">
+<table class="verification-table">
+<caption>${escapeHtml(table.caption)}</caption>
+<thead>
+<tr>
+<th>検証項目</th>
+<th>話数</th>
+<th>作中値</th>
+<th>実測/文献値</th>
+<th>精度</th>
+<th>判定</th>
+<th>出典</th>
+</tr>
+</thead>
+<tbody>
+${rows}
+</tbody>
+</table>
+</div>`;
+}
+
 /** Generate a URL-safe slug from a heading string */
 function slugify(text: string): string {
   return text
@@ -1168,10 +1279,14 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const sectionId = slugify(section.heading);
     const tableHtml = section.table ? renderComparisonTable(section.table) : "";
     const diagramHtml = section.orbitalDiagrams ? renderOrbitalDiagrams(section.orbitalDiagrams) : "";
+    const timelineHtml = section.eventTimeline ? renderEventTimeline(section.eventTimeline) : "";
+    const verificationHtml = section.verificationTable ? renderVerificationTable(section.verificationTable) : "";
     return `<div class="summary-section" id="${escapeHtml(sectionId)}">
 <h2>${escapeHtml(section.heading)}</h2>
 ${markdownToHtml(section.markdown)}
 ${diagramHtml}
+${timelineHtml}
+${verificationHtml}
 ${tableHtml}
 </div>`;
   }).join("\n");

@@ -224,6 +224,59 @@ export interface ComparisonTable {
   rows: ComparisonRow[];
 }
 
+/** An event in a ship/system timeline */
+export interface TimelineEvent {
+  /** Episode number where this event occurs */
+  episode: number;
+  /** Timestamp within the episode (MM:SS or HH:MM:SS) */
+  timestamp?: string;
+  /** Short event label */
+  label: string;
+  /** Detailed description */
+  description: string;
+  /** State changes caused by this event (e.g. "推力: 9.8 → 6.37 MN") */
+  stateChanges?: string[];
+  /** Evidence quote ID from episode report */
+  evidenceQuoteId?: string;
+}
+
+/** A chronological event timeline for a ship or system */
+export interface EventTimeline {
+  /** Timeline title */
+  caption: string;
+  /** Ordered list of events */
+  events: TimelineEvent[];
+}
+
+/** Verification status for a scientific claim */
+export type VerificationStatus = "verified" | "approximate" | "unverified" | "discrepancy";
+
+/** A row in a science verification table */
+export interface VerificationRow {
+  /** The claim being verified */
+  claim: string;
+  /** Episode number */
+  episode: number;
+  /** Value depicted in the anime */
+  depicted: string;
+  /** Reference value from real-world data */
+  reference: string;
+  /** Source of the reference value */
+  source: string;
+  /** Accuracy percentage (e.g. 99.5), null if not quantifiable */
+  accuracyPercent: number | null;
+  /** Verification status */
+  status: VerificationStatus;
+}
+
+/** A verification table comparing depicted vs real-world values */
+export interface VerificationTable {
+  /** Table caption */
+  caption: string;
+  /** Rows of verifications */
+  rows: VerificationRow[];
+}
+
 /** A section in a summary report */
 export interface SummarySection {
   /** Section heading */
@@ -234,6 +287,10 @@ export interface SummarySection {
   table?: ComparisonTable;
   /** Optional orbital diagrams rendered within this section */
   orbitalDiagrams?: OrbitalDiagram[];
+  /** Optional event timeline */
+  eventTimeline?: EventTimeline;
+  /** Optional verification table */
+  verificationTable?: VerificationTable;
 }
 
 /** A cross-episode or summary report page */

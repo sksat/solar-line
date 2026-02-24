@@ -20,9 +20,11 @@ import {
   renderOrbitalDiagrams,
   renderComparisonTable,
   renderSummaryPage,
+  renderEventTimeline,
+  renderVerificationTable,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ComparisonTable, SummaryReport, VerdictCounts } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -1966,5 +1968,254 @@ describe("renderSummaryPage section anchors", () => {
     };
     const html = renderSummaryPage(report);
     assert.ok(!html.includes("目次"));
+  });
+});
+
+// --- renderEventTimeline ---
+
+describe("renderEventTimeline", () => {
+  const timeline: EventTimeline = {
+    caption: "テスト タイムライン",
+    events: [
+      {
+        episode: 1,
+        timestamp: "01:00",
+        label: "イベント1",
+        description: "最初のイベント",
+        stateChanges: ["変化A", "変化B"],
+      },
+      {
+        episode: 2,
+        label: "イベント2",
+        description: "2番目のイベント",
+      },
+    ],
+  };
+
+  it("renders timeline container with caption", () => {
+    const html = renderEventTimeline(timeline);
+    assert.ok(html.includes("event-timeline"));
+    assert.ok(html.includes("テスト タイムライン"));
+  });
+
+  it("renders all events", () => {
+    const html = renderEventTimeline(timeline);
+    assert.ok(html.includes("イベント1"));
+    assert.ok(html.includes("イベント2"));
+    assert.ok(html.includes("最初のイベント"));
+    assert.ok(html.includes("2番目のイベント"));
+  });
+
+  it("renders episode numbers", () => {
+    const html = renderEventTimeline(timeline);
+    assert.ok(html.includes("第1話"));
+    assert.ok(html.includes("第2話"));
+  });
+
+  it("renders timestamp when present", () => {
+    const html = renderEventTimeline(timeline);
+    assert.ok(html.includes("01:00"));
+  });
+
+  it("renders state changes when present", () => {
+    const html = renderEventTimeline(timeline);
+    assert.ok(html.includes("state-changes"));
+    assert.ok(html.includes("変化A"));
+    assert.ok(html.includes("変化B"));
+  });
+
+  it("does not render state changes when absent", () => {
+    const html = renderEventTimeline(timeline);
+    // Event 2 has no stateChanges — check it doesn't have an empty list
+    const event2Section = html.split("イベント2")[1];
+    assert.ok(event2Section);
+    // The event2 section should not contain state-changes class before the next event
+    const nextEventIdx = event2Section.indexOf("timeline-event");
+    const relevantSection = nextEventIdx > 0 ? event2Section.substring(0, nextEventIdx) : event2Section;
+    assert.ok(!relevantSection.includes("state-changes"));
+  });
+
+  it("includes data-episode attributes", () => {
+    const html = renderEventTimeline(timeline);
+    assert.ok(html.includes('data-episode="1"'));
+    assert.ok(html.includes('data-episode="2"'));
+  });
+
+  it("escapes HTML in labels and descriptions", () => {
+    const dangerousTimeline: EventTimeline = {
+      caption: "<script>alert('xss')</script>",
+      events: [{
+        episode: 1,
+        label: "<b>bold</b>",
+        description: "safe & sound",
+      }],
+    };
+    const html = renderEventTimeline(dangerousTimeline);
+    assert.ok(!html.includes("<script>"));
+    assert.ok(html.includes("&lt;script&gt;"));
+    assert.ok(!html.includes("<b>bold</b>"));
+    assert.ok(html.includes("safe &amp; sound"));
+  });
+});
+
+// --- renderVerificationTable ---
+
+describe("renderVerificationTable", () => {
+  const table: VerificationTable = {
+    caption: "テスト検証表",
+    rows: [
+      {
+        claim: "天王星磁場傾斜角",
+        episode: 4,
+        depicted: "60°",
+        reference: "59.7°",
+        source: "Voyager 2",
+        accuracyPercent: 99.5,
+        status: "verified",
+      },
+      {
+        claim: "巡航速度",
+        episode: 3,
+        depicted: "3,000 km/s",
+        reference: "2,791 km/s",
+        source: "計算値",
+        accuracyPercent: 93.0,
+        status: "approximate",
+      },
+      {
+        claim: "地球捕捉ΔV",
+        episode: 5,
+        depicted: "※暫定",
+        reference: "0.42 km/s",
+        source: "vis-viva",
+        accuracyPercent: null,
+        status: "unverified",
+      },
+    ],
+  };
+
+  it("renders table with caption", () => {
+    const html = renderVerificationTable(table);
+    assert.ok(html.includes("verification-table"));
+    assert.ok(html.includes("テスト検証表"));
+  });
+
+  it("renders column headers in Japanese", () => {
+    const html = renderVerificationTable(table);
+    assert.ok(html.includes("検証項目"));
+    assert.ok(html.includes("話数"));
+    assert.ok(html.includes("作中値"));
+    assert.ok(html.includes("実測/文献値"));
+    assert.ok(html.includes("精度"));
+    assert.ok(html.includes("判定"));
+    assert.ok(html.includes("出典"));
+  });
+
+  it("renders all rows", () => {
+    const html = renderVerificationTable(table);
+    assert.ok(html.includes("天王星磁場傾斜角"));
+    assert.ok(html.includes("巡航速度"));
+    assert.ok(html.includes("地球捕捉ΔV"));
+  });
+
+  it("renders accuracy percentages", () => {
+    const html = renderVerificationTable(table);
+    assert.ok(html.includes("99.5%"));
+    assert.ok(html.includes("93.0%"));
+  });
+
+  it("renders dash for null accuracy", () => {
+    const html = renderVerificationTable(table);
+    // Unverified row with null accuracy should show "—"
+    assert.ok(html.includes("—"));
+  });
+
+  it("renders verification badges with status", () => {
+    const html = renderVerificationTable(table);
+    assert.ok(html.includes("検証済"));
+    assert.ok(html.includes("近似一致"));
+    assert.ok(html.includes("未検証"));
+  });
+
+  it("applies status CSS classes", () => {
+    const html = renderVerificationTable(table);
+    assert.ok(html.includes("status-verified"));
+    assert.ok(html.includes("status-approximate"));
+    assert.ok(html.includes("status-unverified"));
+  });
+
+  it("renders episode numbers", () => {
+    const html = renderVerificationTable(table);
+    assert.ok(html.includes("第4話"));
+    assert.ok(html.includes("第3話"));
+    assert.ok(html.includes("第5話"));
+  });
+
+  it("escapes HTML in claim text", () => {
+    const dangerousTable: VerificationTable = {
+      caption: "test",
+      rows: [{
+        claim: "<script>xss</script>",
+        episode: 1,
+        depicted: "test",
+        reference: "test",
+        source: "test",
+        accuracyPercent: null,
+        status: "verified",
+      }],
+    };
+    const html = renderVerificationTable(dangerousTable);
+    assert.ok(!html.includes("<script>xss</script>"));
+    assert.ok(html.includes("&lt;script&gt;"));
+  });
+});
+
+// --- renderSummaryPage with new section types ---
+
+describe("renderSummaryPage with eventTimeline and verificationTable", () => {
+  it("renders eventTimeline in summary section", () => {
+    const report: SummaryReport = {
+      slug: "test-timeline",
+      title: "テスト",
+      summary: "テスト",
+      sections: [{
+        heading: "タイムライン",
+        markdown: "テスト",
+        eventTimeline: {
+          caption: "テスト",
+          events: [{ episode: 1, label: "テスト", description: "テスト" }],
+        },
+      }],
+    };
+    const html = renderSummaryPage(report);
+    assert.ok(html.includes("event-timeline"));
+    assert.ok(html.includes("timeline-track"));
+  });
+
+  it("renders verificationTable in summary section", () => {
+    const report: SummaryReport = {
+      slug: "test-verification",
+      title: "テスト",
+      summary: "テスト",
+      sections: [{
+        heading: "検証",
+        markdown: "テスト",
+        verificationTable: {
+          caption: "テスト",
+          rows: [{
+            claim: "テスト",
+            episode: 1,
+            depicted: "1",
+            reference: "1",
+            source: "テスト",
+            accuracyPercent: 100,
+            status: "verified",
+          }],
+        },
+      }],
+    };
+    const html = renderSummaryPage(report);
+    assert.ok(html.includes("verification-table"));
+    assert.ok(html.includes("検証済"));
   });
 });
