@@ -141,6 +141,29 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
     const dialogue = readJsonFile<EpisodeDialogue>(path.join(episodesDir, `ep${epNum}_dialogue.json`));
     const speakersFile = readJsonFile<SpeakersFile>(path.join(episodesDir, `ep${epNum}_speakers.json`));
 
+    // Discover additional sources (e.g. ep01_lines_whisper.json)
+    const additionalSources: TranscriptionPageData["additionalSources"] = [];
+    const altPattern = new RegExp(`^ep${epNum}_lines_(\\w+)\\.json$`);
+    const altFiles = fs.readdirSync(episodesDir).filter(f => altPattern.test(f)).sort();
+    for (const altFile of altFiles) {
+      const altLines = readJsonFile<EpisodeLines>(path.join(episodesDir, altFile));
+      if (!altLines) continue;
+      // Skip if same source type and hash as primary
+      if (altLines.sourceSubtitle.source === lines.sourceSubtitle.source
+          && altLines.sourceSubtitle.rawContentHash === lines.sourceSubtitle.rawContentHash) continue;
+      additionalSources.push({
+        source: altLines.sourceSubtitle.source,
+        language: altLines.sourceSubtitle.language,
+        lines: altLines.lines.map(l => ({
+          lineId: l.lineId,
+          startMs: l.startMs,
+          endMs: l.endMs,
+          text: l.text,
+          mergeReasons: l.mergeReasons,
+        })),
+      });
+    }
+
     transcriptions.push({
       episode: lines.episode,
       videoId: lines.videoId,
@@ -176,6 +199,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
         description: s.description,
       })) : null,
       title: dialogue ? dialogue.title : null,
+      additionalSources: additionalSources.length > 0 ? additionalSources : undefined,
     });
   }
   return transcriptions;

@@ -544,6 +544,13 @@ footer {
 .confidence-uncertain { background: var(--red); color: #fff; }
 .phase-done { color: var(--green); font-weight: 600; }
 .phase-partial { color: var(--yellow); font-weight: 600; }
+.tab-container { margin: 1rem 0; }
+.tab-buttons { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 0; flex-wrap: wrap; }
+.tab-btn { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; color: var(--muted); font-size: 0.9rem; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.2s, border-color 0.2s; }
+.tab-btn:hover { color: var(--fg); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tab-panel { display: none; padding-top: 0.5rem; }
+.tab-panel.active { display: block; }
 @media (max-width: 600px) {
   body { padding: 1rem 0.5rem; }
   h1 { font-size: 1.4rem; }
@@ -1704,16 +1711,23 @@ export function renderTranscriptionPage(data: TranscriptionPageData, summaryPage
   const epTitle = data.title ?? `第${data.episode}話`;
   const heading = `文字起こし — ${escapeHtml(epTitle)}`;
 
+  // Collect all available sources for the source info card
+  const allSources = [{ label: sourceLabel(data.sourceInfo.source), count: data.lines.length }];
+  if (data.additionalSources) {
+    for (const src of data.additionalSources) {
+      allSources.push({ label: sourceLabel(src.source), count: src.lines.length });
+    }
+  }
+
   // Source info
   const sourceInfo = `
 <div class="card">
 <h2>ソース情報</h2>
 <table class="meta-table">
 <tr><th>エピソード</th><td>第${data.episode}話</td></tr>
-<tr><th>字幕ソース</th><td>${sourceLabel(data.sourceInfo.source)}</td></tr>
+<tr><th>字幕ソース</th><td>${allSources.map(s => `${s.label}（${s.count}行）`).join("、")}</td></tr>
 <tr><th>言語</th><td>${escapeHtml(data.sourceInfo.language)}</td></tr>
 <tr><th>動画ID</th><td>${escapeHtml(data.videoId)}</td></tr>
-<tr><th>抽出行数</th><td>${data.lines.length}行</td></tr>
 ${data.dialogue ? `<tr><th>帰属台詞数</th><td>${data.dialogue.length}行</td></tr>` : ""}
 ${data.speakers ? `<tr><th>話者数</th><td>${data.speakers.length}人</td></tr>` : ""}
 ${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` : ""}
@@ -1738,10 +1752,11 @@ ${rows}
 </table>`;
   }
 
-  // Main dialogue/lines table
-  let dialogueSection: string;
+  // Build tab panels
+  const tabs: { id: string; label: string; content: string }[] = [];
+
+  // Tab 1: Corrected dialogue (Phase 2) — if available
   if (data.dialogue && data.scenes) {
-    // Phase 2: show attributed dialogue grouped by scene
     const sceneMap = new Map(data.scenes.map(s => [s.id, s]));
     let currentScene = "";
     const rows: string[] = [];
@@ -1757,27 +1772,71 @@ ${rows}
         `<tr><td class="ts">${formatTimestamp(d.startMs)}</td><td class="speaker">${escapeHtml(d.speakerName)}</td><td>${escapeHtml(d.text)}</td><td>${confidenceBadge(d.confidence)}</td></tr>`
       );
     }
-    dialogueSection = `
-<h2>台詞一覧（話者帰属済み）</h2>
-<table class="data-table dialogue-table">
+    tabs.push({
+      id: "corrected",
+      label: "修正版（話者帰属済み）",
+      content: `<table class="data-table dialogue-table">
 <thead><tr><th>時刻</th><th>話者</th><th>台詞</th><th>確度</th></tr></thead>
 <tbody>
 ${rows.join("\n")}
 </tbody>
-</table>`;
+</table>`,
+    });
+  }
+
+  // Tab for primary raw source
+  tabs.push({
+    id: "primary",
+    label: `${sourceLabel(data.sourceInfo.source)}（生データ）`,
+    content: renderRawLinesTable(data.lines),
+  });
+
+  // Tabs for additional sources
+  if (data.additionalSources) {
+    for (let i = 0; i < data.additionalSources.length; i++) {
+      const src = data.additionalSources[i];
+      tabs.push({
+        id: `alt-${i}`,
+        label: `${sourceLabel(src.source)}（生データ）`,
+        content: renderRawLinesTable(src.lines),
+      });
+    }
+  }
+
+  // Build tabbed UI (or simple view if only one tab)
+  let dialogueSection: string;
+  if (tabs.length === 1) {
+    dialogueSection = `<h2>${escapeHtml(tabs[0].label)}</h2>\n${tabs[0].content}`;
   } else {
-    // Phase 1 only: show raw extracted lines
-    const rows = data.lines.map(l =>
-      `<tr><td class="ts">${formatTimestamp(l.startMs)}</td><td>${escapeHtml(l.text)}</td><td>${l.mergeReasons.length > 0 ? escapeHtml(l.mergeReasons.join(", ")) : "—"}</td></tr>`
+    const tabButtons = tabs.map((t, i) =>
+      `<button class="tab-btn${i === 0 ? " active" : ""}" data-tab="${t.id}">${escapeHtml(t.label)}</button>`
+    ).join("\n");
+    const tabPanels = tabs.map((t, i) =>
+      `<div class="tab-panel${i === 0 ? " active" : ""}" id="tab-${t.id}">\n${t.content}\n</div>`
     ).join("\n");
     dialogueSection = `
-<h2>抽出行一覧（話者未帰属）</h2>
-<table class="data-table lines-table">
-<thead><tr><th>時刻</th><th>テキスト</th><th>結合理由</th></tr></thead>
-<tbody>
-${rows}
-</tbody>
-</table>`;
+<h2>台詞データ</h2>
+<div class="tab-container">
+<div class="tab-buttons">
+${tabButtons}
+</div>
+${tabPanels}
+</div>
+<script>
+(function(){
+  var btns = document.querySelectorAll('.tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+  btns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btns.forEach(function(b){ b.classList.remove('active'); });
+      panels.forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      var panel = document.getElementById('tab-' + btn.getAttribute('data-tab'));
+      if(panel) panel.classList.add('active');
+    });
+  });
+})();
+</script>`;
   }
 
   const content = `
@@ -1789,6 +1848,19 @@ ${dialogueSection}`;
   return layoutHtml(`文字起こし 第${data.episode}話`, content, "..", summaryPages, `第${data.episode}話の文字起こし・台詞データ`);
 }
 
+/** Render a raw lines table (Phase 1 extracted lines) */
+function renderRawLinesTable(lines: { lineId: string; startMs: number; endMs: number; text: string; mergeReasons: string[] }[]): string {
+  const rows = lines.map(l =>
+    `<tr><td class="ts">${formatTimestamp(l.startMs)}</td><td>${escapeHtml(l.text)}</td><td>${l.mergeReasons.length > 0 ? escapeHtml(l.mergeReasons.join(", ")) : "—"}</td></tr>`
+  ).join("\n");
+  return `<table class="data-table lines-table">
+<thead><tr><th>時刻</th><th>テキスト</th><th>結合理由</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+}
+
 /** Render the transcription index page */
 export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[], summaryPages?: SiteManifest["summaryPages"]): string {
   const rows = transcriptions.map(t => {
@@ -1796,10 +1868,12 @@ export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[]
     const link = `ep-${String(t.episode).padStart(3, "0")}.html`;
     const phase = t.dialogue ? "Phase 2 完了" : "Phase 1 のみ";
     const phaseClass = t.dialogue ? "phase-done" : "phase-partial";
+    const sourceCount = 1 + (t.additionalSources?.length ?? 0);
+    const sourceNames = [sourceLabel(t.sourceInfo.source), ...(t.additionalSources?.map(s => sourceLabel(s.source)) ?? [])].join("、");
     return `<tr>
 <td><a href="${link}">第${t.episode}話</a></td>
 <td>${escapeHtml(epTitle)}</td>
-<td>${sourceLabel(t.sourceInfo.source)}</td>
+<td>${sourceNames}${sourceCount > 1 ? ` (${sourceCount})` : ""}</td>
 <td>${t.lines.length}</td>
 <td>${t.dialogue ? t.dialogue.length : "—"}</td>
 <td>${t.speakers ? t.speakers.length : "—"}</td>

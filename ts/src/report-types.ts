@@ -399,6 +399,18 @@ export interface TranscriptionPageData {
   }[] | null;
   /** Episode title from dialogue file (null if Phase 2 not done) */
   title: string | null;
+  /** Additional raw sources (e.g. Whisper when primary is VTT, or VTT when primary is Whisper) */
+  additionalSources?: {
+    source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
+    language: string;
+    lines: {
+      lineId: string;
+      startMs: number;
+      endMs: number;
+      text: string;
+      mergeReasons: string[];
+    }[];
+  }[];
 }
 
 /** Site-wide manifest listing all available reports */

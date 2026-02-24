@@ -2903,7 +2903,7 @@ describe("renderTranscriptionPage", () => {
     assert.ok(html.includes("Whisper STT"));
     assert.ok(html.includes("2行"));
     assert.ok(html.includes("Phase 1 のみ"));
-    assert.ok(html.includes("抽出行一覧"));
+    assert.ok(html.includes("Whisper STT（生データ）"));
     assert.ok(html.includes("small_gap"));
   });
 
@@ -2915,7 +2915,8 @@ describe("renderTranscriptionPage", () => {
     assert.ok(html.includes("こんにちは"));
     assert.ok(html.includes("了解です"));
     assert.ok(html.includes("Phase 2 完了"));
-    assert.ok(html.includes("台詞一覧"));
+    assert.ok(html.includes("修正版（話者帰属済み）"));
+    assert.ok(html.includes("台詞データ"));
     assert.ok(html.includes("話者一覧"));
     assert.ok(html.includes("船長"));
     assert.ok(html.includes("冒頭シーン"));
@@ -2950,6 +2951,62 @@ describe("renderTranscriptionPage", () => {
     const html = renderTranscriptionPage(data);
     assert.ok(!html.includes("<script>alert"));
     assert.ok(html.includes("&lt;script&gt;"));
+  });
+
+  it("renders tab UI when Phase 2 has multiple sources", () => {
+    const data: TranscriptionPageData = {
+      ...phase2Done,
+      additionalSources: [{
+        source: "whisper",
+        language: "ja",
+        lines: [
+          { lineId: "w1", startMs: 0, endMs: 5000, text: "Whisperテスト", mergeReasons: [] },
+        ],
+      }],
+    };
+    const html = renderTranscriptionPage(data);
+    // Should have tab container with 3 tabs
+    assert.ok(html.includes("tab-container"));
+    assert.ok(html.includes("修正版（話者帰属済み）"));
+    assert.ok(html.includes("YouTube 自動字幕（生データ）"));
+    assert.ok(html.includes("Whisper STT（生データ）"));
+    assert.ok(html.includes("Whisperテスト"));
+    // Tab switching script
+    assert.ok(html.includes("tab-btn"));
+    assert.ok(html.includes("tab-panel"));
+  });
+
+  it("renders single tab without tab UI when Phase 1 only", () => {
+    const html = renderTranscriptionPage(phase1Only);
+    // No tab buttons for single source (CSS class exists in stylesheet but no tab markup)
+    assert.ok(!html.includes('<button class="tab-btn'));
+    assert.ok(!html.includes('<div class="tab-container'));
+    assert.ok(html.includes("Whisper STT（生データ）"));
+    assert.ok(html.includes("テスト台詞"));
+  });
+
+  it("renders two tabs for Phase 2 without additional sources", () => {
+    const html = renderTranscriptionPage(phase2Done);
+    // corrected tab + primary raw tab = 2 tabs → tab UI shown
+    assert.ok(html.includes("tab-container"));
+    assert.ok(html.includes("修正版（話者帰属済み）"));
+    assert.ok(html.includes("YouTube 自動字幕（生データ）"));
+  });
+
+  it("shows all sources in source info card", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      additionalSources: [{
+        source: "youtube-auto",
+        language: "ja",
+        lines: [
+          { lineId: "v1", startMs: 0, endMs: 3000, text: "VTTテスト", mergeReasons: [] },
+        ],
+      }],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("Whisper STT（2行）"));
+    assert.ok(html.includes("YouTube 自動字幕（1行）"));
   });
 });
 

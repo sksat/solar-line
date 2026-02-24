@@ -1,0 +1,4114 @@
+{
+  "schemaVersion": 1,
+  "videoId": "YXZWJLKD7Oo",
+  "episode": 2,
+  "sourceSubtitle": {
+    "language": "ja",
+    "source": "whisper",
+    "rawContentHash": "ecb6a28f4e095a41847cdbb7fdf1fcd89bb7fc001634822f8eaf71bd57ab554e"
+  },
+  "lines": [
+    {
+      "lineId": "ep02-line-001",
+      "startMs": 27000,
+      "endMs": 32000,
+      "text": "分かったよ 20分で切り上げる 8分は帰り道にとっておく",
+      "rawEntryIds": [
+        "whisper-4"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-002",
+      "startMs": 32000,
+      "endMs": 35000,
+      "text": "そうしてください",
+      "rawEntryIds": [
+        "whisper-5"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-003",
+      "startMs": 35000,
+      "endMs": 41000,
+      "text": "RCS深すなよ 不安ならアンビリカルをつなげて外に出ればいいじゃないですか",
+      "rawEntryIds": [
+        "whisper-6"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-004",
+      "startMs": 41000,
+      "endMs": 46000,
+      "text": "好んでつける船乗りはいないよ だから死亡率が高いんです",
+      "rawEntryIds": [
+        "whisper-7"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-005",
+      "startMs": 46000,
+      "endMs": 51000,
+      "text": "春にフロストラインが出てる 冷却系圧力は規定ないですが",
+      "rawEntryIds": [
+        "whisper-8"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-006",
+      "startMs": 80000,
+      "endMs": 83000,
+      "text": "次はありません 優しく言いました",
+      "rawEntryIds": [
+        "whisper-16"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-007",
+      "startMs": 83000,
+      "endMs": 86000,
+      "text": "ありがとよ",
+      "rawEntryIds": [
+        "whisper-17"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-008",
+      "startMs": 86000,
+      "endMs": 89000,
+      "text": "累積占領5.6センチシーベルト",
+      "rawEntryIds": [
+        "whisper-18"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-009",
+      "startMs": 89000,
+      "endMs": 94000,
+      "text": "EVA可能時間残り16分です",
+      "rawEntryIds": [
+        "whisper-19"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-010",
+      "startMs": 94000,
+      "endMs": 96000,
+      "text": "聞いてますか",
+      "rawEntryIds": [
+        "whisper-20"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-011",
+      "startMs": 96000,
+      "endMs": 99000,
+      "text": "ああ聞いてる",
+      "rawEntryIds": [
+        "whisper-21"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-012",
+      "startMs": 99000,
+      "endMs": 104000,
+      "text": "ガニメデが追い越してく 私たち置いてかれる",
+      "rawEntryIds": [
+        "whisper-22"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-013",
+      "startMs": 104000,
+      "endMs": 108000,
+      "text": "視覚的閉僧です 実際の相対速度は増加傾向",
+      "rawEntryIds": [
+        "whisper-23"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-014",
+      "startMs": 108000,
+      "endMs": 113000,
+      "text": "3時間後に再近接を外れます",
+      "rawEntryIds": [
+        "whisper-24"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-015",
+      "startMs": 113000,
+      "endMs": 118000,
+      "text": "けえ正直に言え この船まだ飛ぶか",
+      "rawEntryIds": [
+        "whisper-25"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-016",
+      "startMs": 118000,
+      "endMs": 124000,
+      "text": "飛ぶの定義によります ここから安全権に逃れるなら確率は23%",
+      "rawEntryIds": [
+        "whisper-26"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-017",
+      "startMs": 124000,
+      "endMs": 130000,
+      "text": "誰も追いつけない加速をかけるなら 確率は4%もしくは火星に帰るのやめろ",
+      "rawEntryIds": [
+        "whisper-27"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-018",
+      "startMs": 130000,
+      "endMs": 133000,
+      "text": "了解やめます",
+      "rawEntryIds": [
+        "whisper-28"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-019",
+      "startMs": 133000,
+      "endMs": 136000,
+      "text": "まだ持ってくれよ",
+      "rawEntryIds": [
+        "whisper-29"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-020",
+      "startMs": 136000,
+      "endMs": 140000,
+      "text": "落ちるときは一緒です 優しく言いました",
+      "rawEntryIds": [
+        "whisper-30"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-021",
+      "startMs": 140000,
+      "endMs": 144000,
+      "text": "優しさって毒だよな",
+      "rawEntryIds": [
+        "whisper-31"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-022",
+      "startMs": 144000,
+      "endMs": 148000,
+      "text": "ほいあの光光湾のビーコンか",
+      "rawEntryIds": [
+        "whisper-32"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-023",
+      "startMs": 148000,
+      "endMs": 152000,
+      "text": "確かに先ほどの光は木製光湾交差の光湾ビーコンです",
+      "rawEntryIds": [
+        "whisper-33"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-024",
+      "startMs": 152000,
+      "endMs": 157000,
+      "text": "ですが現行企画ではありません 最終回転はおよそ30年前",
+      "rawEntryIds": [
+        "whisper-34"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-025",
+      "startMs": 157000,
+      "endMs": 161000,
+      "text": "現行の交路完成では運用停止扱いとなっています",
+      "rawEntryIds": [
+        "whisper-35"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-026",
+      "startMs": 161000,
+      "endMs": 164000,
+      "text": "ただがこの答えは動いていた",
+      "rawEntryIds": [
+        "whisper-36"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-027",
+      "startMs": 164000,
+      "endMs": 171000,
+      "text": "このシリーズの電源は小型ベータボルタイク発電素子 外送温度には使用時特有の発熱パターンが見られるはずですが",
+      "rawEntryIds": [
+        "whisper-37"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-028",
+      "startMs": 171000,
+      "endMs": 178000,
+      "text": "温度センサーには反応なし直近72時間以内に稼働を開始したと見られます",
+      "rawEntryIds": [
+        "whisper-38"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-029",
+      "startMs": 178000,
+      "endMs": 180000,
+      "text": "72時間ね",
+      "rawEntryIds": [
+        "whisper-39"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-030",
+      "startMs": 180000,
+      "endMs": 184000,
+      "text": "私たちが依頼を受けた時間と同じです",
+      "rawEntryIds": [
+        "whisper-40"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-031",
+      "startMs": 184000,
+      "endMs": 186000,
+      "text": "アドバイザリーも生きてるのか",
+      "rawEntryIds": [
+        "whisper-41"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-032",
+      "startMs": 186000,
+      "endMs": 190000,
+      "text": "温層波は12.5MHz 急式の周波数ですが生きています",
+      "rawEntryIds": [
+        "whisper-42"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-033",
+      "startMs": 190000,
+      "endMs": 192000,
+      "text": "随分と低周波だな",
+      "rawEntryIds": [
+        "whisper-43"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-034",
+      "startMs": 192000,
+      "endMs": 196000,
+      "text": "木製剣は強い放射線体やプラズマ卵流がありますから",
+      "rawEntryIds": [
+        "whisper-44"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-035",
+      "startMs": 196000,
+      "endMs": 201000,
+      "text": "低周波は精度は落ちますが減水に強いので 初手は主流でした",
+      "rawEntryIds": [
+        "whisper-45"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-036",
+      "startMs": 201000,
+      "endMs": 203000,
+      "text": "ものしりだな尊敬するよ",
+      "rawEntryIds": [
+        "whisper-46"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-037",
+      "startMs": 203000,
+      "endMs": 205000,
+      "text": "古い船に乗っていて良かったですね",
+      "rawEntryIds": [
+        "whisper-47"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-038",
+      "startMs": 205000,
+      "endMs": 207000,
+      "text": "そうだな",
+      "rawEntryIds": [
+        "whisper-48"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-039",
+      "startMs": 207000,
+      "endMs": 209000,
+      "text": "アドバイザリーされてる交路は",
+      "rawEntryIds": [
+        "whisper-49"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-040",
+      "startMs": 209000,
+      "endMs": 213000,
+      "text": "ガニメデ交差軌道から木製の夜側に滑り込み",
+      "rawEntryIds": [
+        "whisper-50"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-041",
+      "startMs": 213000,
+      "endMs": 215000,
+      "text": "岩のトーラス外園をかすめ",
+      "rawEntryIds": [
+        "whisper-51"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-042",
+      "startMs": 215000,
+      "endMs": 218000,
+      "text": "外向きのオーバースでエネルギーを一気に稼ぎ",
+      "rawEntryIds": [
+        "whisper-52"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-043",
+      "startMs": 218000,
+      "endMs": 221000,
+      "text": "影添いに木製剣を離脱する交路です",
+      "rawEntryIds": [
+        "whisper-53"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-044",
+      "startMs": 221000,
+      "endMs": 224000,
+      "text": "時期リスクの影と岩の谷間を通ることで",
+      "rawEntryIds": [
+        "whisper-54"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-045",
+      "startMs": 224000,
+      "endMs": 227000,
+      "text": "木製時期剣の低プラズマ域を指して抜けるわけか",
+      "rawEntryIds": [
+        "whisper-55"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-046",
+      "startMs": 227000,
+      "endMs": 231000,
+      "text": "はい木製時期剣の強大な背景ノイズに紛れつつ",
+      "rawEntryIds": [
+        "whisper-56",
+        "whisper-57"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep02-line-047",
+      "startMs": 231000,
+      "endMs": 233000,
+      "text": "影を主に高校することで",
+      "rawEntryIds": [
+        "whisper-58"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-048",
+      "startMs": 233000,
+      "endMs": 235000,
+      "text": "工学監視網を逃れ",
+      "rawEntryIds": [
+        "whisper-59"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-049",
+      "startMs": 235000,
+      "endMs": 239000,
+      "text": "岩をかすめることで遠距離の石外監視網が 随日を失いやすくなります",
+      "rawEntryIds": [
+        "whisper-60"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-050",
+      "startMs": 239000,
+      "endMs": 242000,
+      "text": "岩は火山活動が活発だから",
+      "rawEntryIds": [
+        "whisper-61"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-051",
+      "startMs": 242000,
+      "endMs": 245000,
+      "text": "音楽をかすめればサーマルも 随日ができないだろうな",
+      "rawEntryIds": [
+        "whisper-62"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-052",
+      "startMs": 245000,
+      "endMs": 248000,
+      "text": "オーバースで監視網に再度補足される頃には",
+      "rawEntryIds": [
+        "whisper-63"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-053",
+      "startMs": 248000,
+      "endMs": 251000,
+      "text": "追っても偽装合わせが間に合わないでしょうね",
+      "rawEntryIds": [
+        "whisper-64"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-054",
+      "startMs": 251000,
+      "endMs": 256000,
+      "text": "まるでこれを使って逃げてくださいと 言われてるようで腹が立つな",
+      "rawEntryIds": [
+        "whisper-65"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-055",
+      "startMs": 256000,
+      "endMs": 259000,
+      "text": "交路の視点が現在位置にちょうど管でいます",
+      "rawEntryIds": [
+        "whisper-66"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-056",
+      "startMs": 259000,
+      "endMs": 261000,
+      "text": "運の良さを言わいましょうか",
+      "rawEntryIds": [
+        "whisper-67"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-057",
+      "startMs": 261000,
+      "endMs": 264000,
+      "text": "運が良ければ何を受けてないだろうよ",
+      "rawEntryIds": [
+        "whisper-68"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-058",
+      "startMs": 264000,
+      "endMs": 266000,
+      "text": "私は止めましたが",
+      "rawEntryIds": [
+        "whisper-69"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-059",
+      "startMs": 266000,
+      "endMs": 267000,
+      "text": "すねるなよ",
+      "rawEntryIds": [
+        "whisper-70"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-060",
+      "startMs": 267000,
+      "endMs": 270000,
+      "text": "このビーコンを起動した誰かは",
+      "rawEntryIds": [
+        "whisper-71"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-061",
+      "startMs": 270000,
+      "endMs": 272000,
+      "text": "私たちがここに来ると知っていた",
+      "rawEntryIds": [
+        "whisper-72"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-062",
+      "startMs": 272000,
+      "endMs": 275000,
+      "text": "あるいはガニメデに急ぐ小型線を 待ち構えていた",
+      "rawEntryIds": [
+        "whisper-73"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-063",
+      "startMs": 275000,
+      "endMs": 279000,
+      "text": "もしくは誘導した",
+      "rawEntryIds": [
+        "whisper-74"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-064",
+      "startMs": 279000,
+      "endMs": 282000,
+      "text": "ゾッとするねその冗談",
+      "rawEntryIds": [
+        "whisper-75"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-065",
+      "startMs": 282000,
+      "endMs": 286000,
+      "text": "ビーコンの時刻タグは 木製標準時から7.4秒もずれています",
+      "rawEntryIds": [
+        "whisper-76"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-066",
+      "startMs": 286000,
+      "endMs": 289000,
+      "text": "交換校舎の誘導ならありえないな",
+      "rawEntryIds": [
+        "whisper-77"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-067",
+      "startMs": 289000,
+      "endMs": 291000,
+      "text": "急式のビーコンを使って",
+      "rawEntryIds": [
+        "whisper-78"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-068",
+      "startMs": 291000,
+      "endMs": 294000,
+      "text": "誰かが意図的に私たちを誘導しよう としているということです",
+      "rawEntryIds": [
+        "whisper-79"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-069",
+      "startMs": 294000,
+      "endMs": 296000,
+      "text": "唯一の想定外は",
+      "rawEntryIds": [
+        "whisper-80"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-070",
+      "startMs": 296000,
+      "endMs": 299000,
+      "text": "私たちが嵐の回路ではなく",
+      "rawEntryIds": [
+        "whisper-81"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-071",
+      "startMs": 299000,
+      "endMs": 303000,
+      "text": "マイレクトエントリーで 到着したことだろうな",
+      "rawEntryIds": [
+        "whisper-82"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-072",
+      "startMs": 303000,
+      "endMs": 306000,
+      "text": "それともう一つ",
+      "rawEntryIds": [
+        "whisper-83"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-073",
+      "startMs": 306000,
+      "endMs": 309000,
+      "text": "なんだよ",
+      "rawEntryIds": [
+        "whisper-84"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-074",
+      "startMs": 309000,
+      "endMs": 311000,
+      "text": "暗号課前のプレフィックスに",
+      "rawEntryIds": [
+        "whisper-85"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-075",
+      "startMs": 311000,
+      "endMs": 314000,
+      "text": "U3という文字列が埋め込まれていました",
+      "rawEntryIds": [
+        "whisper-86"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-076",
+      "startMs": 314000,
+      "endMs": 316000,
+      "text": "グラヌス3だとすると",
+      "rawEntryIds": [
+        "whisper-87"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-077",
+      "startMs": 316000,
+      "endMs": 319000,
+      "text": "天能性第三衛星タイタニアか",
+      "rawEntryIds": [
+        "whisper-88"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-078",
+      "startMs": 319000,
+      "endMs": 321000,
+      "text": "確定ではありません",
+      "rawEntryIds": [
+        "whisper-89"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-079",
+      "startMs": 321000,
+      "endMs": 324000,
+      "text": "ですが天能性建設を蒼起させる文字列を",
+      "rawEntryIds": [
+        "whisper-90"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-080",
+      "startMs": 324000,
+      "endMs": 326000,
+      "text": "わざと残す理由は一つ",
+      "rawEntryIds": [
+        "whisper-91"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-081",
+      "startMs": 326000,
+      "endMs": 329000,
+      "text": "連想させたいのです",
+      "rawEntryIds": [
+        "whisper-92"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-082",
+      "startMs": 332000,
+      "endMs": 334000,
+      "text": "気に入らないね",
+      "rawEntryIds": [
+        "whisper-93"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-083",
+      "startMs": 335000,
+      "endMs": 337000,
+      "text": "地球と火星が追いかけているのが",
+      "rawEntryIds": [
+        "whisper-94"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-084",
+      "startMs": 337000,
+      "endMs": 340000,
+      "text": "本当に罪にならこいつがお取りになる",
+      "rawEntryIds": [
+        "whisper-95"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-085",
+      "startMs": 340000,
+      "endMs": 342000,
+      "text": "2を漂流させれば",
+      "rawEntryIds": [
+        "whisper-96"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-086",
+      "startMs": 342000,
+      "endMs": 344000,
+      "text": "追っては回収せざるを得ません",
+      "rawEntryIds": [
+        "whisper-97"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-087",
+      "startMs": 344000,
+      "endMs": 346000,
+      "text": "ただし回収が進めば",
+      "rawEntryIds": [
+        "whisper-98"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-088",
+      "startMs": 346000,
+      "endMs": 348000,
+      "text": "次の追跡対象は私たちです",
+      "rawEntryIds": [
+        "whisper-99"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-089",
+      "startMs": 348000,
+      "endMs": 350000,
+      "text": "木製に落とすって手もある",
+      "rawEntryIds": [
+        "whisper-100"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-090",
+      "startMs": 350000,
+      "endMs": 352000,
+      "text": "目の前で燃え尽きりゃ",
+      "rawEntryIds": [
+        "whisper-101"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-091",
+      "startMs": 352000,
+      "endMs": 354000,
+      "text": "奴らも諦めるだろう",
+      "rawEntryIds": [
+        "whisper-102"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-092",
+      "startMs": 354000,
+      "endMs": 356000,
+      "text": "コンテナの存在が確認されている以上",
+      "rawEntryIds": [
+        "whisper-103"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-093",
+      "startMs": 356000,
+      "endMs": 359000,
+      "text": "破壊すれば運んだものが狙われます",
+      "rawEntryIds": [
+        "whisper-104"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-094",
+      "startMs": 359000,
+      "endMs": 362000,
+      "text": "それに2の中はおそらく生態です",
+      "rawEntryIds": [
+        "whisper-105"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-095",
+      "startMs": 362000,
+      "endMs": 364000,
+      "text": "人殺しにはなりたくないな",
+      "rawEntryIds": [
+        "whisper-106"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-096",
+      "startMs": 364000,
+      "endMs": 368000,
+      "text": "放り出すことも燃やすこともできない",
+      "rawEntryIds": [
+        "whisper-107"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-097",
+      "startMs": 368000,
+      "endMs": 370000,
+      "text": "なら中身を取り出して",
+      "rawEntryIds": [
+        "whisper-108"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-098",
+      "startMs": 370000,
+      "endMs": 373000,
+      "text": "コンテナだけを漂流させるのはどうでしょうか",
+      "rawEntryIds": [
+        "whisper-109"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-099",
+      "startMs": 373000,
+      "endMs": 376000,
+      "text": "運び屋として死ねって言うのか",
+      "rawEntryIds": [
+        "whisper-110"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-100",
+      "startMs": 376000,
+      "endMs": 378000,
+      "text": "少なくとも中身を取り出せば",
+      "rawEntryIds": [
+        "whisper-111"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-101",
+      "startMs": 378000,
+      "endMs": 380000,
+      "text": "コンテナだけ漂流させられますし",
+      "rawEntryIds": [
+        "whisper-112"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-102",
+      "startMs": 380000,
+      "endMs": 382000,
+      "text": "何よりコンテナに追跡信号が",
+      "rawEntryIds": [
+        "whisper-113"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-103",
+      "startMs": 382000,
+      "endMs": 385000,
+      "text": "埋められている可能性もあります",
+      "rawEntryIds": [
+        "whisper-114"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-104",
+      "startMs": 385000,
+      "endMs": 387000,
+      "text": "それは中身だって一緒だろう",
+      "rawEntryIds": [
+        "whisper-115"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-105",
+      "startMs": 387000,
+      "endMs": 389000,
+      "text": "いえ、コンテナは外部放射線を強固に",
+      "rawEntryIds": [
+        "whisper-116"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-106",
+      "startMs": 389000,
+      "endMs": 391000,
+      "text": "車兵しています",
+      "rawEntryIds": [
+        "whisper-117"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-107",
+      "startMs": 391000,
+      "endMs": 394000,
+      "text": "私ならそんな非効率的なことはしません",
+      "rawEntryIds": [
+        "whisper-118"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-108",
+      "startMs": 394000,
+      "endMs": 397000,
+      "text": "少しでも生存の可能性を上げるべきです",
+      "rawEntryIds": [
+        "whisper-119"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-109",
+      "startMs": 397000,
+      "endMs": 400000,
+      "text": "それに何者かが私たちを誘導している",
+      "rawEntryIds": [
+        "whisper-120"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-110",
+      "startMs": 400000,
+      "endMs": 403000,
+      "text": "その理由への手がかりがやられるかもしれません",
+      "rawEntryIds": [
+        "whisper-121"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-111",
+      "startMs": 403000,
+      "endMs": 405000,
+      "text": "あのでかい釣り張り",
+      "rawEntryIds": [
+        "whisper-122"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-112",
+      "startMs": 405000,
+      "endMs": 408000,
+      "text": "天能政権の影がここまで伸びてる",
+      "rawEntryIds": [
+        "whisper-123"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-113",
+      "startMs": 408000,
+      "endMs": 411000,
+      "text": "だったら泳がされるより先に",
+      "rawEntryIds": [
+        "whisper-124"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-114",
+      "startMs": 411000,
+      "endMs": 414000,
+      "text": "私たちから泳ぎ方を決めてやる",
+      "rawEntryIds": [
+        "whisper-125"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-115",
+      "startMs": 414000,
+      "endMs": 415000,
+      "text": "残り4分で",
+      "rawEntryIds": [
+        "whisper-126"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-116",
+      "startMs": 415000,
+      "endMs": 418000,
+      "text": "両のトーラスが延スカートに到達",
+      "rawEntryIds": [
+        "whisper-127"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-117",
+      "startMs": 418000,
+      "endMs": 420000,
+      "text": "地球圏、火星圏の船は",
+      "rawEntryIds": [
+        "whisper-128"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-118",
+      "startMs": 420000,
+      "endMs": 422000,
+      "text": "以前として周回軌道を豪華中",
+      "rawEntryIds": [
+        "whisper-129"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-119",
+      "startMs": 422000,
+      "endMs": 424000,
+      "text": "到達まで約13時間",
+      "rawEntryIds": [
+        "whisper-130"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-120",
+      "startMs": 424000,
+      "endMs": 426000,
+      "text": "まるで遠速気分だな",
+      "rawEntryIds": [
+        "whisper-131"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-121",
+      "startMs": 426000,
+      "endMs": 429000,
+      "text": "大型庭はいそ合わせに時間がかかります",
+      "rawEntryIds": [
+        "whisper-132"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-122",
+      "startMs": 429000,
+      "endMs": 431000,
+      "text": "どんくさい奴らだ",
+      "rawEntryIds": [
+        "whisper-133"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-123",
+      "startMs": 431000,
+      "endMs": 433000,
+      "text": "2時冷却系の圧力",
+      "rawEntryIds": [
+        "whisper-134"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-124",
+      "startMs": 433000,
+      "endMs": 434000,
+      "text": "まだ低下しています",
+      "rawEntryIds": [
+        "whisper-135"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-125",
+      "startMs": 434000,
+      "endMs": 436000,
+      "text": "老栄箇所は時期のずる周辺の",
+      "rawEntryIds": [
+        "whisper-136"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-126",
+      "startMs": 436000,
+      "endMs": 438000,
+      "text": "冷媒ラインと推測",
+      "rawEntryIds": [
+        "whisper-137"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-127",
+      "startMs": 438000,
+      "endMs": 441000,
+      "text": "次の式天下で路心温度が設計上限に",
+      "rawEntryIds": [
+        "whisper-138"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-128",
+      "startMs": 441000,
+      "endMs": 443000,
+      "text": "到達する可能性があります",
+      "rawEntryIds": [
+        "whisper-139"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-129",
+      "startMs": 443000,
+      "endMs": 446000,
+      "text": "つまり最後の一撃ってわけか",
+      "rawEntryIds": [
+        "whisper-140"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-130",
+      "startMs": 446000,
+      "endMs": 449000,
+      "text": "冷却余裕は通常運転の半分以下",
+      "rawEntryIds": [
+        "whisper-141"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-131",
+      "startMs": 449000,
+      "endMs": 452000,
+      "text": "運が悪ければ路心は限界温度を超え",
+      "rawEntryIds": [
+        "whisper-142"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-132",
+      "startMs": 452000,
+      "endMs": 454000,
+      "text": "式は二度とつかなくなります",
+      "rawEntryIds": [
+        "whisper-143"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-133",
+      "startMs": 454000,
+      "endMs": 456000,
+      "text": "爆地だな",
+      "rawEntryIds": [
+        "whisper-144"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-134",
+      "startMs": 456000,
+      "endMs": 458000,
+      "text": "放射線時期シールドの残住秒",
+      "rawEntryIds": [
+        "whisper-145"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-135",
+      "startMs": 458000,
+      "endMs": 459000,
+      "text": "42分",
+      "rawEntryIds": [
+        "whisper-146"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-136",
+      "startMs": 459000,
+      "endMs": 461000,
+      "text": "このままではコールの途中で",
+      "rawEntryIds": [
+        "whisper-147"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-137",
+      "startMs": 461000,
+      "endMs": 462000,
+      "text": "コア放射圏に焼かれます",
+      "rawEntryIds": [
+        "whisper-148"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-138",
+      "startMs": 462000,
+      "endMs": 464000,
+      "text": "それうれしいね",
+      "rawEntryIds": [
+        "whisper-149"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-139",
+      "startMs": 464000,
+      "endMs": 466000,
+      "text": "そのため推奨されませんが",
+      "rawEntryIds": [
+        "whisper-150"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-140",
+      "startMs": 466000,
+      "endMs": 468000,
+      "text": "時期シールドの出力を",
+      "rawEntryIds": [
+        "whisper-151"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-141",
+      "startMs": 468000,
+      "endMs": 469000,
+      "text": "放射線ベルトに合わせて",
+      "rawEntryIds": [
+        "whisper-152"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-142",
+      "startMs": 469000,
+      "endMs": 471000,
+      "text": "段階的に変調することで",
+      "rawEntryIds": [
+        "whisper-153"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-143",
+      "startMs": 471000,
+      "endMs": 473000,
+      "text": "残住秒を伸ばします",
+      "rawEntryIds": [
+        "whisper-154"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-144",
+      "startMs": 473000,
+      "endMs": 475000,
+      "text": "ただし一部でも計算に失敗するか",
+      "rawEntryIds": [
+        "whisper-155"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-145",
+      "startMs": 475000,
+      "endMs": 477000,
+      "text": "太陽風の予報が外れれば",
+      "rawEntryIds": [
+        "whisper-156"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-146",
+      "startMs": 477000,
+      "endMs": 479000,
+      "text": "放射線に焼かれます",
+      "rawEntryIds": [
+        "whisper-157"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-147",
+      "startMs": 481000,
+      "endMs": 482000,
+      "text": "いいさ",
+      "rawEntryIds": [
+        "whisper-158"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-148",
+      "startMs": 482000,
+      "endMs": 484000,
+      "text": "お前の計算を信じる",
+      "rawEntryIds": [
+        "whisper-159"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-149",
+      "startMs": 486000,
+      "endMs": 488000,
+      "text": "信じるのではなく依存です",
+      "rawEntryIds": [
+        "whisper-160"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-150",
+      "startMs": 488000,
+      "endMs": 490000,
+      "text": "素直じゃねえよな",
+      "rawEntryIds": [
+        "whisper-161"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-151",
+      "startMs": 490000,
+      "endMs": 491000,
+      "text": "まもなくペリジュピタ",
+      "rawEntryIds": [
+        "whisper-162"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-152",
+      "startMs": 491000,
+      "endMs": 493000,
+      "text": "コンテナ投下準備完了",
+      "rawEntryIds": [
+        "whisper-163"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-153",
+      "startMs": 493000,
+      "endMs": 495000,
+      "text": "時間稼ぎになればいいけど",
+      "rawEntryIds": [
+        "whisper-164"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-154",
+      "startMs": 495000,
+      "endMs": 497000,
+      "text": "相手は大型定です",
+      "rawEntryIds": [
+        "whisper-165"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-155",
+      "startMs": 497000,
+      "endMs": 499000,
+      "text": "低起動に漂流するコンテナを",
+      "rawEntryIds": [
+        "whisper-166"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-156",
+      "startMs": 499000,
+      "endMs": 500000,
+      "text": "回収するだけで",
+      "rawEntryIds": [
+        "whisper-167"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-157",
+      "startMs": 500000,
+      "endMs": 502000,
+      "text": "1週間はかかります",
+      "rawEntryIds": [
+        "whisper-168"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-158",
+      "startMs": 503000,
+      "endMs": 505000,
+      "text": "苦労して回収しても",
+      "rawEntryIds": [
+        "whisper-169"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-159",
+      "startMs": 505000,
+      "endMs": 507000,
+      "text": "開けたら残念がるだろうな",
+      "rawEntryIds": [
+        "whisper-170"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-160",
+      "startMs": 508000,
+      "endMs": 509000,
+      "text": "コンテナ投下",
+      "rawEntryIds": [
+        "whisper-171"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-161",
+      "startMs": 512000,
+      "endMs": 514000,
+      "text": "分離レール正常",
+      "rawEntryIds": [
+        "whisper-172"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-162",
+      "startMs": 514000,
+      "endMs": 517000,
+      "text": "コンテナ相対速度0.3m毎秒",
+      "rawEntryIds": [
+        "whisper-173"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-163",
+      "startMs": 517000,
+      "endMs": 519000,
+      "text": "式プレヒート完了",
+      "rawEntryIds": [
+        "whisper-174"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-164",
+      "startMs": 519000,
+      "endMs": 521000,
+      "text": "ロシン温度410度",
+      "rawEntryIds": [
+        "whisper-175"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-165",
+      "startMs": 523000,
+      "endMs": 524000,
+      "text": "メインアップ",
+      "rawEntryIds": [
+        "whisper-176"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-166",
+      "startMs": 526000,
+      "endMs": 527000,
+      "text": "式アーム度",
+      "rawEntryIds": [
+        "whisper-177"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-167",
+      "startMs": 527000,
+      "endMs": 529000,
+      "text": "衝撃に備えてください",
+      "rawEntryIds": [
+        "whisper-178"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-168",
+      "startMs": 529000,
+      "endMs": 530000,
+      "text": "放射線レベル",
+      "rawEntryIds": [
+        "whisper-179"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-169",
+      "startMs": 530000,
+      "endMs": 531000,
+      "text": "許容範囲内",
+      "rawEntryIds": [
+        "whisper-180"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-170",
+      "startMs": 531000,
+      "endMs": 534000,
+      "text": "543",
+      "rawEntryIds": [
+        "whisper-181",
+        "whisper-182",
+        "whisper-183"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep02-line-171",
+      "startMs": 534000,
+      "endMs": 537000,
+      "text": "21転換",
+      "rawEntryIds": [
+        "whisper-184",
+        "whisper-185",
+        "whisper-186"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep02-line-172",
+      "startMs": 545000,
+      "endMs": 547000,
+      "text": "木製剣からの離脱コールに乗りました",
+      "rawEntryIds": [
+        "whisper-187"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-173",
+      "startMs": 547000,
+      "endMs": 549000,
+      "text": "現在コードは50RJ",
+      "rawEntryIds": [
+        "whisper-188"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-174",
+      "startMs": 549000,
+      "endMs": 552000,
+      "text": "木製基準速度10.3km毎秒",
+      "rawEntryIds": [
+        "whisper-189"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-175",
+      "startMs": 552000,
+      "endMs": 554000,
+      "text": "線上面の中心線に到着",
+      "rawEntryIds": [
+        "whisper-190"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-176",
+      "startMs": 554000,
+      "endMs": 556000,
+      "text": "同調スラストはトリム飲み",
+      "rawEntryIds": [
+        "whisper-191",
+        "whisper-192"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep02-line-177",
+      "startMs": 556000,
+      "endMs": 558000,
+      "text": "プラズマ冷却終了",
+      "rawEntryIds": [
+        "whisper-193"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-178",
+      "startMs": 558000,
+      "endMs": 561000,
+      "text": "以降の式冷却は被膜冷却飲み",
+      "rawEntryIds": [
+        "whisper-194"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-179",
+      "startMs": 561000,
+      "endMs": 563000,
+      "text": "サーマルからも身を隠す",
+      "rawEntryIds": [
+        "whisper-195"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-180",
+      "startMs": 563000,
+      "endMs": 565000,
+      "text": "了解プラズマ冷却終了",
+      "rawEntryIds": [
+        "whisper-196",
+        "whisper-197"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep02-line-181",
+      "startMs": 565000,
+      "endMs": 568000,
+      "text": "冷却完了まで37時間",
+      "rawEntryIds": [
+        "whisper-198"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-182",
+      "startMs": 570000,
+      "endMs": 572000,
+      "text": "どうされました?",
+      "rawEntryIds": [
+        "whisper-199"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-183",
+      "startMs": 572000,
+      "endMs": 575000,
+      "text": "どうもこうも確認しに行くんだよ",
+      "rawEntryIds": [
+        "whisper-200"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-184",
+      "startMs": 575000,
+      "endMs": 577000,
+      "text": "釣り針の正体を",
+      "rawEntryIds": [
+        "whisper-201"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-185",
+      "startMs": 577000,
+      "endMs": 579000,
+      "text": "聞かせてもらおうと思ってな",
+      "rawEntryIds": [
+        "whisper-202"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-186",
+      "startMs": 580000,
+      "endMs": 581000,
+      "text": "サイカオンショックで",
+      "rawEntryIds": [
+        "whisper-203"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-187",
+      "startMs": 581000,
+      "endMs": 584000,
+      "text": "新博が停止する可能性が28%ありましたが",
+      "rawEntryIds": [
+        "whisper-204"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-188",
+      "startMs": 584000,
+      "endMs": 585000,
+      "text": "問題なく",
+      "rawEntryIds": [
+        "whisper-205"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-189",
+      "startMs": 585000,
+      "endMs": 587000,
+      "text": "蘇生プロセスは完了しました",
+      "rawEntryIds": [
+        "whisper-206"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-190",
+      "startMs": 587000,
+      "endMs": 590000,
+      "text": "4分の1で死ぬかもしれないのって",
+      "rawEntryIds": [
+        "whisper-207"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-191",
+      "startMs": 590000,
+      "endMs": 592000,
+      "text": "どういう感覚なんだろうな",
+      "rawEntryIds": [
+        "whisper-208"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-192",
+      "startMs": 592000,
+      "endMs": 594000,
+      "text": "先ほどまでの私たちです",
+      "rawEntryIds": [
+        "whisper-209"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-193",
+      "startMs": 595000,
+      "endMs": 597000,
+      "text": "何ですか?",
+      "rawEntryIds": [
+        "whisper-210"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-194",
+      "startMs": 597000,
+      "endMs": 598000,
+      "text": "別に",
+      "rawEntryIds": [
+        "whisper-211"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-195",
+      "startMs": 600000,
+      "endMs": 601000,
+      "text": "もう意識があるのか",
+      "rawEntryIds": [
+        "whisper-212"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-196",
+      "startMs": 601000,
+      "endMs": 602000,
+      "text": "すごいな",
+      "rawEntryIds": [
+        "whisper-213"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-197",
+      "startMs": 602000,
+      "endMs": 604000,
+      "text": "目覚めはよろしいようで",
+      "rawEntryIds": [
+        "whisper-214"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-198",
+      "startMs": 604000,
+      "endMs": 606000,
+      "text": "キミエステンズ",
+      "rawEntryIds": [
+        "whisper-215"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-199",
+      "startMs": 606000,
+      "endMs": 608000,
+      "text": "なんだ土製ナマリか",
+      "rawEntryIds": [
+        "whisper-216"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-200",
+      "startMs": 608000,
+      "endMs": 609000,
+      "text": "いいえ",
+      "rawEntryIds": [
+        "whisper-217"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-201",
+      "startMs": 609000,
+      "endMs": 611000,
+      "text": "これはコモンではありません",
+      "rawEntryIds": [
+        "whisper-218"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-202",
+      "startMs": 611000,
+      "endMs": 612000,
+      "text": "エスパー",
+      "rawEntryIds": [
+        "whisper-219"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-203",
+      "startMs": 612000,
+      "endMs": 614000,
+      "text": "もしくは彼らの言葉ではリングボです",
+      "rawEntryIds": [
+        "whisper-220"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-204",
+      "startMs": 614000,
+      "endMs": 615000,
+      "text": "天能生後か",
+      "rawEntryIds": [
+        "whisper-221"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-205",
+      "startMs": 615000,
+      "endMs": 617000,
+      "text": "ずいぶんと中立きどりな言葉を",
+      "rawEntryIds": [
+        "whisper-222"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-206",
+      "startMs": 617000,
+      "endMs": 618000,
+      "text": "使うもんだ",
+      "rawEntryIds": [
+        "whisper-223"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-207",
+      "startMs": 618000,
+      "endMs": 620000,
+      "text": "こんな時代に",
+      "rawEntryIds": [
+        "whisper-224"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-208",
+      "startMs": 620000,
+      "endMs": 622000,
+      "text": "それで何か覚えてることは",
+      "rawEntryIds": [
+        "whisper-225"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-209",
+      "startMs": 622000,
+      "endMs": 624000,
+      "text": "エスパーで話さないと伝わらないですよ",
+      "rawEntryIds": [
+        "whisper-226"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-210",
+      "startMs": 624000,
+      "endMs": 626000,
+      "text": "無茶言うなよ",
+      "rawEntryIds": [
+        "whisper-227"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-211",
+      "startMs": 626000,
+      "endMs": 628000,
+      "text": "気温ビメモーラス",
+      "rawEntryIds": [
+        "whisper-228"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-212",
+      "startMs": 628000,
+      "endMs": 630000,
+      "text": "心強いね",
+      "rawEntryIds": [
+        "whisper-229"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-213",
+      "startMs": 632000,
+      "endMs": 634000,
+      "text": "断片しか覚えていないと",
+      "rawEntryIds": [
+        "whisper-230"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-214",
+      "startMs": 638000,
+      "endMs": 640000,
+      "text": "もうバーマフィーキャプスロー",
+      "rawEntryIds": [
+        "whisper-231"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-215",
+      "startMs": 640000,
+      "endMs": 641000,
+      "text": "ドゥデクバーハモイ",
+      "rawEntryIds": [
+        "whisper-232"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-216",
+      "startMs": 641000,
+      "endMs": 642000,
+      "text": "長い旅",
+      "rawEntryIds": [
+        "whisper-233"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-217",
+      "startMs": 642000,
+      "endMs": 643000,
+      "text": "光のない旅",
+      "rawEntryIds": [
+        "whisper-234"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-218",
+      "startMs": 643000,
+      "endMs": 645000,
+      "text": "24人がカプセルに眠っていた",
+      "rawEntryIds": [
+        "whisper-235"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-219",
+      "startMs": 645000,
+      "endMs": 647000,
+      "text": "24人",
+      "rawEntryIds": [
+        "whisper-236"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-220",
+      "startMs": 656000,
+      "endMs": 658000,
+      "text": "一緒に夢を見ているようだったが",
+      "rawEntryIds": [
+        "whisper-237"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-221",
+      "startMs": 658000,
+      "endMs": 660000,
+      "text": "次々と運びさられた",
+      "rawEntryIds": [
+        "whisper-238"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-222",
+      "startMs": 662000,
+      "endMs": 663000,
+      "text": "巨大な船",
+      "rawEntryIds": [
+        "whisper-239"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-223",
+      "startMs": 663000,
+      "endMs": 665000,
+      "text": "明かりのない",
+      "rawEntryIds": [
+        "whisper-240"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-224",
+      "startMs": 665000,
+      "endMs": 666000,
+      "text": "無頭の歓迎",
+      "rawEntryIds": [
+        "whisper-241"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-225",
+      "startMs": 666000,
+      "endMs": 669000,
+      "text": "通常の交換校舎や地球圏の船ではありません",
+      "rawEntryIds": [
+        "whisper-242"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-226",
+      "startMs": 669000,
+      "endMs": 670000,
+      "text": "密輸か",
+      "rawEntryIds": [
+        "whisper-243"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-227",
+      "startMs": 670000,
+      "endMs": 671000,
+      "text": "違法輸送か",
+      "rawEntryIds": [
+        "whisper-244"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-228",
+      "startMs": 671000,
+      "endMs": 672000,
+      "text": "軍事行動か",
+      "rawEntryIds": [
+        "whisper-245"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-229",
+      "startMs": 672000,
+      "endMs": 674000,
+      "text": "もしくは外演の何かか",
+      "rawEntryIds": [
+        "whisper-246"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-230",
+      "startMs": 675000,
+      "endMs": 676000,
+      "text": "最悪だ",
+      "rawEntryIds": [
+        "whisper-247"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-231",
+      "startMs": 676000,
+      "endMs": 677000,
+      "text": "無頭の歓迎なんざ",
+      "rawEntryIds": [
+        "whisper-248"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-232",
+      "startMs": 677000,
+      "endMs": 679000,
+      "text": "死神と同じようなもんだ",
+      "rawEntryIds": [
+        "whisper-249"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-233",
+      "startMs": 679000,
+      "endMs": 681000,
+      "text": "生還率の統計でも出しますか",
+      "rawEntryIds": [
+        "whisper-250"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-234",
+      "startMs": 681000,
+      "endMs": 683000,
+      "text": "やめろって演技でもない",
+      "rawEntryIds": [
+        "whisper-251"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-235",
+      "startMs": 686000,
+      "endMs": 687000,
+      "text": "違うよ",
+      "rawEntryIds": [
+        "whisper-252"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-236",
+      "startMs": 687000,
+      "endMs": 688000,
+      "text": "私はフリーの運び屋",
+      "rawEntryIds": [
+        "whisper-253"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-237",
+      "startMs": 688000,
+      "endMs": 690000,
+      "text": "なんだ分かるんじゃないですか",
+      "rawEntryIds": [
+        "whisper-254"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-238",
+      "startMs": 690000,
+      "endMs": 692000,
+      "text": "誰が分からないって言ったよ",
+      "rawEntryIds": [
+        "whisper-255"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-239",
+      "startMs": 692000,
+      "endMs": 694000,
+      "text": "じゃああなたは自由なんだ",
+      "rawEntryIds": [
+        "whisper-256"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-240",
+      "startMs": 695000,
+      "endMs": 697000,
+      "text": "あいつも分かるみたいだぞ",
+      "rawEntryIds": [
+        "whisper-257"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-241",
+      "startMs": 697000,
+      "endMs": 698000,
+      "text": "コモン",
+      "rawEntryIds": [
+        "whisper-258"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-242",
+      "startMs": 698000,
+      "endMs": 699000,
+      "text": "むかつく",
+      "rawEntryIds": [
+        "whisper-259"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-243",
+      "startMs": 699000,
+      "endMs": 702000,
+      "text": "故郷ではいつも星を眺めていたの",
+      "rawEntryIds": [
+        "whisper-260"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-244",
+      "startMs": 702000,
+      "endMs": 705000,
+      "text": "星を見るのが好きだったのか",
+      "rawEntryIds": [
+        "whisper-261"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-245",
+      "startMs": 705000,
+      "endMs": 708000,
+      "text": "天皇政権の生活習慣と不合します",
+      "rawEntryIds": [
+        "whisper-262"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-246",
+      "startMs": 708000,
+      "endMs": 710000,
+      "text": "構成観測が文化的ご楽として",
+      "rawEntryIds": [
+        "whisper-263"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-247",
+      "startMs": 710000,
+      "endMs": 712000,
+      "text": "残っている地域です",
+      "rawEntryIds": [
+        "whisper-264"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-248",
+      "startMs": 712000,
+      "endMs": 714000,
+      "text": "星は嘘をつかないから",
+      "rawEntryIds": [
+        "whisper-265"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-249",
+      "startMs": 714000,
+      "endMs": 717000,
+      "text": "人間はよく嘘をつきますからね",
+      "rawEntryIds": [
+        "whisper-266"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-250",
+      "startMs": 717000,
+      "endMs": 718000,
+      "text": "怒るなよ",
+      "rawEntryIds": [
+        "whisper-267"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-251",
+      "startMs": 718000,
+      "endMs": 720000,
+      "text": "あなたは自由な人",
+      "rawEntryIds": [
+        "whisper-268"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-252",
+      "startMs": 720000,
+      "endMs": 722000,
+      "text": "だから私を選んでくれたのね",
+      "rawEntryIds": [
+        "whisper-269"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-253",
+      "startMs": 723000,
+      "endMs": 724000,
+      "text": "私を選んでくれた?",
+      "rawEntryIds": [
+        "whisper-270"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-254",
+      "startMs": 724000,
+      "endMs": 726000,
+      "text": "どういうことだ",
+      "rawEntryIds": [
+        "whisper-271"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-255",
+      "startMs": 726000,
+      "endMs": 728000,
+      "text": "ただそう感じたの",
+      "rawEntryIds": [
+        "whisper-272"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-256",
+      "startMs": 728000,
+      "endMs": 732000,
+      "text": "あなたが私を生きる方を選んでくれたって",
+      "rawEntryIds": [
+        "whisper-273"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-257",
+      "startMs": 732000,
+      "endMs": 734000,
+      "text": "アプローチ原則完了",
+      "rawEntryIds": [
+        "whisper-274"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-258",
+      "startMs": 734000,
+      "endMs": 736000,
+      "text": "まもなく昼休突入",
+      "rawEntryIds": [
+        "whisper-275"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-259",
+      "startMs": 736000,
+      "endMs": 739000,
+      "text": "エンケラドゥス起動面にエントリーします",
+      "rawEntryIds": [
+        "whisper-276"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-260",
+      "startMs": 739000,
+      "endMs": 741000,
+      "text": "指揮による原則ができないため",
+      "rawEntryIds": [
+        "whisper-277"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-261",
+      "startMs": 741000,
+      "endMs": 743000,
+      "text": "オーバースなしでエンケラドゥスの弱安定期に",
+      "rawEntryIds": [
+        "whisper-278"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-262",
+      "startMs": 743000,
+      "endMs": 745000,
+      "text": "このまま滑り込み",
+      "rawEntryIds": [
+        "whisper-279"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-263",
+      "startMs": 745000,
+      "endMs": 747000,
+      "text": "後編進起動から長跡で原則して",
+      "rawEntryIds": [
+        "whisper-280"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-264",
+      "startMs": 747000,
+      "endMs": 749000,
+      "text": "仮の集会に入ります",
+      "rawEntryIds": [
+        "whisper-281"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-265",
+      "startMs": 749000,
+      "endMs": 752000,
+      "text": "あとはステーション側の引き込み支援に頼りましょう",
+      "rawEntryIds": [
+        "whisper-282"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-266",
+      "startMs": 752000,
+      "endMs": 755000,
+      "text": "まさかこんなところまで来るとは",
+      "rawEntryIds": [
+        "whisper-283"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-267",
+      "startMs": 755000,
+      "endMs": 758000,
+      "text": "まだまだ目的の天皇政権は先です",
+      "rawEntryIds": [
+        "whisper-284"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-268",
+      "startMs": 758000,
+      "endMs": 760000,
+      "text": "そりゃ楽しみだ",
+      "rawEntryIds": [
+        "whisper-285"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-269",
+      "startMs": 760000,
+      "endMs": 763000,
+      "text": "あのお客さんにもう一つのコンテナの中身について",
+      "rawEntryIds": [
+        "whisper-286"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-270",
+      "startMs": 763000,
+      "endMs": 765000,
+      "text": "聞いてみたか",
+      "rawEntryIds": [
+        "whisper-287"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-271",
+      "startMs": 765000,
+      "endMs": 767000,
+      "text": "ええ、何も知らないと",
+      "rawEntryIds": [
+        "whisper-288"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-272",
+      "startMs": 767000,
+      "endMs": 768000,
+      "text": "だよな",
+      "rawEntryIds": [
+        "whisper-289"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-273",
+      "startMs": 772000,
+      "endMs": 773000,
+      "text": "言えねえよな",
+      "rawEntryIds": [
+        "whisper-290"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-274",
+      "startMs": 773000,
+      "endMs": 775000,
+      "text": "もう一つは死体だったなんて",
+      "rawEntryIds": [
+        "whisper-291"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-275",
+      "startMs": 775000,
+      "endMs": 778000,
+      "text": "なあ、あの罪に生きていたのが正しかったのか",
+      "rawEntryIds": [
+        "whisper-292"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-276",
+      "startMs": 778000,
+      "endMs": 781000,
+      "text": "もしくは死んでいるのが正しかったのか",
+      "rawEntryIds": [
+        "whisper-293"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-277",
+      "startMs": 781000,
+      "endMs": 784000,
+      "text": "現時点での情報のみでは判断できません",
+      "rawEntryIds": [
+        "whisper-294"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-278",
+      "startMs": 784000,
+      "endMs": 785000,
+      "text": "そうだな",
+      "rawEntryIds": [
+        "whisper-295"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-279",
+      "startMs": 786000,
+      "endMs": 789000,
+      "text": "生きる方へ選んでくれたか",
+      "rawEntryIds": [
+        "whisper-296"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-280",
+      "startMs": 789000,
+      "endMs": 792000,
+      "text": "天皇政の奴らの言葉はわからないな",
+      "rawEntryIds": [
+        "whisper-297"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-281",
+      "startMs": 794000,
+      "endMs": 796000,
+      "text": "なんだこのリレー基地",
+      "rawEntryIds": [
+        "whisper-298"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-282",
+      "startMs": 796000,
+      "endMs": 798000,
+      "text": "もう廃墟同然じゃねーか",
+      "rawEntryIds": [
+        "whisper-299"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-283",
+      "startMs": 798000,
+      "endMs": 800000,
+      "text": "電源も生命維持装置も",
+      "rawEntryIds": [
+        "whisper-300"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-284",
+      "startMs": 800000,
+      "endMs": 802000,
+      "text": "人工重力も必要なのか",
+      "rawEntryIds": [
+        "whisper-301"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-285",
+      "startMs": 802000,
+      "endMs": 804000,
+      "text": "電源も生命維持装置も",
+      "rawEntryIds": [
+        "whisper-302"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-286",
+      "startMs": 804000,
+      "endMs": 806000,
+      "text": "人工重力装置もまだ生きています",
+      "rawEntryIds": [
+        "whisper-303"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-287",
+      "startMs": 806000,
+      "endMs": 809000,
+      "text": "廃墟というには賑やかすぎますね",
+      "rawEntryIds": [
+        "whisper-304"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-288",
+      "startMs": 809000,
+      "endMs": 811000,
+      "text": "だが人が住んでいるというには",
+      "rawEntryIds": [
+        "whisper-305"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-289",
+      "startMs": 811000,
+      "endMs": 812000,
+      "text": "静かすぎる",
+      "rawEntryIds": [
+        "whisper-306"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-290",
+      "startMs": 812000,
+      "endMs": 815000,
+      "text": "あら、静かな方が好きかと思っていました",
+      "rawEntryIds": [
+        "whisper-307"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-291",
+      "startMs": 816000,
+      "endMs": 818000,
+      "text": "静かの意味が違う",
+      "rawEntryIds": [
+        "whisper-308"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-292",
+      "startMs": 819000,
+      "endMs": 822000,
+      "text": "リレー基地なら最低でも住人は必要なはず",
+      "rawEntryIds": [
+        "whisper-309"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-293",
+      "startMs": 822000,
+      "endMs": 824000,
+      "text": "あなた一人だけなの?",
+      "rawEntryIds": [
+        "whisper-310"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-294",
+      "startMs": 824000,
+      "endMs": 827000,
+      "text": "そう、よく来たね、エンケラデス",
+      "rawEntryIds": [
+        "whisper-311"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-295",
+      "startMs": 827000,
+      "endMs": 830000,
+      "text": "何もないところだけど、まあゆっくりしていって",
+      "rawEntryIds": [
+        "whisper-312"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-296",
+      "startMs": 831000,
+      "endMs": 833000,
+      "text": "昔は十数人いたよ",
+      "rawEntryIds": [
+        "whisper-313"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-297",
+      "startMs": 833000,
+      "endMs": 835000,
+      "text": "でもね、補助金が切られた",
+      "rawEntryIds": [
+        "whisper-314"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-298",
+      "startMs": 836000,
+      "endMs": 840000,
+      "text": "地球も火星も自動化で足りるって言った",
+      "rawEntryIds": [
+        "whisper-315"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-299",
+      "startMs": 841000,
+      "endMs": 845000,
+      "text": "残ったのは最低限の人でつまり私だけ",
+      "rawEntryIds": [
+        "whisper-316"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-300",
+      "startMs": 845000,
+      "endMs": 847000,
+      "text": "まるで牢獄だな",
+      "rawEntryIds": [
+        "whisper-317"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-301",
+      "startMs": 847000,
+      "endMs": 849000,
+      "text": "そうだね",
+      "rawEntryIds": [
+        "whisper-318"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-302",
+      "startMs": 849000,
+      "endMs": 852000,
+      "text": "契約だから家族に借金があったの",
+      "rawEntryIds": [
+        "whisper-319"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-303",
+      "startMs": 853000,
+      "endMs": 856000,
+      "text": "外は0か170度で帰る船も来ない",
+      "rawEntryIds": [
+        "whisper-320"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-304",
+      "startMs": 856000,
+      "endMs": 859000,
+      "text": "だから、この基地が私の家なんだよ",
+      "rawEntryIds": [
+        "whisper-321"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-305",
+      "startMs": 860000,
+      "endMs": 863000,
+      "text": "それでまだ動いてるのか、この氷の母標",
+      "rawEntryIds": [
+        "whisper-322"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-306",
+      "startMs": 865000,
+      "endMs": 867000,
+      "text": "動かさなきゃ死ぬから",
+      "rawEntryIds": [
+        "whisper-323"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-307",
+      "startMs": 868000,
+      "endMs": 871000,
+      "text": "ここは土星圏のステーションって言われてるけど",
+      "rawEntryIds": [
+        "whisper-324"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-308",
+      "startMs": 871000,
+      "endMs": 873000,
+      "text": "半分は地球と火星のもの",
+      "rawEntryIds": [
+        "whisper-325"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-309",
+      "startMs": 873000,
+      "endMs": 876000,
+      "text": "設備の修繕も水の使用も",
+      "rawEntryIds": [
+        "whisper-326"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-310",
+      "startMs": 876000,
+      "endMs": 879000,
+      "text": "地球と火星の承認なしではできないの",
+      "rawEntryIds": [
+        "whisper-327"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-311",
+      "startMs": 879000,
+      "endMs": 882000,
+      "text": "私たちが氷に渦もれてても",
+      "rawEntryIds": [
+        "whisper-328"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-312",
+      "startMs": 882000,
+      "endMs": 885000,
+      "text": "あの人たちは綺麗な空気を吸って笑ってる",
+      "rawEntryIds": [
+        "whisper-329"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-313",
+      "startMs": 888000,
+      "endMs": 889000,
+      "text": "みじめだよね",
+      "rawEntryIds": [
+        "whisper-330"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-314",
+      "startMs": 890000,
+      "endMs": 892000,
+      "text": "どこも同じだな",
+      "rawEntryIds": [
+        "whisper-331"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-315",
+      "startMs": 892000,
+      "endMs": 896000,
+      "text": "外援は経済と軍事を握る内援に吸い取られるだけだ",
+      "rawEntryIds": [
+        "whisper-332"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-316",
+      "startMs": 896000,
+      "endMs": 898000,
+      "text": "でも木星は違う",
+      "rawEntryIds": [
+        "whisper-333"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-317",
+      "startMs": 898000,
+      "endMs": 901000,
+      "text": "祖国でいるのはもう嫌だってみんな言ってる",
+      "rawEntryIds": [
+        "whisper-334"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-318",
+      "startMs": 902000,
+      "endMs": 905000,
+      "text": "資源を握ってるのは自分たちなのに",
+      "rawEntryIds": [
+        "whisper-335"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-319",
+      "startMs": 905000,
+      "endMs": 907000,
+      "text": "なぜ未来を選べないのかって",
+      "rawEntryIds": [
+        "whisper-336"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-320",
+      "startMs": 907000,
+      "endMs": 910000,
+      "text": "せたけに合わない夢は破滅を招く",
+      "rawEntryIds": [
+        "whisper-337"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-321",
+      "startMs": 911000,
+      "endMs": 914000,
+      "text": "でもねそれでも言い出さなきゃ何も変わらない",
+      "rawEntryIds": [
+        "whisper-338"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-322",
+      "startMs": 915000,
+      "endMs": 917000,
+      "text": "土星にはその力はない",
+      "rawEntryIds": [
+        "whisper-339"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-323",
+      "startMs": 918000,
+      "endMs": 922000,
+      "text": "だからこそ木星の人たちを見てるとちょっと羨ましいんだ",
+      "rawEntryIds": [
+        "whisper-340"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-324",
+      "startMs": 923000,
+      "endMs": 924000,
+      "text": "羨ましいか",
+      "rawEntryIds": [
+        "whisper-341"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-325",
+      "startMs": 925000,
+      "endMs": 927000,
+      "text": "あわれだな",
+      "rawEntryIds": [
+        "whisper-342"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-326",
+      "startMs": 929000,
+      "endMs": 932000,
+      "text": "汎用整備ドローンでの応急修理が完了しました",
+      "rawEntryIds": [
+        "whisper-343"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-327",
+      "startMs": 932000,
+      "endMs": 934000,
+      "text": "冷媒パイプの仮設パッチ",
+      "rawEntryIds": [
+        "whisper-344"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-328",
+      "startMs": 934000,
+      "endMs": 936000,
+      "text": "外角クラックのシーリング",
+      "rawEntryIds": [
+        "whisper-345"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-329",
+      "startMs": 936000,
+      "endMs": 938000,
+      "text": "時期コイルの交換を実施済み",
+      "rawEntryIds": [
+        "whisper-346"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-330",
+      "startMs": 939000,
+      "endMs": 942000,
+      "text": "あそこじゃ死にかけの船に天敵を撃ってくれる程度だな",
+      "rawEntryIds": [
+        "whisper-347"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-331",
+      "startMs": 943000,
+      "endMs": 946000,
+      "text": "天敵なしでは天皇政権にはたどり着けませんでした",
+      "rawEntryIds": [
+        "whisper-348"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-332",
+      "startMs": 947000,
+      "endMs": 950000,
+      "text": "あの子一人であんなステーションを抱えて生きてる",
+      "rawEntryIds": [
+        "whisper-349"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-333",
+      "startMs": 950000,
+      "endMs": 953000,
+      "text": "そして多分あそこで死ぬんだ",
+      "rawEntryIds": [
+        "whisper-350"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-334",
+      "startMs": 953000,
+      "endMs": 955000,
+      "text": "珍しい話ではありません",
+      "rawEntryIds": [
+        "whisper-351"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-335",
+      "startMs": 955000,
+      "endMs": 959000,
+      "text": "土星権は資源基盤に飛ぼしく独自経済を維持できない",
+      "rawEntryIds": [
+        "whisper-352"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-336",
+      "startMs": 960000,
+      "endMs": 963000,
+      "text": "土星権の中継施設のほとんどすべては",
+      "rawEntryIds": [
+        "whisper-353"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-337",
+      "startMs": 963000,
+      "endMs": 966000,
+      "text": "地球と火星が出資した合同所有のものです",
+      "rawEntryIds": [
+        "whisper-354"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-338",
+      "startMs": 967000,
+      "endMs": 970000,
+      "text": "土星は中継地であり続けるしかないのです",
+      "rawEntryIds": [
+        "whisper-355"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-339",
+      "startMs": 970000,
+      "endMs": 973000,
+      "text": "たった10年開発が遅れただけで",
+      "rawEntryIds": [
+        "whisper-356"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-340",
+      "startMs": 973000,
+      "endMs": 976000,
+      "text": "土星と木星はここまで違うか",
+      "rawEntryIds": [
+        "whisper-357"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-341",
+      "startMs": 976000,
+      "endMs": 980000,
+      "text": "外円コールを投入のための推進シークエンスを開始",
+      "rawEntryIds": [
+        "whisper-358"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-342",
+      "startMs": 980000,
+      "endMs": 982000,
+      "text": "天下ウィンドウまで残り5時間",
+      "rawEntryIds": [
+        "whisper-359"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-343",
+      "startMs": 982000,
+      "endMs": 985000,
+      "text": "外円コールは修正起動を許容しません",
+      "rawEntryIds": [
+        "whisper-360"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-344",
+      "startMs": 985000,
+      "endMs": 988000,
+      "text": "一度外せば期間の可能性は消えます",
+      "rawEntryIds": [
+        "whisper-361"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-345",
+      "startMs": 988000,
+      "endMs": 991000,
+      "text": "帰る場所なんて最初からないさ",
+      "rawEntryIds": [
+        "whisper-362"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-346",
+      "startMs": 994000,
+      "endMs": 995000,
+      "text": "そうでした",
+      "rawEntryIds": [
+        "whisper-363"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-347",
+      "startMs": 997000,
+      "endMs": 999000,
+      "text": "起動交差警告",
+      "rawEntryIds": [
+        "whisper-364"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-348",
+      "startMs": 999000,
+      "endMs": 1001000,
+      "text": "衝突の危険あり",
+      "rawEntryIds": [
+        "whisper-365"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-349",
+      "startMs": 1001000,
+      "endMs": 1004000,
+      "text": "相対速度0.12キロメートル毎秒",
+      "rawEntryIds": [
+        "whisper-366"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-350",
+      "startMs": 1004000,
+      "endMs": 1005000,
+      "text": "消耗中",
+      "rawEntryIds": [
+        "whisper-367"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-351",
+      "startMs": 1005000,
+      "endMs": 1006000,
+      "text": "登録なし",
+      "rawEntryIds": [
+        "whisper-368"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-352",
+      "startMs": 1006000,
+      "endMs": 1007000,
+      "text": "発信信号なし",
+      "rawEntryIds": [
+        "whisper-369"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-353",
+      "startMs": 1007000,
+      "endMs": 1008000,
+      "text": "ありえない",
+      "rawEntryIds": [
+        "whisper-370"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-354",
+      "startMs": 1008000,
+      "endMs": 1011000,
+      "text": "こんなところに船がいるはずがない",
+      "rawEntryIds": [
+        "whisper-371"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-355",
+      "startMs": 1011000,
+      "endMs": 1013000,
+      "text": "1K2Kともに同じ結果です",
+      "rawEntryIds": [
+        "whisper-372"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-356",
+      "startMs": 1013000,
+      "endMs": 1015000,
+      "text": "観測機器の誤差動ではありません",
+      "rawEntryIds": [
+        "whisper-373"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-357",
+      "startMs": 1015000,
+      "endMs": 1016000,
+      "text": "主機は",
+      "rawEntryIds": [
+        "whisper-374"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-358",
+      "startMs": 1016000,
+      "endMs": 1018000,
+      "text": "現在プレヒート中",
+      "rawEntryIds": [
+        "whisper-375"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-359",
+      "startMs": 1018000,
+      "endMs": 1021000,
+      "text": "目標温度まで残り3時間13分",
+      "rawEntryIds": [
+        "whisper-376"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-360",
+      "startMs": 1021000,
+      "endMs": 1024000,
+      "text": "逃げられないところを狙ってきやがったか",
+      "rawEntryIds": [
+        "whisper-377"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-361",
+      "startMs": 1025000,
+      "endMs": 1027000,
+      "text": "対象は距離8.9キロ",
+      "rawEntryIds": [
+        "whisper-378"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-362",
+      "startMs": 1027000,
+      "endMs": 1028000,
+      "text": "接近中",
+      "rawEntryIds": [
+        "whisper-379"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-363",
+      "startMs": 1028000,
+      "endMs": 1030000,
+      "text": "進路を合わせています",
+      "rawEntryIds": [
+        "whisper-380"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-364",
+      "startMs": 1031000,
+      "endMs": 1033000,
+      "text": "こんなにギリギリまで接近警告に",
+      "rawEntryIds": [
+        "whisper-381"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-365",
+      "startMs": 1033000,
+      "endMs": 1035000,
+      "text": "引っかからないわけがない",
+      "rawEntryIds": [
+        "whisper-382"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-366",
+      "startMs": 1035000,
+      "endMs": 1037000,
+      "text": "異常な光の消失を",
+      "rawEntryIds": [
+        "whisper-383"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-367",
+      "startMs": 1037000,
+      "endMs": 1039000,
+      "text": "天文モニターの背景構成観測にて",
+      "rawEntryIds": [
+        "whisper-384"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-368",
+      "startMs": 1039000,
+      "endMs": 1040000,
+      "text": "検知しました",
+      "rawEntryIds": [
+        "whisper-385"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-369",
+      "startMs": 1040000,
+      "endMs": 1041000,
+      "text": "おそらく",
+      "rawEntryIds": [
+        "whisper-386"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-370",
+      "startMs": 1041000,
+      "endMs": 1044000,
+      "text": "高砲塔やトランスポンダを切った上で",
+      "rawEntryIds": [
+        "whisper-387"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-371",
+      "startMs": 1044000,
+      "endMs": 1046000,
+      "text": "相対速度を限りなく0に近づけ",
+      "rawEntryIds": [
+        "whisper-388"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-372",
+      "startMs": 1046000,
+      "endMs": 1047000,
+      "text": "ただそこに漂って",
+      "rawEntryIds": [
+        "whisper-389"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-373",
+      "startMs": 1047000,
+      "endMs": 1050000,
+      "text": "待ち構えていたものと推定されます",
+      "rawEntryIds": [
+        "whisper-390"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-374",
+      "startMs": 1051000,
+      "endMs": 1053000,
+      "text": "無頭の歓迎か",
+      "rawEntryIds": [
+        "whisper-391"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-375",
+      "startMs": 1054000,
+      "endMs": 1055000,
+      "text": "対象接近中",
+      "rawEntryIds": [
+        "whisper-392"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-376",
+      "startMs": 1055000,
+      "endMs": 1056000,
+      "text": "想定出量",
+      "rawEntryIds": [
+        "whisper-393"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-377",
+      "startMs": 1056000,
+      "endMs": 1057000,
+      "text": "50万トン級",
+      "rawEntryIds": [
+        "whisper-394"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-378",
+      "startMs": 1057000,
+      "endMs": 1059000,
+      "text": "距離3キロメートルで停止",
+      "rawEntryIds": [
+        "whisper-395"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-379",
+      "startMs": 1059000,
+      "endMs": 1061000,
+      "text": "閉鎖しています",
+      "rawEntryIds": [
+        "whisper-396"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-380",
+      "startMs": 1061000,
+      "endMs": 1063000,
+      "text": "私の船の10倍以上だ",
+      "rawEntryIds": [
+        "whisper-397"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-381",
+      "startMs": 1063000,
+      "endMs": 1065000,
+      "text": "地球化火星しかあり得ない",
+      "rawEntryIds": [
+        "whisper-398"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-382",
+      "startMs": 1065000,
+      "endMs": 1067000,
+      "text": "該当する戦績なし",
+      "rawEntryIds": [
+        "whisper-399"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-383",
+      "startMs": 1067000,
+      "endMs": 1069000,
+      "text": "少なくとも正規の交換ネットワークには",
+      "rawEntryIds": [
+        "whisper-400"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-384",
+      "startMs": 1069000,
+      "endMs": 1071000,
+      "text": "属していません",
+      "rawEntryIds": [
+        "whisper-401"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-385",
+      "startMs": 1071000,
+      "endMs": 1072000,
+      "text": "そうだろうな",
+      "rawEntryIds": [
+        "whisper-402"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-386",
+      "startMs": 1075000,
+      "endMs": 1077000,
+      "text": "さてどうするか",
+      "rawEntryIds": [
+        "whisper-403"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-387",
+      "startMs": 1079000,
+      "endMs": 1081000,
+      "text": "レーザー通信です",
+      "rawEntryIds": [
+        "whisper-404"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-388",
+      "startMs": 1081000,
+      "endMs": 1083000,
+      "text": "違法な通信手段を取るってことは",
+      "rawEntryIds": [
+        "whisper-405"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-389",
+      "startMs": 1083000,
+      "endMs": 1086000,
+      "text": "あいつら火星でも地球でもないな",
+      "rawEntryIds": [
+        "whisper-406"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-390",
+      "startMs": 1086000,
+      "endMs": 1089000,
+      "text": "チャンネル開けて開けます",
+      "rawEntryIds": [
+        "whisper-407"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-391",
+      "startMs": 1089000,
+      "endMs": 1091000,
+      "text": "その罪によ",
+      "rawEntryIds": [
+        "whisper-408"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-392",
+      "startMs": 1091000,
+      "endMs": 1093000,
+      "text": "地球や火星に渡すな",
+      "rawEntryIds": [
+        "whisper-409"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-393",
+      "startMs": 1093000,
+      "endMs": 1095000,
+      "text": "火星交換校舎登録",
+      "rawEntryIds": [
+        "whisper-410"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-394",
+      "startMs": 1095000,
+      "endMs": 1096000,
+      "text": "小型貨物船",
+      "rawEntryIds": [
+        "whisper-411"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-395",
+      "startMs": 1096000,
+      "endMs": 1100000,
+      "text": "登録番号02814ケストレルだ",
+      "rawEntryIds": [
+        "whisper-412"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-396",
+      "startMs": 1100000,
+      "endMs": 1103000,
+      "text": "奇跡船の目的は何を知っている",
+      "rawEntryIds": [
+        "whisper-413"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-397",
+      "startMs": 1103000,
+      "endMs": 1104000,
+      "text": "地球と火星は",
+      "rawEntryIds": [
+        "whisper-414"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-398",
+      "startMs": 1104000,
+      "endMs": 1106000,
+      "text": "太陽系を自分たちの都合で",
+      "rawEntryIds": [
+        "whisper-415"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-399",
+      "startMs": 1106000,
+      "endMs": 1108000,
+      "text": "塗り替えようとしている",
+      "rawEntryIds": [
+        "whisper-416"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-400",
+      "startMs": 1108000,
+      "endMs": 1110000,
+      "text": "質問に答えろ",
+      "rawEntryIds": [
+        "whisper-417"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-401",
+      "startMs": 1110000,
+      "endMs": 1111000,
+      "text": "その罪によ",
+      "rawEntryIds": [
+        "whisper-418"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-402",
+      "startMs": 1111000,
+      "endMs": 1113000,
+      "text": "地球や火星に渡すな",
+      "rawEntryIds": [
+        "whisper-419"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-403",
+      "startMs": 1120000,
+      "endMs": 1121000,
+      "text": "対象が指揮を抜か",
+      "rawEntryIds": [
+        "whisper-420"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-404",
+      "startMs": 1121000,
+      "endMs": 1123000,
+      "text": "急速に離脱しています",
+      "rawEntryIds": [
+        "whisper-421"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-405",
+      "startMs": 1123000,
+      "endMs": 1124000,
+      "text": "放射線時期フィールドは",
+      "rawEntryIds": [
+        "whisper-422"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-406",
+      "startMs": 1124000,
+      "endMs": 1126000,
+      "text": "正常に稼働中",
+      "rawEntryIds": [
+        "whisper-423"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-407",
+      "startMs": 1129000,
+      "endMs": 1132000,
+      "text": "地球や火星に渡すなか",
+      "rawEntryIds": [
+        "whisper-424"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep02-line-408",
+      "startMs": 1134000,
+      "endMs": 1136000,
+      "text": "まるで太陽だな",
+      "rawEntryIds": [
+        "whisper-425"
+      ],
+      "mergeReasons": []
+    }
+  ],
+  "extractedAt": "2026-02-24T05:12:20.746Z",
+  "mergeConfig": {
+    "maxGapMs": 300,
+    "minCueDurationMs": 100
+  }
+}
