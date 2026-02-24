@@ -38,9 +38,10 @@ import {
   renderExplorerPage,
   renderADRIndex,
   REPORT_CSS,
+  renderGlossary,
 } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -4083,5 +4084,46 @@ describe("Task 131: transfer arc arrival alignment", () => {
     assert.ok(bodyPos, "should find departure body dot");
     const dist = Math.sqrt((startX - bodyPos.x) ** 2 + (startY - bodyPos.y) ** 2);
     assert.ok(dist < 2, `arc start (${startX}, ${startY}) should be near departure body (${bodyPos.x}, ${bodyPos.y}), distance=${dist.toFixed(1)}`);
+  });
+});
+
+// --- renderGlossary ---
+
+describe("renderGlossary", () => {
+  it("renders glossary terms in a table", () => {
+    const terms: GlossaryTerm[] = [
+      { term: "ΔV", reading: "デルタブイ", definition: "速度変化量。軌道変更に必要なエネルギーの指標。" },
+      { term: "brachistochrone", definition: "最短時間軌道遷移。中間点で反転し常時加速する航法。" },
+    ];
+    const html = renderGlossary(terms);
+    assert.ok(html.includes("<table>"));
+    assert.ok(html.includes("ΔV"));
+    assert.ok(html.includes("デルタブイ"));
+    assert.ok(html.includes("brachistochrone"));
+    assert.ok(html.includes("用語"));
+    assert.ok(html.includes("説明"));
+  });
+
+  it("returns empty string for empty glossary", () => {
+    assert.equal(renderGlossary([]), "");
+  });
+
+  it("omits reading when not provided", () => {
+    const terms: GlossaryTerm[] = [
+      { term: "SOI", definition: "重力圏。天体の重力が支配的な領域。" },
+    ];
+    const html = renderGlossary(terms);
+    assert.ok(html.includes("SOI"));
+    assert.ok(!html.includes("("));
+  });
+
+  it("escapes HTML in terms and definitions", () => {
+    const terms: GlossaryTerm[] = [
+      { term: "<script>", definition: "A <dangerous> term" },
+    ];
+    const html = renderGlossary(terms);
+    assert.ok(html.includes("&lt;script&gt;"));
+    assert.ok(html.includes("&lt;dangerous&gt;"));
+    assert.ok(!html.includes("<script>"));
   });
 });

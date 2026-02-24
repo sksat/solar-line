@@ -313,6 +313,18 @@ export interface EpisodeReport {
   timeSeriesCharts?: TimeSeriesChart[];
   /** Detail sub-pages for long analyses; when set, matched transfers render as summary cards on the main page */
   detailPages?: TransferDetailPage[];
+  /** Glossary of technical terms used in this report */
+  glossary?: GlossaryTerm[];
+}
+
+/** A technical term definition for the glossary */
+export interface GlossaryTerm {
+  /** The term (e.g. "ΔV", "brachistochrone") */
+  term: string;
+  /** Reading/pronunciation hint (optional, e.g. "デルタブイ") */
+  reading?: string;
+  /** Japanese definition */
+  definition: string;
 }
 
 /** A row in a cross-episode comparison table */
@@ -510,6 +522,8 @@ export interface SummaryReport {
   category?: "analysis" | "meta";
   /** Structured sections */
   sections: SummarySection[];
+  /** Glossary of technical terms used in this report */
+  glossary?: GlossaryTerm[];
 }
 
 /** Verdict count breakdown */

@@ -1,6 +1,6 @@
 # Task 140: Remaining Quality Fixes from Review
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Motivation
 Task 139 review identified several unfixed issues. Some are CLAUDE.md violations that need immediate attention.

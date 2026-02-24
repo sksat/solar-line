@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -1663,6 +1663,20 @@ const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
   },
 };
 
+/** Render a glossary of technical terms */
+export function renderGlossary(terms: GlossaryTerm[]): string {
+  if (terms.length === 0) return "";
+  const rows = terms.map(t => {
+    const reading = t.reading ? ` <span style="color:var(--text-muted);font-size:0.85em">(${escapeHtml(t.reading)})</span>` : "";
+    return `<tr><td><strong>${escapeHtml(t.term)}</strong>${reading}</td><td>${escapeHtml(t.definition)}</td></tr>`;
+  }).join("\n");
+  return `<div class="card" style="overflow-x:auto">
+<table><thead><tr><th>用語</th><th>説明</th></tr></thead>
+<tbody>
+${rows}
+</tbody></table></div>`;
+}
+
 /** Render the interactive brachistochrone calculator widget */
 export function renderCalculator(episode?: number): string {
   const ep = episode && CALC_EPISODE_PRESETS[episode] ? episode : 1;
@@ -1896,6 +1910,9 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     }
     tocItems.push('</ul>');
   }
+  if (report.glossary && report.glossary.length > 0) {
+    tocItems.push('<li><a href="#section-glossary">用語集</a></li>');
+  }
   tocItems.push('<li><a href="#calculator">Brachistochrone 計算機</a></li>');
   const toc = tocItems.length > 0
     ? `<nav class="toc card"><h3>目次</h3><ul>${tocItems.join("\n")}</ul></nav>`
@@ -1932,6 +1949,8 @@ ${timeSeriesSectionWithId}
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}
 
 ${unlinkedSection}
+
+${report.glossary && report.glossary.length > 0 ? `<h2 id="section-glossary">用語集</h2>\n${renderGlossary(report.glossary)}` : ""}
 
 ${calculator}`;
 
@@ -2191,6 +2210,9 @@ ${dagHtml}
     const sectionId = slugify(section.heading);
     return `<li><a href="#${escapeHtml(sectionId)}">${escapeHtml(section.heading)}</a></li>`;
   });
+  if (report.glossary && report.glossary.length > 0) {
+    summaryTocItems.push('<li><a href="#section-glossary">用語集</a></li>');
+  }
   const summaryToc = summaryTocItems.length > 1
     ? `<nav class="toc card"><h3>目次</h3><ul>${summaryTocItems.join("\n")}</ul></nav>`
     : "";
@@ -2206,12 +2228,17 @@ ${dagHtml}
   const hasDagViewer = report.sections.some(s => s.dagViewer);
   const dagScript = hasDagViewer ? '\n<script src="../dag-viewer.js"></script>' : "";
 
+  const glossarySection = report.glossary && report.glossary.length > 0
+    ? `<h2 id="section-glossary">用語集</h2>\n${renderGlossary(report.glossary)}`
+    : "";
+
   const content = `
 <h1>${escapeHtml(report.title)}</h1>
 ${markdownToHtml(report.summary, mdOpts)}
 ${episodeNav}
 ${summaryToc}
-${sections}`;
+${sections}
+${glossarySection}`;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
   return layoutHtml(report.title, content + animScript + dagScript, "..", summaryPages, desc, navEpisodes, metaPages);
