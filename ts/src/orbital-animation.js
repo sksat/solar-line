@@ -161,6 +161,10 @@ function initDiagramAnimation(card) {
 
   var mainG = svg.querySelector("g");
 
+  // Determine primary scenario (first in list) for multi-pattern diagrams
+  var scenarios = data.scenarios || [];
+  var primaryScenarioId = scenarios.length > 0 ? scenarios[0].id : null;
+
   // Create ship marker element for each animated transfer
   var shipMarkers = [];
   for (var i = 0; i < data.transfers.length; i++) {
@@ -171,11 +175,16 @@ function initDiagramAnimation(card) {
       ? transfer.burns
       : (transfer.style === "brachistochrone" ? inferBrachistochroneBurns(transfer) : []);
 
+    // Non-primary scenario arcs get smaller, semi-transparent markers
+    var isAlt = primaryScenarioId && transfer.scenarioId && transfer.scenarioId !== primaryScenarioId;
+    var markerR = isAlt ? "4" : "5";
+    var markerOpacity = isAlt ? 0.7 : 1.0;
+
     var marker = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    marker.setAttribute("r", "5");
+    marker.setAttribute("r", markerR);
     marker.setAttribute("fill", transfer.color);
     marker.setAttribute("stroke", "#fff");
-    marker.setAttribute("stroke-width", "1.5");
+    marker.setAttribute("stroke-width", isAlt ? "1" : "1.5");
     marker.setAttribute("class", "ship-marker");
     marker.setAttribute("opacity", "0");
     if (mainG) mainG.appendChild(marker);
@@ -193,7 +202,9 @@ function initDiagramAnimation(card) {
       plume: plume,
       burnLabel: burnLabel,
       transfer: transfer,
-      burns: effectiveBurns
+      burns: effectiveBurns,
+      isAlt: isAlt,
+      activeOpacity: markerOpacity
     });
   }
 
@@ -242,7 +253,7 @@ function initDiagramAnimation(card) {
         continue;
       }
 
-      marker.setAttribute("opacity", "1");
+      marker.setAttribute("opacity", String(sm.activeOpacity || 1));
 
       // Find the SVG path for this transfer
       var pathEl = svg.querySelector('[data-transfer-path="' + tr.pathId + '"]');

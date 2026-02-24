@@ -338,6 +338,99 @@
       "animation": {
         "durationSeconds": 259200
       }
+    },
+    {
+      "id": "ep01-diagram-02",
+      "title": "質量シナリオ比較: 72h（299t）vs 150h（1,297t）",
+      "centerLabel": "太陽",
+      "scaleMode": "sqrt",
+      "radiusUnit": "AU",
+      "scenarios": [
+        { "id": "72h", "label": "作中航路 — 72h（質量 ≤ 299t, 3.34g）" },
+        { "id": "150h", "label": "通常ルート — 150h（質量 ≤ 1,297t, 0.77g）" }
+      ],
+      "orbits": [
+        {
+          "id": "earth",
+          "label": "地球",
+          "radius": 1,
+          "color": "#58a6ff",
+          "meanMotion": 1.991e-07
+        },
+        {
+          "id": "mars",
+          "label": "火星",
+          "radius": 1.524,
+          "color": "#f85149",
+          "angle": 2.9604,
+          "meanMotion": 1.059e-07
+        },
+        {
+          "id": "jupiter",
+          "label": "木星",
+          "radius": 5.203,
+          "color": "#d29922",
+          "angle": 2.989,
+          "meanMotion": 1.678e-08
+        }
+      ],
+      "transfers": [
+        {
+          "label": "72h Brachistochrone（299t）",
+          "fromOrbitId": "mars",
+          "toOrbitId": "jupiter",
+          "color": "#3fb950",
+          "style": "brachistochrone",
+          "scenarioId": "72h",
+          "burnMarkers": [
+            {
+              "angle": 0.52,
+              "label": "加速 3.34g",
+              "startTime": 0,
+              "endTime": 129600,
+              "type": "acceleration"
+            },
+            {
+              "angle": 0.52,
+              "label": "減速 3.34g",
+              "startTime": 129600,
+              "endTime": 259200,
+              "type": "deceleration"
+            }
+          ],
+          "startTime": 0,
+          "endTime": 259200
+        },
+        {
+          "label": "150h Brachistochrone（1,297t）",
+          "fromOrbitId": "mars",
+          "toOrbitId": "jupiter",
+          "color": "#d2a8ff",
+          "style": "brachistochrone",
+          "scenarioId": "150h",
+          "burnMarkers": [
+            {
+              "angle": 0.52,
+              "label": "加速 0.77g",
+              "startTime": 0,
+              "endTime": 270000,
+              "type": "acceleration"
+            },
+            {
+              "angle": 0.52,
+              "label": "減速 0.77g",
+              "startTime": 270000,
+              "endTime": 540000,
+              "type": "deceleration"
+            }
+          ],
+          "startTime": 0,
+          "endTime": 540000
+        }
+      ],
+      "animation": {
+        "durationSeconds": 540000
+      }
     }
   ],
   "explorations": [

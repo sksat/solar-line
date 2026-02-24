@@ -161,6 +161,16 @@ export interface TransferArc {
   startTime?: number;
   /** End time in seconds from animation epoch. Used for animated diagrams. */
   endTime?: number;
+  /** Scenario ID for multi-pattern diagrams. Groups arcs into named scenarios. */
+  scenarioId?: string;
+}
+
+/** A named scenario in a multi-pattern orbital diagram */
+export interface DiagramScenario {
+  /** Unique ID matching TransferArc.scenarioId */
+  id: string;
+  /** Display label, e.g. "作中航路（507h, 木星フライバイ）" */
+  label: string;
 }
 
 /** Animation configuration for an orbital diagram */
@@ -221,6 +231,8 @@ export interface OrbitalDiagram {
   scaleLegend?: ScaleLegend;
   /** Timeline waypoint annotations (rendered as bottom bar + on-diagram badges) */
   timelineAnnotations?: TimelineAnnotation[];
+  /** Named scenarios for multi-pattern diagrams. When present, transfers are grouped by scenarioId. */
+  scenarios?: DiagramScenario[];
 }
 
 /** Per-episode report data */

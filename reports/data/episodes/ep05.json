@@ -1021,6 +1021,125 @@
       "animation": {
         "durationSeconds": 86400
       }
+    },
+    {
+      "id": "ep05-diagram-03",
+      "title": "IF分析: 木星フライバイあり vs 直行ルート",
+      "centerLabel": "太陽",
+      "scaleMode": "sqrt",
+      "radiusUnit": "AU",
+      "scenarios": [
+        { "id": "flyby", "label": "作中航路 — 507h（木星フライバイ, ノズル残26分）" },
+        { "id": "direct", "label": "直行ルート — ノズル73分前に消失（帰還失敗）" }
+      ],
+      "orbits": [
+        {
+          "id": "earth-orbit",
+          "label": "地球",
+          "radius": 1,
+          "color": "#4488ff",
+          "angle": 1.4706,
+          "meanMotion": 1.991e-07
+        },
+        {
+          "id": "jupiter-orbit",
+          "label": "木星",
+          "radius": 5.2,
+          "color": "#ffaa44",
+          "angle": 3.6104,
+          "meanMotion": 1.678e-08
+        },
+        {
+          "id": "uranus-orbit",
+          "label": "天王星",
+          "radius": 19.2,
+          "color": "#66dddd",
+          "angle": 4.8762
+        }
+      ],
+      "transfers": [
+        {
+          "label": "フライバイルート: 天王星→木星",
+          "fromOrbitId": "uranus-orbit",
+          "toOrbitId": "jupiter-orbit",
+          "color": "#ff4444",
+          "style": "brachistochrone",
+          "scenarioId": "flyby",
+          "burnMarkers": [
+            {
+              "angle": 4.0,
+              "label": "出発加速",
+              "startTime": 0,
+              "endTime": 360000,
+              "type": "acceleration"
+            },
+            {
+              "angle": 3.6,
+              "label": "木星接近減速",
+              "startTime": 360000,
+              "endTime": 720000,
+              "type": "deceleration"
+            }
+          ],
+          "startTime": 0,
+          "endTime": 720000
+        },
+        {
+          "label": "フライバイルート: 木星→地球",
+          "fromOrbitId": "jupiter-orbit",
+          "toOrbitId": "earth-orbit",
+          "color": "#ff8844",
+          "style": "brachistochrone",
+          "scenarioId": "flyby",
+          "burnMarkers": [
+            {
+              "angle": 2.4,
+              "label": "Oberth加速（+3%）",
+              "startTime": 720000,
+              "endTime": 1200000,
+              "type": "acceleration"
+            },
+            {
+              "angle": 1.8,
+              "label": "地球捕捉",
+              "startTime": 1200000,
+              "endTime": 1825200,
+              "type": "capture"
+            }
+          ],
+          "startTime": 720000,
+          "endTime": 1825200
+        },
+        {
+          "label": "直行ルート: 天王星→地球（ノズル消失）",
+          "fromOrbitId": "uranus-orbit",
+          "toOrbitId": "earth-orbit",
+          "color": "#888888",
+          "style": "brachistochrone",
+          "scenarioId": "direct",
+          "burnMarkers": [
+            {
+              "angle": 3.14,
+              "label": "加速",
+              "startTime": 0,
+              "endTime": 717120,
+              "type": "acceleration"
+            },
+            {
+              "angle": 1.57,
+              "label": "減速（ノズル消失 ✕）",
+              "startTime": 717120,
+              "endTime": 1434240,
+              "type": "deceleration"
+            }
+          ],
+          "startTime": 0,
+          "endTime": 1434240
+        }
+      ],
+      "animation": {
+        "durationSeconds": 1825200
+      }
     }
   ]
 }

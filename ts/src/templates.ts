@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -1078,6 +1078,10 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     return parts.join("\n    ");
   }).join("\n    ");
 
+  // Build scenario lookup for multi-pattern diagrams
+  const hasScenarios = !!(diagram.scenarios && diagram.scenarios.length > 0);
+  const primaryScenarioId = hasScenarios ? diagram.scenarios![0].id : undefined;
+
   // Draw transfer arcs
   const transferPaths = diagram.transfers.map((t, idx) => {
     const fromOrbit = orbitMap.get(t.fromOrbitId);
@@ -1089,7 +1093,12 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     const dashArray = t.style === "brachistochrone" ? ' stroke-dasharray="8 4"' : "";
     const arrowId = `arrow-${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}-${idx}`;
     const transferPathAttr = isAnimated ? ` data-transfer-path="${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}-${idx}"` : "";
-    return `<path d="${pathD}" fill="none" stroke="${t.color}" stroke-width="2"${dashArray}${transferPathAttr} marker-end="url(#${arrowId})"/>
+    const scenarioAttr = t.scenarioId ? ` data-scenario="${escapeHtml(t.scenarioId)}"` : "";
+    // Non-primary scenario arcs get reduced opacity and thinner stroke
+    const isAlt = hasScenarios && t.scenarioId && t.scenarioId !== primaryScenarioId;
+    const strokeW = isAlt ? "1.5" : "2";
+    const opacity = isAlt ? ' stroke-opacity="0.6"' : "";
+    return `<path d="${pathD}" fill="none" stroke="${t.color}" stroke-width="${strokeW}"${dashArray}${opacity}${transferPathAttr}${scenarioAttr} marker-end="url(#${arrowId})"/>
     <marker id="${arrowId}" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="${t.color}"/></marker>`;
   }).join("\n    ");
 
@@ -1138,26 +1147,45 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     }).filter(s => s.length > 0).join("\n    ");
   }
 
-  // Build legend
-  const styles = [...new Set(diagram.transfers.map(t => t.style))];
-  const legendItems = styles.map((s, i) => {
-    const y = i * 18;
-    const dash = s === "brachistochrone" ? ' stroke-dasharray="6 3"' : "";
-    const color = diagram.transfers.find(t => t.style === s)?.color ?? "var(--fg)";
-    return `<line x1="0" y1="${y + 6}" x2="20" y2="${y + 6}" stroke="${color}" stroke-width="2"${dash}/>
+  // Build legend — scenario-based when multi-pattern, style-based otherwise
+  let legendItems: string;
+  let legendRowCount: number;
+  if (hasScenarios) {
+    // Multi-pattern: show scenario labels with representative arc colors
+    legendItems = diagram.scenarios!.map((sc, i) => {
+      const y = i * 18;
+      const repr = diagram.transfers.find(t => t.scenarioId === sc.id);
+      const color = repr?.color ?? "var(--fg)";
+      const dash = repr?.style === "brachistochrone" ? ' stroke-dasharray="6 3"' : "";
+      const isAlt = i > 0;
+      const sw = isAlt ? "1.5" : "2";
+      const op = isAlt ? ' stroke-opacity="0.6"' : "";
+      return `<line x1="0" y1="${y + 6}" x2="20" y2="${y + 6}" stroke="${color}" stroke-width="${sw}"${dash}${op}/>
+    <text x="24" y="${y + 10}" fill="var(--fg)" font-size="10">${escapeHtml(sc.label)}</text>`;
+    }).join("\n    ");
+    legendRowCount = diagram.scenarios!.length;
+  } else {
+    const styles = [...new Set(diagram.transfers.map(t => t.style))];
+    legendItems = styles.map((s, i) => {
+      const y = i * 18;
+      const dash = s === "brachistochrone" ? ' stroke-dasharray="6 3"' : "";
+      const color = diagram.transfers.find(t => t.style === s)?.color ?? "var(--fg)";
+      return `<line x1="0" y1="${y + 6}" x2="20" y2="${y + 6}" stroke="${color}" stroke-width="2"${dash}/>
     <text x="24" y="${y + 10}" fill="var(--fg)" font-size="10">${transferStyleLabel(s)}</text>`;
-  }).join("\n    ");
+    }).join("\n    ");
+    legendRowCount = styles.length;
+  }
 
   // Scale mode label appended to legend
   let scaleLabelItem = "";
   let scaleLabelHeight = 0;
   if (diagram.scaleLegend) {
-    const yOff = styles.length * 18;
+    const yOff = legendRowCount * 18;
     scaleLabelItem = `<text x="0" y="${yOff + 14}" fill="var(--fg)" font-size="9" fill-opacity="0.6">${escapeHtml(diagram.scaleLegend.label)}</text>`;
     scaleLabelHeight = 20;
   }
 
-  const legendHeight = styles.length * 18 + 4 + scaleLabelHeight;
+  const legendHeight = legendRowCount * 18 + 4 + scaleLabelHeight;
 
   const ariaLabel = `${diagram.title} — ${diagram.centerLabel}中心の軌道図`;
   const svg = `<svg width="${size}" height="${size + legendHeight + 10}" viewBox="${-cx} ${-cy} ${size} ${size + legendHeight + 10}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(ariaLabel)}">
@@ -1207,6 +1235,7 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
           radiusPx: orbitPxMap.get(o.id)!,
           color: o.color,
         })),
+      scenarios: diagram.scenarios?.map(s => ({ id: s.id, label: s.label })),
       transfers: diagram.transfers
         .map((t, idx) => ({ t, idx }))
         .filter(({ t }) => t.startTime !== undefined && t.endTime !== undefined)
@@ -1217,6 +1246,7 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
           endTime: t.endTime!,
           color: t.color,
           style: t.style,
+          scenarioId: t.scenarioId,
           pathId: `${t.fromOrbitId}-${t.toOrbitId}-${idx}`,
           burns: (t.burnMarkers ?? [])
             .filter(bm => bm.startTime !== undefined && bm.endTime !== undefined)
