@@ -150,36 +150,42 @@ function updateCalculator() {
   const accelRatio = reqAccelKmS2 / shipAccelKmS2;
   const dvRatio = reqDvKmS / shipDvKmS;
 
-  // Update display values
-  document.getElementById("calc-distance-val").textContent = distanceAU.toFixed(2) + " AU";
-  document.getElementById("calc-mass-val").textContent = formatNumber(massT, 0) + " t";
-  document.getElementById("calc-time-val").textContent = timeH.toFixed(0) + " h";
+  // Update display values (some elements may not exist in the template)
+  function setTextById(id, text) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+  setTextById("calc-distance-val", distanceAU.toFixed(2) + " AU");
+  setTextById("calc-mass-val", formatNumber(massT, 0) + " t");
+  setTextById("calc-time-val", timeH.toFixed(0) + " h");
 
   // Results table
-  document.getElementById("res-req-accel").textContent =
-    formatNumber(reqAccelKmS2 * 1000, 2) + " m/s\u00B2 (" + formatNumber(reqAccelG, 2) + " g)";
-  document.getElementById("res-req-dv").textContent = formatNumber(reqDvKmS, 2) + " km/s";
-  document.getElementById("res-ship-accel").textContent =
-    formatNumber(shipAccelKmS2 * 1000, 3) + " m/s\u00B2 (" + formatNumber(shipAccelG, 3) + " g)";
-  document.getElementById("res-ship-dv").textContent = formatNumber(shipDvKmS, 2) + " km/s";
-  document.getElementById("res-ship-reach").textContent =
-    formatNumber(shipMaxDistKm, 0) + " km (" + formatNumber(shipMaxDistAU, 4) + " AU)";
+  setTextById("res-req-accel",
+    formatNumber(reqAccelKmS2 * 1000, 2) + " m/s\u00B2 (" + formatNumber(reqAccelG, 2) + " g)");
+  setTextById("res-req-dv", formatNumber(reqDvKmS, 2) + " km/s");
+  setTextById("res-ship-accel",
+    formatNumber(shipAccelKmS2 * 1000, 3) + " m/s\u00B2 (" + formatNumber(shipAccelG, 3) + " g)");
+  setTextById("res-ship-dv", formatNumber(shipDvKmS, 2) + " km/s");
+  setTextById("res-ship-reach",
+    formatNumber(shipMaxDistKm, 0) + " km (" + formatNumber(shipMaxDistAU, 4) + " AU)");
 
   // Gap / verdict
   const verdictEl = document.getElementById("res-verdict");
-  if (accelRatio <= 1.0) {
-    verdictEl.textContent = "船の性能内";
-    verdictEl.className = "verdict verdict-plausible";
-  } else if (accelRatio <= 2.0) {
-    verdictEl.textContent = formatNumber(accelRatio, 1) + "\u00D7 不足（限界的）";
-    verdictEl.className = "verdict verdict-indeterminate";
-  } else {
-    verdictEl.textContent = formatNumber(accelRatio, 0) + "\u00D7 不足";
-    verdictEl.className = "verdict verdict-implausible";
+  if (verdictEl) {
+    if (accelRatio <= 1.0) {
+      verdictEl.textContent = "船の性能内";
+      verdictEl.className = "verdict verdict-plausible";
+    } else if (accelRatio <= 2.0) {
+      verdictEl.textContent = formatNumber(accelRatio, 1) + "\u00D7 不足（限界的）";
+      verdictEl.className = "verdict verdict-indeterminate";
+    } else {
+      verdictEl.textContent = formatNumber(accelRatio, 0) + "\u00D7 不足";
+      verdictEl.className = "verdict verdict-implausible";
+    }
   }
 
-  document.getElementById("res-accel-ratio").textContent = formatNumber(accelRatio, 1) + "\u00D7";
-  document.getElementById("res-dv-ratio").textContent = formatNumber(dvRatio, 1) + "\u00D7";
+  setTextById("res-accel-ratio", formatNumber(accelRatio, 1) + "\u00D7");
+  setTextById("res-dv-ratio", formatNumber(dvRatio, 1) + "\u00D7");
 }
 
 // --- Preset buttons ---

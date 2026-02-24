@@ -1,6 +1,6 @@
 # Task 053: Playwright E2E Tests for Report Rendering
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 Human directive: Markdown の表が壊れるなど表示が壊れている。Playwright E2E test を組むなどして防ぐこと。

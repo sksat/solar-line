@@ -16,6 +16,10 @@ raw_data/
 # Agent logs (local only, not committed via CI)
 agent_logs/
 
+# Playwright
+test-results/
+playwright-report/
+
 # OS
 .DS_Store
 

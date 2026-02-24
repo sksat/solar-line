@@ -47,6 +47,25 @@ jobs:
       - run: npm test
         working-directory: ts
 
+  e2e:
+    name: Playwright E2E tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: ts/package-lock.json
+      - run: npm ci
+        working-directory: ts
+      - run: npx playwright install --with-deps chromium
+        working-directory: ts
+      - run: npm run build
+        working-directory: ts
+      - run: npx playwright test
+        working-directory: ts
+
   wasm-web:
     name: WASM browser build
     runs-on: ubuntu-latest
