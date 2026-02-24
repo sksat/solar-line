@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "episode": 3,
+  "videoId": "l1jjXpv17-E",
+  "extractionMethod": "manual_frame_reading",
+  "extractedAt": "2026-02-24T23:50:00Z",
+  "extractedBy": "Claude Opus 4.6 (visual analysis of video frames)",
+  "frames": [
+    {
+      "timestampSec": 139,
+      "description": "エンケラドゥス停泊軌道（場所テロップ）",
+      "subtitleText": "…わかったよ",
+      "instrumentData": {
+        "locationLabel": "エンケラドゥス停泊軌道",
+        "jurisdiction": "国際連合・火星自治連邦保護領 / 土星圏"
+      },
+      "notes": "ケストレルの船体外観。背景に土星が右側に見える。修理完了後の出発準備シーン。"
+    },
+    {
+      "timestampSec": 177,
+      "description": "NAVIGATION OVERVIEW — 航路計画表示（最重要フレーム①）",
+      "subtitleText": "航路の目的地はUranus-III・タイタニア終端複合施設 …天王星自由港機構の宇宙港です",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW",
+        "systemOperator": "MARS PORT (Authority)",
+        "shipId": "MTS-9907/EXT-P17",
+        "routePlan": {
+          "destination": "U-3 Titania Terminal Complex (U3-TTC)",
+          "arrivalEta": "T+143:12:00",
+          "etaReference": "PORT STD TIME",
+          "navModeSequence": "SATURN-REF > SOL-INERTIAL > URANUS-REF (Scheduled)",
+          "routeName": "SOLER LINE"
+        },
+        "navModeBar": {
+          "segments": ["SATURN-REF", "SOL-INERTIAL(OUTER LINE)", "(red section = URANUS-REF pending)"]
+        },
+        "orbCurtainWarning": {
+          "message": "ORB-CURTAIN BOUNDARY CROSSING DETECTED",
+          "legalNotice": "Proceeding with this route constitutes acceptance of all operational and legal risks."
+        },
+        "departurePoint": "SATURN II. ENCELADUS"
+      },
+      "notes": "EP全体で最も情報密度の高いフレーム群の一つ。NAVIGATION OVERSIEWの上部にルート計画、NAV MODEバー、ORB-CURTAIN警告が表示。SOLER LINEというルート名が作品タイトルの由来であることが判明。T+143:12:00は字幕の143時間12分と完全一致。"
+    },
+    {
+      "timestampSec": 191,
+      "description": "NAVIGATION OVERVIEW — 所要時間確認",
+      "subtitleText": "所要時間は 143時間12分",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW",
+        "etaConfirmation": "T+143:12:00 matches subtitle 143時間12分 exactly"
+      },
+      "notes": "177sと同じ画面の別アングル。字幕とHUD表示の二重確認。ORB-CURTAIN BOUNDARY CROSSING DETECTEDも引き続き表示。"
+    },
+    {
+      "timestampSec": 198,
+      "description": "NAVIGATION OVERVIEW — バーンシーケンス表示（最重要フレーム②）",
+      "subtitleText": "まずはエンケラドゥスから 土星の重力アシストを受けて巡航加速 火星港湾公社のMTS 9907のエントリーまで進みます",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW",
+        "routeDiagram": {
+          "origin": "SATURN II. ENCELADUS",
+          "sunDirection": "← SUN",
+          "shipMarker": "MTS-9907-E01"
+        },
+        "burnSequence": [
+          {
+            "phase": 1,
+            "name": "Saturn Escape",
+            "deltaV_km_s": 4.31,
+            "startTime": "T+00:00",
+            "duration": "0:10:10",
+            "color": "green"
+          },
+          {
+            "phase": 2,
+            "name": "Cruise Burn",
+            "deltaV_display": "2.99*10^6",
+            "deltaV_interpretation_km_s": 2990,
+            "deltaV_note": "Display shows 2.99*10^6 — likely m/s (=2990 km/s) matching dialogue cruise speed ~3000 km/s",
+            "startTime": "T+03:30",
+            "duration": "30:25:00",
+            "color": "green"
+          },
+          {
+            "phase": 3,
+            "name": "Exoplanar Alignment",
+            "type": "RCS Trim",
+            "deltaV_km_s": 0.11,
+            "startTime": "T+47:00",
+            "duration": "0:18:00",
+            "color": "red"
+          },
+          {
+            "phase": 4,
+            "name": "MCC-1",
+            "type": "RCS Trim",
+            "deltaV_km_s": 0.05,
+            "startTime": "T+71:00",
+            "color": "red"
+          },
+          {
+            "phase": 5,
+            "name": "MCC-2",
+            "type": "RCS Trim",
+            "deltaV_km_s": null,
+            "note": "Partially obscured by subtitle, Δv≈0.07 km/s estimated",
+            "color": "red"
+          },
+          {
+            "phase": 6,
+            "name": "Capture Prep",
+            "deltaV_display": "*10^6 km/s",
+            "deltaV_interpretation_km_s": 2990,
+            "deltaV_note": "Partially visible — deceleration burn, duration matches cruise burn (brachistochrone symmetry)",
+            "duration": "30:25:30",
+            "color": "red"
+          }
+        ],
+        "plasmoidStorm": {
+          "label": "PLASMOID STORM",
+          "estimatedTime": "EST T+138:00:00"
+        }
+      },
+      "notes": "バーンシーケンスの全貌が見える。Saturn Escape (4.31 km/s, 10分10秒) → Cruise Burn (≈2990 km/s, 30時間25分) → RCS Trim (0.11+0.05+≈0.07 km/s) → Capture Prep (≈2990 km/s, 30時間25分30秒)。Cruise BurnとCapture Prepの所要時間がほぼ同じ（30:25:00 vs 30:25:30）であることはbrachistochrone遷移の加速-減速対称構造を直接的に示す。PLASMOID STORM警告はT+138時間（天王星到着の約5時間前）に予測されている。"
+    },
+    {
+      "timestampSec": 228,
+      "description": "NAVIGATION OVERVIEW — 右側（天王星圏到着部分）",
+      "subtitleText": "天王星圏までは2回の航法補正を行いますが 最終誤差は「±18キロ以内」でなければなりません",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW",
+        "rightSideVisible": true,
+        "uranusRefSection": "URANUS-REF",
+        "destination": {
+          "planet": "URANUS",
+          "moon": "URANUS III. TITANIA TTC"
+        },
+        "rcsTrimsVisible": [
+          "Exoplanar Alignment: Δv=0.11 km/s, T+47:00, D=0:18:00",
+          "MCC-1: Δv=0.05 km/s, T+71:00",
+          "MCC-2: Δv≈0.0? km/s (partially visible)"
+        ],
+        "capturePrep": {
+          "label": "Capture Prep",
+          "deltaV_display": "*10^6 km/s",
+          "duration": "D=30:25:30"
+        },
+        "plasmoidStorm": {
+          "label": "PLASMOID STORM",
+          "estimatedTime": "EST T+138:00:00"
+        }
+      },
+      "notes": "カメラが右にパンし、天王星到着部分が見える。PLASMOID STORM警告がT+138:00:00に表示。MCC-1とMCC-2の2回の航法補正が「2回の航法補正」という字幕に対応。±18km精度要件は字幕のみでHUDには未確認。"
+    },
+    {
+      "timestampSec": 383,
+      "description": "天体（天王星?）近傍 — ケストレル飛行",
+      "subtitleText": "…大丈夫ですか？ 心拍数が増えていますが",
+      "instrumentData": null,
+      "notes": "青い天体の上をケストレルが飛行。G耐性シーンの近傍。HUDデータなし。"
+    },
+    {
+      "timestampSec": 823,
+      "description": "コックピット — きりたんクローズアップ（航法危機前）",
+      "subtitleText": null,
+      "instrumentData": null,
+      "notes": "きりたん（青髪キャラクター）のクローズアップ。航法危機報告の直前。"
+    },
+    {
+      "timestampSec": 827,
+      "description": "コックピット — 航法系不整合報告",
+      "subtitleText": "…現在「背景恒星観測系」と「慣性航法系」の整合が取れません",
+      "instrumentData": null,
+      "notes": "同じきりたんクローズアップ。ケイの報告を聞いている表情。"
+    },
+    {
+      "timestampSec": 852,
+      "description": "航法危機ディスプレイ — 2ソリューション表示（最重要フレーム③）",
+      "subtitleText": "背景恒星観測と慣性航法系は「それぞれ違うコース」にナビゲートしています …この二つの差は角度にして1.23度になります",
+      "instrumentData": {
+        "displayType": "NAVIGATION_CRISIS",
+        "solutionA": {
+          "name": "STAR TRACKER REFERENCE",
+          "confidence_percent": 92.3,
+          "trajectory": "白色線（上方向）"
+        },
+        "solutionB": {
+          "name": "INERTIAL GUIDANCE REFERENCE",
+          "confidence_percent": 91.7,
+          "lastCorrection": "-21min",
+          "trajectory": "白色線（下方向）"
+        },
+        "divergence": {
+          "angularDifference_deg": 1.23,
+          "source": "subtitle（HUDには角度表示は不鮮明）"
+        },
+        "trajectoryVisualization": "2本の赤い線が中央の分岐点から広がる — 2つのナビゲーション解が乖離している様子"
+      },
+      "notes": "SOLUTION AとSOLUTION Bの信頼度が明示的に表示。92.3% vs 91.7%はわずか0.6%の差で、どちらが正しいかAI（ケイ）にも判断できないことを視覚的に示す。1.23°の角度差は字幕から。赤い警告ボックスがSOLUTION B下に表示されている。"
+    },
+    {
+      "timestampSec": 856,
+      "description": "航法危機ディスプレイ — 交差面距離表示（最重要フレーム④）",
+      "subtitleText": "この誤差は天王星公転面で およそ1436万キロメートル… 一方のコースは天王星に交差し もう一方は太陽のヒル球外縁を超えるコースです",
+      "instrumentData": {
+        "displayType": "NAVIGATION_CRISIS",
+        "displacementAtUranus": {
+          "display": "DIFF/ENT: 1.43*10^7[km]",
+          "value_km": 14300000,
+          "matchesDialogue": true,
+          "dialogueValue": "1436万km"
+        },
+        "solutionA_visible": {
+          "name": "STAR TRACKER REFERENCE",
+          "confidence_percent": 92.3
+        },
+        "solutionB_visible": {
+          "name": "INERTIAL GUIDANCE REFERENCE",
+          "confidence_percent": 91.7,
+          "lastCorrection": "-21min"
+        },
+        "upperText": "partially visible: '...remain...' '...band consistency...'",
+        "destinationLabel": "URAN... TITAN... TTC..."
+      },
+      "notes": "DIFF/ENT: 1.43*10^7[km]がはっきり読める。字幕の1436万kmとHUDの1.43×10^7 km（= 14,300,000 km）は0.4%の丸め誤差で一致。この一致は偶然ではなく、制作者が正確な科学的計算に基づいてHUDデータを設計していることを示す。"
+    },
+    {
+      "timestampSec": 937,
+      "description": "深宇宙 — ケストレル外景",
+      "subtitleText": "要は機械に決められないから… 人に決めてもらうって事だな",
+      "instrumentData": null,
+      "notes": "天の川銀河を背景にケストレルが浮かぶ。孤独な深宇宙での決断シーン。"
+    },
+    {
+      "timestampSec": 968,
+      "description": "コックピット — 慣性航法系選択",
+      "subtitleText": null,
+      "instrumentData": null,
+      "notes": "きりたん（前景）とケイ（後景）のクローズアップ。慣性航法系コースを選ぶ決断の瞬間。字幕なし。"
+    },
+    {
+      "timestampSec": 993,
+      "description": "天王星磁気圏突入 — 高度25 RU",
+      "subtitleText": "まもなく天王星磁気圏に突入します 現在高度は25RU ナビゲーション参照を天王星原点に切り換えました",
+      "instrumentData": {
+        "altitude_RU": 25,
+        "navReferenceSwitch": "SOL-INERTIAL → URANUS-REF",
+        "status": "天王星磁気圏突入直前"
+      },
+      "notes": "深宇宙背景にケストレル。天王星はまだ見えない距離（25 RU ≈ 640,000 km）。NAV MODEのSOL-INERTIAL→URANUS-REF切り替えは177sのフレームで予告されていたシーケンスと一致。"
+    },
+    {
+      "timestampSec": 997,
+      "description": "天王星エントリー軌道（場所テロップ）",
+      "subtitleText": "まもなく天王星磁気圏に突入します 現在高度は25RU ナビゲーション参照を天王星原点に切り換えました",
+      "instrumentData": {
+        "locationLabel": "天王星エントリー軌道",
+        "jurisdiction": "天王星自由港機構 / 天王星圏",
+        "altitude_RU": 25
+      },
+      "notes": "場所テロップ登場。天王星自由港機構（Free Port Authority?）は木星港湾公社や国際連合・火星自治連邦とは異なる管轄。「自由港」という名称は独立性の高い自治体制を示唆。ケストレルがわずかに見え、右に天王星の衛星（タイタニア?）の小さな青い点が見える。"
+    }
+  ],
+  "summary": {
+    "keyParametersExtracted": {
+      "destination": "U-3 Titania Terminal Complex (U3-TTC)",
+      "arrivalEta": "T+143:12:00 (PORT STD TIME)",
+      "navModeSequence": "SATURN-REF > SOL-INERTIAL > URANUS-REF",
+      "routeName": "SOLER LINE",
+      "saturnEscape_deltaV_km_s": 4.31,
+      "saturnEscape_duration": "0:10:10",
+      "cruiseBurn_deltaV_km_s": 2990,
+      "cruiseBurn_duration": "30:25:00",
+      "exoplanarAlignment_deltaV_km_s": 0.11,
+      "mcc1_deltaV_km_s": 0.05,
+      "capturePrep_duration": "30:25:30",
+      "plasmoidStorm_estimate": "T+138:00:00",
+      "starTracker_confidence_percent": 92.3,
+      "inertialGuidance_confidence_percent": 91.7,
+      "displacementAtUranus_km": 14300000,
+      "uranusEntryAltitude_RU": 25,
+      "kestrelShipId": "MTS-9907/EXT-P17"
+    },
+    "locationLabels": [
+      {
+        "timestamp": "02:19",
+        "label": "エンケラドゥス停泊軌道",
+        "jurisdiction": "国際連合・火星自治連邦保護領 / 土星圏"
+      },
+      {
+        "timestamp": "16:37",
+        "label": "天王星エントリー軌道",
+        "jurisdiction": "天王星自由港機構 / 天王星圏"
+      }
+    ],
+    "parameterSources": {
+      "subtitle": ["ETA 143h12m", "angular divergence 1.23°", "displacement 1436万km", "±18km accuracy", "altitude 25 RU", "cruise speed ~3000 km/s"],
+      "HUD_display": ["destination U3-TTC", "ETA T+143:12:00", "NAV MODE sequence", "6-phase burn sequence", "ΔV values", "burn durations", "PLASMOID STORM estimate", "Solution A/B confidences", "DIFF/ENT 1.43×10^7 km"],
+      "location_label": ["Enceladus parking orbit", "Uranus entry orbit jurisdictions"]
+    },
+    "analysisImplications": [
+      "SOLER LINEはルート名 — 作品タイトルは土星-天王星間外縁航路の正式名称に由来",
+      "Brachistochrone構造の直接証拠: Cruise Burn (30:25:00) ≈ Capture Prep (30:25:30) — 加速と減速がほぼ同時間",
+      "Saturn Escape Δv=4.31 km/sは既存分析のv∞=4.69 km/sと近い値 — これは脱出噴射のΔVであり、v∞とは異なる",
+      "Cruise Burn Δv≈2990 km/sは字幕の巡航速度3000 km/sとほぼ一致 — brachistochrone加速で到達する最高速",
+      "NAV MODE SATURN-REF > SOL-INERTIAL > URANUS-REFは座標系の切り替えを明示 — 土星圏→太陽基準慣性系→天王星圏",
+      "ORB-CURTAIN BOUNDARY CROSSINGは「オービタルカーテン」（航法ビーコン網の境界）を指し、その先は無誘導",
+      "Star Tracker 92.3% vs Inertial Guidance 91.7%: わずか0.6%差で判断不能 — AI（ケイ）が人間（きりたん）に判断を委ねる根拠",
+      "DIFF/ENT 1.43×10^7 km ≈ 1436万km: HUDと字幕が0.4%で一致 — 制作者が精密な計算で設計",
+      "PLASMOID STORM at T+138h（到着5h前）— 第4話のplasmoid被曝とつながる伏線",
+      "天王星自由港機構 — 木星港湾公社・火星自治連邦とは異なる独立自治機構、外縁部の政治構造を示唆"
+    ],
+    "comparisonWithPreviousEpisodes": {
+      "ep01": "EP01はV∞/ΔV/方位角/バーンシーケンス3段階。EP03はそれ以上に詳細な6段階バーンシーケンスとタイミングデータ。",
+      "ep02": "EP02はCOIAS警報とship IDが主。EP03は完全なルートプランと航法危機の定量的表示。",
+      "dataRichness": "EP03は全エピソード中最もHUDデータが豊富。完全なバーンシーケンス（6段階）、タイミング、NAV MODEシーケンス、dual solution confidence、displacement値がすべて判読可能。"
+    }
+  }
+}

@@ -66,6 +66,25 @@ EP02_KEYFRAMES = [
     (1051, "きりたん・ケイ — 緊張シーン"),
 ]
 
+# Key timestamps for EP03 — Enceladus → Titania (143h)
+EP03_KEYFRAMES = [
+    # (timestamp_seconds, description)
+    (139, "外縁航路の危険性説明 — 内縁輸送向け設計"),
+    (177, "目的地報告 — ウラヌス3、タイタニア集合複合施設"),
+    (191, "所要時間143時間12分"),
+    (198, "航路概要 — 土星重力アシスト、オービタルカーテン外側"),
+    (228, "航路補正2回、最終誤差±18km"),
+    (383, "火星生まれ1G — 外園居住者0.8G"),
+    (823, "航法危機 — 位置14.72AU、速度3000km/s、1.23°不一致"),
+    (827, "航法危機（続き）"),
+    (852, "天王星交点面で1436万km誤差"),
+    (856, "天王星交点面（続き）"),
+    (937, "修正可能な時間窓 — 約10分"),
+    (968, "慣性航法系コースを選択"),
+    (993, "天王星磁気圏突入 — 高度25RU"),
+    (997, "天王星磁気圏（続き）"),
+]
+
 
 def extract_frame(video_path: str, timestamp_sec: float,
                   output_path: str) -> bool:
@@ -124,6 +143,7 @@ def main():
     episode_keyframes = {
         1: EP01_KEYFRAMES,
         2: EP02_KEYFRAMES,
+        3: EP03_KEYFRAMES,
     }
     if args.episode in episode_keyframes:
         keyframes = episode_keyframes[args.episode]
