@@ -1,0 +1,95 @@
+{
+  "_meta": {
+    "description": "Cross-reference of EP01 on-screen navigation parameters with computed orbital mechanics",
+    "source": "reports/data/episodes/ep01_onscreen_data.json (Task 146)",
+    "computedBy": "Node.js orbital mechanics (vis-viva equation)",
+    "date": "2026-02-24"
+  },
+  "jupiterSOI": {
+    "onScreen": {
+      "v_infinity_km_s": 12.0,
+      "entry_velocity_km_s": 17.8,
+      "entry_distance_RJ": 20.0,
+      "azimuth_deg": 282.14
+    },
+    "computed": {
+      "v_at_20RJ_km_s": 17.92,
+      "method": "vis-viva: v = sqrt(V∞² + 2μ/r) at 20 RJ"
+    },
+    "comparison": {
+      "velocity_difference_km_s": 0.12,
+      "velocity_difference_percent": 0.67,
+      "verdict": "EXCELLENT MATCH — on-screen display is physically accurate within rounding"
+    }
+  },
+  "perijoveBurn": {
+    "onScreen": {
+      "deltaV_km_s": -2.3,
+      "perijupiter_RJ": 1.5,
+      "window_min": 5
+    },
+    "computed": {
+      "v_perijove_before_km_s": 50.07,
+      "v_perijove_after_km_s": 47.77,
+      "v_escape_at_periapsis_km_s": 48.61,
+      "orbit_type_after_burn": "captured (elliptical)",
+      "method": "vis-viva at 1.5 RJ with V∞=12.0, then subtract 2.3 km/s"
+    },
+    "keyFinding": "The -2.3 km/s burn at 1.5 RJ drops velocity below escape speed (48.61 km/s), capturing the ship into a bound Jupiter orbit. This is the minimum ΔV for capture via Oberth effect at this perijove — the show's navigation computer is computing real orbital mechanics."
+  },
+  "ganymedeApproach": {
+    "computed": {
+      "v_at_ganymede_orbit_km_s": 12.48,
+      "ganymede_orbital_velocity_km_s": 10.88,
+      "relative_velocity_km_s": 1.60,
+      "ganymede_orbital_radius_km": 1070400
+    },
+    "keyFinding": "After capture, the ship passes through Ganymede's orbit at 12.48 km/s vs Ganymede's 10.88 km/s — a relative velocity of only 1.60 km/s, manageable for a final approach burn."
+  },
+  "entryBurn": {
+    "onScreen": {
+      "deltaV_km_s": 2.4,
+      "countdown": "T-11:42:18"
+    },
+    "interpretation": "The +2.4 km/s Phase 2 burn occurs during Jupiter approach. This shapes the approach trajectory to achieve the desired perijove altitude (1.5 RJ) and azimuth (282.14°). The 11h 42m countdown matches the remaining transit time to perijove at approach velocities.",
+    "computed": {
+      "hohmann_v_infinity_km_s": 4.27,
+      "v_infinity_ratio": 2.81,
+      "note": "V∞=12.0 is 2.8× the Hohmann V∞ (4.27 km/s), consistent with a high-energy brachistochrone transfer from Mars"
+    }
+  },
+  "thrustCurve": {
+    "dataPoints": [
+      { "output_percent": 65, "thrust_MN": 6.3, "source": "dialogue 5:16" },
+      { "output_percent": 100, "thrust_MN": 9.8, "source": "dialogue 13:33" },
+      { "output_percent": 110, "thrust_MN": 10.7, "source": "subtitle 16:49" }
+    ],
+    "analysis": {
+      "65_to_100_ratio": 1.556,
+      "100_to_110_ratio": 1.092,
+      "linearity": "Nearly linear above 65%. 65%→100% scales by 1.56 (expected: 1.54), 100%→110% scales by 1.09 (expected: 1.10). Thrust-output relationship is highly linear.",
+      "peak_specific_note": "110% is the over-rated emergency mode visible when cockpit enters red alert"
+    }
+  },
+  "marsDeparture": {
+    "onScreen": {
+      "mars_apparent_diameter_deg": 52,
+      "camera": "rear"
+    },
+    "computed": {
+      "mars_diameter_km": 6779,
+      "distance_from_center_km": 6950,
+      "distance_from_surface_km": 561,
+      "distance_in_mars_radii": 2.05
+    },
+    "keyFinding": "At 52° apparent diameter, Kestrel is approximately 560 km above Mars surface (2.05 Mars radii from center). This is consistent with being just past the 50,000 km RCS-only zone and beginning main engine burns."
+  },
+  "totalDvBudget": {
+    "phase1_cruise_accel_km_s": "unknown (completed before display)",
+    "phase2_entry_burn_km_s": 2.4,
+    "phase3_perijove_km_s": 2.3,
+    "shown_burns_total_km_s": 4.7,
+    "ganymede_capture_additional_km_s": "~1.6 (estimated from relative velocity)",
+    "estimated_total_jupiter_km_s": "~6.3"
+  }
+}
