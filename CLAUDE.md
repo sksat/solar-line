@@ -22,7 +22,7 @@ This project runs via an autonomous Claude Code agent loop inside a VM (followin
 3. Record new ideas in `ideas/`
 4. Write clear commit messages that serve as handoff notes to the next session
 
-Use `nice-friend` skill (Codex consultation) when making design decisions or when a second opinion would improve quality.
+Use `nice-friend` skill (Codex consultation) when making design decisions or when a second opinion would improve quality. Official Anthropic skills (e.g. `frontend-skill`) may also be used.
 
 **Bootstrap (if `current_tasks/` is empty):** Create initial tasks based on DESIGN.md.
 
@@ -63,7 +63,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Scenario ordering**: Present the most plausible scenario first, then alternatives. Collapse implausible scenarios by default (use `<details>`)
 - **Terminology**: Prefer "brachistochrone" (English/formula notation) over カタカナ「ブラキストクローネ」 — the latter is rarely used in Japanese technical writing
 - **Interactive orbital diagrams**: Add time slider to animate orbital transfers, showing how celestial body positions change during the transfer
-- **Report review**: Periodically have other Claude Code sessions or Codex review reports for readability/clarity
+- **Report review**: Periodically have other Claude Code sessions or Codex review reports for readability/clarity. Consider whether analyses are accessible to readers unfamiliar with SOLAR LINE or orbital mechanics, while keeping detailed analysis as the primary goal.
+- **Screenshot citations**: When video analysis produces findings, screenshots may be cited in reports. Follow fair-use citation requirements — do not overuse.
 - **VTT/transcription accuracy**: VTT and other transcriptions are not always perfect — correct text from context when actually using it in reports
 - **Report navigation**: Source citations must be clickable links. Reports should link to other episode reports and summary pages. Use section anchors and a table of contents for intra-page navigation.
 
@@ -74,7 +75,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Math rendering**: Use KaTeX or MathJax to render formulas readably in reports.
 - **Verdict policy**: Reference calculations (where accuracy cannot be measured against a depicted value) should NOT use the "indeterminate" verdict. Reserve verdicts for claims that can be directly compared to in-story depictions.
 - **External source links**: All external source citations (NASA NTRS, papers, worldbuilding documents) must be rendered as clickable hyperlinks, not plain text.
-- **Orbit propagation validation**: After desk calculations (brachistochrone ΔV, Hohmann transfers), validate with detailed numerical orbit propagation. This is especially important for time-dependent parameters (travel time, planetary positions, arrival conditions).
+- **Orbit propagation validation**: After desk calculations (brachistochrone ΔV, Hohmann transfers), validate with detailed numerical orbit propagation. This is especially important for time-dependent parameters (travel time, planetary positions, arrival conditions). Use TDD: estimate and verify numerical integration accuracy (e.g. energy conservation of the full system) as test assertions.
 
 ## Data Infrastructure
 
@@ -88,6 +89,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 - **Playwright E2E tests**: Add browser-based rendering tests to catch broken markdown tables, layout issues, and visual regressions. Use Playwright CLI.
 - **Skill-ize workflows**: Define commonly repeated workflows (subtitle extraction, episode analysis, report review) as Claude Code Skills following Anthropic best practices.
+- **Session log display**: Separate agent-loop stdout summary from conversation log display. In conversation logs, label the assistant as "Assistant (model)". Support sub-agent display where possible. Link each log to its associated commit(s) with GitHub URLs.
+- **GitHub repo link**: The published GitHub Pages site must include a visible link to the source repository.
 
 ## Key Principles
 

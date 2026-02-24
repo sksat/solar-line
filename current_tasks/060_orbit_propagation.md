@@ -18,6 +18,12 @@ Human directive: 大雑把な机上計算による分析の後に詳細な軌道
    - EP05: composite route timing
 4. Add propagation results to reports (overlay on orbital diagrams or separate comparison)
 
+## TDD & Accuracy Verification (Human Directive)
+- **Numerical integration accuracy estimation**: Each integrator step size / method must have documented error bounds
+- **Energy conservation tests**: Total system energy (kinetic + potential) should be conserved in ballistic segments; write tests asserting energy drift stays below threshold
+- **Test-first approach**: Write accuracy/conservation tests BEFORE implementing the integrator, then make them pass
+- Example test: 2-body Keplerian orbit should conserve energy to <1e-10 relative error over 1000 orbits
+
 ## Notes
 - Start simple: 2-body + constant thrust. Add N-body later if needed.
 - Key validation: does the ship actually arrive at the stated destination in the stated time?
