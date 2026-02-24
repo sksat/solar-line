@@ -28,8 +28,10 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 ## Technology Stack
 
-- **Rust**: Orbital mechanics analysis. Compile to WASM for browser-reproducible reports.
+- **Rust**: Orbital mechanics analysis + DAG graph analysis. Compile to WASM for browser-reproducible reports and interactive analysis.
 - **TypeScript**: Scripting, data collection, report generation.
+- **uPlot**: Interactive time-series charts (thrust profiles, radiation dose, etc.). Lightweight Canvas-based library.
+- **DuckDB-WASM**: Browser-side data management. SQL queries over JSON data, integration with uPlot for query-driven visualization.
 - **CI**: GitHub Actions. Check CI status regularly to catch regressions.
 - **Pre-commit checks**: Before committing, run quick CI checks locally when relevant (cargo fmt --check, cargo clippy, npm run typecheck). For changes within a specific scope, verify at least the affected checks pass.
 - **Output**: GitHub Pages with session logs and interactive orbital transfer reports.
@@ -99,6 +101,11 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Video analysis**: Downloaded video (gitignored) may be used for frame-by-frame OCR, subtitle extraction, and visual analysis.
 - **Transcription data on Pages**: Make subtitle/transcription data browsable on GitHub Pages.
 - **Transcription data layers**: Display transcription data in 3 layers: (1) raw data (unmodified VTT/Whisper), (2) preprocessed (alignment, diarization), (3) context-corrected (speaker attribution, text fixes). Clearly distinguish which layer the user is viewing.
+
+## DAG Analysis
+
+- **Rust-based DAG analysis**: DAG analysis (dependency chain extraction, impact cascade, layout algorithms) should be modeled in Rust and compiled to WASM, enabling real-time browser-side analysis in the DAG viewer.
+- **Untangled visualization**: DAG should not just be laid out flat — dependencies must be "untangled" so that dependency chains and invalidation cascades are visually clear.
 
 ## Quality Assurance
 
