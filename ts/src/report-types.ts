@@ -265,6 +265,29 @@ export interface ComparisonTable {
   rows: ComparisonRow[];
 }
 
+/** A bar chart for visualizing numerical comparisons */
+export interface BarChart {
+  /** Chart title */
+  caption: string;
+  /** Unit label for the value axis (e.g., "km/s", "時間", "%") */
+  unit: string;
+  /** Whether to use logarithmic scale */
+  logScale?: boolean;
+  /** Bars to display */
+  bars: BarChartItem[];
+}
+
+export interface BarChartItem {
+  /** Bar label */
+  label: string;
+  /** Numerical value */
+  value: number;
+  /** Optional color override (CSS color) */
+  color?: string;
+  /** Optional annotation text shown next to the bar */
+  annotation?: string;
+}
+
 /** An event in a ship/system timeline */
 export interface TimelineEvent {
   /** Episode number where this event occurs */
@@ -334,6 +357,14 @@ export interface SummarySection {
   verificationTable?: VerificationTable;
   /** If true, render an interactive DAG viewer in this section */
   dagViewer?: boolean;
+  /** Optional bar chart */
+  barChart?: BarChart;
+  /** Optional comparison table with custom headers (for non-episode tables) */
+  comparisonTable?: {
+    caption: string;
+    headers: string[];
+    rows: { label: string; values: string[]; highlight?: boolean }[];
+  };
 }
 
 /** A cross-episode or summary report page */

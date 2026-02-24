@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -297,6 +297,9 @@ pre code.hljs { background: transparent; padding: 0; }
 .dag-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .dag-node-count { margin-left: auto; font-size: 0.75em; color: var(--text-secondary); }
 .dag-snapshot-select { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.4rem; font-size: 0.75em; color: var(--text-secondary); cursor: pointer; }
+.bar-chart-container { margin: 1rem 0; overflow-x: auto; }
+.bar-chart-container figure { margin: 0; }
+.chart-caption { font-size: 0.9em; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); }
 code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
 p code { background: var(--surface); padding: 0.2em 0.4em; border-radius: 3px; }
 ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }
@@ -1632,6 +1635,35 @@ ${rows}
 </div>`;
 }
 
+/** Render a bar chart from a BarChart data object (delegates to renderBarChart) */
+function renderBarChartFromData(chart: BarChart): string {
+  return renderBarChart(chart.caption, chart.bars.map(b => ({
+    label: b.label,
+    value: b.value,
+    color: b.color,
+  })), chart.unit);
+}
+
+/** Render a custom comparison table (non-episode headers) */
+export function renderCustomComparisonTable(table: { caption: string; headers: string[]; rows: { label: string; values: string[]; highlight?: boolean }[] }): string {
+  const headerCells = table.headers.map(h => `<th>${escapeHtml(h)}</th>`).join("");
+  const bodyRows = table.rows.map(row => {
+    const cls = row.highlight ? ' class="highlight"' : "";
+    const cells = row.values.map(v => `<td>${escapeHtml(v)}</td>`).join("");
+    return `<tr${cls}><td class="row-label">${escapeHtml(row.label)}</td>${cells}</tr>`;
+  }).join("\n");
+
+  return `<div class="comparison-table">
+<table>
+<caption>${escapeHtml(table.caption)}</caption>
+<thead><tr><th></th>${headerCells}</tr></thead>
+<tbody>
+${bodyRows}
+</tbody>
+</table>
+</div>`;
+}
+
 /** Generate a URL-safe slug from a heading string */
 function slugify(text: string): string {
   return text
@@ -1662,13 +1694,17 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const timelineHtml = section.eventTimeline ? renderEventTimeline(section.eventTimeline) : "";
     const verificationHtml = section.verificationTable ? renderVerificationTable(section.verificationTable) : "";
     const dagHtml = section.dagViewer ? '<div id="dag-viewer" class="dag-viewer-container"></div>' : "";
+    const barChartHtml = section.barChart ? renderBarChartFromData(section.barChart) : "";
+    const customTableHtml = section.comparisonTable ? renderCustomComparisonTable(section.comparisonTable) : "";
     return `<div class="summary-section" id="${escapeHtml(sectionId)}">
 <h2>${escapeHtml(section.heading)}</h2>
 ${markdownToHtml(section.markdown, mdOpts)}
 ${diagramHtml}
+${barChartHtml}
 ${timelineHtml}
 ${verificationHtml}
 ${tableHtml}
+${customTableHtml}
 ${dagHtml}
 </div>`;
   }).join("\n");
