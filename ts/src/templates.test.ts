@@ -409,6 +409,18 @@ describe("layoutHtml", () => {
     assert.ok(navIdx < bannerIdx, "banner should appear after nav");
     assert.ok(bannerIdx < contentIdx, "banner should appear before content");
   });
+
+  it("inline JS contains valid regex syntax for uPlot color alpha replacement", () => {
+    // Regression test: backslashes in regex inside template literals must be double-escaped.
+    // Without this, /[\d.]+\)/ becomes /[d.]+)/ in the HTML output, causing a browser JS error.
+    const html = layoutHtml("Test", "<p>ok</p>");
+    const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
+    assert.ok(scriptMatch, "should have inline script");
+    const script = scriptMatch![1];
+    // The regex /[\d.]+\)/ should appear literally in the output (with backslash-d and backslash-paren)
+    assert.ok(script.includes("[\\d.]+\\)"), "inline JS regex should have escaped \\d and \\) for valid browser regex");
+    assert.ok(!script.includes("[d.]+)"), "inline JS regex must NOT have unescaped [d.]+) which is invalid");
+  });
 });
 
 // --- renderTransferCard ---
