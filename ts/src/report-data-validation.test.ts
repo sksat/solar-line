@@ -195,6 +195,83 @@ describe("report data: diagram referential integrity", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Error band and uncertainty data integrity
+// ---------------------------------------------------------------------------
+
+describe("report data: time-series error band integrity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const charts = report.timeSeriesCharts ?? [];
+
+    for (const chart of charts) {
+      for (const series of chart.series) {
+        if (series.yLow || series.yHigh) {
+          it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": yLow length matches y length`, () => {
+            if (series.yLow) {
+              assert.equal(
+                series.yLow.length,
+                series.y.length,
+                `yLow length (${series.yLow.length}) !== y length (${series.y.length})`
+              );
+            }
+          });
+
+          it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": yHigh length matches y length`, () => {
+            if (series.yHigh) {
+              assert.equal(
+                series.yHigh.length,
+                series.y.length,
+                `yHigh length (${series.yHigh.length}) !== y length (${series.y.length})`
+              );
+            }
+          });
+
+          it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": yLow and yHigh are both present`, () => {
+            assert.ok(
+              (series.yLow && series.yHigh) || (!series.yLow && !series.yHigh),
+              "yLow and yHigh must both be present or both absent"
+            );
+          });
+        }
+      }
+    }
+  }
+});
+
+describe("report data: uncertainty ellipse referential integrity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+
+    for (const diagram of report.diagrams ?? []) {
+      if (diagram.uncertaintyEllipses && diagram.uncertaintyEllipses.length > 0) {
+        const orbitIds = new Set(diagram.orbits.map(o => o.id));
+
+        for (const ue of diagram.uncertaintyEllipses) {
+          it(`ep${String(epNum).padStart(2, "0")} ${diagram.id}: uncertainty ellipse references valid orbit "${ue.orbitId}"`, () => {
+            assert.ok(
+              orbitIds.has(ue.orbitId),
+              `Uncertainty ellipse references unknown orbitId "${ue.orbitId}"`
+            );
+          });
+
+          it(`ep${String(epNum).padStart(2, "0")} ${diagram.id}: uncertainty ellipse orbit "${ue.orbitId}" has angle defined`, () => {
+            const orbit = diagram.orbits.find(o => o.id === ue.orbitId);
+            assert.ok(
+              orbit && orbit.angle !== undefined,
+              `Uncertainty ellipse orbit "${ue.orbitId}" must have angle defined`
+            );
+          });
+        }
+      }
+    }
+  }
+});
+
+// ---------------------------------------------------------------------------
 // Cross-file consistency: report quotes vs attributed dialogue
 // ---------------------------------------------------------------------------
 

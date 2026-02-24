@@ -552,7 +552,17 @@
       "animation": {
         "durationSeconds": 514800
       },
-      "epochAnnotation": "想定年代: 2242-12-12～2242-12-17"
+      "epochAnnotation": "想定年代: 2242-12-12～2242-12-17",
+      "uncertaintyEllipses": [
+        {
+          "orbitId": "nav-crisis",
+          "semiMajor": 0.6,
+          "semiMinor": 0.15,
+          "rotation": 1.8,
+          "color": "rgba(255, 68, 68, 0.15)",
+          "label": "1.23° 航法誤差 (~1,436万km)"
+        }
+      ]
     },
     {
       "id": "ep03-diagram-02",

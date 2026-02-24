@@ -1703,6 +1703,135 @@ describe("renderOrbitalDiagram with timelineAnnotations", () => {
   });
 });
 
+describe("renderOrbitalDiagram with uncertaintyEllipses", () => {
+  const diagramWithUncertainty: OrbitalDiagram = {
+    ...sampleDiagram,
+    uncertaintyEllipses: [
+      {
+        orbitId: "jupiter",
+        semiMajor: 0.5,
+        semiMinor: 0.15,
+        rotation: Math.PI * 0.6,
+        color: "rgba(255, 68, 68, 0.15)",
+        label: "1.23° 航法誤差",
+      },
+    ],
+  };
+
+  it("renders uncertainty ellipse SVG element", () => {
+    const html = renderOrbitalDiagram(diagramWithUncertainty);
+    assert.ok(html.includes("<ellipse"));
+    assert.ok(html.includes("rgba(255, 68, 68, 0.15)"));
+  });
+
+  it("renders uncertainty label", () => {
+    const html = renderOrbitalDiagram(diagramWithUncertainty);
+    assert.ok(html.includes("1.23° 航法誤差"));
+  });
+
+  it("includes uncertainty ellipse in legend", () => {
+    const html = renderOrbitalDiagram(diagramWithUncertainty);
+    // Legend should contain the label
+    const legendIdx = html.indexOf("Legend");
+    assert.ok(html.includes("1.23° 航法誤差"));
+  });
+
+  it("does NOT render uncertainty when omitted", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes("<ellipse"));
+  });
+
+  it("skips ellipse for orbit without angle", () => {
+    const diagramNoAngle: OrbitalDiagram = {
+      ...sampleDiagram,
+      orbits: [
+        { id: "mars", label: "火星", radius: 1.524, color: "#f85149" },
+        { id: "jupiter", label: "木星", radius: 5.203, color: "#d29922", angle: Math.PI * 0.6 },
+      ],
+      uncertaintyEllipses: [
+        {
+          orbitId: "mars",
+          semiMajor: 0.3,
+          semiMinor: 0.1,
+          color: "rgba(255, 0, 0, 0.2)",
+          label: "test",
+        },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagramNoAngle);
+    // Mars has no angle, so the ellipse should be skipped
+    assert.ok(!html.includes("<ellipse"));
+  });
+});
+
+describe("renderOrbitalDiagram with trajectoryVariations", () => {
+  const diagramWithVariation: OrbitalDiagram = {
+    ...sampleDiagram,
+    trajectoryVariations: [
+      {
+        baseTransferLabel: "ブラキストクローネ遷移",
+        color: "rgba(88, 166, 255, 0.2)",
+        label: "質量 ±10% による航路変動",
+        spread: 0.3,
+      },
+    ],
+  };
+
+  it("renders trajectory variation overlay", () => {
+    const html = renderOrbitalDiagram(diagramWithVariation);
+    // Should contain a wider stroke path for the variation
+    assert.ok(html.includes("rgba(88, 166, 255, 0.2)"));
+    assert.ok(html.includes("stroke-linecap"));
+  });
+
+  it("renders variation label", () => {
+    const html = renderOrbitalDiagram(diagramWithVariation);
+    assert.ok(html.includes("質量 ±10% による航路変動"));
+  });
+
+  it("does NOT render variation when omitted", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes("stroke-linecap"));
+  });
+});
+
+describe("renderTimeSeriesChart with error bands", () => {
+  const chartWithErrorBand: TimeSeriesChart = {
+    id: "test-error-band",
+    title: "誤差バンドテスト",
+    xLabel: "時間",
+    yLabel: "値",
+    series: [
+      {
+        label: "推定値",
+        color: "#ff6644",
+        x: [0, 1, 2, 3, 4],
+        y: [10, 20, 30, 40, 50],
+        yLow: [8, 16, 24, 32, 40],
+        yHigh: [12, 24, 36, 48, 60],
+        errorSource: "parameter",
+      },
+    ],
+  };
+
+  it("includes yLow and yHigh in JSON data", () => {
+    const html = renderTimeSeriesChart(chartWithErrorBand);
+    assert.ok(html.includes('"yLow"'));
+    assert.ok(html.includes('"yHigh"'));
+  });
+
+  it("includes errorSource in JSON data", () => {
+    const html = renderTimeSeriesChart(chartWithErrorBand);
+    assert.ok(html.includes('"errorSource":"parameter"'));
+  });
+
+  it("still renders basic chart structure", () => {
+    const html = renderTimeSeriesChart(chartWithErrorBand);
+    assert.ok(html.includes('class="card uplot-chart"'));
+    assert.ok(html.includes('class="uplot-target"'));
+  });
+});
+
 describe("REPORT_CSS includes scale and timeline styles", () => {
   it("includes scale-ref styles", () => {
     assert.ok(REPORT_CSS.includes(".scale-ref"));

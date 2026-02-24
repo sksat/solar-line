@@ -93,6 +93,41 @@ h2 { color: #58a6ff; }
 <div class="uplot-target"></div>
 </div>
 
+<h2>Chart with Error Bands</h2>
+<div class="card uplot-chart" id="error-band-chart">
+<h3>誤差バンド表示テスト</h3>
+<p>累積被曝量の推定値と不確実性範囲。帯状の領域がパラメータの不確実性を示す。</p>
+<div class="uplot-data" style="display:none">
+{
+  "xLabel": "経過時間 (分)",
+  "yLabel": "累積線量 (mSv)",
+  "series": [
+    {
+      "label": "推定値",
+      "color": "#ff6644",
+      "x": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      "y": [48, 60, 72, 84, 183, 282, 381, 480, 480],
+      "yLow": [48, 60, 72, 84, 96, 108, 120, 132, 144],
+      "yHigh": [48, 174, 300, 426, 552, 678, 804, 930, 1056],
+      "style": "solid",
+      "errorSource": "parameter"
+    }
+  ],
+  "thresholds": [
+    {
+      "value": 500,
+      "label": "限度 500 mSv",
+      "color": "#ff0000",
+      "style": "dashed"
+    }
+  ],
+  "width": 600,
+  "height": 300
+}
+</div>
+<div class="uplot-target"></div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   if (typeof uPlot === "undefined") return;
@@ -101,11 +136,28 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!dataEl) return;
     var cfg = JSON.parse(dataEl.textContent);
     var series = [{}];
+    var data = [cfg.series[0].x];
+    var bands = [];
+    var dataIdx = 1;
     cfg.series.forEach(function(s) {
       series.push({ label: s.label, stroke: s.color, width: 2, dash: s.style === "dashed" ? [6, 3] : undefined });
+      data.push(s.y);
+      var mainIdx = dataIdx;
+      dataIdx++;
+      if (s.yLow && s.yHigh) {
+        var c = s.color;
+        var alpha = c.startsWith("#") ? c + "33" : c.replace(/[\d.]+\)/, "0.15)");
+        series.push({ label: s.label + " (上限)", show: false, stroke: "transparent" });
+        data.push(s.yHigh);
+        var hiIdx = dataIdx;
+        dataIdx++;
+        series.push({ label: s.label + " (下限)", show: false, stroke: "transparent" });
+        data.push(s.yLow);
+        var loIdx = dataIdx;
+        dataIdx++;
+        bands.push({ series: [hiIdx, loIdx], fill: alpha });
+      }
     });
-    var data = [cfg.series[0].x];
-    cfg.series.forEach(function(s) { data.push(s.y); });
     var thresholdPlugin = cfg.thresholds && cfg.thresholds.length ? {
       hooks: { draw: [function(u) {
         var ctx = u.ctx;
@@ -136,7 +188,8 @@ document.addEventListener("DOMContentLoaded", function() {
         { label: cfg.xLabel, stroke: "#aaa", grid: { stroke: "#333" } },
         { label: cfg.yLabel, stroke: "#aaa", grid: { stroke: "#333" } }
       ],
-      series: series
+      series: series,
+      bands: bands.length ? bands : undefined
     };
     var target = el.querySelector(".uplot-target");
     new uPlot(opts, data, target);

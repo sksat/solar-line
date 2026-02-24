@@ -51,15 +51,16 @@ test.describe("uPlot Chart Example", () => {
     await page.waitForTimeout(2000);
     // uPlot creates canvas elements inside .uplot-target
     const canvases = page.locator(".uplot-target canvas");
-    expect(await canvases.count()).toBeGreaterThanOrEqual(2);
+    expect(await canvases.count()).toBeGreaterThanOrEqual(3);
   });
 
   test("renders chart titles", async ({ page }) => {
     await page.goto("/examples/uplot-chart.html");
     const h3s = page.locator("h3");
-    expect(await h3s.count()).toBe(2);
+    expect(await h3s.count()).toBe(3);
     await expect(h3s.first()).toContainText("推力プロファイル");
     await expect(h3s.nth(1)).toContainText("ノズル残寿命");
+    await expect(h3s.nth(2)).toContainText("誤差バンド表示テスト");
   });
 
   test("uPlot legend is visible", async ({ page }) => {

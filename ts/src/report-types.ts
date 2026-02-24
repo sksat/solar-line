@@ -213,6 +213,34 @@ export interface TimelineAnnotation {
   orbitId: string;
 }
 
+/** An uncertainty ellipse rendered on an orbital diagram */
+export interface UncertaintyEllipse {
+  /** Orbit ID where the ellipse is centered */
+  orbitId: string;
+  /** Semi-major axis of ellipse in same units as orbit radius */
+  semiMajor: number;
+  /** Semi-minor axis of ellipse in same units as orbit radius */
+  semiMinor: number;
+  /** Rotation angle of the ellipse in radians (default: 0) */
+  rotation?: number;
+  /** CSS color with alpha, e.g. "rgba(255, 100, 0, 0.2)" */
+  color: string;
+  /** Label for the uncertainty region, e.g. "1.23° 航法誤差" */
+  label?: string;
+}
+
+/** A trajectory variation overlay showing parameter sensitivity */
+export interface TrajectoryVariation {
+  /** Transfer arc to overlay variations on (must match a TransferArc in the same diagram) */
+  baseTransferLabel: string;
+  /** CSS color with alpha for the variation band */
+  color: string;
+  /** Label for the variation, e.g. "質量 ±10% による航路変動" */
+  label?: string;
+  /** Variation magnitude as fraction of base arc curvature (0-1). Controls the width of the variation band. */
+  spread: number;
+}
+
 /** An orbital transfer diagram rendered as inline SVG */
 export interface OrbitalDiagram {
   /** Unique identifier, e.g. "ep01-diagram-01" */
@@ -243,6 +271,10 @@ export interface OrbitalDiagram {
   scenarios?: DiagramScenario[];
   /** Epoch annotation showing the assumed in-story date, e.g. "想定年代: 2240-06-15" */
   epochAnnotation?: string;
+  /** Uncertainty ellipses rendered at orbit positions */
+  uncertaintyEllipses?: UncertaintyEllipse[];
+  /** Trajectory variation overlays showing parameter sensitivity */
+  trajectoryVariations?: TrajectoryVariation[];
 }
 
 /** Specifies which transfers should be rendered as separate detail sub-pages */
@@ -362,6 +394,12 @@ export interface TimeSeriesDatum {
   y: number[];
   /** Line style */
   style?: "solid" | "dashed";
+  /** Lower bound of error band (same length as y). When set with yHigh, renders a shaded region. */
+  yLow?: number[];
+  /** Upper bound of error band (same length as y). When set with yLow, renders a shaded region. */
+  yHigh?: number[];
+  /** Source of uncertainty: measurement, parameter, or model approximation */
+  errorSource?: "measurement" | "parameter" | "model";
 }
 
 /** A horizontal threshold/limit line on a time-series chart */

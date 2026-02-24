@@ -663,7 +663,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}${metaNav}</nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a> | <a href="${basePath}/doc/solar_line_core/index.html">API Docs</a></footer>
-<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}if(typeof hljs!=="undefined"){hljs.highlightAll()}if(typeof uPlot!=="undefined"){document.querySelectorAll(".uplot-chart").forEach(function(el){var dataEl=el.querySelector(".uplot-data");if(!dataEl)return;var cfg=JSON.parse(dataEl.textContent);var series=[{}];cfg.series.forEach(function(s){series.push({label:s.label,stroke:s.color,width:2,dash:s.style==="dashed"?[6,3]:undefined})});var data=[cfg.series[0].x];cfg.series.forEach(function(s){data.push(s.y)});var thresholdPlugin=cfg.thresholds&&cfg.thresholds.length?{hooks:{draw:[function(u){var ctx=u.ctx;cfg.thresholds.forEach(function(t){var yPos=u.valToPos(t.value,"y",true);ctx.save();ctx.strokeStyle=t.color;ctx.lineWidth=1.5;if(t.style==="dashed")ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(u.bbox.left,yPos);ctx.lineTo(u.bbox.left+u.bbox.width,yPos);ctx.stroke();ctx.fillStyle=t.color;ctx.font="11px sans-serif";ctx.textAlign="right";ctx.fillText(t.label,u.bbox.left+u.bbox.width-4,yPos-4);ctx.restore()})}]}}:undefined;var plugins=thresholdPlugin?[thresholdPlugin]:[];var opts={width:cfg.width||600,height:cfg.height||300,plugins:plugins,axes:[{label:cfg.xLabel,stroke:"#aaa",grid:{stroke:"#333"}},{label:cfg.yLabel,stroke:"#aaa",grid:{stroke:"#333"}}],series:series};var target=el.querySelector(".uplot-target");new uPlot(opts,data,target)})}});</script>
+<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}if(typeof hljs!=="undefined"){hljs.highlightAll()}if(typeof uPlot!=="undefined"){document.querySelectorAll(".uplot-chart").forEach(function(el){var dataEl=el.querySelector(".uplot-data");if(!dataEl)return;var cfg=JSON.parse(dataEl.textContent);var series=[{}];var data=[cfg.series[0].x];var bands=[];var dataIdx=1;cfg.series.forEach(function(s){series.push({label:s.label,stroke:s.color,width:2,dash:s.style==="dashed"?[6,3]:undefined});data.push(s.y);var mainIdx=dataIdx;dataIdx++;if(s.yLow&&s.yHigh){var c=s.color;var alpha=c.startsWith("#")?c+"33":c.replace(/[\d.]+\)/,"0.15)");series.push({label:s.label+" (下限)",show:false,stroke:"transparent",fill:undefined});data.push(s.yHigh);var hiIdx=dataIdx;dataIdx++;series.push({label:s.label+" (上限)",show:false,stroke:"transparent",fill:undefined});data.push(s.yLow);var loIdx=dataIdx;dataIdx++;bands.push({series:[hiIdx,loIdx],fill:alpha})}});var thresholdPlugin=cfg.thresholds&&cfg.thresholds.length?{hooks:{draw:[function(u){var ctx=u.ctx;cfg.thresholds.forEach(function(t){var yPos=u.valToPos(t.value,"y",true);ctx.save();ctx.strokeStyle=t.color;ctx.lineWidth=1.5;if(t.style==="dashed")ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(u.bbox.left,yPos);ctx.lineTo(u.bbox.left+u.bbox.width,yPos);ctx.stroke();ctx.fillStyle=t.color;ctx.font="11px sans-serif";ctx.textAlign="right";ctx.fillText(t.label,u.bbox.left+u.bbox.width-4,yPos-4);ctx.restore()})}]}}:undefined;var plugins=thresholdPlugin?[thresholdPlugin]:[];var opts={width:cfg.width||600,height:cfg.height||300,plugins:plugins,axes:[{label:cfg.xLabel,stroke:"#aaa",grid:{stroke:"#333"}},{label:cfg.yLabel,stroke:"#aaa",grid:{stroke:"#333"}}],series:series,bands:bands.length?bands:undefined};var target=el.querySelector(".uplot-target");new uPlot(opts,data,target)})}});</script>
 </body>
 </html>`;
 }
@@ -1224,6 +1224,55 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     return parts.join("\n    ");
   }).join("\n    ");
 
+  // Draw uncertainty ellipses
+  let uncertaintyEllipsesSvg = "";
+  if (diagram.uncertaintyEllipses && diagram.uncertaintyEllipses.length > 0) {
+    uncertaintyEllipsesSvg = diagram.uncertaintyEllipses.map(ue => {
+      const orbit = orbitMap.get(ue.orbitId);
+      if (!orbit || orbit.angle === undefined) return "";
+      const orbitR = orbitPxMap.get(ue.orbitId)!;
+      const ecx = orbitR * Math.cos(orbit.angle);
+      const ecy = -orbitR * Math.sin(orbit.angle);
+      const rxPx = scaleRadius(ue.semiMajor, maxOrbitR, maxPlotR, mode);
+      const ryPx = scaleRadius(ue.semiMinor, maxOrbitR, maxPlotR, mode);
+      const rotDeg = ue.rotation ? (-ue.rotation * 180 / Math.PI) : 0;
+      const labelSvg = ue.label
+        ? `<text x="${ecx.toFixed(1)}" y="${(ecy - ryPx - 4).toFixed(1)}" fill="${ue.color.replace(/[\d.]+\)/, "0.8)")}" font-size="8" text-anchor="middle">${escapeHtml(ue.label)}</text>`
+        : "";
+      return `<ellipse cx="${ecx.toFixed(1)}" cy="${ecy.toFixed(1)}" rx="${rxPx.toFixed(1)}" ry="${ryPx.toFixed(1)}" fill="${ue.color}" stroke="${ue.color.replace(/[\d.]+\)/, "0.5)")}" stroke-width="1" stroke-dasharray="3 2" transform="rotate(${rotDeg.toFixed(1)} ${ecx.toFixed(1)} ${ecy.toFixed(1)})"/>
+    ${labelSvg}`;
+    }).filter(s => s.length > 0).join("\n    ");
+  }
+
+  // Draw trajectory variation overlays
+  let trajectoryVarSvg = "";
+  if (diagram.trajectoryVariations && diagram.trajectoryVariations.length > 0) {
+    trajectoryVarSvg = diagram.trajectoryVariations.map(tv => {
+      const baseTransfer = diagram.transfers.find(t => t.label === tv.baseTransferLabel);
+      if (!baseTransfer) return "";
+      const fromOrbit = orbitMap.get(baseTransfer.fromOrbitId);
+      const toOrbit = orbitMap.get(baseTransfer.toOrbitId);
+      if (!fromOrbit || !toOrbit) return "";
+      const fromPx = orbitPxMap.get(baseTransfer.fromOrbitId)!;
+      const toPx = orbitPxMap.get(baseTransfer.toOrbitId)!;
+      // Generate two offset paths to form a variation band
+      const basePath = transferArcPath(baseTransfer.style, fromOrbit, toOrbit, fromPx, toPx);
+      const offsetPx = tv.spread * Math.abs(toPx - fromPx) * 0.3;
+      // Create a filled region using two arcs offset in perpendicular direction
+      const fromAngle = fromOrbit.angle ?? 0;
+      const toAngle = toOrbit.angle ?? (fromAngle + (baseTransfer.style === "hohmann" ? Math.PI : Math.PI / 2));
+      const midAngle = (fromAngle + toAngle) / 2;
+      const perpX = -Math.sin(midAngle);
+      const perpY = Math.cos(midAngle);
+      const labelSvg = tv.label
+        ? `<text x="${(offsetPx * perpX).toFixed(1)}" y="${(-offsetPx * perpY - 4).toFixed(1)}" fill="${tv.color.replace(/[\d.]+\)/, "0.6)")}" font-size="8" text-anchor="middle">${escapeHtml(tv.label)}</text>`
+        : "";
+      // Render as a thicker, semi-transparent copy of the base path
+      return `<path d="${basePath}" fill="none" stroke="${tv.color}" stroke-width="${(offsetPx * 2).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round"/>
+    ${labelSvg}`;
+    }).filter(s => s.length > 0).join("\n    ");
+  }
+
   // Build scenario lookup for multi-pattern diagrams
   const hasScenarios = !!(diagram.scenarios && diagram.scenarios.length > 0);
   const primaryScenarioId = hasScenarios ? diagram.scenarios![0].id : undefined;
@@ -1329,6 +1378,34 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     legendRowCount = styles.length;
   }
 
+  // Add uncertainty legend entries
+  let uncertaintyLegendItems = "";
+  if (diagram.uncertaintyEllipses && diagram.uncertaintyEllipses.length > 0) {
+    const renderedEllipses = diagram.uncertaintyEllipses.filter(ue => {
+      const orbit = orbitMap.get(ue.orbitId);
+      return ue.label && orbit && orbit.angle !== undefined;
+    });
+    uncertaintyLegendItems = renderedEllipses
+      .map((ue, i) => {
+        const y = (legendRowCount + i) * 18;
+        return `<ellipse cx="10" cy="${y + 6}" rx="10" ry="5" fill="${ue.color}" stroke="${ue.color.replace(/[\d.]+\)/, "0.5)")}" stroke-width="1" stroke-dasharray="2 1"/>
+    <text x="24" y="${y + 10}" fill="var(--fg)" font-size="10">${escapeHtml(ue.label!)}</text>`;
+      }).join("\n    ");
+    legendRowCount += renderedEllipses.length;
+  }
+  if (diagram.trajectoryVariations && diagram.trajectoryVariations.length > 0) {
+    const tvLegend = diagram.trajectoryVariations
+      .filter(tv => tv.label)
+      .map((tv, i) => {
+        const y = (legendRowCount + i) * 18;
+        return `<rect x="0" y="${y + 2}" width="20" height="8" fill="${tv.color}" rx="2"/>
+    <text x="24" y="${y + 10}" fill="var(--fg)" font-size="10">${escapeHtml(tv.label!)}</text>`;
+      }).join("\n    ");
+    legendRowCount += diagram.trajectoryVariations.filter(tv => tv.label).length;
+    uncertaintyLegendItems += (uncertaintyLegendItems ? "\n    " : "") + tvLegend;
+  }
+  legendItems += (legendItems ? "\n    " : "") + uncertaintyLegendItems;
+
   // Scale mode label appended to legend
   let scaleLabelItem = "";
   let scaleLabelHeight = 0;
@@ -1356,6 +1433,12 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
 
     <!-- Labels & body positions -->
     ${orbitLabels}
+
+    <!-- Uncertainty ellipses -->
+    ${uncertaintyEllipsesSvg}
+
+    <!-- Trajectory variation overlays -->
+    ${trajectoryVarSvg}
 
     <!-- Transfer arcs -->
     ${transferPaths}
