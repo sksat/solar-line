@@ -1314,5 +1314,19 @@
       "width": 700,
       "height": 250
     }
+  ],
+  "detailPages": [
+    {
+      "slug": "brachistochrone",
+      "transferIds": ["ep05-transfer-02"],
+      "diagramIds": ["ep05-diagram-01", "ep05-diagram-03"],
+      "title": "Brachistochrone遷移: 天王星→地球（質量別シナリオ）"
+    },
+    {
+      "slug": "ignition-budget",
+      "transferIds": ["ep05-transfer-04"],
+      "chartIds": ["ep05-nozzle-life", "ep05-thrust-profile"],
+      "title": "点火回数バジェットとノズル寿命分析"
+    }
   ]
 }

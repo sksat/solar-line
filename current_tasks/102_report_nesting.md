@@ -1,6 +1,6 @@
 # Task 102: Report Nesting for Long Analyses
 
-## Status: TODO
+## Status: IN_PROGRESS
 
 ## Motivation
 Human directive: 各分析は、長くなってきたらレポートの切り分け方を見直したり、レポートをネストさせたりしてもよい。ネストさせる場合はネストの深さに気を付けることと、ヘッダの選択でもネストさせること。

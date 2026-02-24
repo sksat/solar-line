@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -602,6 +602,14 @@ footer {
   .ep-nav-strip { gap: 0.3rem; padding: 0.5rem; }
   pre { font-size: 0.8em; padding: 0.75rem; }
 }
+.breadcrumb { margin-bottom: 1rem; font-size: 0.9rem; color: #8b949e; }
+.breadcrumb a { color: var(--accent); }
+.breadcrumb span:last-child { color: var(--fg); }
+.detail-page-parent { margin-bottom: 1.5rem; font-size: 0.95rem; }
+.detail-page-nav { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.transfer-summary { border-left: 3px solid var(--accent); }
+.transfer-summary .detail-link { font-weight: 600; }
+.detail-badge { display: inline-block; background: #1f2937; color: #8b949e; font-size: 0.75rem; padding: 0.1em 0.5em; border-radius: 10px; margin-left: 0.3em; vertical-align: middle; }
 `;
 
 /** Wrap content in the common HTML layout */
@@ -825,6 +833,112 @@ ${markdownToHtml(t.explanation)}
 ${sourcesHtml}
 ${reproHtml}
 </div>`;
+}
+
+/** Render a compact summary card for a transfer that has a detail sub-page */
+export function renderTransferSummaryCard(t: TransferAnalysis, detailUrl: string, explorationCount: number, videoCards?: VideoCard[]): string {
+  const verdictClass = `verdict-${t.verdict}`;
+  const dvLine = t.claimedDeltaV !== null && t.computedDeltaV !== null
+    ? `作中のΔV: <strong>${t.claimedDeltaV.toFixed(2)} km/s</strong> | 計算値: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong>`
+    : t.computedDeltaV !== null
+      ? `計算ΔV: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong>`
+      : "";
+  const tsHtml = timestampLink(t.timestamp, videoCards);
+  const explorationNote = explorationCount > 0
+    ? `<span class="detail-badge">${explorationCount}件のパラメータ探索</span>`
+    : "";
+
+  return `<div class="card transfer-summary" id="${escapeHtml(t.id)}">
+<h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
+<p>第${t.episode}話 @ ${tsHtml}</p>
+${dvLine ? `<p>${dvLine}</p>` : ""}
+<p>${markdownToHtml(t.explanation.split("\n")[0])}</p>
+<p><a href="${escapeHtml(detailUrl)}" class="detail-link">詳細分析を見る →</a> ${explorationNote}</p>
+</div>`;
+}
+
+/** Render a transfer detail sub-page with breadcrumb navigation */
+export function renderTransferDetailPage(
+  report: EpisodeReport,
+  detailPage: TransferDetailPage,
+  transfers: TransferAnalysis[],
+  explorations: ParameterExploration[],
+  diagrams: OrbitalDiagram[],
+  charts: TimeSeriesChart[],
+  summaryPages?: SiteManifest["summaryPages"],
+  navEpisodes?: NavEpisode[],
+  metaPages?: SiteManifest["metaPages"],
+): string {
+  const epNum = String(report.episode).padStart(3, "0");
+  const parentUrl = `../ep-${epNum}.html`;
+  const pageTitle = detailPage.title ?? transfers.map(t => t.description).join(" / ");
+
+  // Breadcrumb navigation
+  const breadcrumb = `<nav class="breadcrumb">
+<a href="../../index.html">トップ</a> &gt;
+<a href="${parentUrl}">第${report.episode}話</a> &gt;
+<span>${escapeHtml(pageTitle)}</span>
+</nav>`;
+
+  // Group explorations by transferId
+  const explorationsByTransfer = new Map<string, ParameterExploration[]>();
+  for (const exp of explorations) {
+    const list = explorationsByTransfer.get(exp.transferId) ?? [];
+    list.push(exp);
+    explorationsByTransfer.set(exp.transferId, list);
+  }
+
+  // Render transfers with their explorations
+  const transferCards = transfers.map((t) => {
+    const inlineQuotes = t.evidenceQuoteIds && report.dialogueQuotes
+      ? t.evidenceQuoteIds
+          .map(id => report.dialogueQuotes!.find(q => q.id === id))
+          .filter((q): q is DialogueQuote => q !== undefined)
+      : [];
+    const transferHtml = renderTransferCard(t, inlineQuotes, report.videoCards);
+    const relatedExplorations = explorationsByTransfer.get(t.id) ?? [];
+    const explorationHtml = relatedExplorations.map(renderExploration).join("\n");
+    return transferHtml + explorationHtml;
+  }).join("\n");
+
+  // Render diagrams
+  const diagramSection = diagrams.length > 0
+    ? `<h2 id="section-diagrams">軌道遷移図</h2>\n${diagrams.map(renderOrbitalDiagram).join("\n")}`
+    : "";
+
+  // Render time-series charts
+  const chartSection = charts.length > 0
+    ? `<h2 id="section-timeseries">時系列グラフ</h2>\n${renderTimeSeriesCharts(charts)}`
+    : "";
+
+  const content = `
+${breadcrumb}
+<h1>${escapeHtml(pageTitle)}</h1>
+<p class="detail-page-parent">← <a href="${parentUrl}">第${report.episode}話: ${escapeHtml(report.title)}</a> に戻る</p>
+
+${diagramSection}
+
+${chartSection}
+
+<h2 id="section-transfers">分析</h2>
+${transferCards}
+
+<nav class="detail-page-nav">
+<a href="${parentUrl}">← 第${report.episode}話に戻る</a>
+</nav>`;
+
+  const hasAnimatedDiagrams = diagrams.some(d => d.animation);
+  const animScript = hasAnimatedDiagrams ? '\n<script src="../../orbital-animation.js"></script>' : "";
+
+  return layoutHtml(
+    `第${report.episode}話 — ${pageTitle}`,
+    content + animScript,
+    "../..",
+    summaryPages,
+    `第${report.episode}話の分析詳細: ${pageTitle}`,
+    navEpisodes,
+    metaPages,
+  );
 }
 
 /** Allowed embed hosts for video cards (security whitelist) */
@@ -1546,8 +1660,29 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     }
   }
 
+  // Build a set of transfer IDs that have been moved to detail sub-pages
+  const detailPageTransferIds = new Set<string>();
+  const transferToDetailSlug = new Map<string, string>();
+  if (report.detailPages) {
+    for (const dp of report.detailPages) {
+      for (const tid of dp.transferIds) {
+        detailPageTransferIds.add(tid);
+        transferToDetailSlug.set(tid, dp.slug);
+      }
+    }
+  }
+
+  const epDir = `ep-${String(report.episode).padStart(3, "0")}`;
+
   // Render each transfer with its nested explorations and inline citations
   const cards = report.transfers.map((t) => {
+    // If this transfer has a detail sub-page, render a summary card instead
+    const detailSlug = transferToDetailSlug.get(t.id);
+    if (detailSlug) {
+      const explorationCount = (explorationsByTransfer.get(t.id) ?? []).length;
+      return renderTransferSummaryCard(t, `${epDir}/${detailSlug}.html`, explorationCount, report.videoCards);
+    }
+
     // Resolve inline citations from evidenceQuoteIds
     const inlineQuotes = t.evidenceQuoteIds && report.dialogueQuotes
       ? t.evidenceQuoteIds
@@ -1594,7 +1729,12 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     tocItems.push('<ul>');
     for (const t of report.transfers) {
       const badge = verdictBadge(t.verdict);
-      tocItems.push(`<li><a href="#${escapeHtml(t.id)}">${escapeHtml(t.description)}</a> ${badge}</li>`);
+      const detailSlug = transferToDetailSlug.get(t.id);
+      if (detailSlug) {
+        tocItems.push(`<li><a href="${epDir}/${detailSlug}.html">${escapeHtml(t.description)}</a> ${badge} <span class="detail-badge">詳細ページ</span></li>`);
+      } else {
+        tocItems.push(`<li><a href="#${escapeHtml(t.id)}">${escapeHtml(t.description)}</a> ${badge}</li>`);
+      }
     }
     tocItems.push('</ul>');
   }

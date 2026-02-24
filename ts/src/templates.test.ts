@@ -7,6 +7,8 @@ import {
   renderIndex,
   renderEpisode,
   renderTransferCard,
+  renderTransferSummaryCard,
+  renderTransferDetailPage,
   renderCalculator,
   renderVideoCard,
   renderVideoCards,
@@ -35,7 +37,7 @@ import {
   renderTimeSeriesCharts,
   REPORT_CSS,
 } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -3272,5 +3274,211 @@ describe("renderTaskDashboard", () => {
     const html = layoutHtml("Test", "<p>content</p>");
     assert.ok(html.includes("タスク状況"), "nav should include task dashboard link");
     assert.ok(html.includes("meta/tasks.html"), "nav should link to tasks page");
+  });
+});
+
+// --- renderTransferSummaryCard ---
+
+describe("renderTransferSummaryCard", () => {
+  const transfer: TransferAnalysis = {
+    id: "ep05-transfer-02",
+    episode: 5,
+    description: "天王星→地球 brachistochrone",
+    timestamp: "02:36",
+    claimedDeltaV: null,
+    computedDeltaV: 15207,
+    assumptions: ["Isp = 10^6 s"],
+    verdict: "conditional",
+    explanation: "First paragraph of explanation.\n\nSecond paragraph with more details.",
+    parameters: {},
+  };
+
+  it("renders compact card with detail link", () => {
+    const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 3);
+    assert.ok(html.includes("transfer-summary"), "should have transfer-summary class");
+    assert.ok(html.includes('href="ep-005/transfer-02.html"'), "should link to detail page");
+    assert.ok(html.includes("詳細分析を見る"), "should have detail link text");
+    assert.ok(html.includes("3件のパラメータ探索"), "should show exploration count");
+  });
+
+  it("renders verdict badge", () => {
+    const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 0);
+    assert.ok(html.includes("verdict-conditional"), "should show conditional verdict");
+  });
+
+  it("renders ΔV when available", () => {
+    const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 0);
+    assert.ok(html.includes("15207.00 km/s"), "should show computed ΔV");
+  });
+
+  it("omits exploration badge when count is 0", () => {
+    const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 0);
+    assert.ok(!html.includes("パラメータ探索"), "should not show exploration badge");
+  });
+});
+
+// --- renderTransferDetailPage ---
+
+describe("renderTransferDetailPage", () => {
+  const baseReport: EpisodeReport = {
+    episode: 5,
+    title: "SOLAR LINE Part 5 END",
+    summary: "Summary text",
+    transfers: [
+      {
+        id: "ep05-transfer-02",
+        episode: 5,
+        description: "天王星→地球 brachistochrone",
+        timestamp: "02:36",
+        claimedDeltaV: null,
+        computedDeltaV: 15207,
+        assumptions: [],
+        verdict: "conditional",
+        explanation: "Detailed explanation.",
+        parameters: {},
+        evidenceQuoteIds: ["ep05-quote-01"],
+      },
+    ],
+    dialogueQuotes: [
+      {
+        id: "ep05-quote-01",
+        speaker: "ケイ",
+        text: "推定所要時間は507時間",
+        timestamp: "02:36",
+      },
+    ],
+    explorations: [
+      {
+        id: "ep05-exploration-01",
+        transferId: "ep05-transfer-02",
+        question: "質量シナリオ分析",
+        scenarios: [
+          {
+            label: "48,000t",
+            variedParam: "mass",
+            variedValue: 48000,
+            variedUnit: "t",
+            results: { accel: 1.5 },
+            feasible: true,
+            note: "Feasible",
+          },
+        ],
+        summary: "All scenarios feasible.",
+      },
+    ],
+  };
+
+  const detailPage: TransferDetailPage = {
+    slug: "transfer-02",
+    transferIds: ["ep05-transfer-02"],
+  };
+
+  it("renders breadcrumb navigation", () => {
+    const html = renderTransferDetailPage(baseReport, detailPage, baseReport.transfers, baseReport.explorations!, [], []);
+    assert.ok(html.includes('class="breadcrumb"'), "should have breadcrumb");
+    assert.ok(html.includes("トップ"), "should link to top");
+    assert.ok(html.includes("第5話"), "should link to parent episode");
+    assert.ok(html.includes("ep-005.html"), "should link to correct episode file");
+  });
+
+  it("renders transfer card with explorations", () => {
+    const html = renderTransferDetailPage(baseReport, detailPage, baseReport.transfers, baseReport.explorations!, [], []);
+    assert.ok(html.includes("ep05-transfer-02"), "should render transfer ID");
+    assert.ok(html.includes("質量シナリオ分析"), "should render explorations");
+  });
+
+  it("renders back link", () => {
+    const html = renderTransferDetailPage(baseReport, detailPage, baseReport.transfers, baseReport.explorations!, [], []);
+    assert.ok(html.includes("第5話に戻る"), "should have back link");
+  });
+
+  it("uses custom title when specified", () => {
+    const dpWithTitle: TransferDetailPage = { ...detailPage, title: "Custom Title" };
+    const html = renderTransferDetailPage(baseReport, dpWithTitle, baseReport.transfers, baseReport.explorations!, [], []);
+    assert.ok(html.includes("Custom Title"), "should use custom title");
+  });
+
+  it("renders inline citations from dialogueQuotes", () => {
+    const html = renderTransferDetailPage(baseReport, detailPage, baseReport.transfers, baseReport.explorations!, [], []);
+    assert.ok(html.includes("推定所要時間は507時間"), "should include dialogue quotes as citations");
+  });
+});
+
+// --- renderEpisode with detailPages ---
+
+describe("renderEpisode with detailPages", () => {
+  const reportWithDetails: EpisodeReport = {
+    episode: 5,
+    title: "Test Episode",
+    summary: "Test summary",
+    transfers: [
+      {
+        id: "ep05-transfer-01",
+        episode: 5,
+        description: "Reference transfer",
+        timestamp: "01:00",
+        claimedDeltaV: null,
+        computedDeltaV: 15.94,
+        assumptions: [],
+        verdict: "reference",
+        explanation: "Reference value.",
+        parameters: {},
+      },
+      {
+        id: "ep05-transfer-02",
+        episode: 5,
+        description: "Brachistochrone transit",
+        timestamp: "02:36",
+        claimedDeltaV: null,
+        computedDeltaV: 15207,
+        assumptions: [],
+        verdict: "conditional",
+        explanation: "Detailed analysis.",
+        parameters: {},
+      },
+    ],
+    explorations: [
+      {
+        id: "ep05-exploration-01",
+        transferId: "ep05-transfer-02",
+        question: "Mass scenarios",
+        scenarios: [{ label: "S1", variedParam: "m", variedValue: 48000, variedUnit: "t", results: {}, feasible: true, note: "ok" }],
+        summary: "Done.",
+      },
+    ],
+    detailPages: [
+      {
+        slug: "transfer-02",
+        transferIds: ["ep05-transfer-02"],
+      },
+    ],
+  };
+
+  it("renders summary card for transfers with detail pages", () => {
+    const html = renderEpisode(reportWithDetails);
+    assert.ok(html.includes("transfer-summary"), "should render summary card for transfer-02");
+    assert.ok(html.includes("ep-005/transfer-02.html"), "should link to detail page");
+    assert.ok(html.includes("詳細分析を見る"), "should include detail link");
+  });
+
+  it("still renders full card for transfers without detail pages", () => {
+    const html = renderEpisode(reportWithDetails);
+    assert.ok(html.includes('id="ep05-transfer-01"'), "should render transfer-01 with full card");
+    assert.ok(html.includes("Reference value."), "should include full explanation");
+  });
+
+  it("shows detail badge in TOC for detail-page transfers", () => {
+    const html = renderEpisode(reportWithDetails);
+    assert.ok(html.includes("詳細ページ"), "should show detail badge in TOC");
+  });
+
+  it("renders normal episode when no detailPages", () => {
+    const normalReport: EpisodeReport = {
+      ...reportWithDetails,
+      detailPages: undefined,
+    };
+    const html = renderEpisode(normalReport);
+    assert.ok(!html.includes('class="card transfer-summary"'), "should not have summary card elements");
+    assert.ok(!html.includes("詳細ページ"), "should not have detail badges in TOC");
   });
 });

@@ -245,6 +245,20 @@ export interface OrbitalDiagram {
   epochAnnotation?: string;
 }
 
+/** Specifies which transfers should be rendered as separate detail sub-pages */
+export interface TransferDetailPage {
+  /** Slug for the sub-page URL, e.g. "transfer-02" → episodes/ep-005/transfer-02.html */
+  slug: string;
+  /** IDs of TransferAnalysis entries to include on this sub-page */
+  transferIds: string[];
+  /** IDs of OrbitalDiagram entries to include on this sub-page (optional) */
+  diagramIds?: string[];
+  /** IDs of TimeSeriesChart entries to include on this sub-page (optional) */
+  chartIds?: string[];
+  /** Optional page title override (defaults to transfer description) */
+  title?: string;
+}
+
 /** Per-episode report data */
 export interface EpisodeReport {
   /** Episode number */
@@ -265,6 +279,8 @@ export interface EpisodeReport {
   diagrams?: OrbitalDiagram[];
   /** Interactive time-series charts (rendered via uPlot) */
   timeSeriesCharts?: TimeSeriesChart[];
+  /** Detail sub-pages for long analyses; when set, matched transfers render as summary cards on the main page */
+  detailPages?: TransferDetailPage[];
 }
 
 /** A row in a cross-episode comparison table */

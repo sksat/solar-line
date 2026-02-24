@@ -266,6 +266,112 @@ describe("build (integration)", () => {
   });
 });
 
+// --- build with detailPages (integration) ---
+
+describe("build with detailPages (integration)", () => {
+  let dataDir: string;
+  let outDir: string;
+
+  beforeEach(() => {
+    dataDir = makeTempDir();
+    outDir = makeTempDir();
+  });
+  afterEach(() => {
+    rmDir(dataDir);
+    rmDir(outDir);
+  });
+
+  it("generates detail sub-pages for episodes with detailPages", () => {
+    const epDir = path.join(dataDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    const episode: EpisodeReport = {
+      episode: 5,
+      title: "Test EP05",
+      summary: "Test summary.",
+      transfers: [
+        {
+          id: "ep05-transfer-01",
+          episode: 5,
+          description: "Reference transfer",
+          timestamp: "01:00",
+          claimedDeltaV: null,
+          computedDeltaV: 15.94,
+          assumptions: [],
+          verdict: "reference",
+          explanation: "Reference value.",
+          parameters: {},
+        },
+        {
+          id: "ep05-transfer-02",
+          episode: 5,
+          description: "Brachistochrone transit",
+          timestamp: "02:36",
+          claimedDeltaV: null,
+          computedDeltaV: 15207,
+          assumptions: [],
+          verdict: "conditional",
+          explanation: "Analysis text.",
+          parameters: {},
+        },
+      ],
+      explorations: [
+        {
+          id: "ep05-exploration-01",
+          transferId: "ep05-transfer-02",
+          question: "Mass scenarios",
+          scenarios: [{ label: "S1", variedParam: "m", variedValue: 48000, variedUnit: "t", results: {}, feasible: true, note: "ok" }],
+          summary: "All feasible.",
+        },
+      ],
+      detailPages: [
+        {
+          slug: "transfer-02",
+          transferIds: ["ep05-transfer-02"],
+        },
+      ],
+    };
+    fs.writeFileSync(path.join(epDir, "ep05.json"), JSON.stringify(episode));
+
+    build({ dataDir, outDir });
+
+    // Main episode page should exist
+    const epPage = path.join(outDir, "episodes", "ep-005.html");
+    assert.ok(fs.existsSync(epPage), "episode page should exist");
+    const mainHtml = fs.readFileSync(epPage, "utf-8");
+    assert.ok(mainHtml.includes("transfer-summary"), "main page should have summary card");
+    assert.ok(mainHtml.includes("ep-005/transfer-02.html"), "main page should link to detail");
+
+    // Detail sub-page should exist
+    const detailPage = path.join(outDir, "episodes", "ep-005", "transfer-02.html");
+    assert.ok(fs.existsSync(detailPage), "detail sub-page should exist");
+    const detailHtml = fs.readFileSync(detailPage, "utf-8");
+    assert.ok(detailHtml.includes("Brachistochrone transit"), "detail page should render transfer");
+    assert.ok(detailHtml.includes("Mass scenarios"), "detail page should render explorations");
+    assert.ok(detailHtml.includes("breadcrumb"), "detail page should have breadcrumb");
+    assert.ok(detailHtml.includes("ep-005.html"), "detail page should link back to parent");
+  });
+
+  it("does not generate sub-pages when detailPages is absent", () => {
+    const epDir = path.join(dataDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    const episode: EpisodeReport = {
+      episode: 1,
+      title: "Test EP01",
+      summary: "Summary.",
+      transfers: [
+        { id: "t1", episode: 1, description: "T1", timestamp: "00:00", claimedDeltaV: null, computedDeltaV: 5.0, assumptions: [], verdict: "plausible", explanation: "ok", parameters: {} },
+      ],
+    };
+    fs.writeFileSync(path.join(epDir, "ep01.json"), JSON.stringify(episode));
+
+    build({ dataDir, outDir });
+
+    assert.ok(!fs.existsSync(path.join(outDir, "episodes", "ep-001")), "should not create sub-directory");
+  });
+});
+
 // --- countVerdicts ---
 
 describe("countVerdicts", () => {

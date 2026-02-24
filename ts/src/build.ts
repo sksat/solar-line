@@ -7,13 +7,14 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { EpisodeReport, SiteManifest, SummaryReport, TranscriptionPageData, VerdictCounts, DialogueQuote } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, SummaryReport, TranscriptionPageData, TransferDetailPage, VerdictCounts, DialogueQuote } from "./report-types.ts";
 import type { EpisodeLines } from "./dialogue-extraction-types.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 import { parseSummaryMarkdown } from "./mdx-parser.ts";
 import {
   renderIndex,
   renderEpisode,
+  renderTransferDetailPage,
   renderLogsIndex,
   renderLogPage,
   renderSummaryPage,
@@ -547,10 +548,32 @@ export function build(config: BuildConfig): void {
   // Generate index page
   fs.writeFileSync(path.join(outDir, "index.html"), renderIndex(manifest, navEpisodes));
 
-  // Generate episode pages
+  // Generate episode pages (and detail sub-pages for nested reports)
   for (const ep of episodes) {
     const filename = `ep-${String(ep.episode).padStart(3, "0")}.html`;
     fs.writeFileSync(path.join(outDir, "episodes", filename), renderEpisode(ep, manifest.summaryPages, episodes.length, navEpisodes, manifest.metaPages));
+
+    // Generate detail sub-pages for episodes with detailPages
+    if (ep.detailPages && ep.detailPages.length > 0) {
+      const epDir = path.join(outDir, "episodes", `ep-${String(ep.episode).padStart(3, "0")}`);
+      ensureDir(epDir);
+
+      for (const dp of ep.detailPages) {
+        const transfers = ep.transfers.filter(t => dp.transferIds.includes(t.id));
+        const explorations = (ep.explorations ?? []).filter(e => dp.transferIds.includes(e.transferId));
+        const diagrams = dp.diagramIds
+          ? (ep.diagrams ?? []).filter(d => dp.diagramIds!.includes(d.id))
+          : [];
+        const charts = dp.chartIds
+          ? (ep.timeSeriesCharts ?? []).filter(c => dp.chartIds!.includes(c.id))
+          : [];
+
+        fs.writeFileSync(
+          path.join(epDir, `${dp.slug}.html`),
+          renderTransferDetailPage(ep, dp, transfers, explorations, diagrams, charts, manifest.summaryPages, navEpisodes, manifest.metaPages),
+        );
+      }
+    }
   }
 
   // Generate summary pages (with episode nav strip and auto-linking)
