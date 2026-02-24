@@ -10,7 +10,7 @@ import * as assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { EpisodeReport, TransferAnalysis, DialogueQuote } from "./report-types.ts";
-import type { EpisodeDialogue } from "./subtitle-types.ts";
+import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 
 const REPORTS_DIR = path.resolve(import.meta.dirname ?? ".", "..", "..", "reports");
 const EPISODES_DIR = path.join(REPORTS_DIR, "data", "episodes");
@@ -343,4 +343,186 @@ describe("report data: summary reports", () => {
       assert.ok(typeof section.markdown === "string", `Section "${section.heading}" missing markdown`);
     }
   });
+});
+
+// ---------------------------------------------------------------------------
+// Transcription-report sync: dialogue quote text and timestamp matching
+// ---------------------------------------------------------------------------
+
+/**
+ * Parse "MM:SS" or "HH:MM:SS" timestamp string to milliseconds.
+ * Returns null if the format is invalid.
+ */
+function parseTimestampMs(ts: string): number | null {
+  const parts = ts.split(":").map(Number);
+  if (parts.some(isNaN)) return null;
+  if (parts.length === 2) {
+    const [min, sec] = parts;
+    return (min * 60 + sec) * 1000;
+  }
+  if (parts.length === 3) {
+    const [hr, min, sec] = parts;
+    return (hr * 3600 + min * 60 + sec) * 1000;
+  }
+  return null;
+}
+
+/**
+ * Find dialogue entries that overlap a target timestamp.
+ * A match occurs if the target falls within the entry's time range (startMs to endMs),
+ * or if the entry starts within toleranceMs of the target.
+ * Returns entries sorted by proximity to the target.
+ */
+function findNearbyDialogue(
+  dialogueLines: DialogueLine[],
+  targetMs: number,
+  toleranceMs: number
+): DialogueLine[] {
+  return dialogueLines
+    .filter(d =>
+      // Target falls within the dialogue entry's time range
+      (targetMs >= d.startMs && targetMs <= d.endMs) ||
+      // Or entry start is within tolerance of target
+      Math.abs(d.startMs - targetMs) <= toleranceMs
+    )
+    .sort((a, b) => Math.abs(a.startMs - targetMs) - Math.abs(b.startMs - targetMs));
+}
+
+/**
+ * Normalize Japanese text for fuzzy comparison: remove punctuation and whitespace.
+ */
+function normalizeJa(text: string): string {
+  return text.replace(/[\s、。！？「」『』（）\(\)…—―・,\.!?\u3000]/g, "");
+}
+
+/**
+ * Check if two texts have significant overlap.
+ * Returns true if one is a substring of the other, or if they share
+ * a long common substring (≥30% of the shorter text).
+ */
+function hasTextOverlap(reportText: string, dialogueText: string): boolean {
+  const a = normalizeJa(reportText);
+  const b = normalizeJa(dialogueText);
+  if (a.length === 0 || b.length === 0) return false;
+  // Direct substring check
+  if (a.includes(b) || b.includes(a)) return true;
+  // Check for a shared substring of at least 30% of the shorter text
+  const minLen = Math.min(a.length, b.length);
+  const threshold = Math.max(3, Math.floor(minLen * 0.3));
+  for (let i = 0; i <= a.length - threshold; i++) {
+    const sub = a.slice(i, i + threshold);
+    if (b.includes(sub)) return true;
+  }
+  return false;
+}
+
+describe("report data: transcription-report sync", () => {
+  const episodes = getAvailableEpisodes();
+  /** Tolerance for timestamp matching: ±15 seconds */
+  const TIMESTAMP_TOLERANCE_MS = 15_000;
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const dialogue = loadDialogue(epNum);
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    if (!dialogue) continue;
+    if (!report.dialogueQuotes || report.dialogueQuotes.length === 0) continue;
+
+    // Build speaker name lookup: speakerId → nameJa
+    const speakerNameById = new Map(dialogue.speakers.map(s => [s.id, s.nameJa]));
+
+    it(`${prefix}: dialogue quotes have matching entries in dialogue data (timestamp proximity)`, () => {
+      const unmatched: string[] = [];
+
+      for (const quote of report.dialogueQuotes!) {
+        const targetMs = parseTimestampMs(quote.timestamp);
+        if (targetMs === null) {
+          // Timestamp parse failures are caught by another test
+          continue;
+        }
+
+        const nearby = findNearbyDialogue(dialogue.dialogue, targetMs, TIMESTAMP_TOLERANCE_MS);
+        if (nearby.length === 0) {
+          unmatched.push(
+            `${quote.id} "${quote.text.slice(0, 30)}..." @${quote.timestamp} — no dialogue entry within ±${TIMESTAMP_TOLERANCE_MS / 1000}s`
+          );
+        }
+      }
+
+      if (unmatched.length > 0) {
+        const total = report.dialogueQuotes!.length;
+        const matchRate = ((total - unmatched.length) / total * 100).toFixed(0);
+        assert.ok(
+          unmatched.length <= Math.ceil(total * 0.2),
+          `${unmatched.length}/${total} quotes unmatched (${matchRate}% match rate). ` +
+          `Unmatched:\n  ${unmatched.join("\n  ")}`
+        );
+      }
+    });
+
+    it(`${prefix}: matched quotes have consistent speaker names`, () => {
+      const mismatches: string[] = [];
+
+      for (const quote of report.dialogueQuotes!) {
+        const targetMs = parseTimestampMs(quote.timestamp);
+        if (targetMs === null) continue;
+
+        const nearby = findNearbyDialogue(dialogue.dialogue, targetMs, TIMESTAMP_TOLERANCE_MS);
+        if (nearby.length === 0) continue;
+
+        // Check if any nearby entry has a matching speaker
+        const speakerMatch = nearby.some(d => {
+          const speakerName = speakerNameById.get(d.speakerId) ?? d.speakerName;
+          return speakerName === quote.speaker;
+        });
+
+        if (!speakerMatch) {
+          const nearbyNames = nearby.map(d => speakerNameById.get(d.speakerId) ?? d.speakerName);
+          mismatches.push(
+            `${quote.id}: report says "${quote.speaker}" but nearby dialogue has [${[...new Set(nearbyNames)].join(", ")}] @${quote.timestamp}`
+          );
+        }
+      }
+
+      if (mismatches.length > 0) {
+        assert.fail(
+          `Speaker mismatches found:\n  ${mismatches.join("\n  ")}`
+        );
+      }
+    });
+
+    it(`${prefix}: matched quotes have overlapping text content`, () => {
+      const noOverlap: string[] = [];
+
+      for (const quote of report.dialogueQuotes!) {
+        const targetMs = parseTimestampMs(quote.timestamp);
+        if (targetMs === null) continue;
+
+        const nearby = findNearbyDialogue(dialogue.dialogue, targetMs, TIMESTAMP_TOLERANCE_MS);
+        if (nearby.length === 0) continue;
+
+        // Check if any nearby entry has text overlap
+        const textMatch = nearby.some(d => hasTextOverlap(quote.text, d.text));
+
+        if (!textMatch) {
+          const nearbyTexts = nearby.map(d => `"${d.text.slice(0, 30)}..."`);
+          noOverlap.push(
+            `${quote.id}: "${quote.text.slice(0, 40)}..." has no text overlap with nearby entries: ${nearbyTexts.join(", ")}`
+          );
+        }
+      }
+
+      if (noOverlap.length > 0) {
+        const total = report.dialogueQuotes!.length;
+        const matched = total - noOverlap.length;
+        // Allow up to 30% mismatch (quotes may be paraphrased or combined from multiple lines)
+        assert.ok(
+          noOverlap.length <= Math.ceil(total * 0.3),
+          `${noOverlap.length}/${total} quotes have no text overlap (${((matched / total) * 100).toFixed(0)}% overlap rate). ` +
+          `No overlap:\n  ${noOverlap.join("\n  ")}`
+        );
+      }
+    });
+  }
 });
