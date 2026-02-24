@@ -9,6 +9,8 @@
  *   npm run dag -- invalidate <id>
  *   npm run dag -- impact <id>          # Show downstream impact
  *   npm run dag -- lineage <id>         # Show upstream lineage
+ *   npm run dag -- remove-dep <from> <to>  # Remove a dependency
+ *   npm run dag -- rewire <node> --from <old-dep> --to <new-dep>
  *   npm run dag -- validate             # Check DAG integrity
  *   npm run dag -- show [--stale]       # Print DAG summary
  */
@@ -20,6 +22,7 @@ import {
   createEmptyDag,
   addNode,
   addDependency,
+  removeDependency,
   setStatus,
   invalidate,
   getDownstream,
@@ -74,7 +77,7 @@ const command = positional[0];
 
 if (!command) {
   console.log("Usage: npm run dag -- <command> [args]");
-  console.log("Commands: add, depend, status, invalidate, impact, lineage, validate, show");
+  console.log("Commands: add, depend, remove-dep, rewire, status, invalidate, impact, lineage, validate, show");
   process.exit(0);
 }
 
@@ -216,9 +219,34 @@ switch (command) {
     break;
   }
 
+  case "remove-dep": {
+    const [, from, to] = positional;
+    if (!from || !to) {
+      console.error("Usage: remove-dep <from> <to>");
+      process.exit(1);
+    }
+    const event = removeDependency(state, from, to);
+    events.push(event);
+    console.log(`Removed dependency: ${from} → ${to}`);
+    break;
+  }
+
+  case "rewire": {
+    const [, nodeId] = positional;
+    if (!nodeId || !flags.from || !flags.to) {
+      console.error("Usage: rewire <node> --from <old-dep> --to <new-dep>");
+      process.exit(1);
+    }
+    const removeEvt = removeDependency(state, nodeId, flags.from);
+    const addEvt = addDependency(state, nodeId, flags.to);
+    events.push(removeEvt, addEvt);
+    console.log(`Rewired '${nodeId}': ${flags.from} → ${flags.to}`);
+    break;
+  }
+
   default:
     console.error(`Unknown command: ${command}`);
-    console.error("Commands: add, depend, status, invalidate, impact, lineage, validate, show");
+    console.error("Commands: add, depend, remove-dep, rewire, status, invalidate, impact, lineage, validate, show");
     process.exit(1);
 }
 
