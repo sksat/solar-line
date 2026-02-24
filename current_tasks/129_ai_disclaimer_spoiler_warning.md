@@ -1,6 +1,6 @@
 # Task 129: AI生成表記とネタバレ警告の明示
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 人間の指示: 「この考証のほとんどが AI 生成であることと、ネタバレ注意を最初に強く明示すること」

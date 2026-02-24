@@ -296,6 +296,20 @@ describe("layoutHtml", () => {
     assert.ok(html.includes("auto-render.min.js"), "should include auto-render");
     assert.ok(html.includes("renderMathInElement"), "should include auto-render initialization");
   });
+
+  it("includes AI disclaimer and spoiler warning banner", () => {
+    const html = layoutHtml("Test", "<p>ok</p>");
+    assert.ok(html.includes("site-banner"), "should include site-banner CSS class");
+    assert.ok(html.includes("ネタバレ注意"), "should include spoiler warning");
+    assert.ok(html.includes("AI生成コンテンツ"), "should include AI-generated notice");
+    // Banner div should appear between nav and content
+    const navIdx = html.indexOf("<nav");
+    const bannerIdx = html.indexOf('<div class="site-banner"');
+    const contentIdx = html.indexOf("<p>ok</p>");
+    assert.ok(bannerIdx > 0, "banner div should exist");
+    assert.ok(navIdx < bannerIdx, "banner should appear after nav");
+    assert.ok(bannerIdx < contentIdx, "banner should appear before content");
+  });
 });
 
 // --- renderTransferCard ---
