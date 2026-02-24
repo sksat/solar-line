@@ -1,6 +1,6 @@
 # Task 103: DAG 分析の Rust モデリング
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Motivation
 
@@ -32,8 +32,39 @@ Human directive: DAG は単に並べて可視化するだけでは分かりに�
 - Task 085 (DAG foundation — DONE)
 - Task 088 (DAG improvements — DONE)
 
+## Completed
+
+### Phase 1: Rust DAG Module (`dag.rs`) — 33 tests
+- Types: DagNode, Dag, NodeType (5 variants), NodeStatus (3 variants)
+- Topological sort (Kahn's algorithm)
+- Depth computation (longest path from roots)
+- Critical path detection (trace back from deepest node)
+- Sugiyama-style layout with barycenter crossing minimization
+- Impact analysis with type breakdown
+- Subgraph extraction (tag-based with depth expansion)
+- Path finding between nodes (DFS with max_paths limit)
+- Edge crossing counter (segment intersection)
+- Cycle detection (DFS 3-color)
+- Orphan detection
+- Zero external dependencies maintained
+
+### Phase 2: WASM Bindings — 8 tests
+- dag_layout: Sugiyama → {ids, x, y, layers, crossings}
+- dag_impact: Cascade → {affected, cascade_count, by_type}
+- dag_analyze: Full → {topo_order, critical_path, depths, orphans}
+- dag_upstream / dag_downstream: Transitive chains
+- dag_find_paths: All paths between two nodes
+- dag_subgraph: Tag-based extraction
+
+### Phase 3: DAG Viewer Enhancement
+- WASM integration with JS fallback
+- Depth-based Sugiyama layout replaces type-based layout
+- Impact / upstream / downstream analysis buttons on node click
+- Analysis panel with color-coded affected node badges
+- Critical path marking in tooltip
+- Edge crossing count display
+- Engine badge (WASM/JS indicator)
+
 ## Notes
-- Current DAG viewer (`dag-viewer.js`) does simple layered layout in JS
-- Rust implementation enables more sophisticated graph algorithms
-- Existing `dag.ts` has basic analysis (getDownstream, getUpstream, invalidate) — Rust version should be more capable
+- Cluster detection (communities/SCC) deferred — current DAG is acyclic by design
 - Keep zero-dependency policy in solar-line-core
