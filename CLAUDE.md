@@ -123,6 +123,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 - **Rust-based DAG analysis**: DAG analysis (dependency chain extraction, impact cascade, layout algorithms) should be modeled in Rust and compiled to WASM, enabling real-time browser-side analysis in the DAG viewer.
 - **Untangled visualization**: DAG should not just be laid out flat — dependencies must be "untangled" so that dependency chains and invalidation cascades are visually clear.
+- **DAG-driven task planning**: Use the DAG not just for re-analysis tracking but also for understanding task dependencies, identifying which tasks can be parallelized via Task agents or Codex, and deciding session work priorities. Mark the currently active dependency tree so that concurrent sessions avoid conflicts and can identify parallelizable work.
 
 ## Quality Assurance
 
