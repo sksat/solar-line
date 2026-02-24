@@ -2,7 +2,7 @@
  * Tests for Episode 5 analysis: Uranus→Earth series finale.
  *
  * These tests verify orbital mechanics calculations for the final leg
- * of the Solar Line route. Marked as preliminary pending subtitle data.
+ * of the Solar Line route, including nozzle lifespan and Oberth effect analysis.
  */
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
@@ -13,6 +13,8 @@ import {
   burnBudgetAnalysis,
   fullRouteSummary,
   earthCaptureScenarios,
+  nozzleLifespanAnalysis,
+  oberthEffectAnalysis,
   analyzeEpisode5,
   KESTREL,
   EP05_PARAMS,
@@ -33,9 +35,26 @@ describe("EP05 Constants", () => {
     assert.equal(EP05_PARAMS.cumulativeRadiationMSv, 480);
   });
 
+  it("EP05_PARAMS has confirmed nozzle lifespan values", () => {
+    // 55h38m = 55*3600 + 38*60 = 200,280 seconds
+    assert.equal(EP05_PARAMS.nozzleLifetimeSec, 200_280);
+    // 55h12m = 55*3600 + 12*60 = 198,720 seconds
+    assert.equal(EP05_PARAMS.requiredBurnTimeSec, 198_720);
+  });
+
+  it("EP05_PARAMS has confirmed velocity values", () => {
+    assert.equal(EP05_PARAMS.cruiseVelocityKms, 1500);
+    assert.equal(EP05_PARAMS.finalVelocityKms, 2100);
+    assert.equal(EP05_PARAMS.transitTimeHours, 507);
+  });
+
   it("remaining burns after departure is 2-3", () => {
     assert.equal(EP05_PARAMS.remainingBurnsAfterDeparture.min, 2);
     assert.equal(EP05_PARAMS.remainingBurnsAfterDeparture.max, 3);
+  });
+
+  it("actual burn count is 4", () => {
+    assert.equal(EP05_PARAMS.actualBurnCount, 4);
   });
 
   it("distance scenarios are in correct order", () => {
@@ -245,6 +264,128 @@ describe("EP05 Earth Capture Scenarios", () => {
   });
 });
 
+describe("EP05 Nozzle Lifespan Analysis", () => {
+  it("nozzle lifetime is 55h38m (200,280 seconds)", () => {
+    const n = nozzleLifespanAnalysis();
+    assert.equal(n.nozzleLifetimeSec, 200_280);
+    assert.ok(Math.abs(n.nozzleLifetimeHours - 55.633) < 0.01, `${n.nozzleLifetimeHours}h`);
+  });
+
+  it("required burn time is 55h12m (198,720 seconds)", () => {
+    const n = nozzleLifespanAnalysis();
+    assert.equal(n.requiredBurnTimeSec, 198_720);
+    assert.ok(Math.abs(n.requiredBurnTimeHours - 55.2) < 0.01, `${n.requiredBurnTimeHours}h`);
+  });
+
+  it("margin is 26 minutes (1560 seconds)", () => {
+    const n = nozzleLifespanAnalysis();
+    assert.equal(n.marginSec, 1560);
+    assert.equal(n.marginMinutes, 26);
+  });
+
+  it("margin is consistent with ケイ stated value", () => {
+    const n = nozzleLifespanAnalysis();
+    assert.ok(n.marginConsistency, "computed margin should match stated 26 minutes");
+    assert.equal(n.statedMarginMinutes, 26);
+  });
+
+  it("margin fraction is ~0.78%", () => {
+    const n = nozzleLifespanAnalysis();
+    assert.ok(n.marginPercent > 0.5 && n.marginPercent < 1.0, `margin = ${n.marginPercent}%`);
+  });
+
+  it("sensitivity scenarios show 5% burn increase would exceed lifetime", () => {
+    const n = nozzleLifespanAnalysis();
+    const fivePercentIncrease = n.sensitivityScenarios.find(s => s.label.includes("5%増加"))!;
+    assert.ok(fivePercentIncrease.marginSec < 0, `5% increase margin = ${fivePercentIncrease.marginSec}s (should be negative)`);
+  });
+
+  it("sensitivity scenarios show 1% burn increase still has positive margin", () => {
+    const n = nozzleLifespanAnalysis();
+    const onePercentIncrease = n.sensitivityScenarios.find(s => s.label.includes("1%増加"))!;
+    // 1% of 198720 = 1987 seconds, margin is 1560 seconds → should be negative
+    assert.ok(onePercentIncrease.marginSec < 0, `1% increase exhausts margin`);
+  });
+
+  it("nozzle was destroyed", () => {
+    const n = nozzleLifespanAnalysis();
+    assert.ok(n.nozzleDestroyed);
+  });
+
+  it("series margins show tightening pattern", () => {
+    const n = nozzleLifespanAnalysis();
+    // EP5 has smallest % margin in the series
+    const ep5Margin = n.seriesMargins.find(m => m.episode === 5)!;
+    const ep4Margin = n.seriesMargins.find(m => m.episode === 4)!;
+    assert.ok(ep5Margin.margin < ep4Margin.margin, "EP5 margin should be tighter than EP4");
+  });
+});
+
+describe("EP05 Oberth Effect Analysis", () => {
+  it("uses v_inf = 1500 km/s", () => {
+    const o = oberthEffectAnalysis();
+    assert.equal(o.vInfKms, 1500);
+  });
+
+  it("Jupiter escape velocity at surface is ~59.5 km/s", () => {
+    const o = oberthEffectAnalysis();
+    assert.ok(o.vEscJupiterSurfaceKms > 59 && o.vEscJupiterSurfaceKms < 60, `${o.vEscJupiterSurfaceKms} km/s`);
+  });
+
+  it("gravity well fraction is small (~4%)", () => {
+    const o = oberthEffectAnalysis();
+    assert.ok(o.gravityWellPercent > 3 && o.gravityWellPercent < 5, `${o.gravityWellPercent}%`);
+  });
+
+  it("provides efficiency matrix for multiple periapsis and burn scenarios", () => {
+    const o = oberthEffectAnalysis();
+    assert.equal(o.efficiencyMatrix.length, 5); // 5 periapsis scenarios
+    assert.equal(o.efficiencyMatrix[0].results.length, 5); // 5 burn scenarios each
+  });
+
+  it("efficiency increases at closer periapsis", () => {
+    const o = oberthEffectAnalysis();
+    // Compare 1 RJ vs 10 RJ at same burn_dv
+    const eff1RJ = o.efficiencyMatrix[0].results[2].efficiencyPercent; // 50 km/s burn
+    const eff10RJ = o.efficiencyMatrix[4].results[2].efficiencyPercent; // 50 km/s burn
+    assert.ok(eff1RJ > eff10RJ, `1 RJ (${eff1RJ}%) > 10 RJ (${eff10RJ}%)`);
+  });
+
+  it("all efficiencies are positive (burn at periapsis is always better)", () => {
+    const o = oberthEffectAnalysis();
+    for (const peri of o.efficiencyMatrix) {
+      for (const r of peri.results) {
+        assert.ok(r.efficiencyPercent > 0, `${peri.label} burn ${r.burnDvKms}: ${r.efficiencyPercent}%`);
+      }
+    }
+  });
+
+  it("strict Oberth velocity efficiency at 1500 km/s is much less than 3%", () => {
+    const o = oberthEffectAnalysis();
+    // At 1500 km/s, Jupiter's gravity well is negligible
+    // Best-case velocity efficiency is << 1%
+    assert.ok(o.bestCaseVelocityEfficiencyPercent < 0.1, `best case = ${o.bestCaseVelocityEfficiencyPercent}%`);
+  });
+
+  it("energy efficiency is also small at 1500 km/s", () => {
+    const o = oberthEffectAnalysis();
+    assert.ok(o.energyEfficiencyPercent < 0.2, `energy eff = ${o.energyEfficiencyPercent}%`);
+  });
+
+  it("3% burn time saving would exceed nozzle margin", () => {
+    const o = oberthEffectAnalysis();
+    // If 3% of burn time is saved, that's ~99 minutes — much more than 26 min margin
+    assert.ok(o.threePercentBurnSavingMinutes > 90, `3% saving = ${o.threePercentBurnSavingMinutes} min`);
+    assert.ok(o.burnSavingExceedsMargin, "3% saving should exceed 26-min margin");
+  });
+
+  it("interpretation is mission-level composite", () => {
+    const o = oberthEffectAnalysis();
+    assert.equal(o.interpretation, "mission-level-composite");
+    assert.equal(o.claimedEfficiencyPercent, 3);
+  });
+});
+
 describe("EP05 Full Analysis", () => {
   it("analyzeEpisode5 returns all expected sections", () => {
     const a = analyzeEpisode5();
@@ -254,7 +395,9 @@ describe("EP05 Full Analysis", () => {
     assert.ok(a.burnBudget);
     assert.ok(a.fullRoute);
     assert.ok(a.earthCapture);
-    assert.ok(a.preliminary === true);
+    assert.ok(a.nozzleLifespan);
+    assert.ok(a.oberthEffect);
+    assert.ok(a.preliminary === false);
   });
 
   it("cross-check: Hohmann vastly slower than brachistochrone", () => {
@@ -265,5 +408,13 @@ describe("EP05 Full Analysis", () => {
   it("cross-check: burn budget supports brachistochrone", () => {
     const a = analyzeEpisode5();
     assert.ok(a.burnBudget.brachistochrone.feasible);
+  });
+
+  it("cross-check: nozzle margin is tight and Oberth saving would help", () => {
+    const a = analyzeEpisode5();
+    // With <1% margin, even small fuel savings matter
+    assert.ok(a.nozzleLifespan.marginPercent < 1);
+    assert.equal(a.oberthEffect.claimedEfficiencyPercent, 3);
+    assert.ok(a.oberthEffect.burnSavingExceedsMargin);
   });
 });

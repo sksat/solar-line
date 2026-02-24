@@ -133,6 +133,23 @@ pub fn jet_power(thrust_n: f64, ve: f64) -> f64 {
     orbits::jet_power(thrust_n, KmPerSec(ve))
 }
 
+/// Oberth effect ΔV gain (km/s) for a burn at periapsis of a hyperbolic flyby.
+/// mu: gravitational parameter (km³/s²), r_periapsis (km), v_inf (km/s), burn_dv (km/s).
+/// Returns the extra Δv_inf beyond the burn itself.
+#[wasm_bindgen]
+pub fn oberth_dv_gain(mu: f64, r_periapsis: f64, v_inf: f64, burn_dv: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::oberth_dv_gain(Mu(mu), Km(r_periapsis), KmPerSec(v_inf), KmPerSec(burn_dv)).value()
+}
+
+/// Oberth effect fractional efficiency: (Δv_inf / burn_dv) - 1.
+/// Returns the fractional improvement (e.g. 0.03 = 3% gain).
+#[wasm_bindgen]
+pub fn oberth_efficiency(mu: f64, r_periapsis: f64, v_inf: f64, burn_dv: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::oberth_efficiency(Mu(mu), Km(r_periapsis), KmPerSec(v_inf), KmPerSec(burn_dv))
+}
+
 // ---------------------------------------------------------------------------
 // Kepler equation solver and anomaly conversions
 // ---------------------------------------------------------------------------
@@ -595,5 +612,28 @@ mod tests {
     #[test]
     fn test_j2000_jd_constant() {
         assert!((j2000_jd() - 2_451_545.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_wasm_oberth_dv_gain_positive() {
+        // Jupiter flyby: v_inf=10 km/s, burn=1 km/s at 1 RJ
+        let mu_j = 1.26686534e8;
+        let gain = oberth_dv_gain(mu_j, 71_492.0, 10.0, 1.0);
+        assert!(gain > 0.0, "Oberth gain should be positive: {}", gain);
+    }
+
+    #[test]
+    fn test_wasm_oberth_efficiency_high_v_inf() {
+        // At 1500 km/s, efficiency should be small
+        let mu_j = 1.26686534e8;
+        let eff = oberth_efficiency(mu_j, 71_492.0 * 3.0, 1500.0, 50.0);
+        assert!(eff > 0.0 && eff < 0.1, "efficiency at 1500 km/s = {}", eff);
+    }
+
+    #[test]
+    fn test_wasm_oberth_zero_burn() {
+        let mu_j = 1.26686534e8;
+        let gain = oberth_dv_gain(mu_j, 71_492.0, 10.0, 0.0);
+        assert!(gain.abs() < 1e-10, "zero burn = zero gain: {}", gain);
     }
 }
