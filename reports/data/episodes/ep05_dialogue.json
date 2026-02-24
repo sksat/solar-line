@@ -1520,7 +1520,7 @@
       "rawEntryIds": ["ep05-line-092"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライ登場。EP01のガニメデのパイロットが再登場。可視光通信。"
+      "note": "船乗り登場。EP01のガニメデのパイロットが再登場。可視光通信。"
     },
     {
       "speakerId": "kiritan",
@@ -1546,7 +1546,7 @@
       "rawEntryIds": ["ep05-line-093"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの返し。Whisper「法案法」→「航法法」修正。"
+      "note": "船乗りの返し。Whisper「法案法」→「航法法」修正。"
     },
     {
       "speakerId": "rai",
@@ -1559,7 +1559,7 @@
       "rawEntryIds": ["ep05-line-095"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライがエンケラドスの管理人の発信の効果を伝える。Whisper「天皇星」→「天王星」、「公報鍵」→「航法鍵」修正。"
+      "note": "船乗りがエンケラドスの管理人の発信の効果を伝える。Whisper「天皇星」→「天王星」、「公報鍵」→「航法鍵」修正。"
     },
     {
       "speakerId": "rai",
@@ -1572,7 +1572,7 @@
       "rawEntryIds": ["ep05-line-096"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライがガニメデの窮状を伝える。Whisper「落って」→「落ちて」修正。"
+      "note": "船乗りがガニメデの窮状を伝える。Whisper「落って」→「落ちて」修正。"
     },
     {
       "speakerId": "rai",
@@ -1585,7 +1585,7 @@
       "rawEntryIds": ["ep05-line-097"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの怒り。Whisper「木製の住人を日上がらせて」→「木星の住人を干上がらせて」修正。"
+      "note": "船乗りの怒り。Whisper「木製の住人を日上がらせて」→「木星の住人を干上がらせて」修正。"
     },
     {
       "speakerId": "rai",
@@ -1598,7 +1598,7 @@
       "rawEntryIds": ["ep05-line-099"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの計画。保安艇2隻が木星圏で待ち伏せ。Whisper「木製券」→「木星圏」修正。"
+      "note": "船乗りの計画。保安艇2隻が木星圏で待ち伏せ。Whisper「木製券」→「木星圏」修正。"
     },
     {
       "speakerId": "rai",
@@ -1611,7 +1611,7 @@
       "rawEntryIds": ["ep05-line-100"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの欺瞞計画。偽トランスポンダで複数の偽航跡。Whisper「木製」→「木星」、「起走功績」→「欺瞞航跡」修正。"
+      "note": "船乗りの欺瞞計画。偽トランスポンダで複数の偽航跡。Whisper「木製」→「木星」、「起走功績」→「欺瞞航跡」修正。"
     },
     {
       "speakerId": "rai",
@@ -1624,7 +1624,7 @@
       "rawEntryIds": ["ep05-line-100"],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの覚悟。EP01ガニメデでの約束。Whisper「起走」→「欺瞞」、「仮目で」→「ガニメデ」修正。"
+      "note": "船乗りの覚悟。EP01ガニメデでの約束。Whisper「起走」→「欺瞞」、「仮目で」→「ガニメデ」修正。"
     },
     {
       "speakerId": "kestrel-ai",

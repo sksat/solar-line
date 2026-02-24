@@ -92,6 +92,21 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **3D orbital analysis**: After 2D analysis is mature, extend to 3D considering orbital inclination, Saturn ring plane geometry, and Uranus axial tilt effects.
 - **Plasmoid perturbation**: Estimate trajectory perturbations from plasmoid encounters, distinguishing radiation effects from momentum effects.
 - **Physics consultation model**: Use gpt-5.2 or similar reasoning models (not -codex) for physics-specific consultations. Reserve -codex for design/architecture review.
+- **Mass timeline analysis**: Track container jettison, propellant consumption, and damage-related mass changes as time series. Model multiple scenarios (nominal mass, 299t limit, optimized propellant allocation) and visualize with comparison charts.
+- **Burn position alignment**: Ensure acceleration/deceleration points in orbital diagrams match the physical animation position — brachistochrone midpoint flip, Hohmann departure/arrival burns, flyby periapsis burns.
+
+## Report Structure
+
+- **Ship vs infrastructure separation**: Other spacecraft analysis (保安艦隊, 大型船, etc.) and solar system infrastructure analysis (stations, navigation networks, governance) should be separate reports. Ship analysis includes orbital transfer calculations.
+- **Accuracy vs provenance**: Do not conflate "scientific accuracy" (physics law compliance) with "parameter provenance" (source reliability). Real-world observational values matching story parameters is a provenance/citation question, not an accuracy question.
+- **Character naming**: Never fabricate character names not explicitly given in the source material. Use role descriptions for unnamed characters (e.g., "船乗り" not "ライ").
+
+## Report Review
+
+- **External agent review**: Reviews must be conducted by agents with separate context (gpt-5.2, Task agents), NOT the same session that wrote the report.
+- **Reviewer persona**: Set a system prompt establishing the reviewer as someone interested in SF and orbital mechanics but NOT deeply familiar with either, with no prior knowledge of SOLAR LINE.
+- **Draft review**: Review with codebase access, checking data integrity and analytical logic.
+- **Final review**: Launch in a temporary directory WITHOUT codebase access, accessing only the deployed GitHub Pages URL to evaluate reader experience (layout, navigation, broken links, readability).
 
 ## Data Infrastructure
 

@@ -1139,7 +1139,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがライだと気づく。ASR「おぼ小型線」→「おんぼろ小型船」。line-036中盤。"
+      "note": "きりたんが船乗りだと気づく。ASR「おぼ小型線」→「おんぼろ小型船」。line-036中盤。"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1169,7 +1169,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがライに話しかける。line-037前半。"
+      "note": "きりたんが船乗りに話しかける。line-037前半。"
     },
     {
       "speakerId": "rai",
@@ -1185,7 +1185,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの返答。きりたんとの親しい関係が見える。line-037後半。"
+      "note": "船乗りの返答。きりたんとの親しい関係が見える。line-037後半。"
     },
     {
       "speakerId": "rai",
@@ -1200,7 +1200,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライがきりたんの依頼について言及。line-038。"
+      "note": "船乗りがきりたんの依頼について言及。line-038。"
     },
     {
       "speakerId": "kiritan",
@@ -1231,7 +1231,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライがきりたんに追手の情報を提供。ASR「左作艇」→「査察艇」、「保安定」→「保安艇」。line-040。"
+      "note": "船乗りがきりたんに追手の情報を提供。ASR「左作艇」→「査察艇」、「保安定」→「保安艇」。line-040。"
     },
     {
       "speakerId": "rai",
@@ -1246,7 +1246,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライが状況の深刻さを説明。ASR「佐々艇」→「査察艇」。line-041。"
+      "note": "船乗りが状況の深刻さを説明。ASR「佐々艇」→「査察艇」。line-041。"
     },
     {
       "speakerId": "kiritan",
@@ -1276,7 +1276,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "皮肉めいた返答。ライの口調と推定。line-043。"
+      "note": "皮肉めいた返答。船乗りの口調と推定。line-043。"
     },
     {
       "speakerId": "rai",
@@ -1291,7 +1291,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの分析。ASR「強調」→「協調」、「総戦」→「捜索」。line-044。"
+      "note": "船乗りの分析。ASR「強調」→「協調」、「総戦」→「捜索」。line-044。"
     },
     {
       "speakerId": "kiritan",
@@ -1321,7 +1321,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライがきりたんに警告。ASR「改そこまで」→「回廊はそこまで」。line-046。"
+      "note": "船乗りがきりたんに警告。ASR「改そこまで」→「回廊はそこまで」。line-046。"
     },
     {
       "speakerId": "kiritan",
@@ -1802,7 +1802,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライがきりたんのダイレクトエントリー決断に驚く。ASR「狂るった」→「狂った」。line-053末尾。"
+      "note": "船乗りがきりたんのダイレクトエントリー決断に驚く。ASR「狂るった」→「狂った」。line-053末尾。"
     },
     {
       "speakerId": "rai",
@@ -1817,7 +1817,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの非難。line-054。"
+      "note": "船乗りの非難。line-054。"
     },
     {
       "speakerId": "kiritan",
@@ -1832,7 +1832,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "短い返し。きりたんまたはライの可能性。line-055。"
+      "note": "短い返し。きりたんまたは船乗りの可能性。line-055。"
     },
     {
       "speakerId": "kiritan",
@@ -1847,7 +1847,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんがライの追尾にツッコミ。line-056。"
+      "note": "きりたんが船乗りの追尾にツッコミ。line-056。"
     },
     {
       "speakerId": "kiritan",
@@ -1879,7 +1879,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの驚き。line-058。"
+      "note": "船乗りの驚き。line-058。"
     },
     {
       "speakerId": "kestrel-ai",
@@ -1920,7 +1920,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライが冗談半分に聞く。line-059後半。"
+      "note": "船乗りが冗談半分に聞く。line-059後半。"
     },
     {
       "speakerId": "kiritan",
@@ -2575,7 +2575,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライからの通信。ASR「公案ネット」→「航案ネット」。line-080。"
+      "note": "船乗りからの通信。ASR「公案ネット」→「航案ネット」。line-080。"
     },
     {
       "speakerId": "kiritan",
@@ -2607,7 +2607,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライが追手の状況を報告。ASR「呑キ」→「呑気」。line-082〜083。"
+      "note": "船乗りが追手の状況を報告。ASR「呑キ」→「呑気」。line-082〜083。"
     },
     {
       "speakerId": "rai",
@@ -2622,7 +2622,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "ライの要望。line-083後半。"
+      "note": "船乗りの要望。line-083後半。"
     },
     {
       "speakerId": "kiritan",
@@ -2670,7 +2670,7 @@
       "note": "ガニメデ管制が他の港へ誘導。ASR「渡ってくれ」→「当たってくれ」。line-086。"
     }
   ],
-  "attributionNotes": "Phase 2 speaker attribution: Claude Opus 4.6による文脈ベースの話者判定。自動字幕のASR品質が非常に低い（VOICEROID音声はYouTube ASRと相性が悪い）ため、テキストは文脈から修正した推定値。話者判定の根拠: (1) AIは丁寧語・技術用語・ステータス報告を使用、(2) きりたんはカジュアルな口調・決定権を持つ、(3) ライは外部通信で情報提供、(4) 火星管制は出港時の交信、(5) ガニメデ管制は到着時の交信、(6) 場面構成からの推定。confidence=uncertainの行は動画の再確認が必要。全87行中のうち、最終行(line-087)は音楽のみのため除外。",
+  "attributionNotes": "Phase 2 speaker attribution: Claude Opus 4.6による文脈ベースの話者判定。自動字幕のASR品質が非常に低い（VOICEROID音声はYouTube ASRと相性が悪い）ため、テキストは文脈から修正した推定値。話者判定の根拠: (1) AIは丁寧語・技術用語・ステータス報告を使用、(2) きりたんはカジュアルな口調・決定権を持つ、(3) 船乗りは外部通信で情報提供、(4) 火星管制は出港時の交信、(5) ガニメデ管制は到着時の交信、(6) 場面構成からの推定。confidence=uncertainの行は動画の再確認が必要。全87行中のうち、最終行(line-087)は音楽のみのため除外。",
   "reviewedBy": "Claude Opus 4.6 (context-assisted, session 029)",
   "reviewedAt": "2026-02-23T00:00:00Z",
   "rawContentHash": "9b3381e10b4345ac87782bc7ef6fcb16eb410c2fe3aaa152e4eef60fe75f8ac1"

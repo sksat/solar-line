@@ -1187,6 +1187,26 @@
       ],
       "notes": "Non-Kestrel ships, stations, navigation infrastructure, governance",
       "lastValidated": "2026-02-24T13:26:01.248Z"
+    },
+    "report.other-ships": {
+      "id": "report.other-ships",
+      "type": "report",
+      "title": "他船舶分析（軌道遷移込み）",
+      "dependsOn": [
+        "report.infrastructure"
+      ],
+      "status": "pending",
+      "version": 1
+    },
+    "analysis.mass-timeline": {
+      "id": "analysis.mass-timeline",
+      "type": "analysis",
+      "title": "質量時系列分析",
+      "dependsOn": [
+        "param.ship_mass"
+      ],
+      "status": "pending",
+      "version": 1
     }
   },
   "schemaVersion": 1

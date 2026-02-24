@@ -38,3 +38,7 @@
 {"timestamp":"2026-02-24T10:43:52.745Z","action":"status_changed","nodeId":"report.cross_episode","detail":"→ stale (caused by param.ship_mass)"}
 {"timestamp":"2026-02-24T10:43:52.745Z","action":"status_changed","nodeId":"report.science_accuracy","detail":"→ stale (caused by param.ship_mass)"}
 {"timestamp":"2026-02-24T11:28:00.698Z","action":"dependency_added","nodeId":"report.ai_costs","detail":"→ param.ship_mass"}
+{"timestamp":"2026-02-24T13:35:23.360Z","action":"node_added","nodeId":"report.other-ships","detail":"他船舶分析（軌道遷移込み）"}
+{"timestamp":"2026-02-24T13:35:28.432Z","action":"node_added","nodeId":"analysis.mass-timeline","detail":"質量時系列分析"}
+{"timestamp":"2026-02-24T13:35:28.606Z","action":"dependency_added","nodeId":"report.other-ships","detail":"→ report.infrastructure"}
+{"timestamp":"2026-02-24T13:35:28.781Z","action":"dependency_added","nodeId":"analysis.mass-timeline","detail":"→ param.ship_mass"}
