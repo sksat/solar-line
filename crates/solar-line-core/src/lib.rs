@@ -1,3 +1,4 @@
+pub mod attitude;
 pub mod comms;
 pub mod constants;
 pub mod ephemeris;

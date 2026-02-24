@@ -110,6 +110,9 @@ function seed(): DagState {
   addNode(dag, "analysis.communications", "analysis", "通信遅延・リンクバジェット分析", allTransferIds, {
     tags: ["cross-episode"],
   });
+  addNode(dag, "analysis.attitude_control", "analysis", "姿勢制御精度・安定性分析", ["param.ship_mass", "param.thrust", "param.nozzle_life", ...allTransferIds], {
+    tags: ["cross-episode"],
+  });
 
   // ── Episode Reports ──
   for (let ep = 1; ep <= 5; ep++) {
@@ -129,6 +132,9 @@ function seed(): DagState {
     tags: ["summary"],
   });
   addNode(dag, "report.science_accuracy", "report", "科学的正確性検証", [...allReportIds, "analysis.communications"], {
+    tags: ["summary"],
+  });
+  addNode(dag, "report.attitude_control", "report", "姿勢制御精度・安定性レポート", [...allReportIds, "analysis.attitude_control"], {
     tags: ["summary"],
   });
 

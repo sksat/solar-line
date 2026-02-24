@@ -799,6 +799,58 @@ pub fn comm_timeline_linear(
 }
 
 // ---------------------------------------------------------------------------
+// Attitude control functions
+// ---------------------------------------------------------------------------
+
+/// Miss distance (km) from pointing error during a constant-thrust burn.
+#[wasm_bindgen]
+pub fn miss_distance_km(accel_m_s2: f64, burn_time_s: f64, pointing_error_rad: f64) -> f64 {
+    solar_line_core::attitude::miss_distance_km(accel_m_s2, burn_time_s, pointing_error_rad)
+}
+
+/// Required pointing accuracy (radians) for a given miss distance.
+#[wasm_bindgen]
+pub fn required_pointing_rad(accel_m_s2: f64, burn_time_s: f64, max_miss_km: f64) -> f64 {
+    solar_line_core::attitude::required_pointing_rad(accel_m_s2, burn_time_s, max_miss_km)
+}
+
+/// Angular rate for a 180° flip maneuver (rad/s).
+#[wasm_bindgen]
+pub fn flip_angular_rate(flip_duration_s: f64) -> f64 {
+    solar_line_core::attitude::flip_angular_rate(flip_duration_s)
+}
+
+/// Angular momentum for a flip maneuver (kg·m²/s).
+#[wasm_bindgen]
+pub fn flip_angular_momentum(mass_kg: f64, radius_m: f64, angular_rate_rad_s: f64) -> f64 {
+    solar_line_core::attitude::flip_angular_momentum(mass_kg, radius_m, angular_rate_rad_s)
+}
+
+/// RCS torque required for a flip maneuver (N·m).
+#[wasm_bindgen]
+pub fn flip_rcs_torque(mass_kg: f64, radius_m: f64, flip_duration_s: f64, ramp_time_s: f64) -> f64 {
+    solar_line_core::attitude::flip_rcs_torque(mass_kg, radius_m, flip_duration_s, ramp_time_s)
+}
+
+/// Velocity error (km/s) from pointing misalignment.
+#[wasm_bindgen]
+pub fn velocity_error_from_pointing(accel_m_s2: f64, burn_time_s: f64, pointing_error_rad: f64) -> f64 {
+    solar_line_core::attitude::velocity_error_from_pointing(accel_m_s2, burn_time_s, pointing_error_rad)
+}
+
+/// Convert navigation accuracy fraction to pointing error (radians).
+#[wasm_bindgen]
+pub fn accuracy_to_pointing_error_rad(accuracy_fraction: f64) -> f64 {
+    solar_line_core::attitude::accuracy_to_pointing_error_rad(accuracy_fraction)
+}
+
+/// Gravity gradient torque on an elongated spacecraft (N·m).
+#[wasm_bindgen]
+pub fn gravity_gradient_torque(gm_m3_s2: f64, distance_m: f64, mass_kg: f64, length_m: f64, angle_rad: f64) -> f64 {
+    solar_line_core::attitude::gravity_gradient_torque(gm_m3_s2, distance_m, mass_kg, length_m, angle_rad)
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 
