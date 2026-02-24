@@ -85,6 +85,25 @@ EP03_KEYFRAMES = [
     (997, "天王星磁気圏（続き）"),
 ]
 
+# Key timestamps for EP04 — Titania → Earth (65% thrust, plasmoid)
+EP04_KEYFRAMES = [
+    # (timestamp_seconds, description)
+    (7, "2次冷却系圧力0.74MPa — 規定値の63%"),
+    (22, "タイタニアまで残り9時間42分"),
+    (33, "軌道投入に減速噴射必要"),
+    (77, "磁気ノズルコイル温度異常"),
+    (120, "プラズモイド発生検知 — 数分後に交差"),
+    (158, "磁気シールド残寿命14分 — 通過8分"),
+    (165, "天王星磁軸傾斜60° — プラズモイド予測困難"),
+    (392, "累積被曝量48ミリシーベルト"),
+    (617, "480ミリシーベルト — ゲスト読み取り"),
+    (791, "深宇宙スキャナー — 土星方面から複数大型船舶"),
+    (797, "公安艦隊5隻 — 到着まで33時間"),
+    (985, "フルチェックリスト — 冷却系・シールド・点火回数"),
+    (1049, "出力65% — 推力6.3MN — 巡航加速"),
+    (1104, "炉アームド — カウントダウン"),
+]
+
 
 def extract_frame(video_path: str, timestamp_sec: float,
                   output_path: str) -> bool:
@@ -144,6 +163,7 @@ def main():
         1: EP01_KEYFRAMES,
         2: EP02_KEYFRAMES,
         3: EP03_KEYFRAMES,
+        4: EP04_KEYFRAMES,
     }
     if args.episode in episode_keyframes:
         keyframes = episode_keyframes[args.episode]

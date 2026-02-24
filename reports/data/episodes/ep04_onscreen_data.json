@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "episode": 4,
+  "videoId": "1cTmWjYSlTM",
+  "extractionMethod": "manual_frame_reading",
+  "extractedAt": "2026-02-24T23:59:00Z",
+  "extractedBy": "Claude Opus 4.6 (visual analysis of video frames)",
+  "frames": [
+    {
+      "timestampSec": 7,
+      "description": "天王星エントリー軌道（場所テロップ）— 冷却系圧力低下",
+      "subtitleText": "二次冷却系圧力 0.74メガパスカル 規定値の63%",
+      "instrumentData": {
+        "locationLabel": "天王星エントリー軌道",
+        "jurisdiction": "天王星自由港機構 / タイタニア自治圏",
+        "coolingSystemPressure": {
+          "value_MPa": 0.74,
+          "percentOfSpec": 63,
+          "system": "二次冷却系"
+        }
+      },
+      "notes": "EP03末尾で天王星圏に到達した直後のシーン。管轄表記が「天王星自由港機構 / 天王星圏」（EP03）から「天王星自由港機構 / タイタニア自治圏」に変化 — タイタニアの軌道に近づいたことで管轄がより具体的に。冷却系の損傷状態がEP02のEVA修理後も完全には回復していないことを示す。"
+    },
+    {
+      "timestampSec": 22,
+      "description": "天王星遠景 — タイタニアまでの残り時間",
+      "subtitleText": "現在の軌道で 残り9時間42分",
+      "instrumentData": {
+        "remainingTime": "9:42:00",
+        "destination": "タイタニア"
+      },
+      "notes": "天王星が画面中央に見える。巨大な青緑色のガス惑星。EP03で計画されたT+143:12:00到着予定からの残り時間。減速噴射が必要な段階。"
+    },
+    {
+      "timestampSec": 33,
+      "description": "ケストレル船体 — 天王星の環を背景に減速噴射の必要性",
+      "subtitleText": "タイタニアへの軌道投入には減速噴射が必要です",
+      "instrumentData": {
+        "maneuverRequired": "減速噴射（capture burn）",
+        "purpose": "タイタニア軌道投入"
+      },
+      "notes": "ケストレルの3Dモデルが天王星とその環を背景に映る。EP03の6フェーズ噴射シーケンスの最終段階「Capture Prep」に対応。ノズルの状態が問題となる。"
+    },
+    {
+      "timestampSec": 77,
+      "description": "船内（機関室付近）— 磁気ノズル温度異常",
+      "subtitleText": "磁気ノズルのコイル温度… 異常上昇の兆候あり 次の主機点火で完全に焼損する可能性が67%",
+      "instrumentData": {
+        "nozzleStatus": {
+          "issue": "コイル温度異常上昇",
+          "burnoutProbability": 0.67,
+          "remainingIgnitions": "次の1回で焼損の可能性"
+        }
+      },
+      "notes": "きりたんが船内で報告を受けるシーン。67%の焼損確率は深刻 — EP05で実際にノズルが破壊されることの伏線。EP03では「1-2 BURNS MAXIMUM」と表示されていたのと整合。"
+    },
+    {
+      "timestampSec": 120,
+      "description": "きりたん — ブリッジ窓越しの星空",
+      "subtitleText": "「星は嘘をつかない」のかって…",
+      "instrumentData": null,
+      "notes": "きりたんが後ろ姿でブリッジの窓から星空を見つめる。EP03の航法危機（星追尾 vs 慣性航法）を振り返る台詞。左右にブリッジの計器パネルが見えるが、詳細は読み取れない。"
+    },
+    {
+      "timestampSec": 158,
+      "description": "TRAJECTORY PREDICTION — プラズモイドゾーン表示（最重要フレーム①）",
+      "subtitleText": "磁気シールドの残寿命は14分… プラズモイドの通過には最低でも8分かかります",
+      "instrumentData": {
+        "displayType": "TRAJECTORY_PREDICTION",
+        "orbitalDiagram": {
+          "center": "URANUS",
+          "visibleOrbits": ["OBERON ORBIT", "TITANIA ORBIT"],
+          "destination": "U3-TITANIA TTC",
+          "shipTrajectory": "天王星近傍を通過してタイタニア軌道へ向かう曲線"
+        },
+        "trajectoryPrediction": {
+          "periapsisAltitude": "6.50 RU",
+          "interceptVelocity_km_s": 18.3,
+          "vector": {
+            "inclination_deg": 2.1,
+            "azimuth_deg": 110.8
+          },
+          "approachEta": "U3-TITANIA APPROACH T+9h"
+        },
+        "plasmoidZone": {
+          "status": "ESTIMATED",
+          "magneticField_nT": "180-340",
+          "plasmaDensity_cm3": "0.8-2.3",
+          "coreTemperature_K": "2.1e6",
+          "traverseTime": "00:08:00"
+        },
+        "shieldStatus": {
+          "capacity_percent": 63,
+          "timeToFailure": "12H TO CRITICAL",
+          "remainingLifetime_min": 14
+        },
+        "operationalConstraints": {
+          "advisoryIndex": "CRITICAL",
+          "advisory": "MINIMIZE TIME IN PLASMOID ZONE",
+          "burnsRemaining": "1-2 BURNS MAXIMUM",
+          "navigationMode": "CS > INERTIAL (BEACON UNAVAIL)"
+        },
+        "marginAnalysis": {
+          "shieldLife_min": 14,
+          "traverseTime_min": 8,
+          "margin_min": 6,
+          "marginPercent": 42.9,
+          "verdict": "6 minutes margin — not comfortable per ケイ's assessment"
+        }
+      },
+      "notes": "EP04で最も情報密度の高いフレーム。天王星中心の軌道図にプラズモイドゾーンが赤く表示。左パネルに軌道予測データ、右にプラズモイド物理パラメータ。磁気シールド残寿命14分 vs 通過時間8分 = マージン6分はEP全体の「ギリギリ」テーマを象徴。BEACON UNAVAILはEP03の航法危機後、天王星圏でビーコンが利用不可能な状態を示す。"
+    },
+    {
+      "timestampSec": 165,
+      "description": "TRAJECTORY PREDICTION — プラズモイドゾーン表示（続き）",
+      "subtitleText": "6分は「余裕」とは言いません",
+      "instrumentData": {
+        "displayType": "TRAJECTORY_PREDICTION",
+        "plasmoidZone": {
+          "magneticField_nT": "180-340",
+          "plasmaDensity_cm3": "0.8-2.3",
+          "coreTemperature_K": "2.1e6",
+          "traverseTime": "00:08:00"
+        },
+        "shieldStatus": {
+          "capacity_percent": 63,
+          "burnsRemaining": "1-2 BURNS MAXIMUM"
+        }
+      },
+      "notes": "同じ表示の続き。ケイが6分のマージンでは「余裕」ではないと評価。カメラアングルが微妙に変わり、左パネルの一部が切れているが、プラズモイドゾーンのパラメータはより鮮明に読み取れる。"
+    },
+    {
+      "timestampSec": 392,
+      "description": "きりたんクローズアップ",
+      "subtitleText": "…いえ",
+      "instrumentData": null,
+      "notes": "きりたんの横顔クローズアップ。計器類は見えない。感情的な対話シーン。累積被曝量48ミリシーベルト言及の前後。"
+    },
+    {
+      "timestampSec": 617,
+      "description": "きりたん＆ゲスト — 累積被曝量480 mSv",
+      "subtitleText": "ドライパッチによる累積線量は 480ミリシーベルト… ずいぶんと無茶をしてきたのね",
+      "instrumentData": {
+        "radiationData": {
+          "cumulativeDose_mSv": 480,
+          "measurementMethod": "ドライパッチ",
+          "assessment": "「ずいぶんと無茶をしてきた」— 危険域に近い蓄積"
+        }
+      },
+      "notes": "タイタニアでのゲストキャラクターとの対面シーン。きりたん（左前景）とゲスト（黒髪・右側、タイタニア関係者）。480 mSvはIAEA勧告の年間職業上限50 mSvの約10倍。ドライパッチは個人線量計の一種。EP01からの全航程での累積被曝を示す。"
+    },
+    {
+      "timestampSec": 791,
+      "description": "ケストレル船内（居住区）— 深宇宙スキャナー警告",
+      "subtitleText": "深宇宙スキャナーに反応があった… 土星軌道方面から 複数の大型船舶が接近中",
+      "instrumentData": {
+        "deepSpaceScanner": {
+          "detectionDirection": "土星軌道方面",
+          "targets": "複数の大型船舶",
+          "status": "接近中"
+        }
+      },
+      "notes": "ケストレルの居住区。壁面に「Wet Unit」のラベルが見える（浴室/洗面区画）。きりたん（左）と別キャラクター（右、座位）。EP02で検知された大型船（MPA-MC-SCV-02814相当）が追跡を継続していることを示唆。"
+    },
+    {
+      "timestampSec": 797,
+      "description": "きりたん — 制御ステーション（深宇宙スキャナー続き）",
+      "subtitleText": "深宇宙スキャナーに反応があった… 土星軌道方面から 複数の大型船舶が接近中",
+      "instrumentData": {
+        "deepSpaceScanner": {
+          "detectionDirection": "土星軌道方面",
+          "targets": "複数の大型船舶",
+          "numberOfShips": "5隻（公安艦隊、到着まで33時間）"
+        },
+        "stationEquipment": {
+          "monitors": "緑色画面のコンソール3台",
+          "type": "タイタニア施設の制御ステーション"
+        }
+      },
+      "notes": "きりたんがタイタニアの管制施設で情報を確認するシーン。複数の緑色モニターが並ぶコントロールルーム。公安艦隊5隻・到着33時間の情報は字幕で後に確認される（frame_797sの時点では字幕に隻数なし）。"
+    },
+    {
+      "timestampSec": 985,
+      "description": "深宇宙 — ケストレル出港・ソーラーライン宣言",
+      "subtitleText": "「新しいソーラーライン」を… 私が拓いてやる",
+      "instrumentData": {
+        "seriesTitleReference": {
+          "quote": "「新しいソーラーライン」を… 私が拓いてやる",
+          "meaning": "EP03で判明したルート名SOLER LINEを踏まえ、きりたんが新しい航路を開拓する決意を表明"
+        }
+      },
+      "notes": "深宇宙の背景にケストレルが小さく映る。天王星の大気光が右側に見える。きりたんの決意表明 — EP05の地球帰還ルート開拓への布石。EP03のNAVIGATION OVERVIEWに表示された「SOLER LINE」がストーリー上の核心概念であることを確認。"
+    },
+    {
+      "timestampSec": 1049,
+      "description": "ケストレル外観 — メインアップ準備",
+      "subtitleText": "…メインアップ準備",
+      "instrumentData": {
+        "engineStatus": {
+          "phase": "メインアップ準備（main engine startup preparation）",
+          "context": "タイタニア出港、地球帰還航路への出発噴射"
+        }
+      },
+      "notes": "ケストレルの3Dモデルが詳細に映る外観ショット。銀河の星々を背景に。メインエンジン起動準備 — EP04最終場面への導入。出力65%制限下での噴射となる。"
+    },
+    {
+      "timestampSec": 1104,
+      "description": "ケストレル接近 — 主機アームド・点火準備",
+      "subtitleText": "主機アームド… 衝撃に備えてください 放射線レベル… 許容範囲内",
+      "instrumentData": {
+        "engineStatus": {
+          "phase": "アームド（armed = 点火待機）",
+          "radiationLevel": "許容範囲内",
+          "thrustSetting": "65%出力（推力6.3MN）"
+        }
+      },
+      "notes": "ケストレルのクローズアップ。天王星が左背景に。エンジンセクションに赤い光が見える（放射線シールドまたはエンジンの余熱を視覚化）。EP04エンディングへの直前シーン。65%出力・6.3MNは字幕で確認される値。EP05へのブリッジとなるシーン。"
+    }
+  ],
+  "summary": {
+    "totalFrames": 14,
+    "framesWithInstrumentData": 11,
+    "framesCharacterOnly": 3,
+    "keyParametersExtracted": [
+      "二次冷却系圧力: 0.74 MPa（規定値の63%）",
+      "タイタニアまでの残り時間: 9時間42分",
+      "磁気ノズル焼損確率: 67%（次回点火時）",
+      "天王星近点高度: 6.50 RU",
+      "接近速度: 18.3 km/s",
+      "軌道傾斜: 2.1°, 方位角: 110.8°",
+      "プラズモイド磁場: 180-340 nT",
+      "プラズモイド密度: 0.8-2.3 cm⁻³",
+      "プラズモイド温度: 2.1×10⁶ K",
+      "プラズモイド通過時間: 8分",
+      "磁気シールド残寿命: 14分（マージン6分）",
+      "シールド容量: 63%（12時間で限界）",
+      "累積被曝量: 480 mSv（ドライパッチ読み取り）",
+      "深宇宙スキャナー: 土星方面から複数大型船舶接近中",
+      "主機出力: 65%（推力6.3MN）",
+      "放射線レベル: 許容範囲内（点火時）"
+    ],
+    "locationLabels": [
+      {
+        "location": "天王星エントリー軌道",
+        "jurisdiction": "天王星自由港機構 / タイタニア自治圏",
+        "timestamp": "00:07",
+        "comparison": "EP03末尾「天王星エントリー軌道 / 天王星自由港機構 / 天王星圏」からタイタニア自治圏に管轄が具体化"
+      }
+    ],
+    "parameterSources": {
+      "instrumentDisplay": [
+        "天王星近点高度6.50 RU",
+        "接近速度18.3 km/s",
+        "軌道傾斜2.1°・方位角110.8°",
+        "プラズモイドゾーン全パラメータ",
+        "シールド容量63%",
+        "残噴射回数1-2回",
+        "航法モード: CS > INERTIAL (BEACON UNAVAIL)"
+      ],
+      "subtitleOnly": [
+        "冷却系圧力0.74 MPa（63%）",
+        "残り時間9時間42分",
+        "ノズル焼損確率67%",
+        "シールド残寿命14分",
+        "通過時間8分",
+        "累積被曝480 mSv",
+        "出力65%・推力6.3MN"
+      ],
+      "dialogueContext": [
+        "公安艦隊5隻（到着まで33時間）",
+        "新しいソーラーライン開拓宣言"
+      ]
+    },
+    "analysisImplications": [
+      "プラズモイド物理パラメータが初めて定量的に表示された — Rust plasmoid.rsの解析値（magnetic_pressure_pa, ram_pressure_pa）との照合が可能",
+      "磁場180-340 nTは地球磁気圏の約1/100〜1/200。プラズマ密度0.8-2.3 cm⁻³は太陽風の典型的密度（5-10 cm⁻³）よりやや低い",
+      "コア温度2.1×10⁶ Kは太陽コロナ温度（1-3×10⁶ K）に匹敵 — 非常に高温だが、密度が低いため放射エネルギーは限定的",
+      "6分マージン（14分寿命 - 8分通過）は全シリーズで最も定量的に示された「ギリギリ」の場面",
+      "天王星近点6.50 RU（≈166,000 km）は天王星の大気圏外だが、磁気圏内（天王星の磁気圏は約18 RU）",
+      "速度18.3 km/sはEP03のCapture Prep（Δv≈2990 km/s）後の残存速度 — brachistochrone減速後の天王星接近速度",
+      "BEACON UNAVAILは天王星圏のインフラ不足を示す — 辺境宙域の航行困難さを強調",
+      "480 mSvはIAEA年間職業被曝限度（50 mSv）の約10倍。ただし長期（数百時間）の宇宙航行としては現実的な範囲（ISS飛行士は年間約150-200 mSv）",
+      "管轄表記「タイタニア自治圏」の出現は、タイタニアが独自の自治権を持つことを示唆。EP03の「天王星自由港機構 / 天王星圏」は広域管轄、タイタニア接近で具体化"
+    ],
+    "comparisonWithPreviousEpisodes": {
+      "ep01_contrast": "EP01は火星→木星の高速transit。EP04は天王星圏内のローカル航行だが、損傷船での運用という別の困難。EP01のメインアップチェックが正常だったのに対し、EP04は67%焼損確率という危機。",
+      "ep02_contrast": "EP02のNAVIGATION OVERVIEWは衝突警報（COIAS）が主要情報。EP04はプラズモイド環境のリアルタイム表示が主要 — 脅威の種類が人工的（大型船）から自然現象（プラズモイド）に。ただし大型船の追跡は継続。",
+      "ep03_contrast": "EP03のNAVIGATION OVERVIEWは全航程計画表示。EP04のTRAJECTORY PREDICTIONはリアルタイム危機管理表示。EP03のプラズモイド警告（EST T+138:00:00）がEP04で現実化。EP03で予告された「1-2 BURNS MAXIMUM」が67%焼損確率として具体化。",
+      "displayEvolution": "EP01: 計器パネル（読みにくい）→ EP02: NAVIGATION OVERVIEW（衝突警報）→ EP03: NAVIGATION OVERVIEW（航路計画）→ EP04: TRAJECTORY PREDICTION（リアルタイム環境モニタリング）。表示システムが状況に応じて異なるモードを使用していることが判明。"
+    },
+    "crossReferenceTargets": [
+      "plasmoid.rs: magnetic_pressure_pa()にB=180-340 nTを入力して圧力を検証",
+      "plasmoid.rs: ram_pressure_pa()にn=0.8-2.3 cm⁻³, v=18.3 km/sを入力",
+      "plasmoid.rs: uranus_plasmoid_scenarios()の出力値との照合",
+      "ep04.json: 既存のプラズモイド分析パラメータとの整合性確認",
+      "mass_timeline.rs: 480 mSvの放射線モデルとの照合",
+      "orbits.rs: 天王星近点6.50 RUでの軌道速度vs表示値18.3 km/s"
+    ]
+  }
+}
