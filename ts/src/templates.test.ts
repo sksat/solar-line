@@ -22,6 +22,7 @@ import {
   renderSummaryPage,
   renderEventTimeline,
   renderVerificationTable,
+  formatNumericValue,
   REPORT_CSS,
 } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
@@ -853,8 +854,8 @@ describe("renderBarChart handles long labels", () => {
       { label: "低速遷移", value: 2.74 },
     ], "km/s");
     assert.ok(html.includes("<svg"));
-    // Large values should use exponential notation
-    assert.ok(html.includes("e+"));
+    // Large values should use locale-formatted notation (comma separators)
+    assert.ok(html.includes("11,165.23"), `Expected comma-formatted number in: ${html.slice(0, 500)}`);
   });
 });
 
@@ -2328,5 +2329,51 @@ describe("renderSummaryPage with eventTimeline and verificationTable", () => {
     const html = renderSummaryPage(report);
     assert.ok(html.includes("verification-table"));
     assert.ok(html.includes("検証済"));
+  });
+});
+
+// --- formatNumericValue ---
+
+describe("formatNumericValue", () => {
+  it("formats small numbers with fixed decimals", () => {
+    assert.equal(formatNumericValue(42.5), "42.50");
+    assert.equal(formatNumericValue(0.75), "0.75");
+  });
+
+  it("formats moderate numbers with locale separators", () => {
+    const result = formatNumericValue(1202.5);
+    // Should NOT use exponential for numbers just over 1000
+    assert.ok(!result.includes("e+"), `Expected no exponential but got: ${result}`);
+    assert.ok(result.includes("1,202") || result.includes("1202"), `Expected comma-formatted but got: ${result}`);
+  });
+
+  it("formats large numbers with locale separators up to 1e9", () => {
+    const result = formatNumericValue(1500000);
+    assert.ok(!result.includes("e+"), `Expected no exponential but got: ${result}`);
+    assert.ok(result.includes("1,500,000") || result.includes("1500000"), `Expected readable but got: ${result}`);
+  });
+
+  it("uses exponential for very large numbers (>=1e9)", () => {
+    const result = formatNumericValue(2.5e10);
+    assert.ok(result.includes("e+"), `Expected exponential but got: ${result}`);
+  });
+
+  it("uses exponential for very small numbers (<1e-4)", () => {
+    const result = formatNumericValue(0.0000123);
+    assert.ok(result.includes("e-"), `Expected exponential but got: ${result}`);
+  });
+
+  it("formats zero correctly", () => {
+    assert.equal(formatNumericValue(0), "0.00");
+  });
+
+  it("respects custom decimal places", () => {
+    const result = formatNumericValue(42.567, 1);
+    assert.ok(result.includes("42.6") || result.includes("42.5"), `Expected 1 decimal place but got: ${result}`);
+  });
+
+  it("handles negative numbers", () => {
+    const result = formatNumericValue(-1500);
+    assert.ok(!result.includes("e"), `Expected no exponential for -1500 but got: ${result}`);
   });
 });

@@ -370,12 +370,26 @@ function initDiagramAnimation(card) {
 
 /**
  * Initialize all animated diagrams on the page.
+ * Also registers a visibility change handler to pause animations when the tab
+ * is hidden, saving CPU/battery.
  */
 function initAllAnimations() {
   var cards = document.querySelectorAll('.orbital-diagram[data-animated="true"]');
   for (var i = 0; i < cards.length; i++) {
     initDiagramAnimation(cards[i]);
   }
+
+  // Pause all playing animations when the page tab is hidden
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      var playBtns = document.querySelectorAll(".anim-play");
+      for (var j = 0; j < playBtns.length; j++) {
+        if (playBtns[j].textContent === "\u23f8") {
+          playBtns[j].click(); // triggers pause via existing click handler
+        }
+      }
+    }
+  });
 }
 
 // Start when DOM is ready

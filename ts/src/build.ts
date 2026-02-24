@@ -218,8 +218,12 @@ export function build(config: BuildConfig): void {
       const src = path.join(wasmPkgDir, wf);
       if (fs.existsSync(src)) {
         fs.copyFileSync(src, path.join(wasmOutDir, wf));
+      } else {
+        console.warn(`⚠️  WASM file missing: ${wf} — calculator will use JS fallback`);
       }
     }
+  } else {
+    console.warn("⚠️  WASM package directory not found — calculator will use JS fallback");
   }
 
   // Copy calculator JS for interactive episode pages

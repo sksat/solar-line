@@ -582,6 +582,18 @@ function truncateLabel(label: string, maxChars: number): string {
   return label.slice(0, maxChars - 1) + "…";
 }
 
+/** Format a numeric value for display: locale-formatted with comma separators
+ *  for moderate numbers, exponential notation only for very large/small values. */
+export function formatNumericValue(v: number, decimals: number = 2): string {
+  const abs = Math.abs(v);
+  if (abs >= 1e9) return v.toExponential(decimals);
+  if (abs >= 1) return v.toLocaleString("en", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  if (abs === 0) return "0." + "0".repeat(decimals);
+  // Small decimals: use fixed unless extremely small
+  if (abs < 1e-4) return v.toExponential(decimals);
+  return v.toFixed(decimals);
+}
+
 export function renderBarChart(
   title: string,
   bars: { label: string; value: number; color?: string }[],
@@ -599,7 +611,7 @@ export function renderBarChart(
     const y = i * (barHeight + 8) + 20;
     const width = maxVal > 0 ? Math.max(1, (b.value / maxVal) * barAreaWidth) : 0;
     const color = b.color || "var(--accent)";
-    const displayVal = b.value >= 1000 ? b.value.toExponential(2) : b.value.toFixed(2);
+    const displayVal = formatNumericValue(b.value);
     const truncatedLabel = truncateLabel(b.label, 20);
     return `<text x="${labelWidth - 8}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" text-anchor="end" font-size="11">${escapeHtml(truncatedLabel)}</text>
 <rect x="${labelWidth}" y="${y}" width="${width}" height="${barHeight}" rx="3" fill="${color}" opacity="0.85"/>
@@ -969,7 +981,7 @@ function renderScenarioRow(s: ExplorationScenario): string {
   const cls = s.feasible ? "feasible" : "infeasible";
   const icon = s.feasible ? "✓" : "✗";
   const resultCells = Object.entries(s.results)
-    .map(([_k, v]) => `<td>${typeof v === "number" ? (v >= 1000 ? v.toExponential(2) : v.toFixed(2)) : escapeHtml(String(v))}</td>`)
+    .map(([_k, v]) => `<td>${typeof v === "number" ? formatNumericValue(v) : escapeHtml(String(v))}</td>`)
     .join("");
   return `<tr class="${cls}"><td>${icon} ${escapeHtml(s.label)}</td><td>${s.variedValue.toLocaleString()} ${escapeHtml(s.variedUnit)}</td>${resultCells}<td>${escapeHtml(s.note)}</td></tr>`;
 }

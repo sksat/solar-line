@@ -121,6 +121,11 @@ function updateCalculator() {
   const thrustMN = 9.8; // Fixed: Kestrel's thrust
 
   if (isNaN(distanceAU) || isNaN(massT) || isNaN(timeH) || timeH <= 0 || massT <= 0 || distanceAU <= 0) {
+    const verdictEl = document.getElementById("res-verdict");
+    if (verdictEl) {
+      verdictEl.textContent = "値が無効です";
+      verdictEl.className = "verdict verdict-indeterminate";
+    }
     return;
   }
 
