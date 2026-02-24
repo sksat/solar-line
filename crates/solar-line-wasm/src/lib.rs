@@ -1,3 +1,5 @@
+#![allow(clippy::too_many_arguments)] // Flat WASM ABI requires many f64 parameters
+
 /// WASM bridge for solar-line-core.
 ///
 /// Exposes a flat f64 API for use from JavaScript/TypeScript.
@@ -435,9 +437,15 @@ pub fn j2000_jd() -> f64 {
 /// energy_drift is the relative energy error |ΔE/E₀|.
 #[wasm_bindgen]
 pub fn propagate_ballistic(
-    x: f64, y: f64, z: f64,
-    vx: f64, vy: f64, vz: f64,
-    mu: f64, dt: f64, duration: f64,
+    x: f64,
+    y: f64,
+    z: f64,
+    vx: f64,
+    vy: f64,
+    vz: f64,
+    mu: f64,
+    dt: f64,
+    duration: f64,
 ) -> Box<[f64]> {
     let initial = propagation::PropState::new(
         Vec3::new(Km(x), Km(y), Km(z)),
@@ -451,11 +459,19 @@ pub fn propagate_ballistic(
     let e0 = initial.specific_energy(Mu(mu));
     let final_state = propagation::propagate_final(&initial, &config, duration);
     let ef = final_state.specific_energy(Mu(mu));
-    let drift = if e0.abs() > 1e-30 { ((ef - e0) / e0).abs() } else { (ef - e0).abs() };
+    let drift = if e0.abs() > 1e-30 {
+        ((ef - e0) / e0).abs()
+    } else {
+        (ef - e0).abs()
+    };
 
     Box::new([
-        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
-        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.pos.x.value(),
+        final_state.pos.y.value(),
+        final_state.pos.z.value(),
+        final_state.vel.x.value(),
+        final_state.vel.y.value(),
+        final_state.vel.z.value(),
         final_state.time,
         drift,
     ])
@@ -469,10 +485,17 @@ pub fn propagate_ballistic(
 /// Returns [x, y, z, vx, vy, vz, time] — 7 floats.
 #[wasm_bindgen]
 pub fn propagate_brachistochrone(
-    x: f64, y: f64, z: f64,
-    vx: f64, vy: f64, vz: f64,
-    mu: f64, dt: f64, duration: f64,
-    accel_km_s2: f64, flip_time: f64,
+    x: f64,
+    y: f64,
+    z: f64,
+    vx: f64,
+    vy: f64,
+    vz: f64,
+    mu: f64,
+    dt: f64,
+    duration: f64,
+    accel_km_s2: f64,
+    flip_time: f64,
 ) -> Box<[f64]> {
     let initial = propagation::PropState::new(
         Vec3::new(Km(x), Km(y), Km(z)),
@@ -489,8 +512,12 @@ pub fn propagate_brachistochrone(
     let final_state = propagation::propagate_final(&initial, &config, duration);
 
     Box::new([
-        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
-        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.pos.x.value(),
+        final_state.pos.y.value(),
+        final_state.pos.z.value(),
+        final_state.vel.x.value(),
+        final_state.vel.y.value(),
+        final_state.vel.z.value(),
         final_state.time,
     ])
 }
@@ -502,9 +529,15 @@ pub fn propagate_brachistochrone(
 /// E.g., sample_interval=100 with dt=10 means one point every 1000s.
 #[wasm_bindgen]
 pub fn propagate_trajectory(
-    x: f64, y: f64, z: f64,
-    vx: f64, vy: f64, vz: f64,
-    mu: f64, dt: f64, duration: f64,
+    x: f64,
+    y: f64,
+    z: f64,
+    vx: f64,
+    vy: f64,
+    vz: f64,
+    mu: f64,
+    dt: f64,
+    duration: f64,
     sample_interval: usize,
 ) -> Box<[f64]> {
     let initial = propagation::PropState::new(
@@ -518,7 +551,11 @@ pub fn propagate_trajectory(
     };
     let states = propagation::propagate(&initial, &config, duration);
 
-    let interval = if sample_interval == 0 { 1 } else { sample_interval };
+    let interval = if sample_interval == 0 {
+        1
+    } else {
+        sample_interval
+    };
     let mut result = Vec::new();
     for (i, state) in states.iter().enumerate() {
         if i % interval == 0 || i == states.len() - 1 {
@@ -544,30 +581,42 @@ pub fn propagate_trajectory(
 /// Returns [x, y, z, vx, vy, vz, time, energy_drift, n_eval, n_accept, n_reject] — 11 floats.
 #[wasm_bindgen]
 pub fn propagate_adaptive_ballistic(
-    x: f64, y: f64, z: f64,
-    vx: f64, vy: f64, vz: f64,
-    mu: f64, duration: f64,
-    rtol: f64, atol: f64,
+    x: f64,
+    y: f64,
+    z: f64,
+    vx: f64,
+    vy: f64,
+    vz: f64,
+    mu: f64,
+    duration: f64,
+    rtol: f64,
+    atol: f64,
 ) -> Box<[f64]> {
     let initial = propagation::PropState::new(
         Vec3::new(Km(x), Km(y), Km(z)),
         Vec3::new(KmPerSec(vx), KmPerSec(vy), KmPerSec(vz)),
     );
-    let mut config = propagation::AdaptiveConfig::heliocentric(
-        Mu(mu),
-        propagation::ThrustProfile::None,
-    );
+    let mut config =
+        propagation::AdaptiveConfig::heliocentric(Mu(mu), propagation::ThrustProfile::None);
     config.rtol = rtol;
     config.atol = atol;
 
     let e0 = initial.specific_energy(Mu(mu));
     let (final_state, n_eval) = propagation::propagate_adaptive_final(&initial, &config, duration);
     let ef = final_state.specific_energy(Mu(mu));
-    let drift = if e0.abs() > 1e-30 { ((ef - e0) / e0).abs() } else { (ef - e0).abs() };
+    let drift = if e0.abs() > 1e-30 {
+        ((ef - e0) / e0).abs()
+    } else {
+        (ef - e0).abs()
+    };
 
     Box::new([
-        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
-        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.pos.x.value(),
+        final_state.pos.y.value(),
+        final_state.pos.z.value(),
+        final_state.vel.x.value(),
+        final_state.vel.y.value(),
+        final_state.vel.z.value(),
         final_state.time,
         drift,
         n_eval as f64,
@@ -582,11 +631,18 @@ pub fn propagate_adaptive_ballistic(
 /// Returns [x, y, z, vx, vy, vz, time, n_eval] — 8 floats.
 #[wasm_bindgen]
 pub fn propagate_adaptive_brachistochrone(
-    x: f64, y: f64, z: f64,
-    vx: f64, vy: f64, vz: f64,
-    mu: f64, duration: f64,
-    accel_km_s2: f64, flip_time: f64,
-    rtol: f64, atol: f64,
+    x: f64,
+    y: f64,
+    z: f64,
+    vx: f64,
+    vy: f64,
+    vz: f64,
+    mu: f64,
+    duration: f64,
+    accel_km_s2: f64,
+    flip_time: f64,
+    rtol: f64,
+    atol: f64,
 ) -> Box<[f64]> {
     let initial = propagation::PropState::new(
         Vec3::new(Km(x), Km(y), Km(z)),
@@ -605,8 +661,12 @@ pub fn propagate_adaptive_brachistochrone(
     let (final_state, n_eval) = propagation::propagate_adaptive_final(&initial, &config, duration);
 
     Box::new([
-        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
-        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.pos.x.value(),
+        final_state.pos.y.value(),
+        final_state.pos.z.value(),
+        final_state.vel.x.value(),
+        final_state.vel.y.value(),
+        final_state.vel.z.value(),
         final_state.time,
         n_eval as f64,
     ])
@@ -657,7 +717,9 @@ pub fn ship_planet_light_delay(
     jd: f64,
 ) -> Result<f64, JsError> {
     let p = parse_planet(planet)?;
-    Ok(solar_line_core::comms::ship_planet_light_delay(ship_x, ship_y, p, jd))
+    Ok(solar_line_core::comms::ship_planet_light_delay(
+        ship_x, ship_y, p, jd,
+    ))
 }
 
 /// Distance range (min, max in km) between two planets.
@@ -983,9 +1045,7 @@ mod tests {
         let v = (mu_earth / r).sqrt();
 
         let result = propagate_brachistochrone(
-            r, 0.0, 0.0, 0.0, v, 0.0,
-            mu_earth, 1.0, 1000.0,
-            1e-4, 500.0, // flip at 500s
+            r, 0.0, 0.0, 0.0, v, 0.0, mu_earth, 1.0, 1000.0, 1e-4, 500.0, // flip at 500s
         );
         assert_eq!(result.len(), 7);
         // Time should be approximately 1000s
@@ -1000,11 +1060,8 @@ mod tests {
         let v = (mu_earth / r).sqrt();
         let period = std::f64::consts::TAU * (r.powi(3) / mu_earth).sqrt();
 
-        let result = propagate_adaptive_ballistic(
-            r, 0.0, 0.0, 0.0, v, 0.0,
-            mu_earth, period,
-            1e-10, 1e-12,
-        );
+        let result =
+            propagate_adaptive_ballistic(r, 0.0, 0.0, 0.0, v, 0.0, mu_earth, period, 1e-10, 1e-12);
         assert_eq!(result.len(), 9);
         // Energy drift
         let drift = result[7];
@@ -1021,10 +1078,7 @@ mod tests {
         let v = (mu_earth / r).sqrt();
 
         let result = propagate_adaptive_brachistochrone(
-            r, 0.0, 0.0, 0.0, v, 0.0,
-            mu_earth, 1000.0,
-            1e-4, 500.0,
-            1e-8, 1e-10,
+            r, 0.0, 0.0, 0.0, v, 0.0, mu_earth, 1000.0, 1e-4, 500.0, 1e-8, 1e-10,
         );
         assert_eq!(result.len(), 8);
         assert!((result[6] - 1000.0).abs() < 1.0, "time should be ~1000s");
@@ -1037,12 +1091,12 @@ mod tests {
         let v = (mu_earth / r).sqrt();
         let period = std::f64::consts::TAU * (r.powi(3) / mu_earth).sqrt();
 
-        let result = propagate_trajectory(
-            r, 0.0, 0.0, 0.0, v, 0.0,
-            mu_earth, 10.0, period, 100,
-        );
+        let result = propagate_trajectory(r, 0.0, 0.0, 0.0, v, 0.0, mu_earth, 10.0, period, 100);
         // Should have multiple 4-float tuples (t, x, y, z)
-        assert!(result.len() >= 8, "trajectory should have at least 2 points");
+        assert!(
+            result.len() >= 8,
+            "trajectory should have at least 2 points"
+        );
         assert_eq!(result.len() % 4, 0, "trajectory should be [t,x,y,z] tuples");
     }
 

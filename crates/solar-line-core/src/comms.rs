@@ -110,7 +110,9 @@ impl CommFeasibility {
 pub fn free_space_path_loss_db(distance_km: f64, freq_hz: f64) -> f64 {
     let d_m = distance_km * 1000.0;
     let c_m_s = C_KM_S * 1000.0;
-    20.0 * d_m.log10() + 20.0 * freq_hz.log10() + 20.0 * (4.0 * std::f64::consts::PI / c_m_s).log10()
+    20.0 * d_m.log10()
+        + 20.0 * freq_hz.log10()
+        + 20.0 * (4.0 * std::f64::consts::PI / c_m_s).log10()
 }
 
 /// Minimum and maximum distances between two planets (km).
@@ -282,8 +284,16 @@ mod tests {
         let min_au = min.value() / AU_KM;
         let max_au = max.value() / AU_KM;
         // Min ~8.5 AU, Max ~10.5 AU
-        assert!(min_au > 8.0 && min_au < 9.0, "Earth-Saturn min = {:.1} AU", min_au);
-        assert!(max_au > 10.0 && max_au < 11.0, "Earth-Saturn max = {:.1} AU", max_au);
+        assert!(
+            min_au > 8.0 && min_au < 9.0,
+            "Earth-Saturn min = {:.1} AU",
+            min_au
+        );
+        assert!(
+            max_au > 10.0 && max_au < 11.0,
+            "Earth-Saturn max = {:.1} AU",
+            max_au
+        );
     }
 
     #[test]
@@ -292,8 +302,16 @@ mod tests {
         let min_au = min.value() / AU_KM;
         let max_au = max.value() / AU_KM;
         // Min ~18.2 AU, Max ~20.2 AU
-        assert!(min_au > 17.5 && min_au < 19.0, "Earth-Uranus min = {:.1} AU", min_au);
-        assert!(max_au > 19.5 && max_au < 21.0, "Earth-Uranus max = {:.1} AU", max_au);
+        assert!(
+            min_au > 17.5 && min_au < 19.0,
+            "Earth-Uranus min = {:.1} AU",
+            min_au
+        );
+        assert!(
+            max_au > 19.5 && max_au < 21.0,
+            "Earth-Uranus max = {:.1} AU",
+            max_au
+        );
     }
 
     #[test]
@@ -346,12 +364,24 @@ mod tests {
     fn test_feasibility_classification() {
         assert_eq!(CommFeasibility::classify(0.5), CommFeasibility::RealTime);
         assert_eq!(CommFeasibility::classify(2.9), CommFeasibility::RealTime);
-        assert_eq!(CommFeasibility::classify(3.0), CommFeasibility::NearRealTime);
-        assert_eq!(CommFeasibility::classify(15.0), CommFeasibility::NearRealTime);
+        assert_eq!(
+            CommFeasibility::classify(3.0),
+            CommFeasibility::NearRealTime
+        );
+        assert_eq!(
+            CommFeasibility::classify(15.0),
+            CommFeasibility::NearRealTime
+        );
         assert_eq!(CommFeasibility::classify(30.0), CommFeasibility::Delayed);
         assert_eq!(CommFeasibility::classify(600.0), CommFeasibility::Delayed);
-        assert_eq!(CommFeasibility::classify(1800.0), CommFeasibility::DeepSpace);
-        assert_eq!(CommFeasibility::classify(3600.0), CommFeasibility::DeepSpace);
+        assert_eq!(
+            CommFeasibility::classify(1800.0),
+            CommFeasibility::DeepSpace
+        );
+        assert_eq!(
+            CommFeasibility::classify(3600.0),
+            CommFeasibility::DeepSpace
+        );
     }
 
     #[test]
@@ -409,13 +439,7 @@ mod tests {
         let jd = J2000_JD;
         let travel_time = 72.0 * 3600.0; // 72 hours
 
-        let timeline = comm_timeline_linear(
-            Planet::Mars,
-            Planet::Jupiter,
-            jd,
-            travel_time,
-            10,
-        );
+        let timeline = comm_timeline_linear(Planet::Mars, Planet::Jupiter, jd, travel_time, 10);
 
         assert_eq!(timeline.len(), 11); // 10 steps + 1
         assert!((timeline[0].elapsed_s - 0.0).abs() < 1e-10);
@@ -454,11 +478,7 @@ mod tests {
         // Ship is near Mars, communicating with Mars control → should be real-time
         // Ship 10,000 km from Mars
         let delay = light_time_seconds(Km(10_000.0));
-        assert!(
-            delay < 0.1,
-            "Mars control at 10,000 km = {:.3}s",
-            delay
-        );
+        assert!(delay < 0.1, "Mars control at 10,000 km = {:.3}s", delay);
         assert_eq!(CommFeasibility::classify(delay), CommFeasibility::RealTime);
     }
 
@@ -474,7 +494,11 @@ mod tests {
 
         // Light delay at minimum: ~35 min
         let min_delay_min = light_time_minutes(min);
-        assert!(min_delay_min > 30.0, "J-S min delay = {:.1} min", min_delay_min);
+        assert!(
+            min_delay_min > 30.0,
+            "J-S min delay = {:.1} min",
+            min_delay_min
+        );
     }
 
     #[test]

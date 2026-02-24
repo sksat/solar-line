@@ -467,7 +467,14 @@ const PI_EXPONENT_I: f64 = -0.20; // integral gain (1/p where p=5 for RK45)
 const PI_EXPONENT_P: f64 = 0.08; // proportional gain
 
 /// Estimate initial step size using the approach from Hairer-Nørsett-Wanner.
-fn estimate_initial_step(pos: [f64; 3], vel: [f64; 3], mu_val: f64, thrust: &ThrustProfile, rtol: f64, atol: f64) -> f64 {
+fn estimate_initial_step(
+    pos: [f64; 3],
+    vel: [f64; 3],
+    mu_val: f64,
+    thrust: &ThrustProfile,
+    rtol: f64,
+    atol: f64,
+) -> f64 {
     // Compute initial derivatives
     let (_, dvdt) = derivatives(pos, vel, 0.0, mu_val, thrust);
 
@@ -484,17 +491,16 @@ fn estimate_initial_step(pos: [f64; 3], vel: [f64; 3], mu_val: f64, thrust: &Thr
     let d1 = (d1_sq / 6.0).sqrt();
 
     // Initial guess: h0 = 0.01 * d0/d1
-    let h0 = if d0 < 1e-5 || d1 < 1e-5 {
+    if d0 < 1e-5 || d1 < 1e-5 {
         1e-6
     } else {
         0.01 * d0 / d1
-    };
-
-    h0
+    }
 }
 
 /// Compute scaled RMS error norm for step acceptance.
 /// State is [x, y, z, vx, vy, vz] (6 components).
+#[allow(clippy::too_many_arguments)]
 fn scaled_error_norm(
     err_pos: [f64; 3],
     err_vel: [f64; 3],
@@ -559,10 +565,10 @@ fn dopri45_step(
     let mut p5 = [0.0; 3];
     let mut v5 = [0.0; 3];
     for i in 0..3 {
-        p5[i] = pos[i]
-            + h * (DP_A51 * k1r[i] + DP_A52 * k2r[i] + DP_A53 * k3r[i] + DP_A54 * k4r[i]);
-        v5[i] = vel[i]
-            + h * (DP_A51 * k1v[i] + DP_A52 * k2v[i] + DP_A53 * k3v[i] + DP_A54 * k4v[i]);
+        p5[i] =
+            pos[i] + h * (DP_A51 * k1r[i] + DP_A52 * k2r[i] + DP_A53 * k3r[i] + DP_A54 * k4r[i]);
+        v5[i] =
+            vel[i] + h * (DP_A51 * k1v[i] + DP_A52 * k2v[i] + DP_A53 * k3v[i] + DP_A54 * k4v[i]);
     }
     let (k5r, k5v) = derivatives(p5, v5, time + DP_C[4] * h, mu_val, thrust);
 
@@ -698,13 +704,19 @@ pub fn propagate_adaptive(
         }
 
         // Take a trial step
-        let (new_pos, new_vel, err_pos, err_vel) =
-            dopri45_step(pos, vel, t, h, mu_val, thrust);
+        let (new_pos, new_vel, err_pos, err_vel) = dopri45_step(pos, vel, t, h, mu_val, thrust);
         n_eval += 7; // 7 stages per DOPRI45 step
 
         // Compute scaled error norm
         let err = scaled_error_norm(
-            err_pos, err_vel, pos, vel, new_pos, new_vel, config.rtol, config.atol,
+            err_pos,
+            err_vel,
+            pos,
+            vel,
+            new_pos,
+            new_vel,
+            config.rtol,
+            config.atol,
         );
 
         if err <= 1.0 {
@@ -722,9 +734,7 @@ pub fn propagate_adaptive(
 
             // PI controller for next step size
             if err > 1e-30 {
-                let factor = SAFETY
-                    * err.powf(PI_EXPONENT_I)
-                    * err_prev.powf(PI_EXPONENT_P);
+                let factor = SAFETY * err.powf(PI_EXPONENT_I) * err_prev.powf(PI_EXPONENT_P);
                 h *= factor.clamp(FAC_MIN, FAC_MAX);
             } else {
                 h *= FAC_MAX;
@@ -813,12 +823,18 @@ pub fn propagate_adaptive_final(
             }
         }
 
-        let (new_pos, new_vel, err_pos, err_vel) =
-            dopri45_step(pos, vel, t, h, mu_val, thrust);
+        let (new_pos, new_vel, err_pos, err_vel) = dopri45_step(pos, vel, t, h, mu_val, thrust);
         n_eval += 7;
 
         let err = scaled_error_norm(
-            err_pos, err_vel, pos, vel, new_pos, new_vel, config.rtol, config.atol,
+            err_pos,
+            err_vel,
+            pos,
+            vel,
+            new_pos,
+            new_vel,
+            config.rtol,
+            config.atol,
         );
 
         if err <= 1.0 {
@@ -827,9 +843,7 @@ pub fn propagate_adaptive_final(
             t += h;
 
             if err > 1e-30 {
-                let factor = SAFETY
-                    * err.powf(PI_EXPONENT_I)
-                    * err_prev.powf(PI_EXPONENT_P);
+                let factor = SAFETY * err.powf(PI_EXPONENT_I) * err_prev.powf(PI_EXPONENT_P);
                 h *= factor.clamp(FAC_MIN, FAC_MAX);
             } else {
                 h *= FAC_MAX;
@@ -872,7 +886,11 @@ pub fn circular_orbit_state(mu: Mu, radius: Km) -> PropState {
 /// At periapsis (true anomaly = 0):
 /// Position: (r_p, 0, 0)
 /// Velocity: (0, v_p, 0) where v_p = sqrt(μ(2/r_p - 1/a))
-pub fn elliptical_orbit_state_at_periapsis(mu: Mu, semi_major_axis: Km, eccentricity: f64) -> PropState {
+pub fn elliptical_orbit_state_at_periapsis(
+    mu: Mu,
+    semi_major_axis: Km,
+    eccentricity: f64,
+) -> PropState {
     let a = semi_major_axis.value();
     let r_p = a * (1.0 - eccentricity);
     let v_p = (mu.value() * (2.0 / r_p - 1.0 / a)).sqrt();
@@ -947,7 +965,8 @@ mod tests {
     fn test_energy_conservation_elliptical_orbit() {
         // Elliptical orbit (e=0.5): energy conservation is harder
         // due to varying velocity through periapsis
-        let state = elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.5);
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.5);
         let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
 
         let config = IntegratorConfig {
@@ -1426,7 +1445,8 @@ mod tests {
         let accel = 4.0 * distance / (duration * duration);
 
         // Desk ΔV (no gravity, straight line)
-        let desk_dv = crate::orbits::brachistochrone_dv(Km(distance), crate::units::Seconds(duration));
+        let desk_dv =
+            crate::orbits::brachistochrone_dv(Km(distance), crate::units::Seconds(duration));
 
         // Propagation: track actual velocity integral
         let r_mars = orbit_radius::MARS.value();
@@ -1736,9 +1756,9 @@ mod tests {
         let mid_state = propagate_final(&state, &config, flip_time);
         let speed_at_flip = mid_state.speed();
         let _expected_cruise = accel * flip_time; // ~v_max at flip
-        // The cruise velocity includes initial orbital velocity, so it will differ
-        // The desk calc gives v_max = accel * t/2 = 0.02166 * 257760 ≈ 5582 km/s
-        // But total speed = v_orbital + v_thrust (approximately, since thrust follows velocity)
+                                                  // The cruise velocity includes initial orbital velocity, so it will differ
+                                                  // The desk calc gives v_max = accel * t/2 = 0.02166 * 257760 ≈ 5582 km/s
+                                                  // But total speed = v_orbital + v_thrust (approximately, since thrust follows velocity)
         assert!(
             speed_at_flip > 1000.0,
             "EP03: Speed at flip = {:.0} km/s should be > 1000 km/s (cruise ~3000 km/s)",
@@ -1762,10 +1782,8 @@ mod tests {
         let distance = 1_438_930_000.0_f64;
         let duration = 515_520.0;
 
-        let desk_dv = crate::orbits::brachistochrone_dv(
-            Km(distance),
-            crate::units::Seconds(duration),
-        );
+        let desk_dv =
+            crate::orbits::brachistochrone_dv(Km(distance), crate::units::Seconds(duration));
 
         // Report says 11,165 km/s
         assert!(
@@ -1804,10 +1822,8 @@ mod tests {
         let flip_time = duration / 2.0;
 
         // Verify desk ΔV
-        let desk_dv = crate::orbits::brachistochrone_dv(
-            Km(distance_target),
-            crate::units::Seconds(duration),
-        );
+        let desk_dv =
+            crate::orbits::brachistochrone_dv(Km(distance_target), crate::units::Seconds(duration));
         assert!(
             (desk_dv.value() - 15_207.0).abs() < 100.0,
             "EP05: Desk ΔV = {:.0} km/s, expected ~15,207",
@@ -1948,11 +1964,7 @@ mod tests {
         let e0 = state.specific_energy(mu::SUN);
         let ef = final_state.specific_energy(mu::SUN);
         let rel_err = ((ef - e0) / e0).abs();
-        assert!(
-            rel_err < 1e-9,
-            "EP05 coast energy drift = {:.2e}",
-            rel_err
-        );
+        assert!(rel_err < 1e-9, "EP05 coast energy drift = {:.2e}", rel_err);
     }
 
     #[test]
