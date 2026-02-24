@@ -37,7 +37,7 @@ export interface RawSubtitleFile {
   /** BCP 47 language code, e.g. "ja", "en" */
   language: string;
   /** How the subtitles were obtained */
-  source: "youtube-auto" | "youtube-manual" | "manual";
+  source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
   /** ISO 8601 timestamp of when subtitles were fetched */
   fetchedAt: string;
   /** SHA-256 hash of the raw subtitle file content before parsing */

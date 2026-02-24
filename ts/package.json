@@ -11,7 +11,8 @@
     "collect-subtitles": "node --experimental-strip-types src/collect-subtitles.ts",
     "extract-session-log": "node --experimental-strip-types src/extract-session-log.ts",
     "extract-dialogue": "node --experimental-strip-types src/extract-dialogue.ts",
-    "generate-cross-episode": "node --experimental-strip-types src/generate-cross-episode.ts"
+    "generate-cross-episode": "node --experimental-strip-types src/generate-cross-episode.ts",
+    "whisper": "node --experimental-strip-types src/run-whisper.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

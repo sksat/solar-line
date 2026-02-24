@@ -58,7 +58,7 @@ export interface EpisodeLines {
     /** Language code of the subtitle track used */
     language: string;
     /** How subtitles were obtained */
-    source: "youtube-auto" | "youtube-manual" | "manual";
+    source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
     /** SHA-256 hash of the raw subtitle content */
     rawContentHash: string;
   };
