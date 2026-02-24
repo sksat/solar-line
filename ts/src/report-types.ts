@@ -332,6 +332,8 @@ export interface SummarySection {
   eventTimeline?: EventTimeline;
   /** Optional verification table */
   verificationTable?: VerificationTable;
+  /** If true, render an interactive DAG viewer in this section */
+  dagViewer?: boolean;
 }
 
 /** A cross-episode or summary report page */

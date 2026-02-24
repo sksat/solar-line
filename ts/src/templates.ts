@@ -280,6 +280,17 @@ pre {
   margin: 1rem 0;
 }
 pre code.hljs { background: transparent; padding: 0; }
+.dag-viewer-container { width: 100%; min-height: 500px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative; background: var(--surface); }
+.dag-viewer-container svg { width: 100%; height: 100%; }
+.dag-node { cursor: pointer; }
+.dag-node:hover circle, .dag-node:hover rect { stroke-width: 3; filter: brightness(1.2); }
+.dag-tooltip { position: absolute; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem; font-size: 0.85em; max-width: 350px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); pointer-events: none; z-index: 10; }
+.dag-tooltip h4 { margin: 0 0 0.3rem; font-size: 0.95em; }
+.dag-tooltip .dag-type { font-size: 0.8em; opacity: 0.7; }
+.dag-tooltip .dag-status { display: inline-block; padding: 0.1em 0.4em; border-radius: 3px; font-size: 0.8em; }
+.dag-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 0.8em; padding: 0.5rem; }
+.dag-legend-item { display: flex; align-items: center; gap: 0.3rem; }
+.dag-legend-item .swatch { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--border); }
 code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
 p code { background: var(--surface); padding: 0.2em 0.4em; border-radius: 3px; }
 ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }
@@ -1644,6 +1655,7 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const diagramHtml = section.orbitalDiagrams ? renderOrbitalDiagrams(section.orbitalDiagrams) : "";
     const timelineHtml = section.eventTimeline ? renderEventTimeline(section.eventTimeline) : "";
     const verificationHtml = section.verificationTable ? renderVerificationTable(section.verificationTable) : "";
+    const dagHtml = section.dagViewer ? '<div id="dag-viewer" class="dag-viewer-container"></div>' : "";
     return `<div class="summary-section" id="${escapeHtml(sectionId)}">
 <h2>${escapeHtml(section.heading)}</h2>
 ${markdownToHtml(section.markdown, mdOpts)}
@@ -1651,6 +1663,7 @@ ${diagramHtml}
 ${timelineHtml}
 ${verificationHtml}
 ${tableHtml}
+${dagHtml}
 </div>`;
   }).join("\n");
 
@@ -1671,6 +1684,8 @@ ${tableHtml}
     s => s.orbitalDiagrams?.some(d => d.animation) ?? false
   );
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
+  const hasDagViewer = report.sections.some(s => s.dagViewer);
+  const dagScript = hasDagViewer ? '\n<script src="../dag-viewer.js"></script>' : "";
 
   const content = `
 <h1>${escapeHtml(report.title)}</h1>
@@ -1680,7 +1695,7 @@ ${summaryToc}
 ${sections}`;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(report.title, content + animScript, "..", summaryPages, desc, navEpisodes);
+  return layoutHtml(report.title, content + animScript + dagScript, "..", summaryPages, desc, navEpisodes);
 }
 
 // ---------------------------------------------------------------------------

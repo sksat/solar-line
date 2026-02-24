@@ -373,6 +373,16 @@ export function build(config: BuildConfig): void {
     fs.copyFileSync(animSrc, path.join(outDir, "orbital-animation.js"));
   }
 
+  // Copy DAG viewer JS and state data for interactive visualization
+  const dagViewerSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "dag-viewer.js");
+  if (fs.existsSync(dagViewerSrc)) {
+    fs.copyFileSync(dagViewerSrc, path.join(outDir, "dag-viewer.js"));
+  }
+  const dagStateSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "../../dag/state.json");
+  if (fs.existsSync(dagStateSrc)) {
+    fs.copyFileSync(dagStateSrc, path.join(outDir, "dag-state.json"));
+  }
+
   // Copy rustdoc if available
   const rustdocCandidates = [
     path.join(dataDir, "..", "target", "doc"),          // from reports/../target/doc

@@ -1,6 +1,6 @@
 # Task 085: タスク・分析の DAG 管理構造
 
-## Status: IN_PROGRESS (Phase 1 DONE, Phases 2-3 remain)
+## Status: DONE (Phase 1 + Phase 3 complete)
 
 ## Motivation
 
@@ -31,9 +31,16 @@ npm run dag -- show [--stale ""]
 ### Key Finding
 Invalidating `param.ship_mass` cascades to 39/58 nodes (67% of DAG) — demonstrates the critical role of mass assumption in the analysis chain.
 
+## Phase 3: DONE — DAG Visualization
+
+- **Browser module**: `dag-viewer.js` — Layered SVG layout with click-to-inspect
+- **Integration**: `dagViewer: true` on SummarySection, auto-loads dag-state.json
+- **Features**: Node tooltip (title, type, status, deps, downstream count, tags, notes), edge highlighting, legend
+- **Location**: 技術解説ページ「分析依存グラフ（DAG）」セクション
+
 ## Requirements (remaining)
 
-### Phase 2: Reconstruct Historical DAG
+### Phase 2: Reconstruct Historical DAG (optional future)
 - Parse session logs and commit messages to identify task dependencies
 - Map existing `current_tasks/` files into DAG nodes
 - Identify implicit dependencies (e.g., EP02 analysis depends on EP01 mass findings)
