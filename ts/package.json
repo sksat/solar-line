@@ -14,7 +14,10 @@
     "generate-cross-episode": "node --experimental-strip-types src/generate-cross-episode.ts",
     "generate-ship-kestrel": "node --experimental-strip-types src/generate-ship-kestrel.ts",
     "generate-science-accuracy": "node --experimental-strip-types src/generate-science-accuracy.ts",
-    "whisper": "node --experimental-strip-types src/run-whisper.ts"
+    "whisper": "node --experimental-strip-types src/run-whisper.ts",
+    "extract-dialogue-whisper": "node --experimental-strip-types src/extract-dialogue-from-whisper.ts",
+    "process-whisper": "node --experimental-strip-types src/process-whisper-output.ts",
+    "compare-transcriptions": "node --experimental-strip-types src/compare-transcriptions.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
