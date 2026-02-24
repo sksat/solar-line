@@ -439,14 +439,33 @@ describe("renderCalculator", () => {
     assert.ok(html.includes('id="calc-distance-range"'));
     assert.ok(html.includes('id="calc-mass-range"'));
     assert.ok(html.includes('id="calc-time-range"'));
+    assert.ok(html.includes('id="calc-thrust-range"'));
+    assert.ok(html.includes('id="calc-thrust"'));
   });
 
-  it("includes preset buttons", () => {
+  it("includes episode-specific preset buttons", () => {
+    // Default (no episode) → EP01 presets
     const html = renderCalculator();
-    assert.ok(html.includes('id="preset-ep01_canonical"'));
-    assert.ok(html.includes('id="preset-ep01_150h"'));
-    assert.ok(html.includes('id="preset-mass_48t"'));
-    assert.ok(html.includes('id="preset-mass_4800t"'));
+    assert.ok(html.includes('data-preset="ep01_72h"'));
+    assert.ok(html.includes('data-preset="ep01_150h"'));
+    assert.ok(html.includes("火星→ガニメデ 72h"));
+  });
+
+  it("renders EP03 presets when episode=3", () => {
+    const html = renderCalculator(3);
+    assert.ok(html.includes('data-preset="ep03_143h"'));
+    assert.ok(html.includes("エンケラドス→タイタニア 143h"));
+    assert.ok(html.includes('data-episode="3"'));
+    // Should use EP03 defaults
+    assert.ok(html.includes('value="9.62"'));
+    assert.ok(html.includes('value="143"'));
+  });
+
+  it("renders EP05 presets with damaged thrust default", () => {
+    const html = renderCalculator(5);
+    assert.ok(html.includes('data-preset="ep05_composite"'));
+    assert.ok(html.includes('value="6.37"'));
+    assert.ok(html.includes("ノズル寿命上限"));
   });
 
   it("includes result placeholders", () => {

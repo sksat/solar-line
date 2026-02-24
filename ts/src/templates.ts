@@ -1297,41 +1297,104 @@ export function renderOrbitalDiagrams(diagrams: OrbitalDiagram[]): string {
   return `<h2>軌道遷移図</h2>\n${diagrams.map(renderOrbitalDiagram).join("\n")}`;
 }
 
+/** Episode-specific calculator defaults (must match calculator.js EPISODE_PRESETS) */
+interface CalcPresetDef { key: string; label: string }
+interface CalcEpConfig { defaults: { distanceAU: number; massT: number; timeH: number; thrustMN: number }; presets: CalcPresetDef[] }
+
+const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
+  1: {
+    defaults: { distanceAU: 3.68, massT: 48000, timeH: 72, thrustMN: 9.8 },
+    presets: [
+      { key: "ep01_72h", label: "火星→ガニメデ 72h（作中描写）" },
+      { key: "ep01_150h", label: "通常ルート 150h" },
+      { key: "ep01_mass299", label: "質量 ≤299t（成立条件）" },
+      { key: "ep01_mass48", label: "質量 48t（48,000kg解釈）" },
+    ],
+  },
+  2: {
+    defaults: { distanceAU: 4.32, massT: 48000, timeH: 27, thrustMN: 9.8 },
+    presets: [
+      { key: "ep02_escape", label: "木星圏脱出 27h" },
+      { key: "ep02_trim1pct", label: "木星→土星 トリム推力1%" },
+      { key: "ep02_mass300", label: "木星圏脱出（300t仮定）" },
+    ],
+  },
+  3: {
+    defaults: { distanceAU: 9.62, massT: 48000, timeH: 143, thrustMN: 9.8 },
+    presets: [
+      { key: "ep03_143h", label: "エンケラドス→タイタニア 143h（作中描写）" },
+      { key: "ep03_mass452", label: "質量 ≤452t（成立条件）" },
+      { key: "ep03_mass300", label: "質量 300t（EP01と一致）" },
+    ],
+  },
+  4: {
+    defaults: { distanceAU: 18.2, massT: 48000, timeH: 2520, thrustMN: 6.37 },
+    presets: [
+      { key: "ep04_damaged", label: "タイタニア→地球 65%推力（作中描写）" },
+      { key: "ep04_mass300", label: "質量 300t・65%推力" },
+      { key: "ep04_full_thrust", label: "仮に100%推力の場合" },
+    ],
+  },
+  5: {
+    defaults: { distanceAU: 18.2, massT: 48000, timeH: 507, thrustMN: 6.37 },
+    presets: [
+      { key: "ep05_composite", label: "天王星→地球 507h 複合航路（作中描写）" },
+      { key: "ep05_mass300", label: "質量 300t・65%推力" },
+      { key: "ep05_direct", label: "直行ルート（フライバイなし）" },
+      { key: "ep05_nozzle_limit", label: "ノズル寿命上限 55h38m" },
+    ],
+  },
+};
+
 /** Render the interactive brachistochrone calculator widget */
-export function renderCalculator(): string {
-  return `<div class="calc-section card" id="calculator">
+export function renderCalculator(episode?: number): string {
+  const ep = episode && CALC_EPISODE_PRESETS[episode] ? episode : 1;
+  const epConfig = CALC_EPISODE_PRESETS[ep];
+  const d = epConfig.defaults;
+
+  const presetButtons = epConfig.presets
+    .map(p => `  <button data-preset="${escapeHtml(p.key)}">${escapeHtml(p.label)}</button>`)
+    .join("\n");
+
+  const distMax = Math.max(25, Math.ceil(d.distanceAU * 2));
+  const timeMax = Math.max(500, Math.ceil(d.timeH * 2));
+
+  return `<div class="calc-section card" id="calculator" data-episode="${ep}">
 <h2>Brachistochrone 計算機 <span class="calc-badge" id="calc-engine-badge">エンジン: JS</span></h2>
-<p>距離・船質量・遷移時間を変えて、必要な加速度と&Delta;Vへの影響を探索できます。</p>
+<p>距離・船質量・遷移時間・推力を変えて、必要な加速度と&Delta;Vへの影響を探索できます。</p>
 <p class="calc-assumptions" id="calc-assumptions">前提: 直線経路、中間点で加速反転減速、一定推力、重力無視、静止→静止遷移。</p>
 
 <div class="calc-controls">
   <div class="calc-control">
-    <label for="calc-distance">距離</label>
-    <input type="range" id="calc-distance-range" min="0.5" max="10" step="0.01" value="3.68" aria-label="距離 (AU)" aria-describedby="calc-assumptions">
-    <input type="number" id="calc-distance" min="0.1" max="50" step="0.01" value="3.68" aria-describedby="calc-assumptions">
+    <label for="calc-distance">距離 (AU)</label>
+    <input type="range" id="calc-distance-range" min="0.5" max="${distMax}" step="0.01" value="${d.distanceAU}" aria-label="距離 (AU)" aria-describedby="calc-assumptions">
+    <input type="number" id="calc-distance" min="0.1" max="50" step="0.01" value="${d.distanceAU}" aria-describedby="calc-assumptions">
   </div>
   <div class="calc-control">
-    <label for="calc-mass">船質量</label>
-    <input type="range" id="calc-mass-range" min="10" max="100000" step="10" value="48000" aria-label="船質量 (t)" aria-describedby="calc-assumptions">
-    <input type="number" id="calc-mass" min="1" max="1000000" step="1" value="48000" aria-describedby="calc-assumptions">
+    <label for="calc-mass">船質量 (t)</label>
+    <input type="range" id="calc-mass-range" min="10" max="100000" step="10" value="${d.massT}" aria-label="船質量 (t)" aria-describedby="calc-assumptions">
+    <input type="number" id="calc-mass" min="1" max="1000000" step="1" value="${d.massT}" aria-describedby="calc-assumptions">
   </div>
   <div class="calc-control">
-    <label for="calc-time">遷移時間</label>
-    <input type="range" id="calc-time-range" min="1" max="500" step="1" value="72" aria-label="遷移時間 (h)" aria-describedby="calc-assumptions">
-    <input type="number" id="calc-time" min="1" max="10000" step="1" value="72" aria-describedby="calc-assumptions">
+    <label for="calc-time">遷移時間 (h)</label>
+    <input type="range" id="calc-time-range" min="1" max="${timeMax}" step="1" value="${d.timeH}" aria-label="遷移時間 (h)" aria-describedby="calc-assumptions">
+    <input type="number" id="calc-time" min="1" max="10000" step="1" value="${d.timeH}" aria-describedby="calc-assumptions">
+  </div>
+  <div class="calc-control">
+    <label for="calc-thrust">推力 (MN)</label>
+    <input type="range" id="calc-thrust-range" min="0.01" max="15" step="0.01" value="${d.thrustMN}" aria-label="推力 (MN)" aria-describedby="calc-assumptions">
+    <input type="number" id="calc-thrust" min="0.01" max="100" step="0.01" value="${d.thrustMN}" aria-describedby="calc-assumptions">
+    <span id="calc-thrust-val" class="calc-badge" style="font-size:0.85em">${d.thrustMN} MN</span>
   </div>
 </div>
 
 <div class="calc-presets">
-  <button id="preset-ep01_canonical">第1話 基準値 (48,000t, 72h)</button>
-  <button id="preset-ep01_150h">通常ルート (150h)</button>
-  <button id="preset-mass_48t">質量 = 48 t の場合</button>
-  <button id="preset-mass_4800t">質量 = 4,800 t の場合</button>
+${presetButtons}
 </div>
 
 <div class="calc-results" aria-live="polite">
 <table>
-  <tr><th colspan="2">遷移の要件</th><th colspan="2">船の性能 (ケストレル号, 9.8 MN)</th></tr>
+  <tr><th colspan="2">遷移の要件</th><th colspan="2">船の性能 (ケストレル号)</th></tr>
   <tr>
     <td>必要加速度</td><td id="res-req-accel">—</td>
     <td>船の加速度</td><td id="res-ship-accel">—</td>
@@ -1463,7 +1526,7 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     ? `<h2>その他のパラメータ探索</h2>\n${unlinkedExplorations.map(renderExploration).join("\n")}`
     : "";
 
-  const calculator = renderCalculator();
+  const calculator = renderCalculator(report.episode);
 
   const isProvisional = report.summary.includes("暫定");
   const provisionalBadge = isProvisional
