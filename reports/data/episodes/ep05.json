@@ -1198,6 +1198,92 @@
         "durationSeconds": 1825200
       },
       "epochAnnotation": "想定年代: 2242-12-19～2242-12-28"
+    },
+    {
+      "id": "ep05-diagram-04",
+      "title": "天王星中心座標: タイタニア出発・天王星圏脱出",
+      "description": "天王星中心座標でのケストレル号出発ジオメトリ。タイタニア軌道（約43.6万km）から天王星SOI外側に向けた双曲線脱出軌道を描く。EP03の到着図（捕獲軌道）と対をなし、5大衛星（ミランダ〜オベロン）の配置で天王星系のスケール感を示す。脱出後はそのまま巡航速度1,500 km/sへ加速し太陽系内側へ向かう。",
+      "centerLabel": "天王星",
+      "scaleMode": "linear",
+      "radiusUnit": "km",
+      "orbits": [
+        {
+          "id": "uranus-surface",
+          "label": "天王星",
+          "radius": 25559,
+          "color": "#88ccee"
+        },
+        {
+          "id": "miranda",
+          "label": "ミランダ",
+          "radius": 129900,
+          "color": "#999999",
+          "angle": 0.5,
+          "meanMotion": 0.00005173
+        },
+        {
+          "id": "ariel",
+          "label": "アリエル",
+          "radius": 190900,
+          "color": "#aaaacc",
+          "angle": 2.1,
+          "meanMotion": 0.00002789
+        },
+        {
+          "id": "umbriel",
+          "label": "ウンブリエル",
+          "radius": 266000,
+          "color": "#8888aa",
+          "angle": 4.0,
+          "meanMotion": 0.00001516
+        },
+        {
+          "id": "titania",
+          "label": "タイタニア",
+          "radius": 435910,
+          "color": "#cc8844",
+          "angle": 1.2,
+          "meanMotion": 0.000008354
+        },
+        {
+          "id": "oberon",
+          "label": "オベロン",
+          "radius": 583500,
+          "color": "#bb9966",
+          "angle": 3.5,
+          "meanMotion": 0.000004723
+        },
+        {
+          "id": "escape-point",
+          "label": "脱出点 (25 RU)",
+          "radius": 638975,
+          "color": "#ff444444",
+          "angle": 5.0
+        }
+      ],
+      "transfers": [
+        {
+          "label": "脱出軌道（→巡航1,500 km/s）",
+          "fromOrbitId": "titania",
+          "toOrbitId": "escape-point",
+          "color": "#ff4444",
+          "style": "hyperbolic",
+          "burnMarkers": [
+            {
+              "angle": 1.2,
+              "label": "天王星脱出噴射",
+              "startTime": 0,
+              "endTime": 14400,
+              "type": "acceleration"
+            }
+          ],
+          "startTime": 0,
+          "endTime": 43200
+        }
+      ],
+      "animation": {
+        "durationSeconds": 43200
+      }
     }
   ],
   "timeSeriesCharts": [

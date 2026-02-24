@@ -751,10 +751,30 @@ export function renderIndex(manifest: SiteManifest, navEpisodes?: NavEpisode[]):
   // Project overview section
   const overview = `
 <h1>SOLAR LINE 考察</h1>
-<p>『<a href="https://www.nicovideo.jp/user/5844196/series/531506">良いソフトウェアトーク劇場</a>』のSFシリーズ長編「SOLAR LINE」に描かれた軌道遷移を宇宙力学的に検証するプロジェクト。</p>
+<p>『<a href="https://www.nicovideo.jp/user/5844196/series/531506">良いソフトウェアトーク劇場</a>』のSFシリーズ長編「SOLAR LINE」（全5話・ゆえぴこ氏制作）に描かれた軌道遷移を宇宙力学的に検証するプロジェクト。</p>
 <div class="card">
-<p>ゆえぴこ氏の「SOLAR LINE」は、主人公きりたんが小型貨物船ケストレルで太陽系を駆け巡る物語です。本サイトでは、作中で描かれた各軌道遷移について、実際の軌道力学に基づくΔV計算・加速度分析を行い、描写の妥当性を考察しています。</p>
-<p>航路: <strong>火星</strong> → <strong>ガニメデ</strong>（木星系） → <strong>エンケラドス</strong>（土星系） → <strong>タイタニア</strong>（天王星系） → <strong>地球</strong>（約35.9 AU）</p>
+<h3>作品紹介</h3>
+<p>「SOLAR LINE」は、小型貨物船ケストレル号の船長きりたんと船載AIケイが、火星から地球まで約35.9 AUの太陽系横断航路を駆け巡るSF物語です。作中では各遷移ごとにΔV（速度変化量）や加速度が具体的な数値で描かれています。</p>
+<p>本サイトでは、作中に登場する全${totalTransfers}件の軌道遷移について、brachistochrone（最速降下線）航法、ホーマン遷移、重力アシストなどの実際の軌道力学に基づく計算を行い、描写の妥当性を考察しています。SF作品としての許容を前提に、物語内の数値・時間・距離が整合しているかを検証します。</p>
+<p>航路: <strong>火星</strong> → <strong>ガニメデ</strong>（木星系） → <strong>エンケラドス</strong>（土星系） → <strong>タイタニア</strong>（天王星系） → <strong>地球</strong></p>
+<details style="margin-top:0.5rem">
+<summary style="cursor:pointer;color:var(--accent)">視聴リンク</summary>
+<ul style="margin-top:0.3rem">
+<li><a href="https://www.nicovideo.jp/user/5844196/series/531506" target="_blank" rel="noopener">ニコニコ動画（全5話）</a></li>
+<li><a href="https://www.youtube.com/watch?v=CQ_OkDjEwRk" target="_blank" rel="noopener">YouTube Part 1</a> / <a href="https://www.youtube.com/watch?v=YXZWJLKD7Oo" target="_blank" rel="noopener">Part 2</a> / <a href="https://www.youtube.com/watch?v=l1jjXpv17-E" target="_blank" rel="noopener">Part 3</a> / <a href="https://www.youtube.com/watch?v=1cTmWjYSlTM" target="_blank" rel="noopener">Part 4</a></li>
+</ul>
+</details>
+</div>
+
+<div class="card" style="font-size:0.9em">
+<h3>判定バッジの見かた</h3>
+<p>各軌道遷移には以下の判定が付与されます:</p>
+<ul style="list-style:none;padding-left:0">
+<li>${verdictBadge("plausible")} — 計算結果が作中描写と整合している</li>
+<li>${verdictBadge("conditional")} — 特定の条件（推進剤量、エンジン出力等）を仮定すれば成立</li>
+<li>${verdictBadge("reference")} — 作中で明示されていない参考計算値（直接比較不能）</li>
+<li>${verdictBadge("implausible")} — 物理法則との明確な矛盾がある</li>
+</ul>
 </div>`;
 
   // Stats section

@@ -2434,6 +2434,49 @@ describe("renderIndex enhanced content", () => {
   });
 });
 
+// --- renderIndex verdict legend and series links ---
+
+describe("renderIndex verdict legend and series links", () => {
+  const manifest: SiteManifest = {
+    title: "SOLAR LINE 考察",
+    generatedAt: "2026-02-23T00:00:00Z",
+    episodes: [
+      { episode: 1, title: "火星からガニメデへ", transferCount: 4, path: "episodes/ep-001.html" },
+    ],
+    totalVerdicts: { plausible: 2, conditional: 1, indeterminate: 0, implausible: 0, reference: 1 },
+    logs: [],
+  };
+
+  it("includes verdict legend section", () => {
+    const html = renderIndex(manifest);
+    assert.ok(html.includes("判定バッジの見かた"), "should have verdict legend heading");
+    assert.ok(html.includes("計算結果が作中描写と整合"), "should explain plausible");
+    assert.ok(html.includes("特定の条件"), "should explain conditional");
+    assert.ok(html.includes("参考計算値"), "should explain reference");
+    assert.ok(html.includes("物理法則との明確な矛盾"), "should explain implausible");
+  });
+
+  it("includes series watching links", () => {
+    const html = renderIndex(manifest);
+    assert.ok(html.includes("視聴リンク"), "should have watching links section");
+    assert.ok(html.includes("nicovideo.jp"), "should link to Niconico");
+    assert.ok(html.includes("youtube.com"), "should link to YouTube");
+    assert.ok(html.includes("CQ_OkDjEwRk"), "should have Part 1 YouTube ID");
+  });
+
+  it("includes project intro with brachistochrone mention", () => {
+    const html = renderIndex(manifest);
+    assert.ok(html.includes("brachistochrone"), "should mention brachistochrone");
+    assert.ok(html.includes("ホーマン遷移"), "should mention Hohmann transfer");
+    assert.ok(html.includes("重力アシスト"), "should mention gravity assist");
+  });
+
+  it("uses dynamic transfer count in overview", () => {
+    const html = renderIndex(manifest);
+    assert.ok(html.includes("全4件の軌道遷移"), "should use dynamic total transfer count");
+  });
+});
+
 // --- Accessibility attributes ---
 
 describe("SVG accessibility attributes", () => {
