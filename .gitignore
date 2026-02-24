@@ -30,3 +30,9 @@ playwright-report/
 # Environment
 .env
 .env.*
+
+# Python virtual environment
+.venv/
+
+# Cross-validation generated output
+cross_validation/rust_values.json

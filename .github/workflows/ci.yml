@@ -66,6 +66,23 @@ jobs:
       - run: npx playwright test
         working-directory: ts
 
+  cross-validate:
+    name: Cross-validate orbital mechanics (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python3 -m venv .venv && .venv/bin/pip install numpy scipy
+      - run: |
+          cargo test --test cross_validation_export -- --nocapture 2>/dev/null \
+            | grep -v '^running\|^test \|^$\|test result' \
+            > cross_validation/rust_values.json
+      - run: .venv/bin/python3 cross_validation/validate.py
+
   wasm-web:
     name: WASM browser build
     runs-on: ubuntu-latest
