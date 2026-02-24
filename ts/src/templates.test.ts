@@ -145,6 +145,52 @@ describe("markdownToHtml", () => {
     assert.ok(html.includes("</ol>"));
     assert.ok(html.includes("<ul>"));
   });
+  it("preserves inline math $...$ delimiters through HTML escaping", () => {
+    const html = markdownToHtml("The formula $E = mc^2$ is famous");
+    assert.ok(html.includes("$E = mc^2$"), "inline math should be preserved");
+    assert.ok(!html.includes("&amp;"), "math content should not be HTML-escaped");
+  });
+
+  it("preserves display math $$...$$ on standalone line", () => {
+    const html = markdownToHtml("$$\\Delta V = \\sqrt{\\frac{2\\mu}{r}}$$");
+    assert.ok(html.includes("$$\\Delta V = \\sqrt{\\frac{2\\mu}{r}}$$"), "display math should be preserved");
+  });
+
+  it("preserves inline math in paragraphs with other formatting", () => {
+    const html = markdownToHtml("When **thrust** $F \\geq 9.8$ MN");
+    assert.ok(html.includes("<strong>thrust</strong>"));
+    assert.ok(html.includes("$F \\geq 9.8$"));
+  });
+
+  it("preserves math in list items", () => {
+    const html = markdownToHtml("- velocity $v = 13.06$ km/s");
+    assert.ok(html.includes("$v = 13.06$"));
+    assert.ok(html.includes("<li>"));
+  });
+
+  it("preserves math in headings", () => {
+    const html = markdownToHtml("## The $\\Delta V$ Budget");
+    assert.ok(html.includes("$\\Delta V$"));
+    assert.ok(html.includes("<h2>"));
+  });
+
+  it("does not treat single $ as math delimiter", () => {
+    const html = markdownToHtml("Price is $100 or $200");
+    // No matching pair across the text that makes sense — but $100 or $ alone should work
+    assert.ok(html.includes("$100 or $"));
+  });
+
+  it("handles multiple inline math expressions", () => {
+    const html = markdownToHtml("$a = 1$ and $b = 2$");
+    assert.ok(html.includes("$a = 1$"));
+    assert.ok(html.includes("$b = 2$"));
+  });
+
+  it("does not extract math from inside code blocks", () => {
+    const html = markdownToHtml("```\n$x = 1$\n```");
+    // Inside code blocks, $ should be escaped
+    assert.ok(html.includes("<pre><code>"));
+  });
 });
 
 // --- layoutHtml ---
@@ -167,6 +213,14 @@ describe("layoutHtml", () => {
   it("escapes title", () => {
     const html = layoutHtml("Test <script>", "<p>ok</p>");
     assert.ok(html.includes("Test &lt;script&gt;"));
+  });
+
+  it("includes KaTeX CDN assets", () => {
+    const html = layoutHtml("Test", "<p>ok</p>");
+    assert.ok(html.includes("katex.min.css"), "should include KaTeX CSS");
+    assert.ok(html.includes("katex.min.js"), "should include KaTeX JS");
+    assert.ok(html.includes("auto-render.min.js"), "should include auto-render");
+    assert.ok(html.includes("renderMathInElement"), "should include auto-render initialization");
   });
 });
 

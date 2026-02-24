@@ -633,7 +633,7 @@
       "id": "ep05-exploration-05",
       "transferId": "ep05-transfer-02",
       "question": "木星パワードフライバイでのオーベルト効果「3%程度」は物理的に整合するか?",
-      "boundaryCondition": "巡航速度1500 km/s、木星重力パラメータ μ = 1.267×10⁸ km³/s²、木星半径 71,492 km",
+      "boundaryCondition": "巡航速度 1500 km/s、木星重力パラメータ $\\mu = 1.267 \\times 10^8$ km³/s²、木星半径 71,492 km",
       "scenarios": [
         {
           "label": "1 RJ近接フライバイ",

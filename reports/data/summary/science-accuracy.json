@@ -72,7 +72,7 @@
             "episode": 3,
             "depicted": "ΔV比 = 1.31（EP1→EP3）",
             "reference": "理論比 = 距離比/時間比 = 2.61/1.99 = 1.31",
-            "source": "ΔV = 2d/t",
+            "source": "$\\Delta V = 2d/t$",
             "accuracyPercent": 100,
             "status": "verified"
           },
@@ -81,7 +81,7 @@
             "episode": 3,
             "depicted": "3,000 km/s",
             "reference": "2,791 km/s（Brachistochrone平均速度）",
-            "source": "v_avg = d / t",
+            "source": "$v_{\\text{avg}} = d / t$",
             "accuracyPercent": 93,
             "status": "approximate"
           },
@@ -107,7 +107,7 @@
             "claim": "地球捕捉ΔV（LEO 400km投入）",
             "episode": 5,
             "depicted": "LEO 400km直接投入（軌道速度7.67 km/s）",
-            "reference": "≈3.18 km/s（v∞=0からLEO投入）、軌道速度 √(μ/(R+h)) ≈ 7.67 km/s",
+            "reference": "≈3.18 km/s（$v_\\infty=0$からLEO投入）、軌道速度 $\\sqrt{\\mu/(R+h)} \\approx 7.67$ km/s",
             "source": "vis-viva方程式 + JPL地球重力パラメータ",
             "accuracyPercent": null,
             "status": "verified"
@@ -125,7 +125,7 @@
             "claim": "オーベルト効果3%効率向上",
             "episode": 5,
             "depicted": "木星フライバイでのエネルギー効率向上「およそ3%程度」",
-            "reference": "古典Oberth速度増幅は≪1%（v_esc/v∞ = 59.5/1500 ≈ 4%）; 複合効果として3%は妥当",
+            "reference": "古典Oberth速度増幅は$\\ll 1$%（$v_{\\text{esc}}/v_\\infty = 59.5/1500 \\approx 4$%）; 複合効果として3%は妥当",
             "source": "Oberth効果方程式 + JPL木星重力パラメータ",
             "accuracyPercent": null,
             "status": "approximate"

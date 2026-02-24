@@ -59,6 +59,13 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
       continue;
     }
 
+    // Display math block ($$...$$ on its own line) — pass through for KaTeX
+    if (line.trim().startsWith("$$") && line.trim().endsWith("$$") && line.trim().length > 4) {
+      closeList();
+      output.push(`<p>${line.trim()}</p>`);
+      continue;
+    }
+
     // Empty line — close list if open
     if (line.trim() === "") {
       closeList();
@@ -99,9 +106,42 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
   return output.join("\n");
 }
 
+/**
+ * Extract math expressions ($...$ and $$...$$) from text, replacing them with
+ * placeholders that survive HTML escaping. Returns the modified text and a
+ * restore function.
+ */
+function extractMath(text: string): { text: string; restore: (html: string) => string } {
+  const placeholders: { key: string; math: string }[] = [];
+  let idx = 0;
+  // Replace $$...$$ (display) first, then $...$ (inline)
+  let result = text.replace(/\$\$([^$]+?)\$\$/g, (_match, expr) => {
+    const key = `\x00MATH${idx++}\x00`;
+    placeholders.push({ key, math: `$$${expr}$$` });
+    return key;
+  });
+  result = result.replace(/\$([^$\n]+?)\$/g, (_match, expr) => {
+    const key = `\x00MATH${idx++}\x00`;
+    placeholders.push({ key, math: `$${expr}$` });
+    return key;
+  });
+  return {
+    text: result,
+    restore(html: string): string {
+      let out = html;
+      for (const { key, math } of placeholders) {
+        out = out.replace(key, math);
+      }
+      return out;
+    },
+  };
+}
+
 /** Apply inline formatting: bold, inline code, links */
 function inlineFormat(text: string, options?: { autoLinkEpisodes?: boolean; episodeBasePath?: string }): string {
-  let result = escapeHtml(text);
+  // Extract math before escaping so delimiters pass through to KaTeX auto-render
+  const { text: safeText, restore } = extractMath(text);
+  let result = escapeHtml(safeText);
   // Inline code (must come before bold to avoid conflicts)
   result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
   // Bold
@@ -112,6 +152,8 @@ function inlineFormat(text: string, options?: { autoLinkEpisodes?: boolean; epis
   if (options?.autoLinkEpisodes) {
     result = autoLinkEpisodeRefs(result, options.episodeBasePath ?? "../episodes");
   }
+  // Restore math expressions
+  result = restore(result);
   return result;
 }
 
@@ -406,6 +448,8 @@ footer {
 .status-approximate .verification-badge, .verification-badge.status-approximate { background: var(--yellow); color: #000; }
 .status-unverified .verification-badge, .verification-badge.status-unverified { background: #8b949e; color: #000; }
 .status-discrepancy .verification-badge, .verification-badge.status-discrepancy { background: var(--red); color: #fff; }
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.5rem 0; }
+.katex { font-size: 1.1em; }
 @media (max-width: 600px) {
   .calc-control { grid-template-columns: 1fr; gap: 0.25rem; }
   .comparison-table { font-size: 0.8em; }
@@ -438,11 +482,15 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <meta property="og:site_name" content="SOLAR LINE 考察">
 <meta name="description" content="${ogDescription}">
 <style>${REPORT_CSS}</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <nav><a href="${basePath}/index.html">トップ</a>${summaryNav} <a href="${basePath}/logs/index.html">セッションログ</a></nav>
 ${content}
 <footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成</footer>
+<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}});</script>
 </body>
 </html>`;
 }
@@ -1113,7 +1161,7 @@ function renderScenarioRow(s: ExplorationScenario): string {
 /** Render a parameter exploration section */
 export function renderExploration(exp: ParameterExploration): string {
   const boundary = exp.boundaryCondition
-    ? `<p class="boundary">${escapeHtml(exp.boundaryCondition)}</p>`
+    ? `<p class="boundary">${inlineFormat(exp.boundaryCondition)}</p>`
     : "";
 
   const visibleScenarios = exp.scenarios.filter(s => !s.collapsedByDefault);
@@ -1325,9 +1373,9 @@ export function renderComparisonTable(table: ComparisonTable): string {
       // Only apply numeric class if value looks like a number/measurement
       const isNumeric = /^[\d.,≤≥~≈<>]+(\s*(km\/s|MN|AU|t|%|mSv|日|年))?$/.test(val.trim()) || val === "—";
       const cls = isNumeric ? ' class="numeric"' : '';
-      return `<td${cls}>${escapeHtml(val)}</td>`;
+      return `<td${cls}>${inlineFormat(val)}</td>`;
     }).join("");
-    return `<tr class="status-${row.status}"><td>${escapeHtml(row.metric)}</td>${cells}<td class="note">${escapeHtml(row.note)}</td></tr>`;
+    return `<tr class="status-${row.status}"><td>${inlineFormat(row.metric)}</td>${cells}<td class="note">${escapeHtml(row.note)}</td></tr>`;
   }).join("\n");
 
   return `<table class="comparison-table">
@@ -1383,10 +1431,10 @@ export function renderVerificationTable(table: VerificationTable): string {
 <td>${escapeHtml(row.claim)}</td>
 <td class="numeric">第${row.episode}話</td>
 <td>${escapeHtml(row.depicted)}</td>
-<td>${escapeHtml(row.reference)}</td>
+<td>${inlineFormat(row.reference)}</td>
 <td class="numeric">${accuracy}</td>
 <td><span class="verification-badge ${cssClass}">${label}</span></td>
-<td class="source-cell">${escapeHtml(row.source)}</td>
+<td class="source-cell">${inlineFormat(row.source)}</td>
 </tr>`;
   }).join("\n");
   return `<div class="verification-table-container">

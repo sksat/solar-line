@@ -541,7 +541,7 @@
       "id": "ep02-exploration-01",
       "transferId": "ep02-transfer-02",
       "question": "木星離脱方向（順行 vs 逆行）で太陽中心軌道はどう変わるか？",
-      "boundaryCondition": "v_helio = v_Jupiter ± v_inf = 13.06 ± 5.93 km/s（太陽脱出速度: 18.46 km/s）",
+      "boundaryCondition": "$v_{\\text{helio}} = v_{\\text{Jupiter}} \\pm v_\\infty = 13.06 \\pm 5.93$ km/s（太陽脱出速度: 18.46 km/s）",
       "scenarios": [
         {
           "label": "順行離脱（最良ケース）",
@@ -593,7 +593,7 @@
       "id": "ep02-exploration-02",
       "transferId": "ep02-transfer-04",
       "question": "損傷状態の推力で土星捕獲に必要なΔVは生成可能か？",
-      "boundaryCondition": "最小捕獲ΔV ≈ 0.61 km/s、円軌道捕獲ΔV ≈ 5.83 km/s",
+      "boundaryCondition": "最小捕獲 $\\Delta V \\approx 0.61$ km/s、円軌道捕獲 $\\Delta V \\approx 5.83$ km/s",
       "scenarios": [
         {
           "label": "300 t、通常推力（9.8 MN）",
@@ -658,7 +658,7 @@
       "id": "ep02-exploration-03",
       "transferId": "ep02-transfer-03",
       "question": "「外縁軌道は修正機動を許容しない」—この制約はどの程度厳しいか？",
-      "boundaryCondition": "太陽系脱出速度とのマージン: v_helio - v_esc = 18.99 - 18.46 ≈ 0.53 km/s",
+      "boundaryCondition": "太陽系脱出速度とのマージン: $v_{\\text{helio}} - v_{\\text{esc}} = 18.99 - 18.46 \\approx 0.53$ km/s",
       "scenarios": [
         {
           "label": "正確な順行離脱",

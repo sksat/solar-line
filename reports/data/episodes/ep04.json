@@ -347,7 +347,7 @@
       "id": "ep04-exploration-01",
       "transferId": "ep04-transfer-03",
       "question": "65%推力のケストレルは天王星→地球をどの程度の時間で飛行できるか？ 質量境界は？",
-      "boundaryCondition": "mass ≤ 3,929t at 6.37 MN for 30-day trip, closest distance",
+      "boundaryCondition": "$m \\leq 3{,}929$ t at 6.37 MN for 30-day trip, closest distance",
       "scenarios": [
         {
           "label": "48,000t（設定値）",
