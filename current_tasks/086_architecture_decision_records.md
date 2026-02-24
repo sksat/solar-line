@@ -1,6 +1,6 @@
 # Task 086: ADR (Architecture Decision Records)
 
-## Status: TODO
+## Status: DONE (Phase 1-2 complete, Phase 3 optional)
 
 ## Motivation
 
