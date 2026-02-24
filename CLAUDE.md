@@ -28,12 +28,12 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 ## Technology Stack
 
-- **Rust**: Orbital mechanics analysis + DAG graph analysis. Compile to WASM for browser-reproducible reports and interactive analysis.
+- **Rust**: Orbital mechanics analysis + DAG graph analysis. Compile to WASM for browser-reproducible reports and interactive analysis. `no_std`-compatible crates (e.g., nalgebra) are allowed. Use oracle tests (comparing against trusted implementations) to verify calculation accuracy while keeping the WASM build simple.
 - **TypeScript**: Scripting, data collection, report generation.
 - **uPlot**: Interactive time-series charts (thrust profiles, radiation dose, etc.). Lightweight Canvas-based library.
 - **DuckDB-WASM**: Browser-side data management. SQL queries over JSON data, integration with uPlot for query-driven visualization.
 - **CI**: GitHub Actions. Check CI status regularly to catch regressions.
-- **Pre-commit checks**: Before committing, run quick CI checks locally when relevant (cargo fmt --check, cargo clippy, npm run typecheck). For changes within a specific scope, verify at least the affected checks pass.
+- **Pre-commit checks**: Before committing, run quick CI checks locally when relevant (cargo fmt --check, cargo clippy, npm run typecheck). For changes within a specific scope, verify at least the affected checks pass. **CI must stay green** — never push commits that knowingly break CI.
 - **Output**: GitHub Pages with session logs and interactive orbital transfer reports.
 
 ## Data Handling
@@ -94,6 +94,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Physics consultation model**: Use gpt-5.2 or similar reasoning models (not -codex) for physics-specific consultations. Reserve -codex for design/architecture review.
 - **Mass timeline analysis**: Track container jettison, propellant consumption, and damage-related mass changes as time series. Model multiple scenarios (nominal mass, 299t limit, optimized propellant allocation) and visualize with comparison charts.
 - **Burn position alignment**: Ensure acceleration/deceleration points in orbital diagrams match the physical animation position — brachistochrone midpoint flip, Hohmann departure/arrival burns, flyby periapsis burns.
+- **Diagram descriptions**: Orbital diagrams should have not just a title but also a description explaining what analysis the diagram supports, what to look for, and what conclusions can be drawn from it.
+- **Error range visualization**: Visualize uncertainty/error ranges in time-series charts (error bands) and orbital diagrams (uncertainty ellipses, trajectory variation overlays). Distinguish between measurement error, parameter uncertainty, and model approximation.
 
 ## Report Structure
 
@@ -133,8 +135,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 - **TodoWrite discipline**: Only update the todo list on state transitions (task start, task complete). Do not update between every tool call.
 - **Background long commands**: Use `run_in_background` for Bash commands that take >30s (yt-dlp, Whisper, cargo build on first run). Check with TaskOutput later.
-- **Sonnet delegation**: Use Sonnet (or Haiku) for simple, well-defined tasks (file formatting, mechanical refactors, boilerplate generation) to reduce cost and latency. Always review delegated output. Criteria for delegation: (1) clear, unambiguous specification, (2) no architectural decisions, (3) output is easily validated by tests or visual inspection. When unsure, use Opus.
-- **Subagent model selection**: Default to Haiku for exploration/research subagents. Reserve Sonnet/Opus for complex review or multi-step reasoning tasks.
+- **Sonnet delegation**: Use Sonnet for simple, well-defined tasks (file formatting, mechanical refactors, boilerplate generation) to reduce cost and latency. Always review delegated output. Criteria for delegation: (1) clear, unambiguous specification, (2) no architectural decisions, (3) output is easily validated by tests or visual inspection. When unsure, use Opus.
+- **Subagent model selection**: Default to Sonnet for exploration/research subagents. Do NOT use Haiku — its quality is insufficient for this project. Reserve Opus for complex review or multi-step reasoning tasks.
 - **Subagent scope limits**: Set `max_turns` on Task calls when the exploration scope is bounded (e.g., "find this function" → max_turns: 5).
 - **Prefer dedicated tools in subagents**: Subagent prompts should explicitly prefer Read/Grep/Glob over Bash for file operations. This produces more structured output and uses fewer tokens.
 - **Cost analysis**: Run `npm run analyze-costs` periodically (see `ts/src/analyze-costs.ts`) to track token usage patterns. Keep `ideas/cost_efficiency_analysis.md` updated.
