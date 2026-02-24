@@ -74,6 +74,177 @@
     {
       "heading": "航路の連続性",
       "markdown": "全5話の航路は太陽系内の連続した旅程を構成する:\n\n**火星 → ガニメデ → (木星脱出) → エンケラドス → タイタニア → 地球**\n\n各話の到着地点が次話の出発地点と一致しており、航路の連続性は完全に保たれている。特に注目すべきは:\n\n- 第1話〜第3話: 太陽系外側へ向かう往路（火星→木星→土星→天王星）\n- 第4話: 帰還出発（天王星→地球）= 「新しいソーラーライン」の開拓\n- 第5話: 帰還完結（地球到着・捕捉）= ソーラーライン完結\n\n第2話の弾道遷移（約455日）のみがBrachistochroneではなく、損傷状態での受動的な軌道遷移である点も物語と整合する。全航路の合計距離は約35.9 AU。",
+      "orbitalDiagrams": [
+        {
+          "id": "full-route-diagram",
+          "title": "ケストレル号 全航路: 火星 → 木星 → 土星 → 天王星 → 地球",
+          "centerLabel": "太陽",
+          "scaleMode": "sqrt",
+          "radiusUnit": "AU",
+          "viewRadius": 21,
+          "orbits": [
+            {
+              "id": "earth",
+              "label": "地球 (1.0 AU)",
+              "radius": 1.0,
+              "color": "#4488ff",
+              "angle": 2.9604,
+              "meanMotion": 1.991e-7
+            },
+            {
+              "id": "mars",
+              "label": "火星 (1.52 AU)",
+              "radius": 1.524,
+              "color": "#ff6644",
+              "angle": 2.9604,
+              "meanMotion": 1.059e-7
+            },
+            {
+              "id": "jupiter",
+              "label": "木星 (5.20 AU)",
+              "radius": 5.203,
+              "color": "#dd8844",
+              "angle": 2.989,
+              "meanMotion": 1.678e-8
+            },
+            {
+              "id": "saturn",
+              "label": "土星 (9.58 AU)",
+              "radius": 9.58,
+              "color": "#daa520",
+              "angle": 2.2198,
+              "meanMotion": 6.761e-9
+            },
+            {
+              "id": "uranus",
+              "label": "天王星 (19.2 AU)",
+              "radius": 19.19,
+              "color": "#66dddd",
+              "angle": 4.8746,
+              "meanMotion": 2.37e-9
+            }
+          ],
+          "transfers": [
+            {
+              "label": "EP1: 火星→木星 (72h brachistochrone)",
+              "fromOrbitId": "mars",
+              "toOrbitId": "jupiter",
+              "color": "#3fb950",
+              "style": "brachistochrone",
+              "startTime": 0,
+              "endTime": 50000,
+              "burnMarkers": [
+                {
+                  "angle": 2.96,
+                  "label": "EP1 加速",
+                  "startTime": 0,
+                  "endTime": 25000,
+                  "type": "acceleration"
+                },
+                {
+                  "angle": 2.99,
+                  "label": "EP1 減速",
+                  "startTime": 25000,
+                  "endTime": 50000,
+                  "type": "deceleration"
+                }
+              ]
+            },
+            {
+              "label": "EP2: 木星→土星 (455日 弾道遷移)",
+              "fromOrbitId": "jupiter",
+              "toOrbitId": "saturn",
+              "color": "#8b949e",
+              "style": "hyperbolic",
+              "startTime": 55000,
+              "endTime": 300000,
+              "burnMarkers": [
+                {
+                  "angle": 2.99,
+                  "label": "EP2 木星圏脱出",
+                  "startTime": 0,
+                  "endTime": 5000,
+                  "type": "acceleration"
+                },
+                {
+                  "angle": 2.22,
+                  "label": "EP2 土星捕捉",
+                  "startTime": 240000,
+                  "endTime": 245000,
+                  "type": "capture"
+                }
+              ]
+            },
+            {
+              "label": "EP3: 土星→天王星 (143h brachistochrone)",
+              "fromOrbitId": "saturn",
+              "toOrbitId": "uranus",
+              "color": "#ff6600",
+              "style": "brachistochrone",
+              "startTime": 310000,
+              "endTime": 380000,
+              "burnMarkers": [
+                {
+                  "angle": 2.51,
+                  "label": "EP3 加速",
+                  "startTime": 0,
+                  "endTime": 35000,
+                  "type": "acceleration"
+                },
+                {
+                  "angle": 4.87,
+                  "label": "EP3 減速",
+                  "startTime": 35000,
+                  "endTime": 70000,
+                  "type": "deceleration"
+                }
+              ]
+            },
+            {
+              "label": "EP5: 天王星→地球 (507h 複合航路)",
+              "fromOrbitId": "uranus",
+              "toOrbitId": "earth",
+              "color": "#ff4444",
+              "style": "brachistochrone",
+              "startTime": 390000,
+              "endTime": 520000,
+              "burnMarkers": [
+                {
+                  "angle": 4.88,
+                  "label": "EP5 天王星脱出",
+                  "startTime": 0,
+                  "endTime": 32500,
+                  "type": "acceleration"
+                },
+                {
+                  "angle": 3.14,
+                  "label": "EP5 木星フライバイ",
+                  "startTime": 45000,
+                  "endTime": 50000,
+                  "type": "midcourse"
+                },
+                {
+                  "angle": 1.57,
+                  "label": "EP5 減速",
+                  "startTime": 80000,
+                  "endTime": 120000,
+                  "type": "deceleration"
+                },
+                {
+                  "angle": 2.96,
+                  "label": "EP5 地球投入",
+                  "startTime": 125000,
+                  "endTime": 130000,
+                  "type": "capture"
+                }
+              ]
+            }
+          ],
+          "animation": {
+            "durationSeconds": 520000
+          }
+        }
+      ],
       "table": {
         "caption": "航路の連続性",
         "episodes": [
