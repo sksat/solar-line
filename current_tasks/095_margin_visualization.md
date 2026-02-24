@@ -1,6 +1,6 @@
 # Task 095: "ギリギリ" Margin Visualization
 
-## Status: TODO
+## Status: TODO (partially done)
 
 ## Motivation
 Human directive: どのように"ギリギリ"だったのかをわかりやすく可視化してほしい。そのために典型的に想定される他パターンの分析をするとよい。
@@ -13,6 +13,13 @@ Human directive: どのように"ギリギリ"だったのかをわかりやす�
 2. Create comparison visualizations showing "what if" alternative scenarios alongside the actual path
 3. Add these to episode reports where margins are tight (especially EP04 radiation, EP05 nozzle)
 4. Consider bar/gauge charts showing how close to limits each parameter gets
+
+## Progress
+- [x] EP05: Nozzle remaining life chart + thrust profile (Task 104)
+- [x] EP04: Cumulative radiation dose chart + shield life chart (this session)
+- [ ] EP01: Mass boundary gauge/chart
+- [ ] "What if" comparison visualizations
+- [ ] Summary gauge charts showing how close to limits each parameter gets
 
 ## Related
 - EP04: 480 mSv / 500 mSv ICRP limit (96%)
