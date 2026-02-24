@@ -1,30 +1,28 @@
 # Task 090: Cost Analysis — Non-Max-Subscription Estimates
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 
 Human directive: コスト分析においては、実際はmax subscriptionでもそうでなかった場合のコスト見積もりもすること
 
-## Scope
+## Completed
 
-Extend the existing cost analysis (ai-costs.json) to include:
-1. **Actual Max Plan costs** (current analysis)
-2. **Pro Plan estimate**: If using Claude Pro ($20/mo) — what would the token costs be at API rates?
-3. **API-only estimate**: Pure API pricing without subscription
-4. **Team Plan estimate**: If using Claude Team ($30/seat/mo)
-5. Compare cost-effectiveness across plans
+Added "プラン別コスト比較" section to ai-costs.json with:
 
-### Approach
-- Use existing token counts from ccusage analysis
-- Apply different pricing tiers:
-  - Max subscription: flat rate
-  - Pro: rate-limited, may not support all features
-  - API: input/output/cache pricing per model
-  - Team: per-seat with shared limits
-- Calculate hypothetical costs for the full project
-- Update ai-costs.json with comparison section
+### Plans compared
+1. **Max Plan ($100-200/mo)**: ~$7 per VM boot (Haiku subagent API only)
+2. **API-only**: ~$196 per VM boot (all tokens at API rates)
+3. **Batch API**: ~$195 (50% I/O discount, non-interactive only)
+4. **Pro Plan ($20/mo)**: Rate-limited, not practical for agent loop
 
-## Dependencies
-- Task 066 (cost analysis foundation — DONE)
-- Task 077 (cost analysis page — DONE)
+### Key findings
+- **Cache is critical**: 97.3% cache hit rate reduces Opus effective rate to $0.50/MTok (10% of base)
+- **Max Plan ROI**: $100-200/mo subscription vs ~$196 API cost — pays for itself in one VM boot
+- **Per-session cost**: $3.39 (API) vs $0.12 (Max) — 28× difference
+- **Opus dominates cost**: Main session Opus tokens (260M) account for 89% of API cost
+
+### Pricing sources
+- Official API pricing from platform.claude.com/docs/en/about-claude/pricing (Feb 2026)
+- Opus 4.6: $5/$25/MTok (input/output), $0.50 cache read, $6.25 cache write
+- Haiku 4.5: $1/$5/MTok, $0.10 cache read, $1.25 cache write
