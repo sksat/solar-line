@@ -10,6 +10,7 @@ import * as path from "node:path";
 import type { EpisodeReport, SiteManifest, SummaryReport, TranscriptionPageData, VerdictCounts } from "./report-types.ts";
 import type { EpisodeLines } from "./dialogue-extraction-types.ts";
 import type { EpisodeDialogue } from "./subtitle-types.ts";
+import { parseSummaryMarkdown } from "./mdx-parser.ts";
 import {
   renderIndex,
   renderEpisode,
@@ -91,20 +92,48 @@ export function discoverLogs(dataDir: string): LogEntry[] {
   });
 }
 
-/** Discover summary JSON files in data/summary/ */
+/** Discover summary report files in data/summary/ (supports both .json and .md formats).
+ *  If both .json and .md exist for the same slug, throws an error to prevent ambiguity. */
 export function discoverSummaries(dataDir: string): SummaryReport[] {
   const summaryDir = path.join(dataDir, "data", "summary");
   if (!fs.existsSync(summaryDir)) return [];
 
-  const files = fs.readdirSync(summaryDir)
-    .filter(f => f.endsWith(".json"))
-    .sort();
+  const jsonFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".json")).sort();
+  const mdFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md")).sort();
+
+  // Check for slug conflicts (same basename in both .json and .md)
+  const jsonSlugs = new Set(jsonFiles.map(f => f.replace(/\.json$/, "")));
+  const mdSlugs = new Set(mdFiles.map(f => f.replace(/\.md$/, "")));
+  for (const slug of mdSlugs) {
+    if (jsonSlugs.has(slug)) {
+      throw new Error(
+        `Duplicate summary report: both ${slug}.json and ${slug}.md exist. ` +
+        `Remove one to resolve the conflict.`,
+      );
+    }
+  }
 
   const summaries: SummaryReport[] = [];
-  for (const file of files) {
+
+  // Load JSON reports
+  for (const file of jsonFiles) {
     const report = readJsonFile<SummaryReport>(path.join(summaryDir, file));
     if (report) summaries.push(report);
   }
+
+  // Load Markdown reports
+  for (const file of mdFiles) {
+    try {
+      const content = fs.readFileSync(path.join(summaryDir, file), "utf-8");
+      const report = parseSummaryMarkdown(content);
+      summaries.push(report);
+    } catch (e) {
+      console.error(`Error parsing ${file}: ${(e as Error).message}`);
+    }
+  }
+
+  // Sort by slug for deterministic order
+  summaries.sort((a, b) => a.slug.localeCompare(b.slug));
   return summaries;
 }
 

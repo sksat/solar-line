@@ -1,6 +1,6 @@
 # Task 127: レポートをMDX的に記述してレビューしやすくする
 
-## Status: TODO
+## Status: DONE
 
 ## Description
 現在のレポートはJSONデータとHTMLテンプレートで構成されているが、

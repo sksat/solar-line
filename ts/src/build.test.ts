@@ -6,6 +6,7 @@ import * as os from "node:os";
 import {
   discoverEpisodes,
   discoverLogs,
+  discoverSummaries,
   discoverTranscriptions,
   buildManifest,
   countVerdicts,
@@ -690,5 +691,102 @@ describe("build with transcriptions (integration)", () => {
     // Main index should link to transcriptions
     const mainIndex = fs.readFileSync(path.join(outDir, "index.html"), "utf-8");
     assert.ok(mainIndex.includes("文字起こし"), "main index should link to transcriptions");
+  });
+});
+
+// --- discoverSummaries with Markdown ---
+
+describe("discoverSummaries", () => {
+  let tmpDir: string;
+
+  beforeEach(() => { tmpDir = makeTempDir(); });
+  afterEach(() => { rmDir(tmpDir); });
+
+  it("discovers JSON summary files", () => {
+    const summaryDir = path.join(tmpDir, "data", "summary");
+    fs.mkdirSync(summaryDir, { recursive: true });
+    fs.writeFileSync(path.join(summaryDir, "test.json"), JSON.stringify({
+      slug: "test",
+      title: "Test Report",
+      summary: "A test report",
+      sections: [{ heading: "Intro", markdown: "Hello" }],
+    }));
+
+    const result = discoverSummaries(tmpDir);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].slug, "test");
+  });
+
+  it("discovers Markdown summary files", () => {
+    const summaryDir = path.join(tmpDir, "data", "summary");
+    fs.mkdirSync(summaryDir, { recursive: true });
+    fs.writeFileSync(path.join(summaryDir, "test.md"), `---
+slug: test
+title: Test Report
+summary: A test report
+---
+
+## Intro
+
+Hello world.
+`);
+
+    const result = discoverSummaries(tmpDir);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].slug, "test");
+    assert.equal(result[0].title, "Test Report");
+    assert.equal(result[0].sections.length, 1);
+    assert.equal(result[0].sections[0].heading, "Intro");
+    assert.ok(result[0].sections[0].markdown.includes("Hello world."));
+  });
+
+  it("throws on duplicate slug (both .json and .md)", () => {
+    const summaryDir = path.join(tmpDir, "data", "summary");
+    fs.mkdirSync(summaryDir, { recursive: true });
+    fs.writeFileSync(path.join(summaryDir, "test.json"), JSON.stringify({
+      slug: "test", title: "Test", summary: "test",
+      sections: [{ heading: "A", markdown: "B" }],
+    }));
+    fs.writeFileSync(path.join(summaryDir, "test.md"), `---
+slug: test
+title: Test
+summary: test
+---
+
+## A
+
+B
+`);
+
+    assert.throws(() => discoverSummaries(tmpDir), /Duplicate summary report/);
+  });
+
+  it("discovers mixed JSON and Markdown files", () => {
+    const summaryDir = path.join(tmpDir, "data", "summary");
+    fs.mkdirSync(summaryDir, { recursive: true });
+    fs.writeFileSync(path.join(summaryDir, "alpha.json"), JSON.stringify({
+      slug: "alpha", title: "Alpha", summary: "First",
+      sections: [{ heading: "A", markdown: "Content" }],
+    }));
+    fs.writeFileSync(path.join(summaryDir, "beta.md"), `---
+slug: beta
+title: Beta
+summary: Second
+---
+
+## B
+
+Content
+`);
+
+    const result = discoverSummaries(tmpDir);
+    assert.equal(result.length, 2);
+    assert.equal(result[0].slug, "alpha");
+    assert.equal(result[1].slug, "beta");
+  });
+
+  it("returns empty array when no summary dir exists", () => {
+    const result = discoverSummaries(tmpDir);
+    assert.equal(result.length, 0);
   });
 });
