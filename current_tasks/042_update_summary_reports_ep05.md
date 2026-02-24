@@ -1,6 +1,6 @@
 # Task 042: Update Summary Reports with Confirmed EP05 Data
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Problem
 The three summary reports (`cross-episode.json`, `ship-kestrel.json`, `science-accuracy.json`) contain 24+ "※暫定" and "字幕データ未取得" markers for EP05 data. These were written when EP05 analysis was incomplete (no subtitle/dialogue data). Now that EP05 is fully analyzed (Task 023 complete, dialogue attribution done), these markers are stale and need to be replaced with confirmed data.
