@@ -95,6 +95,23 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
       continue;
     }
 
+    // Markdown table: detect header row (|...|...|)
+    if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
+      closeList();
+      const tableLines: string[] = [line];
+      // Collect remaining table lines
+      while (i + 1 < lines.length) {
+        const next = lines[i + 1].trim();
+        if (next.startsWith("|") && next.endsWith("|")) {
+          tableLines.push(lines[++i]);
+        } else {
+          break;
+        }
+      }
+      output.push(renderMarkdownTable(tableLines, inlineOpts));
+      continue;
+    }
+
     // Paragraph
     closeList();
     output.push(`<p>${inlineFormat(line, inlineOpts)}</p>`);
@@ -104,6 +121,46 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
   if (inCodeBlock) output.push("</code></pre>");
 
   return output.join("\n");
+}
+
+/** Parse a markdown table (|...|...|) into HTML <table> */
+function renderMarkdownTable(lines: string[], inlineOpts?: { autoLinkEpisodes: boolean; episodeBasePath?: string }): string {
+  function parseCells(row: string): string[] {
+    return row.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim());
+  }
+
+  function isSeparator(row: string): boolean {
+    return /^\|[\s:|-]+\|$/.test(row.trim());
+  }
+
+  const out: string[] = ["<table>"];
+
+  // Determine if second line is a separator (header row pattern)
+  const hasHeader = lines.length >= 2 && isSeparator(lines[1]);
+  const startIdx = hasHeader ? 2 : 0;
+
+  if (hasHeader) {
+    const headers = parseCells(lines[0]);
+    out.push("<thead><tr>");
+    for (const h of headers) {
+      out.push(`<th>${inlineFormat(h, inlineOpts)}</th>`);
+    }
+    out.push("</tr></thead>");
+  }
+
+  out.push("<tbody>");
+  for (let j = startIdx; j < lines.length; j++) {
+    if (isSeparator(lines[j])) continue;
+    const cells = parseCells(lines[j]);
+    out.push("<tr>");
+    for (const c of cells) {
+      out.push(`<td>${inlineFormat(c, inlineOpts)}</td>`);
+    }
+    out.push("</tr>");
+  }
+  out.push("</tbody></table>");
+
+  return out.join("");
 }
 
 /**

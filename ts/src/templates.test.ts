@@ -194,6 +194,51 @@ describe("markdownToHtml", () => {
     // Inside code blocks, $ should be escaped
     assert.ok(html.includes("<pre><code>"));
   });
+
+  it("converts markdown table with header", () => {
+    const md = "| Name | Value |\n| --- | --- |\n| foo | 42 |\n| bar | 99 |";
+    const html = markdownToHtml(md);
+    assert.ok(html.includes("<table>"), "should produce <table>");
+    assert.ok(html.includes("<thead>"), "should have thead");
+    assert.ok(html.includes("<th>Name</th>"), "should have header cell");
+    assert.ok(html.includes("<th>Value</th>"), "should have header cell");
+    assert.ok(html.includes("<td>foo</td>"), "should have data cell");
+    assert.ok(html.includes("<td>42</td>"), "should have data cell");
+    assert.ok(html.includes("<td>bar</td>"));
+    assert.ok(html.includes("<td>99</td>"));
+    assert.ok(!html.includes("|"), "should not contain raw pipe characters");
+  });
+
+  it("converts markdown table without header separator", () => {
+    const md = "| a | b |\n| c | d |";
+    const html = markdownToHtml(md);
+    assert.ok(html.includes("<table>"));
+    assert.ok(!html.includes("<thead>"), "no separator means no thead");
+    assert.ok(html.includes("<td>a</td>"));
+    assert.ok(html.includes("<td>d</td>"));
+  });
+
+  it("applies inline formatting inside table cells", () => {
+    const md = "| Header |\n| --- |\n| **bold** `code` |";
+    const html = markdownToHtml(md);
+    assert.ok(html.includes("<strong>bold</strong>"));
+    assert.ok(html.includes("<code>code</code>"));
+  });
+
+  it("handles table followed by paragraph", () => {
+    const md = "| a | b |\n| - | - |\n| 1 | 2 |\n\nParagraph after table.";
+    const html = markdownToHtml(md);
+    assert.ok(html.includes("<table>"));
+    assert.ok(html.includes("</table>"));
+    assert.ok(html.includes("<p>Paragraph after table.</p>"));
+  });
+
+  it("handles math inside table cells", () => {
+    const md = "| Param | Formula |\n| --- | --- |\n| ΔV | $v = \\sqrt{2}$ |";
+    const html = markdownToHtml(md);
+    assert.ok(html.includes("<table>"));
+    assert.ok(html.includes("$v = \\sqrt{2}$"), "math should be preserved in cells");
+  });
 });
 
 // --- layoutHtml ---

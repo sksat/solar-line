@@ -20,11 +20,27 @@ const manifestPath = path.resolve(import.meta.dirname, "..", "..", "dist", "mani
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
 
 // Collect console errors per page
+// Third-party console errors to ignore:
+// - KaTeX CDN module-loading messages
+// - Niconico/YouTube embed iframe CORS and network errors
+const IGNORED_CONSOLE_STRINGS = [
+  "Requiring module",
+  "unresolved dependencies",
+  "CORS policy",
+  "net::ERR_",
+  "Failed to load resource",
+  "embed.nicovideo.jp",
+  "connect.facebook.net",
+];
+
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", msg => {
     if (msg.type() === "error") {
-      errors.push(msg.text());
+      const text = msg.text();
+      if (!IGNORED_CONSOLE_STRINGS.some(s => text.includes(s))) {
+        errors.push(text);
+      }
     }
   });
   page.on("pageerror", err => {
