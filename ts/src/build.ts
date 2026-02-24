@@ -104,7 +104,7 @@ export function discoverSummaries(dataDir: string): SummaryReport[] {
 
 /** Count verdict types in an episode's transfers */
 export function countVerdicts(ep: EpisodeReport): VerdictCounts {
-  const counts: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0 };
+  const counts: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0, reference: 0 };
   for (const t of ep.transfers) {
     counts[t.verdict]++;
   }
@@ -113,12 +113,13 @@ export function countVerdicts(ep: EpisodeReport): VerdictCounts {
 
 /** Sum multiple VerdictCounts */
 function sumVerdicts(all: VerdictCounts[]): VerdictCounts {
-  const total: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0 };
+  const total: VerdictCounts = { plausible: 0, implausible: 0, conditional: 0, indeterminate: 0, reference: 0 };
   for (const v of all) {
     total.plausible += v.plausible;
     total.implausible += v.implausible;
     total.conditional += v.conditional;
     total.indeterminate += v.indeterminate;
+    total.reference += v.reference;
   }
   return total;
 }

@@ -169,7 +169,7 @@
         "二体問題近似（太陽重力のみ）",
         "最小エネルギー遷移（ホーマン軌道）"
       ],
-      "verdict": "indeterminate",
+      "verdict": "reference",
       "explanation": "ホーマン遷移による天王星→地球の基準所要時間は約16.1年（5,863日）、合計ΔV 15.94 km/s。出発ΔV 4.66 km/s、到着ΔV 11.28 km/s。到着側のΔVが大きいのは内側軌道（地球）での速度差が大きいため。この所要時間は物語上あまりにも長く、brachistochrone遷移が必須となる。作中ではケイが推定所要時間507時間（約21日）と述べており、ホーマン遷移の16.1年とは桁違いの短縮がbrachistochrone＋木星フライバイで実現されている。",
       "parameters": {
         "μ_sun": 132712440041,
@@ -185,13 +185,13 @@
         {
           "claim": "天王星軌道半径",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/uranusfact.html",
           "sourceLabel": "NASA Uranus Fact Sheet"
         },
         {
           "claim": "地球軌道半径",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
           "sourceLabel": "NASA Earth Fact Sheet"
         }
       ]
@@ -268,13 +268,13 @@
         {
           "claim": "地球重力パラメータ",
           "sourceType": "external-reference",
-          "sourceRef": "NASA JPL DE440/DE441",
+          "sourceRef": "https://ssd.jpl.nasa.gov/planets/eph_export.html",
           "sourceLabel": "JPL Planetary Ephemeris"
         },
         {
           "claim": "月軌道半径",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Moon Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
           "sourceLabel": "NASA Moon Fact Sheet"
         }
       ]
@@ -325,7 +325,7 @@
         {
           "claim": "ICRP緊急時被曝限度",
           "sourceType": "external-reference",
-          "sourceRef": "ICRP Publication 103",
+          "sourceRef": "https://www.icrp.org/publication.asp?id=ICRP+Publication+103",
           "sourceLabel": "ICRP 2007勧告"
         }
       ]
@@ -355,7 +355,7 @@
         {
           "claim": "各惑星軌道半径",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Planetary Fact Sheets",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
           "sourceLabel": "NASA惑星データ"
         },
         {

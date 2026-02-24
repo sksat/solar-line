@@ -1794,7 +1794,7 @@ describe("renderIndex enhanced content", () => {
         title: "火星からガニメデへ",
         transferCount: 4,
         summary: "きりたんが72時間でガニメデへ。",
-        verdicts: { plausible: 1, conditional: 2, indeterminate: 1, implausible: 0 },
+        verdicts: { plausible: 1, conditional: 2, indeterminate: 0, implausible: 0, reference: 1 },
         path: "episodes/ep-001.html",
       },
       {
@@ -1802,11 +1802,11 @@ describe("renderIndex enhanced content", () => {
         title: "木星圏脱出",
         transferCount: 5,
         summary: "木星圏から土星へ。",
-        verdicts: { plausible: 3, conditional: 1, indeterminate: 1, implausible: 0 },
+        verdicts: { plausible: 3, conditional: 1, indeterminate: 0, implausible: 0, reference: 1 },
         path: "episodes/ep-002.html",
       },
     ],
-    totalVerdicts: { plausible: 4, conditional: 3, indeterminate: 2, implausible: 0 },
+    totalVerdicts: { plausible: 4, conditional: 3, indeterminate: 0, implausible: 0, reference: 2 },
     logs: [],
   };
 

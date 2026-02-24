@@ -80,7 +80,7 @@
         "衝撃的噴射（瞬間的な速度変更）",
         "二体問題（太陽の重力のみ）"
       ],
-      "verdict": "indeterminate",
+      "verdict": "reference",
       "explanation": "古典的ホーマン遷移には合計約3.36 km/sのΔVが必要だが、約3,672日（約10年）を要する。作中のケストレルは損傷した状態で木星圏を脱出し、土星圏に到達しているが、所要時間については明示的な言及がない。ホーマン遷移は最小エネルギーの基準値として参考とする。",
       "parameters": {
         "mu": 132712440041,
@@ -94,13 +94,13 @@
         {
           "claim": "木星軌道半径: 778,570,000 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceRef": "https://ssd.jpl.nasa.gov/planets/approx_pos.html",
           "sourceLabel": "NASA/JPL 太陽系力学データ（木星平均軌道半径）"
         },
         {
           "claim": "土星軌道半径: 1,433,530,000 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceRef": "https://ssd.jpl.nasa.gov/planets/approx_pos.html",
           "sourceLabel": "NASA/JPL 太陽系力学データ（土星平均軌道半径）"
         }
       ]
@@ -153,7 +153,7 @@
         {
           "claim": "木星赤道半径: 71,492 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/jupiterfact.html",
           "sourceLabel": "NASA/JPL 太陽系力学データ（木星赤道半径）"
         }
       ]
@@ -242,7 +242,7 @@
         {
           "claim": "エンケラドス軌道半径: 238,020 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturniansatfact.html",
           "sourceLabel": "NASA/JPL 太陽系力学データ（エンケラドス平均軌道半径）"
         }
       ]

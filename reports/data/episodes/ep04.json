@@ -122,7 +122,7 @@
         "衝撃的噴射（瞬間的な速度変更）",
         "二体問題（太陽の重力のみ）"
       ],
-      "verdict": "indeterminate",
+      "verdict": "reference",
       "explanation": "古典的ホーマン遷移には合計約15.94 km/sのΔVが必要で、約16.1年を要する。天王星→地球は太陽系で最も長い内惑星への帰還軌道の一つであり、ΔVの大部分（11.28 km/s）は地球軌道での減速に消費される。作中の描写では巡行加速で「太陽に向かって落ちる」と言及しており、ホーマン遷移よりも高推力のBrachistochrone型遷移を示唆している。",
       "parameters": {
         "mu": 132712440041,
@@ -137,13 +137,13 @@
         {
           "claim": "天王星軌道半径: 2,872,460,000 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Uranus Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/uranusfact.html",
           "sourceLabel": "NASA惑星データ"
         },
         {
           "claim": "地球軌道半径: 149,598,023 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Earth Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
           "sourceLabel": "NASA惑星データ"
         }
       ]
@@ -191,13 +191,13 @@
         {
           "claim": "天王星磁軸の実測値: 59.7°（自転軸からの傾斜）",
           "sourceType": "external-reference",
-          "sourceRef": "Voyager 2 magnetometer data, Ness et al. 1986",
+          "sourceRef": "https://doi.org/10.1126/science.233.4759.85",
           "sourceLabel": "Voyager 2観測データ"
         },
         {
           "claim": "天王星プラズモイドの観測・分析",
           "sourceType": "external-reference",
-          "sourceRef": "DiBraccio & Gershman 2019, Geophysical Research Letters",
+          "sourceRef": "https://doi.org/10.1029/2019GL083969",
           "sourceLabel": "天王星プラズモイド研究"
         },
         {
@@ -272,7 +272,7 @@
         {
           "claim": "タイタニア軌道半径: 435,910 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Titania (Uranus III) data",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/uraniansatfact.html",
           "sourceLabel": "NASA衛星データ"
         },
         {

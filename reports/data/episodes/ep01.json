@@ -68,7 +68,7 @@
         "衝撃的噴射（瞬間的な速度変更）",
         "二体問題（太陽の重力のみ）"
       ],
-      "verdict": "indeterminate",
+      "verdict": "reference",
       "explanation": "古典的ホーマン遷移には合計約10.15 km/sのΔVが必要だが、約1,127日（約3.1年）を要する。これは最小エネルギーの基準値であり、72時間の期限には遅すぎる。作中の設定はホーマン級を超える推進技術を明確に前提としている。",
       "parameters": {
         "mu": 132712440041,
@@ -82,13 +82,13 @@
         {
           "claim": "火星軌道半径: 227,939,200 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceRef": "https://ssd.jpl.nasa.gov/planets/approx_pos.html",
           "sourceLabel": "NASA/JPL 太陽系力学データ（火星平均軌道半径）"
         },
         {
           "claim": "木星軌道半径: 778,570,000 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA JPL Solar System Dynamics",
+          "sourceRef": "https://ssd.jpl.nasa.gov/planets/approx_pos.html",
           "sourceLabel": "NASA/JPL 太陽系力学データ（木星平均軌道半径）"
         }
       ]

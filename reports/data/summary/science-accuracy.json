@@ -18,7 +18,7 @@
             "episode": 4,
             "depicted": "60°",
             "reference": "59.7°",
-            "source": "Voyager 2 (Ness et al. 1986)",
+            "source": "[Voyager 2 (Ness et al. 1986)](https://doi.org/10.1126/science.233.4759.85)",
             "accuracyPercent": 99.5,
             "status": "verified"
           },
@@ -36,7 +36,7 @@
             "episode": 2,
             "depicted": "10.3 km/s（船速）",
             "reference": "8.42 km/s（脱出速度）",
-            "source": "JPL 木星重力パラメータ",
+            "source": "[JPL 木星重力パラメータ](https://ssd.jpl.nasa.gov/planets/phys_par.html)",
             "accuracyPercent": null,
             "status": "verified"
           },
@@ -45,7 +45,7 @@
             "episode": 4,
             "depicted": "480 mSv",
             "reference": "500 mSv（ICRP緊急時上限）",
-            "source": "ICRP Publication 103 (2007)",
+            "source": "[ICRP Publication 103 (2007)](https://www.icrp.org/publication.asp?id=ICRP+Publication+103)",
             "accuracyPercent": null,
             "status": "verified"
           },
@@ -54,7 +54,7 @@
             "episode": 2,
             "depicted": "v_helio ≈ 18.99 km/s",
             "reference": "v_esc_sun ≈ 18.46 km/s",
-            "source": "JPL 太陽重力パラメータ",
+            "source": "[JPL 太陽重力パラメータ](https://ssd.jpl.nasa.gov/planets/phys_par.html)",
             "accuracyPercent": null,
             "status": "verified"
           },
@@ -90,7 +90,7 @@
             "episode": 1,
             "depicted": "TSF-43R Orion Micropulser",
             "reference": "D-He³反応: 理論Isp 10⁵〜10⁶ s",
-            "source": "Bussard & DeLauer (1958)",
+            "source": "[Bussard & DeLauer (1958)](https://books.google.com/books/about/Nuclear_Rocket_Propulsion.html?id=Q6RxAAAAMAAJ)",
             "accuracyPercent": null,
             "status": "approximate"
           },
@@ -99,7 +99,7 @@
             "episode": 5,
             "depicted": "約35.9 AU",
             "reference": "惑星軌道半径から計算: ≈35.9 AU",
-            "source": "JPL 平均軌道要素",
+            "source": "[JPL 平均軌道要素](https://ssd.jpl.nasa.gov/planets/approx_pos.html)",
             "accuracyPercent": 100,
             "status": "verified"
           },
@@ -108,7 +108,7 @@
             "episode": 5,
             "depicted": "LEO 400km直接投入（軌道速度7.67 km/s）",
             "reference": "≈3.18 km/s（$v_\\infty=0$からLEO投入）、軌道速度 $\\sqrt{\\mu/(R+h)} \\approx 7.67$ km/s",
-            "source": "vis-viva方程式 + JPL地球重力パラメータ",
+            "source": "vis-viva方程式 + [JPL地球重力パラメータ](https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html)",
             "accuracyPercent": null,
             "status": "verified"
           },
@@ -126,7 +126,7 @@
             "episode": 5,
             "depicted": "木星フライバイでのエネルギー効率向上「およそ3%程度」",
             "reference": "古典Oberth速度増幅は$\\ll 1$%（$v_{\\text{esc}}/v_\\infty = 59.5/1500 \\approx 4$%）; 複合効果として3%は妥当",
-            "source": "Oberth効果方程式 + JPL木星重力パラメータ",
+            "source": "Oberth効果方程式 + [JPL木星重力パラメータ](https://ssd.jpl.nasa.gov/planets/phys_par.html)",
             "accuracyPercent": null,
             "status": "approximate"
           }

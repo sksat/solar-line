@@ -1,6 +1,6 @@
 # Task 059: Verdict Policy & External Source Links Cleanup
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 Human directives:

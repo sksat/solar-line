@@ -90,7 +90,7 @@ describe("report data: structural integrity", () => {
       });
 
       it("transfers have valid verdicts", () => {
-        const validVerdicts = new Set(["plausible", "implausible", "indeterminate", "conditional"]);
+        const validVerdicts = new Set(["plausible", "implausible", "indeterminate", "conditional", "reference"]);
         for (const t of report.transfers) {
           assert.ok(validVerdicts.has(t.verdict), `Transfer ${t.id} has invalid verdict: ${t.verdict}`);
         }

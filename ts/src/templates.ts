@@ -245,6 +245,7 @@ li { margin: 0.25rem 0; }
 .verdict-implausible { background: var(--red); color: #fff; }
 .verdict-indeterminate { background: var(--yellow); color: #000; }
 .verdict-conditional { background: #8957e5; color: #fff; }
+.verdict-reference { background: #6e7681; color: #fff; }
 .sources-list { font-size: 0.85em; color: #8b949e; margin-top: 0.5rem; }
 .sources-list dt { font-weight: 600; color: var(--fg); margin-top: 0.3rem; }
 .sources-list dd { margin-left: 1rem; }
@@ -497,7 +498,7 @@ ${content}
 
 /** Render verdict badge inline */
 function verdictBadge(verdict: string): string {
-  const label = verdict === "plausible" ? "妥当" : verdict === "implausible" ? "非現実的" : verdict === "conditional" ? "条件付き" : "判定不能";
+  const label = verdict === "plausible" ? "妥当" : verdict === "implausible" ? "非現実的" : verdict === "conditional" ? "条件付き" : verdict === "reference" ? "参考値" : "判定不能";
   return `<span class="verdict verdict-${verdict}">${label}</span>`;
 }
 
@@ -526,7 +527,7 @@ export function renderIndex(manifest: SiteManifest): string {
 <div class="stat-row" style="margin-top:0.75rem">
   <div class="stat-item">${verdictBadge("plausible")} <span class="stat-count">${tv.plausible}</span></div>
   <div class="stat-item">${verdictBadge("conditional")} <span class="stat-count">${tv.conditional}</span></div>
-  <div class="stat-item">${verdictBadge("indeterminate")} <span class="stat-count">${tv.indeterminate}</span></div>
+  <div class="stat-item">${verdictBadge("reference")} <span class="stat-count">${tv.reference}</span></div>
   <div class="stat-item">${verdictBadge("implausible")} <span class="stat-count">${tv.implausible}</span></div>
 </div>
 </div>` : "";
@@ -538,7 +539,7 @@ export function renderIndex(manifest: SiteManifest): string {
           ? [
               ep.verdicts.plausible > 0 ? `${verdictBadge("plausible")} ${ep.verdicts.plausible}` : "",
               ep.verdicts.conditional > 0 ? `${verdictBadge("conditional")} ${ep.verdicts.conditional}` : "",
-              ep.verdicts.indeterminate > 0 ? `${verdictBadge("indeterminate")} ${ep.verdicts.indeterminate}` : "",
+              ep.verdicts.reference > 0 ? `${verdictBadge("reference")} ${ep.verdicts.reference}` : "",
               ep.verdicts.implausible > 0 ? `${verdictBadge("implausible")} ${ep.verdicts.implausible}` : "",
             ].filter(Boolean).join(" ")
           : "";
@@ -578,6 +579,7 @@ function verdictLabel(v: TransferAnalysis["verdict"]): string {
     case "implausible": return "非現実的";
     case "conditional": return "条件付き";
     case "indeterminate": return "判定不能";
+    case "reference": return "参考値";
   }
 }
 

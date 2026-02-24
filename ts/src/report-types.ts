@@ -93,7 +93,7 @@ export interface TransferAnalysis {
   /** Assumptions made for this analysis */
   assumptions: string[];
   /** Verdict: plausible, implausible, indeterminate, or conditional */
-  verdict: "plausible" | "implausible" | "indeterminate" | "conditional";
+  verdict: "plausible" | "implausible" | "indeterminate" | "conditional" | "reference";
   /** Detailed explanation of the verdict */
   explanation: string;
   /** Orbital parameters used */
@@ -352,6 +352,7 @@ export interface VerdictCounts {
   implausible: number;
   conditional: number;
   indeterminate: number;
+  reference: number;
 }
 
 /** Site-wide manifest listing all available reports */

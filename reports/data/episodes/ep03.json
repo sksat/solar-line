@@ -92,7 +92,7 @@
         "衝撃的噴射（瞬間的な速度変更）",
         "二体問題（太陽の重力のみ）"
       ],
-      "verdict": "indeterminate",
+      "verdict": "reference",
       "explanation": "古典的ホーマン遷移には合計約2.74 km/sのΔVが必要だが、約9,971日（約27.3年）を要する。143時間の所要時間とは全く異なる次元の問題であり、作中の推進技術はホーマン級を大幅に超えている。",
       "parameters": {
         "mu": 132712440041,
@@ -107,13 +107,13 @@
         {
           "claim": "土星軌道半径: 1,433,530,000 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Saturn Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
           "sourceLabel": "NASA惑星データ"
         },
         {
           "claim": "天王星軌道半径: 2,872,460,000 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Uranus Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/uranusfact.html",
           "sourceLabel": "NASA惑星データ"
         }
       ]
@@ -146,7 +146,7 @@
         {
           "claim": "エンケラドス軌道半径: 238,020 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Enceladus Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturniansatfact.html",
           "sourceLabel": "NASA衛星データ"
         },
         {
@@ -268,7 +268,7 @@
         {
           "claim": "天王星のヒル球半径: 約5,179万km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Uranus Fact Sheet (μ_U / μ_Sun)",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/uranusfact.html",
           "sourceLabel": "NASAデータから計算"
         }
       ]
@@ -311,13 +311,13 @@
         {
           "claim": "天王星半径: 25,559 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Uranus Fact Sheet",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/uranusfact.html",
           "sourceLabel": "NASA惑星データ"
         },
         {
           "claim": "タイタニア軌道半径: 435,910 km",
           "sourceType": "external-reference",
-          "sourceRef": "NASA Titania (Uranus III) data",
+          "sourceRef": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/uraniansatfact.html",
           "sourceLabel": "NASA衛星データ"
         }
       ]

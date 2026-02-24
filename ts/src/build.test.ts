@@ -278,14 +278,15 @@ describe("countVerdicts", () => {
         makeTransfer("plausible"),
         makeTransfer("plausible"),
         makeTransfer("conditional"),
-        makeTransfer("indeterminate"),
+        makeTransfer("reference"),
       ],
     };
     const counts = countVerdicts(ep);
     assert.equal(counts.plausible, 2);
     assert.equal(counts.conditional, 1);
-    assert.equal(counts.indeterminate, 1);
+    assert.equal(counts.reference, 1);
     assert.equal(counts.implausible, 0);
+    assert.equal(counts.indeterminate, 0);
   });
 
   it("returns all zeros for empty transfers", () => {
@@ -294,6 +295,7 @@ describe("countVerdicts", () => {
     assert.equal(counts.plausible, 0);
     assert.equal(counts.conditional, 0);
     assert.equal(counts.indeterminate, 0);
+    assert.equal(counts.reference, 0);
     assert.equal(counts.implausible, 0);
   });
 });
