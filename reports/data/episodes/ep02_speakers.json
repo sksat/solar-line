@@ -7,14 +7,20 @@
       "id": "kiritan",
       "nameJa": "きりたん",
       "nameEn": "Kiritan",
-      "aliases": ["キリタン"],
+      "aliases": [
+        "キリタン"
+      ],
       "notes": "ケストレル号の船長兼パイロット。損傷した船体で木星圏からの脱出を試みる。"
     },
     {
       "id": "kestrel-ai",
-      "nameJa": "ケストレルAI",
-      "nameEn": "Kestrel AI",
-      "aliases": ["公案", "コアン", "航案"],
+      "nameJa": "ケイ",
+      "nameEn": "Kei",
+      "aliases": [
+        "公案",
+        "コアン",
+        "航案"
+      ],
       "notes": "ケストレル号の船載AI。損傷状況の報告、航法計算、EVA時間管理を行う。丁寧語を使う。"
     },
     {

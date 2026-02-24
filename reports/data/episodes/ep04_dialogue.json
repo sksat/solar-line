@@ -14,7 +14,7 @@
     },
     {
       "id": "kestrel-ai",
-      "nameJa": "ケストレルAI（ケイ）",
+      "nameJa": "ケイ",
       "nameEn": "Kestrel AI (Kei)",
       "aliases": ["公案", "コアン", "航案", "ケイ"]
     },
@@ -90,7 +90,7 @@
   "dialogue": [
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "2次冷却系圧力、規定値の63%まで低下。冷媒の漏洩が加速しています。このままでは12時間以内に炉の冷却能力を喪失します",
       "startMs": 7399,
       "endMs": 20000,
@@ -116,7 +116,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "タイタニアまでは現在の軌道で残り9時間42分",
       "startMs": 22000,
       "endMs": 25470,
@@ -142,7 +142,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "楽観的ですね",
       "startMs": 28000,
       "endMs": 30000,
@@ -168,7 +168,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "いえ、タイタニアへの軌道投入には減速噴射が必要です。もしも炉が使えなければこのまま天王星の重力圏を突き抜けることになります",
       "startMs": 33000,
       "endMs": 42000,
@@ -194,7 +194,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "あら、ロマンティックですね",
       "startMs": 44000,
       "endMs": 46000,
@@ -220,7 +220,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "磁気ノズルのコイル温度異常上昇の兆候あり。次の炉点火で完全に消耗する可能性が",
       "startMs": 76880,
       "endMs": 83230,
@@ -246,7 +246,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "1回打てれば幸運です",
       "startMs": 87520,
       "endMs": 94910,
@@ -259,7 +259,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "天王星磁気圏内でプラズモイド発生を検知。進路上、数分後に交差。RCSのみでは回避不能。炉を使えば回避できますが、減速用の点火ができなくなる可能性があります",
       "startMs": 119799,
       "endMs": 155000,
@@ -285,7 +285,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "磁気シールドの残寿命は14分。プラズモイドの通過には最低でも8分かかります",
       "startMs": 158000,
       "endMs": 163000,
@@ -311,7 +311,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "6分は余裕とは言いません。天王星は自転軸と磁軸が60度もずれています。その他の惑星と異なり、プラズモイドの挙動が極めて予測しづらいのです",
       "startMs": 165000,
       "endMs": 180000,
@@ -337,7 +337,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "タイタニアまでの被曝量は現在の航路で累積48ミリシーベルト、許容範囲以内です",
       "startMs": 392240,
       "endMs": 399150,
@@ -402,7 +402,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "深宇宙スキャナーに反応。土星軌道方面から複数の大型船舶が接近中",
       "startMs": 791160,
       "endMs": 797470,
@@ -415,7 +415,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "少なくとも5隻。おそらくは公安艦隊でしょうね。到着まで33時間",
       "startMs": 797480,
       "endMs": 811000,
@@ -454,7 +454,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ビフォア・メインアップ・チェックリスト。外部状態、修理完了。外殻クラック7箇所、うち3箇所に構造補強済み。RCSノズル開閉制御系、問題なし。炉プレヒート温度408度、適正値。燃料残量問題なし。冷却系圧力、1次系1.87 MPa、2次系0.96 MPa。仮設パッチによる修理のため熱余裕は規定値の78%。主機フルバーンは推奨しません。磁気シールドコイル2系のみ稼働。磁気ノズル素材変形あり、仮設修理済み。推定点火可能回数3回、最大4回。ビフォア・メインアップ・チェックリスト・コンプリート",
       "startMs": 985000,
       "endMs": 1036000,
@@ -480,7 +480,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "座らないんですか？",
       "startMs": 1065000,
       "endMs": 1068000,
@@ -506,7 +506,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "誰に似たんだか",
       "startMs": 1072000,
       "endMs": 1075000,
@@ -532,7 +532,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "感覚も思考も全てこの船と繋がっています。それでも私は人間なのでしょうか？",
       "startMs": 1086360,
       "endMs": 1097000,
@@ -571,7 +571,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "炉アームド。衝撃に備えてください。放射線レベル許容範囲内。5、4、3、2、1",
       "startMs": 1104039,
       "endMs": 1114470,

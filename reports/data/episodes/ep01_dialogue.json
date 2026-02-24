@@ -10,13 +10,19 @@
       "id": "kiritan",
       "nameJa": "きりたん",
       "nameEn": "Kiritan",
-      "aliases": ["キリタン"]
+      "aliases": [
+        "キリタン"
+      ]
     },
     {
       "id": "kestrel-ai",
-      "nameJa": "ケストレルAI",
+      "nameJa": "ケイ",
       "nameEn": "Kestrel AI",
-      "aliases": ["公案", "コアン", "航案"]
+      "aliases": [
+        "公案",
+        "コアン",
+        "航案"
+      ]
     },
     {
       "id": "client",
@@ -26,7 +32,7 @@
     },
     {
       "id": "rai",
-      "nameJa": "ライ",
+      "nameJa": "船乗り",
       "nameEn": "Rai",
       "aliases": []
     },
@@ -72,7 +78,7 @@
       "id": "ep01-scene-05",
       "startMs": 520000,
       "endMs": 660000,
-      "description": "ライとの遭遇 — コンテナの秘密"
+      "description": "船乗りとの遭遇 — コンテナの秘密"
     },
     {
       "id": "ep01-scene-06",
@@ -102,33 +108,42 @@
       "endMs": 8190,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-0"],
+      "rawEntryIds": [
+        "cue-0"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR原文: 結露まだ残ってる。冒頭のきりたん台詞。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "航案環境データ更新、相対湿度47%。補助RCSベントを閉じることを推奨します。ブロアだけでなんとかしようとするものではありません",
       "startMs": 11360,
       "endMs": 22870,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-1", "cue-3", "cue-5", "cue-7"],
+      "rawEntryIds": [
+        "cue-1",
+        "cue-3",
+        "cue-5",
+        "cue-7"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR原文に誤認識多数。AIによるステータス報告・推奨。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "あなたはまた冷却待ちの工室を作ろうとしています",
       "startMs": 24920,
       "endMs": 29429,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-9"],
+      "rawEntryIds": [
+        "cue-9"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIからきりたんへの警告。「あなた」という呼びかけがAI的。"
@@ -141,20 +156,24 @@
       "endMs": 34430,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-10"],
+      "rawEntryIds": [
+        "cue-10"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがAIに確認。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "針は死んでいません。動いてないだけです",
       "startMs": 34440,
       "endMs": 38470,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-11a"],
+      "rawEntryIds": [
+        "cue-11a"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの返答。皮肉めいた表現。"
@@ -167,20 +186,25 @@
       "endMs": 47110,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-12"],
+      "rawEntryIds": [
+        "cue-12"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの独白風。カジュアルな口調。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "反応質量タンクのスロッシング指数が低い。重力がないために後部慣性が低く、微小な姿勢変化で液面が立ちやすい状態です",
       "startMs": 47120,
       "endMs": 56310,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-11", "cue-12a"],
+      "rawEntryIds": [
+        "cue-11",
+        "cue-12a"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIのテクニカルレポート。ASR誤認識多数。"
@@ -206,25 +230,36 @@
       "endMs": 71990,
       "sceneId": "ep01-scene-01",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-13"],
+      "rawEntryIds": [
+        "cue-13"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "船への愛着を語る。きりたんらしい台詞。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "依頼が入っています。ガニメデ中央港へ72時間以内、封印コンテナ2基、危険物指定なし",
       "startMs": 72920,
       "endMs": 79469,
       "sceneId": "ep01-scene-02",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-15", "cue-17", "cue-19"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-15",
+        "cue-17",
+        "cue-19"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "other",
-          "textSpan": [16, 22],
+          "textSpan": [
+            16,
+            22
+          ],
           "normalizedValue": 72,
           "unit": "hours"
         }
@@ -239,12 +274,20 @@
       "endMs": 84749,
       "sceneId": "ep01-scene-02",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-21", "cue-23"],
-      "transferRefs": ["ep01-transfer-03"],
+      "rawEntryIds": [
+        "cue-21",
+        "cue-23"
+      ],
+      "transferRefs": [
+        "ep01-transfer-03"
+      ],
       "mentions": [
         {
           "concept": "other",
-          "textSpan": [10, 16],
+          "textSpan": [
+            10,
+            16
+          ],
           "normalizedValue": 150,
           "unit": "hours"
         }
@@ -253,31 +296,41 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "ガニメデの優先権テーブルは大型で埋まっています。あなたは裏口枠です。航案ネットの噂ですが、コンテナの中身はガニメデの未来そのものだとか",
       "startMs": 84759,
       "endMs": 94469,
       "sceneId": "ep01-scene-02",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-25"],
+      "rawEntryIds": [
+        "cue-25"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが背景情報を提供。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "ガニメデまで72時間以内に輸送するには嵐の回廊を通過する必要があります。まともな輸送会社が受ける仕事ではありません",
       "startMs": 96680,
       "endMs": 105469,
       "sceneId": "ep01-scene-02",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-27", "cue-29"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-27",
+        "cue-29"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "gravity_assist",
-          "textSpan": [22, 28],
+          "textSpan": [
+            22,
+            28
+          ],
           "normalizedValue": null,
           "unit": null
         }
@@ -286,24 +339,43 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "正面から突っ切るコースになります。木星の重力圏へ落下し、磁気の中で木星の重力アシストを受けて軌道を変え、ペリジュピターオーバースでガニメデの最接近軌道を取ります。オーバースのウィンドウは長く見積もっても数時間、タイミングがずれれば木星の重力に捕まって落下します。まともな人間が取るコースではありません",
       "startMs": 113759,
       "endMs": 140270,
       "sceneId": "ep01-scene-02",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-31", "cue-33", "cue-35", "cue-37", "cue-39", "cue-41", "cue-43", "cue-45", "cue-47", "cue-49"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-31",
+        "cue-33",
+        "cue-35",
+        "cue-37",
+        "cue-39",
+        "cue-41",
+        "cue-43",
+        "cue-45",
+        "cue-47",
+        "cue-49"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "gravity_assist",
-          "textSpan": [25, 38],
+          "textSpan": [
+            25,
+            38
+          ],
           "normalizedValue": null,
           "unit": null
         },
         {
           "concept": "orbit",
-          "textSpan": [45, 62],
+          "textSpan": [
+            45,
+            62
+          ],
           "normalizedValue": null,
           "unit": null
         }
@@ -325,13 +397,18 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "報酬は通常料金の3倍、遅延は1時間ごとに15%減。公安税は免除、ガニメデ配とのことです",
       "startMs": 140280,
       "endMs": 149990,
       "sceneId": "ep01-scene-02",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-51", "cue-53", "cue-55", "cue-57"],
+      "rawEntryIds": [
+        "cue-51",
+        "cue-53",
+        "cue-55",
+        "cue-57"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが報酬条件を説明。"
@@ -364,13 +441,17 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "火星公安法に基づいて、航案周辺5万kmまではRCS推進のみ。核融合パルス式の使用は禁止です。安全距離内での点火は自動的に罰金と放射線警報の発令対象となります",
       "startMs": 197879,
       "endMs": 213000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-69", "cue-71", "cue-73"],
+      "rawEntryIds": [
+        "cue-69",
+        "cue-71",
+        "cue-73"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR原文「公案周辺」→「航案周辺」、「式」→「点火」。AIによる法規情報の説明。line-016前半部分。"
@@ -383,7 +464,9 @@
       "endMs": 218000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-75"],
+      "rawEntryIds": [
+        "cue-75"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "火星管制からの通信。line-016中盤。"
@@ -396,46 +479,61 @@
       "endMs": 221000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-77"],
+      "rawEntryIds": [
+        "cue-77"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの返答。カジュアルな口調。line-016後半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "点火転換許可域までのコース設定完了",
       "startMs": 221000,
       "endMs": 222000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-79", "cue-81"],
+      "rawEntryIds": [
+        "cue-79",
+        "cue-81"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIのナビゲーション報告。line-016末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "現行RCSプロファイルで到達まで22分。ビフォアメインアップチェック。外部状態問題なし、外殻クラックなし。RCSノズル開放、プレヒート温度412°適正値。燃料残量は問題なし。冷却系圧力、1次系2.34MPa、2次系1.18MPa問題なし。ビフォアメインアップチェック コンプリート",
       "startMs": 221959,
       "endMs": 254000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-83", "cue-85", "cue-87", "cue-89", "cue-91", "cue-93", "cue-95"],
+      "rawEntryIds": [
+        "cue-83",
+        "cue-85",
+        "cue-87",
+        "cue-89",
+        "cue-91",
+        "cue-93",
+        "cue-95"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIによるメインアップ前チェックリスト。ASR誤認識多数を修正。line-017前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "あんたも座れば",
       "startMs": 254000,
       "endMs": 256000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-97"],
+      "rawEntryIds": [
+        "cue-97"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIがきりたんに着座を促す。line-017中盤。"
@@ -448,20 +546,26 @@
       "endMs": 262000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-99", "cue-101"],
+      "rawEntryIds": [
+        "cue-99",
+        "cue-101"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの反論。ASR「機械が人型」→「機体が人型」。line-017中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "全く。人型にしろとは頼んでいません",
       "startMs": 262000,
       "endMs": 264000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-103", "cue-105"],
+      "rawEntryIds": [
+        "cue-103",
+        "cue-105"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの皮肉めいた返答。line-017後半。"
@@ -474,20 +578,24 @@
       "endMs": 266000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-107"],
+      "rawEntryIds": [
+        "cue-107"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの軽い返し。line-017末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "作らなければよかったのでは？",
       "startMs": 269639,
       "endMs": 272000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-109"],
+      "rawEntryIds": [
+        "cue-109"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの皮肉。line-018前半。"
@@ -500,46 +608,54 @@
       "endMs": 275310,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-111"],
+      "rawEntryIds": [
+        "cue-111"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの自嘲。line-018後半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "そうですか",
       "startMs": 275320,
       "endMs": 277390,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-113"],
+      "rawEntryIds": [
+        "cue-113"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの淡白な返答。line-019。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "火星の姿、後方カメラで52°、極冠を確認",
       "startMs": 277400,
       "endMs": 282110,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-115"],
+      "rawEntryIds": [
+        "cue-115"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR「試後方」→「姿、後方」、「極感」→「極冠」。AIによる位置報告。line-020。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "外周マーカー、レーダー圏内に入りました",
       "startMs": 282120,
       "endMs": 285749,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-117"],
+      "rawEntryIds": [
+        "cue-117"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIによるマーカー接近報告。line-021。"
@@ -552,7 +668,10 @@
       "endMs": 293000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-119", "cue-121"],
+      "rawEntryIds": [
+        "cue-119",
+        "cue-121"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "火星管制からの点火許可。ASR「機は」→「管制」、「各融合」→「核融合」。line-022前半。"
@@ -565,7 +684,10 @@
       "endMs": 300000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-123", "cue-125"],
+      "rawEntryIds": [
+        "cue-123",
+        "cue-125"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの返答。ASR「後悔」→「航海」。カジュアルだが礼儀あり。line-022中盤。"
@@ -578,25 +700,34 @@
       "endMs": 302070,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-127"],
+      "rawEntryIds": [
+        "cue-127"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがメインエンジン起動を指示。line-022末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "D-³Heカートリッジ1番装填。核融合パルス炉、転換温度到達まで8秒。重力影響許容範囲内。推進剤、補助RCS圧安定",
       "startMs": 302080,
       "endMs": 316000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-129", "cue-131", "cue-133"],
+      "rawEntryIds": [
+        "cue-129",
+        "cue-131",
+        "cue-133"
+      ],
       "transferRefs": [],
       "mentions": [
         {
           "concept": "thrust",
-          "textSpan": [0, 16],
+          "textSpan": [
+            0,
+            16
+          ],
           "normalizedValue": null,
           "unit": null
         }
@@ -611,12 +742,18 @@
       "endMs": 328000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-135", "cue-137"],
+      "rawEntryIds": [
+        "cue-135",
+        "cue-137"
+      ],
       "transferRefs": [],
       "mentions": [
         {
           "concept": "thrust",
-          "textSpan": [36, 50],
+          "textSpan": [
+            36,
+            50
+          ],
           "normalizedValue": 6.3,
           "unit": "MN"
         }
@@ -631,33 +768,41 @@
       "endMs": 330189,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-139"],
+      "rawEntryIds": [
+        "cue-139"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "「Confirm main（メイン確認）」の省略形。きりたんがメインアップを確認。line-023末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "アームド。衝撃に備えてください。放射線レベル許容範囲内。5、4、3、2、1",
       "startMs": 332280,
       "endMs": 343070,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-141", "cue-143"],
+      "rawEntryIds": [
+        "cue-141",
+        "cue-143"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIによるカウントダウン。核融合パルス点火シーケンス。line-024。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "25万kmまでは肉眼にて視認できます",
       "startMs": 352560,
       "endMs": 356000,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-145", "cue-147"],
+      "rawEntryIds": [
+        "cue-145",
+        "cue-147"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが核融合パルスの視認距離を報告。line-025前半。"
@@ -670,20 +815,24 @@
       "endMs": 360070,
       "sceneId": "ep01-scene-03",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-149"],
+      "rawEntryIds": [
+        "cue-149"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの軽口。line-025後半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "火星の住民も慣れっこですから、何とも思わないでしょうね",
       "startMs": 360080,
       "endMs": 363510,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-151"],
+      "rawEntryIds": [
+        "cue-151"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの返答。ASR「の住民」の前の文字欠落。line-026。"
@@ -696,7 +845,9 @@
       "endMs": 372000,
       "sceneId": "ep01-scene-04",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-153"],
+      "rawEntryIds": [
+        "cue-153"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR不正確。きりたんのカジュアルな口調。line-027前半。"
@@ -709,33 +860,40 @@
       "endMs": 373070,
       "sceneId": "ep01-scene-04",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-153"],
+      "rawEntryIds": [
+        "cue-153"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR「露出力」→「炉出力」。きりたんが出力変更を指示。line-027末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "推進効率−1.8%、骨格許容範囲内",
       "startMs": 374639,
       "endMs": 381710,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-155", "cue-157"],
+      "rawEntryIds": [
+        "cue-155",
+        "cue-157"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIのステータス報告。ASR「水進行率」→「推進効率」。line-028。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "迷うのは人生だけにしてください",
       "startMs": 397360,
       "endMs": 400000,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-159"],
+      "rawEntryIds": [
+        "cue-159"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの皮肉。航路選択に対する警告。line-029前半。"
@@ -748,20 +906,24 @@
       "endMs": 403469,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-161"],
+      "rawEntryIds": [
+        "cue-161"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの返答。line-029後半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "そうでしょうか",
       "startMs": 403479,
       "endMs": 407469,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-163"],
+      "rawEntryIds": [
+        "cue-163"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの疑い深い返答。line-030。"
@@ -774,18 +936,42 @@
       "endMs": 460000,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-165", "cue-167", "cue-169", "cue-171", "cue-173", "cue-175", "cue-177", "cue-179", "cue-181", "cue-183", "cue-185", "cue-187", "cue-189", "cue-191", "cue-193"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-165",
+        "cue-167",
+        "cue-169",
+        "cue-171",
+        "cue-173",
+        "cue-175",
+        "cue-177",
+        "cue-179",
+        "cue-181",
+        "cue-183",
+        "cue-185",
+        "cue-187",
+        "cue-189",
+        "cue-191",
+        "cue-193"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "gravity_assist",
-          "textSpan": [63, 77],
+          "textSpan": [
+            63,
+            77
+          ],
           "normalizedValue": null,
           "unit": null
         },
         {
           "concept": "orbit",
-          "textSpan": [108, 114],
+          "textSpan": [
+            108,
+            114
+          ],
           "normalizedValue": null,
           "unit": null
         }
@@ -794,39 +980,50 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "木星の磁気嵐は当時から2倍以上の規模になっています。単純な比較はできません",
       "startMs": 460000,
       "endMs": 463990,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-195"],
+      "rawEntryIds": [
+        "cue-195"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが現在の磁気嵐の規模拡大を指摘。line-031末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "それに何十隻もの船が嵐の回廊に挑んで失敗してきました。わずか14時間の短縮のためにです。迂回コースを取れば安全にガニメデに到達できます。わざわざ無謀なコースを取って命を危険にさらす必要はないのではないでしょうか",
       "startMs": 464000,
       "endMs": 482629,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-197", "cue-199", "cue-201", "cue-203", "cue-205", "cue-207"],
+      "rawEntryIds": [
+        "cue-197",
+        "cue-199",
+        "cue-201",
+        "cue-203",
+        "cue-205",
+        "cue-207"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが回廊ルートの危険性を警告。ASR「街に挑んで」→「回廊に挑んで」、「集回コ路」→「迂回コース」。line-032。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "コンテナを届けることがあなたの仕事です",
       "startMs": 482639,
       "endMs": 488029,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-209"],
+      "rawEntryIds": [
+        "cue-209"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが本来の任務を再確認。ASR「2を届ける」→「コンテナを届ける」。line-033。"
@@ -839,20 +1036,24 @@
       "endMs": 496000,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-211"],
+      "rawEntryIds": [
+        "cue-211"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが回廊を通りたい気持ちを見せつつ、安全策も指示。ASR「集会路」→「迂回路」。line-034前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "負けず嫌いですね",
       "startMs": 496000,
       "endMs": 498749,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-213"],
+      "rawEntryIds": [
+        "cue-213"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの感想。line-034後半。"
@@ -865,25 +1066,32 @@
       "endMs": 502000,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-215"],
+      "rawEntryIds": [
+        "cue-215"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの信条。カジュアルな口調。line-035前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "バカですね。船を動かすのは重水素とヘリウム3です",
       "startMs": 502000,
       "endMs": 503110,
       "sceneId": "ep01-scene-04",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-215"],
+      "rawEntryIds": [
+        "cue-215"
+      ],
       "transferRefs": [],
       "mentions": [
         {
           "concept": "thrust",
-          "textSpan": [14, 26],
+          "textSpan": [
+            14,
+            26
+          ],
           "normalizedValue": null,
           "unit": null
         }
@@ -892,18 +1100,25 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "識別パターンは非公式。接近速度は相対0.3km/s。こちらのコースに合わせる動きを取っています",
       "startMs": 524480,
       "endMs": 535000,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-217", "cue-219", "cue-221"],
+      "rawEntryIds": [
+        "cue-217",
+        "cue-219",
+        "cue-221"
+      ],
       "transferRefs": [],
       "mentions": [
         {
           "concept": "delta_v",
-          "textSpan": [16, 27],
+          "textSpan": [
+            16,
+            27
+          ],
           "normalizedValue": 0.3,
           "unit": "km/s"
         }
@@ -918,20 +1133,25 @@
       "endMs": 541000,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-223", "cue-225"],
+      "rawEntryIds": [
+        "cue-223",
+        "cue-225"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがライだと気づく。ASR「おぼ小型線」→「おんぼろ小型船」。line-036中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "回線をつなぎます",
       "startMs": 541000,
       "endMs": 543630,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-227"],
+      "rawEntryIds": [
+        "cue-227"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが通信をつなぐ。ASR「賢をついでつぎます」→「回線をつなぎます」。line-036末尾。"
@@ -944,33 +1164,40 @@
       "endMs": 549000,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-229"],
+      "rawEntryIds": [
+        "cue-229"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがライに話しかける。line-037前半。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "偶然なもんか。私もこんなところでお前の耳障りな声を聞くとは思わなかったよ",
       "startMs": 549000,
       "endMs": 554110,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-231", "cue-233"],
+      "rawEntryIds": [
+        "cue-231",
+        "cue-233"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライの返答。きりたんとの親しい関係が見える。line-037後半。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "こんなところに来る奴はいない。お前、例の依頼受けたらしいな",
       "startMs": 554120,
       "endMs": 559150,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-235"],
+      "rawEntryIds": [
+        "cue-235"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライがきりたんの依頼について言及。line-038。"
@@ -983,33 +1210,40 @@
       "endMs": 562829,
       "sceneId": "ep01-scene-05",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-237"],
+      "rawEntryIds": [
+        "cue-237"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR不正確。きりたんの返答と推定。line-039。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "お前が優先スロットで火星を出発した直後、公安回線がロックダウンされた。直後に火星の査察艇が何隻も木星方向に出発していくのが見えた。噂だと地球の保安艇も同じく木星に向けて動き出してるらしい",
       "startMs": 562839,
       "endMs": 577100,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-239", "cue-241"],
+      "rawEntryIds": [
+        "cue-239",
+        "cue-241"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライがきりたんに追手の情報を提供。ASR「左作艇」→「査察艇」、「保安定」→「保安艇」。line-040。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "地球圏の保安艇と火星圏の査察艇、どっちも本気で探してる",
       "startMs": 579959,
       "endMs": 584870,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-243"],
+      "rawEntryIds": [
+        "cue-243"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライが状況の深刻さを説明。ASR「佐々艇」→「査察艇」。line-041。"
@@ -1022,33 +1256,39 @@
       "endMs": 589430,
       "sceneId": "ep01-scene-05",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-245"],
+      "rawEntryIds": [
+        "cue-245"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR不正確。きりたんの推理。line-042。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "それは嬉しいね",
       "startMs": 589440,
       "endMs": 590910,
       "sceneId": "ep01-scene-05",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-247"],
+      "rawEntryIds": [
+        "cue-247"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "皮肉めいた返答。ライの口調と推定。line-043。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "火星と地球の間で暗号通信が複数走ってる。あいつらが協調することなんて生のコンテナ以外ありえない。あいつらは機械頼みの捜索しかできないから、接触は木星へのエントリーだろうな",
       "startMs": 590920,
       "endMs": 607000,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-249"],
+      "rawEntryIds": [
+        "cue-249"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライの分析。ASR「強調」→「協調」、「総戦」→「捜索」。line-044。"
@@ -1061,20 +1301,24 @@
       "endMs": 609710,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-251"],
+      "rawEntryIds": [
+        "cue-251"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの軽い返し。line-045。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "あいつらにとってみれば嵐の回廊はそこまで難易度が高いコースじゃない。なんとかして逃げ切れ",
       "startMs": 609720,
       "endMs": 615790,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-253"],
+      "rawEntryIds": [
+        "cue-253"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライがきりたんに警告。ASR「改そこまで」→「回廊はそこまで」。line-046。"
@@ -1087,33 +1331,44 @@
       "endMs": 625000,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-255", "cue-257"],
+      "rawEntryIds": [
+        "cue-255",
+        "cue-257"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが状況を受け入れる。ASR「をつまされた」→「物をつかまされた」。line-047前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "コンテナの外部放射線遮蔽レベルはA30でした。あのコンテナ、ほとんどが遮蔽材かよ。通常の貨物にしては遮蔽が高すぎますし、植物や資料をわざわざ急便に載せる意味がありません",
       "startMs": 625000,
       "endMs": 647310,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-259", "cue-261", "cue-263"],
+      "rawEntryIds": [
+        "cue-259",
+        "cue-261",
+        "cue-263"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIがコンテナの分析結果を報告。ASR「射兵」→「遮蔽」。途中のきりたんの反応「あのコンテナ、ほとんどが遮蔽材かよ」が混在。line-047後半〜048。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "高遮蔽かつ急行となれば、生きていて放射線被曝を避けなければならない対象が格納されていると考えるのが妥当です",
       "startMs": 637320,
       "endMs": 647310,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-265", "cue-267", "cue-269"],
+      "rawEntryIds": [
+        "cue-265",
+        "cue-267",
+        "cue-269"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの推論。ASR「校舎兵」→「高遮蔽」、「被爆」→「被曝」。line-048。"
@@ -1126,25 +1381,37 @@
       "endMs": 651790,
       "sceneId": "ep01-scene-05",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-271"],
+      "rawEntryIds": [
+        "cue-271"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの結論。line-049。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "要望を全て叶えるとすると、木星への直接エントリーしか方法はありません。木星赤道面にフルバーンでエントリーし、高エネルギー直接遷移でガニメデに接近します。このコースであれば嵐の回廊よりもさらに10時間早くガニメデに到達できます",
       "startMs": 654360,
       "endMs": 682000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-273", "cue-275", "cue-277", "cue-279"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-273",
+        "cue-275",
+        "cue-277",
+        "cue-279"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "orbit",
-          "textSpan": [62, 76],
+          "textSpan": [
+            62,
+            76
+          ],
           "normalizedValue": null,
           "unit": null
         }
@@ -1153,18 +1420,27 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "オーバー筋の木星高度は1.5RJ。潮力による機体応力は数百t相当です。小型船なら耐えられる可能性がありますが、地球や火星の大型艇ではまず耐えられないでしょうね",
       "startMs": 682000,
       "endMs": 695000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-281", "cue-283", "cue-285"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-281",
+        "cue-283",
+        "cue-285"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "orbit",
-          "textSpan": [11, 17],
+          "textSpan": [
+            11,
+            17
+          ],
           "normalizedValue": 1.5,
           "unit": "RJ"
         }
@@ -1179,20 +1455,24 @@
       "endMs": 697000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-287"],
+      "rawEntryIds": [
+        "cue-287"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの不安。line-050中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "85%の確率で基礎骨格が破断します",
       "startMs": 697000,
       "endMs": 700000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-289"],
+      "rawEntryIds": [
+        "cue-289"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが生存確率を提示。line-050。"
@@ -1205,20 +1485,25 @@
       "endMs": 702000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-291"],
+      "rawEntryIds": [
+        "cue-291"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんのツッコミ。line-050。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "乗務員は重力保護で守られますから大丈夫ですよ",
       "startMs": 702000,
       "endMs": 705000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-293", "cue-295"],
+      "rawEntryIds": [
+        "cue-293",
+        "cue-295"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの楽観的な返答。line-050。"
@@ -1231,25 +1516,40 @@
       "endMs": 700000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-297", "cue-299", "cue-301"],
+      "rawEntryIds": [
+        "cue-297",
+        "cue-299",
+        "cue-301"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの皮肉。line-051前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "オーバースのウィンドウは嵐の回廊では数時間ありましたが、ダイレクトエントリーの場合ターゲットウィンドウはプラスマイナス5分です。必要ΔVは-2.3km/s。中央を180秒以上外せばガニメデ交差は消失、重力井戸に落ちます",
       "startMs": 700000,
       "endMs": 723710,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-303", "cue-305", "cue-307", "cue-309", "cue-311"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-303",
+        "cue-305",
+        "cue-307",
+        "cue-309",
+        "cue-311"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "delta_v",
-          "textSpan": [63, 74],
+          "textSpan": [
+            63,
+            74
+          ],
           "normalizedValue": -2.3,
           "unit": "km/s"
         }
@@ -1264,20 +1564,26 @@
       "endMs": 723710,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-313", "cue-315", "cue-317"],
+      "rawEntryIds": [
+        "cue-313",
+        "cue-315",
+        "cue-317"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの懸念。アビオニクス(航空電子機器)への放射線影響。line-051末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "木星待機圏にじっくり潰されるよりはマシですね",
       "startMs": 723720,
       "endMs": 728000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-319"],
+      "rawEntryIds": [
+        "cue-319"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの比較。ASR「待機に」→「待機圏に」。line-052前半。"
@@ -1290,7 +1596,9 @@
       "endMs": 730190,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-321"],
+      "rawEntryIds": [
+        "cue-321"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの返答。line-052後半。"
@@ -1303,7 +1611,9 @@
       "endMs": 733000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-323"],
+      "rawEntryIds": [
+        "cue-323"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがAIに問いかける。ASR「どうしますか」はAI口調だが、文脈的にはきりたんの自問。line-053冒頭。"
@@ -1316,20 +1626,25 @@
       "endMs": 745000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-325", "cue-327"],
+      "rawEntryIds": [
+        "cue-325",
+        "cue-327"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがダイレクトエントリーを決断。ASR「おっ手」→「奴ら」。line-053中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "そう来なくちゃですね",
       "startMs": 745000,
       "endMs": 748000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-329"],
+      "rawEntryIds": [
+        "cue-329"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが同意。やや不自然なカジュアルさ。line-053。"
@@ -1342,20 +1657,24 @@
       "endMs": 751000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-331"],
+      "rawEntryIds": [
+        "cue-331"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがAIの態度にツッコミ。line-053。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "木星待機圏の風は時速480kmなんですって",
       "startMs": 751000,
       "endMs": 755000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-333"],
+      "rawEntryIds": [
+        "cue-333"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが木星大気の風速データを提示。line-053。"
@@ -1368,33 +1687,41 @@
       "endMs": 757000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-335"],
+      "rawEntryIds": [
+        "cue-335"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがAIの怖い話を止める。line-053。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "演技でもないんですけどね",
       "startMs": 757000,
       "endMs": 760000,
       "sceneId": "ep01-scene-06",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-337"],
+      "rawEntryIds": [
+        "cue-337"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ASR不正確。AIの返答と推定。line-053。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "フォアエントリーチェックリスト。炉、401°で安定、冷却済み。1次骨格値、設計値範囲内。放射線フィールド到着時残量42分",
       "startMs": 760000,
       "endMs": 780000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-339", "cue-341", "cue-343"],
+      "rawEntryIds": [
+        "cue-339",
+        "cue-341",
+        "cue-343"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIによるエントリー前チェックリスト。ASR誤認識を修正。line-053後半。"
@@ -1407,34 +1734,43 @@
       "endMs": 782000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-345"],
+      "rawEntryIds": [
+        "cue-345"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが放射線シールドの残量に驚く。line-053。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "ダイレクトエントリーでは放射線圏に直接突っ込みますから。持つだけマシか",
       "startMs": 782000,
       "endMs": 788000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-347"],
+      "rawEntryIds": [
+        "cue-347"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの説明。「持つだけマシか」はきりたんの台詞の可能性もあり。line-053。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "航法計算。ペリジュピター到達予測まで残り11時間42分。オーバースウィンドウ、プラスマイナス5分、180秒以内",
       "startMs": 788000,
       "endMs": 790150,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-349", "cue-351"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-349",
+        "cue-351"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [],
       "note": "AIがペリジュピター到達予測を報告。line-053末尾。"
     },
@@ -1446,33 +1782,39 @@
       "endMs": 791000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-353"],
+      "rawEntryIds": [
+        "cue-353"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの了承。line-053末尾。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "おい、お前気が狂ったか",
       "startMs": 791000,
       "endMs": 793000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-355"],
+      "rawEntryIds": [
+        "cue-355"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライがきりたんのダイレクトエントリー決断に驚く。ASR「狂るった」→「狂った」。line-053末尾。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "お前が木星への直撃コースにいるからだろうが",
       "startMs": 792600,
       "endMs": 795710,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-357"],
+      "rawEntryIds": [
+        "cue-357"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライの非難。line-054。"
@@ -1485,7 +1827,9 @@
       "endMs": 799069,
       "sceneId": "ep01-scene-06",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-359"],
+      "rawEntryIds": [
+        "cue-359"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "短い返し。きりたんまたはライの可能性。line-055。"
@@ -1498,7 +1842,9 @@
       "endMs": 802430,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-361"],
+      "rawEntryIds": [
+        "cue-361"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがライの追尾にツッコミ。line-056。"
@@ -1511,38 +1857,50 @@
       "endMs": 811670,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-363"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-363"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [],
       "note": "きりたんがダイレクトエントリーを宣言。line-057。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "お前今なんつった？",
       "startMs": 811680,
       "endMs": 813030,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-365"],
+      "rawEntryIds": [
+        "cue-365"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライの驚き。line-058。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "了解。炉出力は100%で設定。想定推力は9.8MN。メインアップ。点火アームド、衝撃に備えてください。放射線レベル許容範囲内",
       "startMs": 813040,
       "endMs": 826000,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-367", "cue-369"],
+      "rawEntryIds": [
+        "cue-367",
+        "cue-369"
+      ],
       "transferRefs": [],
       "mentions": [
         {
           "concept": "thrust",
-          "textSpan": [18, 29],
+          "textSpan": [
+            18,
+            29
+          ],
           "normalizedValue": 9.8,
           "unit": "MN"
         }
@@ -1551,13 +1909,15 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "何か言い残すことはあるか？",
       "startMs": 826000,
       "endMs": 830030,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-371"],
+      "rawEntryIds": [
+        "cue-371"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライが冗談半分に聞く。line-059後半。"
@@ -1570,20 +1930,24 @@
       "endMs": 833710,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-373"],
+      "rawEntryIds": [
+        "cue-373"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの別れの言葉。ASR「出会おう」→「会おう」。line-060。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "5、4、3、2、1",
       "startMs": 833720,
       "endMs": 839110,
       "sceneId": "ep01-scene-06",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-375"],
+      "rawEntryIds": [
+        "cue-375"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIによるフルバーンのカウントダウン。line-061。"
@@ -1596,20 +1960,24 @@
       "endMs": 860000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-377"],
+      "rawEntryIds": [
+        "cue-377"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが木星接近の光景に感嘆。ASR「ない光景だな」→「すごい光景だな」。line-062前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "いかがでしょう。ペリジュピターの景色は違うかもしれませんが",
       "startMs": 860000,
       "endMs": 864000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-379"],
+      "rawEntryIds": [
+        "cue-379"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの返答。ASR「きどうでしょう」→「いかがでしょう」。line-062中盤。"
@@ -1622,20 +1990,24 @@
       "endMs": 867150,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-381"],
+      "rawEntryIds": [
+        "cue-381"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの感想。line-062後半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "ガリレオ探査機の気分ですね",
       "startMs": 867160,
       "endMs": 871000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-383"],
+      "rawEntryIds": [
+        "cue-383"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIがガリレオ探査機に例える。ASR「探査の」→「探査機の」。line-063前半。"
@@ -1648,20 +2020,24 @@
       "endMs": 873000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-385"],
+      "rawEntryIds": [
+        "cue-385"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんのツッコミ。ASR「探索」→「探査機」。line-063中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "我々の先輩です",
       "startMs": 873000,
       "endMs": 874110,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-385"],
+      "rawEntryIds": [
+        "cue-385"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIのブラックジョーク。line-063後半。"
@@ -1674,20 +2050,24 @@
       "endMs": 877310,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-387"],
+      "rawEntryIds": [
+        "cue-387"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが縁起でもない話を止める。line-064。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "まだ後悔してますか？",
       "startMs": 877320,
       "endMs": 880000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-389"],
+      "rawEntryIds": [
+        "cue-389"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの質問。冒頭の「後悔してる」への回帰。line-065前半。"
@@ -1700,20 +2080,24 @@
       "endMs": 885000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-391"],
+      "rawEntryIds": [
+        "cue-391"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの返答。line-065中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "まあそうですね。今更です",
       "startMs": 885000,
       "endMs": 886870,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-393"],
+      "rawEntryIds": [
+        "cue-393"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの同意。line-065後半。"
@@ -1726,20 +2110,25 @@
       "endMs": 892000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-395"],
+      "rawEntryIds": [
+        "cue-395"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが木星の巨大さに感嘆。line-066前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "直径は地球の11倍、質量は318倍です。厚い大気の下には液体水素の海があります",
       "startMs": 892000,
       "endMs": 900000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-397", "cue-399"],
+      "rawEntryIds": [
+        "cue-397",
+        "cue-399"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが木星の基本データを解説。ASR「火星の11倍」→「地球の11倍」、「熱い待機」→「厚い大気」。line-066中盤。"
@@ -1752,33 +2141,40 @@
       "endMs": 902030,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-401"],
+      "rawEntryIds": [
+        "cue-401"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの後悔。line-066後半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "残り1分で磁気圏通過。磁気シールドは最大出力を維持。被曝計ゼロ点リセット",
       "startMs": 902040,
       "endMs": 909430,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-403", "cue-405"],
+      "rawEntryIds": [
+        "cue-403",
+        "cue-405"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIのステータス報告。ASR「時期圏」→「磁気圏」、「時期シールド」→「磁気シールド」、「被爆系」→「被曝計」。line-067。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "引き返しますか？",
       "startMs": 909440,
       "endMs": 912000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-407"],
+      "rawEntryIds": [
+        "cue-407"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの質問。line-068前半。"
@@ -1791,20 +2187,24 @@
       "endMs": 916000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-409"],
+      "rawEntryIds": [
+        "cue-409"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんのツッコミ。line-068中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "次回から気をつけます",
       "startMs": 916000,
       "endMs": 918000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-411"],
+      "rawEntryIds": [
+        "cue-411"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの返答。line-068。"
@@ -1817,25 +2217,36 @@
       "endMs": 919629,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-411"],
+      "rawEntryIds": [
+        "cue-411"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの短い返し。line-068末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "ウィンドウ、プラスマイナス180秒。速度48.9km/s。問題なし。船体放射線レベル上昇中",
       "startMs": 923320,
       "endMs": 933269,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-413", "cue-415", "cue-417"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-413",
+        "cue-415",
+        "cue-417"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "delta_v",
-          "textSpan": [17, 28],
+          "textSpan": [
+            17,
+            28
+          ],
           "normalizedValue": 48.9,
           "unit": "km/s"
         }
@@ -1844,39 +2255,46 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "現在、放射線ベルト内。磁気シールドは稼働中",
       "startMs": 933279,
       "endMs": 938309,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-419"],
+      "rawEntryIds": [
+        "cue-419"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIのステータス報告。ASR「毎8ベルト」→「放射線ベルト」。line-070。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "潮力による機体応力は現在130%。設計上の許容値を上回っています",
       "startMs": 938319,
       "endMs": 946629,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-421", "cue-423"],
+      "rawEntryIds": [
+        "cue-421",
+        "cue-423"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが構造限界の警告。ASR「調力」→「潮力」、「期待力」→「機体応力」。line-071。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "磁気シールドの焦点ずれによってエンジン出力が6%低下中",
       "startMs": 946639,
       "endMs": 952000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-425"],
+      "rawEntryIds": [
+        "cue-425"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが出力低下を報告。ASR「時のズル」→「磁気シールド」。line-072前半。"
@@ -1889,7 +2307,9 @@
       "endMs": 954000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-425"],
+      "rawEntryIds": [
+        "cue-425"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの苛立ち。line-072。"
@@ -1902,20 +2322,26 @@
       "endMs": 957000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-427"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-427"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [],
       "note": "きりたんがオーバースの準備を指示。line-072中盤。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "定格値を超えています。バーストを超える出力は炉の熱を圧迫します",
       "startMs": 957000,
       "endMs": 960000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-427"],
+      "rawEntryIds": [
+        "cue-427"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが過負荷の警告。ASR「バースを超える力は黒の熱を圧縮」→「バーストを超える出力は炉の熱を圧迫」。line-072。"
@@ -1928,51 +2354,70 @@
       "endMs": 961000,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-429"],
+      "rawEntryIds": [
+        "cue-429"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの判断。line-072。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "了解。ピーク出力で設定。オーバース時間を再計算しました。最接近まで残りわずか",
       "startMs": 961000,
       "endMs": 976839,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-429"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-429"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [],
       "note": "AIがオーバース準備完了を報告。line-072末尾。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "機体応力上昇中。オーバース準備。点火アームド、衝撃に備えてください。放射線レベル許容範囲内。5、4、3、2、1",
       "startMs": 976839,
       "endMs": 992670,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-431", "cue-433", "cue-435"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-431",
+        "cue-433",
+        "cue-435"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [],
       "note": "AIによるオーバースのカウントダウン。line-073。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "ΔV進行、残り1.8km/s",
       "startMs": 1009199,
       "endMs": 1016030,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-437"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-437"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "delta_v",
-          "textSpan": [0, 13],
+          "textSpan": [
+            0,
+            13
+          ],
           "normalizedValue": 1.8,
           "unit": "km/s"
         }
@@ -1987,25 +2432,36 @@
       "endMs": 1026630,
       "sceneId": "ep01-scene-07",
       "confidence": "uncertain",
-      "rawEntryIds": ["cue-439", "cue-441"],
+      "rawEntryIds": [
+        "cue-439",
+        "cue-441"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "文脈不明瞭。きりたんの独白と推定。line-075。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "ΔV進行、残り0.3km/s。磁気シールドの応力歪み、許容値を超過",
       "startMs": 1029559,
       "endMs": 1039110,
       "sceneId": "ep01-scene-07",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-443", "cue-445"],
-      "transferRefs": ["ep01-transfer-02"],
+      "rawEntryIds": [
+        "cue-443",
+        "cue-445"
+      ],
+      "transferRefs": [
+        "ep01-transfer-02"
+      ],
       "mentions": [
         {
           "concept": "delta_v",
-          "textSpan": [0, 13],
+          "textSpan": [
+            0,
+            13
+          ],
           "normalizedValue": 0.3,
           "unit": "km/s"
         }
@@ -2014,26 +2470,34 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "推進系に損傷7%。磁気シールドのコイル応力は限界値を17秒間超過しました",
       "startMs": 1052000,
       "endMs": 1067350,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-447", "cue-449"],
+      "rawEntryIds": [
+        "cue-447",
+        "cue-449"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが損傷レポート。ASR「水系」→「推進系」、「時ずるのコイル王力」→「磁気シールドのコイル応力」。line-077。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "船体温度、均衡に復帰しました。改めて報告します。磁気ノズルの一部が塑性変形を起こしています。長時間の高出力運転は危険です",
       "startMs": 1070400,
       "endMs": 1083149,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-451", "cue-453", "cue-455", "cue-457"],
+      "rawEntryIds": [
+        "cue-451",
+        "cue-453",
+        "cue-455",
+        "cue-457"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIが損傷詳細を報告。ASR「先体温度近衡」→「船体温度、均衡」、「蘇生変形」→「塑性変形」、「時期ノズル」→「磁気ノズル」。line-078。"
@@ -2046,20 +2510,24 @@
       "endMs": 1087000,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-459"],
+      "rawEntryIds": [
+        "cue-459"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの不満。ASR「干渉」→「感動」。line-079前半。"
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI",
+      "speakerName": "ケイ",
       "text": "座ってただけでしょ",
       "startMs": 1087000,
       "endMs": 1089000,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-459"],
+      "rawEntryIds": [
+        "cue-459"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "AIの皮肉。line-079中盤。"
@@ -2072,7 +2540,9 @@
       "endMs": 1091000,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-459"],
+      "rawEntryIds": [
+        "cue-459"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんのツッコミ。line-079。"
@@ -2085,20 +2555,24 @@
       "endMs": 1092669,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-459"],
+      "rawEntryIds": [
+        "cue-459"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが成功を喜ぶ。line-079末尾。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "航案ネットはお前の話で持ちきりだぞ。木星にダイレクトエントリーしたってな",
       "startMs": 1094240,
       "endMs": 1096920,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-461"],
+      "rawEntryIds": [
+        "cue-461"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライからの通信。ASR「公案ネット」→「航案ネット」。line-080。"
@@ -2111,33 +2585,41 @@
       "endMs": 1101590,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-463", "cue-465"],
+      "rawEntryIds": [
+        "cue-463",
+        "cue-465"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの本音。line-081。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "地球と火星の奴らは呑気に周回コースに回ったよ。お前の何時間も前を走ってるな",
       "startMs": 1101600,
       "endMs": 1109950,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-467", "cue-469"],
+      "rawEntryIds": [
+        "cue-467",
+        "cue-469"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライが追手の状況を報告。ASR「呑キ」→「呑気」。line-082〜083。"
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "後でログ見せてくれよ",
       "startMs": 1109000,
       "endMs": 1110000,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-469"],
+      "rawEntryIds": [
+        "cue-469"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ライの要望。line-083後半。"
@@ -2150,7 +2632,9 @@
       "endMs": 1116230,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-471"],
+      "rawEntryIds": [
+        "cue-471"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがペリジュピター通過時の視界について語る。ASR「時期フィールド」→「磁気フィールド」。line-084。"
@@ -2163,7 +2647,9 @@
       "endMs": 1138350,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-473"],
+      "rawEntryIds": [
+        "cue-473"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ガニメデ管制が入港拒否を通告。ASR「メでは」→「ガニメデでは」。line-085。"
@@ -2176,7 +2662,9 @@
       "endMs": 1152480,
       "sceneId": "ep01-scene-08",
       "confidence": "inferred",
-      "rawEntryIds": ["cue-475"],
+      "rawEntryIds": [
+        "cue-475"
+      ],
       "transferRefs": [],
       "mentions": [],
       "note": "ガニメデ管制が他の港へ誘導。ASR「渡ってくれ」→「当たってくれ」。line-086。"

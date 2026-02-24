@@ -7,14 +7,21 @@
       "id": "kiritan",
       "nameJa": "きりたん",
       "nameEn": "Kiritan",
-      "aliases": ["キリタン"],
+      "aliases": [
+        "キリタン"
+      ],
       "notes": "小型貨物船ケストレルの船長兼パイロット。フリーランス。"
     },
     {
       "id": "kestrel-ai",
-      "nameJa": "ケストレルAI",
-      "nameEn": "Kestrel AI",
-      "aliases": ["公案", "コアン", "航案", "航案AI"],
+      "nameJa": "ケイ",
+      "nameEn": "Kei",
+      "aliases": [
+        "公案",
+        "コアン",
+        "航案",
+        "航案AI"
+      ],
       "notes": "ケストレル号の船内AI。船のステータス報告、航法計算、安全警告を行う。"
     },
     {
@@ -26,10 +33,10 @@
     },
     {
       "id": "rai",
-      "nameJa": "ライ",
-      "nameEn": "Rai",
+      "nameJa": "船乗り",
+      "nameEn": "Sailor",
       "aliases": [],
-      "notes": "別の船のパイロット。途中できりたんと通信する。"
+      "notes": "名前不詳。きりたんの知人の船乗り。EP01で情報提供、EP05でガニメデから通信。元の話者名「ライ」は対話帰属時の仮称で原作では不明。"
     },
     {
       "id": "mars-control",

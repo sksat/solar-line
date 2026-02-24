@@ -14,7 +14,7 @@
     },
     {
       "id": "kestrel-ai",
-      "nameJa": "ケストレルAI（ケイ）",
+      "nameJa": "ケイ",
       "nameEn": "Kestrel AI (Kei)",
       "aliases": ["公案", "コアン", "航案", "ケイ"]
     },
@@ -96,7 +96,7 @@
   "dialogue": [
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "木星航案校舎の航行ログからは追跡できません。おそらく非公式のアドバイザリーを受けて航行したものと推定されます",
       "startMs": 6839,
       "endMs": 20000,
@@ -161,7 +161,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "どうされますか？",
       "startMs": 109799,
       "endMs": 112000,
@@ -187,7 +187,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "外縁航路は土星圏での航路とは根本的に異なります。まして、この船は内縁輸送向けに設計されたものです。計算上航行は可能ですが、保証はできません",
       "startMs": 139200,
       "endMs": 151309,
@@ -200,7 +200,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "今まで以上に危険だということです",
       "startMs": 153271,
       "endMs": 156000,
@@ -226,7 +226,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "それよりはるかに危険なものです",
       "startMs": 158000,
       "endMs": 160000,
@@ -239,7 +239,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "航路の目的地はウラヌス3、タイタニア集合複合施設、天王星自治有効機構宇宙港です",
       "startMs": 177040,
       "endMs": 180772,
@@ -265,7 +265,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "少なくとも閉鎖されたというアドバイザリーは配信されていません",
       "startMs": 183519,
       "endMs": 187000,
@@ -291,7 +291,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "143時間12分です",
       "startMs": 191560,
       "endMs": 193000,
@@ -317,7 +317,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "外縁航路では人間は全く役に立ちません。それはつまり航法AIである私に全てを委ねることに他なりません",
       "startMs": 306000,
       "endMs": 315189,
@@ -330,7 +330,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "問題はその私です",
       "startMs": 315199,
       "endMs": 318990,
@@ -356,7 +356,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "私たちがここまでたどり着いたのも木星でビーコンの情報を拾ったからですが、あれはダイレクトエントリーの出口に都合よく配置されていました。そしてそのダイレクトエントリーを提案したのは私です",
       "startMs": 322000,
       "endMs": 335510,
@@ -382,7 +382,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ですが、もし私に何らかの異常があり、それが外縁航路で顕在化したら、人間だけではリカバリーは不可能です。内縁航路とは異なり、外縁には誘導がないためです",
       "startMs": 342000,
       "endMs": 354870,
@@ -408,7 +408,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "話聞いてましたか？",
       "startMs": 356000,
       "endMs": 359000,
@@ -447,7 +447,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "大丈夫ですか？ 心拍数が増えていますが",
       "startMs": 380440,
       "endMs": 383790,
@@ -512,7 +512,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "現在位置は太陽基準で14.72 AU。速度は巡航速度でおよそ3000 km/s。背景恒星観測と慣性航法系はそれぞれ違うコースにナビゲートしています。この2つの差は角度にして1.23度になります",
       "startMs": 823880,
       "endMs": 852000,
@@ -525,7 +525,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "この誤差は天王星交点面でおよそ1436万km。一方のコースは天王星に交差し、もう一方は太陽系の外縁を超えるコースです",
       "startMs": 852000,
       "endMs": 858049,
@@ -538,7 +538,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "修正可能な時間窓は約10分です。今すぐに決めてください",
       "startMs": 937040,
       "endMs": 945000,
@@ -564,7 +564,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "選ぶだけでしょ",
       "startMs": 947000,
       "endMs": 949000,
@@ -603,7 +603,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "天王星磁気圏に突入します。現在高度は25 RU。ナビゲーション基準を天王星原点に切り替えました",
       "startMs": 993279,
       "endMs": 1004000,
@@ -629,7 +629,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "赤外線で見れば見えますよ",
       "startMs": 1008000,
       "endMs": 1008430,
@@ -642,7 +642,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ええ、外していれば今頃太陽系の暗闇に向けて飛び続けているところでした",
       "startMs": 1022759,
       "endMs": 1031909,
@@ -655,7 +655,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "なぜあの時慣性航法系を選んだのでしょうか？ あなたならきっと「夢がある」とか言って星を選ぶものだと思っていました",
       "startMs": 1035160,
       "endMs": 1046000,
@@ -681,7 +681,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "そうでした",
       "startMs": 1049880,
       "endMs": 1053590,
@@ -707,7 +707,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "私は嘘をつきません",
       "startMs": 1062000,
       "endMs": 1064000,
@@ -733,7 +733,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "もし私が嘘をつくとしたら、それはあなたとの信頼を壊したくない時です",
       "startMs": 1066080,
       "endMs": 1073000,

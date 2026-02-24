@@ -14,7 +14,7 @@
     },
     {
       "id": "kestrel-ai",
-      "nameJa": "ケストレルAI（ケイ）",
+      "nameJa": "ケイ",
       "nameEn": "Kestrel AI (Kei)",
       "aliases": ["ケイ"]
     },
@@ -26,7 +26,7 @@
     },
     {
       "id": "rai",
-      "nameJa": "ライ",
+      "nameJa": "船乗り",
       "nameEn": "Rai",
       "aliases": []
     },
@@ -120,7 +120,7 @@
   "dialogue": [
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "モニターにて異常値。骨格フレーム5番で亀裂が進行、0.3マイクロメートル。同じくフレーム7番、0.2マイクロメートル。炉心温度は安定していますが、加速荷重による応力が骨格全体に蓄積しています",
       "startMs": 1780,
       "endMs": 19020,
@@ -159,7 +159,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "あら、心配してくれるんですか",
       "startMs": 27960,
       "endMs": 31420,
@@ -185,7 +185,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "おそらくあなたが想像するような痛みなどの感覚はありません",
       "startMs": 36000,
       "endMs": 42660,
@@ -198,7 +198,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ただ、大切なものが少しずつ壊れていく。そういった感覚なのだと思います",
       "startMs": 43360,
       "endMs": 48540,
@@ -224,7 +224,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "私には骨格フレームの応力も核融合炉の炉心温度も外部放射線の強度だって分かります。この船が感じていることなら全て",
       "startMs": 53220,
       "endMs": 62540,
@@ -237,7 +237,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ですが、この船が壊れていくたびに感じているものが何なのか、私には区別がつかないのです",
       "startMs": 63300,
       "endMs": 70500,
@@ -263,7 +263,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "次の船にはもっと優しくしてあげてくださいね",
       "startMs": 81900,
       "endMs": 86000,
@@ -276,7 +276,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "今回の航路はここタイタニアから地球まで直接エントリーする航路になる",
       "startMs": 86000,
       "endMs": 96000,
@@ -289,7 +289,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "もちろんそんなものは港湾航舎の航路体系には存在しないから、あなたたちは無誘導で地球まで航行することになるわね",
       "startMs": 96000,
       "endMs": 105000,
@@ -315,7 +315,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "おそらく地球はあなたたちが内苑に戻るのを阻止するため、ソーラーラインの航路誘導網を停波してくるはず",
       "startMs": 107900,
       "endMs": 114540,
@@ -328,7 +328,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "もちろんこれは地球にとっても大きな代償を伴う行為だけど、100年以上維持されてきた港湾航舎体制を守るためなら、あの星は手段を選ばないでしょうね",
       "startMs": 115340,
       "endMs": 124540,
@@ -341,7 +341,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "あなたたちが内苑に戻れば、それは地球が管理できない船が確かに存在していることの証明になってしまう。それは彼らが一番恐れていることだから",
       "startMs": 125640,
       "endMs": 134440,
@@ -367,7 +367,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "降ろされたのではなく、レールのない場所を行くのです",
       "startMs": 139000,
       "endMs": 141440,
@@ -380,7 +380,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "今回は全ての区間で恒星観測による自律航法を用います。そのため港湾航舎による誘導網には依存しません。目的地は地球高度400kmの低軌道です",
       "startMs": 142160,
       "endMs": 155440,
@@ -393,7 +393,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "推定所要時間は507時間",
       "startMs": 156320,
       "endMs": 158440,
@@ -419,7 +419,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "壊すのではありません。開くのです",
       "startMs": 166260,
       "endMs": 170000,
@@ -432,7 +432,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "水素炉の磁気ノズルに蘇生変形があるため、今回の航路では点火可能回数に制限があります。まず1度目の点火で天王星圏を脱出、そのまま巡航速度まで加速して土星まで向かいます",
       "startMs": 170000,
       "endMs": 183040,
@@ -445,7 +445,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "通常であればオービタルカーテンの通過時点で航舎の地上局を使って位置誤差の校正を行いますが、今回は土星のリング面の近傍5kmをかすめながらエッジを観測し校正を行います。その後、木星フライバイにより軌道修正と追加加速を実施します",
       "startMs": 183780,
       "endMs": 202000,
@@ -458,7 +458,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "この時点での予定速度は1500km毎秒。オーベルト効果によるエネルギー効率向上はおよそ3%程度となりますが、ノズル寿命が限られている現状では無視できない数値です",
       "startMs": 202000,
       "endMs": 214540,
@@ -471,7 +471,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "その後、火星で3回目の点火を行い減速。地球近傍で最後の点火を行い軌道投入します。航舎誘導なしのため、ナビゲーションの位置誤差は大きく、土星通過時点で最大1000kmとなる可能性があります",
       "startMs": 215160,
       "endMs": 234000,
@@ -510,7 +510,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "第1シークエンス完了。予定ΔV達成。天王星脱出軌道に乗りました",
       "startMs": 249380,
       "endMs": 255300,
@@ -523,7 +523,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "次の点火は木星圏、375時間後です",
       "startMs": 256180,
       "endMs": 261000,
@@ -549,7 +549,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "何もありません。少し眠ってはいかがですか",
       "startMs": 263360,
       "endMs": 267020,
@@ -575,7 +575,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "船が寝たら誰があなたを地球まで送り届けるのです",
       "startMs": 270100,
       "endMs": 275000,
@@ -601,7 +601,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "オービタルカーテンを通過。土星港湾交差圏内へ侵入",
       "startMs": 313440,
       "endMs": 319000,
@@ -627,7 +627,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "全周波数帯をスキャンしましたが信号なし",
       "startMs": 320660,
       "endMs": 324100,
@@ -640,7 +640,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "こんなに静かな宇宙は初めてです",
       "startMs": 326480,
       "endMs": 330000,
@@ -666,7 +666,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "港湾交差の航路を飛んでいる時は常に何かしらの信号が聞こえていました。ビーコンの恒星信号、管制からのアドバイザリー、他船のトランスポンダ",
       "startMs": 332520,
       "endMs": 344000,
@@ -692,7 +692,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "消えたのではなく、消されたのです",
       "startMs": 348680,
       "endMs": 352000,
@@ -718,7 +718,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "太陽系を航行する船は常時700隻近くになります。それらを全て停泊させ、もしくは漂流させているとすると、その経済的損失は測り知れません",
       "startMs": 354340,
       "endMs": 365020,
@@ -744,7 +744,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "航法鍵なしの航行が可能だという前例が、地球にとってそれだけ致命的ということです",
       "startMs": 374880,
       "endMs": 382000,
@@ -770,7 +770,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ええ、全くです",
       "startMs": 384740,
       "endMs": 386120,
@@ -783,7 +783,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "信号を受信。発信源はエンケラドスです",
       "startMs": 389840,
       "endMs": 398000,
@@ -1056,7 +1056,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "校正データを受信。慣性航法系のドリフト補正を実施します。位置精度が大幅に改善しました。土星リング近傍通過の精密航法に十分です",
       "startMs": 533180,
       "endMs": 543880,
@@ -1082,7 +1082,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ええ。でも今は黙っていないようです",
       "startMs": 548000,
       "endMs": 551000,
@@ -1095,7 +1095,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "土星リング面スポーク帯域に接近中、現在距離88km。スポーク帯面で光学およびレーザー観測を行い、リング構造の位置を基準として背景恒星観測航法の校正を実施します",
       "startMs": 553740,
       "endMs": 568100,
@@ -1121,7 +1121,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "土星のリング面の構造はサブキロメートル精度で特定されています。エンケラドスから配信された時刻情報から惑星位置が分かるため、この2つを組み合わせれば高精度で位置の特定が可能です",
       "startMs": 571600,
       "endMs": 590000,
@@ -1147,7 +1147,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "現在速度は1500km毎秒。1cmの氷の粒が衝突しただけでも運動エネルギーはおよそ110メガジュールほどになります。粉々になって永久に土星を眺めたいのであれば、もう少し近寄ってもいいですよ",
       "startMs": 596000,
       "endMs": 603020,
@@ -1173,7 +1173,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "あら、残念",
       "startMs": 604000,
       "endMs": 605280,
@@ -1199,7 +1199,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "天王星人のお友達です",
       "startMs": 611040,
       "endMs": 612280,
@@ -1225,7 +1225,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "天王星人は星を見るのではなく読むのだそうです。光の揺らぎ、磁場の震え、全部が言葉なんですって",
       "startMs": 615400,
       "endMs": 625000,
@@ -1251,7 +1251,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "船と接続されることが前提の人種ですからね",
       "startMs": 626960,
       "endMs": 630280,
@@ -1277,7 +1277,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "気にしてませんよ。それに、そうだったからこそ、最後まであなたと一緒にいられるんですから",
       "startMs": 633000,
       "endMs": 640900,
@@ -1303,7 +1303,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "いいんですよ",
       "startMs": 646820,
       "endMs": 653320,
@@ -1316,7 +1316,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "木星圏まで残り3時間。外部放射線量が上昇し始めています。現在毎時1.2ミリシーベルト",
       "startMs": 655440,
       "endMs": 668000,
@@ -1342,7 +1342,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "今回木星ではパワードフライバイにて、火星に向けた軌道修正と最終加速を実施します。エントリー速度は1500km毎秒、外苑巡航速度のまま木星の重力圏をかすめます",
       "startMs": 671520,
       "endMs": 689000,
@@ -1368,7 +1368,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ブレーキを失った船が突っ込んでくるように見えているでしょうね。あながち間違いではありませんが",
       "startMs": 691000,
       "endMs": 694560,
@@ -1381,7 +1381,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "この速度では重力アシストによるΔV変更は誤差でしかありません。ですがオーベルト効果によりエネルギー効率が3%程度向上し、その分燃焼時間を削減することが可能となります",
       "startMs": 695580,
       "endMs": 708380,
@@ -1394,7 +1394,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "本来であれば迂回したいところですが、イオ・トーラス外縁をかすめ高放射線帯域の中を最大で6分間航行することになります",
       "startMs": 709040,
       "endMs": 717380,
@@ -1407,7 +1407,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "こうすることで得られる最終速度は2100km毎秒。この速度であれば地球の核魚雷による攻撃を完全に回避できます",
       "startMs": 718200,
       "endMs": 726380,
@@ -1420,7 +1420,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "地球の保有する1メガトン級標準核魚雷の実効殺傷半径は40km程度。信管が作動して爆発する頃には私たちは遠くに飛び去っています。つまりこの速度帯では物理的に当たりません",
       "startMs": 727460,
       "endMs": 746000,
@@ -1433,7 +1433,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "天王星も土星も火星、港湾航舎の目があり、火星近傍や地球近傍では核魚雷の使用は政治的に不可能です。従って地球が私たちを撃ち落とすには木星圏か小惑星帯しかありません",
       "startMs": 746000,
       "endMs": 760000,
@@ -1446,7 +1446,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "木星圏でこの速度帯まで加速することができれば、次は火星近傍となります。つまり彼らはただ黙って私たちを地球に迎え入れるしかないということです",
       "startMs": 760000,
       "endMs": 773000,
@@ -1472,7 +1472,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "地球もソーラーラインに依存していたのでしょうね。ただ代償として水素炉の磁気ノズル寿命の問題があります",
       "startMs": 774000,
       "endMs": 780000,
@@ -1485,7 +1485,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ノズル寿命は残り55時間38分。対して地球軌道投入までに必要な燃焼時間は55時間12分。マージンは26分しかありません",
       "startMs": 776520,
       "endMs": 791000,
@@ -1511,7 +1511,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "こちらガニメデコントロール。聞こえるか",
       "startMs": 796140,
       "endMs": 800000,
@@ -1537,7 +1537,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "なら共犯だな。お前らに聞かせたいものがあってな。航法法を破ってみた",
       "startMs": 803940,
       "endMs": 810000,
@@ -1550,7 +1550,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "あいつ聞こえてるか。お前が天王星から帰ってきてるって話、エンケラドスの中継で知った。港湾ネットは大騒ぎだ。航法鍵なしの船が内苑に向かってるって",
       "startMs": 814560,
       "endMs": 826300,
@@ -1563,7 +1563,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "でもな、騒ぎはお前のことだけじゃないんだ。ビーコンが全部落ちてから内苑の物流が完全に止まってる。ガニメデの食料備蓄があと10日を切った。医療品もそこが見えてる",
       "startMs": 827300,
       "endMs": 838300,
@@ -1576,7 +1576,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "地球はお前一隻を止めるために木星の住人を干上がらせてやがる",
       "startMs": 838960,
       "endMs": 843300,
@@ -1589,7 +1589,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "本題だ。地球の保安艇が2隻、お前の予測軌道上で待ってる。木星圏でお前を落とす気だろうな。だから私が少し騒いでやる",
       "startMs": 871000,
       "endMs": 882000,
@@ -1602,7 +1602,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "木星の旧ビーコン網を使ってお前のトランスポンダ信号をばらまいて、欺瞞航跡を何本も敷いてやる。お前の予測軌道と似たプロファイルのやつ。地球は慌てるだろうな。全航路に核魚雷なんて配置できっこない",
       "startMs": 877080,
       "endMs": 898000,
@@ -1615,7 +1615,7 @@
     },
     {
       "speakerId": "rai",
-      "speakerName": "ライ",
+      "speakerName": "船乗り",
       "text": "あとはお前が当たりを引けるかどうかだ。航路の欺瞞は違法だ。さすがに免許は飛ぶだろうな。でもお前は止まるな。何があっても木星を抜けろ。ガニメデでの約束はまだ生きてるからな",
       "startMs": 898000,
       "endMs": 906860,
@@ -1628,7 +1628,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ΔV進行。残り400km毎秒。イオ・トーラス外沿を通過中。外部線量毎時220シーベルト。磁気シールドコイルの出力は最大。応力歪みにより骨格フレーム4番、6番、8番の亀裂が拡大中",
       "startMs": 908240,
       "endMs": 930000,
@@ -1654,7 +1654,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "イオの軌道直上では毎時1000シーベルトを超えます。まだマシです",
       "startMs": 932000,
       "endMs": 932860,
@@ -1667,7 +1667,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "現在小惑星帯を通過中。既知の小惑星カタログとの位置照合を行っています。照合完了。航法誤差は20km以内、許容範囲です",
       "startMs": 959460,
       "endMs": 970860,
@@ -1693,7 +1693,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "自律航法のみで天王星から飛んできて20kmです。研究者が聞いたら泣くと思いますよ",
       "startMs": 978000,
       "endMs": 985000,
@@ -1719,7 +1719,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "おそらくは",
       "startMs": 992260,
       "endMs": 994060,
@@ -1732,7 +1732,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "減速開始。目標速度1500km毎秒。軌道修正も同時に行い、地球エントリー軌道へ向かいます",
       "startMs": 1026120,
       "endMs": 1036000,
@@ -1758,7 +1758,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "あなたの故郷ですからね。恋しいですか",
       "startMs": 1038000,
       "endMs": 1042000,
@@ -1784,7 +1784,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "冷媒漏洩に伴う圧力低下が見られます。クロスバルブ解放中。磁気ノズル蘇生変形進行中。推定残存点火回数1回。これが最後です",
       "startMs": 1214260,
       "endMs": 1226040,
@@ -1797,7 +1797,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "私の安全基準では点火はできません",
       "startMs": 1227440,
       "endMs": 1230060,
@@ -1823,7 +1823,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "主機アームド。衝撃に備えてください。5、4、3、2、1",
       "startMs": 1236020,
       "endMs": 1243600,
@@ -1849,7 +1849,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "ΔV進行。残り1200km毎秒。ノズル温度上昇中。導流制御に問題なし",
       "startMs": 1252120,
       "endMs": 1260160,
@@ -1862,7 +1862,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "冷却系圧力低下中。2次冷却系をカットオフし、1次冷却系の圧力を回復します。カットオフ完了。1次冷却系の圧力の回復を確認。0.88メガパスカル",
       "startMs": 1260640,
       "endMs": 1275980,
@@ -1875,7 +1875,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "骨格フレーム8番にて亀裂の拡大を確認。RCS制御で機体応力を分散中",
       "startMs": 1276260,
       "endMs": 1282260,
@@ -1953,7 +1953,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "怒っているのではないと思います。恐らく困っているのです。航法鍵が効かない船をどう止めればいいのか分からない。彼女たちが知っている秩序の中に私たちは存在しないのです",
       "startMs": 1332360,
       "endMs": 1347220,
@@ -1966,7 +1966,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "残りΔV 20km毎秒。磁気ノズル耐久限界まであと20秒",
       "startMs": 1348420,
       "endMs": 1355280,
@@ -1979,7 +1979,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "残りΔV 10km毎秒。7.67km毎秒到達。カットオフ",
       "startMs": 1356120,
       "endMs": 1364220,
@@ -1992,7 +1992,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "軌道速度達成。地球低軌道400kmに投入完了",
       "startMs": 1370440,
       "endMs": 1374720,
@@ -2005,7 +2005,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "磁気ノズルの温度センサーがロスト。磁気ノズルが消失しました",
       "startMs": 1378180,
       "endMs": 1382220,
@@ -2018,7 +2018,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "姿勢制御不能。冷却系圧力喪失。骨格フレーム亀裂14箇所、うち4箇所が構造限界を超過",
       "startMs": 1387360,
       "endMs": 1396460,
@@ -2031,7 +2031,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "この船はもう飛べません",
       "startMs": 1401560,
       "endMs": 1402900,
@@ -2057,7 +2057,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "何でしょう？",
       "startMs": 1411000,
       "endMs": 1412220,
@@ -2083,7 +2083,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "大切なものが少しずつ壊れていきました",
       "startMs": 1424180,
       "endMs": 1427220,
@@ -2096,7 +2096,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "でも、大切なものが新しく一つできました",
       "startMs": 1434180,
       "endMs": 1437960,
@@ -2122,7 +2122,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "この景色ですよ",
       "startMs": 1446120,
       "endMs": 1447220,
@@ -2148,7 +2148,7 @@
     },
     {
       "speakerId": "kestrel-ai",
-      "speakerName": "ケストレルAI（ケイ）",
+      "speakerName": "ケイ",
       "text": "そうですね。妙な貨物と一緒じゃなければどこでも",
       "startMs": 1616780,
       "endMs": 1622240,

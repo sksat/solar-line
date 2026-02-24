@@ -19,7 +19,7 @@
   "dialogueQuotes": [
     {
       "id": "ep01-quote-01",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "依頼が入っています。ガニメデ中央港へ72時間以内、封印コンテナ2基、危険物指定なし",
       "timestamp": "01:12"
     },
@@ -37,19 +37,19 @@
     },
     {
       "id": "ep01-quote-04",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "必要ΔVは-2.3km/s。中央を180秒以上外せばガニメデ交差は消失、重力井戸に落ちます",
       "timestamp": "11:40"
     },
     {
       "id": "ep01-quote-05",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "了解。炉出力は100%で設定。想定推力は9.8MN",
       "timestamp": "13:33"
     },
     {
       "id": "ep01-quote-06",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "85%の確率で基礎骨格が破断します",
       "timestamp": "11:37"
     }
@@ -275,7 +275,7 @@
           "label": "地球",
           "radius": 1,
           "color": "#58a6ff",
-          "meanMotion": 1.991e-7
+          "meanMotion": 1.991e-07
         },
         {
           "id": "mars",
@@ -283,7 +283,7 @@
           "radius": 1.524,
           "color": "#f85149",
           "angle": 2.9604,
-          "meanMotion": 1.059e-7
+          "meanMotion": 1.059e-07
         },
         {
           "id": "jupiter",
@@ -291,7 +291,7 @@
           "radius": 5.203,
           "color": "#d29922",
           "angle": 2.989,
-          "meanMotion": 1.678e-8
+          "meanMotion": 1.678e-08
         }
       ],
       "transfers": [

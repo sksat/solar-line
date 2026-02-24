@@ -19,43 +19,43 @@
   "dialogueQuotes": [
     {
       "id": "ep02-quote-01",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "冷却系圧力 0.04 MPa低下。冷媒が局所的に漏洩している可能性があります。次の加速で冷却余裕はゼロになります",
       "timestamp": "00:54"
     },
     {
       "id": "ep02-quote-02",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "骨格フレーム応力比は114%。少なくとも3点で歪みを検出しています。連続フルバーンは不可です",
       "timestamp": "01:05"
     },
     {
       "id": "ep02-quote-03",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "高度50RJ、木星基準速度10.3 km/s。遷移面の中心線に投入。スラストはトリムのみ",
       "timestamp": "09:08"
     },
     {
       "id": "ep02-quote-04",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "放射線シールドの残寿命42分。このままでは航路の途中でコア放射圏に焼かれます",
       "timestamp": "07:44"
     },
     {
       "id": "ep02-quote-05",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "外縁軌道投入のための推進シークエンスを開始。転化ウィンドウまで残り5時間",
       "timestamp": "16:07"
     },
     {
       "id": "ep02-quote-06",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "外縁軌道は修正機動を許容しません。一度外せば帰還の可能性は消えます",
       "timestamp": "16:15"
     },
     {
       "id": "ep02-quote-07",
-      "speaker": "ケストレルAI",
+      "speaker": "ケイ",
       "text": "軌道交差警告。衝突の危険あり。相対速度0.12 km/s",
       "timestamp": "16:38"
     },
