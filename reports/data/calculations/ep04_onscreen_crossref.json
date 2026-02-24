@@ -1,0 +1,137 @@
+{
+  "_meta": {
+    "description": "Cross-reference of EP04 on-screen navigation/plasmoid data with existing analysis and Rust plasmoid module",
+    "source": "reports/data/episodes/ep04_onscreen_data.json (Task 151)",
+    "date": "2026-02-24"
+  },
+  "plasmoidParameterComparison": {
+    "onScreenValues": {
+      "magneticField_nT": "180-340",
+      "plasmaDensity_cm3": "0.8-2.3",
+      "coreTemperature_K": "2.1e6",
+      "traverseTime_min": 8,
+      "source": "TRAJECTORY PREDICTION display (02:38)"
+    },
+    "rustModuleScenarios": {
+      "nominal": {"B_nT": 2, "n_cm3": 0.05, "v_km_s": 150, "source": "Voyager 2 typical magnetotail"},
+      "enhanced": {"B_nT": 15, "n_cm3": 0.5, "v_km_s": 250, "source": "Compressed plasmoid"},
+      "extreme": {"B_nT": 50, "n_cm3": 5, "v_km_s": 500, "source": "Reconnection-driven fast plasmoid"}
+    },
+    "comparison": {
+      "magneticField": {
+        "onScreen": "180-340 nT",
+        "rustExtreme": "50 nT",
+        "ratio": "3.6x - 6.8x above extreme scenario",
+        "interpretation": "作品のプラズモイドはVoyager 2観測値に基づくRust推定よりも遥かに強磁場。ただし天王星のプラズモイドはVoyager 2の単一フライバイデータしかないため、未知の強イベントが存在する可能性は否定できない。また、作品世界が現在より約200年先であることを考えると、より詳細な観測データに基づいた設定値の可能性もある。"
+      },
+      "plasmaDensity": {
+        "onScreen": "0.8-2.3 cm⁻³",
+        "rustEnhanced": "0.5 cm⁻³",
+        "rustExtreme": "5 cm⁻³",
+        "interpretation": "enhanced〜extremeの中間。Voyager 2データと一致する範囲内。"
+      },
+      "coreTemperature": {
+        "onScreen": "2.1×10⁶ K",
+        "solarCoronaComparison": "太陽コロナ温度（1-3×10⁶ K）と同レベル",
+        "thermalVelocity_km_s": 228,
+        "interpretation": "熱速度228 km/sは船の接近速度18.3 km/sの12倍以上。プラズモイド内の粒子は極めて高速に運動しており、磁気シールドへの衝撃は大きい。コロナ温度に匹敵するため、プラズモイドは太陽風-磁気圏相互作用で加熱されたプラズマと考えられる。"
+      },
+      "bulkFlowVelocity": {
+        "onScreen": "表示なし（船の接近速度18.3 km/sのみ）",
+        "rustScenarios": "150-500 km/s（バルクフロー速度）",
+        "interpretation": "画面表示は船の軌道速度であり、プラズモイド自体のバルクフロー速度は未表示。Rust計算のバルクフロー速度はプラズモイド離脱速度として妥当だが、作品はこの値を提供していないため直接比較不可。"
+      }
+    },
+    "pressureAnalysis": {
+      "onScreenMin": {
+        "B_nT": 180,
+        "P_mag_Pa": 1.289e-8,
+        "P_ram_Pa": 2.241e-13,
+        "dominant": "magnetic (99.998%)",
+        "note": "船速18.3 km/sでのラム圧。磁気圧が圧倒的に支配。"
+      },
+      "onScreenMax": {
+        "B_nT": 340,
+        "P_mag_Pa": 4.600e-8,
+        "P_ram_Pa": 6.442e-13,
+        "dominant": "magnetic (99.999%)",
+        "note": "最大磁場でも同様。ラム圧は完全に無視可能。"
+      },
+      "conclusion": "画面表示値を使用しても、磁気圧が圧倒的に支配。しかし船速18.3 km/sは実際のプラズモイド相対速度ではない可能性がある（プラズモイド自体の運動を含めるとラム圧は増加）。いずれにせよ、48,000t船に対する軌道摂動は完全に無視可能で、既存結論は維持される。"
+    }
+  },
+  "trajectoryParameterVerification": {
+    "periapsisAltitude": {
+      "onScreen": "6.50 RU",
+      "dialogueRef": "なし（画面表示のみの新データ）",
+      "physicalContext": "天王星半径25,559 km × 6.50 = 約166,000 km。天王星の環（約52,000 km）やミランダ軌道（約130,000 km）の外側、アリエル軌道（約191,000 km）の内側。タイタニア軌道（約436,000 km）より大幅に内側を通過。",
+      "magnetospherePosition": "天王星磁気圏（約18 RU ≈ 460,000 km）の内側、プラズモイド発生域に位置。6.50 RUは磁気圏の比較的内部であり、プラズモイドの衝突確率が高い。"
+    },
+    "interceptVelocity": {
+      "onScreen": "18.3 km/s",
+      "dialogueRef": "なし（画面表示のみの新データ）",
+      "visVivaCheck": {
+        "context": "EP03のCapture Prep（Δv≈2990 km/s）で減速後の天王星接近速度",
+        "interpretation": "Brachistochrone減速により相対速度が2990 km/sから18.3 km/sまで落ちているのは物理的に整合。天王星の脱出速度は約21.3 km/s（表面）なので、18.3 km/sは重力束縛されうる速度域。減速噴射でさらに速度を落としてタイタニア軌道投入する必要がある。"
+      }
+    },
+    "orbitalInclination": {
+      "onScreen": "2.1° INC / AZM 110.8°",
+      "interpretation": "天王星赤道面に対する軌道傾斜角2.1°は非常に小さい。天王星の衛星系は赤道面にほぼ乗っているため、タイタニアへの直接アプローチに適した角度。方位角110.8°は黄道面からの到来方向を示すと推定。"
+    },
+    "approachEta": {
+      "onScreen": "U3-TITANIA APPROACH T+9h",
+      "dialogueRef": "ep04-quote-02: 「現在の軌道で残り9時間42分」",
+      "comparison": "画面のT+9hは丸め値、字幕の9時間42分はより正確。表示時刻の差（frame_158s ≈ 2:38 vs frame_022s ≈ 0:22）を考慮すると、約2分16秒後に残り時間が約42分減少しており整合。"
+    }
+  },
+  "shieldAndOperationalStatus": {
+    "shieldCapacity": {
+      "onScreen": "63% CAPACITY (12H TO CRITICAL)",
+      "dialogueRef": "ep04-quote-01: 「規定値の63%まで低下」（冷却系との関連）",
+      "crossReference": "画面の63%は冷却系圧力の63%と同じ値。シールド容量の低下が冷却系の劣化と連動していることを示唆。12時間でCRITICALはquote-01の「12時間以内に炉の冷却能力を喪失」と完全一致。"
+    },
+    "burnsRemaining": {
+      "onScreen": "1-2 BURNS MAXIMUM",
+      "dialogueRef": "ep04-quote-11: 「推定点火可能回数3回、最大4回」",
+      "discrepancy": "画面表示（1-2回）vs 字幕（3-4回）に差がある。時系列を考慮すると、frame_158s（02:38）はプラズモイド遭遇前の表示で、シールドの消耗を見込んだ悲観的見積もり。quote-11（17:16）はタイタニアでの修理後の見積もり。修理により1-2回→3-4回に回復したと解釈できる。",
+      "timeline": [
+        "02:38 (画面表示): プラズモイド突入前、シールド劣化中 → 1-2回",
+        "02:38-06:32: プラズモイド通過、さらに損傷",
+        "06:32-13:27: タイタニア到着・修理",
+        "17:16 (字幕): 修理後の再見積もり → 3-4回"
+      ]
+    },
+    "navigationMode": {
+      "onScreen": "CS > INERTIAL (BEACON UNAVAIL)",
+      "interpretation": "CSは恐らくCelestial Sensor（天測航法）。ビーコンが利用不可能なため、慣性航法（INERTIAL）へのフォールバック。EP03の航法危機（Star Tracker vs Inertial）の延長線上にある。天王星圏のインフラ不足（天王星自由港機構の限定的な航行支援）を示す。",
+      "ep03Connection": "EP03ではSOL-INERTIAL → URANUS-REFへの切り替えが計画されていたが、BEACON UNAVAILによりURN-REFが使用不能。INERTIAL（慣性航法）に依存せざるを得ない。"
+    }
+  },
+  "jurisdictionEvolution": {
+    "ep02": {
+      "jupiter": "木星港湾公社 / 木星圏",
+      "saturn": "国際連合・火星自治連邦保護領 / 土星圏"
+    },
+    "ep03": {
+      "saturn": "国際連合・火星自治連邦保護領 / 土星圏",
+      "uranus_entry": "天王星自由港機構 / 天王星圏"
+    },
+    "ep04": {
+      "uranus_entry_titania": "天王星自由港機構 / タイタニア自治圏"
+    },
+    "pattern": "地球圏→火星圏→木星圏→土星圏（保護領）→天王星圏（自由港）→タイタニア自治圏。外側に行くほど管轄が独立的に。保護領→自由港→自治圏という自治度の上昇は、距離に比例する中央権力からの独立度を示す。"
+  },
+  "shipInteriorDetails": {
+    "wetUnit": {
+      "label": "Wet Unit",
+      "location": "居住区（frame_791s）",
+      "interpretation": "「ウェットユニット」は宇宙船の浴室/洗面/トイレ区画。ISS/宇宙ステーション設計で使用される用語。ケストレルの居住設備が実用的に設計されていることを示す。"
+    },
+    "controlStation": {
+      "location": "タイタニア施設（frame_797s）",
+      "equipment": "緑色画面モニター3台、キーボード、制御コンソール",
+      "interpretation": "タイタニアの施設がレトロな緑色モニターを使用。辺境宙域のインフラは最新ではないことを視覚的に示す。"
+    }
+  }
+}
