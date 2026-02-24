@@ -28,6 +28,8 @@ import {
   renderTranscriptionPage,
   renderTranscriptionIndex,
   formatTimestamp,
+  parseTimestamp,
+  timestampLink,
   REPORT_CSS,
 } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable } from "./report-types.ts";
@@ -585,6 +587,76 @@ describe("renderDialogueQuotes", () => {
 
   it("returns empty string for empty array", () => {
     assert.equal(renderDialogueQuotes([]), "");
+  });
+});
+
+// --- parseTimestamp ---
+
+describe("parseTimestamp", () => {
+  it("parses MM:SS format", () => {
+    assert.equal(parseTimestamp("02:15"), 135);
+  });
+
+  it("parses HH:MM:SS format", () => {
+    assert.equal(parseTimestamp("1:02:15"), 3735);
+  });
+
+  it("returns 0 for invalid input", () => {
+    assert.equal(parseTimestamp(""), 0);
+  });
+});
+
+// --- timestampLink ---
+
+describe("timestampLink", () => {
+  it("returns plain text when no video cards provided", () => {
+    const result = timestampLink("10:05");
+    assert.equal(result, "(10:05)");
+  });
+
+  it("returns plain text when video cards array is empty", () => {
+    const result = timestampLink("10:05", []);
+    assert.equal(result, "(10:05)");
+  });
+
+  it("generates YouTube link with seconds", () => {
+    const cards: VideoCard[] = [{ provider: "youtube", id: "CQ_OkDjEwRk" }];
+    const result = timestampLink("10:05", cards);
+    assert.ok(result.includes("youtube.com/watch?v=CQ_OkDjEwRk&t=605"));
+    assert.ok(result.includes("10:05"));
+    assert.ok(result.includes("<a "));
+  });
+
+  it("generates Niconico link when no YouTube available", () => {
+    const cards: VideoCard[] = [{ provider: "niconico", id: "sm45280425" }];
+    const result = timestampLink("05:30", cards);
+    assert.ok(result.includes("nicovideo.jp/watch/sm45280425?from=330"));
+    assert.ok(result.includes("05:30"));
+  });
+
+  it("prefers YouTube over Niconico", () => {
+    const cards: VideoCard[] = [
+      { provider: "niconico", id: "sm12345" },
+      { provider: "youtube", id: "abc123" },
+    ];
+    const result = timestampLink("01:00", cards);
+    assert.ok(result.includes("youtube.com"));
+    assert.ok(!result.includes("nicovideo.jp"));
+  });
+});
+
+describe("renderDialogueQuote with video links", () => {
+  it("renders timestamp as video link when video cards provided", () => {
+    const cards: VideoCard[] = [{ provider: "youtube", id: "CQ_OkDjEwRk" }];
+    const html = renderDialogueQuote(sampleQuote, cards);
+    assert.ok(html.includes("youtube.com/watch?v=CQ_OkDjEwRk&t=135"));
+    assert.ok(html.includes("02:15"));
+  });
+
+  it("renders plain timestamp when no video cards", () => {
+    const html = renderDialogueQuote(sampleQuote);
+    assert.ok(html.includes("(02:15)"));
+    assert.ok(!html.includes("youtube.com"));
   });
 });
 

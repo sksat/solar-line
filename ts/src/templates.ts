@@ -714,16 +714,17 @@ function renderSources(sources: SourceCitation[]): string {
 }
 
 /** Render inline citations from evidence quotes */
-function renderInlineCitations(quotes: DialogueQuote[]): string {
+function renderInlineCitations(quotes: DialogueQuote[], videoCards?: VideoCard[]): string {
   if (quotes.length === 0) return "";
-  const citations = quotes.map(q =>
-    `<span class="inline-citation">${escapeHtml(q.speaker)}「${escapeHtml(q.text)}」<span class="timestamp">(${escapeHtml(q.timestamp)})</span></span>`
-  ).join("　");
+  const citations = quotes.map(q => {
+    const tsHtml = timestampLink(q.timestamp, videoCards);
+    return `<span class="inline-citation">${escapeHtml(q.speaker)}「${escapeHtml(q.text)}」<span class="timestamp">(${tsHtml})</span></span>`;
+  }).join("　");
   return `<p class="evidence-citations">${citations}</p>`;
 }
 
 /** Render a single transfer analysis card */
-export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQuote[]): string {
+export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQuote[], videoCards?: VideoCard[]): string {
   const verdictClass = `verdict-${t.verdict}`;
   const dvComparison = t.claimedDeltaV !== null && t.computedDeltaV !== null
     ? `<p>作中のΔV: <strong>${t.claimedDeltaV.toFixed(2)} km/s</strong> | 計算値: <strong>${t.computedDeltaV.toFixed(2)} km/s</strong></p>`
@@ -732,7 +733,7 @@ export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQ
       : `<p>（ΔVは単一のスカラー値として表現不可 — 詳細は下記分析を参照）</p>`;
 
   const citationsHtml = inlineQuotes && inlineQuotes.length > 0
-    ? renderInlineCitations(inlineQuotes)
+    ? renderInlineCitations(inlineQuotes, videoCards)
     : "";
 
   const assumptionsList = t.assumptions.length > 0
@@ -740,10 +741,11 @@ export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQ
     : "";
 
   const sourcesHtml = t.sources && t.sources.length > 0 ? renderSources(t.sources) : "";
+  const tsHtml = timestampLink(t.timestamp, videoCards);
 
   return `<div class="card" id="${escapeHtml(t.id)}">
 <h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
-<p>第${t.episode}話 @ ${escapeHtml(t.timestamp)}</p>
+<p>第${t.episode}話 @ ${tsHtml}</p>
 ${dvComparison}
 ${citationsHtml}
 ${assumptionsList}
@@ -779,16 +781,42 @@ export function renderVideoCards(cards: VideoCard[]): string {
 }
 
 /** Render a single dialogue quote */
-export function renderDialogueQuote(q: DialogueQuote): string {
+/** Parse a timestamp string (MM:SS or HH:MM:SS) to seconds */
+export function parseTimestamp(ts: string): number {
+  const parts = ts.split(":").map(Number);
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return 0;
+}
+
+/** Build a video URL with timestamp for the first YouTube video card */
+export function timestampLink(ts: string, videoCards?: VideoCard[]): string {
+  const escaped = escapeHtml(ts);
+  if (!videoCards || videoCards.length === 0) return `(${escaped})`;
+  const yt = videoCards.find(v => v.provider === "youtube");
+  if (yt) {
+    const secs = parseTimestamp(ts);
+    return `<a href="https://www.youtube.com/watch?v=${encodeURIComponent(yt.id)}&t=${secs}" target="_blank" rel="noopener">${escaped}</a>`;
+  }
+  const nico = videoCards.find(v => v.provider === "niconico");
+  if (nico) {
+    const secs = parseTimestamp(ts);
+    return `<a href="https://www.nicovideo.jp/watch/${encodeURIComponent(nico.id)}?from=${secs}" target="_blank" rel="noopener">${escaped}</a>`;
+  }
+  return `(${escaped})`;
+}
+
+export function renderDialogueQuote(q: DialogueQuote, videoCards?: VideoCard[]): string {
+  const tsHtml = timestampLink(q.timestamp, videoCards);
   return `<div class="dialogue-quote" id="${escapeHtml(q.id)}">
-<span class="speaker">${escapeHtml(q.speaker)}</span>「${escapeHtml(q.text)}」<span class="timestamp">(${escapeHtml(q.timestamp)})</span>
+<span class="speaker">${escapeHtml(q.speaker)}</span>「${escapeHtml(q.text)}」<span class="timestamp">(${tsHtml})</span>
 </div>`;
 }
 
 /** Render a list of dialogue quotes as a section */
-export function renderDialogueQuotes(quotes: DialogueQuote[]): string {
+export function renderDialogueQuotes(quotes: DialogueQuote[], videoCards?: VideoCard[]): string {
   if (quotes.length === 0) return "";
-  return `<h2>主要な台詞</h2>\n${quotes.map(renderDialogueQuote).join("\n")}`;
+  return `<h2>主要な台詞</h2>\n${quotes.map(q => renderDialogueQuote(q, videoCards)).join("\n")}`;
 }
 
 /**
@@ -1348,7 +1376,7 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
           .filter((q): q is DialogueQuote => q !== undefined)
       : [];
 
-    const transferHtml = renderTransferCard(t, inlineQuotes);
+    const transferHtml = renderTransferCard(t, inlineQuotes, report.videoCards);
 
     // Render nested explorations for this transfer
     const relatedExplorations = explorationsByTransfer.get(t.id) ?? [];
@@ -1394,7 +1422,7 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     : "";
 
   const dialogueSectionWithId = report.dialogueQuotes && report.dialogueQuotes.length > 0
-    ? `<h2 id="section-dialogue">主要な台詞</h2>\n${report.dialogueQuotes.map(renderDialogueQuote).join("\n")}`
+    ? `<h2 id="section-dialogue">主要な台詞</h2>\n${report.dialogueQuotes.map(q => renderDialogueQuote(q, report.videoCards)).join("\n")}`
     : "";
 
   const diagramSectionWithId = report.diagrams && report.diagrams.length > 0
