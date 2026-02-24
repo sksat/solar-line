@@ -7,7 +7,9 @@ use serde::Serialize;
 use wasm_bindgen::prelude::*;
 
 use solar_line_core::kepler;
-use solar_line_core::units::{Eccentricity, Km, Mu, Radians, Seconds};
+use solar_line_core::propagation;
+use solar_line_core::units::{Eccentricity, Km, KmPerSec, Mu, Radians, Seconds};
+use solar_line_core::vec3::Vec3;
 use solar_line_core::{constants, ephemeris, orbits};
 
 // ---------------------------------------------------------------------------
@@ -421,6 +423,116 @@ pub fn j2000_jd() -> f64 {
 }
 
 // ---------------------------------------------------------------------------
+// Orbit propagation (RK4 integrator)
+// ---------------------------------------------------------------------------
+
+/// Propagate a ballistic (thrust-free) orbit and return the final state.
+///
+/// Input: initial position (km) and velocity (km/s) as 6 floats,
+/// central body mu (km³/s²), time step (s), and total duration (s).
+///
+/// Returns [x, y, z, vx, vy, vz, time, energy_drift] — 8 floats.
+/// energy_drift is the relative energy error |ΔE/E₀|.
+#[wasm_bindgen]
+pub fn propagate_ballistic(
+    x: f64, y: f64, z: f64,
+    vx: f64, vy: f64, vz: f64,
+    mu: f64, dt: f64, duration: f64,
+) -> Box<[f64]> {
+    let initial = propagation::PropState::new(
+        Vec3::new(Km(x), Km(y), Km(z)),
+        Vec3::new(KmPerSec(vx), KmPerSec(vy), KmPerSec(vz)),
+    );
+    let config = propagation::IntegratorConfig {
+        dt,
+        mu: Mu(mu),
+        thrust: propagation::ThrustProfile::None,
+    };
+    let e0 = initial.specific_energy(Mu(mu));
+    let final_state = propagation::propagate_final(&initial, &config, duration);
+    let ef = final_state.specific_energy(Mu(mu));
+    let drift = if e0.abs() > 1e-30 { ((ef - e0) / e0).abs() } else { (ef - e0).abs() };
+
+    Box::new([
+        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
+        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.time,
+        drift,
+    ])
+}
+
+/// Propagate a brachistochrone (constant-thrust, flip-at-midpoint) trajectory.
+///
+/// Input: initial state (6 floats), mu (km³/s²), dt (s), duration (s),
+/// acceleration (km/s²), flip_time (s from start).
+///
+/// Returns [x, y, z, vx, vy, vz, time] — 7 floats.
+#[wasm_bindgen]
+pub fn propagate_brachistochrone(
+    x: f64, y: f64, z: f64,
+    vx: f64, vy: f64, vz: f64,
+    mu: f64, dt: f64, duration: f64,
+    accel_km_s2: f64, flip_time: f64,
+) -> Box<[f64]> {
+    let initial = propagation::PropState::new(
+        Vec3::new(Km(x), Km(y), Km(z)),
+        Vec3::new(KmPerSec(vx), KmPerSec(vy), KmPerSec(vz)),
+    );
+    let config = propagation::IntegratorConfig {
+        dt,
+        mu: Mu(mu),
+        thrust: propagation::ThrustProfile::Brachistochrone {
+            accel_km_s2,
+            flip_time,
+        },
+    };
+    let final_state = propagation::propagate_final(&initial, &config, duration);
+
+    Box::new([
+        final_state.pos.x.value(), final_state.pos.y.value(), final_state.pos.z.value(),
+        final_state.vel.x.value(), final_state.vel.y.value(), final_state.vel.z.value(),
+        final_state.time,
+    ])
+}
+
+/// Propagate a ballistic orbit and return sampled trajectory points.
+///
+/// Returns a flat array: [t0, x0, y0, z0, t1, x1, y1, z1, ...].
+/// `sample_interval` controls how many time steps between samples.
+/// E.g., sample_interval=100 with dt=10 means one point every 1000s.
+#[wasm_bindgen]
+pub fn propagate_trajectory(
+    x: f64, y: f64, z: f64,
+    vx: f64, vy: f64, vz: f64,
+    mu: f64, dt: f64, duration: f64,
+    sample_interval: usize,
+) -> Box<[f64]> {
+    let initial = propagation::PropState::new(
+        Vec3::new(Km(x), Km(y), Km(z)),
+        Vec3::new(KmPerSec(vx), KmPerSec(vy), KmPerSec(vz)),
+    );
+    let config = propagation::IntegratorConfig {
+        dt,
+        mu: Mu(mu),
+        thrust: propagation::ThrustProfile::None,
+    };
+    let states = propagation::propagate(&initial, &config, duration);
+
+    let interval = if sample_interval == 0 { 1 } else { sample_interval };
+    let mut result = Vec::new();
+    for (i, state) in states.iter().enumerate() {
+        if i % interval == 0 || i == states.len() - 1 {
+            result.push(state.time);
+            result.push(state.pos.x.value());
+            result.push(state.pos.y.value());
+            result.push(state.pos.z.value());
+        }
+    }
+
+    result.into_boxed_slice()
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 
@@ -635,5 +747,60 @@ mod tests {
         let mu_j = 1.26686534e8;
         let gain = oberth_dv_gain(mu_j, 71_492.0, 10.0, 0.0);
         assert!(gain.abs() < 1e-10, "zero burn = zero gain: {}", gain);
+    }
+
+    // ── Propagation WASM tests ────────────────────────────────────────
+
+    #[test]
+    fn test_wasm_propagate_ballistic_energy_conservation() {
+        // Circular LEO orbit for 1 period
+        let mu_earth: f64 = 3.986004418e5;
+        let r: f64 = 6578.0;
+        let v = (mu_earth / r).sqrt();
+        let period = std::f64::consts::TAU * (r.powi(3) / mu_earth).sqrt();
+
+        let result = propagate_ballistic(r, 0.0, 0.0, 0.0, v, 0.0, mu_earth, 1.0, period);
+        assert_eq!(result.len(), 8);
+
+        // Energy drift (last element)
+        let drift = result[7];
+        assert!(drift < 1e-10, "energy drift = {:.2e}", drift);
+
+        // Should return near start position
+        let pos_err = ((result[0] - r).powi(2) + result[1].powi(2) + result[2].powi(2)).sqrt();
+        assert!(pos_err / r < 1e-6, "position error = {:.2e} km", pos_err);
+    }
+
+    #[test]
+    fn test_wasm_propagate_brachistochrone() {
+        // Simple test: brachistochrone from LEO, 1000s
+        let mu_earth: f64 = 3.986004418e5;
+        let r: f64 = 6578.0;
+        let v = (mu_earth / r).sqrt();
+
+        let result = propagate_brachistochrone(
+            r, 0.0, 0.0, 0.0, v, 0.0,
+            mu_earth, 1.0, 1000.0,
+            1e-4, 500.0, // flip at 500s
+        );
+        assert_eq!(result.len(), 7);
+        // Time should be approximately 1000s
+        assert!((result[6] - 1000.0).abs() < 1.0);
+    }
+
+    #[test]
+    fn test_wasm_propagate_trajectory_returns_points() {
+        let mu_earth: f64 = 3.986004418e5;
+        let r: f64 = 6578.0;
+        let v = (mu_earth / r).sqrt();
+        let period = std::f64::consts::TAU * (r.powi(3) / mu_earth).sqrt();
+
+        let result = propagate_trajectory(
+            r, 0.0, 0.0, 0.0, v, 0.0,
+            mu_earth, 10.0, period, 100,
+        );
+        // Should have multiple 4-float tuples (t, x, y, z)
+        assert!(result.len() >= 8, "trajectory should have at least 2 points");
+        assert_eq!(result.len() % 4, 0, "trajectory should be [t,x,y,z] tuples");
     }
 }

@@ -2,6 +2,7 @@ pub mod constants;
 pub mod ephemeris;
 pub mod kepler;
 pub mod orbits;
+pub mod propagation;
 /// solar-line-core: Orbital mechanics analysis for SOLAR LINE 考察.
 ///
 /// Provides type-safe orbital mechanics primitives for analyzing
