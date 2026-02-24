@@ -8,17 +8,19 @@ EP01-EP05 の各話レポートに用語集を追加した（Tasks 141, 143）�
 
 ## Scope
 
-4つの総合分析レポートに、各レポートで使用される専門用語のglosaryを追加:
+5つの総合分析レポートに、各レポートで使用される専門用語のglossaryを追加:
 
 1. **ship-kestrel.json** — 6 terms (ΔV, Isp, 磁気ノズル, ツィオルコフスキーの式, LEO, brachistochrone)
 2. **science-accuracy.json** — 6 terms (ΔV, ホーマン遷移, vis-viva方程式, Isp, オーベルト効果, フライバイ)
 3. **communications.json** — 5 terms (光速遅延, FSOC, DSN, FSPL, 慣性航法系)
 4. **attitude-control.json** — 6 terms (RCS, 姿勢制御, 慣性航法系, SOI, 重力傾斜トルク, LEO)
+5. **other-ships.json** — 4 terms (ΔV, brachistochrone, Isp, フライバイ)
 
 cross-episode.json はすでに6用語の glossary を持っていた。
+infrastructure.json は軌道力学用語をほとんど含まないため、glossaryは不要と判断。
 
 ## Results
 
 - All 1413 tests pass
-- All 5 summary reports with technical content now have glossary sections
+- 6 of 7 summary reports now have glossary sections (infrastructure excluded)
 - TOC links and section rendering confirmed in built HTML
