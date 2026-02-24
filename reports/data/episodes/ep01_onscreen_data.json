@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "episode": 1,
+  "videoId": "CQ_OkDjEwRk",
+  "extractionMethod": "manual_frame_reading",
+  "extractedAt": "2026-02-24T22:00:00Z",
+  "extractedBy": "Claude Opus 4.6 (visual analysis of video frames)",
+  "frames": [
+    {
+      "timestampSec": 72,
+      "description": "依頼表示 — ケストレル号ドック",
+      "subtitleText": "緊急依頼が１本入っています… ガニメデ中央港へ72時間以内 封印コンテナ２基 危険物指定なし",
+      "instrumentData": null,
+      "notes": "船体外観ショット、ドック内。字幕のみでHUD表示なし。"
+    },
+    {
+      "timestampSec": 285,
+      "description": "火星離脱直後 — 外部カメラ映像",
+      "subtitleText": "火星の視直径 後方カメラで52度… 極冠を確認 外周マーカー レーダー圏内に入りました",
+      "instrumentData": {
+        "marsApparentDiameter": "52°（後方カメラ）",
+        "polarCapVisible": true,
+        "radarRange": "entered"
+      },
+      "notes": "火星の視直径52°は火星からの距離推定に使える。火星の実直径6,779kmから逆算すると約3,600km離れている。"
+    },
+    {
+      "timestampSec": 302,
+      "description": "メインアップチェック — D-He3装填",
+      "subtitleText": "D-He3カートリッジ1番装填… 核融合パルス炉 点火温度到達まで8秒",
+      "instrumentData": {
+        "fuelType": "D-He3",
+        "cartridgeNumber": 1,
+        "ignitionCountdown": "8秒"
+      },
+      "notes": "重水素-ヘリウム3核融合。カートリッジ式。"
+    },
+    {
+      "timestampSec": 316,
+      "description": "巡航加速開始",
+      "subtitleText": "巡航加速で慣らす いきなりフルバーンは骨格に悪いから",
+      "instrumentData": null,
+      "notes": "きりたんの台詞。65%出力で6.3MNの設定はこの数秒前の台詞。"
+    },
+    {
+      "timestampSec": 410,
+      "description": "嵐の回廊ルート — ナビゲーション画面（緑色）",
+      "subtitleText": "木星の嵐の回廊… このルートを開拓したのは私の親父なんだよね",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW_GREEN",
+        "visibleLabels": ["JUPITER", "IO ORBIT", "GANYMEDE", "MAGNETIC STORM", "STORM CORRIDOR"],
+        "routeType": "嵐の回廊（Storm Corridor）— 木星赤道面磁気嵐横断ルート"
+      },
+      "notes": "緑色のナビ画面に木星系の軌道図表示。嵐の回廊ルートが可視化されている。テキストは小さくて一部判読困難。"
+    },
+    {
+      "timestampSec": 654,
+      "description": "JO-DIRECT ENTRY ナビゲーション画面（赤色） — 最重要フレーム",
+      "subtitleText": "あなたの要望を全てかなえるとすると… 木星への直接エントリーしか方法はありません",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW_RED",
+        "entryVector": {
+          "inclination_deg": "15.2° (推定、一部不鮮明)",
+          "azimuth_deg": 282.14,
+          "referenceFrame": "Jovian Center frame"
+        },
+        "entryPoint": {
+          "distance_RJ": 20.0,
+          "referenceFrame": "Jovian Center frame"
+        },
+        "entryVelocity": {
+          "total_km_s": 17.8,
+          "v_infinity_km_s": 12.0
+        },
+        "burnSequence": [
+          {
+            "phase": 1,
+            "name": "CRUISE ACCEL",
+            "route": "Mars → Jovian Sphere",
+            "status": "Completed"
+          },
+          {
+            "phase": 2,
+            "name": "FULL BURN ENTRY",
+            "countdown": "T-11:42:18",
+            "deltaV_km_s": 2.4,
+            "direction": "prograde"
+          },
+          {
+            "phase": 3,
+            "name": "PERIJOVE OVERSHOT CORRECTION",
+            "window": "±05:00 min",
+            "windowType": "TARGET",
+            "deltaV_km_s": -2.3,
+            "direction": "retrograde"
+          }
+        ],
+        "orbitalDiagram": {
+          "center": "JUPITER",
+          "satellites": ["J1-IO"],
+          "periapsis": ["PERI-JUPITER(1.5Rj)", "PERI-JUPITER(2.0Rj)"],
+          "hazards": ["MAGNETIC STORM"],
+          "trajectory": "JO-DIRECT ENTRY"
+        }
+      },
+      "notes": "最も情報量の多いフレーム。V∞=12.0km/s、ΔV=+2.4km/sと-2.3km/sが明確に読み取れる。ペリジュピター1.5RJも確認。"
+    },
+    {
+      "timestampSec": 660,
+      "description": "NAVIGATION OVERVIEW 全体表示 — きりたんとケイがディスプレイを見ている",
+      "subtitleText": "木星赤道面にフルバーンでエントリーし 高エネルギー直接遷移でガニメデに接近します",
+      "instrumentData": {
+        "displayType": "NAVIGATION_OVERVIEW_FULL",
+        "additionalData": {
+          "trajectoryPrediction": {
+            "perijoveVelocity_km_s": "4?.? (一部不鮮明、推定40-49km/s)",
+            "target": "GANYMEDE INTERCEPT",
+            "interceptTime": "T+?h (不鮮明)"
+          },
+          "structuralWarning": "CRITICAL: structural limits (一部不鮮明)",
+          "ganymede": "GANYMEDE ORBIT visible on right side of display"
+        }
+      },
+      "notes": "ワイドショットで全ディスプレイが見えるが、文字が小さい。TRAJECTORY PREDICTIONセクションにペリジュピター速度とガニメデ到達時間の予測あり。"
+    },
+    {
+      "timestampSec": 788,
+      "description": "コックピット — HUD表示（半透明スクリーン）",
+      "subtitleText": "（フレーム内なし — 前後の台詞から航法計算シーン）",
+      "instrumentData": {
+        "displayType": "HUD_TRANSLUCENT",
+        "upperSection": "白文字テキスト（航行パラメータ、判読困難）",
+        "middleSection": "黄緑文字テキスト（複数行、航法データ）",
+        "lowerSection": "小型モニター上に緑色データ表示"
+      },
+      "notes": "HUDは半透明で背景の星空が透けて見える。文字は小さく720pでは判読困難。高解像度版が必要。"
+    },
+    {
+      "timestampSec": 923,
+      "description": "木星接近 — ペリジュピター付近",
+      "subtitleText": "近点到達まで 残り4分50秒… オーバースウィンドウ ±180秒",
+      "instrumentData": {
+        "locationLabel": "木星磁気圏コア放射域・ペリジュピター付近",
+        "periapsisCountdown": "4分50秒",
+        "overshootWindow": "±180秒",
+        "visualContext": "木星大気が画面いっぱいに広がり、ケストレルの光点が小さく見える"
+      },
+      "notes": "位置ラベル「木星磁気圏コア放射域・ペリジュピター付近」は画面左上に表示。劇中では場面説明テロップとして使用。"
+    },
+    {
+      "timestampSec": 1009,
+      "description": "エンジン過負荷 — 赤色警報",
+      "subtitleText": "エンジン出力110%… 想定推力10.7メガニュートン",
+      "instrumentData": {
+        "engineOutput_percent": 110,
+        "estimatedThrust_MN": 10.7,
+        "alertLevel": "赤色警報（コックピット全体が赤い照明）"
+      },
+      "notes": "重要な新データ: 110%出力時の推力が10.7MN。100%=9.8MNとの関係: 10.7/9.8=1.092、ほぼ線形の出力-推力関係。"
+    },
+    {
+      "timestampSec": 1029,
+      "description": "エンジン点火準備 — ENGINE ARMED表示",
+      "subtitleText": "おい…",
+      "instrumentData": {
+        "displayType": "ENGINE_STATUS_MONITOR",
+        "status": "ENGINE ARMED",
+        "readyMessage": "Y FOR IGNITION",
+        "alertIndicators": "赤色表示、多数の警告"
+      },
+      "notes": "モニターに「ENGINE ARMED / Y FOR IGNITION」表示。エンジン点火確認のインターフェース。"
+    }
+  ],
+  "summary": {
+    "keyParametersExtracted": {
+      "jupiterEntryVelocity_km_s": 17.8,
+      "v_infinity_km_s": 12.0,
+      "azimuth_deg": 282.14,
+      "phase2_deltaV_km_s": 2.4,
+      "phase3_deltaV_km_s": -2.3,
+      "perijupiter_altitude_RJ": 1.5,
+      "overshootWindow_min": 5,
+      "thrust100pct_MN": 9.8,
+      "thrust110pct_MN": 10.7,
+      "cruiseThrust65pct_MN": 6.3,
+      "marsApparentDiameter_deg": 52,
+      "periapsisCountdown_s": 290
+    },
+    "parameterSources": {
+      "subtitle": ["thrust values", "countdown", "Mars diameter"],
+      "HUD_display": ["V∞", "entry velocity", "burn sequence", "ΔV values", "azimuth"],
+      "location_label": ["magnetosphere region"]
+    },
+    "analysisImplications": [
+      "V∞=12.0km/s at Jupiter SOI — compare with our computed hyperbolic excess velocity",
+      "Entry vel 17.8km/s — total velocity at 20 RJ from Jupiter center",
+      "ΔV budget: +2.4km/s (entry burn) + -2.3km/s (perijove correction) = 4.7km/s total",
+      "110% thrust = 10.7 MN — thrust-output relationship is nearly linear (not in existing analysis)",
+      "Perijupiter at 1.5 RJ explicitly shown on navigation diagram",
+      "Mars apparent diameter 52° gives distance estimate for departure burn timing"
+    ]
+  }
+}
