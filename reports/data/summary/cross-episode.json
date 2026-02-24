@@ -79,10 +79,30 @@
         "unit": "時間",
         "logScale": true,
         "bars": [
-          { "label": "EP01 火星→ガニメデ", "value": 72, "color": "#58a6ff", "annotation": "3日" },
-          { "label": "EP02 木星→土星（弾道）", "value": 10920, "color": "#3fb950", "annotation": "455日" },
-          { "label": "EP03 エンケラドス→タイタニア", "value": 143, "color": "#f0883e", "annotation": "6日" },
-          { "label": "EP04-05 天王星→地球", "value": 507, "color": "#f85149", "annotation": "21日" }
+          {
+            "label": "EP01 火星→ガニメデ",
+            "value": 72,
+            "color": "#58a6ff",
+            "annotation": "3日"
+          },
+          {
+            "label": "EP02 木星→土星（弾道）",
+            "value": 10920,
+            "color": "#3fb950",
+            "annotation": "455日"
+          },
+          {
+            "label": "EP03 エンケラドス→タイタニア",
+            "value": 143,
+            "color": "#f0883e",
+            "annotation": "6日"
+          },
+          {
+            "label": "EP04-05 天王星→地球",
+            "value": 507,
+            "color": "#f85149",
+            "annotation": "21日"
+          }
         ]
       },
       "orbitalDiagrams": [
@@ -98,10 +118,10 @@
             {
               "id": "earth",
               "label": "地球 (1.0 AU)",
-              "radius": 1.0,
+              "radius": 1,
               "color": "#4488ff",
               "angle": 2.9604,
-              "meanMotion": 1.991e-07
+              "meanMotion": 1.991e-7
             },
             {
               "id": "mars",
@@ -109,7 +129,7 @@
               "radius": 1.524,
               "color": "#ff6644",
               "angle": 2.9604,
-              "meanMotion": 1.059e-07
+              "meanMotion": 1.059e-7
             },
             {
               "id": "jupiter",
@@ -117,7 +137,7 @@
               "radius": 5.203,
               "color": "#dd8844",
               "angle": 2.989,
-              "meanMotion": 1.678e-08
+              "meanMotion": 1.678e-8
             },
             {
               "id": "saturn",
@@ -125,7 +145,7 @@
               "radius": 9.58,
               "color": "#daa520",
               "angle": 2.2198,
-              "meanMotion": 6.761e-09
+              "meanMotion": 6.761e-9
             },
             {
               "id": "uranus",
@@ -133,7 +153,7 @@
               "radius": 19.19,
               "color": "#66dddd",
               "angle": 4.8746,
-              "meanMotion": 2.37e-09
+              "meanMotion": 2.37e-9
             }
           ],
           "transfers": [
@@ -437,19 +457,39 @@
     },
     {
       "heading": "Brachistochrone ΔV スケーリング",
-      "markdown": "Brachistochrone遷移の$\\Delta V$は距離と遷移時間の関数として $\\Delta V = 2d/t$ でスケーリングする。各話の値がこの関係に整合しているかを検証する。\n\n第1話（72h, 3.68 AU）と第3話（143h, 9.62 AU）を比較すると:\n- 距離比: $9.62/3.68 = $ **2.61倍**\n- 時間比: $143/72 = $ **1.99倍**\n- $\\Delta V$比: $11{,}165/8{,}497 = $ **1.31倍**\n\n理論上の$\\Delta V$比 $= $ 距離比/時間比 $= 2.61/1.99 = $ **1.31倍** — 計算値と完全に一致する。\n\n第4話は損傷状態かつ遷移時間が大幅に長い（105日@48,000t）ため、$\\Delta V$は比較的小さい1,202 km/sとなる。これは距離18.2 AUに対して時間に余裕があることを反映しており、物理的に正しい。",
+      "markdown": "Brachistochrone遷移の$\\Delta V$は距離と遷移時間の関数として $\\Delta V = 2d/t$ でスケーリングする。各話の値がこの関係に整合しているかを検証する。\n\n第1話（72h, 3.68 AU）と第3話（143h, 9.62 AU）を比較すると:\n- 距離比: $9.62/3.68 = $ **2.61倍**\n- 時間比: $143/72 = $ **1.99倍**\n- $\\Delta V$比: $11{,}165/8{,}497 = $ **1.31倍**\n\n理論上の$\\Delta V$比 $= $ 距離比/時間比 $= 2.61/1.99 = $ **1.31倍** — 計算値と完全に一致する。\n\n第4話は損傷状態かつ遷移時間が大幅に長い（105日@48,000t）ため、$\\Delta V$は比較的小さい1,202 km/sとなる。これは距離18.2 AUに対して時間に余裕があることを反映しており、物理的に正しい。\n\n**ホーマン遷移との対比:**\n\nBrachistochrone遷移はホーマン遷移（最小エネルギー軌道）と比べ、遷移時間を数百〜数千倍短縮する代わりに、桁違いのΔVを必要とする。\nこの「時間 vs エネルギー」のトレードオフは現実の宇宙工学の根本的な制約であり、SOLAR LINEはこれを物語の核心に据えている。",
       "barChart": {
         "caption": "各話のBrachistochrone ΔV 比較",
         "unit": "km/s",
         "bars": [
-          { "label": "EP01 火星→ガニメデ", "value": 8497, "color": "#58a6ff", "annotation": "72h, 3.68 AU" },
-          { "label": "EP03 エンケラドス→タイタニア", "value": 11165, "color": "#f0883e", "annotation": "143h, 9.62 AU" },
-          { "label": "EP04 タイタニア→地球 (48kt)", "value": 1202, "color": "#bc8cff", "annotation": "105d, 18.2 AU" },
-          { "label": "EP05 天王星→地球 (300t)", "value": 15207, "color": "#f85149", "annotation": "507h, 18.2 AU" }
+          {
+            "label": "EP01 火星→ガニメデ",
+            "value": 8497,
+            "color": "#58a6ff",
+            "annotation": "72h, 3.68 AU"
+          },
+          {
+            "label": "EP03 エンケラドス→タイタニア",
+            "value": 11165,
+            "color": "#f0883e",
+            "annotation": "143h, 9.62 AU"
+          },
+          {
+            "label": "EP04 タイタニア→地球 (48kt)",
+            "value": 1202,
+            "color": "#bc8cff",
+            "annotation": "105d, 18.2 AU"
+          },
+          {
+            "label": "EP05 天王星→地球 (300t)",
+            "value": 15207,
+            "color": "#f85149",
+            "annotation": "507h, 18.2 AU"
+          }
         ]
       },
       "table": {
-        "caption": "Brachistochrone ΔV スケーリング",
+        "caption": "ホーマン遷移 vs Brachistochrone 比較",
         "episodes": [
           1,
           2,
@@ -459,52 +499,76 @@
         ],
         "rows": [
           {
-            "metric": "距離 (AU)",
+            "metric": "遷移方式",
             "values": {
-              "1": "3.68",
-              "2": "4.38（弾道）",
-              "3": "9.62",
-              "4": "18.2",
-              "5": "18.2（天王星→地球帰還）"
+              "1": "Brachistochrone",
+              "2": "弾道（太陽系双曲線）",
+              "3": "Brachistochrone",
+              "4": "Brachistochrone",
+              "5": "Brachistochrone（複合航路）"
             },
             "status": "ok",
-            "note": "太陽系外側へ距離増大→帰還"
+            "note": "第2話のみ損傷により弾道遷移"
+          },
+          {
+            "metric": "ホーマン所要時間",
+            "values": {
+              "1": "3.1年",
+              "2": "≈10年",
+              "3": "27.3年",
+              "4": "16.1年",
+              "5": "16.1年"
+            },
+            "status": "ok",
+            "note": "外惑星へのホーマン遷移は数年〜数十年"
+          },
+          {
+            "metric": "作中遷移時間",
+            "values": {
+              "1": "72時間",
+              "2": "≈455日",
+              "3": "143時間",
+              "4": "8.3日（300t）",
+              "5": "507h（複合航路）/ 8.3日（直線Brach @300t）"
+            },
+            "status": "ok",
+            "note": "Brachistochroneでホーマンの数百〜数千倍短縮"
+          },
+          {
+            "metric": "短縮倍率",
+            "values": {
+              "1": "377×",
+              "2": "8×（弾道でも短縮）",
+              "3": "1,674×",
+              "4": "708×（300t想定）",
+              "5": "281×（507h/16.1年）"
+            },
+            "status": "ok",
+            "note": "連続推力によるドラマチックな時間短縮"
+          },
+          {
+            "metric": "ホーマンΔV (km/s)",
+            "values": {
+              "1": "5.64",
+              "2": "—（弾道）",
+              "3": "5.20",
+              "4": "15.94",
+              "5": "15.94"
+            },
+            "status": "ok",
+            "note": "ホーマンは最小エネルギーだが長時間"
           },
           {
             "metric": "Brachistochrone ΔV (km/s)",
             "values": {
               "1": "8,497",
-              "2": "—（弾道）",
+              "2": "—",
               "3": "11,165",
-              "4": "1,202（48kt）",
+              "4": "15,207（300t）",
               "5": "15,207（300t @6.37 MN）"
             },
             "status": "ok",
-            "note": "距離と時間に対して整合的にスケーリング"
-          },
-          {
-            "metric": "必要加速度 (g)",
-            "values": {
-              "1": "3.34",
-              "2": "—",
-              "3": "2.21",
-              "4": "0.014（48kt）",
-              "5": "2.17（300t @6.37 MN）"
-            },
-            "status": "ok",
-            "note": "2-3Gの加速度は作中で耐Gが問題視されないことから、慣性補償等のSF技術で解決済みと推定される（詳細はケストレル号分析の耐G仮説セクション参照）"
-          },
-          {
-            "metric": "ホーマン基準 (年)",
-            "values": {
-              "1": "3.1",
-              "2": "10",
-              "3": "27.3",
-              "4": "16.1",
-              "5": "16.1（21日で達成）"
-            },
-            "status": "ok",
-            "note": "Brachistochroneとの比較で劇的短縮"
+            "note": "時間短縮の代償として桁違いのΔVが必要"
           }
         ]
       }
@@ -639,8 +703,8 @@
       }
     },
     {
-      "heading": "科学的精度の検証",
-      "markdown": "作品に登場する科学的数値は、実在の観測データと驚くべき精度で一致する:\n\n**天王星磁場傾斜角** (第4話)\n- 作中値: 60°\n- Voyager 2実測値: 59.7°\n- 精度: **99.5%**\n\n**航法誤差の伝播** (第3話)\n- 14.72 AUで1.23°の角度誤差 → 作中「14,360,000 km」の位置誤差\n- 計算値: 14,393,613 km\n- 精度: **99.8%**\n\n**放射線被曝** (第4話)\n- 実曝露量: 480 mSv\n- ICRP緊急時上限: 500 mSv\n- NASA生涯上限: 600 mSv\n- 医学的に現実的な値を使用\n\n**木星脱出速度** (第2話)\n- 50 RJでの脱出速度: 8.42 km/s\n- 船の速度: 10.3 km/s → 超過分5.93 km/sが双曲線超過速度\n- 太陽系脱出速度との余裕: わずか0.53 km/s — 劇的に「ギリギリ」な設定",
+      "heading": "考証: パラメータの出典と検証",
+      "markdown": "作品に登場する科学的数値を、実在の観測データ・学術文献と照合した結果をまとめる。\n「精度」と「出典の確からしさ」は別の概念であり、ここでは両方を扱う:\n\n- **物理法則の整合性**: vis-viva方程式、Brachistochrone方程式、誤差伝播の幾何学が正しく適用されているか\n- **実測データとの一致**: 天体データ（JPL）、放射線基準（ICRP）、探査機データ（Voyager 2）との合致\n- **内部整合性**: 各話のΔV、質量、推力が一貫しているか（→他セクションで検証）\n\n**検証結果（15項目）:**\n- 検証済（verified）: 11件 — 実測データと高精度一致\n- 近似一致（approximate）: 4件 — 理論的に妥当\n- 不一致（discrepancy）: **0件**\n\n定量的精度を計算可能な8件の平均精度: **99.0%**。科学的に極めて誠実な作品と評価できる。",
       "table": {
         "caption": "科学的精度のハイライト",
         "episodes": [
@@ -676,6 +740,146 @@
             "note": "実在の物理定数・安全基準を参照"
           }
         ]
+      },
+      "verificationTable": {
+        "caption": "科学的精度の検証スコアカード",
+        "rows": [
+          {
+            "claim": "天王星磁場傾斜角",
+            "episode": 4,
+            "depicted": "60°",
+            "reference": "59.7°",
+            "source": "[Voyager 2 (Ness et al. 1986)](https://doi.org/10.1126/science.233.4759.85)",
+            "accuracyPercent": 99.5,
+            "status": "verified"
+          },
+          {
+            "claim": "航法誤差の伝播距離",
+            "episode": 3,
+            "depicted": "14,360,000 km",
+            "reference": "14,393,613 km（1.23° @ 14.72 AU）",
+            "source": "幾何学的計算（d = r × sin θ）",
+            "accuracyPercent": 99.8,
+            "status": "verified"
+          },
+          {
+            "claim": "木星50 RJでの脱出速度",
+            "episode": 2,
+            "depicted": "10.3 km/s（船速）",
+            "reference": "8.42 km/s（脱出速度）",
+            "source": "[JPL 木星重力パラメータ](https://ssd.jpl.nasa.gov/planets/phys_par.html)",
+            "accuracyPercent": null,
+            "status": "verified"
+          },
+          {
+            "claim": "被曝量とICRP基準",
+            "episode": 4,
+            "depicted": "480 mSv",
+            "reference": "500 mSv（ICRP緊急時上限）",
+            "source": "[ICRP Publication 103 (2007)](https://www.icrp.org/publication.asp?id=ICRP+Publication+103)",
+            "accuracyPercent": null,
+            "status": "verified"
+          },
+          {
+            "claim": "太陽系脱出速度（木星軌道）",
+            "episode": 2,
+            "depicted": "v_helio ≈ 18.99 km/s",
+            "reference": "v_esc_sun ≈ 18.46 km/s",
+            "source": "[JPL 太陽重力パラメータ](https://ssd.jpl.nasa.gov/planets/phys_par.html)",
+            "accuracyPercent": null,
+            "status": "verified"
+          },
+          {
+            "claim": "土星捕捉ΔV（エンケラドス軌道）",
+            "episode": 2,
+            "depicted": "損傷状態で達成",
+            "reference": "≈0.61 km/s（最小ΔV）",
+            "source": "vis-viva方程式",
+            "accuracyPercent": null,
+            "status": "approximate"
+          },
+          {
+            "claim": "Brachistochrone ΔVスケーリング",
+            "episode": 3,
+            "depicted": "ΔV比 = 1.31（EP1→EP3）",
+            "reference": "理論比 = 距離比/時間比 = 2.61/1.99 = 1.31",
+            "source": "$\\Delta V = 2d/t$",
+            "accuracyPercent": 100,
+            "status": "verified"
+          },
+          {
+            "claim": "巡航速度 3000 km/s",
+            "episode": 3,
+            "depicted": "3,000 km/s",
+            "reference": "2,791 km/s（Brachistochrone平均速度）",
+            "source": "$v_{\\text{avg}} = d / t$",
+            "accuracyPercent": 93,
+            "status": "approximate"
+          },
+          {
+            "claim": "D-He³核融合推進",
+            "episode": 1,
+            "depicted": "TSF-43R Orion Micropulser",
+            "reference": "D-He³反応: 理論Isp 10⁵〜10⁶ s",
+            "source": "[Bussard & DeLauer (1958)](https://books.google.com/books/about/Nuclear_Rocket_Propulsion.html?id=Q6RxAAAAMAAJ)",
+            "accuracyPercent": null,
+            "status": "approximate"
+          },
+          {
+            "claim": "全航路距離",
+            "episode": 5,
+            "depicted": "約35.9 AU",
+            "reference": "惑星軌道半径から計算: ≈35.9 AU",
+            "source": "[JPL 平均軌道要素](https://ssd.jpl.nasa.gov/planets/approx_pos.html)",
+            "accuracyPercent": 100,
+            "status": "verified"
+          },
+          {
+            "claim": "地球捕捉ΔV（LEO 400km投入）",
+            "episode": 5,
+            "depicted": "LEO 400km直接投入（軌道速度7.67 km/s）",
+            "reference": "≈3.18 km/s（$v_\\infty=0$からLEO投入）、軌道速度 $\\sqrt{\\mu/(R+h)} \\approx 7.67$ km/s",
+            "source": "vis-viva方程式 + [JPL地球重力パラメータ](https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html)",
+            "accuracyPercent": null,
+            "status": "verified"
+          },
+          {
+            "claim": "ノズル寿命マージン26分",
+            "episode": 5,
+            "depicted": "55h38m - 55h12m = マージン26分",
+            "reference": "200,280s - 198,720s = 1,560s = 26.0分",
+            "source": "算術検証（ep05 12:56 ケイの報告値）",
+            "accuracyPercent": 100,
+            "status": "verified"
+          },
+          {
+            "claim": "オーベルト効果3%効率向上",
+            "episode": 5,
+            "depicted": "木星フライバイでのエネルギー効率向上「およそ3%程度」",
+            "reference": "古典Oberth速度増幅は$\\ll 1$%（$v_{\\text{esc}}/v_\\infty = 59.5/1500 \\approx 4$%）; 複合効果として3%は妥当",
+            "source": "Oberth効果方程式 + [JPL木星重力パラメータ](https://ssd.jpl.nasa.gov/planets/phys_par.html)",
+            "accuracyPercent": null,
+            "status": "approximate"
+          },
+          {
+            "claim": "RK4軌道伝搬: EP02弾道遷移エネルギー保存",
+            "episode": 2,
+            "depicted": "455日弾道遷移",
+            "reference": "エネルギー保存 < 10⁻⁹",
+            "source": "RK4 4次数値積分（自作検証済）",
+            "accuracyPercent": 99.99,
+            "status": "verified"
+          },
+          {
+            "claim": "RK4軌道伝搬: ΔV不変性検証",
+            "episode": 1,
+            "depicted": "ΔV = 8,497 km/s",
+            "reference": "ΔV = a × t（重力場非依存）",
+            "source": "RK4 Brachistochrone伝搬 vs 机上計算",
+            "accuracyPercent": 100,
+            "status": "verified"
+          }
+        ]
       }
     },
     {
@@ -691,8 +895,30 @@
             {
               "label": "各話の主要制約マージン",
               "color": "#ff6644",
-              "x": [0, 3, 3, 458, 458, 464, 464, 474, 474, 495],
-              "y": [0, 0, 2.9, 2.9, 1.23, 1.23, 43, 43, 0.78, 0.78],
+              "x": [
+                0,
+                3,
+                3,
+                458,
+                458,
+                464,
+                464,
+                474,
+                474,
+                495
+              ],
+              "y": [
+                0,
+                0,
+                2.9,
+                2.9,
+                1.23,
+                1.23,
+                43,
+                43,
+                0.78,
+                0.78
+              ],
               "style": "solid"
             }
           ],
@@ -723,15 +949,35 @@
             {
               "label": "実際値（対限界比率）",
               "color": "#ff6644",
-              "x": [1, 2, 3, 4],
-              "y": [97.1, 98.8, 57.0, 99.2],
+              "x": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "y": [
+                97.1,
+                98.8,
+                57,
+                99.2
+              ],
               "style": "solid"
             },
             {
               "label": "限界（100%で破綻）",
               "color": "#ff0000",
-              "x": [1, 2, 3, 4],
-              "y": [100, 100, 100, 100],
+              "x": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "y": [
+                100,
+                100,
+                100,
+                100
+              ],
               "style": "dashed"
             }
           ],
@@ -751,38 +997,83 @@
         "caption": "マージン縮小の系列（各話の主要制約余裕率）",
         "unit": "%",
         "bars": [
-          { "label": "EP02 太陽脱出速度マージン", "value": 2.9, "color": "#3fb950", "annotation": "0.53 km/s余裕" },
-          { "label": "EP03 航法精度", "value": 1.23, "color": "#58a6ff", "annotation": "1.23°偏差" },
-          { "label": "EP04 シールド時間マージン", "value": 43, "color": "#f0883e", "annotation": "6分余裕/14分" },
-          { "label": "EP05 ノズル寿命マージン", "value": 0.78, "color": "#f85149", "annotation": "26分余裕/55h38m" }
+          {
+            "label": "EP02 太陽脱出速度マージン",
+            "value": 2.9,
+            "color": "#3fb950",
+            "annotation": "0.53 km/s余裕"
+          },
+          {
+            "label": "EP03 航法精度",
+            "value": 1.23,
+            "color": "#58a6ff",
+            "annotation": "1.23°偏差"
+          },
+          {
+            "label": "EP04 シールド時間マージン",
+            "value": 43,
+            "color": "#f0883e",
+            "annotation": "6分余裕/14分"
+          },
+          {
+            "label": "EP05 ノズル寿命マージン",
+            "value": 0.78,
+            "color": "#f85149",
+            "annotation": "26分余裕/55h38m"
+          }
         ]
       },
       "markdown": "SOLAR LINEでは各話のマージンが話を追うごとに縮小するが、これらは独立した制約なのか、相互に結合しているのか。Codex（OpenAI gpt-5.3）との対話から得られた視点を基に、**結合信頼性問題** として分析する。\n\n### マージンの系列\n\n| 話 | 制約 | マージン | 失敗時の帰結 |\n|---|---|---|---|\n| EP02 | 太陽中心速度 vs 脱出速度 | 0.53 km/s (2.9%) | 楕円軌道に転落、土星に到達不能 |\n| EP03 | 航法精度 | 1.23° (99.8%精度) | 天王星捕捉不可能 |\n| EP04 | シールド寿命 vs 通過時間 | 6分 (43%) | 致死的放射線被曝 |\n| EP05 | ノズル寿命 vs 燃焼時間 | 26分 (0.78%) | LEO投入不能、大気圏突入 |\n\n### 結合メカニズム（カスケード経路）\n\nCodexが指摘した通り、これらのマージンは状態ベクトル $\\mathbf{x} = (m, T_{\\text{nozzle}}, \\sigma_{\\text{nav}}, D_{\\text{dose}}, m_{\\text{prop}})$ を介して結合しうる:\n\n1. **航法誤差 → 修正噴射 → 推進剤消費 → 加速度低下 → 遷移時間増大 → 放射線被曝増**: EP03の航法誤差が大きければ、EP04到着前に追加ΔVが必要。これは推進剤を消費し、EP05での利用可能推進剤を減らす。\n\n2. **放射線 → 電子機器劣化 → 航法精度劣化 → 修正噴射増**: EP04の480 mSvはICP基準ギリギリだが、電子機器への影響も考慮すべき。半導体の放射線耐性（Total Ionizing Dose限界）を超えると航法センサーの精度が劣化し、EP05の航路計画精度に影響する。\n\n3. **ノズル熱サイクル → 寿命消費 → 利用可能燃焼時間減少 → ΔV制約**: EP05の4回点火シーケンスでは、各起動/停止で追加の寿命消費が発生（exploration-08で分析）。ノズル寿命がさらに短ければ、オーベルト効果3%でも不足する。\n\n4. **質量 → 全制約への伝搬**: 質量が300tでなく500tであれば、全話のマージンが系統的に縮小する。加速度は0.65×になり、同じ距離に1.24倍の時間がかかるため、燃焼時間・被曝時間・航法誤差がすべて悪化する。\n\n### 感度分析（ヤコビアン的考察）\n\n| 摂動 | EP02マージン | EP03マージン | EP04マージン | EP05マージン |\n|---|---|---|---|---|\n| 基準値 | 2.9% | 99.8%精度 | 43% | 0.78% |\n| 質量 +50% (450t) | 2.9%（不変） | 低下（加速度低下で修正困難に） | 低下（通過時間増） | **<0%（破綻）** |\n| EP03航法誤差 2倍 | — | 99.6%精度 | 33%（経路変更で通過時間増） | ~0.3%（追加修正ΔV消費） |\n| EP04シールド損傷50% | — | — | 22% | 0.78%（直接影響なし） |\n| ノズル劣化 +1% | — | — | — | **−0.22%（破綻）** |\n\n最も感度が高いのは**EP05のノズルマージン**で、質量・航法精度・ノズル劣化のいずれの摂動でも破綻する。これは作品の設計意図と一致する——最終話の制約が最もクリティカルで、前話のすべての成功が前提条件になっている。\n\n### 確率論的評価\n\n各マージンに正規分布の不確実性を仮定して、全航路成功確率を概算する:\n\n- EP02: $P(\\text{成功}) \\approx 0.97$（離脱方向精度 $\\pm 3°$ で95%信頼区間）\n- EP03: $P(\\text{成功}) \\approx 0.95$（航法精度 $\\sigma = 0.5°$）\n- EP04: $P(\\text{成功}) \\approx 0.90$（プラズモイド持続時間の変動 $\\sigma = 2$ 分）\n- EP05: $P(\\text{成功}) \\approx 0.55$（ノズル寿命変動 $\\sigma = 1\\%$、熱サイクル含む）\n\n**連鎖成功確率（独立仮定）**: $0.97 \\times 0.95 \\times 0.90 \\times 0.55 \\approx 0.46$\n\n**結合効果を含めた場合**: 前段の失敗が後段のマージンを縮小するため、連鎖成功確率はさらに低下（$\\approx 0.3$〜$0.4$）。\n\nこれは「ケストレルの旅は3〜4回に1回しか成功しない」ことを意味する。物語の結末がハッピーエンドであることは、統計的には幸運な結果であり、作品が「ギリギリ」と表現する状況の定量的裏付けとなる。\n\n### Codex評価への応答\n\nCodexは「0件のimplausible判定は楽観的すぎる可能性」を指摘した。我々の応答:\n\n- 各転移は**個別には** plausibleまたはconditionalの範囲内にある\n- しかし**連鎖的に**評価すると、全航路の成功確率は50%を下回る\n- これは「implausible」ではなく「**extraordinary**」——物理的に不可能ではないが、統計的に幸運が必要な範囲\n- 作品はまさにこの「不可能ではないがギリギリ」の領域を描いており、それ自体が高い科学的リテラシーの証",
       "table": {
         "caption": "マージン連鎖: 感度行列",
-        "episodes": [2, 3, 4, 5],
+        "episodes": [
+          2,
+          3,
+          4,
+          5
+        ],
         "rows": [
           {
             "metric": "基準マージン",
-            "values": { "2": "2.9%", "3": "99.8%", "4": "43%", "5": "0.78%" },
+            "values": {
+              "2": "2.9%",
+              "3": "99.8%",
+              "4": "43%",
+              "5": "0.78%"
+            },
             "status": "ok",
             "note": "各話の主要制約のマージン"
           },
           {
             "metric": "質量+50%時",
-            "values": { "2": "2.9%", "3": "低下", "4": "低下", "5": "<0%" },
+            "values": {
+              "2": "2.9%",
+              "3": "低下",
+              "4": "低下",
+              "5": "<0%"
+            },
             "status": "warn",
             "note": "EP05が破綻"
           },
           {
             "metric": "航法誤差2倍時",
-            "values": { "2": "—", "3": "99.6%", "4": "33%", "5": "~0.3%" },
+            "values": {
+              "2": "—",
+              "3": "99.6%",
+              "4": "33%",
+              "5": "~0.3%"
+            },
             "status": "warn",
             "note": "EP04-05にカスケード"
           },
           {
             "metric": "連鎖成功確率",
-            "values": { "2": "97%", "3": "95%", "4": "90%", "5": "55%" },
+            "values": {
+              "2": "97%",
+              "3": "95%",
+              "4": "90%",
+              "5": "55%"
+            },
             "status": "warn",
             "note": "合計: ~46%（独立仮定）、~30-40%（結合）"
           }

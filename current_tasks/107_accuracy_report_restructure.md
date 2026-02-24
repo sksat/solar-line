@@ -1,6 +1,6 @@
 # Task 107: 科学的精度レポートのスコープ再構成
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 
