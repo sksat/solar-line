@@ -5,7 +5,7 @@
  * Supports invalidation propagation and impact analysis.
  */
 
-import type { DagState, DagNode, DagEvent, NodeType, NodeStatus } from "./dag-types.ts";
+import type { DagState, DagNode, DagEvent, NodeType, NodeStatus, TaskFileStatus } from "./dag-types.ts";
 
 const SCHEMA_VERSION = 1;
 
@@ -270,4 +270,122 @@ export function summarize(state: DagState): string {
   for (const issue of issues) lines.push(`  ${issue}`);
 
   return lines.join("\n");
+}
+
+// ---- Task planning functions ----
+
+/** Map task file status to DAG node status. */
+export function taskFileStatusToNodeStatus(fileStatus: TaskFileStatus): NodeStatus {
+  switch (fileStatus) {
+    case "DONE": return "valid";
+    case "IN PROGRESS": return "active";
+    case "TODO": return "pending";
+  }
+}
+
+/**
+ * Get task nodes that are ready to work on:
+ * - Status is "pending" (TODO)
+ * - All dependency task nodes are "valid" (DONE) or non-task dependencies are "valid"
+ */
+export function getPlannable(state: DagState): DagNode[] {
+  return Object.values(state.nodes)
+    .filter(n => n.type === "task" && n.status === "pending")
+    .filter(n => {
+      // All dependencies must be satisfied
+      return n.dependsOn.every(depId => {
+        const dep = state.nodes[depId];
+        if (!dep) return false;
+        // Task deps must be done (valid); non-task deps must be valid
+        return dep.status === "valid";
+      });
+    })
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+/**
+ * Get task nodes that are blocked:
+ * - Status is "pending" (TODO)
+ * - At least one dependency is not yet "valid"
+ */
+export function getBlocked(state: DagState): DagNode[] {
+  return Object.values(state.nodes)
+    .filter(n => n.type === "task" && n.status === "pending")
+    .filter(n => {
+      return n.dependsOn.some(depId => {
+        const dep = state.nodes[depId];
+        return !dep || dep.status !== "valid";
+      });
+    })
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+/**
+ * Find groups of plannable tasks that can be executed in parallel
+ * (no mutual dependencies).
+ */
+export function getParallelGroups(state: DagState): DagNode[][] {
+  const plannable = getPlannable(state);
+  if (plannable.length === 0) return [];
+
+  // Build conflict set: two tasks conflict if one depends (transitively) on the other
+  const groups: DagNode[][] = [];
+  const assigned = new Set<string>();
+
+  for (const task of plannable) {
+    if (assigned.has(task.id)) continue;
+
+    const group = [task];
+    assigned.add(task.id);
+    const taskUpstream = new Set(getUpstream(state, task.id));
+    const taskDownstream = new Set(getDownstream(state, task.id));
+
+    for (const other of plannable) {
+      if (assigned.has(other.id)) continue;
+      // No transitive dependency between them
+      if (!taskUpstream.has(other.id) && !taskDownstream.has(other.id)) {
+        // Also check this task doesn't conflict with any existing group member
+        let conflicts = false;
+        for (const member of group) {
+          const mUp = new Set(getUpstream(state, member.id));
+          const mDown = new Set(getDownstream(state, member.id));
+          if (mUp.has(other.id) || mDown.has(other.id)) {
+            conflicts = true;
+            break;
+          }
+        }
+        if (!conflicts) {
+          group.push(other);
+          assigned.add(other.id);
+        }
+      }
+    }
+
+    groups.push(group);
+  }
+
+  return groups;
+}
+
+/** Get all active (in-progress) task nodes. */
+export function getActiveTasks(state: DagState): DagNode[] {
+  return Object.values(state.nodes)
+    .filter(n => n.type === "task" && n.status === "active")
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+/** Claim a task node (set to active). Returns the event. */
+export function claimTask(state: DagState, nodeId: string): DagEvent {
+  const node = state.nodes[nodeId];
+  if (!node) throw new Error(`Node '${nodeId}' not found`);
+  if (node.type !== "task") throw new Error(`Node '${nodeId}' is not a task (type: ${node.type})`);
+  if (node.status !== "pending") throw new Error(`Task '${nodeId}' is not pending (status: ${node.status})`);
+  // Check all dependencies are satisfied
+  for (const depId of node.dependsOn) {
+    const dep = state.nodes[depId];
+    if (!dep || dep.status !== "valid") {
+      throw new Error(`Task '${nodeId}' has unsatisfied dependency '${depId}' (status: ${dep?.status ?? "missing"})`);
+    }
+  }
+  return setStatus(state, nodeId, "active");
 }

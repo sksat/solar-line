@@ -30,6 +30,11 @@ import {
   validate,
   getStaleNodes,
   summarize,
+  getPlannable,
+  getBlocked,
+  getParallelGroups,
+  getActiveTasks,
+  claimTask,
 } from "./dag.ts";
 
 const STATE_FILE = path.resolve(import.meta.dirname ?? ".", "../../dag/state.json");
@@ -77,7 +82,7 @@ const command = positional[0];
 
 if (!command) {
   console.log("Usage: npm run dag -- <command> [args]");
-  console.log("Commands: add, depend, remove-dep, rewire, status, invalidate, impact, lineage, validate, show");
+  console.log("Commands: add, depend, remove-dep, rewire, status, invalidate, impact, lineage, validate, show, plan, claim, parallel");
   process.exit(0);
 }
 
@@ -124,7 +129,7 @@ switch (command) {
       console.error("Usage: status <id> <valid|stale|pending>");
       process.exit(1);
     }
-    const validStatuses: NodeStatus[] = ["valid", "stale", "pending"];
+    const validStatuses: NodeStatus[] = ["valid", "stale", "pending", "active", "blocked"];
     if (!validStatuses.includes(newStatus as NodeStatus)) {
       console.error(`Invalid status '${newStatus}'. Must be one of: ${validStatuses.join(", ")}`);
       process.exit(1);
@@ -241,6 +246,67 @@ switch (command) {
     const addEvt = addDependency(state, nodeId, flags.to);
     events.push(removeEvt, addEvt);
     console.log(`Rewired '${nodeId}': ${flags.from} → ${flags.to}`);
+    break;
+  }
+
+  case "plan": {
+    const active = getActiveTasks(state);
+    if (active.length > 0) {
+      console.log(`Currently active (${active.length}):`);
+      for (const t of active) {
+        console.log(`  🔵 ${t.id} — ${t.title}`);
+      }
+      console.log();
+    }
+    const plannable = getPlannable(state);
+    if (plannable.length === 0) {
+      console.log("No plannable tasks — all pending tasks have unsatisfied dependencies.");
+    } else {
+      console.log(`Plannable tasks (${plannable.length}):`);
+      for (const t of plannable) {
+        const deps = t.dependsOn.length > 0 ? ` [deps: ${t.dependsOn.join(", ")}]` : "";
+        console.log(`  ⚪ ${t.id} — ${t.title}${deps}`);
+      }
+    }
+    const blocked = getBlocked(state);
+    if (blocked.length > 0) {
+      console.log(`\nBlocked tasks (${blocked.length}):`);
+      for (const t of blocked) {
+        const unsatisfied = t.dependsOn.filter(d => {
+          const dep = state.nodes[d];
+          return !dep || dep.status !== "valid";
+        });
+        console.log(`  🔴 ${t.id} — ${t.title} [blocked by: ${unsatisfied.join(", ")}]`);
+      }
+    }
+    break;
+  }
+
+  case "claim": {
+    const [, taskId] = positional;
+    if (!taskId) {
+      console.error("Usage: claim <task-id>");
+      process.exit(1);
+    }
+    const event = claimTask(state, taskId);
+    events.push(event);
+    console.log(`Claimed task '${taskId}' — now active`);
+    break;
+  }
+
+  case "parallel": {
+    const groups = getParallelGroups(state);
+    if (groups.length === 0) {
+      console.log("No parallelizable task groups available.");
+    } else {
+      console.log(`Parallel execution groups (${groups.length}):`);
+      for (let i = 0; i < groups.length; i++) {
+        console.log(`\n  Group ${i + 1} (${groups[i].length} tasks):`);
+        for (const t of groups[i]) {
+          console.log(`    ${t.id} — ${t.title}`);
+        }
+      }
+    }
     break;
   }
 

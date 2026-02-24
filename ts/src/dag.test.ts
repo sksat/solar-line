@@ -14,7 +14,14 @@ import {
   validate,
   getStaleNodes,
   summarize,
+  taskFileStatusToNodeStatus,
+  getPlannable,
+  getBlocked,
+  getParallelGroups,
+  getActiveTasks,
+  claimTask,
 } from "./dag.ts";
+import { parseTaskFile, syncTasksIntoDag } from "./dag-task-sync.ts";
 import type { DagState } from "./dag-types.ts";
 
 describe("createEmptyDag", () => {
@@ -247,5 +254,236 @@ describe("summarize", () => {
     assert.ok(summary.includes("1 edges"));
     assert.ok(summary.includes("parameter=1"));
     assert.ok(summary.includes("analysis=1"));
+  });
+});
+
+// ---- Task planning tests ----
+
+describe("taskFileStatusToNodeStatus", () => {
+  it("maps DONE to valid", () => {
+    assert.equal(taskFileStatusToNodeStatus("DONE"), "valid");
+  });
+  it("maps IN PROGRESS to active", () => {
+    assert.equal(taskFileStatusToNodeStatus("IN PROGRESS"), "active");
+  });
+  it("maps TODO to pending", () => {
+    assert.equal(taskFileStatusToNodeStatus("TODO"), "pending");
+  });
+});
+
+describe("getPlannable", () => {
+  it("returns pending tasks with all deps satisfied", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "valid");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+    addNode(dag, "task.003", "task", "Task 3", ["task.002"]);
+
+    const plannable = getPlannable(dag);
+    assert.equal(plannable.length, 1);
+    assert.equal(plannable[0].id, "task.002");
+  });
+
+  it("returns multiple plannable tasks", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "valid");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+    addNode(dag, "task.003", "task", "Task 3", ["task.001"]);
+
+    const plannable = getPlannable(dag);
+    assert.equal(plannable.length, 2);
+  });
+
+  it("excludes active tasks", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "active");
+    const plannable = getPlannable(dag);
+    assert.equal(plannable.length, 0);
+  });
+});
+
+describe("getBlocked", () => {
+  it("returns tasks with unsatisfied dependencies", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+
+    const blocked = getBlocked(dag);
+    assert.equal(blocked.length, 1);
+    assert.equal(blocked[0].id, "task.002");
+  });
+
+  it("does not include tasks with all deps valid", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "valid");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+
+    const blocked = getBlocked(dag);
+    assert.equal(blocked.length, 0);
+  });
+});
+
+describe("getParallelGroups", () => {
+  it("groups independent tasks together", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "valid");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+    addNode(dag, "task.003", "task", "Task 3", ["task.001"]);
+
+    const groups = getParallelGroups(dag);
+    assert.equal(groups.length, 1);
+    assert.equal(groups[0].length, 2);
+  });
+
+  it("separates dependent tasks into different groups", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "valid");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+    addNode(dag, "task.003", "task", "Task 3", ["task.001", "task.002"]);
+
+    const groups = getParallelGroups(dag);
+    // task.002 is plannable, task.003 is blocked (depends on pending task.002)
+    assert.equal(groups.length, 1);
+    assert.equal(groups[0].length, 1);
+    assert.equal(groups[0][0].id, "task.002");
+  });
+
+  it("returns empty for no plannable tasks", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+
+    const groups = getParallelGroups(dag);
+    assert.equal(groups.length, 1);
+    // task.001 has no deps, so it's plannable
+    assert.equal(groups[0][0].id, "task.001");
+  });
+});
+
+describe("getActiveTasks", () => {
+  it("returns only active task nodes", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    addNode(dag, "task.002", "task", "Task 2");
+    setStatus(dag, "task.001", "active");
+
+    const active = getActiveTasks(dag);
+    assert.equal(active.length, 1);
+    assert.equal(active[0].id, "task.001");
+  });
+});
+
+describe("claimTask", () => {
+  it("sets a pending task to active", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    const event = claimTask(dag, "task.001");
+    assert.equal(dag.nodes["task.001"].status, "active");
+    assert.equal(event.action, "status_changed");
+  });
+
+  it("rejects claiming non-task nodes", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "param.mass", "parameter", "Ship mass");
+    assert.throws(() => claimTask(dag, "param.mass"), /not a task/);
+  });
+
+  it("rejects claiming non-pending tasks", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "valid");
+    assert.throws(() => claimTask(dag, "task.001"), /not pending/);
+  });
+
+  it("rejects claiming tasks with unsatisfied deps", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+    assert.throws(() => claimTask(dag, "task.002"), /unsatisfied dependency/);
+  });
+});
+
+// ---- Task file parsing tests ----
+
+describe("parseTaskFile", () => {
+  it("parses a DONE task", () => {
+    const content = `# Task 001: Minimal Scaffold\n\n## Status: DONE\n\n## Goal\nSetup project`;
+    const result = parseTaskFile(content, "001_scaffold.md");
+    assert.equal(result?.num, 1);
+    assert.equal(result?.dagId, "task.001");
+    assert.equal(result?.title, "Minimal Scaffold");
+    assert.equal(result?.fileStatus, "DONE");
+    assert.equal(result?.nodeStatus, "valid");
+  });
+
+  it("parses an IN PROGRESS task", () => {
+    const content = `# Task 118: DAG Planning\n\n## Status: IN PROGRESS\n\n## Dependencies\n- Task 085 (DAG) — DONE\n- Task 088 — DONE`;
+    const result = parseTaskFile(content, "118_dag_planning.md");
+    assert.equal(result?.num, 118);
+    assert.equal(result?.fileStatus, "IN PROGRESS");
+    assert.equal(result?.nodeStatus, "active");
+    assert.deepEqual(result?.taskDeps, [85, 88]);
+  });
+
+  it("parses a TODO task", () => {
+    const content = `# Task 056: Speaker Diarization\n\n## Status: TODO`;
+    const result = parseTaskFile(content, "056_speaker_diarization.md");
+    assert.equal(result?.fileStatus, "TODO");
+    assert.equal(result?.nodeStatus, "pending");
+  });
+
+  it("extracts episode tags", () => {
+    const content = `# Task 006: Episode 1 Analysis\n\n## Status: DONE\n\nEP01 analysis`;
+    const result = parseTaskFile(content, "006_ep01_analysis.md");
+    assert.ok(result?.tags.includes("episode:01"));
+  });
+
+  it("returns null for invalid filename", () => {
+    const result = parseTaskFile("# Bad", "readme.md");
+    assert.equal(result, null);
+  });
+});
+
+describe("syncTasksIntoDag", () => {
+  it("adds task nodes to an empty DAG", () => {
+    const dag = createEmptyDag();
+    const tasks = [
+      { num: 1, dagId: "task.001", title: "Task 1", fileStatus: "DONE" as const, nodeStatus: "valid" as const, taskDeps: [], tags: [] },
+      { num: 2, dagId: "task.002", title: "Task 2", fileStatus: "TODO" as const, nodeStatus: "pending" as const, taskDeps: [1], tags: [] },
+    ];
+    const events = syncTasksIntoDag(dag, tasks);
+    assert.ok(events.length > 0);
+    assert.ok(dag.nodes["task.001"]);
+    assert.ok(dag.nodes["task.002"]);
+    assert.equal(dag.nodes["task.001"].status, "valid");
+    assert.equal(dag.nodes["task.002"].status, "pending");
+    assert.ok(dag.nodes["task.002"].dependsOn.includes("task.001"));
+  });
+
+  it("updates status of existing task nodes", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    const tasks = [
+      { num: 1, dagId: "task.001", title: "Task 1", fileStatus: "DONE" as const, nodeStatus: "valid" as const, taskDeps: [], tags: [] },
+    ];
+    syncTasksIntoDag(dag, tasks);
+    assert.equal(dag.nodes["task.001"].status, "valid");
+  });
+
+  it("does not duplicate existing nodes", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    setStatus(dag, "task.001", "valid");
+    const tasks = [
+      { num: 1, dagId: "task.001", title: "Task 1", fileStatus: "DONE" as const, nodeStatus: "valid" as const, taskDeps: [], tags: [] },
+    ];
+    const events = syncTasksIntoDag(dag, tasks);
+    // No status change since already valid
+    assert.equal(events.length, 0);
   });
 });

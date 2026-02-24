@@ -321,6 +321,7 @@ pre code.hljs { background: transparent; padding: 0; }
 .dag-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .dag-node-count { margin-left: auto; font-size: 0.75em; color: var(--text-secondary); }
 .dag-snapshot-select { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.4rem; font-size: 0.75em; color: var(--text-secondary); cursor: pointer; }
+@keyframes dagPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 0.15; } }
 .bar-chart-container { margin: 1rem 0; overflow-x: auto; }
 .bar-chart-container figure { margin: 0; }
 .chart-caption { font-size: 0.9em; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); }

@@ -2,7 +2,10 @@
 
 export type NodeType = "data_source" | "parameter" | "analysis" | "report" | "task";
 
-export type NodeStatus = "valid" | "stale" | "pending";
+export type NodeStatus = "valid" | "stale" | "pending" | "active" | "blocked";
+
+/** Task-specific status derived from current_tasks/ files */
+export type TaskFileStatus = "DONE" | "IN PROGRESS" | "TODO";
 
 export interface DagNode {
   id: string;

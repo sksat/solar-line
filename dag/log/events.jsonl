@@ -42,3 +42,255 @@
 {"timestamp":"2026-02-24T13:35:28.432Z","action":"node_added","nodeId":"analysis.mass-timeline","detail":"質量時系列分析"}
 {"timestamp":"2026-02-24T13:35:28.606Z","action":"dependency_added","nodeId":"report.other-ships","detail":"→ report.infrastructure"}
 {"timestamp":"2026-02-24T13:35:28.781Z","action":"dependency_added","nodeId":"analysis.mass-timeline","detail":"→ param.ship_mass"}
+{"timestamp":"2026-02-24T19:16:34.178Z","action":"node_added","nodeId":"task.001","detail":"Minimal Monorepo Scaffold + CI"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.001","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.002","detail":"Rust Core Types, Units, and Constants"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.003","detail":"WASM Bridge and TS Bindings"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.004","detail":"YouTube Subtitle Collection Script"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.004","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.005","detail":"GitHub Pages Report Pipeline"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.006","detail":"Episode 1 Content Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.007","detail":"Interactive Brachistochrone Calculator"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.008","detail":"Episode 2 Content Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.008","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.009","detail":"Subtitle Collection & Speaker Attribution"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.009","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.010","detail":"Localize Reports to Japanese"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.010","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.011","detail":"Session Log Collection from Conversation Logs"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.011","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.012","detail":"Report Enrichment — Video Embeds, Graphs, Dialogue Quotes"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.012","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.013","detail":"Episode 1 Reanalysis — Evidence & Multi-Parameter Exploration"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.013","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.014","detail":"Orbital Transfer Diagrams in Reports"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.014","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.015","detail":"Episode 3 (Part 3) Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.015","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.016","detail":"ΔV比較カードのテキスト溢れ修正"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.016","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.017","detail":"レポート構造改善"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.017","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.018","detail":"第1話台詞データ修正"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.018","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.019","detail":"軌道遷移図のインタラクティブアニメーション"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.019","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.020","detail":"Episode 4 Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.020","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.021","detail":"Cross-Episode Consistency Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.021","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.022","detail":"Build Test Fix & Report Readability Review"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.022","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.023","detail":"Episode 5 (Finale) Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.023","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.024","detail":"CI Testing Workflow & Type Safety"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.024","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.025","detail":"Report Quality Review & Full-Route Diagram"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.025","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.026","detail":"Accessibility Improvements for Interactive Elements"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.026","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.027","detail":"Report Quality Review (Round 2) — Codex Consultation"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.027","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.028","detail":"Episode 2-4 Dialogue Attribution (Phase 2)"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.028","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.029","detail":"EP01 Dialogue Attribution Continuation"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.029","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.030","detail":"Report Data Integrity Validation & Dialogue Evidence Enrichment"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.030","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.031","detail":"Enhanced Index (Top) Page"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.031","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.032","detail":"Template and Type Quality Fixes"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.032","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.033","detail":"Report Data Quality Fixes"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.033","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.034","detail":"Site Polish — OGP Meta Tags + Report Content Review (Codex)"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.034","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.035","detail":"Comprehensive Report Quality Review with Codex"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.035","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.036","detail":"Whisper STT Infrastructure for EP05 Subtitles"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.036","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.037","detail":"Compute Planetary Positions and Solar System Dates for Orbital Transfers"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.037","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.038","detail":"Enrich Earlier Reports with Later Episode Findings"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.038","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.039","detail":"Expand Cross-Episode Analysis Beyond Episode-Based Structure"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.039","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.040","detail":"Engine Burn Visualization in Interactive Orbital Diagrams"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.040","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.041","detail":"Report Navigation and Source Link Improvements"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.041","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.042","detail":"Update Summary Reports with Confirmed EP05 Data"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.042","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.043","detail":"Full-Route Orbital Diagram & EP05 Lines Fix"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.043","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.044","detail":"Security Fix & EP05 Data Quality"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.044","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.045","detail":"Propellant Budget Analysis (Tsiolkovsky Rocket Equation)"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.045","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.046","detail":"Whisper STT for Episodes 01-04"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.046","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.047","detail":"EP05 Analysis Completion — Oberth Effect, Nozzle Lifespan, Remove Preliminary Flag"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.047","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.048","detail":"Report UX Polish — Number Formatting, Calculator Feedback, Animation Robustness"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.048","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.049","detail":"Orbital Diagram Scale Legend and Timeline Annotations"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.049","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.050","detail":"Saturn-Centric Enceladus Capture Diagram for EP02"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.050","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.051","detail":"Add Episode Cross-Links in Summary Pages"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.051","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.052","detail":"Math Formula Rendering (KaTeX)"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.053","detail":"Playwright E2E Tests for Report Rendering"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.053","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.054","detail":"IF/Counterfactual Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.054","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.055","detail":"Transcription Data on GitHub Pages"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.055","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.056","detail":"Speaker Diarization Investigation"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.057","detail":"Workflow Skills"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.057","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.058","detail":"Multi-Pattern Orbital Diagram Animation"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.058","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.059","detail":"Verdict Policy & External Source Links Cleanup"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.059","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.060","detail":"Detailed Orbit Propagation Validation"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.060","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.061","detail":"GitHub Repo Link on Pages"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.061","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.062","detail":"Session Log Display Improvements"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.062","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.063","detail":"Adaptive Timestep Integration Methods"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.063","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.064","detail":"Attitude Control Precision & Stability Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.064","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.065","detail":"Communications Systems Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.065","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.066","detail":"ccusage Cost Analysis and Efficiency Optimization"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.067","detail":"ケイ表記統一 & ライ検証"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.067","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.068","detail":"ヘッダーナビゲーション視認性改善"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.068","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.069","detail":"レスポンシブ対応"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.070","detail":"文字起こしページ複数ソース表示"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.070","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.071","detail":"README更新"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.071","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.072","detail":"タイムスタンプ→動画リンク化"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.072","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.073","detail":"メタ技術解説ページ"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.073","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.074","detail":"分析の再検討 — nice-friend による視点補完"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.074","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.075","detail":"解説の図・グラフ追加"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.075","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.076","detail":"セッションログ更新"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.076","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.077","detail":"AIコストをページから確認可能に"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.077","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.078","detail":"技術解説ページの構造改善"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.078","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.079","detail":"文字起こし修正時のレポート連動更新"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.079","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.080","detail":"ヘッダーナビの各話・総合分析ドロップダウン分離"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.080","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.081","detail":"Rustdoc ビルド・デプロイ"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.081","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.082","detail":"ログの日時を JST で管理"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.082","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.083","detail":"コード引用のシンタックスハイライト"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.083","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.084","detail":"Claude Code 固有ツールの表示改善"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.084","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.085","detail":"タスク・分析の DAG 管理構造"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.086","detail":"ADR (Architecture Decision Records)"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.087","detail":"他の宇宙船・係留地の分析"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.087","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.088","detail":"DAG Viewer & Management Improvements"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.088","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.089","detail":"Dialogue Speaker Attribution Re-review"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.089","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.090","detail":"Cost Analysis — Non-Max-Subscription Estimates"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.090","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.091","detail":"Narrative Plausibility Review Process"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.091","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.092","detail":"Episode-Aware Brachistochrone Calculator"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.092","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.093","detail":"Tech Overview & Summary Report Statistics Refresh"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.093","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.094","detail":"Transcription-Report Sync Validation"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.094","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.095","detail":"\"ギリギリ\" Margin Visualization"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.095","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.096","detail":"Nav Categories + Task Status Dashboard"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.096","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.097","detail":"Epoch-Consistent Orbital Diagrams"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.097","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.098","detail":"3D Orbital Analysis"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.099","detail":"Enceladus Speaker Correction + Transcription Data Layers"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.099","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.100","detail":"Plasmoid Perturbation Analysis + Physics Consultation Model"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.100","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.101","detail":"DAG Historical Temporal Slider"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.102","detail":"Report Nesting for Long Analyses"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.102","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.103","detail":"DAG 分析の Rust モデリング"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.103","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.104","detail":"uPlot による時系列グラフ基盤"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.104","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.105","detail":"DuckDB-WASM によるデータ管理基盤"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.105","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.106","detail":"他船舶分析と太陽系インフラの分離"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.106","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.107","detail":"科学的精度レポートのスコープ再構成"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.107","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.108","detail":"外部エージェントによるレポートレビュー体制"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.108","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.109","detail":"軌道遷移図のバーン位置整合性修正"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.109","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.110","detail":"コンテナ分離・推進剤損失の質量時系列分析"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.110","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.111","detail":"「ライ」呼称の最終クリーンアップ"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.111","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.112","detail":"Rust 依存ライブラリ解禁とオラクルテスト"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.112","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.113","detail":"内部ドキュメントのサイト公開"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.113","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.114","detail":"ADR に Alternatives セクション追加"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.114","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.115","detail":"軌道遷移図に description フィールド追加"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.115","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.116","detail":"CI 安定性の改善"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.117","detail":"誤差範囲の可視化"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.117","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.118","detail":"DAG を用いたタスク計画と並列実行管理"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.118","detail":"pending → active"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.119","detail":"質量の謎を耐G SF設定仮説で再考"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.119","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.120","detail":"台詞データID参照方式への移行＋静的検査"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.120","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.121","detail":"ヘッダーに「この考証について」セクション追加"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.121","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.122","detail":"インタラクティブ要素のE2Eテスト基盤"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.122","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.123","detail":"数値分析のスクリプト化＋一括更新インフラ"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.123","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.124","detail":"コアロジックのcore crate分離（wasm crateはbind専任）"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.124","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.125","detail":"Orekit等の信頼できるシミュレータによる検算"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.126","detail":"コールドスリープの分析制約の明確化"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.126","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.127","detail":"レポートをMDX的に記述してレビューしやすくする"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.127","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.128","detail":"耐G超技術の前提を分析に反映"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.128","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.129","detail":"AI生成表記とネタバレ警告の明示"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.129","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.130","detail":"未承認ADRによるオーナー承認待ち判断の管理"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.130","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.131","detail":"軌道遷移アニメーション到着位置の修正"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.131","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.132","detail":"数式レンダリングのTDD回帰テスト"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.132","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"node_added","nodeId":"task.133","detail":"各解析ごとの再現コマンド（解析テスト）"}
+{"timestamp":"2026-02-24T19:16:34.179Z","action":"status_changed","nodeId":"task.133","detail":"pending → valid"}
+{"timestamp":"2026-02-24T19:16:34.180Z","action":"dependency_added","nodeId":"task.023","detail":"→ task.036"}

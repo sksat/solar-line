@@ -1,6 +1,6 @@
 # Task 118: DAG を用いたタスク計画と並列実行管理
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 

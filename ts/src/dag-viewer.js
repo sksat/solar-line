@@ -30,12 +30,16 @@
     valid: "#3fb950",
     stale: "#f0883e",
     pending: "#8b949e",
+    active: "#58a6ff",
+    blocked: "#f85149",
   };
 
   const STATUS_LABELS = {
     valid: "有効",
     stale: "要再検証",
     pending: "未処理",
+    active: "作業中",
+    blocked: "ブロック中",
   };
 
   // Episode colors for background grouping
@@ -167,6 +171,9 @@
         const cat = getNodeCategory(n);
         return cat === "cross" || cat === "summary";
       });
+    }
+    if (filter === "task") {
+      return allNodes.filter((n) => n.type === "task");
     }
     if (filter.startsWith("episode:")) {
       const epNodes = allNodes.filter((n) => getEpisodeTag(n) === filter);
@@ -426,8 +433,20 @@
       circle.setAttribute("r", nodeRadius);
       circle.setAttribute("fill", TYPE_COLORS[node.type] || "#8b949e");
       circle.setAttribute("stroke", STATUS_COLORS[node.status] || "#8b949e");
-      circle.setAttribute("stroke-width", "2");
+      circle.setAttribute("stroke-width", node.status === "active" ? "3" : "2");
       g.appendChild(circle);
+
+      // Active task nodes get a pulsing glow ring
+      if (node.status === "active") {
+        const glow = document.createElementNS(svgNS, "circle");
+        glow.setAttribute("r", nodeRadius + 4);
+        glow.setAttribute("fill", "none");
+        glow.setAttribute("stroke", "#58a6ff");
+        glow.setAttribute("stroke-width", "1.5");
+        glow.setAttribute("opacity", "0.6");
+        glow.style.animation = "dagPulse 2s ease-in-out infinite";
+        g.insertBefore(glow, circle);
+      }
 
       // Label (abbreviated)
       const label = document.createElementNS(svgNS, "text");
