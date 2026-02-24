@@ -129,6 +129,24 @@
             "source": "Oberth効果方程式 + [JPL木星重力パラメータ](https://ssd.jpl.nasa.gov/planets/phys_par.html)",
             "accuracyPercent": null,
             "status": "approximate"
+          },
+          {
+            "claim": "RK4軌道伝搬: EP02弾道遷移エネルギー保存",
+            "episode": 2,
+            "depicted": "455日弾道遷移",
+            "reference": "エネルギー保存 < 10⁻⁹",
+            "source": "RK4 4次数値積分（自作検証済）",
+            "accuracyPercent": 99.99,
+            "status": "verified"
+          },
+          {
+            "claim": "RK4軌道伝搬: ΔV不変性検証",
+            "episode": 1,
+            "depicted": "ΔV = 8,497 km/s",
+            "reference": "ΔV = a × t（重力場非依存）",
+            "source": "RK4 Brachistochrone伝搬 vs 机上計算",
+            "accuracyPercent": 100.0,
+            "status": "verified"
           }
         ]
       }

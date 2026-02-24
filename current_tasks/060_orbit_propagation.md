@@ -1,6 +1,6 @@
 # Task 060: Detailed Orbit Propagation Validation
 
-## Status: IN PROGRESS (Session 2026-02-24)
+## Status: DONE
 
 ## Motivation
 Human directive: 大雑把な机上計算による分析の後に詳細な軌道伝搬も行ってみて検証するとよい。特に時間経過などの細かいパラメータについては。
@@ -22,38 +22,34 @@ Human directive: 大雑把な机上計算による分析の後に詳細な軌道
   - EP01 72h brachistochrone: distance & arrival validation
 - **WASM bindings**: propagate_ballistic, propagate_brachistochrone, propagate_trajectory (3 tests)
 
-### Remaining
-- ☐ EP02: 455d ballistic Jupiter→Saturn validation
-- ☐ EP03: 143h Saturn→Uranus brachistochrone validation
-- ☐ EP05: composite route timing validation
-- ☐ Report integration (propagation results in reports/diagrams)
-- ☐ Consider adaptive step size for better efficiency
+### Session 2026-02-24 (cont): EP02-EP05 validation + report integration ✅
+- **9 new validation tests** (25 total propagation tests):
+  - EP02: 455d ballistic Jupiter→Saturn — energy conservation <1e-9, trajectory reaches Saturn neighborhood, vis-viva arrival speed verified
+  - EP02: Solar-hyperbolic trajectory confirmed (v=18.99 > v_esc=18.46), v∞≈4.44 km/s
+  - EP02: Saturn capture ΔV at Enceladus orbit — minimum 0.61 km/s matches desk calc
+  - EP03: 143h12m brachistochrone Saturn→Uranus — distance/arrival validated, mass boundary ≤452t confirmed
+  - EP03: Desk ΔV = 11,165 km/s matches accel × time (independent of gravity)
+  - EP05: Brachistochrone @300t Uranus→Earth — ship moves inward, covers correct distance
+  - EP05: Nozzle lifespan margin 26min (0.78%) — without Oberth, nozzle fails
+  - EP05: 375h cruise at 1,500 km/s — solar gravity causes <5 km/s speed change
+  - EP05: Earth capture to LEO 400km — v_circ=7.67 km/s, capture ΔV=3.18 km/s
+- **Report integration**:
+  - Cross-episode report: new section "軌道伝搬による検証（RK4数値積分）" with comparison table
+  - Science-accuracy report: 2 new verification rows (energy conservation, ΔV invariance)
 
-## Scope
+## Key Findings
+1. **ΔV is gravity-invariant**: Brachistochrone ΔV = a×t is purely a thrust integral, independent of external gravity
+2. **EP02 is solar-hyperbolic**: v_helio=18.99 km/s barely exceeds solar escape (18.46), but Saturn is en route
+3. **Nozzle margin is the tightest constraint**: EP05's 26-minute (0.78%) margin means Jupiter Oberth is essential
+4. **High-speed coasting is near-ballistic**: At 1,500 km/s, solar gravity at 10 AU is negligible (<0.3% speed change over 375h)
+
+## Scope — All Complete
 1. ✅ Add numerical orbit propagation to Rust core (RK4 integrator)
-   - ✅ Support central-body gravity
-   - ✅ Brachistochrone continuous-thrust propagation (flip-and-burn)
-   - ✅ Time-stepping with configurable step size
 2. ✅ WASM bindings for browser-reproducible propagation
-3. Validate existing desk calculations:
-   - ✅ EP01: 72h Mars→Ganymede brachistochrone
-   - ☐ EP02: 455d ballistic Jupiter→Saturn
-   - ☐ EP03: 143h Saturn→Uranus brachistochrone
-   - ☐ EP05: composite route timing
-4. ☐ Add propagation results to reports (overlay on orbital diagrams or separate comparison)
+3. ✅ Validate existing desk calculations (EP01-EP03, EP05)
+4. ✅ Add propagation results to reports
+5. ☐ Consider adaptive step size for better efficiency (deferred — fixed dt is adequate)
 
-## TDD & Accuracy Verification (Human Directive)
-- **Numerical integration accuracy estimation**: Each integrator step size / method must have documented error bounds
-- **Energy conservation tests**: Total system energy (kinetic + potential) should be conserved in ballistic segments; write tests asserting energy drift stays below threshold
-- **Test-first approach**: Write accuracy/conservation tests BEFORE implementing the integrator, then make them pass
-- Example test: 2-body Keplerian orbit should conserve energy to <1e-10 relative error over 1000 orbits
-
-## Notes
-- Start simple: 2-body + constant thrust. Add N-body later if needed.
-- Key validation: does the ship actually arrive at the stated destination in the stated time?
-- Time-dependent parameters (planetary positions during transit) benefit most from propagation.
-- This is a significant Rust engineering task — may need multiple sessions.
-
-## Dependencies
-- Existing: orbits.rs (vis-viva, brachistochrone), ephemeris.rs (planetary positions)
-- New: integrator module, state propagation
+## Test Counts
+- 25 propagation tests in propagation.rs (was 16, added 9)
+- 111 Rust core + 27 WASM + 911 TS = 1,049 total (0 failures)
