@@ -1,6 +1,6 @@
 # Task 130: 未承認ADRによるオーナー承認待ち判断の管理
 
-## Status: TODO
+## Status: DONE
 
 ## Motivation
 人間の指示: 「プロジェクトオーナーの承認が必要な判断は、未承認の ADR という形で明らかにすること」

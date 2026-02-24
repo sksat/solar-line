@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted / Superseded / Deprecated
+Proposed / Accepted / Superseded / Deprecated
+
+（Proposed = プロジェクトオーナーの承認待ち。承認後に Accepted へ変更する。）
 
 ## Context
 

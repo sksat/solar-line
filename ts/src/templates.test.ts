@@ -36,8 +36,10 @@ import {
   renderTimeSeriesChart,
   renderTimeSeriesCharts,
   renderExplorerPage,
+  renderADRIndex,
   REPORT_CSS,
 } from "./templates.ts";
+import type { ADRRenderEntry } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart } from "./report-types.ts";
 
 // --- escapeHtml ---
@@ -3695,5 +3697,38 @@ describe("renderExplorerPage", () => {
     const html = layoutHtml("Test", "<p>content</p>");
     assert.ok(html.includes("データ探索"), "nav should include explorer link");
     assert.ok(html.includes("explorer/index.html"), "nav should link to explorer page");
+  });
+});
+
+// --- renderADRIndex ---
+
+describe("renderADRIndex", () => {
+  const sampleADRs: ADRRenderEntry[] = [
+    { number: 1, title: "Test Accepted", status: "Accepted", content: "# ADR-001\n\n## Status\n\nAccepted", slug: "001-test-accepted" },
+    { number: 2, title: "Test Proposed", status: "Proposed", content: "# ADR-002\n\n## Status\n\nProposed", slug: "002-test-proposed" },
+  ];
+
+  it("renders Proposed status with implausible badge", () => {
+    const html = renderADRIndex(sampleADRs);
+    assert.ok(html.includes("verdict-implausible"), "should use implausible badge for Proposed");
+    assert.ok(html.includes("Proposed"), "should show Proposed text");
+  });
+
+  it("renders Accepted status with plausible badge", () => {
+    const html = renderADRIndex(sampleADRs);
+    assert.ok(html.includes("verdict-plausible"), "should use plausible badge for Accepted");
+  });
+
+  it("shows proposed section when proposed ADRs exist", () => {
+    const html = renderADRIndex(sampleADRs);
+    assert.ok(html.includes("承認待ちの提案"), "should show proposed section header");
+    assert.ok(html.includes("1件"), "should show count of proposed ADRs");
+    assert.ok(html.includes("Test Proposed"), "should list proposed ADR title");
+  });
+
+  it("hides proposed section when no proposed ADRs", () => {
+    const acceptedOnly = [sampleADRs[0]];
+    const html = renderADRIndex(acceptedOnly);
+    assert.ok(!html.includes("承認待ちの提案"), "should not show proposed section");
   });
 });

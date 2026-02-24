@@ -2539,8 +2539,10 @@ export interface ADRRenderEntry {
 /** Render the ADR index page */
 export function renderADRIndex(adrs: ADRRenderEntry[], summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
   const statusBadge = (status: string): string => {
-    const cls = status.toLowerCase() === "accepted" ? "verdict-plausible"
-      : status.toLowerCase() === "superseded" ? "verdict-indeterminate"
+    const s = status.toLowerCase();
+    const cls = s === "accepted" ? "verdict-plausible"
+      : s === "proposed" ? "verdict-implausible"
+      : s === "superseded" ? "verdict-indeterminate"
       : "verdict-conditional";
     return `<span class="verdict ${cls}">${escapeHtml(status)}</span>`;
   };
@@ -2549,9 +2551,19 @@ export function renderADRIndex(adrs: ADRRenderEntry[], summaryPages?: SiteManife
     `<tr><td>ADR-${String(a.number).padStart(3, "0")}</td><td><a href="${a.slug}.html">${escapeHtml(a.title)}</a></td><td>${statusBadge(a.status)}</td></tr>`
   ).join("\n");
 
+  const proposed = adrs.filter(a => a.status.toLowerCase() === "proposed");
+  const proposedSection = proposed.length > 0
+    ? `<div class="card" style="border-color: var(--yellow); margin-bottom: 1.5rem;">
+<h3 style="color: var(--yellow); margin-top: 0;">承認待ちの提案 (${proposed.length}件)</h3>
+<ul>${proposed.map(a => `<li><a href="${a.slug}.html">ADR-${String(a.number).padStart(3, "0")}: ${escapeHtml(a.title)}</a></li>`).join("")}</ul>
+<p style="font-size: 0.85em; color: #8b949e;">プロジェクトオーナーの確認・承認を待っています。</p>
+</div>`
+    : "";
+
   const content = `
 <h1>Architecture Decision Records (ADR)</h1>
 <p>プロジェクトの設計判断を記録した ADR 一覧です。各 ADR は特定の設計上の決定とその理由を文書化しています。</p>
+${proposedSection}
 <table class="data-table">
 <thead><tr><th>番号</th><th>タイトル</th><th>状態</th></tr></thead>
 <tbody>
