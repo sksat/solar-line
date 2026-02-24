@@ -149,6 +149,10 @@ function seed(): DagState {
     tags: ["summary", "meta"],
     notes: "Token usage, cost distribution, efficiency metrics",
   });
+  addNode(dag, "report.infrastructure", "report", "太陽系インフラストラクチャと他船舶の分析", [...allReportIds], {
+    tags: ["summary"],
+    notes: "Non-Kestrel ships, stations, navigation infrastructure, governance",
+  });
 
   // Mark all existing analyses and reports as valid (they've been completed)
   for (const id of Object.keys(dag.nodes)) {
