@@ -64,6 +64,11 @@ pub mod orbit_radius {
     pub const VENUS: Km = Km(108_208_000.0);
 }
 
+/// Standard gravitational acceleration at Earth's surface (m/s²).
+/// Used to convert specific impulse (Isp in seconds) to exhaust velocity.
+/// Source: NIST/CODATA
+pub const G0_M_S2: f64 = 9.806_65;
+
 /// Standard reference orbits.
 pub mod reference_orbits {
     use super::Km;

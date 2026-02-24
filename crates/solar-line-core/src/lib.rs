@@ -13,9 +13,10 @@ pub mod vec3;
 pub use constants::mu;
 pub use kepler::{mean_to_true_anomaly, solve_kepler};
 pub use orbits::{
-    brachistochrone_accel, brachistochrone_dv, brachistochrone_max_distance, hohmann_transfer_dv,
-    orbital_period, specific_angular_momentum, specific_energy, vis_viva, OrbitalElements,
-    StateVector,
+    brachistochrone_accel, brachistochrone_dv, brachistochrone_max_distance, exhaust_velocity,
+    hohmann_transfer_dv, initial_mass, jet_power, mass_flow_rate, mass_ratio, orbital_period,
+    propellant_fraction, required_propellant_mass, specific_angular_momentum, specific_energy,
+    vis_viva, OrbitalElements, StateVector,
 };
 pub use units::{Eccentricity, Km, KmPerSec, Mu, Radians, Seconds};
 pub use vec3::Vec3;

@@ -122,6 +122,73 @@ pub fn brachistochrone_max_distance(accel_km_s2: f64, time: Seconds) -> Km {
     Km(accel_km_s2 * time.value() * time.value() / 4.0)
 }
 
+// ── Tsiolkovsky rocket equation ──────────────────────────────────────
+
+/// Convert specific impulse (seconds) to exhaust velocity (km/s).
+///
+/// vₑ = Isp × g₀, with g₀ = 9.80665 m/s² (converted to km/s).
+///
+/// Panics if `isp_s` is not positive.
+pub fn exhaust_velocity(isp_s: f64) -> KmPerSec {
+    assert!(isp_s > 0.0, "Isp must be positive");
+    KmPerSec(isp_s * crate::constants::G0_M_S2 / 1000.0)
+}
+
+/// Tsiolkovsky mass ratio: m₀/m_f = exp(ΔV / vₑ).
+///
+/// Returns the ratio of initial mass to final (dry) mass required
+/// to achieve the given ΔV at the given exhaust velocity.
+///
+/// Panics if `ve` is not positive or `delta_v` is negative.
+/// Returns f64::INFINITY if ΔV/vₑ overflows exp().
+pub fn mass_ratio(delta_v: KmPerSec, ve: KmPerSec) -> f64 {
+    assert!(ve.value() > 0.0, "exhaust velocity must be positive");
+    assert!(delta_v.value() >= 0.0, "delta-v must be non-negative");
+    (delta_v.value() / ve.value()).exp()
+}
+
+/// Propellant mass fraction: 1 - 1/mass_ratio = 1 - exp(-ΔV/vₑ).
+///
+/// The fraction of initial mass that must be propellant.
+/// Returns a value in [0, 1). For ΔV >> vₑ this approaches 1.
+pub fn propellant_fraction(delta_v: KmPerSec, ve: KmPerSec) -> f64 {
+    let mr = mass_ratio(delta_v, ve);
+    if mr.is_infinite() {
+        1.0
+    } else {
+        1.0 - 1.0 / mr
+    }
+}
+
+/// Required propellant mass (kg) given dry (post-burn) mass and ΔV.
+///
+/// m_prop = m_dry × (exp(ΔV/vₑ) - 1)
+pub fn required_propellant_mass(dry_mass_kg: f64, delta_v: KmPerSec, ve: KmPerSec) -> f64 {
+    dry_mass_kg * (mass_ratio(delta_v, ve) - 1.0)
+}
+
+/// Initial (pre-burn) mass (kg) given dry mass and ΔV.
+///
+/// m₀ = m_dry × exp(ΔV/vₑ)
+pub fn initial_mass(dry_mass_kg: f64, delta_v: KmPerSec, ve: KmPerSec) -> f64 {
+    dry_mass_kg * mass_ratio(delta_v, ve)
+}
+
+/// Mass flow rate (kg/s) for a given thrust (N) and exhaust velocity (km/s).
+///
+/// ṁ = F / vₑ  (with unit conversion: vₑ km/s → m/s)
+pub fn mass_flow_rate(thrust_n: f64, ve: KmPerSec) -> f64 {
+    assert!(ve.value() > 0.0, "exhaust velocity must be positive");
+    thrust_n / (ve.value() * 1000.0)
+}
+
+/// Jet power (W) for a given thrust (N) and exhaust velocity (km/s).
+///
+/// P_jet = ½ × F × vₑ  (kinetic power in the exhaust stream)
+pub fn jet_power(thrust_n: f64, ve: KmPerSec) -> f64 {
+    0.5 * thrust_n * ve.value() * 1000.0
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -293,6 +360,196 @@ mod tests {
             "round-trip distance: {} vs {}",
             d_max.value(),
             d.value()
+        );
+    }
+
+    // ── Tsiolkovsky rocket equation tests ────────────────────────────
+
+    #[test]
+    fn test_exhaust_velocity_chemical() {
+        // Chemical rocket: Isp ≈ 450 s → vₑ ≈ 4.413 km/s
+        let ve = exhaust_velocity(450.0);
+        let expected = 450.0 * 9.80665 / 1000.0; // 4.41299 km/s
+        assert!(
+            (ve.value() - expected).abs() < 1e-6,
+            "ve = {} km/s, expected = {} km/s",
+            ve.value(),
+            expected
+        );
+    }
+
+    #[test]
+    fn test_exhaust_velocity_fusion() {
+        // D-He³ fusion: Isp ≈ 100,000 s → vₑ ≈ 980.665 km/s
+        let ve = exhaust_velocity(100_000.0);
+        assert!(
+            (ve.value() - 980.665).abs() < 0.001,
+            "ve = {} km/s, expected 980.665 km/s",
+            ve.value()
+        );
+    }
+
+    #[test]
+    fn test_mass_ratio_zero_dv() {
+        // Zero ΔV → mass ratio = 1 (no propellant needed)
+        let mr = mass_ratio(KmPerSec(0.0), KmPerSec(1.0));
+        assert!((mr - 1.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn test_mass_ratio_equal_dv_ve() {
+        // ΔV = vₑ → mass ratio = e ≈ 2.71828
+        let mr = mass_ratio(KmPerSec(10.0), KmPerSec(10.0));
+        assert!(
+            (mr - std::f64::consts::E).abs() < 1e-10,
+            "mass ratio = {}, expected e = {}",
+            mr,
+            std::f64::consts::E
+        );
+    }
+
+    #[test]
+    fn test_mass_ratio_chemical_leo() {
+        // Chemical rocket to LEO: ΔV ≈ 9.4 km/s, Isp 450s → vₑ ≈ 4.413 km/s
+        // mass ratio = exp(9.4/4.413) ≈ 8.37
+        let ve = exhaust_velocity(450.0);
+        let mr = mass_ratio(KmPerSec(9.4), ve);
+        assert!(
+            (mr - 8.37).abs() < 0.1,
+            "mass ratio = {}, expected ~8.37",
+            mr
+        );
+    }
+
+    #[test]
+    fn test_mass_ratio_overflow() {
+        // Extremely high ΔV/vₑ ratio → INFINITY
+        let mr = mass_ratio(KmPerSec(1e10), KmPerSec(1.0));
+        assert!(mr.is_infinite(), "expected INFINITY for extreme mass ratio");
+    }
+
+    #[test]
+    fn test_propellant_fraction_zero_dv() {
+        let pf = propellant_fraction(KmPerSec(0.0), KmPerSec(1.0));
+        assert!(pf.abs() < 1e-15, "zero ΔV → zero propellant fraction");
+    }
+
+    #[test]
+    fn test_propellant_fraction_moderate() {
+        // ΔV = vₑ → pf = 1 - 1/e ≈ 0.6321
+        let pf = propellant_fraction(KmPerSec(10.0), KmPerSec(10.0));
+        let expected = 1.0 - 1.0 / std::f64::consts::E;
+        assert!(
+            (pf - expected).abs() < 1e-10,
+            "propellant fraction = {}, expected = {}",
+            pf,
+            expected
+        );
+    }
+
+    #[test]
+    fn test_propellant_fraction_overflow() {
+        let pf = propellant_fraction(KmPerSec(1e10), KmPerSec(1.0));
+        assert!(
+            (pf - 1.0).abs() < 1e-15,
+            "extreme ΔV → propellant fraction = 1.0"
+        );
+    }
+
+    #[test]
+    fn test_required_propellant_mass() {
+        // 1000 kg dry, ΔV = vₑ → propellant = 1000 * (e - 1) ≈ 1718.28 kg
+        let prop = required_propellant_mass(1000.0, KmPerSec(10.0), KmPerSec(10.0));
+        let expected = 1000.0 * (std::f64::consts::E - 1.0);
+        assert!(
+            (prop - expected).abs() < 0.01,
+            "propellant = {} kg, expected = {} kg",
+            prop,
+            expected
+        );
+    }
+
+    #[test]
+    fn test_initial_mass() {
+        // 1000 kg dry, ΔV = vₑ → initial = 1000 * e ≈ 2718.28 kg
+        let m0 = initial_mass(1000.0, KmPerSec(10.0), KmPerSec(10.0));
+        let expected = 1000.0 * std::f64::consts::E;
+        assert!(
+            (m0 - expected).abs() < 0.01,
+            "initial mass = {} kg, expected = {} kg",
+            m0,
+            expected
+        );
+    }
+
+    #[test]
+    fn test_initial_mass_consistency() {
+        // initial_mass = dry_mass + required_propellant_mass
+        let dry = 500.0;
+        let dv = KmPerSec(20.0);
+        let ve = KmPerSec(10.0);
+        let m0 = initial_mass(dry, dv, ve);
+        let prop = required_propellant_mass(dry, dv, ve);
+        assert!(
+            (m0 - (dry + prop)).abs() < 1e-6,
+            "m0 = {}, dry + prop = {}",
+            m0,
+            dry + prop
+        );
+    }
+
+    #[test]
+    fn test_mass_flow_rate() {
+        // 9.8 MN thrust, vₑ = 980.665 km/s (Isp 100,000 s)
+        // ṁ = 9.8e6 / (980.665 * 1000) = 9.993 kg/s
+        let ve = exhaust_velocity(100_000.0);
+        let mdot = mass_flow_rate(9.8e6, ve);
+        let expected = 9.8e6 / (980.665 * 1000.0);
+        assert!(
+            (mdot - expected).abs() < 0.01,
+            "mdot = {} kg/s, expected = {} kg/s",
+            mdot,
+            expected
+        );
+    }
+
+    #[test]
+    fn test_jet_power() {
+        // 9.8 MN thrust, vₑ = 980.665 km/s
+        // P_jet = 0.5 * 9.8e6 * 980665 = 4.805e12 W ≈ 4.8 TW
+        let ve = exhaust_velocity(100_000.0);
+        let p = jet_power(9.8e6, ve);
+        let expected = 0.5 * 9.8e6 * 980.665 * 1000.0;
+        assert!(
+            (p - expected).abs() < 1.0,
+            "P_jet = {} W, expected = {} W",
+            p,
+            expected
+        );
+    }
+
+    #[test]
+    fn test_kestrel_propellant_budget_ep01() {
+        // Kestrel EP01: ΔV ≈ 8497 km/s, dry mass 300t = 300,000 kg
+        // At Isp 1,000,000 s (vₑ ≈ 9806.65 km/s):
+        // mass_ratio = exp(8497/9806.65) ≈ 2.376
+        // propellant fraction ≈ 0.579
+        let ve = exhaust_velocity(1_000_000.0);
+        let dv = KmPerSec(8497.0);
+        let pf = propellant_fraction(dv, ve);
+        assert!(
+            pf > 0.5 && pf < 0.7,
+            "EP01 propellant fraction = {} (expected 0.5-0.7 at Isp 10⁶ s)",
+            pf
+        );
+        // At Isp 100,000 s (vₑ ≈ 980.665 km/s):
+        // mass_ratio = exp(8497/980.665) ≈ 5826 → propellant fraction ≈ 0.99983
+        let ve_low = exhaust_velocity(100_000.0);
+        let pf_low = propellant_fraction(dv, ve_low);
+        assert!(
+            pf_low > 0.999,
+            "EP01 at Isp 10⁵ s → propellant fraction = {} (>99.9%, impractical)",
+            pf_low
         );
     }
 }

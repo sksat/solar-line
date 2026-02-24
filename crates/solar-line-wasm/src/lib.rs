@@ -75,6 +75,65 @@ pub fn brachistochrone_max_distance(accel: f64, time: f64) -> f64 {
 }
 
 // ---------------------------------------------------------------------------
+// Tsiolkovsky rocket equation / propellant analysis
+// ---------------------------------------------------------------------------
+
+/// Convert specific impulse (seconds) to exhaust velocity (km/s).
+/// vₑ = Isp × g₀ (g₀ = 9.80665 m/s²)
+#[wasm_bindgen]
+pub fn exhaust_velocity(isp_s: f64) -> f64 {
+    orbits::exhaust_velocity(isp_s).value()
+}
+
+/// Tsiolkovsky mass ratio: m₀/m_f = exp(ΔV / vₑ).
+/// delta_v and ve in km/s.
+#[wasm_bindgen]
+pub fn mass_ratio(delta_v: f64, ve: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::mass_ratio(KmPerSec(delta_v), KmPerSec(ve))
+}
+
+/// Propellant mass fraction: 1 - 1/mass_ratio.
+/// delta_v and ve in km/s. Returns value in [0, 1).
+#[wasm_bindgen]
+pub fn propellant_fraction(delta_v: f64, ve: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::propellant_fraction(KmPerSec(delta_v), KmPerSec(ve))
+}
+
+/// Required propellant mass (kg) given dry (post-burn) mass and ΔV.
+/// delta_v and ve in km/s.
+#[wasm_bindgen]
+pub fn required_propellant_mass(dry_mass_kg: f64, delta_v: f64, ve: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::required_propellant_mass(dry_mass_kg, KmPerSec(delta_v), KmPerSec(ve))
+}
+
+/// Initial (pre-burn) mass (kg) given dry mass and ΔV.
+/// m₀ = m_dry × exp(ΔV/vₑ)
+#[wasm_bindgen]
+pub fn initial_mass(dry_mass_kg: f64, delta_v: f64, ve: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::initial_mass(dry_mass_kg, KmPerSec(delta_v), KmPerSec(ve))
+}
+
+/// Mass flow rate (kg/s) for a given thrust (N) and exhaust velocity (km/s).
+/// ṁ = F / vₑ
+#[wasm_bindgen]
+pub fn mass_flow_rate(thrust_n: f64, ve: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::mass_flow_rate(thrust_n, KmPerSec(ve))
+}
+
+/// Jet power (W) for a given thrust (N) and exhaust velocity (km/s).
+/// P_jet = ½ × F × vₑ
+#[wasm_bindgen]
+pub fn jet_power(thrust_n: f64, ve: f64) -> f64 {
+    use solar_line_core::units::KmPerSec;
+    orbits::jet_power(thrust_n, KmPerSec(ve))
+}
+
+// ---------------------------------------------------------------------------
 // Kepler equation solver and anomaly conversions
 // ---------------------------------------------------------------------------
 
@@ -463,6 +522,59 @@ mod tests {
         let a = brachistochrone_accel(d, t);
         let d_back = brachistochrone_max_distance(a, t);
         assert!((d_back - d).abs() < 1.0);
+    }
+
+    // ── Tsiolkovsky rocket equation tests ────────────────────────────
+
+    #[test]
+    fn test_wasm_exhaust_velocity() {
+        // Isp 100,000 s → vₑ ≈ 980.665 km/s
+        let ve = exhaust_velocity(100_000.0);
+        assert!((ve - 980.665).abs() < 0.001);
+    }
+
+    #[test]
+    fn test_wasm_mass_ratio() {
+        // ΔV = vₑ → mass ratio = e
+        let mr = mass_ratio(10.0, 10.0);
+        assert!((mr - std::f64::consts::E).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_wasm_propellant_fraction() {
+        // ΔV = vₑ → pf = 1 - 1/e
+        let pf = propellant_fraction(10.0, 10.0);
+        let expected = 1.0 - 1.0 / std::f64::consts::E;
+        assert!((pf - expected).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_wasm_required_propellant_mass() {
+        let prop = required_propellant_mass(1000.0, 10.0, 10.0);
+        let expected = 1000.0 * (std::f64::consts::E - 1.0);
+        assert!((prop - expected).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_wasm_initial_mass() {
+        let m0 = initial_mass(1000.0, 10.0, 10.0);
+        let expected = 1000.0 * std::f64::consts::E;
+        assert!((m0 - expected).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_wasm_mass_flow_rate() {
+        let ve = exhaust_velocity(100_000.0);
+        let mdot = mass_flow_rate(9.8e6, ve);
+        assert!((mdot - 9.993).abs() < 0.1);
+    }
+
+    #[test]
+    fn test_wasm_jet_power() {
+        let ve = exhaust_velocity(100_000.0);
+        let p = jet_power(9.8e6, ve);
+        // Expected: 0.5 * 9.8e6 * 980665 ≈ 4.805e12 W
+        assert!(p > 4.8e12 && p < 4.81e12);
     }
 
     // Validation error tests require JsError which only works on wasm targets.
