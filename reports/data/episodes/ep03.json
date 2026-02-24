@@ -482,6 +482,22 @@
       "summary": "ASR出力の「3000 km/s」は、143時間12分の遷移時間に対してBrachistochrone理論から算出される平均速度（~2,791 km/s）と整合する。VTTの数値認識精度は低いが、この場合はオーダーとして正しい可能性が高い。光速の約1%であり、D-He³核融合パルスエンジンの設定と合わせて考えると、SF的に非現実的とまでは言えない。"
     }
   ],
+  "onScreenDataExploration": {
+    "id": "ep03-exploration-04",
+    "transferId": "ep03-transfer-03",
+    "question": "NAVIGATION OVERVIEW画面の6フェーズ噴射シーケンスは既存Brachistochrone分析と整合するか？",
+    "summary": "EP03のNAVIGATION OVERVIEW画面は全シリーズで最も詳細な噴射シーケンスを表示。6フェーズの噴射計画から、実際の航路が純粋なbrachistochroneではなく「重力アシスト＋brachistochrone＋コースト＋RCS修正」の最適化多段遷移であることが判明。Cruise Burn（30:25:00）とCapture Prep（30:25:30）の30秒差（0.03%）は完全なbrachistochrone対称性を示す。Cruise Burnの加速度（27.3 m/s² = 2.78G）から逆算した船体質量359tは既存の質量境界分析（≤452t）と完全に整合し、ケストレルの実効質量が300-400t台であることをさらに裏付ける。総ΔV 5,984 km/sは既存分析の11,165 km/sの54%で、重力アシストとコースト区間の活用により47%のΔV削減を達成。航法危機の1.43×10^7 kmは字幕（1436万km）・独立計算（14,393,613 km）と三重に一致し、作品の数値精度が極めて高いことを確認。",
+    "keyFindings": [
+      "6フェーズ噴射シーケンス: Saturn Escape(4.31 km/s) → Cruise Burn(2990 km/s) → Exoplanar Alignment(0.11 km/s) → MCC-1(0.05 km/s) → MCC-2(~0.07 km/s) → Capture Prep(2990 km/s)",
+      "Brachistochrone対称性: Cruise/Capture の30秒差 (0.03%) — 太陽重力による微小非対称を反映",
+      "逆算質量359t: Cruise Burn加速度27.3 m/s²から、9.8 MNで359tと導出。既存質量境界(≤452t)の中間値",
+      "コースト率57%: 全行程の過半数が無推進。純粋brachistochroneではなく最適化多段遷移",
+      "総ΔV削減47%: 重力アシスト＋コースト活用で11,165 km/s → 5,984 km/s",
+      "航法危機の三重一致: 画面1.43×10^7 km、字幕1436万km、計算14,393,613 km (全て<1%)",
+      "SOLER LINE: 作品タイトルの由来であるルート名が画面表示で確認",
+      "PLASMOID STORM EST T+138:00:00: EP04プラズモイド遭遇の伏線が航路計画段階で表示"
+    ]
+  },
   "diagrams": [
     {
       "id": "ep03-diagram-01",

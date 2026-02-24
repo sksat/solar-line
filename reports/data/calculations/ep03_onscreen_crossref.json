@@ -1,0 +1,150 @@
+{
+  "_meta": {
+    "description": "Cross-reference of EP03 on-screen navigation data (6-phase burn sequence, navigation crisis) with existing orbital analysis",
+    "source": "reports/data/episodes/ep03_onscreen_data.json (Task 150)",
+    "date": "2026-02-24"
+  },
+  "burnSequenceCrossReference": {
+    "onScreenBurns": [
+      {"phase": 1, "name": "Saturn Escape", "dv_km_s": 4.31, "duration": "0:10:10", "start": "T+00:00", "type": "main engine"},
+      {"phase": 2, "name": "Cruise Burn", "dv_km_s": 2990, "duration": "30:25:00", "start": "T+03:30", "type": "main engine"},
+      {"phase": 3, "name": "Exoplanar Alignment", "dv_km_s": 0.11, "duration": "0:18:00", "start": "T+47:00", "type": "RCS"},
+      {"phase": 4, "name": "MCC-1", "dv_km_s": 0.05, "duration": null, "start": "T+71:00", "type": "RCS"},
+      {"phase": 5, "name": "MCC-2", "dv_km_s": 0.07, "duration": null, "start": null, "type": "RCS", "note": "estimated, partially obscured"},
+      {"phase": 6, "name": "Capture Prep", "dv_km_s": 2990, "duration": "30:25:30", "start": "T+~112:47", "type": "main engine"}
+    ],
+    "totalDeltaV_km_s": 5984.54,
+    "mainBurnsDeltaV_km_s": 5984.31,
+    "rcsTrimsDeltaV_km_s": 0.23
+  },
+  "brachistochroneSymmetry": {
+    "cruiseBurnDuration_s": 109500,
+    "capturePrepDuration_s": 109530,
+    "difference_s": 30,
+    "ratio": 1.000274,
+    "symmetryPrecision": "0.03%の差（30秒）— 完全なbrachistochrone対称性",
+    "interpretation": "加速噴射（30:25:00）と減速噴射（30:25:30）の30秒の差は、加速中に太陽の重力場内を移動することによる微小な非対称を反映。移動方向によって太陽重力の成分が加速側で有利/減速側で不利になるため、減速が30秒長い。この程度の非対称はbrachistochrone理論で予測される範囲内。"
+  },
+  "timelineReconstruction": {
+    "phases": [
+      {"time": "T+00:00 - T+00:10", "phase": "Saturn Escape", "duration_h": 0.17},
+      {"time": "T+00:10 - T+03:30", "phase": "Coast (Saturn SOI transit)", "duration_h": 3.33},
+      {"time": "T+03:30 - T+33:55", "phase": "Cruise Burn (acceleration)", "duration_h": 30.42},
+      {"time": "T+33:55 - T+47:00", "phase": "Coast (midcourse)", "duration_h": 13.08},
+      {"time": "T+47:00 - T+47:18", "phase": "Exoplanar Alignment (RCS)", "duration_h": 0.30},
+      {"time": "T+47:18 - T+71:00", "phase": "Coast", "duration_h": 23.70},
+      {"time": "T+71:00", "phase": "MCC-1 (RCS)", "duration_h": null},
+      {"time": "T+71:00 - T+112:47", "phase": "Coast + MCC-2", "duration_h": 41.78},
+      {"time": "T+112:47 - T+143:12", "phase": "Capture Prep (deceleration)", "duration_h": 30.42}
+    ],
+    "totalBurnTime_h": 61.14,
+    "totalCoastTime_h": 82.06,
+    "burnFraction": 0.427,
+    "coastFraction": 0.573,
+    "note": "全行程の57%がコースト（無推進）フェーズ。純粋なbrachistochroneでは100%が噴射だが、実際には重力アシスト利用と多段噴射構造のため、半分以上が無推進。"
+  },
+  "accelerationAndMassAnalysis": {
+    "cruiseBurn": {
+      "deltaV_m_s": 2990000,
+      "duration_s": 109500,
+      "acceleration_m_s2": 27.31,
+      "acceleration_G": 2.78,
+      "impliedMass_t_at9_8MN": 359,
+      "consistencyWithExistingAnalysis": "既存分析の質量境界（≤452t）と完全に整合。300-452t範囲の中間値。"
+    },
+    "saturnEscape": {
+      "deltaV_m_s": 4310,
+      "duration_s": 610,
+      "acceleration_m_s2": 7.07,
+      "acceleration_G": 0.72,
+      "impliedMass_t_at9_8MN": 1387,
+      "massDiscrepancy": "Cruise Burn（359t）の3.9倍。3つの解釈が可能:",
+      "interpretations": [
+        "1. 出発時に追加質量（コンテナ、余剰燃料）を搭載、Cruise Burn前に投棄",
+        "2. Saturn Escapeは低推力設定（9.8 MN未満）で実施。安全域内での慎重な噴射",
+        "3. 4.31 km/sは純粋なエンジンΔVではなく、土星重力アシストの効果込みの合計速度変化",
+        "最も可能性が高いのは解釈3: 土星フライバイ中のpowered maneuverにより、エンジンΔVが重力アシストで増幅されている"
+      ]
+    },
+    "massTimeline": {
+      "departure": "~1,387t (Saturn Escape段階)",
+      "cruiseBurn": "~359t (Cruise Burn段階)",
+      "massReduction": "~1,028t (3.9倍の質量削減)",
+      "possibleCause": "コンテナ投棄（EP01-02で言及）、または推進剤消費。Saturn Escapeで大量の推進剤を消費した後、軽量状態でCruise Burnに移行するシナリオ。Tsiolkovsky方程式で検証すると、4.31 km/sのΔVで1387t→359tの質量比（3.87）は、排気速度v_e ≈ 3.2 km/sに相当。これは核融合パルスエンジンとしては低すぎるため、コンテナ投棄が主因と推定。"
+    }
+  },
+  "existingAnalysisComparison": {
+    "existingBrachistochroneDeltaV_km_s": 11165,
+    "onScreenTotalDeltaV_km_s": 5984.54,
+    "ratio": 1.87,
+    "discrepancyExplanation": [
+      "既存分析は土星-天王星間の最短距離（9.62 AU）を全行程brachistochroneで仮定",
+      "実際の航路はより複雑な多段構造:",
+      "  Phase 1: 土星重力アシスト＋脱出噴射（4.31 km/s、土星の公転速度9.62 km/sも利用）",
+      "  Phase 2: 3.5hコースト（土星SOI離脱中）",
+      "  Phase 3: Brachistochrone加速（2990 km/s）— 全行程の一部区間のみ",
+      "  Phase 4: コースト＋RCS修正（78.9h = 55%が無推進）",
+      "  Phase 5: Brachistochrone減速（2990 km/s）",
+      "多段構造により、太陽系内の重力場と既存の公転速度を最大限活用。純粋なbrachistochrone（11,165 km/s）の約54%のΔVで同じ距離をカバー。"
+    ],
+    "implication": "作品の航路設計は「最小時間brachistochrone」よりも「最適ΔV多段遷移」に近い。重力アシスト＋コースト区間を組み合わせることで、ΔVを47%削減しながら同じ143時間を達成。これは現実の軌道力学でも使用される手法（gravity assist + low-thrust optimization）であり、作品の科学的設計の深さを示す。"
+  },
+  "navigationCrisisTripleMatch": {
+    "onScreenDisplay": {
+      "value": "1.43×10^7 km",
+      "parsed": 14300000,
+      "source": "DIFF/ENT field on navigation crisis display (14:16)"
+    },
+    "dialogue": {
+      "value": "1436万km",
+      "parsed": 14360000,
+      "source": "ep03-quote-07: ケイ「天王星交点面でおよそ1436万km」(14:17)"
+    },
+    "calculation": {
+      "value": 14393613,
+      "formula": "distance × tan(1.23°) where distance = 4.48 AU",
+      "source": "ep03-transfer-04 計算値"
+    },
+    "comparison": {
+      "displayVsDialogue": {"diff_km": 60000, "pct": 0.42},
+      "displayVsCalculation": {"diff_km": 93613, "pct": 0.65},
+      "dialogueVsCalculation": {"diff_km": 33613, "pct": 0.23},
+      "verdict": "三重一致: 画面表示、字幕、独立計算がすべて1%以内で一致。作品の数値設計の精度を強く裏付ける。"
+    },
+    "navigationSolutionConfidence": {
+      "solutionA_starTracker": {"confidence": 0.923, "source": "on-screen display"},
+      "solutionB_inertialGuidance": {"confidence": 0.917, "source": "on-screen display", "lastCorrection": "-21min"},
+      "confidenceDifference": 0.006,
+      "note": "0.6%の信頼度差 — AIでは判断不能、人間の直感が必要。きりたんは慣性航法系を選択し、正解だった。"
+    }
+  },
+  "routeNameDiscovery": {
+    "onScreen": "SOLER LINE",
+    "interpretation": "NAVIGATION OVERVIEW画面に表示されたルート名。作品タイトル「SOLAR LINE」はこのルート名に由来。「SOLER」は「SOLAR」の誤植ではなく、おそらく意図的な綴り — SOL(太陽) + ER(External Route/外縁ルート)の合成語の可能性。",
+    "orbCurtainWarning": {
+      "message": "ORB-CURTAIN BOUNDARY CROSSING DETECTED",
+      "legalNotice": "Proceeding with this route constitutes acceptance of all operational and legal risks.",
+      "interpretation": "オービタルカーテン（ORB-CURTAIN）は航行インフラの境界線。この外側は無誘導域であり、保険・法的保護が適用されない。作中世界の宇宙航行規制システムの一端。"
+    }
+  },
+  "plasmoidForeshadowing": {
+    "ep03Display": "PLASMOID STORM EST T+138:00:00",
+    "ep04Reality": "プラズモイド遭遇（02:13）、磁気シールド14分 vs 通過8分",
+    "foreshadowingAccuracy": "EP03のT+138:00:00は到着5時間前。EP04の実際の遭遇はタイタニアまで残り9h42mの時点であり、おおよそ一致。プラズモイド警報がEP03の航路計画段階ですでに表示されていたことは、作品の伏線構造の緻密さを示す。"
+  },
+  "jurisdictionComparison": {
+    "ep03_departure": {
+      "location": "エンケラドゥス停泊軌道",
+      "jurisdiction": "国際連合・火星自治連邦保護領 / 土星圏"
+    },
+    "ep03_arrival": {
+      "location": "天王星エントリー軌道",
+      "jurisdiction": "天王星自由港機構 / 天王星圏"
+    },
+    "ep04_titania": {
+      "location": "天王星エントリー軌道",
+      "jurisdiction": "天王星自由港機構 / タイタニア自治圏"
+    },
+    "autonomyGradient": "保護領（土星）→ 自由港（天王星）→ 自治圏（タイタニア）。中央権力からの距離に比例して自治度が上昇。"
+  }
+}
