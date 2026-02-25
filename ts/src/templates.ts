@@ -980,6 +980,14 @@ function renderSourceRef(ref: string, label: string): string {
     const nicoUrl = `https://www.nicovideo.jp/watch/${nicoMatch[1]}`;
     return `<a href="${escapeHtml(nicoUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
   }
+  // Cross-episode transfer refs like "ep01-transfer-02" — link to episode page with anchor
+  const crossEpMatch = ref.match(/^ep(\d+)-transfer-\d+$/);
+  if (crossEpMatch) {
+    const epNum = parseInt(crossEpMatch[1], 10);
+    const epSlug = `ep-${String(epNum).padStart(3, "0")}`;
+    const url = `../episodes/${epSlug}.html#${ref}`;
+    return `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`;
+  }
   // NASA JPL or other plain-text refs
   return escapeHtml(label);
 }
@@ -1066,7 +1074,7 @@ export function renderTransferSummaryCard(t: TransferAnalysis, detailUrl: string
 <p>第${t.episode}話 @ ${tsHtml}</p>
 ${verdictSummaryHtml}
 ${dvLine ? `<p>${dvLine}</p>` : ""}
-<p>${markdownToHtml(t.explanation.split("\n")[0])}</p>
+${markdownToHtml(t.explanation.split("\n")[0])}
 <p><a href="${escapeHtml(detailUrl)}" class="detail-link">詳細分析を見る →</a> ${explorationNote}</p>
 </div>`;
 }
@@ -1996,7 +2004,7 @@ ${boundary}
 ${tableHead}
 <tbody>${visibleRows}</tbody>
 </table>${collapsedSection}
-<p>${escapeHtml(exp.summary)}</p>
+<div class="exploration-summary">${markdownToHtml(exp.summary)}</div>
 </div>`;
 }
 

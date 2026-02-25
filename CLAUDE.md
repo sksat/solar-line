@@ -79,7 +79,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 ## Analysis Perspective
 
-- **SF tolerance**: This is an SF work — human g-tolerance countermeasures and futuristic propulsion capabilities are acceptable premises. Focus on whether in-story depictions are **narratively consistent** (elapsed time, distances, celestial positions) rather than physically realistic by current standards.
+- **SF tolerance**: This is an SF work — human g-tolerance countermeasures and futuristic propulsion capabilities are acceptable premises. Focus on whether in-story depictions are **narratively consistent** (elapsed time, distances, celestial positions) rather than physically realistic by current standards. In particular, multi-year transit times feel inconsistent with the story's depiction — prioritize mass/acceleration scenarios that match depicted timescales over those that keep G-loads within current human tolerance. Acceptable G-forces are secondary to timeline consistency with the anime.
 - **Counterfactual analysis**: Explore IF scenarios — what would happen if characters had made different decisions? (e.g., direct route without Jupiter flyby, low-thrust nozzle conservation path). This deepens the analysis.
 - **Math rendering**: Use KaTeX or MathJax to render formulas readably in reports.
 - **Verdict policy**: Reference calculations (where accuracy cannot be measured against a depicted value) should NOT use the "indeterminate" verdict. Reserve verdicts for claims that can be directly compared to in-story depictions.
@@ -103,6 +103,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Cold sleep constraint**: Cold sleep (コールドスリープ) is explicitly mentioned in the series, which means it is NOT used in scenes where it isn't explicitly depicted. Do not assume characters enter cold sleep during transit unless the scene explicitly shows it. Analyze crew endurance during long transits without cold sleep as the default.
 - **MDX-style reports**: Consider MDX or MDX-like authoring for reports to improve reviewability. JSON with embedded HTML/markdown is hard to review — a content-first format allows reviewers to focus on the analysis text.
 - **Cross-validation with trusted simulators**: Validate complex orbital transfers against trusted simulators like Orekit. Compare self-implemented results with established tools and document discrepancies.
+- **Relativistic effects**: At velocities reaching ~1% of light speed (e.g., brachistochrone peak velocities of ~7,600 km/s at 2.5%c), assess whether special relativistic corrections (time dilation, relativistic mass increase, velocity addition) are significant enough to affect the analysis. Document the magnitude of relativistic corrections even if they are small.
 
 ## Report Structure
 

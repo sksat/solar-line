@@ -1734,6 +1734,33 @@ describe("renderExploration with collapsedByDefault", () => {
     assert.ok(!html.includes("<details"));
     assert.ok(html.includes("シナリオA"));
   });
+
+  it("renders **bold** markdown in summary text", () => {
+    const exp: ParameterExploration = {
+      id: "exp-bold",
+      transferId: "t1",
+      question: "テスト",
+      scenarios: [],
+      summary: "木星フライバイなしでは**LEO到達は不可能**であり、ケイの発言が裏付けられる。",
+    };
+    const html = renderExploration(exp);
+    assert.ok(html.includes("<strong>LEO到達は不可能</strong>"), "should render bold markdown as <strong>");
+    assert.ok(!html.includes("**LEO"), "should not contain raw ** markers");
+  });
+
+  it("renders multiline summary with paragraph breaks", () => {
+    const exp: ParameterExploration = {
+      id: "exp-multi",
+      transferId: "t1",
+      question: "テスト",
+      scenarios: [],
+      summary: "第一段落です。\n\n第二段落です。",
+    };
+    const html = renderExploration(exp);
+    assert.ok(html.includes("<p>第一段落です。</p>"), "should have first paragraph");
+    assert.ok(html.includes("<p>第二段落です。</p>"), "should have second paragraph");
+    assert.ok(!html.includes("<p><p>"), "should not have double-wrapped p tags");
+  });
 });
 
 // --- Animated orbital diagrams ---
@@ -3082,6 +3109,21 @@ describe("source citations render as clickable links", () => {
     assert.ok(html.includes("Part 1 01:14"));
   });
 
+  it("renders cross-episode transfer refs as hyperlinks", () => {
+    const transfer: TransferAnalysis = {
+      ...sampleTransfer,
+      sources: [{
+        claim: "第1話: 火星→ガニメデ 72h brachistochrone",
+        sourceType: "cross-episode",
+        sourceRef: "ep01-transfer-02",
+        sourceLabel: "第1話 Brachistochrone分析（質量≤299tで成立）",
+      }],
+    };
+    const html = renderTransferCard(transfer);
+    assert.ok(html.includes('href="../episodes/ep-001.html#ep01-transfer-02"'), "should link to episode page with anchor");
+    assert.ok(html.includes("第1話 Brachistochrone分析"), "should contain source label");
+  });
+
   it("renders plain text for non-URL non-Niconico refs", () => {
     const transfer: TransferAnalysis = {
       ...sampleTransfer,
@@ -4010,6 +4052,12 @@ describe("renderTransferSummaryCard", () => {
   it("omits verdict summary box in summary card when absent", () => {
     const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 0);
     assert.ok(!html.includes("verdict-summary-box"), "should not have verdict-summary-box");
+  });
+
+  it("does not double-wrap explanation in <p> tags", () => {
+    const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 0);
+    assert.ok(!html.includes("<p><p>"), "should not contain nested <p><p>");
+    assert.ok(!html.includes("</p></p>"), "should not contain nested </p></p>");
   });
 });
 
