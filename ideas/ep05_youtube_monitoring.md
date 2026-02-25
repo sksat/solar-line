@@ -9,5 +9,4 @@ RESOLVED — EP05 is on YouTube as `_trGXYRF8-4`. Video card and VTT added in Ta
 3. ✅ YouTube VTT subtitles collected (Task 168)
 
 ## Remaining Opportunity
-- EP05 Whisper STT (`ep05_lines_whisper.json`) has NOT been generated yet
-  (EP01-04 all have Whisper outputs for multi-source comparison)
+- ✅ EP05 Whisper STT (`ep05_lines_whisper.json`) published — Task 179 DONE
