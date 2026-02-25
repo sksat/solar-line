@@ -2929,6 +2929,18 @@
       "status": "valid",
       "version": 2,
       "lastValidated": "2026-02-24T20:41:19.629Z"
+    },
+    "task.165": {
+      "id": "task.165",
+      "type": "task",
+      "title": "NaNタイムスタンプリンク修正",
+      "dependsOn": [],
+      "status": "valid",
+      "version": 2,
+      "tags": [
+        "bugfix"
+      ],
+      "lastValidated": "2026-02-25T00:51:45.814Z"
     }
   },
   "schemaVersion": 1
