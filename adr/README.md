@@ -20,6 +20,7 @@ SOLAR LINE 考察プロジェクトの設計・分析に関する意思決定の
 | [012](012-jst-timestamps.md) | セッションログの JST タイムスタンプ | Accepted |
 | [013](013-cdn-libraries.md) | CDN ベースの外部ライブラリ | Accepted |
 | [014](014-source-priority.md) | 本編優先の分析原則 | Accepted |
+| [015](015-naming-kousatsu-vs-koushou.md) | プロジェクト名称 — 考察 vs 考証 | Proposed |
 
 ## ADR の追加方法
 

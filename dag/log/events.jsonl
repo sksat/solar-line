@@ -317,3 +317,8 @@
 {"timestamp":"2026-02-24T23:29:26.363Z","action":"status_changed","nodeId":"task.056","detail":"pending → valid"}
 {"timestamp":"2026-02-25T00:51:42.392Z","action":"node_added","nodeId":"task.165","detail":"NaNタイムスタンプリンク修正"}
 {"timestamp":"2026-02-25T00:51:45.814Z","action":"status_changed","nodeId":"task.165","detail":"pending → valid"}
+{"timestamp":"2026-02-25T01:05:11.015Z","action":"node_added","nodeId":"task.166_memory_cleanup","detail":"Task166:MEMORY.md整理"}
+{"timestamp":"2026-02-25T01:05:14.593Z","action":"node_added","nodeId":"task.167_naming_adr","detail":"Task167:ADR015考察vs考証"}
+{"timestamp":"2026-02-25T01:05:14.779Z","action":"node_added","nodeId":"task.168_ep05_youtube","detail":"Task168:EP05YouTube監視"}
+{"timestamp":"2026-02-25T01:05:17.862Z","action":"status_changed","nodeId":"task.166_memory_cleanup","detail":"pending → valid"}
+{"timestamp":"2026-02-25T01:05:18.040Z","action":"status_changed","nodeId":"task.167_naming_adr","detail":"pending → valid"}
