@@ -1,6 +1,6 @@
 # Task 168: EP05 YouTube Video ID Monitoring
 
-Status: TODO
+Status: DONE
 
 ## Goal
 Add EP05 YouTube video ID and auto-generated subtitles when the video is uploaded to YouTube.

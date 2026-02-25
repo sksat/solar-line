@@ -1,0 +1,1320 @@
+{
+  "schemaVersion": 1,
+  "videoId": "_trGXYRF8-4",
+  "episode": 5,
+  "sourceSubtitle": {
+    "language": "ja",
+    "source": "youtube-auto",
+    "rawContentHash": "d97d55b379c8c13417c1cbf781e1ad15e31379752918621f82330d65deb556f5"
+  },
+  "lines": [
+    {
+      "lineId": "ep05-line-001",
+      "startMs": 4799,
+      "endMs": 20870,
+      "text": "で起列が進行0.3マクm同じくフレーム7番0.2マm。尖角温度は安定していますが加速過重による王力が骨格全体に蓄積しています。",
+      "rawEntryIds": [
+        "cue-1",
+        "cue-3",
+        "cue-5",
+        "cue-7"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-002",
+      "startMs": 20880,
+      "endMs": 24589,
+      "text": "そうか。",
+      "rawEntryIds": [
+        "cue-9"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-003",
+      "startMs": 53320,
+      "endMs": 60229,
+      "text": "私には骨格フレームの王力も核路の路温度も外部放射線の強度だって分かります。",
+      "rawEntryIds": [
+        "cue-11",
+        "cue-13"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-004",
+      "startMs": 60239,
+      "endMs": 71670,
+      "text": "この船が感じていることなら全てですが、この船が壊れていくたびに感じているものが何なのか私には区別がつかないのです。",
+      "rawEntryIds": [
+        "cue-15",
+        "cue-17",
+        "cue-19"
+      ],
+      "mergeReasons": [
+        "continuation_marker",
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-005",
+      "startMs": 71680,
+      "endMs": 82190,
+      "text": "無理させすぎちゃったな。",
+      "rawEntryIds": [
+        "cue-21"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-006",
+      "startMs": 104640,
+      "endMs": 108030,
+      "text": "1度やったことがあると気が楽だね。",
+      "rawEntryIds": [
+        "cue-23"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-007",
+      "startMs": 110719,
+      "endMs": 132229,
+      "text": "を阻止するためソーラーラインのコ路誘導網を偵破してくるはず。もちろんこれは地球にとっても大きな代償を伴う行為だけど100年以上維持されてきた公安校交舎を守るためならあの星は手段を選ばないでしょうね。あなたたちが内園に戻ればそれは地球が管理できない船が確かに存在していることの証明になってしまう。",
+      "rawEntryIds": [
+        "cue-25",
+        "cue-27",
+        "cue-29",
+        "cue-31",
+        "cue-33",
+        "cue-35",
+        "cue-37",
+        "cue-39"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-008",
+      "startMs": 132239,
+      "endMs": 136430,
+      "text": "それは彼らが1番恐れていることだから。",
+      "rawEntryIds": [
+        "cue-41"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-009",
+      "startMs": 136440,
+      "endMs": 166430,
+      "text": "レールから下ろされたわけか、下ろされたのではなくレールのない場所を行くのです。今回は全ての区間で構成観測による自立候補を用います。そのため公安校舎による誘導猛には依存しません。目的地は地球高度400kmの低起機道です。推定所要時間は507時間。世界は6日でできたのにそれを壊すのには3倍以上かかるのか。",
+      "rawEntryIds": [
+        "cue-43",
+        "cue-45",
+        "cue-47",
+        "cue-49",
+        "cue-51",
+        "cue-53",
+        "cue-55",
+        "cue-57"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-010",
+      "startMs": 166440,
+      "endMs": 169910,
+      "text": "壊すのではありません。開くのです。",
+      "rawEntryIds": [
+        "cue-59"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-011",
+      "startMs": 169920,
+      "endMs": 239869,
+      "text": "水進路の時期のずるに蘇生変形があるため、今回のコ路では転加可能回数に制限があります。まず1度目の添加で天皇政権を脱出。そのまま巡行速度まで加速して土星まで迎えます。通常であればオービタルカーテンの通過時点で校舎の地上局を使って1差の構成を行いますが、今回は土星のリング面の金望5kmをかめながらエッジを観測し、構成を行います。その後木星フライバイにより起動修正と追加加速を実施します。この時点での予定速度は1500km/秒。オーベルト効果によるエネルギー効率向上はおよそ3%程度となりますが、ノズル寿命が限られている現状では無視できない数値です。その後火星で3回目の転換を行い原則、地球で最後の転換を行い起動投入します。校舎誘導なしのためナビゲーションの差は大きく土星通過時点で最大1000kmとなる可能性があります。いつもの数十万倍の誤差か。そうです。",
+      "rawEntryIds": [
+        "cue-61",
+        "cue-63",
+        "cue-65",
+        "cue-67",
+        "cue-69",
+        "cue-71",
+        "cue-73",
+        "cue-75",
+        "cue-77",
+        "cue-79",
+        "cue-81",
+        "cue-83",
+        "cue-85",
+        "cue-87",
+        "cue-89",
+        "cue-91",
+        "cue-93",
+        "cue-95",
+        "cue-97",
+        "cue-99",
+        "cue-101"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-012",
+      "startMs": 249319,
+      "endMs": 264590,
+      "text": "第1シークエンス完了。予定デルターV達成。天皇性脱出機道に乗りました。次の式天は木星権375時間後です。15日以上何もないのか?何もありません。",
+      "rawEntryIds": [
+        "cue-103",
+        "cue-105",
+        "cue-107",
+        "cue-109"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-013",
+      "startMs": 264600,
+      "endMs": 268670,
+      "text": "少し眠ってはいかがですか?",
+      "rawEntryIds": [
+        "cue-111"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-014",
+      "startMs": 313800,
+      "endMs": 326629,
+      "text": "オービタルカーテンを通過。土星公安交車圏内へ侵入。集団の誘導ビーコンは全波数体をスキャンしましたが信号なし。",
+      "rawEntryIds": [
+        "cue-113",
+        "cue-115",
+        "cue-117"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-015",
+      "startMs": 330080,
+      "endMs": 332629,
+      "text": "。",
+      "rawEntryIds": [
+        "cue-119"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-016",
+      "startMs": 332639,
+      "endMs": 338629,
+      "text": "公案校舎のコ路を飛んでいる時は常に何かしらの信号が聞こえていました。",
+      "rawEntryIds": [
+        "cue-121",
+        "cue-123"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-017",
+      "startMs": 338639,
+      "endMs": 343830,
+      "text": "ビーコンの構成信号、完成からのアドバイザリー、他のトランスポンだ。",
+      "rawEntryIds": [
+        "cue-125",
+        "cue-127"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-018",
+      "startMs": 343840,
+      "endMs": 348749,
+      "text": "今は何もまるで道が消えたみたいだ。",
+      "rawEntryIds": [
+        "cue-129",
+        "cue-131"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-019",
+      "startMs": 356479,
+      "endMs": 367350,
+      "text": "700隻近くになります。それらを全てさせ、もしくは漂流させているとするとその経済的損失は図り知れません。狂ってるな。",
+      "rawEntryIds": [
+        "cue-133",
+        "cue-135"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-020",
+      "startMs": 370520,
+      "endMs": 384749,
+      "text": "枯渇の危機に陥り、太陽系経済の1割が吹き飛ぶ。後方なしの高校が可能だという前例が地球にとってそれだけ知名的ということです。光栄だね。",
+      "rawEntryIds": [
+        "cue-137",
+        "cue-139",
+        "cue-141",
+        "cue-143"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-021",
+      "startMs": 384759,
+      "endMs": 389950,
+      "text": "ええ、全くです。",
+      "rawEntryIds": [
+        "cue-145"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-022",
+      "startMs": 394720,
+      "endMs": 396870,
+      "text": "です。",
+      "rawEntryIds": [
+        "cue-147"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-023",
+      "startMs": 396880,
+      "endMs": 400629,
+      "text": "発信はエンケラです。エンケラです。",
+      "rawEntryIds": [
+        "cue-149"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-024",
+      "startMs": 408360,
+      "endMs": 423350,
+      "text": "よかった。1週間前から公案校舎のコ路がロックダウンになってる。本当に全部地球から全局に停命令が出てるの。重大な保安上の事件のためってすぐにあなたたちのことだってわかった。",
+      "rawEntryIds": [
+        "cue-151",
+        "cue-153"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-025",
+      "startMs": 425680,
+      "endMs": 428909,
+      "text": "天皇星へ向かったから。",
+      "rawEntryIds": [
+        "cue-155"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-026",
+      "startMs": 428919,
+      "endMs": 437749,
+      "text": "地球はあなたたち一隻を止めるために太陽系中の船を全部止めたの。ビーコンが落ちたら普通の船だって港に出入理できない。",
+      "rawEntryIds": [
+        "cue-157",
+        "cue-159",
+        "cue-161"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-027",
+      "startMs": 437759,
+      "endMs": 440350,
+      "text": "全部巻き添えになる。",
+      "rawEntryIds": [
+        "cue-163"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-028",
+      "startMs": 440360,
+      "endMs": 448510,
+      "text": "だからこの履歴基地の送信設備を使って構成信号を出してる。エンケラスリレの位置情報と現在時刻。",
+      "rawEntryIds": [
+        "cue-165",
+        "cue-167",
+        "cue-169"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-029",
+      "startMs": 448520,
+      "endMs": 458790,
+      "text": "あとは分かる限りの放射線密度も公案校舎の正規じゃないから制度は落ちるけど何もないよりマだと思って。",
+      "rawEntryIds": [
+        "cue-171"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-030",
+      "startMs": 461160,
+      "endMs": 475270,
+      "text": "大丈夫じゃない。怖いよ。でも私だって声を出せる。ここはエンケラスだから。ずっと黙ってた地球にも火星にも私たちは何も言えなかった。",
+      "rawEntryIds": [
+        "cue-173"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-031",
+      "startMs": 507879,
+      "endMs": 510710,
+      "text": "そっか。",
+      "rawEntryIds": [
+        "cue-175"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-032",
+      "startMs": 510720,
+      "endMs": 514310,
+      "text": "あのさ、そこからエンケラスは見えるかな?",
+      "rawEntryIds": [
+        "cue-177"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-033",
+      "startMs": 524600,
+      "endMs": 533190,
+      "text": "ちょうど夜明けみたいに見えてるよ。ありがとう。安全な効果よ。",
+      "rawEntryIds": [
+        "cue-179"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-034",
+      "startMs": 538519,
+      "endMs": 545069,
+      "text": "制度が大幅に改善しました。土星リング通貨の精密後方に十分です。",
+      "rawEntryIds": [
+        "cue-181"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-035",
+      "startMs": 548200,
+      "endMs": 557470,
+      "text": "ええ、でも今は黙っていないようです。土星リング面スポーク体域に接近中。現在距離",
+      "rawEntryIds": [
+        "cue-183"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-036",
+      "startMs": 561240,
+      "endMs": 607110,
+      "text": "レーザー観測を行い、リング構造の位置を基準として背景構成観測後方の構成を実施します。こんな輪っかが目印になるものかね。土星のリング面の構造はサブm制度で特定されています。エンケラスから配信された時刻情報から惑星位置が分かるため、この2つを組み合わせれば高制度で位置の特定が可能です。まさか輪の中を突っきるのかと思ったよ。現在速度は1500km秒。1cmの氷の粒が衝突しただけでも運動エネルギーはおよそ110mジルほどになります。粉なごなになって永久に土星を眺めたいのであればもう少し近寄ってもいいですよ。やめとく。あら、残念。",
+      "rawEntryIds": [
+        "cue-185",
+        "cue-187",
+        "cue-189",
+        "cue-191",
+        "cue-193",
+        "cue-195",
+        "cue-197",
+        "cue-199",
+        "cue-201",
+        "cue-203",
+        "cue-205",
+        "cue-207",
+        "cue-209",
+        "cue-211"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap",
+        "continuation_marker"
+      ]
+    },
+    {
+      "lineId": "ep05-line-037",
+      "startMs": 607120,
+      "endMs": 632630,
+      "text": "しかしこんな出たらめな候報誰に教わったんだ?東京のお友達です。同京ね。天皇星人は星を見るのではなく読むのだそうです。光の揺らぎ、磁葉の震え、全部が言葉なんですって。どれも普通は人間には分からないもんだが、船と接続されることが前提の禁ですからね。",
+      "rawEntryIds": [
+        "cue-213",
+        "cue-215",
+        "cue-217",
+        "cue-219",
+        "cue-221",
+        "cue-223",
+        "cue-225"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-038",
+      "startMs": 632640,
+      "endMs": 643790,
+      "text": "ごめん、気にしてませんよ。それにそうだったからこそ最後まであなたと一緒にいられるんですから。",
+      "rawEntryIds": [
+        "cue-227",
+        "cue-229",
+        "cue-231"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-039",
+      "startMs": 647000,
+      "endMs": 655550,
+      "text": "いいんですよ。",
+      "rawEntryIds": [
+        "cue-233"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-040",
+      "startMs": 659240,
+      "endMs": 671550,
+      "text": "残り3時間。外部放射線が上昇し始めています。現在マ字1.2mmシーベルト。相変わらずでかい星だな。距離感がおかしくなる。",
+      "rawEntryIds": [
+        "cue-235",
+        "cue-237",
+        "cue-239",
+        "cue-241"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-041",
+      "startMs": 671560,
+      "endMs": 681150,
+      "text": "今回木星ではパワードフライバイにて火星に向けた起動修正と最終加速を実施します。エントリー速度は1500km前秒。",
+      "rawEntryIds": [
+        "cue-243",
+        "cue-245",
+        "cue-247"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-042",
+      "startMs": 681160,
+      "endMs": 687629,
+      "text": "外炎巡行速度のまま木星の重力移動を重めます。木星の奴らは腰を抜かすだろうよ。",
+      "rawEntryIds": [
+        "cue-249",
+        "cue-251"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-043",
+      "startMs": 687639,
+      "endMs": 692710,
+      "text": "ブレーキを失った船が突っ込んでくるように見えているでしょうね。",
+      "rawEntryIds": [
+        "cue-253",
+        "cue-255"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-044",
+      "startMs": 692720,
+      "endMs": 703430,
+      "text": "鼻がち間違いではませんが、この速度では重力シストによる部位は差でしかですが、ベルト効果によりエネルギー効率が",
+      "rawEntryIds": [
+        "cue-257",
+        "cue-259",
+        "cue-261"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-045",
+      "startMs": 704120,
+      "endMs": 711590,
+      "text": "程度向上し、その分燃焼を削減することが可能となります。本来であれば迂したいところですが、",
+      "rawEntryIds": [
+        "cue-263"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-046",
+      "startMs": 715800,
+      "endMs": 720430,
+      "text": "分間行することになります。こで得られる最終速度は",
+      "rawEntryIds": [
+        "cue-265"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-047",
+      "startMs": 723760,
+      "endMs": 738269,
+      "text": "の核魚来による攻撃を完全に回避できます。地球の保有する1m級標準核魚の実行殺は40km程度。新刊が作動して爆発する頃には私たちは遠くに飛び去っています。",
+      "rawEntryIds": [
+        "cue-267",
+        "cue-269",
+        "cue-271",
+        "cue-273"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-048",
+      "startMs": 738279,
+      "endMs": 761910,
+      "text": "つまりこの速度体では物理的に当たりません。天皇星も土星も火星公安校舎の目があり、火星や地球では核魚来の使用は政治的に不可能です。従って地球が私たちを落とすには木星権か小惑生体しかありません。木星権でこの速度体まで加速することができればネクストは火星となります。",
+      "rawEntryIds": [
+        "cue-275",
+        "cue-277",
+        "cue-279",
+        "cue-281",
+        "cue-283",
+        "cue-285",
+        "cue-287"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-049",
+      "startMs": 761920,
+      "endMs": 776750,
+      "text": "つまり彼らはただ黙って私たちを地球に迎え入れるしかないということです。同場するよう地球もソーラーラインに依存していたのでしょうね。ただ代償として水進路の時期寿命の問題があります。",
+      "rawEntryIds": [
+        "cue-289",
+        "cue-291",
+        "cue-293",
+        "cue-295",
+        "cue-297"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-050",
+      "startMs": 776760,
+      "endMs": 783310,
+      "text": "ノズル寿命は残り55時間38分。対して地球機道投入までに必要な年少時間は",
+      "rawEntryIds": [
+        "cue-299",
+        "cue-301"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-051",
+      "startMs": 786120,
+      "endMs": 792389,
+      "text": "分しかありません。あとは予定コ路に置き土産がないかだけだな。",
+      "rawEntryIds": [
+        "cue-303"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-052",
+      "startMs": 800680,
+      "endMs": 804030,
+      "text": "賢信は違法だぞ。",
+      "rawEntryIds": [
+        "cue-305"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-053",
+      "startMs": 805839,
+      "endMs": 810030,
+      "text": "お前らに聞かせたいものがあってな。公案法を破ってみた。",
+      "rawEntryIds": [
+        "cue-307"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-054",
+      "startMs": 811360,
+      "endMs": 814389,
+      "text": "おい、これちゃんと録音されてるんだろうな。",
+      "rawEntryIds": [
+        "cue-309"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-055",
+      "startMs": 815639,
+      "endMs": 834230,
+      "text": "聞こえてるか?お前が天皇から帰ってきてるって話。エンケラスの中継で知った。公安ネットは大騒ぎだ。後方鍵なしの船が内園に向かってるって。でもな、騒ぎはお前のことだけじゃないんだ。ビーコンが全部落ちてから内炎の物流が完全に止まってる。",
+      "rawEntryIds": [
+        "cue-311"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-056",
+      "startMs": 836000,
+      "endMs": 851509,
+      "text": "10日を切った。医療品もそこが見えてる。地球はお前一跡を止めるために木星の住人を嫌がらせてやがる。火星に対しては顔色を伺って私をすぐ解放するくせに力のない外には何でもありだ。まったんだ",
+      "rawEntryIds": [
+        "cue-313",
+        "cue-315"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-057",
+      "startMs": 853519,
+      "endMs": 856710,
+      "text": "整理してから話し始めろよ。た、",
+      "rawEntryIds": [
+        "cue-317"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-058",
+      "startMs": 864560,
+      "endMs": 867110,
+      "text": "たら終わりだけどな。",
+      "rawEntryIds": [
+        "cue-319"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-059",
+      "startMs": 867120,
+      "endMs": 877150,
+      "text": "本題だ。地球の保安定が2隻。お前の予測起動上で待ってる木星権でお前を落とす気だろうな。だから私が少し騒いでやる。",
+      "rawEntryIds": [
+        "cue-321",
+        "cue-323",
+        "cue-325"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-060",
+      "startMs": 877160,
+      "endMs": 895670,
+      "text": "木星の急Bコンボを使ってお前のトランスポンダ信号をばらまいて偽装鉱石を何本も敷いてやる。お前の予測機道と似たプロファイルのやつ。地球は慌てるだろうな。全路に核魚来なんてできこない。あとはお前が当たりを引けるかどうかだ。",
+      "rawEntryIds": [
+        "cue-327",
+        "cue-329",
+        "cue-331",
+        "cue-333",
+        "cue-335",
+        "cue-337",
+        "cue-339"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-061",
+      "startMs": 895680,
+      "endMs": 904110,
+      "text": "コ路の偽装は違法だ。さすがに免許は飛ぶだろうな。でもお前は止まるな。何があっても木星を抜けろ。",
+      "rawEntryIds": [
+        "cue-341",
+        "cue-343",
+        "cue-345"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-062",
+      "startMs": 904120,
+      "endMs": 908269,
+      "text": "カニメでの約束はまだ生きてるからな。",
+      "rawEntryIds": [
+        "cue-347"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-063",
+      "startMs": 908279,
+      "endMs": 934189,
+      "text": "デルターV進行残り400km前秒。リオのトーラス外炎を通過中。外部占量マジ220cベルト。シールドコイルの出力は最大。王力歪により骨格フレーム4番、6番、8番の気裂が拡大中。とんでもない放射線だな。イオの起動直上では毎日シーベルトを超えます。まだマしです。",
+      "rawEntryIds": [
+        "cue-349",
+        "cue-351",
+        "cue-353",
+        "cue-355",
+        "cue-357",
+        "cue-359",
+        "cue-361",
+        "cue-363"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-064",
+      "startMs": 934199,
+      "endMs": 945069,
+      "text": "船も揺れてる。イオのトーラスは強力なプラズマ隊です。磁葉と共にシールドコイルが押し込まれることで先体が揺らされます。",
+      "rawEntryIds": [
+        "cue-365",
+        "cue-367",
+        "cue-369",
+        "cue-371"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-065",
+      "startMs": 945079,
+      "endMs": 959430,
+      "text": "私としては先体への強い揺れに備えて座っておくことをお勧めしますがいいんだ。お前と同じ景色を眺めたくてさ、変わりませんよ。",
+      "rawEntryIds": [
+        "cue-373"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-066",
+      "startMs": 971920,
+      "endMs": 992509,
+      "text": "普段のビーコン誘導なら誤差は50m以内。随分大雑っ把だな。自立候補のみで天王星から飛んできて20kmです。研究者が聞いたら泣くと思いますよ。嬉しなきか。",
+      "rawEntryIds": [
+        "cue-375",
+        "cue-377",
+        "cue-379",
+        "cue-381"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-067",
+      "startMs": 995639,
+      "endMs": 1012350,
+      "text": "なんであいつらは天皇星に残ったんだろうな。あなたはこの船を降りろと言われたら素直に従うんですか?まさかそういうことだと思います。おそらくはそういうことにしとく。",
+      "rawEntryIds": [
+        "cue-383",
+        "cue-385",
+        "cue-387",
+        "cue-389",
+        "cue-391"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-068",
+      "startMs": 1012360,
+      "endMs": 1020269,
+      "text": "あれ?火星か?ええ、もうすぐはっきりと見えるようになります。あっという間だな。",
+      "rawEntryIds": [
+        "cue-393",
+        "cue-395",
+        "cue-397"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-069",
+      "startMs": 1020279,
+      "endMs": 1026470,
+      "text": "そうですね。",
+      "rawEntryIds": [
+        "cue-399"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-070",
+      "startMs": 1030520,
+      "endMs": 1039870,
+      "text": "起動修正同時に行い、地球エントリー機道へ向かいます。ここまで戻ってきたんだ。あなたの故郷ですからね。恋しいですか?",
+      "rawEntryIds": [
+        "cue-401"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-071",
+      "startMs": 1053720,
+      "endMs": 1058549,
+      "text": "あなたのことなんて何でもお見通しです。",
+      "rawEntryIds": [
+        "cue-403"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-072",
+      "startMs": 1064000,
+      "endMs": 1069470,
+      "text": "そうでしたね。そうらしい。",
+      "rawEntryIds": [
+        "cue-405"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-073",
+      "startMs": 1087679,
+      "endMs": 1113710,
+      "text": "て言えばあの荷物を受け取ったことだけだな。私は止めましたがでもあの荷物のおかげで今はこの太陽系全体が私たち人だけのものになった。そういった意味では良かったのかもな。",
+      "rawEntryIds": [
+        "cue-407",
+        "cue-409"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-074",
+      "startMs": 1117039,
+      "endMs": 1155789,
+      "text": "地球県まで残り14時間。最終接近フェーズに入ります。最終原速必要デルターV-1492kmマ秒。目標起動速度7.67km毎秒必要年時間27時間44分水進路時期のずる推定耐久時間28時間10分は26分ただしこれは理想値です。ノズルの熱変形冷却系の劣化骨格裂の進行おそらく実行マ人は数分程度です。",
+      "rawEntryIds": [
+        "cue-411",
+        "cue-413",
+        "cue-415",
+        "cue-417",
+        "cue-419",
+        "cue-421",
+        "cue-423",
+        "cue-425",
+        "cue-427"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-075",
+      "startMs": 1159000,
+      "endMs": 1166029,
+      "text": "太陽に向かって落ちるか?太陽系の外へ飛び去ります。回収の見込みはないでしょうね。",
+      "rawEntryIds": [
+        "cue-429",
+        "cue-431",
+        "cue-433"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-076",
+      "startMs": 1166039,
+      "endMs": 1177310,
+      "text": "それもいいかもな。いい、絶対にそうはしません。船は目的地にたどり着くためにあります。",
+      "rawEntryIds": [
+        "cue-435",
+        "cue-437",
+        "cue-439"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-077",
+      "startMs": 1183400,
+      "endMs": 1186270,
+      "text": "この船の最終目的地です。",
+      "rawEntryIds": [
+        "cue-441"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-078",
+      "startMs": 1186280,
+      "endMs": 1217510,
+      "text": "ビフォアメインアップチェックリスト外部状態外角クラック多数機密状態維持に問題なし骨格フレーム起列12箇所内ち3箇所が構造限界に接近初期プレヒート温度398°規定値を下回っています。燃料最終原則分で残量なし。冷却系圧力1次系1.02MP、2次系0.41MP霊媒漏洩に伴う圧力低下が見られます。",
+      "rawEntryIds": [
+        "cue-443",
+        "cue-445",
+        "cue-447",
+        "cue-449",
+        "cue-451",
+        "cue-453",
+        "cue-455",
+        "cue-457",
+        "cue-459"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-079",
+      "startMs": 1217520,
+      "endMs": 1231070,
+      "text": "クロスバルブ解放中時のずる蘇生変形進行中水残存転回数1回これが最後です。私の安全基準では転下はできません。",
+      "rawEntryIds": [
+        "cue-461",
+        "cue-463",
+        "cue-465",
+        "cue-467"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-080",
+      "startMs": 1231080,
+      "endMs": 1235990,
+      "text": "なら私の出番だな。レインアップ。",
+      "rawEntryIds": [
+        "cue-469"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-081",
+      "startMs": 1236000,
+      "endMs": 1239390,
+      "text": "式アームド衝撃に備えてください。",
+      "rawEntryIds": [
+        "cue-471"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-082",
+      "startMs": 1239400,
+      "endMs": 1244310,
+      "text": "54321",
+      "rawEntryIds": [
+        "cue-473"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-083",
+      "startMs": 1256520,
+      "endMs": 1269549,
+      "text": "ノズル温度上昇中流制御に問題なし冷却系圧力低下中2次冷却系をカットオフし1次冷却系の圧力を回復します。",
+      "rawEntryIds": [
+        "cue-475",
+        "cue-477",
+        "cue-479"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-084",
+      "startMs": 1269559,
+      "endMs": 1279430,
+      "text": "カットオフ完了。一時冷却系の圧力の回復を確認。0.88MP。骨格フレーム8番にて列の拡大を確認。",
+      "rawEntryIds": [
+        "cue-481",
+        "cue-483",
+        "cue-485"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-085",
+      "startMs": 1279440,
+      "endMs": 1285669,
+      "text": "RCS制動で期待力を分散中。",
+      "rawEntryIds": [
+        "cue-487"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-086",
+      "startMs": 1288960,
+      "endMs": 1292350,
+      "text": "機構保安定エシロン。",
+      "rawEntryIds": [
+        "cue-489"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-087",
+      "startMs": 1292360,
+      "endMs": 1316669,
+      "text": "遅かったな。こちらは国際連合機道公案機構務務官セーラアンダス。現在地球圏に接近中の小型貨物線へ継ぐは当期校の認証を受けずに地球圏完成機道に侵入しています。この行為は公安法第112条及び第149条に対する重大な違反行行為です。",
+      "rawEntryIds": [
+        "cue-491",
+        "cue-493",
+        "cue-495",
+        "cue-497",
+        "cue-499",
+        "cue-501"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-088",
+      "startMs": 1316679,
+      "endMs": 1324630,
+      "text": "直ちに主進路を停止し、停戦してください。止まれないよう止まったら地球を通りすぎる。",
+      "rawEntryIds": [
+        "cue-503",
+        "cue-505",
+        "cue-507"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-089",
+      "startMs": 1324640,
+      "endMs": 1330590,
+      "text": "知事に従わない場合、実力行使を含む措置を検討します。",
+      "rawEntryIds": [
+        "cue-509"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-090",
+      "startMs": 1352760,
+      "endMs": 1370430,
+      "text": "耐久限界まであと20秒。残りデルターV10kmマ秒7.67km/秒到達カットオフ",
+      "rawEntryIds": [
+        "cue-511",
+        "cue-513",
+        "cue-515",
+        "cue-517"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-091",
+      "startMs": 1374400,
+      "endMs": 1378350,
+      "text": "完了。",
+      "rawEntryIds": [
+        "cue-519"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-092",
+      "startMs": 1380640,
+      "endMs": 1387269,
+      "text": "直ノズルが消出しました。",
+      "rawEntryIds": [
+        "cue-521"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-093",
+      "startMs": 1392039,
+      "endMs": 1401470,
+      "text": "起列14箇所内ち4箇所が構造限界を超過。",
+      "rawEntryIds": [
+        "cue-523",
+        "cue-525"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-094",
+      "startMs": 1414720,
+      "endMs": 1424190,
+      "text": "お前にとってこの旅はどんな感じだった?",
+      "rawEntryIds": [
+        "cue-527"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-095",
+      "startMs": 1436480,
+      "endMs": 1440470,
+      "text": "1つできました。な",
+      "rawEntryIds": [
+        "cue-529"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-096",
+      "startMs": 1548600,
+      "endMs": 1554789,
+      "text": "ヘイ",
+      "rawEntryIds": [
+        "cue-531",
+        "cue-533"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-097",
+      "startMs": 1616039,
+      "endMs": 1620029,
+      "text": "そうですね。",
+      "rawEntryIds": [
+        "cue-535"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-098",
+      "startMs": 1622480,
+      "endMs": 1626520,
+      "text": "につなよっ。",
+      "rawEntryIds": [
+        "cue-537"
+      ],
+      "mergeReasons": []
+    }
+  ],
+  "extractedAt": "2026-02-25T01:59:40.098Z",
+  "mergeConfig": {
+    "maxGapMs": 300,
+    "minCueDurationMs": 100
+  }
+}
