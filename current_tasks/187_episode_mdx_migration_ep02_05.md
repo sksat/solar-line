@@ -1,6 +1,6 @@
 # Task 187: Episode Report MDX Migration — EP02-EP05
 
-## Status: IN_PROGRESS
+## Status: DONE
 
 ## Description
 
