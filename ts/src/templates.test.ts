@@ -39,6 +39,7 @@ import {
   renderADRIndex,
   REPORT_CSS,
   renderGlossary,
+  wrapGlossaryTerms,
 } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm } from "./report-types.ts";
@@ -4402,5 +4403,135 @@ describe("renderGlossary", () => {
     assert.ok(html.includes("&lt;script&gt;"));
     assert.ok(html.includes("&lt;dangerous&gt;"));
     assert.ok(!html.includes("<script>"));
+  });
+});
+
+// --- wrapGlossaryTerms ---
+
+describe("wrapGlossaryTerms", () => {
+  const terms: GlossaryTerm[] = [
+    { term: "ΔV", reading: "デルタブイ", definition: "速度変化量" },
+    { term: "brachistochrone", definition: "最短時間軌道遷移" },
+    { term: "ホーマン遷移", reading: "Hohmann transfer", definition: "最小ΔVの楕円軌道遷移" },
+  ];
+
+  it("wraps a glossary term in text with tooltip span", () => {
+    const html = "<p>ΔVの計算結果</p>";
+    const result = wrapGlossaryTerms(html, terms);
+    assert.ok(result.includes('class="glossary-term"'));
+    assert.ok(result.includes('class="glossary-tip"'));
+    assert.ok(result.includes("速度変化量"));
+    assert.ok(result.includes("tabindex"));
+  });
+
+  it("wraps only first occurrence of each term", () => {
+    const html = "<p>ΔVは重要。ΔVの二回目。</p>";
+    const result = wrapGlossaryTerms(html, terms);
+    const matches = result.match(/glossary-term/g);
+    // "glossary-term" appears once in the class, plus "glossary-tip" — count the wrapping spans
+    assert.equal((result.match(/class="glossary-term"/g) || []).length, 1);
+  });
+
+  it("returns unchanged HTML when terms array is empty", () => {
+    const html = "<p>ΔVの計算</p>";
+    assert.equal(wrapGlossaryTerms(html, []), html);
+  });
+
+  it("does not wrap terms inside <code> tags", () => {
+    const html = "<p>See <code>ΔV = 10</code> for details</p>";
+    const result = wrapGlossaryTerms(html, terms);
+    assert.ok(!result.includes('class="glossary-term"'));
+  });
+
+  it("does not wrap terms inside <pre> blocks", () => {
+    const html = "<pre>ΔV formula here</pre>";
+    const result = wrapGlossaryTerms(html, terms);
+    assert.ok(!result.includes('class="glossary-term"'));
+  });
+
+  it("does not wrap terms inside <a> tags", () => {
+    const html = '<p><a href="#">ΔV link</a> and ΔV text</p>';
+    const result = wrapGlossaryTerms(html, terms);
+    // The second ΔV (in text) should be wrapped, not the one in <a>
+    assert.equal((result.match(/class="glossary-term"/g) || []).length, 1);
+    assert.ok(!result.includes('<a href="#"><span class="glossary-term"'));
+  });
+
+  it("does not wrap terms inside headings", () => {
+    const html = "<h2>ΔVの分析</h2><p>ΔVは重要です</p>";
+    const result = wrapGlossaryTerms(html, terms);
+    // Only the one in <p> should be wrapped
+    assert.equal((result.match(/class="glossary-term"/g) || []).length, 1);
+    assert.ok(result.includes("<h2>ΔVの分析</h2>"));
+  });
+
+  it("handles multiple different terms", () => {
+    const html = "<p>ΔVとbrachistochroneとホーマン遷移</p>";
+    const result = wrapGlossaryTerms(html, terms);
+    assert.equal((result.match(/class="glossary-term"/g) || []).length, 3);
+    assert.ok(result.includes("速度変化量"));
+    assert.ok(result.includes("最短時間軌道遷移"));
+    assert.ok(result.includes("最小ΔVの楕円軌道遷移"));
+  });
+
+  it("escapes HTML in definitions", () => {
+    const dangerousTerms: GlossaryTerm[] = [
+      { term: "test", definition: '<script>alert("xss")</script>' },
+    ];
+    const html = "<p>A test case</p>";
+    const result = wrapGlossaryTerms(html, dangerousTerms);
+    assert.ok(result.includes("&lt;script&gt;"));
+    assert.ok(!result.includes('<script>alert'));
+  });
+
+  it("matches longer terms first to avoid partial matches", () => {
+    const overlapping: GlossaryTerm[] = [
+      { term: "ΔV", definition: "short" },
+      { term: "ΔV計算", definition: "longer match" },
+    ];
+    const html = "<p>ΔV計算の結果</p>";
+    const result = wrapGlossaryTerms(html, overlapping);
+    assert.ok(result.includes("longer match"));
+  });
+
+  it("does not modify HTML attributes", () => {
+    const attrTerms: GlossaryTerm[] = [
+      { term: "section", definition: "A section" },
+    ];
+    const html = '<div id="section-transfers"><p>section content</p></div>';
+    const result = wrapGlossaryTerms(html, attrTerms);
+    assert.ok(result.includes('id="section-transfers"'));
+    // The term in the text node should be wrapped
+    assert.ok(result.includes('class="glossary-term"'));
+  });
+
+  it("does not wrap terms inside <th> header cells", () => {
+    const html = "<table><tr><th>ΔV</th></tr><tr><td>ΔV value</td></tr></table>";
+    const result = wrapGlossaryTerms(html, terms);
+    // Should wrap in td but not in th
+    assert.ok(result.includes("<th>ΔV</th>"));
+    assert.ok(result.includes('class="glossary-term"'));
+  });
+
+  it("includes role=tooltip for accessibility", () => {
+    const html = "<p>ΔVの値</p>";
+    const result = wrapGlossaryTerms(html, terms);
+    assert.ok(result.includes('role="tooltip"'));
+  });
+
+  it("does not wrap terms inside <svg> elements", () => {
+    const html = '<svg><text>ΔV = 10 km/s</text></svg><p>ΔVの計算</p>';
+    const result = wrapGlossaryTerms(html, terms);
+    // SVG text must remain untouched
+    assert.ok(result.includes("<text>ΔV = 10 km/s</text>"));
+    // But the term in <p> should be wrapped
+    assert.ok(result.includes('class="glossary-term"'));
+  });
+
+  it("does not wrap terms inside <style> blocks", () => {
+    const html = "<style>.dv { color: red; }</style><p>ΔVの値</p>";
+    const result = wrapGlossaryTerms(html, terms);
+    assert.ok(result.includes("<style>.dv { color: red; }</style>"));
+    assert.ok(result.includes('class="glossary-term"'));
   });
 });

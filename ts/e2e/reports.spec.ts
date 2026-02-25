@@ -319,3 +319,25 @@ test.describe("DAG Viewer Temporal Slider", () => {
     expect(Number(max)).toBeGreaterThanOrEqual(1);
   });
 });
+
+// --- Inline glossary tooltips (Task 169) ---
+
+test("episode pages have inline glossary tooltips", async ({ page }) => {
+  await page.goto("/episodes/ep-001.html");
+  const tooltips = page.locator(".glossary-term");
+  const count = await tooltips.count();
+  expect(count).toBeGreaterThan(0);
+
+  // Tooltip should contain a tip span with definition text
+  const firstTip = tooltips.first().locator(".glossary-tip");
+  await expect(firstTip).toHaveAttribute("role", "tooltip");
+  const tipText = await firstTip.textContent();
+  expect(tipText!.length).toBeGreaterThan(0);
+});
+
+test("glossary tooltips do not appear inside SVG elements", async ({ page }) => {
+  await page.goto("/episodes/ep-001.html");
+  const svgTooltips = page.locator("svg .glossary-term");
+  const count = await svgTooltips.count();
+  expect(count).toBe(0);
+});

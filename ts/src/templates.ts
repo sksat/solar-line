@@ -478,6 +478,9 @@ footer {
 .evidence-citations { font-size: 0.9em; color: #8b949e; margin: 0.5rem 0; border-left: 2px solid var(--border); padding-left: 0.75rem; }
 .inline-citation { display: inline; }
 .inline-citation .timestamp { font-size: 0.85em; color: #8b949e; }
+.glossary-term { position: relative; border-bottom: 1px dotted var(--accent); cursor: help; }
+.glossary-tip { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 0.85em; line-height: 1.4; color: var(--fg); width: max-content; max-width: 300px; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.4); pointer-events: none; white-space: normal; }
+.glossary-term:hover .glossary-tip, .glossary-term:focus .glossary-tip { display: block; }
 .dv-chart { margin: 1rem 0; overflow-x: auto; }
 .dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
 .orbital-diagram { text-align: center; }
@@ -1742,6 +1745,63 @@ ${rows}
 </tbody></table></div>`;
 }
 
+/**
+ * Wrap first occurrence of each glossary term in the given HTML with an inline
+ * tooltip span.  Terms inside <code>, <pre>, <script>, <a>, <button>, <h1>–<h4>,
+ * and the glossary table itself are skipped.  Only text nodes are scanned so
+ * HTML attributes are never modified.
+ *
+ * Returns the HTML string with tooltip spans injected.
+ */
+export function wrapGlossaryTerms(html: string, terms: GlossaryTerm[]): string {
+  if (terms.length === 0) return html;
+
+  // Sort longest-first so "ツィオルコフスキーの式" matches before "ツィオルコフスキー"
+  const sorted = [...terms].sort((a, b) => b.term.length - a.term.length);
+
+  // Tags whose text content should not be wrapped (includes svg to avoid injecting HTML into SVG)
+  const skipTags = new Set(["code", "pre", "script", "a", "button", "h1", "h2", "h3", "h4", "th", "svg", "style"]);
+
+  // Split HTML into tags and text segments
+  const parts = html.split(/(<[^>]+>)/);
+  let skipDepth = 0;
+  const replaced = new Set<string>();
+
+  return parts.map(part => {
+    if (part.startsWith("<")) {
+      // Track opening/closing of skip tags
+      const closeMatch = part.match(/^<\/(\w+)/);
+      const openMatch = part.match(/^<(\w+)/);
+      if (closeMatch && skipTags.has(closeMatch[1].toLowerCase())) {
+        skipDepth = Math.max(0, skipDepth - 1);
+      } else if (openMatch && skipTags.has(openMatch[1].toLowerCase()) && !part.endsWith("/>")) {
+        skipDepth++;
+      }
+      return part;
+    }
+
+    // Text node — skip if inside a protected element
+    if (skipDepth > 0) return part;
+
+    let result = part;
+    for (const term of sorted) {
+      if (replaced.has(term.term)) continue;
+
+      // Escape regex special chars in the term
+      const escaped = term.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escaped);
+      if (regex.test(result)) {
+        const definition = escapeHtml(term.definition);
+        result = result.replace(regex, (match) =>
+          `<span class="glossary-term" tabindex="0">${escapeHtml(match)}<span class="glossary-tip" role="tooltip">${definition}</span></span>`
+        );
+        replaced.add(term.term);
+      }
+    }
+    return result;
+  }).join("");
+}
+
 /** Render the interactive brachistochrone calculator widget */
 export function renderCalculator(episode?: number): string {
   const ep = episode && CALC_EPISODE_PRESETS[episode] ? episode : 1;
@@ -2036,8 +2096,13 @@ ${calculator}`;
   const hasAnimatedDiagrams = report.diagrams?.some(d => d.animation) ?? false;
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
 
+  // Inject inline glossary tooltips into content text
+  const enrichedContent = report.glossary && report.glossary.length > 0
+    ? wrapGlossaryTerms(content, report.glossary)
+    : content;
+
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(`第${report.episode}話`, content + episodeNav + animScript, "..", summaryPages, desc, navEpisodes, metaPages);
+  return layoutHtml(`第${report.episode}話`, enrichedContent + episodeNav + animScript, "..", summaryPages, desc, navEpisodes, metaPages);
 }
 
 /** Render the session logs index page */
@@ -2305,8 +2370,13 @@ ${summaryToc}
 ${sections}
 ${glossarySection}`;
 
+  // Inject inline glossary tooltips into content text
+  const enrichedContent = report.glossary && report.glossary.length > 0
+    ? wrapGlossaryTerms(content, report.glossary)
+    : content;
+
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(report.title, content + animScript + dagScript, "..", summaryPages, desc, navEpisodes, metaPages);
+  return layoutHtml(report.title, enrichedContent + animScript + dagScript, "..", summaryPages, desc, navEpisodes, metaPages);
 }
 
 // ---------------------------------------------------------------------------
