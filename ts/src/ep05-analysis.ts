@@ -6,7 +6,7 @@
  *
  * Key constraints from ep04 (carried forward):
  * - Ship severely damaged: 65% thrust (6.37 MN), 78% thermal margin
- * - Engine nozzle coil degraded: remaining lifetime 55h38m (蘇生変形)
+ * - Engine nozzle coil degraded: remaining lifetime 55h38m (塑性変形/creep)
  * - Radiation exposure: 480 mSv cumulative (near ICRP emergency limit)
  * - Shield: coil system 2 only
  * - Destination: Earth LEO 400km — "new Solar Line"
@@ -370,7 +370,7 @@ export function earthCaptureScenarios() {
 /**
  * Analyze the critical nozzle lifespan constraint — the dramatic climax of EP05.
  *
- * The magnetic nozzle is undergoing 蘇生変形 (creep deformation) and has a finite
+ * The magnetic nozzle is undergoing 塑性変形 (plastic/creep deformation) and has a finite
  * remaining lifetime. The margin between available lifetime and required burn time
  * is the tightest constraint in the entire series.
  *
