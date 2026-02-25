@@ -30,4 +30,4 @@
 
 ## Remaining Ideas
 - Cross-episode full-route diagram could include small inset sub-diagrams (picture-in-picture) rather than separate diagrams
-- Leg highlighting could include episode navigation links (click a leg → go to that episode's analysis)
+- ~~Leg highlighting could include episode navigation links (click a leg → go to that episode's analysis)~~ ✅ DONE (Task 163)

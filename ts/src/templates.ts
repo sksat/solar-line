@@ -556,6 +556,9 @@ footer {
   border-radius: 4px; font-size: 0.8em; color: var(--fg); pointer-events: none; white-space: nowrap;
   z-index: 10; transform: translate(-50%, -120%);
 }
+.leg-tooltip.locked { pointer-events: auto; }
+.leg-tooltip a { color: var(--link); text-decoration: none; margin-left: 0.5em; }
+.leg-tooltip a:hover { text-decoration: underline; }
 .timeline-bar {
   position: relative; height: 3.5rem; margin: 0.5rem auto 0; border-top: 1px solid var(--border);
 }
@@ -1442,7 +1445,11 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     <text x="${(mx + 10).toFixed(1)}" y="${my.toFixed(1)}" fill="var(--yellow)" font-size="9" dominant-baseline="middle">${escapeHtml(bm.label)}</text>`;
     }).join("\n      ");
 
-    return `<g class="transfer-leg" data-leg-idx="${idx}" data-leg-label="${escapeHtml(t.label)}">
+    // Episode number: explicit field or auto-detect from label (e.g. "EP1: ...", "EP05: ...")
+    const epNum = t.episodeNumber ?? (() => { const m = t.label.match(/EP0?(\d+)/i); return m ? parseInt(m[1], 10) : null; })();
+    const epAttr = epNum != null ? ` data-leg-episode="${epNum}"` : "";
+
+    return `<g class="transfer-leg" data-leg-idx="${idx}" data-leg-label="${escapeHtml(t.label)}"${epAttr}>
       ${arcPath}
       ${burns}
     </g>`;

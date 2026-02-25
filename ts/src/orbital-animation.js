@@ -480,7 +480,7 @@ function initDiagramLegHighlight(diagramEl) {
     (function (leg, idx) {
       leg.addEventListener("mouseenter", function (e) {
         if (lockedIdx >= 0) return; // Don't change highlight while locked
-        activateLeg(diagramEl, legs, idx, tooltip, e);
+        activateLeg(diagramEl, legs, idx, tooltip, e, false);
       });
       leg.addEventListener("mousemove", function (e) {
         if (lockedIdx >= 0) return;
@@ -491,6 +491,7 @@ function initDiagramLegHighlight(diagramEl) {
         deactivateAll(diagramEl, legs, tooltip);
       });
       leg.addEventListener("click", function (e) {
+        if (e.target.closest("a")) return; // Allow link clicks through
         e.stopPropagation();
         if (lockedIdx === idx) {
           // Clicking same leg unlocks
@@ -498,7 +499,7 @@ function initDiagramLegHighlight(diagramEl) {
           deactivateAll(diagramEl, legs, tooltip);
         } else {
           lockedIdx = idx;
-          activateLeg(diagramEl, legs, idx, tooltip, e);
+          activateLeg(diagramEl, legs, idx, tooltip, e, true);
         }
       });
     })(legs[j], j);
@@ -514,7 +515,7 @@ function initDiagramLegHighlight(diagramEl) {
   });
 }
 
-function activateLeg(diagramEl, legs, idx, tooltip, e) {
+function activateLeg(diagramEl, legs, idx, tooltip, e, locked) {
   diagramEl.classList.add("leg-active");
   for (var k = 0; k < legs.length; k++) {
     if (k === idx) {
@@ -524,7 +525,18 @@ function activateLeg(diagramEl, legs, idx, tooltip, e) {
     }
   }
   var label = legs[idx].getAttribute("data-leg-label") || "";
-  tooltip.textContent = label;
+  var epNum = legs[idx].getAttribute("data-leg-episode");
+  if (locked && epNum) {
+    var epPad = ("00" + epNum).slice(-3);
+    // Determine relative path to episodes/ from the current page
+    var loc = window.location.pathname;
+    var prefix = loc.indexOf("/episodes/") >= 0 ? "" : loc.indexOf("/summary/") >= 0 ? "../episodes/" : "episodes/";
+    tooltip.innerHTML = label + ' <a href="' + prefix + 'ep-' + epPad + '.html">→ 第' + epNum + '話分析</a>';
+    tooltip.classList.add("locked");
+  } else {
+    tooltip.textContent = label;
+    tooltip.classList.remove("locked");
+  }
   tooltip.style.display = "block";
   positionTooltip(tooltip, diagramEl, e);
 }
@@ -535,6 +547,7 @@ function deactivateAll(diagramEl, legs, tooltip) {
     legs[k].classList.remove("leg-highlight");
   }
   tooltip.style.display = "none";
+  tooltip.classList.remove("locked");
 }
 
 function positionTooltip(tooltip, container, e) {

@@ -1208,6 +1208,65 @@ describe("renderEpisode with diagrams", () => {
   });
 });
 
+// --- Transfer leg episode navigation ---
+
+describe("transfer-leg data-leg-episode attribute", () => {
+  it("auto-detects episode number from label like 'EP1: ...'", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      id: "test-ep-detect",
+      transfers: [
+        { label: "EP1: 火星→木星", fromOrbitId: "mars", toOrbitId: "jupiter", color: "#f00", style: "brachistochrone" },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes('data-leg-episode="1"'));
+  });
+
+  it("auto-detects from 'EP05' format", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      id: "test-ep05-detect",
+      transfers: [
+        { label: "EP05: 天王星→地球", fromOrbitId: "mars", toOrbitId: "jupiter", color: "#f00", style: "brachistochrone" },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes('data-leg-episode="5"'));
+  });
+
+  it("uses explicit episodeNumber when set", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      id: "test-ep-explicit",
+      transfers: [
+        { label: "some transfer", fromOrbitId: "mars", toOrbitId: "jupiter", color: "#f00", style: "brachistochrone", episodeNumber: 3 },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes('data-leg-episode="3"'));
+  });
+
+  it("omits data-leg-episode when no episode info is available", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    // sampleDiagram has label "ブラキストクローネ遷移" — no EP pattern
+    assert.ok(!html.includes('data-leg-episode'));
+  });
+
+  it("explicit episodeNumber overrides label-detected value", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      id: "test-ep-override",
+      transfers: [
+        { label: "EP1: 火星→木星", fromOrbitId: "mars", toOrbitId: "jupiter", color: "#f00", style: "brachistochrone", episodeNumber: 2 },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes('data-leg-episode="2"'));
+    assert.ok(!html.includes('data-leg-episode="1"'));
+  });
+});
+
 // --- Leg highlighting CSS ---
 
 describe("REPORT_CSS includes leg highlighting styles", () => {
@@ -1219,6 +1278,11 @@ describe("REPORT_CSS includes leg highlighting styles", () => {
 
   it("includes leg-tooltip styles", () => {
     assert.ok(REPORT_CSS.includes(".leg-tooltip"));
+  });
+
+  it("includes locked tooltip styles for episode links", () => {
+    assert.ok(REPORT_CSS.includes(".leg-tooltip.locked"));
+    assert.ok(REPORT_CSS.includes(".leg-tooltip a"));
   });
 });
 

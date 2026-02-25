@@ -169,6 +169,8 @@ export interface TransferArc {
   endTime?: number;
   /** Scenario ID for multi-pattern diagrams. Groups arcs into named scenarios. */
   scenarioId?: string;
+  /** Episode number for this transfer. Used to link leg tooltips to episode pages. */
+  episodeNumber?: number;
 }
 
 /** A named scenario in a multi-pattern orbital diagram */
