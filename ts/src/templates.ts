@@ -2046,12 +2046,31 @@ const resultKeyLabels: Record<string, string> = {
   minCaptureFeasible: "最小捕捉可能",
 };
 
-/** Render a scenario table row */
-function renderScenarioRow(s: ExplorationScenario): string {
+/** Collect the union of all result keys across scenarios, preserving insertion order */
+function collectResultKeys(scenarios: ExplorationScenario[]): string[] {
+  const seen = new Set<string>();
+  const keys: string[] = [];
+  for (const s of scenarios) {
+    for (const k of Object.keys(s.results)) {
+      if (!seen.has(k)) {
+        seen.add(k);
+        keys.push(k);
+      }
+    }
+  }
+  return keys;
+}
+
+/** Render a scenario table row using the given column keys */
+function renderScenarioRow(s: ExplorationScenario, resultKeys: string[]): string {
   const cls = s.feasible ? "feasible" : "infeasible";
   const icon = s.feasible ? "✓" : "✗";
-  const resultCells = Object.entries(s.results)
-    .map(([_k, v]) => `<td>${typeof v === "number" ? formatNumericValue(v) : escapeHtml(String(v))}</td>`)
+  const resultCells = resultKeys
+    .map(k => {
+      const v = s.results[k];
+      if (v === undefined) return "<td></td>";
+      return `<td>${typeof v === "number" ? formatNumericValue(v) : escapeHtml(String(v))}</td>`;
+    })
     .join("");
   return `<tr class="${cls}"><td>${icon} ${escapeHtml(s.label)}</td><td>${s.variedValue.toLocaleString()} ${escapeHtml(s.variedUnit)}</td>${resultCells}<td>${escapeHtml(s.note)}</td></tr>`;
 }
@@ -2062,15 +2081,16 @@ export function renderExploration(exp: ParameterExploration): string {
     ? `<p class="boundary">${inlineFormat(exp.boundaryCondition)}</p>`
     : "";
 
+  const resultKeys = collectResultKeys(exp.scenarios);
+
   const visibleScenarios = exp.scenarios.filter(s => !s.collapsedByDefault);
   const collapsedScenarios = exp.scenarios.filter(s => s.collapsedByDefault);
 
-  const visibleRows = visibleScenarios.map(renderScenarioRow).join("\n");
-  const collapsedRows = collapsedScenarios.map(renderScenarioRow).join("\n");
+  const visibleRows = visibleScenarios.map(s => renderScenarioRow(s, resultKeys)).join("\n");
+  const collapsedRows = collapsedScenarios.map(s => renderScenarioRow(s, resultKeys)).join("\n");
 
-  const resultHeaders = exp.scenarios.length > 0
-    ? Object.keys(exp.scenarios[0].results).map(k => `<th>${escapeHtml(resultKeyLabels[k] ?? k)}</th>`).join("")
-    : "";
+  const resultHeaders = resultKeys
+    .map(k => `<th>${escapeHtml(resultKeyLabels[k] ?? k)}</th>`).join("");
 
   const tableHead = `<thead><tr><th>シナリオ</th><th>パラメータ</th>${resultHeaders}<th>備考</th></tr></thead>`;
 

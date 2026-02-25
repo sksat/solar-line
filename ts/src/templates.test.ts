@@ -1787,6 +1787,67 @@ describe("renderExploration with collapsedByDefault", () => {
     assert.ok(html.includes("<p>第二段落です。</p>"), "should have second paragraph");
     assert.ok(!html.includes("<p><p>"), "should not have double-wrapped p tags");
   });
+
+  it("aligns columns when scenarios have different result keys", () => {
+    const exp: ParameterExploration = {
+      id: "exp-col-align",
+      transferId: "t1",
+      question: "列整合テスト",
+      scenarios: [
+        {
+          label: "シナリオA",
+          variedParam: "x",
+          variedValue: 1,
+          variedUnit: "u",
+          results: { alpha: "A1", beta: "B1" },
+          feasible: true,
+          note: "ノートA",
+        },
+        {
+          label: "シナリオB",
+          variedParam: "x",
+          variedValue: 2,
+          variedUnit: "u",
+          results: { beta: "B2", gamma: "G2" },
+          feasible: false,
+          note: "ノートB",
+        },
+      ],
+      summary: "テスト概要",
+    };
+    const html = renderExploration(exp);
+    // Header should contain union of all result keys: alpha, beta, gamma
+    assert.ok(html.includes("<th>alpha</th>"), "header should include alpha");
+    assert.ok(html.includes("<th>beta</th>"), "header should include beta");
+    assert.ok(html.includes("<th>gamma</th>"), "header should include gamma");
+
+    // Count <th> elements in the first <thead> row
+    const theadMatch = html.match(/<thead><tr>(.*?)<\/tr><\/thead>/);
+    assert.ok(theadMatch, "should have thead row");
+    const thCount = (theadMatch![1].match(/<th>/g) || []).length;
+    // シナリオ + パラメータ + alpha + beta + gamma + 備考 = 6
+    assert.strictEqual(thCount, 6, "should have 6 header columns");
+
+    // Row A should have empty cell for gamma
+    // Row B should have empty cell for alpha
+    const rows = html.match(/<tr class="(feasible|infeasible)">(.*?)<\/tr>/g);
+    assert.ok(rows && rows.length >= 2, "should have at least 2 data rows");
+    const rowA = rows![0];
+    const rowB = rows![1];
+    // Both rows should have exactly 6 <td> elements
+    const tdCountA = (rowA.match(/<td>/g) || []).length;
+    const tdCountB = (rowB.match(/<td>/g) || []).length;
+    assert.strictEqual(tdCountA, 6, "row A should have 6 cells");
+    assert.strictEqual(tdCountB, 6, "row B should have 6 cells");
+    // Row A should have A1 for alpha, B1 for beta, empty for gamma
+    assert.ok(rowA.includes("<td>A1</td>"), "row A should have alpha value");
+    assert.ok(rowA.includes("<td>B1</td>"), "row A should have beta value");
+    assert.ok(rowA.includes("<td></td>"), "row A should have empty cell for gamma");
+    // Row B should have empty for alpha, B2 for beta, G2 for gamma
+    assert.ok(rowB.includes("<td></td>"), "row B should have empty cell for alpha");
+    assert.ok(rowB.includes("<td>B2</td>"), "row B should have beta value");
+    assert.ok(rowB.includes("<td>G2</td>"), "row B should have gamma value");
+  });
 });
 
 // --- Animated orbital diagrams ---
