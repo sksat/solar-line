@@ -64,6 +64,12 @@ describe("report data: structural integrity", () => {
         assert.equal(ids.length, uniqueIds.size, `Duplicate transfer IDs: ${ids.filter((id, i) => ids.indexOf(id) !== i)}`);
       });
 
+      it("has transfers in sequential ID order", () => {
+        const ids = report.transfers.map(t => t.id);
+        const sorted = [...ids].sort();
+        assert.deepStrictEqual(ids, sorted, `Transfers out of order: ${ids.join(", ")}`);
+      });
+
       it("has unique dialogue quote IDs", () => {
         const quotes = report.dialogueQuotes ?? [];
         const ids = quotes.map(q => q.id);
