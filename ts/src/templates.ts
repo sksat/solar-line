@@ -81,9 +81,18 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
       continue;
     }
 
-    // Empty line — close list if open
+    // Empty line — close list if open, unless next non-empty line continues it
     if (line.trim() === "") {
-      closeList();
+      if (listType) {
+        // Look ahead to see if the list continues after blank lines
+        let j = i + 1;
+        while (j < lines.length && lines[j].trim() === "") j++;
+        const nextLine = j < lines.length ? lines[j] : "";
+        const listContinues =
+          (listType === "ol" && /^\d+\.\s+/.test(nextLine)) ||
+          (listType === "ul" && /^[-*]\s+/.test(nextLine));
+        if (!listContinues) closeList();
+      }
       continue;
     }
 

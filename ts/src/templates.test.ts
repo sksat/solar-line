@@ -156,6 +156,32 @@ describe("markdownToHtml", () => {
     assert.ok(html.includes("<p>Paragraph</p>"));
   });
 
+  it("continues ordered list across blank lines", () => {
+    const html = markdownToHtml("1. first\n\n2. second\n\n3. third");
+    const olCount = (html.match(/<ol>/g) || []).length;
+    assert.strictEqual(olCount, 1, "should produce exactly one <ol>");
+    assert.ok(html.includes("<li>first</li>"));
+    assert.ok(html.includes("<li>second</li>"));
+    assert.ok(html.includes("<li>third</li>"));
+  });
+
+  it("continues unordered list across blank lines", () => {
+    const html = markdownToHtml("- first\n\n- second\n\n- third");
+    const ulCount = (html.match(/<ul>/g) || []).length;
+    assert.strictEqual(ulCount, 1, "should produce exactly one <ul>");
+    assert.ok(html.includes("<li>first</li>"));
+    assert.ok(html.includes("<li>second</li>"));
+    assert.ok(html.includes("<li>third</li>"));
+  });
+
+  it("closes ordered list when followed by paragraph after blank line", () => {
+    const html = markdownToHtml("1. item\n\nParagraph text");
+    assert.ok(html.includes("</ol>"));
+    assert.ok(html.includes("<p>Paragraph text</p>"));
+    const olCount = (html.match(/<ol>/g) || []).length;
+    assert.strictEqual(olCount, 1);
+  });
+
   it("closes ordered list before heading", () => {
     const html = markdownToHtml("1. item\n## Heading");
     assert.ok(html.includes("</ol>"));
