@@ -1,6 +1,6 @@
 # Task 177: Relativistic Effects Assessment
 
-## Status: TODO
+## Status: DONE
 
 ## Description
 

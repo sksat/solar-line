@@ -1048,7 +1048,8 @@
         "report.ep04",
         "report.ep05",
         "analysis.propellant_budget",
-        "analysis.margin_cascade"
+        "analysis.margin_cascade",
+        "analysis.relativistic-effects"
       ],
       "status": "valid",
       "version": 2,
@@ -1187,6 +1188,16 @@
       ],
       "notes": "Non-Kestrel ships, stations, navigation infrastructure, governance",
       "lastValidated": "2026-02-25T01:54:39.415Z"
+    },
+    "analysis.relativistic-effects": {
+      "id": "analysis.relativistic-effects",
+      "type": "analysis",
+      "title": "相対論的効果の評価",
+      "dependsOn": [
+        "param.ship_mass"
+      ],
+      "status": "pending",
+      "version": 1
     }
   },
   "schemaVersion": 1

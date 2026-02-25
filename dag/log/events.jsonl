@@ -332,3 +332,6 @@
 {"timestamp":"2026-02-25T01:40:34.601Z","action":"node_added","nodeId":"task.170","detail":"Scene timeline per episode"}
 {"timestamp":"2026-02-25T01:40:38.099Z","action":"dependency_added","nodeId":"task.170","detail":"→ report.ep01"}
 {"timestamp":"2026-02-25T01:54:35.717Z","action":"node_added","nodeId":"task.172","detail":"ランディングページ改善"}
+{"timestamp":"2026-02-25T02:47:52.099Z","action":"node_added","nodeId":"analysis.relativistic-effects","detail":"相対論的効果の評価"}
+{"timestamp":"2026-02-25T02:47:55.422Z","action":"dependency_added","nodeId":"analysis.relativistic-effects","detail":"→ param.ship_mass"}
+{"timestamp":"2026-02-25T02:48:24.448Z","action":"dependency_added","nodeId":"report.cross_episode","detail":"→ analysis.relativistic-effects"}
