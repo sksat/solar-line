@@ -10,7 +10,7 @@
       "tags": [
         "source"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.whisper.ep01": {
       "id": "src.whisper.ep01",
@@ -23,7 +23,7 @@
         "source",
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.vtt.ep01": {
       "id": "src.vtt.ep01",
@@ -36,7 +36,7 @@
         "source",
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.dialogue.ep01": {
       "id": "src.dialogue.ep01",
@@ -52,7 +52,7 @@
         "source",
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.whisper.ep02": {
       "id": "src.whisper.ep02",
@@ -65,7 +65,7 @@
         "source",
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.vtt.ep02": {
       "id": "src.vtt.ep02",
@@ -78,7 +78,7 @@
         "source",
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.dialogue.ep02": {
       "id": "src.dialogue.ep02",
@@ -94,7 +94,7 @@
         "source",
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.whisper.ep03": {
       "id": "src.whisper.ep03",
@@ -107,7 +107,7 @@
         "source",
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.vtt.ep03": {
       "id": "src.vtt.ep03",
@@ -120,7 +120,7 @@
         "source",
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.dialogue.ep03": {
       "id": "src.dialogue.ep03",
@@ -136,7 +136,7 @@
         "source",
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.whisper.ep04": {
       "id": "src.whisper.ep04",
@@ -149,7 +149,7 @@
         "source",
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.vtt.ep04": {
       "id": "src.vtt.ep04",
@@ -162,7 +162,7 @@
         "source",
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.dialogue.ep04": {
       "id": "src.dialogue.ep04",
@@ -178,7 +178,7 @@
         "source",
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.whisper.ep05": {
       "id": "src.whisper.ep05",
@@ -191,7 +191,7 @@
         "source",
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.vtt.ep05": {
       "id": "src.vtt.ep05",
@@ -204,7 +204,7 @@
         "source",
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "src.dialogue.ep05": {
       "id": "src.dialogue.ep05",
@@ -220,7 +220,7 @@
         "source",
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "param.ship_mass": {
       "id": "param.ship_mass",
@@ -236,7 +236,7 @@
         "cross-episode"
       ],
       "notes": "All brachistochrone calcs converge on 300-500t for stated performance",
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "param.thrust": {
       "id": "param.thrust",
@@ -251,7 +251,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "param.isp": {
       "id": "param.isp",
@@ -266,7 +266,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "param.nozzle_life": {
       "id": "param.nozzle_life",
@@ -281,7 +281,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "param.propellant_budget": {
       "id": "param.propellant_budget",
@@ -297,7 +297,7 @@
         "parameter",
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep01.t01": {
       "id": "analysis.ep01.t01",
@@ -315,7 +315,7 @@
         "episode:01",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep01.t02": {
       "id": "analysis.ep01.t02",
@@ -333,7 +333,7 @@
         "episode:01",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep01.t03": {
       "id": "analysis.ep01.t03",
@@ -351,7 +351,7 @@
         "episode:01",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep01.t04": {
       "id": "analysis.ep01.t04",
@@ -369,7 +369,7 @@
         "episode:01",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep02.t01": {
       "id": "analysis.ep02.t01",
@@ -387,7 +387,7 @@
         "episode:02",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep02.t02": {
       "id": "analysis.ep02.t02",
@@ -405,7 +405,7 @@
         "episode:02",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep02.t03": {
       "id": "analysis.ep02.t03",
@@ -423,7 +423,7 @@
         "episode:02",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep02.t04": {
       "id": "analysis.ep02.t04",
@@ -441,7 +441,7 @@
         "episode:02",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep02.t05": {
       "id": "analysis.ep02.t05",
@@ -459,7 +459,7 @@
         "episode:02",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep03.t01": {
       "id": "analysis.ep03.t01",
@@ -477,7 +477,7 @@
         "episode:03",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep03.t02": {
       "id": "analysis.ep03.t02",
@@ -495,7 +495,7 @@
         "episode:03",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep03.t03": {
       "id": "analysis.ep03.t03",
@@ -513,7 +513,7 @@
         "episode:03",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep03.t04": {
       "id": "analysis.ep03.t04",
@@ -531,7 +531,7 @@
         "episode:03",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep03.t05": {
       "id": "analysis.ep03.t05",
@@ -549,7 +549,7 @@
         "episode:03",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep04.t01": {
       "id": "analysis.ep04.t01",
@@ -567,7 +567,7 @@
         "episode:04",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep04.t02": {
       "id": "analysis.ep04.t02",
@@ -585,7 +585,7 @@
         "episode:04",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep04.t03": {
       "id": "analysis.ep04.t03",
@@ -603,7 +603,7 @@
         "episode:04",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep04.t04": {
       "id": "analysis.ep04.t04",
@@ -621,7 +621,7 @@
         "episode:04",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep04.t05": {
       "id": "analysis.ep04.t05",
@@ -639,7 +639,7 @@
         "episode:04",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep05.t01": {
       "id": "analysis.ep05.t01",
@@ -658,7 +658,7 @@
         "episode:05",
         "transfer:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep05.t02": {
       "id": "analysis.ep05.t02",
@@ -677,7 +677,7 @@
         "episode:05",
         "transfer:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep05.t03": {
       "id": "analysis.ep05.t03",
@@ -696,7 +696,7 @@
         "episode:05",
         "transfer:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep05.t04": {
       "id": "analysis.ep05.t04",
@@ -715,7 +715,7 @@
         "episode:05",
         "transfer:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.ep05.t05": {
       "id": "analysis.ep05.t05",
@@ -735,7 +735,7 @@
         "episode:05",
         "transfer:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.mass_mystery": {
       "id": "analysis.mass_mystery",
@@ -750,7 +750,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.propellant_budget": {
       "id": "analysis.propellant_budget",
@@ -788,7 +788,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.nozzle_cumulative": {
       "id": "analysis.nozzle_cumulative",
@@ -826,7 +826,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.margin_cascade": {
       "id": "analysis.margin_cascade",
@@ -864,7 +864,7 @@
         "cross-episode"
       ],
       "notes": "Chain success probability: ~30-46%",
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.communications": {
       "id": "analysis.communications",
@@ -901,7 +901,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "analysis.attitude_control": {
       "id": "analysis.attitude_control",
@@ -941,7 +941,7 @@
       "tags": [
         "cross-episode"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.ep01": {
       "id": "report.ep01",
@@ -959,7 +959,7 @@
       "tags": [
         "episode:01"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.ep02": {
       "id": "report.ep02",
@@ -978,7 +978,7 @@
       "tags": [
         "episode:02"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.ep03": {
       "id": "report.ep03",
@@ -997,7 +997,7 @@
       "tags": [
         "episode:03"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.ep04": {
       "id": "report.ep04",
@@ -1016,7 +1016,7 @@
       "tags": [
         "episode:04"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.ep05": {
       "id": "report.ep05",
@@ -1035,7 +1035,7 @@
       "tags": [
         "episode:05"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.cross_episode": {
       "id": "report.cross_episode",
@@ -1055,7 +1055,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.ship_kestrel": {
       "id": "report.ship_kestrel",
@@ -1075,7 +1075,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.science_accuracy": {
       "id": "report.science_accuracy",
@@ -1095,7 +1095,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.attitude_control": {
       "id": "report.attitude_control",
@@ -1114,7 +1114,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.communications": {
       "id": "report.communications",
@@ -1133,7 +1133,7 @@
       "tags": [
         "summary"
       ],
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.tech_overview": {
       "id": "report.tech_overview",
@@ -1153,7 +1153,7 @@
         "meta"
       ],
       "notes": "Contains DAG viewer, project metrics, architecture overview",
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.ai_costs": {
       "id": "report.ai_costs",
@@ -1167,7 +1167,7 @@
         "meta"
       ],
       "notes": "Token usage, cost distribution, efficiency metrics",
-      "lastValidated": "2026-02-24T13:54:40.350Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     },
     "report.infrastructure": {
       "id": "report.infrastructure",
@@ -1186,1761 +1186,7 @@
         "summary"
       ],
       "notes": "Non-Kestrel ships, stations, navigation infrastructure, governance",
-      "lastValidated": "2026-02-24T13:54:40.350Z"
-    },
-    "task.001": {
-      "id": "task.001",
-      "type": "task",
-      "title": "Minimal Monorepo Scaffold + CI",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.002": {
-      "id": "task.002",
-      "type": "task",
-      "title": "Rust Core Types, Units, and Constants",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:43.135Z"
-    },
-    "task.003": {
-      "id": "task.003",
-      "type": "task",
-      "title": "WASM Bridge and TS Bindings",
-      "dependsOn": [
-        "task.002"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:43.342Z"
-    },
-    "task.004": {
-      "id": "task.004",
-      "type": "task",
-      "title": "YouTube Subtitle Collection Script",
-      "dependsOn": [
-        "task.001"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.005": {
-      "id": "task.005",
-      "type": "task",
-      "title": "GitHub Pages Report Pipeline",
-      "dependsOn": [
-        "task.001"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:43.531Z"
-    },
-    "task.006": {
-      "id": "task.006",
-      "type": "task",
-      "title": "Episode 1 Content Analysis",
-      "dependsOn": [
-        "task.002",
-        "task.004",
-        "task.005"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T20:12:43.742Z"
-    },
-    "task.007": {
-      "id": "task.007",
-      "type": "task",
-      "title": "Interactive Brachistochrone Calculator",
-      "dependsOn": [
-        "task.002",
-        "task.003",
-        "task.005",
-        "task.006"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T20:12:43.925Z"
-    },
-    "task.008": {
-      "id": "task.008",
-      "type": "task",
-      "title": "Episode 2 Content Analysis",
-      "dependsOn": [
-        "task.002",
-        "task.005",
-        "task.006"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.009": {
-      "id": "task.009",
-      "type": "task",
-      "title": "Subtitle Collection & Speaker Attribution",
-      "dependsOn": [
-        "task.004"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.010": {
-      "id": "task.010",
-      "type": "task",
-      "title": "Localize Reports to Japanese",
-      "dependsOn": [
-        "task.005",
-        "task.006"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.011": {
-      "id": "task.011",
-      "type": "task",
-      "title": "Session Log Collection from Conversation Logs",
-      "dependsOn": [
-        "task.005"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.012": {
-      "id": "task.012",
-      "type": "task",
-      "title": "Report Enrichment — Video Embeds, Graphs, Dialogue Quotes",
-      "dependsOn": [
-        "task.005",
-        "task.010"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.013": {
-      "id": "task.013",
-      "type": "task",
-      "title": "Episode 1 Reanalysis — Evidence & Multi-Parameter Exploration",
-      "dependsOn": [
-        "task.006",
-        "task.012"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.014": {
-      "id": "task.014",
-      "type": "task",
-      "title": "Orbital Transfer Diagrams in Reports",
-      "dependsOn": [
-        "task.005",
-        "task.006",
-        "task.008"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.015": {
-      "id": "task.015",
-      "type": "task",
-      "title": "Episode 3 (Part 3) Analysis",
-      "dependsOn": [
-        "task.001",
-        "task.005",
-        "task.010",
-        "task.014"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:03",
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.016": {
-      "id": "task.016",
-      "type": "task",
-      "title": "ΔV比較カードのテキスト溢れ修正",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.017": {
-      "id": "task.017",
-      "type": "task",
-      "title": "レポート構造改善",
-      "dependsOn": [
-        "task.016"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.018": {
-      "id": "task.018",
-      "type": "task",
-      "title": "第1話台詞データ修正",
-      "dependsOn": [
-        "task.009"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.019": {
-      "id": "task.019",
-      "type": "task",
-      "title": "軌道遷移図のインタラクティブアニメーション",
-      "dependsOn": [
-        "task.014"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.020": {
-      "id": "task.020",
-      "type": "task",
-      "title": "Episode 4 Analysis",
-      "dependsOn": [
-        "task.006",
-        "task.004",
-        "task.009"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.021": {
-      "id": "task.021",
-      "type": "task",
-      "title": "Cross-Episode Consistency Analysis",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:03"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.022": {
-      "id": "task.022",
-      "type": "task",
-      "title": "Build Test Fix & Report Readability Review",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.023": {
-      "id": "task.023",
-      "type": "task",
-      "title": "Episode 5 (Finale) Analysis",
-      "dependsOn": [
-        "task.020",
-        "task.021",
-        "task.009",
-        "task.036"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.024": {
-      "id": "task.024",
-      "type": "task",
-      "title": "CI Testing Workflow & Type Safety",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.025": {
-      "id": "task.025",
-      "type": "task",
-      "title": "Report Quality Review & Full-Route Diagram",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05",
-        "episode:02",
-        "episode:03",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.026": {
-      "id": "task.026",
-      "type": "task",
-      "title": "Accessibility Improvements for Interactive Elements",
-      "dependsOn": [
-        "task.014",
-        "task.019",
-        "task.007"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.027": {
-      "id": "task.027",
-      "type": "task",
-      "title": "Report Quality Review (Round 2) — Codex Consultation",
-      "dependsOn": [
-        "task.025",
-        "task.026"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.028": {
-      "id": "task.028",
-      "type": "task",
-      "title": "Episode 2-4 Dialogue Attribution (Phase 2)",
-      "dependsOn": [
-        "task.009",
-        "task.008",
-        "task.015",
-        "task.020"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:03",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.029": {
-      "id": "task.029",
-      "type": "task",
-      "title": "EP01 Dialogue Attribution Continuation",
-      "dependsOn": [
-        "task.009"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.030": {
-      "id": "task.030",
-      "type": "task",
-      "title": "Report Data Integrity Validation & Dialogue Evidence Enrichment",
-      "dependsOn": [
-        "task.029",
-        "task.028"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.031": {
-      "id": "task.031",
-      "type": "task",
-      "title": "Enhanced Index (Top) Page",
-      "dependsOn": [
-        "task.005",
-        "task.021"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.032": {
-      "id": "task.032",
-      "type": "task",
-      "title": "Template and Type Quality Fixes",
-      "dependsOn": [
-        "task.005",
-        "task.014",
-        "task.019"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:04",
-        "episode:05",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.033": {
-      "id": "task.033",
-      "type": "task",
-      "title": "Report Data Quality Fixes",
-      "dependsOn": [
-        "task.023",
-        "task.020"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:04",
-        "episode:05",
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.034": {
-      "id": "task.034",
-      "type": "task",
-      "title": "Site Polish — OGP Meta Tags + Report Content Review (Codex)",
-      "dependsOn": [
-        "task.033"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:03",
-        "episode:05",
-        "episode:01",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.035": {
-      "id": "task.035",
-      "type": "task",
-      "title": "Comprehensive Report Quality Review with Codex",
-      "dependsOn": [
-        "task.034",
-        "task.033"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:04",
-        "episode:05",
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.036": {
-      "id": "task.036",
-      "type": "task",
-      "title": "Whisper STT Infrastructure for EP05 Subtitles",
-      "dependsOn": [
-        "task.004",
-        "task.009"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.037": {
-      "id": "task.037",
-      "type": "task",
-      "title": "Compute Planetary Positions and Solar System Dates for Orbital Transfers",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.038": {
-      "id": "task.038",
-      "type": "task",
-      "title": "Enrich Earlier Reports with Later Episode Findings",
-      "dependsOn": [
-        "task.037"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:04",
-        "episode:01",
-        "episode:03",
-        "episode:05",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.039": {
-      "id": "task.039",
-      "type": "task",
-      "title": "Expand Cross-Episode Analysis Beyond Episode-Based Structure",
-      "dependsOn": [
-        "task.021"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.040": {
-      "id": "task.040",
-      "type": "task",
-      "title": "Engine Burn Visualization in Interactive Orbital Diagrams",
-      "dependsOn": [
-        "task.019"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.041": {
-      "id": "task.041",
-      "type": "task",
-      "title": "Report Navigation and Source Link Improvements",
-      "dependsOn": [
-        "task.005"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.042": {
-      "id": "task.042",
-      "type": "task",
-      "title": "Update Summary Reports with Confirmed EP05 Data",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.043": {
-      "id": "task.043",
-      "type": "task",
-      "title": "Full-Route Orbital Diagram & EP05 Lines Fix",
-      "dependsOn": [
-        "task.021"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05",
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.044": {
-      "id": "task.044",
-      "type": "task",
-      "title": "Security Fix & EP05 Data Quality",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.045": {
-      "id": "task.045",
-      "type": "task",
-      "title": "Propellant Budget Analysis (Tsiolkovsky Rocket Equation)",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.046": {
-      "id": "task.046",
-      "type": "task",
-      "title": "Whisper STT for Episodes 01-04",
-      "dependsOn": [
-        "task.036",
-        "task.004",
-        "task.009"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05",
-        "episode:01",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.047": {
-      "id": "task.047",
-      "type": "task",
-      "title": "EP05 Analysis Completion — Oberth Effect, Nozzle Lifespan, Remove Preliminary Flag",
-      "dependsOn": [
-        "task.042",
-        "task.009"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.048": {
-      "id": "task.048",
-      "type": "task",
-      "title": "Report UX Polish — Number Formatting, Calculator Feedback, Animation Robustness",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.049": {
-      "id": "task.049",
-      "type": "task",
-      "title": "Orbital Diagram Scale Legend and Timeline Annotations",
-      "dependsOn": [
-        "task.043",
-        "task.040"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.050": {
-      "id": "task.050",
-      "type": "task",
-      "title": "Saturn-Centric Enceladus Capture Diagram for EP02",
-      "dependsOn": [
-        "task.008",
-        "task.014",
-        "task.040"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.051": {
-      "id": "task.051",
-      "type": "task",
-      "title": "Add Episode Cross-Links in Summary Pages",
-      "dependsOn": [
-        "task.041"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.052": {
-      "id": "task.052",
-      "type": "task",
-      "title": "Math Formula Rendering (KaTeX)",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T20:12:44.112Z"
-    },
-    "task.053": {
-      "id": "task.053",
-      "type": "task",
-      "title": "Playwright E2E Tests for Report Rendering",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.054": {
-      "id": "task.054",
-      "type": "task",
-      "title": "IF/Counterfactual Analysis",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.055": {
-      "id": "task.055",
-      "type": "task",
-      "title": "Transcription Data on GitHub Pages",
-      "dependsOn": [
-        "task.036",
-        "task.046"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.056": {
-      "id": "task.056",
-      "type": "task",
-      "title": "Speaker Diarization Investigation",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T23:29:26.363Z"
-    },
-    "task.057": {
-      "id": "task.057",
-      "type": "task",
-      "title": "Workflow Skills",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.058": {
-      "id": "task.058",
-      "type": "task",
-      "title": "Multi-Pattern Orbital Diagram Animation",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.059": {
-      "id": "task.059",
-      "type": "task",
-      "title": "Verdict Policy & External Source Links Cleanup",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.060": {
-      "id": "task.060",
-      "type": "task",
-      "title": "Detailed Orbit Propagation Validation",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:05",
-        "episode:03"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.061": {
-      "id": "task.061",
-      "type": "task",
-      "title": "GitHub Repo Link on Pages",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.062": {
-      "id": "task.062",
-      "type": "task",
-      "title": "Session Log Display Improvements",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.063": {
-      "id": "task.063",
-      "type": "task",
-      "title": "Adaptive Timestep Integration Methods",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.064": {
-      "id": "task.064",
-      "type": "task",
-      "title": "Attitude Control Precision & Stability Analysis",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.065": {
-      "id": "task.065",
-      "type": "task",
-      "title": "Communications Systems Analysis",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.066": {
-      "id": "task.066",
-      "type": "task",
-      "title": "ccusage Cost Analysis and Efficiency Optimization",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:44.300Z"
-    },
-    "task.067": {
-      "id": "task.067",
-      "type": "task",
-      "title": "ケイ表記統一 & ライ検証",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.068": {
-      "id": "task.068",
-      "type": "task",
-      "title": "ヘッダーナビゲーション視認性改善",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.069": {
-      "id": "task.069",
-      "type": "task",
-      "title": "レスポンシブ対応",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:44.489Z"
-    },
-    "task.070": {
-      "id": "task.070",
-      "type": "task",
-      "title": "文字起こしページ複数ソース表示",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.071": {
-      "id": "task.071",
-      "type": "task",
-      "title": "README更新",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.072": {
-      "id": "task.072",
-      "type": "task",
-      "title": "タイムスタンプ→動画リンク化",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.073": {
-      "id": "task.073",
-      "type": "task",
-      "title": "メタ技術解説ページ",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.074": {
-      "id": "task.074",
-      "type": "task",
-      "title": "分析の再検討 — nice-friend による視点補完",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.075": {
-      "id": "task.075",
-      "type": "task",
-      "title": "解説の図・グラフ追加",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.076": {
-      "id": "task.076",
-      "type": "task",
-      "title": "セッションログ更新",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.077": {
-      "id": "task.077",
-      "type": "task",
-      "title": "AIコストをページから確認可能に",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.078": {
-      "id": "task.078",
-      "type": "task",
-      "title": "技術解説ページの構造改善",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.079": {
-      "id": "task.079",
-      "type": "task",
-      "title": "文字起こし修正時のレポート連動更新",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.080": {
-      "id": "task.080",
-      "type": "task",
-      "title": "ヘッダーナビの各話・総合分析ドロップダウン分離",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.081": {
-      "id": "task.081",
-      "type": "task",
-      "title": "Rustdoc ビルド・デプロイ",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.082": {
-      "id": "task.082",
-      "type": "task",
-      "title": "ログの日時を JST で管理",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.083": {
-      "id": "task.083",
-      "type": "task",
-      "title": "コード引用のシンタックスハイライト",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.084": {
-      "id": "task.084",
-      "type": "task",
-      "title": "Claude Code 固有ツールの表示改善",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.085": {
-      "id": "task.085",
-      "type": "task",
-      "title": "タスク・分析の DAG 管理構造",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T20:12:44.661Z"
-    },
-    "task.086": {
-      "id": "task.086",
-      "type": "task",
-      "title": "ADR (Architecture Decision Records)",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:44.842Z"
-    },
-    "task.087": {
-      "id": "task.087",
-      "type": "task",
-      "title": "他の宇宙船・係留地の分析",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.088": {
-      "id": "task.088",
-      "type": "task",
-      "title": "DAG Viewer & Management Improvements",
-      "dependsOn": [
-        "task.085"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.089": {
-      "id": "task.089",
-      "type": "task",
-      "title": "Dialogue Speaker Attribution Re-review",
-      "dependsOn": [
-        "task.079"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.090": {
-      "id": "task.090",
-      "type": "task",
-      "title": "Cost Analysis — Non-Max-Subscription Estimates",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.091": {
-      "id": "task.091",
-      "type": "task",
-      "title": "Narrative Plausibility Review Process",
-      "dependsOn": [
-        "task.057"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:01",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.092": {
-      "id": "task.092",
-      "type": "task",
-      "title": "Episode-Aware Brachistochrone Calculator",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.093": {
-      "id": "task.093",
-      "type": "task",
-      "title": "Tech Overview & Summary Report Statistics Refresh",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.094": {
-      "id": "task.094",
-      "type": "task",
-      "title": "Transcription-Report Sync Validation",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.095": {
-      "id": "task.095",
-      "type": "task",
-      "title": "\"ギリギリ\" Margin Visualization",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05",
-        "episode:04",
-        "episode:01",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.096": {
-      "id": "task.096",
-      "type": "task",
-      "title": "Nav Categories + Task Status Dashboard",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.097": {
-      "id": "task.097",
-      "type": "task",
-      "title": "Epoch-Consistent Orbital Diagrams",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.098": {
-      "id": "task.098",
-      "type": "task",
-      "title": "3D Orbital Analysis",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T20:12:45.025Z"
-    },
-    "task.099": {
-      "id": "task.099",
-      "type": "task",
-      "title": "Enceladus Speaker Correction + Transcription Data Layers",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05",
-        "episode:02",
-        "episode:03"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.100": {
-      "id": "task.100",
-      "type": "task",
-      "title": "Plasmoid Perturbation Analysis + Physics Consultation Model",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.101": {
-      "id": "task.101",
-      "type": "task",
-      "title": "DAG Historical Temporal Slider",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:45.215Z"
-    },
-    "task.102": {
-      "id": "task.102",
-      "type": "task",
-      "title": "Report Nesting for Long Analyses",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:05",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.103": {
-      "id": "task.103",
-      "type": "task",
-      "title": "DAG 分析の Rust モデリング",
-      "dependsOn": [
-        "task.085",
-        "task.088"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.104": {
-      "id": "task.104",
-      "type": "task",
-      "title": "uPlot による時系列グラフ基盤",
-      "dependsOn": [
-        "task.095"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.105": {
-      "id": "task.105",
-      "type": "task",
-      "title": "DuckDB-WASM によるデータ管理基盤",
-      "dependsOn": [
-        "task.103",
-        "task.104"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.106": {
-      "id": "task.106",
-      "type": "task",
-      "title": "他船舶分析と太陽系インフラの分離",
-      "dependsOn": [
-        "task.087",
-        "task.080"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:02",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.107": {
-      "id": "task.107",
-      "type": "task",
-      "title": "科学的精度レポートのスコープ再構成",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.108": {
-      "id": "task.108",
-      "type": "task",
-      "title": "外部エージェントによるレポートレビュー体制",
-      "dependsOn": [
-        "task.057"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.109": {
-      "id": "task.109",
-      "type": "task",
-      "title": "軌道遷移図のバーン位置整合性修正",
-      "dependsOn": [
-        "task.019",
-        "task.040",
-        "task.097"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.110": {
-      "id": "task.110",
-      "type": "task",
-      "title": "コンテナ分離・推進剤損失の質量時系列分析",
-      "dependsOn": [
-        "task.045",
-        "task.104"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:04"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.111": {
-      "id": "task.111",
-      "type": "task",
-      "title": "「ライ」呼称の最終クリーンアップ",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.112": {
-      "id": "task.112",
-      "type": "task",
-      "title": "Rust 依存ライブラリ解禁とオラクルテスト",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.113": {
-      "id": "task.113",
-      "type": "task",
-      "title": "内部ドキュメントのサイト公開",
-      "dependsOn": [
-        "task.086",
-        "task.096"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.114": {
-      "id": "task.114",
-      "type": "task",
-      "title": "ADR に Alternatives セクション追加",
-      "dependsOn": [
-        "task.086",
-        "task.112"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.115": {
-      "id": "task.115",
-      "type": "task",
-      "title": "軌道遷移図に description フィールド追加",
-      "dependsOn": [
-        "task.014",
-        "task.019"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.116": {
-      "id": "task.116",
-      "type": "task",
-      "title": "CI 安定性の改善",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:45.398Z"
-    },
-    "task.117": {
-      "id": "task.117",
-      "type": "task",
-      "title": "誤差範囲の可視化",
-      "dependsOn": [
-        "task.104",
-        "task.109"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:04",
-        "episode:05",
-        "episode:03"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.118": {
-      "id": "task.118",
-      "type": "task",
-      "title": "DAG を用いたタスク計画と並列実行管理",
-      "dependsOn": [
-        "task.085",
-        "task.088",
-        "task.103"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:12:45.772Z"
-    },
-    "task.119": {
-      "id": "task.119",
-      "type": "task",
-      "title": "質量の謎を耐G SF設定仮説で再考",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:03",
-        "episode:02"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.120": {
-      "id": "task.120",
-      "type": "task",
-      "title": "台詞データID参照方式への移行＋静的検査",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:03"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.121": {
-      "id": "task.121",
-      "type": "task",
-      "title": "ヘッダーに「この考証について」セクション追加",
-      "dependsOn": [
-        "task.096"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.122": {
-      "id": "task.122",
-      "type": "task",
-      "title": "インタラクティブ要素のE2Eテスト基盤",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.123": {
-      "id": "task.123",
-      "type": "task",
-      "title": "数値分析のスクリプト化＋一括更新インフラ",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.124": {
-      "id": "task.124",
-      "type": "task",
-      "title": "コアロジックのcore crate分離（wasm crateはbind専任）",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.125": {
-      "id": "task.125",
-      "type": "task",
-      "title": "Orekit等の信頼できるシミュレータによる検算",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T20:12:45.591Z"
-    },
-    "task.126": {
-      "id": "task.126",
-      "type": "task",
-      "title": "コールドスリープの分析制約の明確化",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.127": {
-      "id": "task.127",
-      "type": "task",
-      "title": "レポートをMDX的に記述してレビューしやすくする",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.128": {
-      "id": "task.128",
-      "type": "task",
-      "title": "耐G超技術の前提を分析に反映",
-      "dependsOn": [
-        "task.119"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.129": {
-      "id": "task.129",
-      "type": "task",
-      "title": "AI生成表記とネタバレ警告の明示",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.130": {
-      "id": "task.130",
-      "type": "task",
-      "title": "未承認ADRによるオーナー承認待ち判断の管理",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.131": {
-      "id": "task.131",
-      "type": "task",
-      "title": "軌道遷移アニメーション到着位置の修正",
-      "dependsOn": [
-        "task.019",
-        "task.097",
-        "task.040"
-      ],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.132": {
-      "id": "task.132",
-      "type": "task",
-      "title": "数式レンダリングのTDD回帰テスト",
-      "dependsOn": [
-        "task.052"
-      ],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.133": {
-      "id": "task.133",
-      "type": "task",
-      "title": "各解析ごとの再現コマンド（解析テスト）",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "episode:01",
-        "episode:02",
-        "episode:03",
-        "episode:04",
-        "episode:05"
-      ],
-      "lastValidated": "2026-02-24T19:16:34.179Z"
-    },
-    "task.138": {
-      "id": "task.138",
-      "type": "task",
-      "title": "プロジェクト健全化・DAGクリーンアップ",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:22:51.989Z"
-    },
-    "task.140": {
-      "id": "task.140",
-      "type": "task",
-      "title": "Remaining Quality Fixes task.139",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "lastValidated": "2026-02-24T20:41:19.629Z"
-    },
-    "task.165": {
-      "id": "task.165",
-      "type": "task",
-      "title": "NaNタイムスタンプリンク修正",
-      "dependsOn": [],
-      "status": "valid",
-      "version": 2,
-      "tags": [
-        "bugfix"
-      ],
-      "lastValidated": "2026-02-25T00:51:45.814Z"
+      "lastValidated": "2026-02-25T00:52:11.773Z"
     }
   },
   "schemaVersion": 1
