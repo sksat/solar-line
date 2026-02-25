@@ -162,7 +162,8 @@
           "sourceLabel": "NASA惑星データ"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: Hohmann baseline\""
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: Hohmann baseline\"",
+      "verdictSummary": "最小エネルギーでは16.1年かかる天王星→地球の帰還——大部分のΔVは地球軌道での減速に使われる。"
     },
     {
       "id": "ep04-transfer-04",
@@ -190,8 +191,8 @@
         "realMagneticTiltDeg": 59.7,
         "tiltAccuracyPercent": 99.5,
         "momentumPerturbation": {
-          "nominalDeltaVMs": 7.1e-9,
-          "enhancedDeltaVMs": 0.0000014,
+          "nominalDeltaVMs": 7.1e-09,
+          "enhancedDeltaVMs": 1.4e-06,
           "extremeDeltaVMs": 0.00017,
           "extremeMissDistanceKm": 0.0059,
           "conclusion": "negligible"
@@ -230,7 +231,8 @@
           "sourceLabel": "Part 4 プラズモイド遭遇"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: fleet intercept\""
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: fleet intercept\"",
+      "verdictSummary": "天王星の磁軸傾斜60°はVoyager 2の実測値59.7°とほぼ一致——プラズモイド描写の科学的根拠は堅固。"
     },
     {
       "id": "ep04-transfer-05",
@@ -265,7 +267,8 @@
           "sourceLabel": "Part 4 艦隊検知"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: damage assessment\""
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: damage assessment\"",
+      "verdictSummary": "地球艦隊の33時間到着は、残距離1億km程度なら光速の0.28%で達成可能——SF設定として合理的。"
     },
     {
       "id": "ep04-transfer-02",
@@ -307,7 +310,8 @@
           "sourceLabel": "Part 4 きりたんの出発準備"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: plasmoid analysis\""
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: plasmoid analysis\"",
+      "verdictSummary": "タイタニア軌道からの脱出に必要な1.51 km/sは損傷状態でも十分達成可能な小さな値。"
     },
     {
       "id": "ep04-transfer-03",
@@ -366,7 +370,8 @@
           "sourceLabel": "第1話 05:16 きりたん「炉出力は65%に設定。想定推力は6.3MN」"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: brachistochrone at 65\""
+      "reproductionCommand": "npm run recalculate -- --episode 4\nnpm run test:analyses -- --test-name-pattern \"EP04 reproduction: brachistochrone at 65\"",
+      "verdictSummary": "65%推力でのbrachistochrone遷移は公称48,000tでは105日以上かかるが、軽量なら大幅に短縮可能。"
     }
   ],
   "explorations": [
@@ -483,10 +488,10 @@
           "variedValue": 3,
           "variedUnit": "シナリオ (nominal/enhanced/extreme)",
           "results": {
-            "nominalDeltaVMs": 7.1e-9,
-            "enhancedDeltaVMs": 0.0000014,
+            "nominalDeltaVMs": 7.1e-09,
+            "enhancedDeltaVMs": 1.4e-06,
             "extremeDeltaVMs": 0.00017,
-            "nominalMissDistanceKm": 2.5e-7,
+            "nominalMissDistanceKm": 2.5e-07,
             "extremeMissDistanceKm": 0.0059,
             "nominalForceN": 0.00071,
             "extremeForceN": 17,
@@ -567,7 +572,7 @@
           "radius": 1,
           "color": "#4488ff",
           "angle": 1.6181,
-          "meanMotion": 1.991e-7
+          "meanMotion": 1.991e-07
         },
         {
           "id": "mars",
@@ -589,7 +594,7 @@
           "radius": 9.58,
           "color": "#daa520",
           "angle": 2.5143,
-          "meanMotion": 6.761e-9
+          "meanMotion": 6.761e-09
         },
         {
           "id": "uranus",
@@ -597,7 +602,7 @@
           "radius": 19.19,
           "color": "#88ccee",
           "angle": 4.8762,
-          "meanMotion": 2.37e-9
+          "meanMotion": 2.37e-09
         }
       ],
       "transfers": [
@@ -659,7 +664,7 @@
           "radius": 435910,
           "color": "#cc8844",
           "angle": 1.2,
-          "meanMotion": 0.000008354
+          "meanMotion": 8.354e-06
         }
       ],
       "transfers": [

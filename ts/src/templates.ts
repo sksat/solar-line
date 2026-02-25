@@ -354,6 +354,20 @@ li { margin: 0.25rem 0; }
 .verdict-indeterminate { background: var(--yellow); color: #000; }
 .verdict-conditional { background: #8957e5; color: #fff; }
 .verdict-reference { background: #6e7681; color: #fff; }
+.verdict-summary-box {
+  border-left: 4px solid var(--accent);
+  background: var(--card-bg);
+  padding: 0.6em 1em;
+  margin: 0.5em 0 1em 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+.verdict-summary-box.verdict-box-plausible { border-left-color: var(--green); }
+.verdict-summary-box.verdict-box-implausible { border-left-color: var(--red); }
+.verdict-summary-box.verdict-box-indeterminate { border-left-color: var(--yellow); }
+.verdict-summary-box.verdict-box-conditional { border-left-color: #8957e5; }
+.verdict-summary-box.verdict-box-reference { border-left-color: #6e7681; }
 .sources-list { font-size: 0.85em; color: #8b949e; margin-top: 0.5rem; }
 .sources-list dt { font-weight: 600; color: var(--fg); margin-top: 0.3rem; }
 .sources-list dd { margin-left: 1rem; }
@@ -954,9 +968,14 @@ export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQ
     ? `<details class="reproduction-command"><summary>再現コマンド</summary><pre><code>${escapeHtml(t.reproductionCommand)}</code></pre></details>`
     : "";
 
+  const verdictSummaryHtml = t.verdictSummary
+    ? `<div class="verdict-summary-box verdict-box-${t.verdict}">${escapeHtml(t.verdictSummary)}</div>`
+    : "";
+
   return `<div class="card" id="${escapeHtml(t.id)}">
 <h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
 <p>第${t.episode}話 @ ${tsHtml}</p>
+${verdictSummaryHtml}
 ${dvComparison}
 ${citationsHtml}
 ${assumptionsList}
@@ -979,9 +998,14 @@ export function renderTransferSummaryCard(t: TransferAnalysis, detailUrl: string
     ? `<span class="detail-badge">${explorationCount}件のパラメータ探索</span>`
     : "";
 
+  const verdictSummaryHtml = t.verdictSummary
+    ? `<div class="verdict-summary-box verdict-box-${t.verdict}">${escapeHtml(t.verdictSummary)}</div>`
+    : "";
+
   return `<div class="card transfer-summary" id="${escapeHtml(t.id)}">
 <h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
 <p>第${t.episode}話 @ ${tsHtml}</p>
+${verdictSummaryHtml}
 ${dvLine ? `<p>${dvLine}</p>` : ""}
 <p>${markdownToHtml(t.explanation.split("\n")[0])}</p>
 <p><a href="${escapeHtml(detailUrl)}" class="detail-link">詳細分析を見る →</a> ${explorationNote}</p>

@@ -112,7 +112,8 @@
           "sourceLabel": "NASA/JPL 太陽系力学データ（土星平均軌道半径）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Hohmann baseline\""
+      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Hohmann baseline\"",
+      "verdictSummary": "最小エネルギー経路では約10年——損傷状態での弾道飛行455日は、ホーマン遷移よりはるかに速い。"
     },
     {
       "id": "ep02-transfer-02",
@@ -166,7 +167,8 @@
           "sourceLabel": "NASA/JPL 太陽系力学データ（木星赤道半径）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Jupiter escape\""
+      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Jupiter escape\"",
+      "verdictSummary": "木星脱出速度を上回る10.3 km/sは物理的に妥当——ケストレルは確実に木星重力圏から離脱できている。"
     },
     {
       "id": "ep02-transfer-03",
@@ -212,7 +214,8 @@
           "sourceLabel": "Part 2 16:15「外縁軌道は修正機動を許容しません。一度外せば帰還の可能性は消えます」"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: heliocentric transfer\""
+      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: heliocentric transfer\"",
+      "verdictSummary": "噴射なしで土星軌道を通過する双曲線軌道に乗っているが、エンケラドスへの正確な到着には追加の軌道調整が必要。"
     },
     {
       "id": "ep02-transfer-04",
@@ -257,7 +260,8 @@
           "sourceLabel": "NASA/JPL 太陽系力学データ（エンケラドス平均軌道半径）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Saturn capture\""
+      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Saturn capture\"",
+      "verdictSummary": "土星圏への捕獲には約5.83 km/sの減速が必要——損傷状態でこれを達成する方法が作中の描写の鍵。"
     },
     {
       "id": "ep02-transfer-05",
@@ -304,7 +308,8 @@
           "sourceLabel": "Part 2 17:31「トランスポンダを切った上で相対速度を限りなく0に近づけ、そこに漂って待ち構えていたものと推定」"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Enceladus orbital\""
+      "reproductionCommand": "npm run recalculate -- --episode 2\nnpm run test:analyses -- --test-name-pattern \"EP02 reproduction: Enceladus orbital\"",
+      "verdictSummary": "相対速度120 m/sでの並走は軌道力学的に自然な近接運用であり、大型船の描写は合理的。"
     }
   ],
   "diagrams": [

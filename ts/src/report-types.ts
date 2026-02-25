@@ -114,6 +114,8 @@ export interface TransferAnalysis {
   sources?: SourceCitation[];
   /** Command to reproduce the numerical analysis, e.g. "npm run recalculate -- --episode 1" */
   reproductionCommand?: string;
+  /** One-sentence plain-language verdict summary for non-expert readers */
+  verdictSummary?: string;
 }
 
 /** A single orbit in an orbital diagram */

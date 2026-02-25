@@ -478,6 +478,42 @@ describe("renderTransferCard", () => {
     assert.ok(html.includes("Earth to Mars Hohmann Transfer"));
     assert.ok(html.includes('class="card"'));
   });
+
+  it("renders verdict summary box when verdictSummary is present", () => {
+    const t: TransferAnalysis = {
+      ...sampleTransfer,
+      verdictSummary: "この遷移は物理的に妥当で、描写と計算が一致している。",
+    };
+    const html = renderTransferCard(t);
+    assert.ok(html.includes("verdict-summary-box"), "should have verdict-summary-box class");
+    assert.ok(html.includes("verdict-box-plausible"), "should have verdict-specific border class");
+    assert.ok(html.includes("この遷移は物理的に妥当で、描写と計算が一致している。"), "should contain summary text");
+  });
+
+  it("omits verdict summary box when verdictSummary is absent", () => {
+    const html = renderTransferCard(sampleTransfer);
+    assert.ok(!html.includes("verdict-summary-box"), "should not have verdict-summary-box");
+  });
+
+  it("renders verdict summary box with correct class for conditional verdict", () => {
+    const t: TransferAnalysis = {
+      ...sampleTransfer,
+      verdict: "conditional",
+      verdictSummary: "条件付きで成立する。",
+    };
+    const html = renderTransferCard(t);
+    assert.ok(html.includes("verdict-box-conditional"), "should have conditional border class");
+  });
+
+  it("escapes HTML in verdict summary text", () => {
+    const t: TransferAnalysis = {
+      ...sampleTransfer,
+      verdictSummary: 'Test <script>alert("xss")</script>',
+    };
+    const html = renderTransferCard(t);
+    assert.ok(!html.includes("<script>"), "should escape script tags");
+    assert.ok(html.includes("&lt;script&gt;"), "should contain escaped tags");
+  });
 });
 
 // --- renderIndex ---
@@ -3883,6 +3919,22 @@ describe("renderTransferSummaryCard", () => {
   it("omits exploration badge when count is 0", () => {
     const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 0);
     assert.ok(!html.includes("パラメータ探索"), "should not show exploration badge");
+  });
+
+  it("renders verdict summary box in summary card", () => {
+    const t: TransferAnalysis = {
+      ...transfer,
+      verdictSummary: "実効質量次第で成立する複合航路。",
+    };
+    const html = renderTransferSummaryCard(t, "ep-005/transfer-02.html", 0);
+    assert.ok(html.includes("verdict-summary-box"), "should have verdict-summary-box class");
+    assert.ok(html.includes("verdict-box-conditional"), "should match verdict type");
+    assert.ok(html.includes("実効質量次第で成立する複合航路。"), "should contain summary text");
+  });
+
+  it("omits verdict summary box in summary card when absent", () => {
+    const html = renderTransferSummaryCard(transfer, "ep-005/transfer-02.html", 0);
+    assert.ok(!html.includes("verdict-summary-box"), "should not have verdict-summary-box");
   });
 });
 

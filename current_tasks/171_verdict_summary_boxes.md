@@ -1,6 +1,6 @@
 # Task 171: Per-Transfer "So What?" Verdict Summary Boxes
 
-Status: TODO
+Status: DONE
 
 ## Goal
 Add plain-language verdict summary boxes at the top of each transfer analysis. One sentence explaining the conclusion in accessible terms for non-expert readers.

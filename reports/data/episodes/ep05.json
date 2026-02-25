@@ -221,7 +221,8 @@
           "sourceLabel": "NASA Earth Fact Sheet"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Hohmann baseline\""
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Hohmann baseline\"",
+      "verdictSummary": "ホーマン遷移では16.1年——作中の複合航路507時間がいかに高速かを示す基準値。"
     },
     {
       "id": "ep05-transfer-02",
@@ -289,7 +290,8 @@
           "sourceLabel": "Part 5 11:58 核魚雷回避のための最終速度"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: brachistochrone by mass\""
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: brachistochrone by mass\"",
+      "verdictSummary": "直線遷移ではなく木星フライバイ等を組み合わせた複合航路で507時間——実効質量次第で成立する。"
     },
     {
       "id": "ep05-transfer-03",
@@ -337,7 +339,8 @@
           "sourceLabel": "NASA Moon Fact Sheet"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Earth capture\""
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Earth capture\"",
+      "verdictSummary": "LEO 400kmでの軌道速度7.67 km/sへの正確な減速が作中で描写されており、物理的に整合している。"
     },
     {
       "id": "ep05-transfer-04",
@@ -397,7 +400,8 @@
           "sourceLabel": "ICRP 2007勧告"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: nozzle lifespan\""
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: nozzle lifespan\"",
+      "verdictSummary": "4回の点火計画（脱出・フライバイ・減速・投入）はノズル寿命55時間38分の制約内で合理的に構成されている。"
     },
     {
       "id": "ep05-transfer-05",
@@ -458,7 +462,8 @@
           "sourceLabel": "第4話 損傷状態Brachistochrone分析（300tなら8.3日）"
         }
       ],
-      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Oberth effect\""
+      "reproductionCommand": "npm run recalculate -- --episode 5\nnpm run test:analyses -- --test-name-pattern \"EP05 reproduction: Oberth effect\"",
+      "verdictSummary": "全5話・約35.9 AUの航路を通じて、ケストレルの軌道力学は一貫した物理法則のもとで描かれている。"
     }
   ],
   "explorations": [
@@ -1021,7 +1026,7 @@
           "radius": 1,
           "color": "#4488ff",
           "angle": 1.6181,
-          "meanMotion": 1.991e-7
+          "meanMotion": 1.991e-07
         },
         {
           "id": "mars-orbit",
@@ -1117,7 +1122,7 @@
           "radius": 384400,
           "color": "#aaaaaa",
           "angle": 2.36,
-          "meanMotion": 0.000002662
+          "meanMotion": 2.662e-06
         },
         {
           "id": "earth-soi",
@@ -1170,7 +1175,7 @@
           "radius": 1,
           "color": "#4488ff",
           "angle": 1.6181,
-          "meanMotion": 1.991e-7
+          "meanMotion": 1.991e-07
         },
         {
           "id": "jupiter-orbit",
@@ -1178,7 +1183,7 @@
           "radius": 5.2,
           "color": "#ffaa44",
           "angle": 3.6104,
-          "meanMotion": 1.678e-8
+          "meanMotion": 1.678e-08
         },
         {
           "id": "uranus-orbit",
@@ -1293,7 +1298,7 @@
           "radius": 129900,
           "color": "#999999",
           "angle": 0.5,
-          "meanMotion": 0.00005173
+          "meanMotion": 5.173e-05
         },
         {
           "id": "ariel",
@@ -1301,7 +1306,7 @@
           "radius": 190900,
           "color": "#aaaacc",
           "angle": 2.1,
-          "meanMotion": 0.00002789
+          "meanMotion": 2.789e-05
         },
         {
           "id": "umbriel",
@@ -1309,7 +1314,7 @@
           "radius": 266000,
           "color": "#8888aa",
           "angle": 4,
-          "meanMotion": 0.00001516
+          "meanMotion": 1.516e-05
         },
         {
           "id": "titania",
@@ -1317,7 +1322,7 @@
           "radius": 435910,
           "color": "#cc8844",
           "angle": 1.2,
-          "meanMotion": 0.000008354
+          "meanMotion": 8.354e-06
         },
         {
           "id": "oberon",
@@ -1325,7 +1330,7 @@
           "radius": 583500,
           "color": "#bb9966",
           "angle": 3.5,
-          "meanMotion": 0.000004723
+          "meanMotion": 4.723e-06
         },
         {
           "id": "escape-point",
