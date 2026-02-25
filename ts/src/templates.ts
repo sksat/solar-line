@@ -627,6 +627,22 @@ footer {
 .timeline-description { color: var(--fg); font-size: 0.9em; margin-top: 0.2rem; }
 .state-changes { font-size: 0.85em; color: var(--yellow); margin-top: 0.3rem; list-style: none; padding-left: 0; }
 .state-changes li::before { content: "→ "; color: #8b949e; }
+.scene-timeline { margin: 1.5rem 0; }
+.scene-timeline h3 { color: var(--accent); margin-bottom: 0.8rem; font-size: 1.05em; }
+.scene-timeline-track { position: relative; padding-left: 2rem; border-left: 2px solid var(--border); margin-left: 0.5rem; }
+.scene-timeline-event { position: relative; margin-bottom: 1rem; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.scene-timeline-marker { position: absolute; left: -2.35rem; top: 0.35rem; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--bg); }
+.scene-timeline-marker.marker-plausible { background: var(--green); }
+.scene-timeline-marker.marker-implausible { background: var(--red); }
+.scene-timeline-marker.marker-conditional { background: #8957e5; }
+.scene-timeline-marker.marker-indeterminate { background: var(--yellow); }
+.scene-timeline-marker.marker-reference { background: #6e7681; }
+.scene-timeline-ts { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.85em; color: #8b949e; min-width: 4em; }
+.scene-timeline-ts a { color: #8b949e; }
+.scene-timeline-ts a:hover { color: var(--accent); }
+.scene-timeline-desc { flex: 1; }
+.scene-timeline-desc a { color: var(--fg); text-decoration: none; }
+.scene-timeline-desc a:hover { color: var(--accent); text-decoration: underline; }
 .verification-table-container { overflow-x: auto; margin: 1rem 0; }
 .verification-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
 .verification-table caption { text-align: left; font-weight: 600; color: #f0f6fc; margin-bottom: 0.5rem; font-size: 1em; }
@@ -2039,6 +2055,11 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
   if (report.dialogueQuotes && report.dialogueQuotes.length > 0) {
     tocItems.push('<li><a href="#section-dialogue">主要な台詞</a></li>');
   }
+  // Check if scene timeline will render (transfers with real timestamps)
+  const hasSceneTimeline = report.transfers.some(t => !t.timestamp.includes("該当なし"));
+  if (hasSceneTimeline) {
+    tocItems.push('<li><a href="#section-scene-timeline">シーンタイムライン</a></li>');
+  }
   if (report.diagrams && report.diagrams.length > 0) {
     tocItems.push('<li><a href="#section-diagrams">軌道遷移図</a></li>');
   }
@@ -2071,6 +2092,8 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     ? `<h2 id="section-dialogue">主要な台詞</h2>\n${report.dialogueQuotes.map(q => renderDialogueQuote(q, report.videoCards)).join("\n")}`
     : "";
 
+  const sceneTimelineHtml = renderSceneTimeline(report.transfers, report.videoCards);
+
   const diagramSectionWithId = report.diagrams && report.diagrams.length > 0
     ? `<h2 id="section-diagrams">軌道遷移図</h2>\n${report.diagrams.map(renderOrbitalDiagram).join("\n")}`
     : "";
@@ -2087,6 +2110,8 @@ ${markdownToHtml(report.summary)}
 ${toc}
 
 ${dialogueSectionWithId}
+
+${sceneTimelineHtml}
 
 ${dvChart}
 
@@ -2201,6 +2226,35 @@ ${stateChanges}
   return `<div class="event-timeline">
 <h4>${escapeHtml(timeline.caption)}</h4>
 <div class="timeline-track">
+${events}
+</div>
+</div>`;
+}
+
+/** Render a compact scene timeline mapping video timestamps to maneuvers and verdicts */
+export function renderSceneTimeline(transfers: TransferAnalysis[], videoCards?: VideoCard[]): string {
+  // Filter to transfers with real timestamps (not 該当なし / reference-only)
+  const withTimestamps = transfers.filter(t => !t.timestamp.includes("該当なし"));
+  if (withTimestamps.length === 0) return "";
+
+  // Sort by parsed timestamp (ascending)
+  const sorted = [...withTimestamps].sort((a, b) => parseTimestamp(a.timestamp) - parseTimestamp(b.timestamp));
+
+  const events = sorted.map(t => {
+    const tsDisplay = t.timestamp.match(/(\d{1,2}:\d{2}(?::\d{2})?(?:\s*-\s*\d{1,2}:\d{2}(?::\d{2})?)?)/)?.[0] ?? t.timestamp;
+    const tsHtml = timestampLink(tsDisplay, videoCards);
+    const badge = verdictBadge(t.verdict);
+    return `<div class="scene-timeline-event">
+<div class="scene-timeline-marker marker-${t.verdict}"></div>
+<span class="scene-timeline-ts">${tsHtml}</span>
+<span class="scene-timeline-desc"><a href="#${escapeHtml(t.id)}">${escapeHtml(t.description)}</a></span>
+${badge}
+</div>`;
+  }).join("\n");
+
+  return `<div class="scene-timeline" id="section-scene-timeline">
+<h3>シーンタイムライン</h3>
+<div class="scene-timeline-track">
 ${events}
 </div>
 </div>`;

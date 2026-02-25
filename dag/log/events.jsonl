@@ -329,3 +329,5 @@
 {"timestamp":"2026-02-25T01:32:09.340Z","action":"dependency_added","nodeId":"task-171","detail":"→ report.ep03"}
 {"timestamp":"2026-02-25T01:32:09.514Z","action":"dependency_added","nodeId":"task-171","detail":"→ report.ep04"}
 {"timestamp":"2026-02-25T01:32:09.693Z","action":"dependency_added","nodeId":"task-171","detail":"→ report.ep05"}
+{"timestamp":"2026-02-25T01:40:34.601Z","action":"node_added","nodeId":"task.170","detail":"Scene timeline per episode"}
+{"timestamp":"2026-02-25T01:40:38.099Z","action":"dependency_added","nodeId":"task.170","detail":"→ report.ep01"}

@@ -40,6 +40,7 @@ import {
   REPORT_CSS,
   renderGlossary,
   wrapGlossaryTerms,
+  renderSceneTimeline,
 } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm } from "./report-types.ts";
@@ -4585,5 +4586,130 @@ describe("wrapGlossaryTerms", () => {
     const result = wrapGlossaryTerms(html, terms);
     assert.ok(result.includes("<style>.dv { color: red; }</style>"));
     assert.ok(result.includes('class="glossary-term"'));
+  });
+});
+
+// --- renderSceneTimeline ---
+
+describe("renderSceneTimeline", () => {
+  const transfersWithTimestamps: TransferAnalysis[] = [
+    {
+      ...sampleTransfer,
+      id: "ep01-transfer-02",
+      description: "72時間高速遷移: Brachistochrone 火星 → 木星",
+      timestamp: "05:30",
+      verdict: "conditional",
+    },
+    {
+      ...sampleTransfer,
+      id: "ep01-transfer-03",
+      description: "150時間通常ルート",
+      timestamp: "該当なし（契約上の通常スケジュールとして言及）",
+      verdict: "conditional",
+    },
+    {
+      ...sampleTransfer,
+      id: "ep01-transfer-01",
+      description: "ホーマン遷移基準値",
+      timestamp: "該当なし（参考計算）",
+      verdict: "reference",
+    },
+    {
+      ...sampleTransfer,
+      id: "ep01-transfer-04",
+      description: "木星圏脱出",
+      timestamp: "09:08",
+      verdict: "plausible",
+    },
+  ];
+
+  it("renders a scene-timeline container", () => {
+    const html = renderSceneTimeline(transfersWithTimestamps);
+    assert.ok(html.includes('class="scene-timeline"'));
+  });
+
+  it("filters out transfers with 該当なし timestamps", () => {
+    const html = renderSceneTimeline(transfersWithTimestamps);
+    assert.ok(!html.includes("ホーマン遷移基準値"), "should exclude reference transfer with 該当なし");
+    assert.ok(!html.includes("150時間通常ルート"), "should exclude transfer with 該当なし");
+    assert.ok(html.includes("72時間高速遷移"), "should include transfer with real timestamp");
+    assert.ok(html.includes("木星圏脱出"), "should include transfer with real timestamp");
+  });
+
+  it("sorts transfers by timestamp", () => {
+    const html = renderSceneTimeline(transfersWithTimestamps);
+    const pos05 = html.indexOf("72時間高速遷移");
+    const pos09 = html.indexOf("木星圏脱出");
+    assert.ok(pos05 < pos09, "05:30 transfer should come before 09:08 transfer");
+  });
+
+  it("renders verdict badges", () => {
+    const html = renderSceneTimeline(transfersWithTimestamps);
+    assert.ok(html.includes("verdict-conditional"), "should have conditional verdict badge");
+    assert.ok(html.includes("verdict-plausible"), "should have plausible verdict badge");
+  });
+
+  it("renders clickable timestamp links with video cards", () => {
+    const cards: VideoCard[] = [{ provider: "youtube", id: "CQ_OkDjEwRk" }];
+    const html = renderSceneTimeline(transfersWithTimestamps, cards);
+    assert.ok(html.includes("youtube.com/watch"), "should have YouTube timestamp link");
+    assert.ok(html.includes("t=330"), "05:30 = 330 seconds");
+    assert.ok(html.includes("t=548"), "09:08 = 548 seconds");
+  });
+
+  it("renders timestamps as plain text without video cards", () => {
+    const html = renderSceneTimeline(transfersWithTimestamps);
+    assert.ok(html.includes("(05:30)"), "should show timestamp as plain text");
+  });
+
+  it("returns empty string when no transfers have real timestamps", () => {
+    const refOnly: TransferAnalysis[] = [
+      {
+        ...sampleTransfer,
+        timestamp: "該当なし（参考計算）",
+        verdict: "reference",
+      },
+    ];
+    const html = renderSceneTimeline(refOnly);
+    assert.strictEqual(html, "");
+  });
+
+  it("includes section heading", () => {
+    const html = renderSceneTimeline(transfersWithTimestamps);
+    assert.ok(html.includes("シーンタイムライン"));
+  });
+
+  it("links transfer descriptions as anchors to transfer sections", () => {
+    const html = renderSceneTimeline(transfersWithTimestamps);
+    assert.ok(html.includes('href="#ep01-transfer-02"'), "should link to transfer section");
+    assert.ok(html.includes('href="#ep01-transfer-04"'), "should link to transfer section");
+  });
+
+  it("handles timestamp ranges (takes first timestamp)", () => {
+    const rangeTransfers: TransferAnalysis[] = [
+      {
+        ...sampleTransfer,
+        id: "ep02-transfer-03",
+        description: "太陽中心遷移軌道",
+        timestamp: "09:08 - 13:45",
+        verdict: "conditional",
+      },
+    ];
+    const html = renderSceneTimeline(rangeTransfers);
+    assert.ok(html.includes("太陽中心遷移軌道"));
+    assert.ok(html.includes("09:08"));
+  });
+
+  it("integrates into renderEpisode output", () => {
+    const report: EpisodeReport = {
+      episode: 1,
+      title: "テスト",
+      summary: "テスト概要",
+      transfers: transfersWithTimestamps,
+      videoCards: [{ provider: "youtube", id: "CQ_OkDjEwRk" }],
+    };
+    const html = renderEpisode(report);
+    assert.ok(html.includes("scene-timeline"), "episode page should include scene timeline");
+    assert.ok(html.includes("シーンタイムライン"), "episode page should include timeline heading");
   });
 });

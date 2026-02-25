@@ -1,6 +1,6 @@
 # Task 170: Scene Timeline (Timestamp → Maneuver → Verdict)
 
-Status: TODO
+Status: DONE
 
 ## Goal
 Add a compact visual timeline per episode mapping video timestamps to maneuvers and plausibility verdicts. Helps readers quickly see "what happens when" and "was it plausible?"
