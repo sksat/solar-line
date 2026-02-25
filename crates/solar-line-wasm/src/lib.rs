@@ -1734,6 +1734,98 @@ pub fn elements_to_state_vector(
 }
 
 // ---------------------------------------------------------------------------
+// Relativistic corrections
+// ---------------------------------------------------------------------------
+
+use solar_line_core::relativistic;
+
+/// Lorentz factor γ for a given velocity (km/s).
+#[wasm_bindgen]
+pub fn lorentz_factor(v_km_s: f64) -> f64 {
+    relativistic::lorentz_factor(KmPerSec(v_km_s))
+}
+
+/// β = v/c for a given velocity (km/s).
+#[wasm_bindgen]
+pub fn beta(v_km_s: f64) -> f64 {
+    relativistic::beta(KmPerSec(v_km_s))
+}
+
+/// Relativistic effects summary for a given velocity.
+/// Returns JSON: { gamma, beta, timeDilationPpm, keCorrectionPpm }
+#[wasm_bindgen]
+pub fn relativistic_effects_summary(v_km_s: f64) -> Result<JsValue, JsError> {
+    let (gamma, beta_val, td_ppm, ke_ppm) = relativistic::effects_summary(KmPerSec(v_km_s));
+
+    #[derive(Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct Summary {
+        gamma: f64,
+        beta: f64,
+        time_dilation_ppm: f64,
+        ke_correction_ppm: f64,
+    }
+
+    let result = Summary {
+        gamma,
+        beta: beta_val,
+        time_dilation_ppm: td_ppm,
+        ke_correction_ppm: ke_ppm,
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Relativistic brachistochrone transfer times.
+/// Returns JSON: { coordinateTimeSec, properTimeSec, timeDilationSec }
+#[wasm_bindgen]
+pub fn relativistic_brachistochrone_times(
+    distance_km: f64,
+    accel_km_s2: f64,
+) -> Result<JsValue, JsError> {
+    let (t_coord, t_proper) = relativistic::brachistochrone_times(Km(distance_km), accel_km_s2);
+
+    #[derive(Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct Times {
+        coordinate_time_sec: f64,
+        proper_time_sec: f64,
+        time_dilation_sec: f64,
+    }
+
+    let result = Times {
+        coordinate_time_sec: t_coord.value(),
+        proper_time_sec: t_proper.value(),
+        time_dilation_sec: t_coord.value() - t_proper.value(),
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Peak velocity at midpoint of a relativistic brachistochrone transfer (km/s).
+#[wasm_bindgen]
+pub fn relativistic_brachistochrone_peak_velocity(distance_km: f64, accel_km_s2: f64) -> f64 {
+    relativistic::brachistochrone_peak_velocity(Km(distance_km), accel_km_s2).value()
+}
+
+/// Classical Tsiolkovsky ΔV (km/s).
+#[wasm_bindgen]
+pub fn classical_delta_v(exhaust_velocity_km_s: f64, mass_ratio: f64) -> f64 {
+    relativistic::classical_delta_v(KmPerSec(exhaust_velocity_km_s), mass_ratio).value()
+}
+
+/// Relativistic rocket equation ΔV (km/s) — Ackeret equation.
+#[wasm_bindgen]
+pub fn relativistic_delta_v(exhaust_velocity_km_s: f64, mass_ratio: f64) -> f64 {
+    relativistic::relativistic_delta_v(KmPerSec(exhaust_velocity_km_s), mass_ratio).value()
+}
+
+/// Fractional correction between relativistic and classical ΔV.
+/// Returns (classical - relativistic) / classical.
+#[wasm_bindgen]
+pub fn delta_v_correction_fraction(exhaust_velocity_km_s: f64, mass_ratio: f64) -> f64 {
+    relativistic::delta_v_correction_fraction(KmPerSec(exhaust_velocity_km_s), mass_ratio)
+}
+
+// ---------------------------------------------------------------------------
 // WASM tests (run with wasm-pack test)
 // ---------------------------------------------------------------------------
 

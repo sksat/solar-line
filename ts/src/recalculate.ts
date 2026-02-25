@@ -25,6 +25,7 @@ import { analyzeEpisode4 } from "./ep04-analysis.ts";
 import { analyzeEpisode5 } from "./ep05-analysis.ts";
 import { generateCrossEpisodeReport } from "./cross-episode-analysis.ts";
 import { generateShipKestrelReport } from "./ship-kestrel-analysis.ts";
+import { analyzeRelativisticEffects } from "./relativistic-analysis.ts";
 import type { EpisodeReport } from "./report-types.ts";
 
 // --- CLI argument parsing ---
@@ -230,6 +231,23 @@ if (regenerateSummaries && !episodeFilter) {
 } else if (!regenerateSummaries && !episodeFilter) {
   console.log("--- Summary Reports ---");
   console.log("  Skipped (use --regenerate-summaries to regenerate)");
+  console.log();
+}
+
+// 4. Cross-episode relativistic effects analysis
+if (!episodeFilter) {
+  console.log("--- Relativistic Effects Analysis ---");
+  process.stdout.write("  Computing relativistic corrections...");
+  const { result: relData, durationMs: relMs } = timeExec("relativistic", analyzeRelativisticEffects);
+  console.log(` done (${relMs}ms)`);
+  writeJson(path.join(calcDir, "relativistic_effects.json"), {
+    _meta: {
+      generatedAt: new Date().toISOString(),
+      reproductionCommand: "npm run recalculate",
+      durationMs: relMs,
+    },
+    ...relData,
+  });
   console.log();
 }
 

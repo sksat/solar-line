@@ -1,0 +1,174 @@
+{
+  "_meta": {
+    "generatedAt": "2026-02-25T08:10:56.776Z",
+    "reproductionCommand": "npm run recalculate",
+    "durationMs": 0
+  },
+  "transfers": [
+    {
+      "episode": 1,
+      "transferId": "ep01-brach-closest",
+      "label": "火星→ガニメデ（最接近、72h）",
+      "distanceKm": 550630800,
+      "distanceAU": 3.680739554804372,
+      "accelKms2": 0.032783136145404665,
+      "accelG": 3.3429495439731878,
+      "classicalTimeSec": 259200,
+      "classicalPeakVelocityKms": 4248.694444444444,
+      "classicalDeltaVKms": 8497.388888888889,
+      "relativistic": {
+        "peakVelocityKms": 4248.374470538341,
+        "betaPeak": 0.0141710518632805,
+        "gammaPeak": 1.0001004244810452,
+        "timeDilationPpm": 100.41439698149634,
+        "timeDilationSec": 8.676544463232858,
+        "coordinateTimeSec": 259206.50742472665,
+        "properTimeSec": 259197.8308802634,
+        "keCorrectionPpm": 150.63924302682886,
+        "dvCorrectionFraction": 0.000267712584777992,
+        "dvCorrectionPpm": 267.712584777992
+      },
+      "verdict": "測定可能な相対論的効果（β = 1-5%）— 補正は0.1%未満、航法精度に影響なし"
+    },
+    {
+      "episode": 1,
+      "transferId": "ep01-brach-mid",
+      "label": "火星→ガニメデ（中間距離、72h）",
+      "distanceKm": 811250592.4784523,
+      "distanceAU": 5.4228752634141095,
+      "accelKms2": 0.04829976568920827,
+      "accelG": 4.925205415632074,
+      "classicalTimeSec": 259200,
+      "classicalPeakVelocityKms": 6259.649633321392,
+      "classicalDeltaVKms": 12519.299266642784,
+      "relativistic": {
+        "peakVelocityKms": 6258.626459963203,
+        "betaPeak": 0.020876530723008394,
+        "gammaPeak": 1.0002179860236633,
+        "timeDilationPpm": 217.93851611273675,
+        "timeDilationSec": 18.83337664839928,
+        "coordinateTimeSec": 259214.12510940977,
+        "properTimeSec": 259195.29173276137,
+        "keCorrectionPpm": 326.9909137089133,
+        "dvCorrectionFraction": 0.0005808908629809596,
+        "dvCorrectionPpm": 580.8908629809596
+      },
+      "verdict": "測定可能な相対論的効果（β = 1-5%）— 補正は0.1%未満、航法精度に影響なし"
+    },
+    {
+      "episode": 2,
+      "transferId": "ep02-ballistic-cruise",
+      "label": "木星系→土星/エンケラドス（弾道巡航 455日, ~1500 km/s）",
+      "distanceKm": 58968000000,
+      "distanceAU": 394.1767334259257,
+      "accelKms2": 0,
+      "accelG": 0,
+      "classicalTimeSec": 39312000,
+      "classicalPeakVelocityKms": 1500,
+      "classicalDeltaVKms": 0,
+      "relativistic": {
+        "peakVelocityKms": 1500,
+        "betaPeak": 0.005003461427972281,
+        "gammaPeak": 1.0000125175481602,
+        "timeDilationPpm": 12.517391473232387,
+        "timeDilationSec": 492.08369359571157,
+        "coordinateTimeSec": 39312000,
+        "properTimeSec": 39311507.916306406,
+        "keCorrectionPpm": 18.77636385971826,
+        "dvCorrectionFraction": 0,
+        "dvCorrectionPpm": 0
+      },
+      "verdict": "微小な相対論的効果（β ≈ 0.5%）— 455日間の時間遅れ ≈ 0.5秒"
+    },
+    {
+      "episode": 3,
+      "transferId": "ep03-brach-143h",
+      "label": "エンケラドス→ティタニア（143h）",
+      "distanceKm": 1438930000,
+      "distanceAU": 9.618652947845735,
+      "accelKms2": 0.021718137685503652,
+      "accelG": 2.214633711359501,
+      "classicalTimeSec": 514800,
+      "classicalPeakVelocityKms": 5590.24864024864,
+      "classicalDeltaVKms": 11180.49728049728,
+      "relativistic": {
+        "peakVelocityKms": 5589.519836020104,
+        "betaPeak": 0.018644631266941693,
+        "gammaPeak": 1.0001738564661387,
+        "timeDilationPpm": 173.8262453219175,
+        "timeDilationSec": 29.832991606614087,
+        "coordinateTimeSec": 514822.37484088965,
+        "properTimeSec": 514792.54184928304,
+        "keCorrectionPpm": 260.79225524378023,
+        "dvCorrectionFraction": 0.000463359459022027,
+        "dvCorrectionPpm": 463.35945902202695
+      },
+      "verdict": "測定可能な相対論的効果（β = 1-5%）— 補正は0.1%未満、航法精度に影響なし"
+    },
+    {
+      "episode": 4,
+      "transferId": "ep04-brach-65pct",
+      "label": "ティタニア→地球（推力65%、~30日）",
+      "distanceKm": 2722862130,
+      "distanceAU": 18.20120912991043,
+      "accelKms2": 0.0016211218099851394,
+      "accelG": 0.1653084192853971,
+      "classicalTimeSec": 2592000,
+      "classicalPeakVelocityKms": 2100.9738657407406,
+      "classicalDeltaVKms": 4201.947731481481,
+      "relativistic": {
+        "peakVelocityKms": 2100.9351719173483,
+        "betaPeak": 0.007007965396905844,
+        "gammaPeak": 1.0000245566940194,
+        "timeDilationPpm": 24.55609100293632,
+        "timeDilationSec": 21.216905480716377,
+        "coordinateTimeSec": 2592015.9126830567,
+        "properTimeSec": 2591994.695777576,
+        "keCorrectionPpm": 36.83519261254986,
+        "dvCorrectionFraction": 0.00006547937192790708,
+        "dvCorrectionPpm": 65.47937192790708
+      },
+      "verdict": "微小な相対論的効果（β < 1%）— 補正は0.01%未満、実用上無視可能"
+    },
+    {
+      "episode": 5,
+      "transferId": "ep05-brach-300t",
+      "label": "天王星→地球（300t、brachistochrone）",
+      "distanceKm": 2722862130,
+      "distanceAU": 18.20120912991043,
+      "accelKms2": 0.03266666666666666,
+      "accelG": 3.3310729623945656,
+      "classicalTimeSec": 577418.1235359305,
+      "classicalPeakVelocityKms": 9431.162684420198,
+      "classicalDeltaVKms": 18862.325368840397,
+      "relativistic": {
+        "peakVelocityKms": 9427.664202177193,
+        "betaPeak": 0.03144730279431244,
+        "gammaPeak": 1.0004948334745898,
+        "timeDilationPpm": 494.58873552732376,
+        "timeDilationSec": 95.23487038863823,
+        "coordinateTimeSec": 577489.5505721403,
+        "properTimeSec": 577394.3157017516,
+        "keCorrectionPpm": 742.3114118849661,
+        "dvCorrectionFraction": 0.0013174698014483072,
+        "dvCorrectionPpm": 1317.4698014483072
+      },
+      "verdict": "測定可能な相対論的効果（β = 1-5%）— 補正は0.1%未満、航法精度に影響なし"
+    }
+  ],
+  "summary": {
+    "maxBetaPeak": 0.03144730279431244,
+    "maxBetaPercent": 3.144730279431244,
+    "maxGamma": 1.0004948334745898,
+    "maxTimeDilationPpm": 494.58873552732376,
+    "maxDvCorrectionPpm": 1317.4698014483072,
+    "cumulativeTimeDilationSec": 665.8783821833124,
+    "cumulativeTimeDilationMin": 11.09797303638854,
+    "conclusion": "全転送において相対論的補正は0.1%未満。最大β = 3.145%c、最大時間遅れ = 494.6 ppm。航法計算への影響は無視可能であり、古典力学による分析は妥当。全行程（479日）累積時間遅れ ≈ 665.9秒（11.10分）。"
+  },
+  "parameters": {
+    "speedOfLightKms": 299792.458,
+    "exhaustVelocityKms": 9806.65,
+    "ispSeconds": 1000000
+  }
+}

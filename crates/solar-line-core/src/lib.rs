@@ -10,6 +10,7 @@ pub mod orbital_3d;
 pub mod orbits;
 pub mod plasmoid;
 pub mod propagation;
+pub mod relativistic;
 /// solar-line-core: Orbital mechanics analysis for SOLAR LINE 考察.
 ///
 /// Provides type-safe orbital mechanics primitives for analyzing
