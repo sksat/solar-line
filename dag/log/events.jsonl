@@ -322,3 +322,4 @@
 {"timestamp":"2026-02-25T01:05:14.779Z","action":"node_added","nodeId":"task.168_ep05_youtube","detail":"Task168:EP05YouTube監視"}
 {"timestamp":"2026-02-25T01:05:17.862Z","action":"status_changed","nodeId":"task.166_memory_cleanup","detail":"pending → valid"}
 {"timestamp":"2026-02-25T01:05:18.040Z","action":"status_changed","nodeId":"task.167_naming_adr","detail":"pending → valid"}
+{"timestamp":"2026-02-25T01:22:45.683Z","action":"node_added","nodeId":"task.169","detail":"Inline glossary tooltips"}
