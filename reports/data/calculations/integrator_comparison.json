@@ -1,0 +1,130 @@
+{
+  "_meta": {
+    "generatedAt": "2026-02-25",
+    "task": 181,
+    "description": "Cross-integrator comparison: RK4 (fixed-step) vs RK45 Dormand-Prince (adaptive) vs Störmer-Verlet (symplectic) for all episode transfers",
+    "reproductionCommand": "cargo test --test episode_integrator_comparison -- --nocapture"
+  },
+  "summary": {
+    "conclusion": "RK4 and RK45 agree to high precision across all episode transfers. Position differences are <0.02% relative for all brachistochrone legs. Energy conservation is excellent for both. Störmer-Verlet shows bounded energy oscillation for EP02 ballistic coast. No episode analysis results need updating.",
+    "recommendation": "Current RK4 results are fully validated. Adaptive RK45 is 7-15× cheaper in derivative evaluations while maintaining equal or better accuracy."
+  },
+  "comparisons": [
+    {
+      "episode": 1,
+      "transfer": "Brachistochrone Mars→Jupiter (72h)",
+      "rk4_dt_seconds": 60,
+      "rk45_n_eval": 1134,
+      "rk4_n_eval_approx": 17280,
+      "position_diff_km": 84962,
+      "position_diff_relative": 1.54e-4,
+      "speed_diff_km_s": 0.656,
+      "heliocentric_r_diff_km": 78627,
+      "notes": "Position difference is 0.015% of 550M km journey. RK45 uses 15× fewer evaluations."
+    },
+    {
+      "episode": 1,
+      "transfer": "Brachistochrone flip point (36h)",
+      "rk4_speed_at_flip_km_s": 4272.1,
+      "rk45_speed_at_flip_km_s": 4272.7,
+      "speed_diff_km_s": 0.656,
+      "speed_diff_relative": 1.53e-4,
+      "notes": "Integrators agree on peak cruise velocity to 0.015%."
+    },
+    {
+      "episode": 2,
+      "transfer": "Ballistic Jupiter→Saturn (455 days)",
+      "rk4_dt_seconds": 3600,
+      "rk45_n_eval": 3283,
+      "rk45_n_accept": 469,
+      "rk45_n_reject": 0,
+      "position_diff_km": 0,
+      "position_diff_relative": 3.01e-15,
+      "speed_diff_km_s": 0.0,
+      "rk4_energy_drift": 7.93e-14,
+      "rk45_energy_drift": 2.16e-14,
+      "notes": "Both integrators agree to machine precision for ballistic coast. Zero rejected steps for RK45."
+    },
+    {
+      "episode": 2,
+      "transfer": "Ballistic Jupiter→Saturn — Störmer-Verlet comparison",
+      "integrators": ["RK4", "Störmer-Verlet"],
+      "dt_seconds": 3600,
+      "position_diff_km": 1,
+      "position_diff_relative": 3.52e-10,
+      "rk4_energy_drift": 7.93e-14,
+      "symplectic_energy_drift": 2.53e-9,
+      "notes": "Symplectic integrator shows bounded energy oscillation as expected. Position agreement sub-km for 455-day coast."
+    },
+    {
+      "episode": 2,
+      "transfer": "All integrators reach Saturn",
+      "rk4_final_r_km": 1257761128,
+      "rk45_final_r_km": 1257761128,
+      "sv_final_r_km": 1257761128,
+      "saturn_orbit_ratio": 0.877,
+      "notes": "All three integrators agree on final heliocentric distance to within rounding."
+    },
+    {
+      "episode": 3,
+      "transfer": "Brachistochrone Saturn→Uranus (143h 12m)",
+      "rk4_dt_seconds": 60,
+      "rk45_n_eval": 1162,
+      "position_diff_km": 111616,
+      "position_diff_relative": 7.76e-5,
+      "speed_diff_km_s": 0.433,
+      "notes": "Position difference is 0.008% of 1.44B km journey. Well within acceptable bounds."
+    },
+    {
+      "episode": 3,
+      "transfer": "Navigation crisis midpoint comparison",
+      "midpoint_position_diff_km": 0,
+      "navigation_error_budget_km": 14360000,
+      "notes": "Integrator difference at midpoint is negligible compared to the 14.36M km navigation error budget. The navigation crisis analysis is robust against integrator choice."
+    },
+    {
+      "episode": 4,
+      "transfer": "Uranus departure at 65% thrust (48000t)",
+      "position_diff_km": 0.0,
+      "speed_diff_km_s": 0.0,
+      "notes": "Low-thrust, short-duration burn shows perfect integrator agreement."
+    },
+    {
+      "episode": 5,
+      "transfer": "Uranus escape prograde burn (12h, ΔV 3800 km/s)",
+      "rk45_n_eval": 287,
+      "position_diff_km": 0,
+      "position_diff_relative": 2.63e-11,
+      "speed_diff_km_s": 0.0,
+      "notes": "Constant prograde thrust shows excellent integrator agreement."
+    },
+    {
+      "episode": 5,
+      "transfer": "Main deceleration burn (35h, ΔV 7600 km/s)",
+      "rk4_dt_seconds": 10,
+      "rk45_n_eval": 504,
+      "position_diff_km": 12625,
+      "position_diff_relative": 6.68e-5,
+      "speed_diff_km_s": 0.202,
+      "notes": "Largest single ΔV in the series. Position difference is 0.007% relative. RK4 needed 10s steps to maintain accuracy at these extreme velocities."
+    },
+    {
+      "episode": 5,
+      "transfer": "LEO insertion (0.2h, ΔV 7.67 km/s)",
+      "position_diff_km": 1.28,
+      "speed_diff_km_s": 0.0036,
+      "notes": "Short Earth-centric burn shows sub-km position agreement."
+    }
+  ],
+  "computationCost": {
+    "ep01_brachistochrone_72h": {
+      "rk4_steps": 4320,
+      "rk4_evals": 17280,
+      "rk45_evals": 1134,
+      "rk45_accepted": 122,
+      "rk45_rejected": 40,
+      "costRatio": 0.07,
+      "notes": "RK45 is ~15× cheaper than RK4(dt=60s) for this scenario."
+    }
+  }
+}
