@@ -108,13 +108,13 @@ Isp が同等であれば質量比は変わらない。つまり**エンジン�
 土星-天王星間の平均距離はおよそ10 AU ≈ 1.5×10⁹ km である。これを33時間（= 118,800 s）で結ぶBrachistochrone遷移に必要な加速度とΔVを計算する。
 
 **加速度の推定:**
-$$a = \frac{2d}{t^2} = \frac{2 \times 1.5 \times 10^9\ \mathrm{km}}{(118800\ \mathrm{s})^2} \approx 0.21\ \mathrm{m/s^2} \approx 0.022g$$
+$$a = \frac{4d}{t^2} = \frac{4 \times 1.5 \times 10^{12}\ \mathrm{m}}{(118{,}800\ \mathrm{s})^2} \approx 0.425\ \mathrm{m/s^2} \approx 0.043g$$
 
 **片道ΔV（加速フェーズのみ）:**
-$$\Delta V_{\text{半程}} = a \times \frac{t}{2} = 0.21 \times 59400 \approx 12.5\ \mathrm{km/s}$$
+$$\Delta V_{\text{半程}} = a \times \frac{t}{2} = 0.425 \times 59{,}400 \approx 25.2\ \mathrm{km/s}$$
 
 **全行程ΔV（加速＋減速）:**
-$$\Delta V_{\text{合計}} = 2 \times 12.5 = 25\ \mathrm{km/s}$$
+$$\Delta V_{\text{合計}} = 2 \times 25.2 \approx 50\ \mathrm{km/s}$$
 
 ただし、この艦隊が既に中間点付近から減速フェーズに入っていた場合や、出発地点が土星軌道上でなくより遠方だった場合はΔVはさらに大きくなる。逆に、タイタニアへの到着後に捕捉軌道に入るための追加ΔVも必要である。
 
