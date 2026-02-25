@@ -1096,9 +1096,14 @@ export function renderVideoCards(cards: VideoCard[]): string {
 }
 
 /** Render a single dialogue quote */
-/** Parse a timestamp string (MM:SS or HH:MM:SS) to seconds */
+/** Parse a timestamp string (MM:SS or HH:MM:SS) to seconds.
+ *  Also handles range formats like "02:22-04:09" or "00:00 - 19:20（全編）"
+ *  by extracting and parsing just the first timestamp. */
 export function parseTimestamp(ts: string): number {
-  const parts = ts.split(":").map(Number);
+  // Extract first MM:SS or HH:MM:SS pattern from the string
+  const match = ts.match(/(\d{1,2}:\d{2}(?::\d{2})?)/);
+  if (!match) return 0;
+  const parts = match[1].split(":").map(Number);
   if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
   if (parts.length === 2) return parts[0] * 60 + parts[1];
   return 0;

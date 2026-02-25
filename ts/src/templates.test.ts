@@ -773,6 +773,26 @@ describe("parseTimestamp", () => {
   it("returns 0 for invalid input", () => {
     assert.equal(parseTimestamp(""), 0);
   });
+
+  it("extracts first timestamp from range format (no spaces)", () => {
+    assert.equal(parseTimestamp("02:22-04:09"), 142);
+  });
+
+  it("extracts first timestamp from range format (with spaces)", () => {
+    assert.equal(parseTimestamp("00:00 - 19:20（全編）"), 0);
+  });
+
+  it("extracts first timestamp from range with description", () => {
+    assert.equal(parseTimestamp("02:50-23:21（航路計画〜ノズル消失〜「この船はもう飛べません」）"), 170);
+  });
+
+  it("extracts first timestamp from range with spaces and description", () => {
+    assert.equal(parseTimestamp("09:08 - 13:45"), 548);
+  });
+
+  it("handles non-timestamp text gracefully", () => {
+    assert.equal(parseTimestamp("該当なし（参考計算）"), 0);
+  });
 });
 
 // --- timestampLink ---
@@ -811,6 +831,26 @@ describe("timestampLink", () => {
     const result = timestampLink("01:00", cards);
     assert.ok(result.includes("youtube.com"));
     assert.ok(!result.includes("nicovideo.jp"));
+  });
+
+  it("handles range timestamps without producing NaN (YouTube)", () => {
+    const cards: VideoCard[] = [{ provider: "youtube", id: "CQ_OkDjEwRk" }];
+    const result = timestampLink("00:00 - 19:20（全編）", cards);
+    assert.ok(!result.includes("NaN"), `Expected no NaN in: ${result}`);
+    assert.ok(result.includes("&t=0"));
+  });
+
+  it("handles range timestamps without producing NaN (Niconico)", () => {
+    const cards: VideoCard[] = [{ provider: "niconico", id: "sm45987761" }];
+    const result = timestampLink("02:22-04:09（航路ブリーフィング〜天王星脱出）", cards);
+    assert.ok(!result.includes("NaN"), `Expected no NaN in: ${result}`);
+    assert.ok(result.includes("?from=142"));
+  });
+
+  it("handles non-timestamp text without producing NaN", () => {
+    const cards: VideoCard[] = [{ provider: "youtube", id: "test" }];
+    const result = timestampLink("該当なし（参考計算）", cards);
+    assert.ok(!result.includes("NaN"), `Expected no NaN in: ${result}`);
   });
 });
 
