@@ -94,7 +94,7 @@ summary: SOLAR LINE 全5話に登場する科学的数値・物理現象を実�
       "episode": 3,
       "depicted": "ΔV比 = 1.31（EP1→EP3）",
       "reference": "理論比 = 距離比/時間比 = 2.61/1.99 = 1.31",
-      "source": "ΔV = 2d/t",
+      "source": "ΔV = 4d/t",
       "accuracyPercent": 100,
       "status": "verified"
     },
@@ -112,7 +112,7 @@ summary: SOLAR LINE 全5話に登場する科学的数値・物理現象を実�
       "episode": 1,
       "depicted": "TSF-43R Orion Micropulser",
       "reference": "D-He³反応: 理論Isp 10⁵〜10⁶ s",
-      "source": "[Bussard & DeLauer (1958)](https://ntrs.nasa.gov/citations/19680007533)",
+      "source": "[Bussard & DeLauer, *Nuclear Rocket Propulsion*, McGraw-Hill, 1958](https://books.google.com/books/about/Nuclear_Rocket_Propulsion.html?id=Q6RxAAAAMAAJ)",
       "accuracyPercent": null,
       "status": "approximate"
     },
@@ -178,9 +178,9 @@ summary: SOLAR LINE 全5話に登場する科学的数値・物理現象を実�
 
 SOLAR LINE の軌道遷移の大部分はBrachistochrone遷移（最短時間軌道）で描かれている。Brachistochrone遷移は連続推力で加速→折返し→減速する方式で、以下の方程式に従う:
 
-- **ΔV** = 2 × d / t（加速+減速の合計速度変化）
+- **ΔV** = 4 × d / t（加速+減速の合計速度変化）
 - **加速度** a = 4 × d / t²
-- **最大速度**（折返し点）= d / t
+- **最大速度**（折返し点）= 2 × d / t
 
 ここで d は距離、t は遷移時間。
 
