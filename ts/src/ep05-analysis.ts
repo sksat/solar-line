@@ -543,6 +543,96 @@ export function oberthEffectAnalysis() {
   };
 }
 
+// ─── Navigation Accuracy Analysis ───
+
+/**
+ * Analyze the autonomous stellar navigation accuracy claim:
+ * "自律航法のみで天王星から飛んできて20km" — ケイ (16:18)
+ *
+ * After traversing 18.2 AU (2,722,861,977 km) from Uranus to Earth using only
+ * stellar observation (no ground station support), Kestrel achieved 20 km
+ * positional accuracy. This analysis quantifies how extraordinary this is.
+ *
+ * Source: ep05 16:18 — ケイ: "自律航法のみで天王星から飛んできて20kmです。
+ *         研究者が聞いたら泣くと思いますよ"
+ */
+export function navigationAccuracyAnalysis() {
+  const distanceKm = UE_DISTANCE_SCENARIOS.closest; // 18.2 AU
+  const positionErrorKm = 20;
+
+  // Angular accuracy: atan(error / distance)
+  const angularAccuracyRad = Math.atan(positionErrorKm / distanceKm);
+  const angularAccuracyDeg = angularAccuracyRad * (180 / Math.PI);
+  const angularAccuracyArcsec = angularAccuracyDeg * 3600;
+  const angularAccuracyNrad = angularAccuracyRad * 1e9;
+
+  // Relative precision
+  const relativePrecision = positionErrorKm / distanceKm;
+
+  // EP03 comparison: 1.23° navigation crisis
+  const ep03AngleDeg = 1.23;
+  const ep03AngleRad = ep03AngleDeg * (Math.PI / 180);
+  const ep03ErrorKm = 14_360_000; // stated in EP03
+  const ep05VsEp03AngleRatio = ep03AngleRad / angularAccuracyRad;
+
+  // Real-world comparisons
+  const comparisons = {
+    newHorizonsPluto: {
+      label: "New Horizons 冥王星フライバイ (2015, DSN支援)",
+      distanceKm: 33 * AU_KM, // ~33 AU
+      errorKm: 184,
+      autonomous: false,
+      angularAccuracyRad: Math.atan(184 / (33 * AU_KM)),
+    },
+    newHorizonsStellar: {
+      label: "New Horizons 自律恒星航法テスト (2025)",
+      distanceKm: 58 * AU_KM, // ~58 AU
+      errorKm: 6_600_000,
+      autonomous: true,
+      angularAccuracyRad: Math.atan(6_600_000 / (58 * AU_KM)),
+    },
+    dsnDDOR: {
+      label: "DSN DDOR角度精度",
+      angularAccuracyNrad: 100, // ~100 nrad operational
+    },
+  };
+
+  const vsNewHorizonsPluto = comparisons.newHorizonsPluto.errorKm / positionErrorKm;
+  const vsNewHorizonsStellar = comparisons.newHorizonsStellar.errorKm / positionErrorKm;
+  const vsDsnDDOR = comparisons.dsnDDOR.angularAccuracyNrad / angularAccuracyNrad;
+
+  // Hubble angular resolution comparison (~0.05 arcsec)
+  const hubbleArcsec = 0.05;
+  const vsHubble = hubbleArcsec / angularAccuracyArcsec;
+
+  // Human eye angular resolution (~60 arcsec)
+  const humanEyeArcsec = 60;
+  const vsHumanEye = humanEyeArcsec / angularAccuracyArcsec;
+
+  return {
+    distanceKm,
+    distanceAU: distanceInAU(distanceKm),
+    positionErrorKm,
+    angularAccuracyRad,
+    angularAccuracyDeg,
+    angularAccuracyArcsec,
+    angularAccuracyNrad,
+    relativePrecision,
+    ep03Comparison: {
+      angleDeg: ep03AngleDeg,
+      angleRad: ep03AngleRad,
+      errorKm: ep03ErrorKm,
+      ep05VsEp03Ratio: ep05VsEp03AngleRatio,
+    },
+    realWorldComparisons: comparisons,
+    vsNewHorizonsPluto,
+    vsNewHorizonsStellar,
+    vsDsnDDOR,
+    vsHubble,
+    vsHumanEye,
+  };
+}
+
 // ─── Full Analysis ───
 
 /**
@@ -557,6 +647,7 @@ export function analyzeEpisode5() {
   const capture = earthCaptureScenarios();
   const nozzle = nozzleLifespanAnalysis();
   const oberth = oberthEffectAnalysis();
+  const navAccuracy = navigationAccuracyAnalysis();
 
   return {
     hohmann,
@@ -567,6 +658,7 @@ export function analyzeEpisode5() {
     earthCapture: capture,
     nozzleLifespan: nozzle,
     oberthEffect: oberth,
+    navigationAccuracy: navAccuracy,
     preliminary: false,
   };
 }

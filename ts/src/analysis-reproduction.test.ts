@@ -543,6 +543,39 @@ describe("EP05 reproduction: burn budget", () => {
   });
 });
 
+describe("EP05 reproduction: navigation accuracy", () => {
+  const r = analyzeEpisode5();
+  const nav = r.navigationAccuracy;
+
+  it("distance = 18.2 AU (2,722,861,977 km)", () => {
+    assertClose(nav.distanceAU, 18.201, "distanceAU", 0.01);
+  });
+
+  it("angular accuracy ≈ 7.35 nrad (0.00152 arcsec)", () => {
+    assertClose(nav.angularAccuracyNrad, 7.345, "angularAccuracyNrad", 0.01);
+    assertClose(nav.angularAccuracyArcsec, 0.001515, "angularAccuracyArcsec", 0.01);
+  });
+
+  it("relative precision ≈ 7.35 × 10⁻⁹", () => {
+    assert.ok(nav.relativePrecision < 1e-8, "relativePrecision should be < 1e-8");
+    assert.ok(nav.relativePrecision > 1e-10, "relativePrecision should be > 1e-10");
+  });
+
+  it("EP03 comparison: ~2.9 million times better", () => {
+    assert.ok(nav.ep03Comparison.ep05VsEp03Ratio > 2_500_000, "should be >2.5M times better than EP03");
+    assert.ok(nav.ep03Comparison.ep05VsEp03Ratio < 3_500_000, "should be <3.5M times better than EP03");
+  });
+
+  it("better than New Horizons Pluto (184 km with DSN)", () => {
+    assert.ok(nav.vsNewHorizonsPluto > 5, "should be >5x better than New Horizons Pluto");
+    assertClose(nav.vsNewHorizonsPluto, 9.2, "vsNewHorizonsPluto", 0.1);
+  });
+
+  it("far better than New Horizons autonomous stellar nav (~6.6M km)", () => {
+    assert.ok(nav.vsNewHorizonsStellar > 100_000, "should be >100,000x better");
+  });
+});
+
 // ============================================================
 // Cross-episode consistency checks
 // ============================================================
