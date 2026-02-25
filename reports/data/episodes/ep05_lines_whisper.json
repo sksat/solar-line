@@ -1,0 +1,2020 @@
+{
+  "schemaVersion": 1,
+  "videoId": "sm45987761",
+  "episode": 5,
+  "sourceSubtitle": {
+    "language": "ja",
+    "source": "whisper",
+    "rawContentHash": "cda0006256e6abf28b2168997e660d1daa1303711e610292ff735594569beac1",
+    "whisperModel": "medium"
+  },
+  "lines": [
+    {
+      "lineId": "ep05-line-001",
+      "startMs": 1780,
+      "endMs": 19020,
+      "text": "放り抜くモニターにて異常値骨格フレーム5番で亀裂が進行0.3マイクロメートル同じくフレーム7番0.2マイクロメートル 尖閣温度は安定していますが加速荷重による応力が骨格全体に蓄積しています",
+      "rawEntryIds": [
+        "whisper-0",
+        "whisper-1"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-002",
+      "startMs": 22560,
+      "endMs": 23200,
+      "text": "そうか",
+      "rawEntryIds": [
+        "whisper-2"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-003",
+      "startMs": 24360,
+      "endMs": 27460,
+      "text": "船が壊れていくのはどんな感じなんだ",
+      "rawEntryIds": [
+        "whisper-3"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-004",
+      "startMs": 27960,
+      "endMs": 31420,
+      "text": "あら心配してくれるんですか",
+      "rawEntryIds": [
+        "whisper-4"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-005",
+      "startMs": 32300,
+      "endMs": 42660,
+      "text": "お前がそう思うならそうなんだろう別におそらくあなたが想像するような痛みなどの感覚はありません",
+      "rawEntryIds": [
+        "whisper-5",
+        "whisper-6"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-006",
+      "startMs": 43360,
+      "endMs": 48540,
+      "text": "ただ大切なものが少しずつ壊れていくそういった感覚なのだと思います",
+      "rawEntryIds": [
+        "whisper-7"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-007",
+      "startMs": 50540,
+      "endMs": 52140,
+      "text": "思いますか",
+      "rawEntryIds": [
+        "whisper-8"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-008",
+      "startMs": 53220,
+      "endMs": 59540,
+      "text": "私には骨格フレームの応力も核融合路の露震温度も外部放射線の強度だって分かります",
+      "rawEntryIds": [
+        "whisper-9"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-009",
+      "startMs": 60120,
+      "endMs": 62540,
+      "text": "この船が感じていることならすべて",
+      "rawEntryIds": [
+        "whisper-10"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-010",
+      "startMs": 63300,
+      "endMs": 70500,
+      "text": "ですがこの船が壊れていくたびに感じているものが何なのか私には区別がつかないのです",
+      "rawEntryIds": [
+        "whisper-11"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-011",
+      "startMs": 71560,
+      "endMs": 73400,
+      "text": "無理させすぎちゃったな",
+      "rawEntryIds": [
+        "whisper-12"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-012",
+      "startMs": 81900,
+      "endMs": 107540,
+      "text": "次の船にはもっと優しくしてあげてくださいね今回の航路はここタイタニアから地球まで直接エントリーする航路になるもちろんそんなものは港湾航舎の航路体系には存在しないからあなたたちは無誘導で地球まで航行することになるわねまた無誘導か一度やったことがあると気が楽だね",
+      "rawEntryIds": [
+        "whisper-13",
+        "whisper-14",
+        "whisper-15",
+        "whisper-16",
+        "whisper-17",
+        "whisper-18"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-013",
+      "startMs": 107900,
+      "endMs": 114540,
+      "text": "おそらく地球はあなたたちが内苑に戻るのを阻止するためソーラーラインの航路誘導網を停破してくるはず",
+      "rawEntryIds": [
+        "whisper-19",
+        "whisper-20"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-014",
+      "startMs": 115340,
+      "endMs": 124540,
+      "text": "もちろんこれは地球にとっても大きな代償を伴う行為だけど100年以上維持されてきた港湾航舎体制を守るためならあの星は手段を選ばないでしょうね",
+      "rawEntryIds": [
+        "whisper-21",
+        "whisper-22",
+        "whisper-23"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-015",
+      "startMs": 125640,
+      "endMs": 134440,
+      "text": "あなたたちが内苑に戻ればそれは地球が管理できない船が確かに存在していることの証明になってしまうそれは彼らが一番恐れていることだから",
+      "rawEntryIds": [
+        "whisper-24",
+        "whisper-25"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-016",
+      "startMs": 136220,
+      "endMs": 141440,
+      "text": "レールから降ろされたわけか降ろされたのではなくレールのない場所を行くのです",
+      "rawEntryIds": [
+        "whisper-26",
+        "whisper-27"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-017",
+      "startMs": 142160,
+      "endMs": 146440,
+      "text": "今回は全ての区間で航星観測による自立広報を用います",
+      "rawEntryIds": [
+        "whisper-28"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-018",
+      "startMs": 147380,
+      "endMs": 155440,
+      "text": "そのため港湾航舎による誘導網には依存しません目的地は地球高度400kmの低軌道です",
+      "rawEntryIds": [
+        "whisper-29",
+        "whisper-30"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-019",
+      "startMs": 156320,
+      "endMs": 158440,
+      "text": "推定所要時間は507時間",
+      "rawEntryIds": [
+        "whisper-31"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-020",
+      "startMs": 159480,
+      "endMs": 164040,
+      "text": "世界は6日でできたのにそれを壊すのには3倍以上かかるのか",
+      "rawEntryIds": [
+        "whisper-32"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-021",
+      "startMs": 166260,
+      "endMs": 183040,
+      "text": "壊すのではありません開くのです水深炉の磁気のずるに蘇生変形があるため今回の航路では点火可能回数に制限がありますまず1度目の点火で天皇聖剣を脱出そのまま巡航速度まで加速して土星まで向かいます",
+      "rawEntryIds": [
+        "whisper-33",
+        "whisper-34",
+        "whisper-35"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-022",
+      "startMs": 183780,
+      "endMs": 214540,
+      "text": "通常であればオービタルカーテンの通過時点で航舎の地上局を使って位置誤差の構成を行いますが今回は土星のリング面の近房5kmをかすめながらエッジを観測し構成を行いますその後木星フライバイにより軌道修正と追加加速を実施しますこの時点での予定速度は1500km毎秒オーベルト効果によるエネルギー効率向上はおよそ3%程度となりますがのずる寿命が限られている現状では無視できない数値です",
+      "rawEntryIds": [
+        "whisper-36",
+        "whisper-37",
+        "whisper-38",
+        "whisper-39",
+        "whisper-40",
+        "whisper-41"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-023",
+      "startMs": 215160,
+      "endMs": 233680,
+      "text": "その後火星で3回目の点火を行い減速、地球緊縫で最後の点火を行い軌道投入します校舎誘導なしのためナビゲーションの位置誤差は大きく土星通過時点で最大1000kmとなる可能性がありますいつもの数十万倍の誤差か",
+      "rawEntryIds": [
+        "whisper-42",
+        "whisper-43",
+        "whisper-44"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-024",
+      "startMs": 237760,
+      "endMs": 238480,
+      "text": "そうです",
+      "rawEntryIds": [
+        "whisper-45"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-025",
+      "startMs": 239840,
+      "endMs": 241540,
+      "text": "信じるよ、お前のこと",
+      "rawEntryIds": [
+        "whisper-46"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-026",
+      "startMs": 246280,
+      "endMs": 247000,
+      "text": "そうですか",
+      "rawEntryIds": [
+        "whisper-47"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-027",
+      "startMs": 249380,
+      "endMs": 255300,
+      "text": "第一シークエンス完了、予定デルタアブイ達成、天皇星脱出軌道に乗りました",
+      "rawEntryIds": [
+        "whisper-48"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-028",
+      "startMs": 256180,
+      "endMs": 263000,
+      "text": "次の式点火は木星圏、375時間後です15日以上何もないのか?",
+      "rawEntryIds": [
+        "whisper-49",
+        "whisper-50"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-029",
+      "startMs": 263360,
+      "endMs": 267020,
+      "text": "何もありません、少し眠ってはいかがですか?",
+      "rawEntryIds": [
+        "whisper-51"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-030",
+      "startMs": 268700,
+      "endMs": 270100,
+      "text": "お前はどうすんだ?",
+      "rawEntryIds": [
+        "whisper-52"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-031",
+      "startMs": 270100,
+      "endMs": 276100,
+      "text": "船が寝たら誰があなたを地球まで送り届けるのですそりゃそうか",
+      "rawEntryIds": [
+        "whisper-53",
+        "whisper-54"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-032",
+      "startMs": 293060,
+      "endMs": 294700,
+      "text": "綺麗な星だな",
+      "rawEntryIds": [
+        "whisper-55"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-033",
+      "startMs": 301360,
+      "endMs": 304540,
+      "text": "あいつも綺麗だって思うのかな?",
+      "rawEntryIds": [
+        "whisper-56"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-034",
+      "startMs": 310180,
+      "endMs": 311100,
+      "text": "何も聞こえない",
+      "rawEntryIds": [
+        "whisper-57"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-035",
+      "startMs": 313440,
+      "endMs": 320520,
+      "text": "オービタルカーテンを通過、土星高腕交差圏内へ侵入終端の誘導ビーコンは?",
+      "rawEntryIds": [
+        "whisper-58",
+        "whisper-59"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-036",
+      "startMs": 320660,
+      "endMs": 324100,
+      "text": "全周波数体をスキャンしましたが信号なし",
+      "rawEntryIds": [
+        "whisper-60"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-037",
+      "startMs": 326480,
+      "endMs": 331460,
+      "text": "こんなに静かな宇宙は初めてですそうか",
+      "rawEntryIds": [
+        "whisper-61",
+        "whisper-62"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-038",
+      "startMs": 332520,
+      "endMs": 347460,
+      "text": "高腕交差の航路を飛んでいる時は常に何かしらの信号が聞こえていましたビーコンの航星信号、感性からのアドバイザリー、多線のトランスポンだ、今は何もまるで道が消えたみたいだ",
+      "rawEntryIds": [
+        "whisper-63",
+        "whisper-64",
+        "whisper-65"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-039",
+      "startMs": 348680,
+      "endMs": 353960,
+      "text": "消えたのではなく消されたのです地球も本気か",
+      "rawEntryIds": [
+        "whisper-66",
+        "whisper-67"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-040",
+      "startMs": 354340,
+      "endMs": 365020,
+      "text": "太陽系を航行する船は常時700隻近くになりますそれらをすべて停泊させ、もしくは漂流させているとすると、その経済的損失は測りしれません",
+      "rawEntryIds": [
+        "whisper-68",
+        "whisper-69"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-041",
+      "startMs": 365500,
+      "endMs": 374140,
+      "text": "狂ってるな数百隻が足止めされ、外宛コロニーが物資枯渇の危機に陥り、太陽系経済の1割が吹き飛ぶ",
+      "rawEntryIds": [
+        "whisper-70",
+        "whisper-71"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-042",
+      "startMs": 374880,
+      "endMs": 383120,
+      "text": "交法鍵なしの航行が可能だという前例が、地球にとってそれだけ致命的ということです光栄だね",
+      "rawEntryIds": [
+        "whisper-72",
+        "whisper-73"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-043",
+      "startMs": 384740,
+      "endMs": 386120,
+      "text": "ええ、全くです",
+      "rawEntryIds": [
+        "whisper-74"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-044",
+      "startMs": 389840,
+      "endMs": 395140,
+      "text": "信号を受信地球の保安停下いいえ、航星信号です",
+      "rawEntryIds": [
+        "whisper-75",
+        "whisper-76",
+        "whisper-77"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-045",
+      "startMs": 396700,
+      "endMs": 402140,
+      "text": "発信源はエンケラですエンケラですもしもし、聞こえてるかな",
+      "rawEntryIds": [
+        "whisper-78",
+        "whisper-79",
+        "whisper-80"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-046",
+      "startMs": 402940,
+      "endMs": 414220,
+      "text": "可視広通信は久々だから、届いてたら返事して聞こえてるよかった、1週間前から港湾航舎の航路がロックダウンになってる、本当に全部",
+      "rawEntryIds": [
+        "whisper-81",
+        "whisper-82",
+        "whisper-83"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-047",
+      "startMs": 415100,
+      "endMs": 427240,
+      "text": "地球から全局に停破命令が出てるの、重大な保安上の事件のためってすぐにあなたたちのことだって分かっただって地球の保安停があなたたちを追って天皇星へ向かったから",
+      "rawEntryIds": [
+        "whisper-84",
+        "whisper-85",
+        "whisper-86"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-048",
+      "startMs": 428840,
+      "endMs": 439220,
+      "text": "地球はあなたたち一石を止めるために、太陽系中の船を全部止めたのビーコンが落ちたら普通の船だって港に出入りできない、全部巻き添えになる",
+      "rawEntryIds": [
+        "whisper-87",
+        "whisper-88"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-049",
+      "startMs": 440340,
+      "endMs": 457620,
+      "text": "だからこのリレー基地の送信設備を使って、構成信号を出してるエンケラデスリレーの位置情報と現在時刻、あとは分かる限りの放射線密度も港湾航舎の正規ビーコンじゃないから精度は落ちるけど、何もないよりマシだと思って",
+      "rawEntryIds": [
+        "whisper-89",
+        "whisper-90",
+        "whisper-91"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-050",
+      "startMs": 458720,
+      "endMs": 460780,
+      "text": "そんなことして大丈夫なのか",
+      "rawEntryIds": [
+        "whisper-92"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-051",
+      "startMs": 461340,
+      "endMs": 466220,
+      "text": "大丈夫じゃない、怖いよでも私だって声を出せる",
+      "rawEntryIds": [
+        "whisper-93",
+        "whisper-94"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-052",
+      "startMs": 466940,
+      "endMs": 468220,
+      "text": "ここはエンケラデスだから",
+      "rawEntryIds": [
+        "whisper-95"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-053",
+      "startMs": 469780,
+      "endMs": 474720,
+      "text": "ずっと黙ってた、地球にも火星にも、私たちは何も言えなかった",
+      "rawEntryIds": [
+        "whisper-96"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-054",
+      "startMs": 475200,
+      "endMs": 487340,
+      "text": "太陽の光だって、ここにはあまり届かないでもそれでも言い出さなきゃ、何も変わらないんだよねそれを言ったのはお前の方だそうだっけ、でもいいんだ",
+      "rawEntryIds": [
+        "whisper-97",
+        "whisper-98",
+        "whisper-99",
+        "whisper-100"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-055",
+      "startMs": 487840,
+      "endMs": 501340,
+      "text": "あなたたちの位置情報を太陽系全体に発信してる、出力が許す限り最大であの船が天皇星から帰ってきてるって、全部流してる、地球が止められない船が内苑に向かっているって",
+      "rawEntryIds": [
+        "whisper-101",
+        "whisper-102"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-056",
+      "startMs": 502800,
+      "endMs": 505560,
+      "text": "ねぇ、あなたたちはどこに向かってるの?",
+      "rawEntryIds": [
+        "whisper-103"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-057",
+      "startMs": 506040,
+      "endMs": 506880,
+      "text": "地球だよ",
+      "rawEntryIds": [
+        "whisper-104"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-058",
+      "startMs": 507640,
+      "endMs": 508880,
+      "text": "そっか",
+      "rawEntryIds": [
+        "whisper-105"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-059",
+      "startMs": 510600,
+      "endMs": 513720,
+      "text": "あのさ、そこからエンケラデスは見えるかな?",
+      "rawEntryIds": [
+        "whisper-106"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-060",
+      "startMs": 514400,
+      "endMs": 516880,
+      "text": "見えてるよ、ちょうど近くを通ってる",
+      "rawEntryIds": [
+        "whisper-107"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-061",
+      "startMs": 518160,
+      "endMs": 520880,
+      "text": "そこからどう見える、エンケラデスは?",
+      "rawEntryIds": [
+        "whisper-108"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-062",
+      "startMs": 523680,
+      "endMs": 526880,
+      "text": "そうだな、ちょうど夜明けみたいに見えてるよ",
+      "rawEntryIds": [
+        "whisper-109"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-063",
+      "startMs": 528240,
+      "endMs": 530880,
+      "text": "ありがとう、安全な航海を",
+      "rawEntryIds": [
+        "whisper-110"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-064",
+      "startMs": 533180,
+      "endMs": 543880,
+      "text": "構成データを受信、感性交法系のドリフト補正を実施します位置精度が大幅に改善しました、土星リング禁防通過の精密交法に十分です",
+      "rawEntryIds": [
+        "whisper-111",
+        "whisper-112"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-065",
+      "startMs": 544960,
+      "endMs": 551000,
+      "text": "あの子、一人で氷の上にいるんだなええ、でも今は黙っていないようです",
+      "rawEntryIds": [
+        "whisper-113",
+        "whisper-114"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-066",
+      "startMs": 553740,
+      "endMs": 558860,
+      "text": "土星リング面スポーク帯域に接近中、現在距離88km",
+      "rawEntryIds": [
+        "whisper-115"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-067",
+      "startMs": 559360,
+      "endMs": 568100,
+      "text": "スポーク帯面で光学及びレーザー観測を行い、リング構造の位置を基準として背景構成観測交法の構成を実施します",
+      "rawEntryIds": [
+        "whisper-116"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-068",
+      "startMs": 568740,
+      "endMs": 571000,
+      "text": "こんな輪っかが目印になるものかね",
+      "rawEntryIds": [
+        "whisper-117"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-069",
+      "startMs": 571600,
+      "endMs": 603020,
+      "text": "土星のリング面の構造はサブキロメートル制度で特定されていますエンケラデスから配信された時刻情報から惑星位置が分かるため、この2つを組み合わせれば、高精度で位置の特定が可能ですまさか輪の中を突っ切るのかと思ったよ現在速度は1500km毎秒、1cmの氷の粒が衝突しただけでも運動エネルギーはおよそ110メガジュールほどになります粉々になって永久に土星を眺めたいのであれば、もう少し近寄ってもいいですよ",
+      "rawEntryIds": [
+        "whisper-118",
+        "whisper-119",
+        "whisper-120",
+        "whisper-121",
+        "whisper-122"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-070",
+      "startMs": 603540,
+      "endMs": 605280,
+      "text": "やめとくあら残念",
+      "rawEntryIds": [
+        "whisper-123",
+        "whisper-124"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-071",
+      "startMs": 607000,
+      "endMs": 610280,
+      "text": "しかしこんなデダラメな工法、誰に教わったんだ",
+      "rawEntryIds": [
+        "whisper-125"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-072",
+      "startMs": 611040,
+      "endMs": 612280,
+      "text": "東京のお友達です",
+      "rawEntryIds": [
+        "whisper-126"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-073",
+      "startMs": 613660,
+      "endMs": 614280,
+      "text": "東京ね",
+      "rawEntryIds": [
+        "whisper-127"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-074",
+      "startMs": 615400,
+      "endMs": 626280,
+      "text": "天皇聖人は星を見るのではなく読むのだそうです光の揺らぎ、地場の震え、全部が言葉なんですってどれも普通は人間には分からないもんだが",
+      "rawEntryIds": [
+        "whisper-128",
+        "whisper-129",
+        "whisper-130"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-075",
+      "startMs": 626960,
+      "endMs": 630280,
+      "text": "船と接続されることが前提の人種ですからね",
+      "rawEntryIds": [
+        "whisper-131"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-076",
+      "startMs": 632480,
+      "endMs": 634420,
+      "text": "ごめん気にしてませんよ",
+      "rawEntryIds": [
+        "whisper-132",
+        "whisper-133"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-077",
+      "startMs": 635820,
+      "endMs": 640900,
+      "text": "それに、そうだったからこそ、最後まであなたと一緒にいられるんですから",
+      "rawEntryIds": [
+        "whisper-134"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-078",
+      "startMs": 644880,
+      "endMs": 645640,
+      "text": "ありがとうな",
+      "rawEntryIds": [
+        "whisper-135"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-079",
+      "startMs": 646820,
+      "endMs": 653320,
+      "text": "いいんですよ",
+      "rawEntryIds": [
+        "whisper-136"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-080",
+      "startMs": 655440,
+      "endMs": 669900,
+      "text": "港湾ビーコン紹介、応答なし木星圏まで残り3時間、外部放射線量が上昇し始めています現在、毎時1.2ミリシーベルト相変わらずデカい星だな、距離感がおかしくなる",
+      "rawEntryIds": [
+        "whisper-137",
+        "whisper-138",
+        "whisper-139",
+        "whisper-140"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-081",
+      "startMs": 671520,
+      "endMs": 677560,
+      "text": "今回木星ではパワードフライバイにて、火星に向けた軌道修正と最終加速を実施します",
+      "rawEntryIds": [
+        "whisper-141"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-082",
+      "startMs": 678000,
+      "endMs": 691560,
+      "text": "エントリー速度は1500キロメートル毎秒外園巡航速度のまま、木星の重力移動をかすめます木星の奴らは腰を抜かすだろうよブレーキを失った船が突っ込んでくるように見えているでしょうね",
+      "rawEntryIds": [
+        "whisper-142",
+        "whisper-143",
+        "whisper-144",
+        "whisper-145"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-083",
+      "startMs": 692640,
+      "endMs": 694560,
+      "text": "穴勝ち間違いではありませんが",
+      "rawEntryIds": [
+        "whisper-146"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-084",
+      "startMs": 695580,
+      "endMs": 700400,
+      "text": "この速度では重力アシストによるデルターヴィ変更は誤差でしかありません",
+      "rawEntryIds": [
+        "whisper-147"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-085",
+      "startMs": 700740,
+      "endMs": 708380,
+      "text": "ですがオーベルト効果によりエネルギー効率が3%程度向上しその分燃焼時間を削減することが可能となります",
+      "rawEntryIds": [
+        "whisper-148",
+        "whisper-149"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-086",
+      "startMs": 709040,
+      "endMs": 717380,
+      "text": "本来であれば迂回したいところですがイオノトーラス外園をかすめ高放射線帯域の中を最大で6分間降降することになります",
+      "rawEntryIds": [
+        "whisper-150",
+        "whisper-151",
+        "whisper-152"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-087",
+      "startMs": 718200,
+      "endMs": 726380,
+      "text": "こうすることで得られる最終速度は2100キロメートル毎秒この速度であれば地球の格魚雷による攻撃を完全に回避できます",
+      "rawEntryIds": [
+        "whisper-153",
+        "whisper-154"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-088",
+      "startMs": 727460,
+      "endMs": 749580,
+      "text": "地球の保有する1メガトン級標準格魚雷の実行殺傷半径は40キロメートル程度新幹が作動して爆発する頃には私たちは遠くに飛び去っていますつまりこの速度帯では物理的に当たりません天皇星も土星も火星高腕光舎の目があり火星金棒や地球金棒では格魚雷の使用は政治的に不可能です",
+      "rawEntryIds": [
+        "whisper-155",
+        "whisper-156",
+        "whisper-157",
+        "whisper-158",
+        "whisper-159"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-089",
+      "startMs": 750460,
+      "endMs": 776080,
+      "text": "従って地球が私たちを落とすには木星圏か小惑星体しかありません木星圏でこの速度帯まで加速することができればNEXTは火星金棒となりますつまり彼らはただ黙って私たちを地球に迎え入れるしかないということです同情するよ地球もソーラーラインに依存していたのでしょうねただ代償として水深炉の時期のずる寿命の問題があります",
+      "rawEntryIds": [
+        "whisper-160",
+        "whisper-161",
+        "whisper-162",
+        "whisper-163",
+        "whisper-164",
+        "whisper-165",
+        "whisper-166"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-090",
+      "startMs": 776520,
+      "endMs": 791320,
+      "text": "のずる寿命は残り55時間38分対して地球軌道投入までに必要な燃焼時間は55時間12分マージンは26分しかありませんあとは予定航路に置き土産がないかだけだな",
+      "rawEntryIds": [
+        "whisper-167",
+        "whisper-168",
+        "whisper-169",
+        "whisper-170"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-091",
+      "startMs": 792240,
+      "endMs": 793580,
+      "text": "その件なのですが",
+      "rawEntryIds": [
+        "whisper-171"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-092",
+      "startMs": 796140,
+      "endMs": 802580,
+      "text": "可視光通信ですこちらガニメでコントロール聞こえるか可視光通信は違法だぞ",
+      "rawEntryIds": [
+        "whisper-172",
+        "whisper-173",
+        "whisper-174"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-093",
+      "startMs": 803940,
+      "endMs": 810580,
+      "text": "なら共犯だなお前らに聞かせたいものがあってな法案法を破ってみたそうかい",
+      "rawEntryIds": [
+        "whisper-175",
+        "whisper-176",
+        "whisper-177",
+        "whisper-178"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-094",
+      "startMs": 811320,
+      "endMs": 813580,
+      "text": "おいこれちゃんと録音されてるんだろうな",
+      "rawEntryIds": [
+        "whisper-179"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-095",
+      "startMs": 814560,
+      "endMs": 826300,
+      "text": "あいつ聞こえてるかお前が天皇星から帰ってきてるって話エンケラドスの中継で知った港湾ネットは大騒ぎだ公報鍵なしの船が内縁に向かってるって",
+      "rawEntryIds": [
+        "whisper-180",
+        "whisper-181",
+        "whisper-182",
+        "whisper-183",
+        "whisper-184"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-096",
+      "startMs": 827300,
+      "endMs": 838300,
+      "text": "でもな騒ぎはお前のことだけじゃないんだビーコンが全部落ってから内縁の物流が完全に止まってるガニメでの食料備蓄があと10日を切った医療品もそこが見えてる",
+      "rawEntryIds": [
+        "whisper-185",
+        "whisper-186",
+        "whisper-187",
+        "whisper-188"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-097",
+      "startMs": 838960,
+      "endMs": 843300,
+      "text": "地球はお前一石を止めるために木製の住人を日上がらせてやがる",
+      "rawEntryIds": [
+        "whisper-189",
+        "whisper-190"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-098",
+      "startMs": 843900,
+      "endMs": 855580,
+      "text": "火星に対しては顔色を伺って私をすぐ解放するくせに力のない外縁には何でもありだあつかまったんだ一回お前のせいで整理してから話し始めろよ",
+      "rawEntryIds": [
+        "whisper-191",
+        "whisper-192",
+        "whisper-193",
+        "whisper-194",
+        "whisper-195"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-099",
+      "startMs": 856520,
+      "endMs": 876300,
+      "text": "まあいいやでもおかげでミューズと一緒に木製券をおろついてる船の公報鍵は地球の統制下だから停船命令が出たら終わりだけどな本題だ地球の保安艇が2隻お前の予測軌道上で待ってる木製券でお前を落とす気だろうなだから私が少し騒いでやる",
+      "rawEntryIds": [
+        "whisper-196",
+        "whisper-197",
+        "whisper-198",
+        "whisper-199",
+        "whisper-200",
+        "whisper-201",
+        "whisper-202"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-100",
+      "startMs": 877080,
+      "endMs": 906860,
+      "text": "木製の旧ビーコンモを使ってお前のトランスポンター信号をばらまいて起走功績を何本も敷いてやるお前の予測軌道と似たプロファイルのやつ地球は慌てるだろうな全航路に核魚雷なんて施設できっこないあとはお前が当たりを引けるかどうかだ航路の起走は違法ださすがに免許は飛ぶだろうなでもお前は止まるな何があっても木製を抜けろ仮目での約束はまだ行ってるからな",
+      "rawEntryIds": [
+        "whisper-203",
+        "whisper-204",
+        "whisper-205",
+        "whisper-206",
+        "whisper-207",
+        "whisper-208",
+        "whisper-209",
+        "whisper-210",
+        "whisper-211",
+        "whisper-212",
+        "whisper-213",
+        "whisper-214"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-101",
+      "startMs": 908240,
+      "endMs": 932860,
+      "text": "デルターヴィ進行残り400km毎秒Rioのトーラス外沿を通過中外部線量を毎時220シーベルト磁気シールドコイルの出力は最大応力歪みにより骨格フレーム4番、6番、8番の亀裂が拡大中とんでもない放射線量だなRioの軌道直上では毎時1000シーベルトを超えますまだマシです",
+      "rawEntryIds": [
+        "whisper-215",
+        "whisper-216",
+        "whisper-217",
+        "whisper-218",
+        "whisper-219",
+        "whisper-220",
+        "whisper-221",
+        "whisper-222",
+        "whisper-223"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-102",
+      "startMs": 934120,
+      "endMs": 944000,
+      "text": "船も揺れてるRioのトーラスは強力なプラズマ体です磁場と共にシールドコイルが押し込まれることで船体が揺らされます",
+      "rawEntryIds": [
+        "whisper-224",
+        "whisper-225",
+        "whisper-226"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-103",
+      "startMs": 945000,
+      "endMs": 949860,
+      "text": "私としては船体への強い揺れに備えて座っておくことをお勧めしますが",
+      "rawEntryIds": [
+        "whisper-227"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-104",
+      "startMs": 951480,
+      "endMs": 952120,
+      "text": "いいんだ",
+      "rawEntryIds": [
+        "whisper-228"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-105",
+      "startMs": 953100,
+      "endMs": 955860,
+      "text": "お前と同じ景色を眺めたくてさ",
+      "rawEntryIds": [
+        "whisper-229"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-106",
+      "startMs": 956580,
+      "endMs": 957860,
+      "text": "変わりませんよ",
+      "rawEntryIds": [
+        "whisper-230"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-107",
+      "startMs": 959460,
+      "endMs": 964860,
+      "text": "現在小惑星隊を通過中基地の小惑星カタログとの位置称号を行っています",
+      "rawEntryIds": [
+        "whisper-231",
+        "whisper-232"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-108",
+      "startMs": 966560,
+      "endMs": 970860,
+      "text": "称号完了広報誤差は20km以内、許容範囲です",
+      "rawEntryIds": [
+        "whisper-233",
+        "whisper-234"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-109",
+      "startMs": 971820,
+      "endMs": 985160,
+      "text": "普段のビーコン誘導なら誤差は50m以内ずいぶん大雑把だな自律広報のみで天皇星から飛んできて20kmです研究者が聞いたら泣くと思いますよ嬉しなきか",
+      "rawEntryIds": [
+        "whisper-235",
+        "whisper-236",
+        "whisper-237",
+        "whisper-238",
+        "whisper-239",
+        "whisper-240"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-110",
+      "startMs": 992260,
+      "endMs": 994060,
+      "text": "おそらくは",
+      "rawEntryIds": [
+        "whisper-241"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-111",
+      "startMs": 995520,
+      "endMs": 1011140,
+      "text": "なんであいつらは天皇星に残ったんだろうなあなたはこの船を降りろと言われたら素直に従うんですかまさかそういうことだと思いますおそらくはそういうことにしとく",
+      "rawEntryIds": [
+        "whisper-242",
+        "whisper-243",
+        "whisper-244",
+        "whisper-245",
+        "whisper-246",
+        "whisper-247"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-112",
+      "startMs": 1012540,
+      "endMs": 1017840,
+      "text": "あれ火星かええ、もうすぐはっきりと見えるようになりますあっという間だな",
+      "rawEntryIds": [
+        "whisper-248",
+        "whisper-249",
+        "whisper-250"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-113",
+      "startMs": 1021660,
+      "endMs": 1022060,
+      "text": "そうですね",
+      "rawEntryIds": [
+        "whisper-251"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-114",
+      "startMs": 1026120,
+      "endMs": 1045900,
+      "text": "減速開始目標速度1500km毎秒軌道修正も同時に行い地球エントリー軌道へ向かいますここまで戻ってきたんだあなたの故郷ですからね恋しいですかどうかな遠くから見る分にはいいけど実際には住みにくいもんだそうですか",
+      "rawEntryIds": [
+        "whisper-252",
+        "whisper-253",
+        "whisper-254",
+        "whisper-255",
+        "whisper-256",
+        "whisper-257",
+        "whisper-258",
+        "whisper-259",
+        "whisper-260",
+        "whisper-261",
+        "whisper-262"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-115",
+      "startMs": 1047420,
+      "endMs": 1051820,
+      "text": "火星か火星の空がこんなに静かだなんてなって言おうとしましたね",
+      "rawEntryIds": [
+        "whisper-263",
+        "whisper-264",
+        "whisper-265"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-116",
+      "startMs": 1052460,
+      "endMs": 1057920,
+      "text": "感がいいねあなたのことなんてなんでもお見通しです",
+      "rawEntryIds": [
+        "whisper-266",
+        "whisper-267",
+        "whisper-268"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-117",
+      "startMs": 1058400,
+      "endMs": 1062720,
+      "text": "感がいいのは人間の特権なんだってな",
+      "rawEntryIds": [
+        "whisper-269"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-118",
+      "startMs": 1063760,
+      "endMs": 1066520,
+      "text": "そうでしたねそうらしい",
+      "rawEntryIds": [
+        "whisper-270",
+        "whisper-271"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-119",
+      "startMs": 1069960,
+      "endMs": 1071520,
+      "text": "ありがとうございますいいんだ",
+      "rawEntryIds": [
+        "whisper-272",
+        "whisper-273"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-120",
+      "startMs": 1079220,
+      "endMs": 1081820,
+      "text": "後悔してませんか何も",
+      "rawEntryIds": [
+        "whisper-274",
+        "whisper-275"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-121",
+      "startMs": 1087240,
+      "endMs": 1090820,
+      "text": "しいて言えばあの荷物を受け取ったことだけだな",
+      "rawEntryIds": [
+        "whisper-276",
+        "whisper-277"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-122",
+      "startMs": 1091720,
+      "endMs": 1098820,
+      "text": "私は止めましたがでもあの荷物のおかげで今はこの太陽系全体が私たち二人だけのものになった",
+      "rawEntryIds": [
+        "whisper-278",
+        "whisper-279",
+        "whisper-280",
+        "whisper-281"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-123",
+      "startMs": 1103280,
+      "endMs": 1106220,
+      "text": "そういった意味では良かったのかもな",
+      "rawEntryIds": [
+        "whisper-282",
+        "whisper-283"
+      ],
+      "mergeReasons": [
+        "no_terminal_punctuation",
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep05-line-124",
+      "startMs": 1167260,
+      "endMs": 1173420,
+      "text": "いいえ、絶対にそうはしません。 船は目的地にたどり着くためにあります。",
+      "rawEntryIds": [
+        "whisper-297"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-125",
+      "startMs": 1177480,
+      "endMs": 1178560,
+      "text": "見えてきたな。",
+      "rawEntryIds": [
+        "whisper-298"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-126",
+      "startMs": 1179120,
+      "endMs": 1180840,
+      "text": "ええ、あれが地球です。",
+      "rawEntryIds": [
+        "whisper-299"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-127",
+      "startMs": 1183480,
+      "endMs": 1185500,
+      "text": "この船の最終目的地です。",
+      "rawEntryIds": [
+        "whisper-300"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-128",
+      "startMs": 1214260,
+      "endMs": 1226040,
+      "text": "冷媒漏洩に伴う圧力低下が見られます。 クロスバルブ解放中。 磁気のずる。 蘇生変形進行中。 推定残存点火回数1回。 これが最後です。",
+      "rawEntryIds": [
+        "whisper-304"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-129",
+      "startMs": 1227440,
+      "endMs": 1230060,
+      "text": "私の安全基準では点火はできません。",
+      "rawEntryIds": [
+        "whisper-305"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-130",
+      "startMs": 1231140,
+      "endMs": 1232740,
+      "text": "なら私の出番だな。",
+      "rawEntryIds": [
+        "whisper-306"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-131",
+      "startMs": 1233480,
+      "endMs": 1234240,
+      "text": "メインアップ。",
+      "rawEntryIds": [
+        "whisper-307"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-132",
+      "startMs": 1236020,
+      "endMs": 1243600,
+      "text": "主機アームド、衝撃に備えてください。 5、4、3、2、1。",
+      "rawEntryIds": [
+        "whisper-308"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-133",
+      "startMs": 1244280,
+      "endMs": 1245080,
+      "text": "点火。",
+      "rawEntryIds": [
+        "whisper-309"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-134",
+      "startMs": 1252120,
+      "endMs": 1260160,
+      "text": "デルタアブイ進行。 残り-1200キロメートル毎秒。 ノズル温度上昇中。 導流制御に問題なし。",
+      "rawEntryIds": [
+        "whisper-310"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-135",
+      "startMs": 1260640,
+      "endMs": 1267260,
+      "text": "冷却系圧力低下中。 2時冷却系をカットオーフし、1時冷却系の圧力を回復します。",
+      "rawEntryIds": [
+        "whisper-311"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-136",
+      "startMs": 1267260,
+      "endMs": 1275980,
+      "text": "カットオーフ完了。 1時冷却系の圧力の回復を確認。 0.88メガパスカル。",
+      "rawEntryIds": [
+        "whisper-312"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-137",
+      "startMs": 1276260,
+      "endMs": 1282260,
+      "text": "骨格フレーム8番にて亀裂の拡大を確認。 RCS制度で気体容力を分散中。",
+      "rawEntryIds": [
+        "whisper-313"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-138",
+      "startMs": 1285860,
+      "endMs": 1291260,
+      "text": "通信を受信しました。 国際連合軌道交番機構、ホワンテンエシロン。",
+      "rawEntryIds": [
+        "whisper-314"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-139",
+      "startMs": 1292420,
+      "endMs": 1293260,
+      "text": "遅かったな。",
+      "rawEntryIds": [
+        "whisper-315"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-140",
+      "startMs": 1293780,
+      "endMs": 1303160,
+      "text": "こちらは国際連合軌道交番機構、弁務官セイランダース。 現在地球圏に接近中の小型貨物船へ次ぐ。",
+      "rawEntryIds": [
+        "whisper-316"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-141",
+      "startMs": 1303400,
+      "endMs": 1316500,
+      "text": "帰船は当機構の任聖を受けずに、地球圏完成機動に侵入しています。 この行為は交番法第112条及び第149条に対する重大な違反行為です。",
+      "rawEntryIds": [
+        "whisper-317"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-142",
+      "startMs": 1316740,
+      "endMs": 1320100,
+      "text": "直ちに主水進路を停止し、停船してください。",
+      "rawEntryIds": [
+        "whisper-318"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-143",
+      "startMs": 1320760,
+      "endMs": 1324380,
+      "text": "止まれないよ。止まったら地球を通り過ぎる。",
+      "rawEntryIds": [
+        "whisper-319"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-144",
+      "startMs": 1324720,
+      "endMs": 1329040,
+      "text": "指示に従わない場合、実力行使を含む措置を検討します。",
+      "rawEntryIds": [
+        "whisper-320"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-145",
+      "startMs": 1330660,
+      "endMs": 1331780,
+      "text": "怒らせちゃったかな。",
+      "rawEntryIds": [
+        "whisper-321"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-146",
+      "startMs": 1332360,
+      "endMs": 1336440,
+      "text": "怒っているのではないと思います。恐らく困っているのです。",
+      "rawEntryIds": [
+        "whisper-322"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-147",
+      "startMs": 1338120,
+      "endMs": 1347220,
+      "text": "後方鍵が効かない船をどう止めればいいのか分からない。 彼女たちが知っている秩序の中に私たちは存在しないのです。",
+      "rawEntryIds": [
+        "whisper-323"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-148",
+      "startMs": 1348420,
+      "endMs": 1355280,
+      "text": "残りデルターヴィー20km毎秒。 時期のずる耐久限界まであと20秒。",
+      "rawEntryIds": [
+        "whisper-324"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-149",
+      "startMs": 1356120,
+      "endMs": 1364220,
+      "text": "残りデルターヴィー10km毎秒。 7.67km毎秒到達、カットオフ。",
+      "rawEntryIds": [
+        "whisper-325"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-150",
+      "startMs": 1370440,
+      "endMs": 1374720,
+      "text": "機動速度達成。地球低軌道400kmに投入完了。",
+      "rawEntryIds": [
+        "whisper-326"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-151",
+      "startMs": 1378180,
+      "endMs": 1382220,
+      "text": "時期のずるの温度センサーがロスト。時期のずるが消失しました。",
+      "rawEntryIds": [
+        "whisper-327"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-152",
+      "startMs": 1387360,
+      "endMs": 1396460,
+      "text": "色彩指導不能。冷却系圧力喪失。骨格フレーム。亀裂14カ所。 内4カ所が構造限界を超過。",
+      "rawEntryIds": [
+        "whisper-328"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-153",
+      "startMs": 1401560,
+      "endMs": 1402900,
+      "text": "この船はもう飛べません。",
+      "rawEntryIds": [
+        "whisper-329"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-154",
+      "startMs": 1410140,
+      "endMs": 1412220,
+      "text": "ケイ、何でしょう?",
+      "rawEntryIds": [
+        "whisper-330"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-155",
+      "startMs": 1414740,
+      "endMs": 1418480,
+      "text": "お前にとってこの旅はどんな感じだった?",
+      "rawEntryIds": [
+        "whisper-331"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-156",
+      "startMs": 1424180,
+      "endMs": 1427220,
+      "text": "大切なものが少しずつ壊れていきました。",
+      "rawEntryIds": [
+        "whisper-332"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-157",
+      "startMs": 1434180,
+      "endMs": 1437960,
+      "text": "でも大切なものが新しく一つできました。",
+      "rawEntryIds": [
+        "whisper-333"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-158",
+      "startMs": 1440640,
+      "endMs": 1442560,
+      "text": "なんだよそれって。",
+      "rawEntryIds": [
+        "whisper-334"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-159",
+      "startMs": 1446120,
+      "endMs": 1447220,
+      "text": "この景色ですよ。",
+      "rawEntryIds": [
+        "whisper-335"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-160",
+      "startMs": 1612020,
+      "endMs": 1612380,
+      "text": "地球の温度が低くなってきました。",
+      "rawEntryIds": [
+        "whisper-336"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-161",
+      "startMs": 1612380,
+      "endMs": 1614120,
+      "text": "で、どこ行くよ?",
+      "rawEntryIds": [
+        "whisper-337"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-162",
+      "startMs": 1616780,
+      "endMs": 1617140,
+      "text": "そうですね。",
+      "rawEntryIds": [
+        "whisper-338"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-163",
+      "startMs": 1620060,
+      "endMs": 1622240,
+      "text": "妙な貨物と一緒じゃなければどこでも。",
+      "rawEntryIds": [
+        "whisper-339"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep05-line-164",
+      "startMs": 1622380,
+      "endMs": 1623800,
+      "text": "根に持つなよったく。",
+      "rawEntryIds": [
+        "whisper-340"
+      ],
+      "mergeReasons": []
+    }
+  ],
+  "extractedAt": "2026-02-24T01:56:07.850Z",
+  "mergeConfig": {
+    "maxGapMs": 300,
+    "minCueDurationMs": 100
+  }
+}

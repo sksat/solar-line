@@ -1,23 +1,31 @@
 # Task 179: Generate EP05 Whisper STT for multi-source comparison
 
-## Status: TODO
+## Status: DONE
 
 ## Description
 EP01-04 all have Whisper STT outputs (`epXX_lines_whisper.json`), but EP05 only has VTT (`ep05_lines_vtt.json`).
 Generate `ep05_lines_whisper.json` to achieve infrastructure parity across all episodes.
 
-## Prerequisites
-- EP05 video downloaded to `raw_data/` (gitignored)
-- Whisper installed (or available via API)
+## Completed
+The raw Whisper STT for EP05 had already been generated from the Niconico source (`sm45987761`)
+using Whisper medium model during a prior session. The processing pipeline (Steps 1-3) had been
+completed, producing:
+- `raw_data/whisper/sm45987761_whisper.json` (raw Whisper output, 341 segments)
+- `raw_data/whisper/sm45987761_subtitle.json` (processed subtitle file, 325 reliable entries)
+- `raw_data/whisper/sm45987761_quality.json` (quality report: 95.3% reliable segments)
+- `raw_data/whisper/ep05_lines.json` (extracted dialogue lines, 164 lines)
 
-## Steps
-1. Download EP05 audio from YouTube (`_trGXYRF8-4`) or Niconico (`sm45987761`)
-2. Run Whisper STT (medium or large model for Japanese)
-3. Generate `ep05_lines_whisper.json` using existing pipeline (`ts/src/whisper-processor.ts`)
-4. Add transcription page Layer 2 Whisper tab
-5. Update DAG if needed
+What remained was:
+1. Adding `whisperModel: "medium"` metadata to the source file
+2. Copying the processed file to `reports/data/episodes/ep05_lines_whisper.json`
+
+After copying, the build system auto-discovered the file and the EP05 transcription page now
+shows Whisper STT [medium] as the primary Layer 2 source alongside YouTube auto-subs.
+
+All 1496 unit tests and 96 E2E tests pass.
 
 ## Notes
-- Refer to Task 056 for Whisper processing methodology
-- Record model size and settings in metadata (per CLAUDE.md Whisper model tracking directive)
-- VOICEROID accuracy may be limited (see `ideas/voiceroid_asr_quality.md`)
+- Source: Niconico `sm45987761` (YouTube audio `_trGXYRF8-4` not used since Niconico was available)
+- Model: Whisper medium, language: ja
+- Quality: avgLogProb=-0.212, avgNoSpeechProb=0.083 (high quality)
+- 164 merged lines from 325 reliable segments (of 341 total)
