@@ -331,3 +331,4 @@
 {"timestamp":"2026-02-25T01:32:09.693Z","action":"dependency_added","nodeId":"task-171","detail":"→ report.ep05"}
 {"timestamp":"2026-02-25T01:40:34.601Z","action":"node_added","nodeId":"task.170","detail":"Scene timeline per episode"}
 {"timestamp":"2026-02-25T01:40:38.099Z","action":"dependency_added","nodeId":"task.170","detail":"→ report.ep01"}
+{"timestamp":"2026-02-25T01:54:35.717Z","action":"node_added","nodeId":"task.172","detail":"ランディングページ改善"}

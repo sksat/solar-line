@@ -2629,6 +2629,80 @@ describe("renderIndex enhanced content", () => {
   });
 });
 
+// --- renderIndex reading guide and conclusion ---
+
+describe("renderIndex reading guide and conclusion", () => {
+  const enrichedManifest: SiteManifest = {
+    title: "SOLAR LINE 考察",
+    generatedAt: "2026-02-23T00:00:00Z",
+    episodes: [
+      { episode: 1, title: "火星からガニメデへ", transferCount: 4, path: "episodes/ep-001.html", verdicts: { plausible: 1, conditional: 2, indeterminate: 0, implausible: 0, reference: 1 } },
+      { episode: 2, title: "木星圏脱出", transferCount: 5, path: "episodes/ep-002.html", verdicts: { plausible: 3, conditional: 1, indeterminate: 0, implausible: 0, reference: 1 } },
+    ],
+    totalVerdicts: { plausible: 4, conditional: 3, indeterminate: 0, implausible: 0, reference: 2 },
+    logs: [],
+  };
+
+  it("includes conclusion summary section", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("この考証の結論"), "should have conclusion heading");
+    assert.ok(html.includes("高い整合性"), "should mention high consistency");
+  });
+
+  it("mentions mass mystery in conclusion", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("48,000t"), "should mention canonical mass");
+    assert.ok(html.includes("~300t"), "should mention estimated true mass");
+  });
+
+  it("mentions nozzle margin in conclusion", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("0.78%"), "should mention nozzle margin percentage");
+    assert.ok(html.includes("26分"), "should mention 26-minute margin");
+  });
+
+  it("includes reading guide section", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("読みかたガイド"), "should have reading guide heading");
+  });
+
+  it("reading guide links to key pages", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("summary/cross-episode.html"), "should link to cross-episode");
+    assert.ok(html.includes("summary/ship-kestrel.html"), "should link to ship dossier");
+    assert.ok(html.includes("summary/tech-overview.html"), "should link to tech overview");
+  });
+
+  it("reading guide has reader type recommendations", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("全体像を知りたい"), "should have overview reader path");
+    assert.ok(html.includes("アニメを観た順"), "should have episode-order reader path");
+    assert.ok(html.includes("軌道力学に興味"), "should have orbital mechanics reader path");
+  });
+
+  it("includes key findings section", () => {
+    const html = renderIndex(enrichedManifest);
+    assert.ok(html.includes("注目の分析結果"), "should have key findings heading");
+    assert.ok(html.includes("質量ミステリー"), "should highlight mass mystery");
+    assert.ok(html.includes("ノズル寿命"), "should highlight nozzle lifetime");
+    assert.ok(html.includes("光速通信遅延"), "should highlight light-speed communications");
+  });
+
+  it("conclusion section appears before episode cards", () => {
+    const html = renderIndex(enrichedManifest);
+    const conclusionIdx = html.indexOf("この考証の結論");
+    const episodesIdx = html.indexOf("エピソードレポート");
+    assert.ok(conclusionIdx > 0 && conclusionIdx < episodesIdx, "conclusion should come before episodes");
+  });
+
+  it("reading guide appears before episode cards", () => {
+    const html = renderIndex(enrichedManifest);
+    const guideIdx = html.indexOf("読みかたガイド");
+    const episodesIdx = html.indexOf("エピソードレポート");
+    assert.ok(guideIdx > 0 && guideIdx < episodesIdx, "reading guide should come before episodes");
+  });
+});
+
 // --- renderIndex verdict legend and series links ---
 
 describe("renderIndex verdict legend and series links", () => {

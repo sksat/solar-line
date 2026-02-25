@@ -70,6 +70,27 @@ test("index page has summary page links", async ({ page }) => {
   expect(await summaryLinks.count()).toBeGreaterThanOrEqual(3);
 });
 
+test("index page has conclusion summary section", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("text=この考証の結論")).toBeVisible();
+  await expect(page.locator("text=高い整合性")).toBeVisible();
+});
+
+test("index page has reading guide section", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("text=読みかたガイド")).toBeVisible();
+  // Reading guide table should have clickable links
+  const guideLinks = page.locator('.scenario-table a');
+  expect(await guideLinks.count()).toBeGreaterThanOrEqual(4);
+});
+
+test("index page has key findings section", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("text=注目の分析結果")).toBeVisible();
+  await expect(page.locator("text=質量ミステリー")).toBeVisible();
+  await expect(page.locator("text=ノズル寿命")).toBeVisible();
+});
+
 // --- Episode pages ---
 
 const episodes: { episode: number; path: string }[] = manifest.episodes;

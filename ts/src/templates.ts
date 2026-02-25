@@ -897,8 +897,51 @@ ${summaryLine}
       ).join("\n")
     : "";
 
+  // Conclusion summary — "What did we find?"
+  const conclusionSection = `
+<div class="card" style="border-left:4px solid var(--green);margin-top:1.5rem">
+<h3>この考証の結論</h3>
+<p>全${totalTransfers}件の軌道遷移を検証した結果、<strong>SOLAR LINE の軌道力学描写は高い整合性を持つ</strong>ことが分かりました。物理法則との明確な矛盾は0件。ΔV・所要時間・天体位置の数値は、brachistochrone航法やホーマン遷移の計算結果と概ね一致します。</p>
+<p>最大のミステリーは<strong>公称質量48,000t</strong>——作中のすべての加速度・所要時間を再現するには質量が~300tでなければ計算が合わず、真の質量は公称値の1%以下と推定されます。これは「非現実的」ではなく、シリーズ全体を貫く謎として考察しています。</p>
+<p>最もギリギリだったのは<strong>磁気ノズルの寿命</strong>——残り55時間38分に対し必要燃焼時間55時間12分、マージンわずか26分（0.78%）。全行程の成功確率は推定30〜46%です。</p>
+</div>`;
+
+  // Reading guide — recommended paths for different readers
+  const readingGuide = `
+<div class="card" style="font-size:0.9em">
+<h3>読みかたガイド</h3>
+<p>どこから読めばいいか迷ったら、以下を参考にしてください:</p>
+<table class="scenario-table">
+<tr><th>読者タイプ</th><th>おすすめルート</th></tr>
+<tr><td><strong>まず全体像を知りたい</strong></td><td>→ このページの結論 → <a href="summary/cross-episode.html">クロスエピソード整合性分析</a></td></tr>
+<tr><td><strong>アニメを観た順に読みたい</strong></td><td>→ <a href="episodes/ep-001.html">第1話</a> → <a href="episodes/ep-002.html">第2話</a> → … → <a href="episodes/ep-005.html">第5話</a>（各話に場面タイムラインと判定バッジ付き）</td></tr>
+<tr><td><strong>軌道力学に興味がある</strong></td><td>→ <a href="summary/ship-kestrel.html">ケストレル号ドシエ</a> → <a href="summary/cross-episode.html">クロスエピソード分析</a> → 各話の個別遷移</td></tr>
+<tr><td><strong>裏側の仕組みを知りたい</strong></td><td>→ <a href="summary/tech-overview.html">技術解説</a> → <a href="summary/ai-costs.html">AIコスト分析</a> → <a href="logs/index.html">セッションログ</a></td></tr>
+</table>
+</div>`;
+
+  // Key findings — most interesting/surprising results
+  const keyFindings = `
+<h2>注目の分析結果</h2>
+<div class="card">
+<h4><a href="summary/ship-kestrel.html">質量ミステリー: 48,000t vs ~300t</a></h4>
+<p>ケストレル号の公称質量48,000tでは、作中の加速度を再現するのに推力が~160倍不足する。全話の計算が整合する真の質量は~300t——公称値の1%以下。</p>
+</div>
+<div class="card">
+<h4><a href="episodes/ep-005.html">ノズル寿命マージン0.78%: 第5話の綱渡り</a></h4>
+<p>磁気ノズル残寿命55h38m vs 必要燃焼時間55h12m。マージンわずか26分。「ギリギリ」という台詞は計算上も正確でした。</p>
+</div>
+<div class="card">
+<h4><a href="summary/communications.html">光速通信遅延の忠実な描写</a></h4>
+<p>作中の通信描写はすべて光速遅延を正しく反映。NASAの深宇宙通信技術（DSOC）との比較でも整合する、作品のこだわりポイント。</p>
+</div>`;
+
   const content = `${overview}
 ${statsSection}
+${conclusionSection}
+${readingGuide}
+
+${keyFindings}
 
 <h2>エピソードレポート</h2>
 ${episodeCards}
