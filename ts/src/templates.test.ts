@@ -2702,6 +2702,83 @@ describe("SVG marker IDs are unique per transfer index", () => {
   });
 });
 
+// --- Task 161: Multi-scenario orbital diagram UI ---
+
+describe("renderOrbitalDiagram multi-scenario support", () => {
+  const multiScenarioDiagram: OrbitalDiagram = {
+    id: "test-multi-scenario",
+    title: "Scenario comparison",
+    centerLabel: "太陽",
+    scaleMode: "sqrt",
+    radiusUnit: "AU",
+    orbits: [
+      { id: "mars", label: "火星", radius: 1.5, color: "#f00", angle: 0.5, meanMotion: 1e-7 },
+      { id: "jupiter", label: "木星", radius: 5.2, color: "#0f0", angle: 2.0, meanMotion: 1e-8 },
+    ],
+    scenarios: [
+      { id: "fast", label: "72h (299t)" },
+      { id: "slow", label: "150h (1,297t)" },
+    ],
+    transfers: [
+      { label: "Fast", fromOrbitId: "mars", toOrbitId: "jupiter", color: "#ff0", style: "brachistochrone", scenarioId: "fast", startTime: 0, endTime: 259200 },
+      { label: "Slow", fromOrbitId: "mars", toOrbitId: "jupiter", color: "#0ff", style: "brachistochrone", scenarioId: "slow", startTime: 0, endTime: 540000 },
+    ],
+    animation: { durationSeconds: 540000 },
+  };
+
+  it("adds data-scenario attribute to transfer paths", () => {
+    const html = renderOrbitalDiagram(multiScenarioDiagram);
+    assert.ok(html.includes('data-scenario="fast"'), "should have fast scenario attr");
+    assert.ok(html.includes('data-scenario="slow"'), "should have slow scenario attr");
+  });
+
+  it("renders scenario-based legend instead of style-based", () => {
+    const html = renderOrbitalDiagram(multiScenarioDiagram);
+    assert.ok(html.includes("72h (299t)"), "should have fast scenario label in legend");
+    assert.ok(html.includes("150h (1,297t)"), "should have slow scenario label in legend");
+  });
+
+  it("non-primary scenario arcs get reduced opacity", () => {
+    const html = renderOrbitalDiagram(multiScenarioDiagram);
+    assert.ok(html.includes('stroke-opacity="0.6"'), "alt scenario should have reduced opacity");
+  });
+
+  it("includes scenario data in animation JSON", () => {
+    const html = renderOrbitalDiagram(multiScenarioDiagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    assert.ok(jsonMatch, "should have animation data JSON");
+    const data = JSON.parse(jsonMatch![1]);
+    assert.ok(data.scenarios, "should have scenarios in animation data");
+    assert.equal(data.scenarios.length, 2);
+    assert.equal(data.scenarios[0].id, "fast");
+    assert.equal(data.scenarios[1].id, "slow");
+  });
+
+  it("includes scenarioId on animated transfers", () => {
+    const html = renderOrbitalDiagram(multiScenarioDiagram);
+    const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+    const data = JSON.parse(jsonMatch![1]);
+    const fastTransfer = data.transfers.find((t: any) => t.scenarioId === "fast");
+    const slowTransfer = data.transfers.find((t: any) => t.scenarioId === "slow");
+    assert.ok(fastTransfer, "should have fast scenario transfer");
+    assert.ok(slowTransfer, "should have slow scenario transfer");
+  });
+});
+
+describe("REPORT_CSS includes scenario toggle styles", () => {
+  it("has .scenario-toggles container styles", () => {
+    assert.ok(REPORT_CSS.includes(".scenario-toggles"), "should have scenario-toggles CSS");
+  });
+
+  it("has .scenario-toggle button styles", () => {
+    assert.ok(REPORT_CSS.includes(".scenario-toggle"), "should have scenario-toggle CSS");
+  });
+
+  it("has .scenario-toggle.active state", () => {
+    assert.ok(REPORT_CSS.includes(".scenario-toggle.active"), "should have active toggle CSS");
+  });
+});
+
 // --- Task 041: Report navigation and source link improvements ---
 
 describe("source citations render as clickable links", () => {

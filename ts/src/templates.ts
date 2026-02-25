@@ -510,6 +510,31 @@ footer {
   min-width: 2rem;
 }
 .orbital-animation-controls button:hover { background: var(--border); }
+.scenario-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin: 0.4rem auto;
+  max-width: 480px;
+}
+.scenario-toggle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.8em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  text-decoration: line-through;
+}
+.scenario-toggle.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+.scenario-toggle:hover { background: var(--border); }
 .orbital-animation-controls .time-display {
   font-family: "SFMono-Regular", Consolas, monospace;
   color: var(--fg);

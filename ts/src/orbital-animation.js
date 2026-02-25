@@ -165,6 +165,54 @@ function initDiagramAnimation(card) {
   var scenarios = data.scenarios || [];
   var primaryScenarioId = scenarios.length > 0 ? scenarios[0].id : null;
 
+  // Track visible scenarios (all visible by default)
+  var visibleScenarios = {};
+  for (var si = 0; si < scenarios.length; si++) {
+    visibleScenarios[scenarios[si].id] = true;
+  }
+
+  // Create scenario toggle buttons when multiple scenarios exist
+  if (scenarios.length > 1) {
+    var toggleContainer = document.createElement("div");
+    toggleContainer.className = "scenario-toggles";
+    toggleContainer.setAttribute("role", "group");
+    toggleContainer.setAttribute("aria-label", "\u30b7\u30ca\u30ea\u30aa\u5207\u308a\u66ff\u3048"); // シナリオ切り替え
+
+    for (var si = 0; si < scenarios.length; si++) {
+      (function(sc) {
+        var btn = document.createElement("button");
+        btn.className = "scenario-toggle active";
+        btn.setAttribute("data-scenario-id", sc.id);
+        btn.textContent = sc.label;
+        btn.setAttribute("aria-pressed", "true");
+        btn.addEventListener("click", function() {
+          visibleScenarios[sc.id] = !visibleScenarios[sc.id];
+          btn.classList.toggle("active", visibleScenarios[sc.id]);
+          btn.setAttribute("aria-pressed", String(visibleScenarios[sc.id]));
+          applyScenarioVisibility();
+          updateFrame(currentTime);
+        });
+        toggleContainer.appendChild(btn);
+      })(scenarios[si]);
+    }
+
+    // Insert after animation controls
+    controls.parentNode.insertBefore(toggleContainer, controls.nextSibling);
+  }
+
+  /** Apply scenario visibility to SVG paths and legend items */
+  function applyScenarioVisibility() {
+    // Toggle SVG transfer arc paths
+    var scenarioPaths = svg.querySelectorAll("[data-scenario]");
+    for (var j = 0; j < scenarioPaths.length; j++) {
+      var el = scenarioPaths[j];
+      var scId = el.getAttribute("data-scenario");
+      if (scId && scId in visibleScenarios) {
+        el.style.display = visibleScenarios[scId] ? "" : "none";
+      }
+    }
+  }
+
   // Create ship marker element for each animated transfer
   var shipMarkers = [];
   for (var i = 0; i < data.transfers.length; i++) {
@@ -246,7 +294,9 @@ function initDiagramAnimation(card) {
       var plume = sm.plume;
       var burnLabel = sm.burnLabel;
 
-      if (currentTime < tr.startTime || currentTime > tr.endTime) {
+      // Hide if outside time window or scenario is toggled off
+      var scenarioHidden = tr.scenarioId && tr.scenarioId in visibleScenarios && !visibleScenarios[tr.scenarioId];
+      if (scenarioHidden || currentTime < tr.startTime || currentTime > tr.endTime) {
         marker.setAttribute("opacity", "0");
         plume.setAttribute("opacity", "0");
         burnLabel.setAttribute("opacity", "0");
