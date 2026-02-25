@@ -130,7 +130,7 @@ summary: SOLAR LINE 全5話に登場する科学的数値・物理現象を実�
       "episode": 5,
       "depicted": "7.67 km/s（軌道速度達成）",
       "reference": "≈7.67 km/s（LEO 400km円軌道速度）",
-      "source": "vis-viva方程式 + [ep05 22:36](../episodes/ep05.html)",
+      "source": "vis-viva方程式 + [ep05 22:36](../episodes/ep-005.html)",
       "accuracyPercent": 100,
       "status": "verified"
     },
@@ -139,7 +139,7 @@ summary: SOLAR LINE 全5話に登場する科学的数値・物理現象を実�
       "episode": 5,
       "depicted": "55h38m - 55h12m = マージン26分",
       "reference": "200,280s - 198,720s = 1,560s = 26.0分",
-      "source": "算術検証（[ep05 12:56](../episodes/ep05.html) ケイの報告値）",
+      "source": "算術検証（[ep05 12:56](../episodes/ep-005.html) ケイの報告値）",
       "accuracyPercent": 100,
       "status": "verified"
     },

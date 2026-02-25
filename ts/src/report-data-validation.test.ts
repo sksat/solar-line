@@ -4,6 +4,7 @@
  * These tests validate the actual JSON report data files in reports/data/,
  * ensuring structural integrity, referential consistency, and alignment
  * between episode reports and attributed dialogue data.
+ * Also validates internal link targets in summary report markdown files.
  */
 import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
@@ -844,5 +845,72 @@ describe("report data: burn marker timing consistency", () => {
         }
       }
     }
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Internal link validation for summary reports
+// ---------------------------------------------------------------------------
+
+describe("report data: internal links in summary markdown", () => {
+  const SUMMARY_DIR = path.join(REPORTS_DIR, "data", "summary");
+  const summaryFiles = fs.existsSync(SUMMARY_DIR)
+    ? fs.readdirSync(SUMMARY_DIR).filter(f => f.endsWith(".md"))
+    : [];
+
+  // Known valid output paths (episode + summary pages in dist)
+  const VALID_EPISODE_FILES = new Set(
+    getAvailableEpisodes().map(n => `ep-${String(n).padStart(3, "0")}.html`),
+  );
+  const VALID_SUMMARY_FILES = new Set(
+    summaryFiles.map(f => f.replace(/\.md$/, ".html")),
+  );
+
+  for (const file of summaryFiles) {
+    it(`${file}: all internal ../episodes/ links point to valid files`, () => {
+      const content = fs.readFileSync(path.join(SUMMARY_DIR, file), "utf-8");
+      // Match markdown links to ../episodes/XXX.html
+      const episodeLinkPattern = /\.\.\/(episodes\/[^)#"]+\.html)/g;
+      let match: RegExpExecArray | null;
+      const brokenLinks: string[] = [];
+      while ((match = episodeLinkPattern.exec(content)) !== null) {
+        const linkedFile = match[1].replace("episodes/", "");
+        if (!VALID_EPISODE_FILES.has(linkedFile)) {
+          brokenLinks.push(`${match[0]} → ${linkedFile} not found`);
+        }
+      }
+      assert.deepStrictEqual(brokenLinks, [], `Broken episode links in ${file}`);
+    });
+
+    it(`${file}: all internal ../summary/ links point to valid files`, () => {
+      const content = fs.readFileSync(path.join(SUMMARY_DIR, file), "utf-8");
+      const summaryLinkPattern = /\.\.\/(summary\/[^)#"]+\.html)/g;
+      let match: RegExpExecArray | null;
+      const brokenLinks: string[] = [];
+      while ((match = summaryLinkPattern.exec(content)) !== null) {
+        const linkedFile = match[1].replace("summary/", "");
+        if (!VALID_SUMMARY_FILES.has(linkedFile)) {
+          brokenLinks.push(`${match[0]} → ${linkedFile} not found`);
+        }
+      }
+      assert.deepStrictEqual(brokenLinks, [], `Broken summary links in ${file}`);
+    });
+  }
+
+  // Also check episode JSON files for internal links
+  for (const epNum of getAvailableEpisodes()) {
+    it(`ep${String(epNum).padStart(2, "0")}.json: all internal episode links are valid`, () => {
+      const filePath = path.join(EPISODES_DIR, `ep${String(epNum).padStart(2, "0")}.json`);
+      const content = fs.readFileSync(filePath, "utf-8");
+      const episodeLinkPattern = /episodes\/([^)#"\\]+\.html)/g;
+      let match: RegExpExecArray | null;
+      const brokenLinks: string[] = [];
+      while ((match = episodeLinkPattern.exec(content)) !== null) {
+        if (!VALID_EPISODE_FILES.has(match[1])) {
+          brokenLinks.push(`episodes/${match[1]} not found`);
+        }
+      }
+      assert.deepStrictEqual(brokenLinks, [], `Broken episode links in ep${String(epNum).padStart(2, "0")}.json`);
+    });
   }
 });
