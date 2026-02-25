@@ -257,6 +257,18 @@ test("no broken internal links on index page", async ({ page }) => {
   }
 });
 
+test("ordered lists in cross-episode have continuous numbering", async ({ page }) => {
+  await page.goto("/summary/cross-episode.html");
+  // Find all <ol> elements and verify none are single-item splits
+  // (which would indicate the blank-line numbering reset bug)
+  const olElements = page.locator("ol");
+  const count = await olElements.count();
+  for (let i = 0; i < count; i++) {
+    const itemCount = await olElements.nth(i).locator("li").count();
+    expect(itemCount, `OL #${i + 1} should have more than 1 item (numbering reset bug)`).toBeGreaterThanOrEqual(2);
+  }
+});
+
 test("responsive layout: body max-width is constrained", async ({ page }) => {
   await page.goto("/");
   const maxWidth = await page.locator("body").evaluate(el => getComputedStyle(el).maxWidth);
