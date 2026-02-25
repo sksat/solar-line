@@ -11,6 +11,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import type { EpisodeReport, TransferAnalysis, DialogueQuote, SummaryReport, OrbitalDiagram, BurnMarker, TransferArc } from "./report-types.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
+import { loadSummaryBySlug } from "./mdx-parser.ts";
 
 const REPORTS_DIR = path.resolve(import.meta.dirname ?? ".", "..", "..", "reports");
 const EPISODES_DIR = path.join(REPORTS_DIR, "data", "episodes");
@@ -404,11 +405,8 @@ describe("report data: summary reports", () => {
     assert.ok(fs.existsSync(summaryDir), "Summary directory not found");
   });
 
-  it("cross-episode.json exists and is valid", () => {
-    const filePath = path.join(summaryDir, "cross-episode.json");
-    assert.ok(fs.existsSync(filePath), "cross-episode.json not found");
-
-    const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  it("cross-episode report exists and is valid", () => {
+    const data = loadSummaryBySlug(summaryDir, "cross-episode");
     assert.ok(data.slug, "Missing slug");
     assert.ok(data.title, "Missing title");
     assert.ok(data.summary, "Missing summary");
@@ -721,10 +719,9 @@ describe("report data: transcription-report sync", () => {
 
 const SUMMARY_DIR = path.join(REPORTS_DIR, "data", "summary");
 
-/** Load a summary report JSON file */
+/** Load a summary report (supports both .md and .json formats) */
 function loadSummaryReport(slug: string): SummaryReport {
-  const filePath = path.join(SUMMARY_DIR, `${slug}.json`);
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  return loadSummaryBySlug(SUMMARY_DIR, slug);
 }
 
 /** Collect all orbital diagrams from all sources */

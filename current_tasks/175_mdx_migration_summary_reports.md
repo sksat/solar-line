@@ -1,6 +1,6 @@
 # Task 175: MDX Migration for Summary Reports
 
-## Status: TODO
+## Status: DONE
 
 ## Description
 

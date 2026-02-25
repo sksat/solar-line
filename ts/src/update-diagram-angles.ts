@@ -16,6 +16,7 @@ import * as path from "node:path";
 import { computeTimeline, type TimelineEvent } from "./timeline-analysis.ts";
 import { calendarToJD, planetLongitude, jdToDateString, type PlanetName } from "./ephemeris.ts";
 import type { EpisodeReport, OrbitalDiagram, SummaryReport, TransferArc } from "./report-types.ts";
+import { loadSummaryBySlug } from "./mdx-parser.ts";
 
 const args = process.argv.slice(2);
 let dataDir = path.resolve("..", "reports", "data", "episodes");
@@ -284,10 +285,12 @@ for (let ep = 1; ep <= 5; ep++) {
 
 // ---- Process cross-episode summary ----
 console.log("\n=== Cross-Episode Summary ===");
-const crossEpisodePath = path.join(summaryDir, "cross-episode.json");
+const crossEpisodeJsonPath = path.join(summaryDir, "cross-episode.json");
+const crossEpisodeMdPath = path.join(summaryDir, "cross-episode.md");
 
-if (fs.existsSync(crossEpisodePath)) {
-  const summary: SummaryReport = JSON.parse(fs.readFileSync(crossEpisodePath, "utf-8"));
+if (fs.existsSync(crossEpisodeJsonPath)) {
+  // JSON format: read, modify, write back
+  const summary: SummaryReport = JSON.parse(fs.readFileSync(crossEpisodeJsonPath, "utf-8"));
   let fileUpdated = false;
 
   for (const section of summary.sections) {
@@ -301,13 +304,46 @@ if (fs.existsSync(crossEpisodePath)) {
   }
 
   if (fileUpdated) {
-    fs.writeFileSync(crossEpisodePath, JSON.stringify(summary, null, 2) + "\n");
+    fs.writeFileSync(crossEpisodeJsonPath, JSON.stringify(summary, null, 2) + "\n");
     console.log(`  Updated cross-episode.json`);
   } else {
     console.log(`  No changes needed for cross-episode.json`);
   }
+} else if (fs.existsSync(crossEpisodeMdPath)) {
+  // MDX format: parse to get diagrams, modify, then replace JSON blocks in raw content
+  const summary = loadSummaryBySlug(summaryDir, "cross-episode");
+  let fileUpdated = false;
+
+  for (const section of summary.sections) {
+    if (section.orbitalDiagrams) {
+      for (const diagram of section.orbitalDiagrams) {
+        if (updateCrossEpisodeDiagram(diagram)) {
+          fileUpdated = true;
+        }
+      }
+    }
+  }
+
+  if (fileUpdated) {
+    // Replace orbital-diagram JSON blocks in the raw MDX file
+    let mdContent = fs.readFileSync(crossEpisodeMdPath, "utf-8");
+    const diagramRegex = /```component:orbital-diagram\n([\s\S]*?)```/g;
+    let diagramIndex = 0;
+    const allDiagrams: OrbitalDiagram[] = [];
+    for (const section of summary.sections) {
+      if (section.orbitalDiagrams) allDiagrams.push(...section.orbitalDiagrams);
+    }
+    mdContent = mdContent.replace(diagramRegex, (_match, _inner) => {
+      const diagram = allDiagrams[diagramIndex++];
+      return "```component:orbital-diagram\n" + JSON.stringify(diagram, null, 2) + "\n```";
+    });
+    fs.writeFileSync(crossEpisodeMdPath, mdContent);
+    console.log(`  Updated cross-episode.md`);
+  } else {
+    console.log(`  No changes needed for cross-episode.md`);
+  }
 } else {
-  console.log(`Skipping cross-episode.json (not found)`);
+  console.log(`Skipping cross-episode (not found)`);
 }
 
 console.log("\nDone. Planet angles and epoch annotations updated to match computed timeline.");

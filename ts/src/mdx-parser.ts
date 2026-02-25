@@ -25,6 +25,9 @@
  * ```
  */
 
+import * as fs from "node:fs";
+import * as path from "node:path";
+
 import type {
   SummaryReport,
   SummarySection,
@@ -37,6 +40,7 @@ import type {
   EventTimeline,
   ComparisonTable,
   VerificationTable,
+  GlossaryTerm,
 } from "./report-types.ts";
 
 /** Frontmatter fields for a summary report */
@@ -150,7 +154,7 @@ export function extractDirectives(content: string): {
   const directives: ComponentDirective[] = [];
   // Match fenced code blocks with component-type language tags
   // Supported patterns: ```chart:bar, ```component:orbital-diagram, ```timeline, ```table:comparison, etc.
-  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
+  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer|glossary):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
 
   const markdown = content.replace(fenceRegex, (_match, prefix: string, suffix: string, inner: string) => {
     const type = suffix || prefix;
@@ -246,8 +250,17 @@ export function applyDirectives(directives: ComponentDirective[]): Partial<Summa
         result.verificationTable = parseJsonDirective<VerificationTable>(d.rawContent);
         break;
       }
+      case "episode": {
+        result.table = parseJsonDirective<ComparisonTable>(d.rawContent);
+        break;
+      }
       case "dag-viewer": {
         result.dagViewer = true;
+        break;
+      }
+      case "glossary": {
+        // Glossary is stored temporarily; parseSummaryMarkdown lifts it to report level
+        (result as Record<string, unknown>)._glossary = parseJsonDirective<GlossaryTerm[]>(d.rawContent);
         break;
       }
       default:
@@ -270,16 +283,29 @@ export function parseSummaryMarkdown(input: string): SummaryReport {
     throw new Error("No sections found. Use ## headings to define sections.");
   }
 
-  const sections: SummarySection[] = rawSections.map(raw => {
+  let glossary: GlossaryTerm[] | undefined;
+
+  const sections: SummarySection[] = [];
+  for (const raw of rawSections) {
     const { markdown, directives } = extractDirectives(raw.content);
     const componentFields = applyDirectives(directives);
 
-    return {
+    // Lift glossary from section level to report level
+    const fields = componentFields as Record<string, unknown>;
+    if (fields._glossary) {
+      glossary = fields._glossary as GlossaryTerm[];
+      delete fields._glossary;
+    }
+
+    // Skip sections that are empty after glossary extraction
+    if (!markdown && Object.keys(fields).length === 0) continue;
+
+    sections.push({
       heading: raw.heading,
       markdown,
       ...componentFields,
-    };
-  });
+    });
+  }
 
   return {
     slug: frontmatter.slug,
@@ -287,5 +313,22 @@ export function parseSummaryMarkdown(input: string): SummaryReport {
     summary: frontmatter.summary,
     category: frontmatter.category,
     sections,
+    glossary,
   };
+}
+
+/**
+ * Load a summary report by slug from a directory, trying .md then .json.
+ * Throws if neither file exists.
+ */
+export function loadSummaryBySlug(summaryDir: string, slug: string): SummaryReport {
+  const mdPath = path.join(summaryDir, `${slug}.md`);
+  if (fs.existsSync(mdPath)) {
+    return parseSummaryMarkdown(fs.readFileSync(mdPath, "utf-8"));
+  }
+  const jsonPath = path.join(summaryDir, `${slug}.json`);
+  if (fs.existsSync(jsonPath)) {
+    return JSON.parse(fs.readFileSync(jsonPath, "utf-8")) as SummaryReport;
+  }
+  throw new Error(`Summary report not found: ${slug} (tried ${mdPath} and ${jsonPath})`);
 }

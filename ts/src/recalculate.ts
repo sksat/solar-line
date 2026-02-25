@@ -198,15 +198,27 @@ const totalStart = performance.now();
 if (regenerateSummaries && !episodeFilter) {
   console.log("--- Summary Reports (regenerating from code) ---");
 
-  process.stdout.write("  Cross-episode analysis...");
-  const { result: crossReport, durationMs: crossMs } = timeExec("cross-episode", generateCrossEpisodeReport);
-  console.log(` done (${crossMs}ms)`);
-  writeJson(path.join(summaryDir, "cross-episode.json"), crossReport);
+  // Check if MDX files exist (they take priority over generated JSON)
+  const crossMdPath = path.join(summaryDir, "cross-episode.md");
+  const shipMdPath = path.join(summaryDir, "ship-kestrel.md");
 
-  process.stdout.write("  Ship Kestrel dossier...");
-  const { result: shipReport, durationMs: shipMs } = timeExec("ship-kestrel", generateShipKestrelReport);
-  console.log(` done (${shipMs}ms)`);
-  writeJson(path.join(summaryDir, "ship-kestrel.json"), shipReport);
+  if (fs.existsSync(crossMdPath)) {
+    console.log("  Cross-episode: skipped (MDX file exists — edit .md directly)");
+  } else {
+    process.stdout.write("  Cross-episode analysis...");
+    const { result: crossReport, durationMs: crossMs } = timeExec("cross-episode", generateCrossEpisodeReport);
+    console.log(` done (${crossMs}ms)`);
+    writeJson(path.join(summaryDir, "cross-episode.json"), crossReport);
+  }
+
+  if (fs.existsSync(shipMdPath)) {
+    console.log("  Ship Kestrel: skipped (MDX file exists — edit .md directly)");
+  } else {
+    process.stdout.write("  Ship Kestrel dossier...");
+    const { result: shipReport, durationMs: shipMs } = timeExec("ship-kestrel", generateShipKestrelReport);
+    console.log(` done (${shipMs}ms)`);
+    writeJson(path.join(summaryDir, "ship-kestrel.json"), shipReport);
+  }
 
   console.log();
 } else if (!regenerateSummaries && !episodeFilter) {

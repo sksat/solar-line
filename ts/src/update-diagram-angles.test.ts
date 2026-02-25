@@ -12,6 +12,7 @@ import * as path from "node:path";
 import { computeTimeline } from "./timeline-analysis.ts";
 import { calendarToJD, planetLongitude, type PlanetName } from "./ephemeris.ts";
 import type { EpisodeReport, OrbitalDiagram, SummaryReport } from "./report-types.ts";
+import { loadSummaryBySlug } from "./mdx-parser.ts";
 
 const episodeDir = path.resolve(import.meta.dirname!, "..", "..", "reports", "data", "episodes");
 const summaryDir = path.resolve(import.meta.dirname!, "..", "..", "reports", "data", "summary");
@@ -118,8 +119,7 @@ describe("epoch-consistent planet positions in episode diagrams", () => {
 });
 
 describe("epoch-consistent positions in cross-episode diagram", () => {
-  const crossEpisodePath = path.join(summaryDir, "cross-episode.json");
-  const summary: SummaryReport = JSON.parse(fs.readFileSync(crossEpisodePath, "utf-8"));
+  const summary: SummaryReport = loadSummaryBySlug(summaryDir, "cross-episode");
 
   function findFullRouteDiagram(): OrbitalDiagram | null {
     for (const section of summary.sections) {
@@ -226,9 +226,7 @@ describe("burn marker angles aligned with planet positions", () => {
   it("cross-episode EP2 capture burn near Saturn arrival longitude", () => {
     const ep02 = timeline.events.find((e) => e.episode === 2)!;
     const satLon = planetLongitude("saturn", ep02.arrivalJD);
-    const diagram = JSON.parse(
-      fs.readFileSync(path.join(summaryDir, "cross-episode.json"), "utf-8"),
-    ) as SummaryReport;
+    const diagram = loadSummaryBySlug(summaryDir, "cross-episode");
 
     for (const section of diagram.sections) {
       for (const d of section.orbitalDiagrams ?? []) {

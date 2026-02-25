@@ -322,6 +322,29 @@ describe("applyDirectives", () => {
     assert.equal(result.timeSeriesCharts!.length, 2);
   });
 
+  it("applies episode table directive", () => {
+    const tableJson = JSON.stringify({
+      caption: "船仕様",
+      episodes: [1, 2, 3],
+      rows: [{ metric: "推力 (MN)", values: { "1": "9.8", "2": "0", "3": "9.8" }, status: "ok", note: "一貫性あり" }],
+    });
+    const result = applyDirectives([{ type: "episode", rawContent: tableJson }]);
+    assert.ok(result.table);
+    assert.equal(result.table!.caption, "船仕様");
+    assert.equal(result.table!.episodes.length, 3);
+    assert.equal(result.table!.rows.length, 1);
+  });
+
+  it("stores glossary in _glossary field", () => {
+    const glossaryJson = JSON.stringify([
+      { term: "ΔV", reading: "デルタブイ", definition: "速度変化量" },
+    ]);
+    const result = applyDirectives([{ type: "glossary", rawContent: glossaryJson }]);
+    const fields = result as Record<string, unknown>;
+    assert.ok(fields._glossary);
+    assert.equal((fields._glossary as unknown[]).length, 1);
+  });
+
   it("throws on unknown directive type", () => {
     assert.throws(
       () => applyDirectives([{ type: "unknown", rawContent: "" }]),
@@ -419,6 +442,66 @@ summary: Summary
     assert.equal(report.sections.length, 1);
     assert.ok(report.sections[0].markdown.includes("| 指標 | 値 |"));
     assert.ok(report.sections[0].markdown.includes("表の後のテキスト。"));
+  });
+
+  it("parses table:episode directive", () => {
+    const tableJson = JSON.stringify({
+      caption: "推力比較",
+      episodes: [1, 2],
+      rows: [{ metric: "推力", values: { "1": "9.8", "2": "0" }, status: "ok", note: "test" }],
+    });
+    const input = `---
+slug: test
+title: Test
+summary: Summary
+---
+
+## 分析
+
+テキスト。
+
+\`\`\`table:episode
+${tableJson}
+\`\`\`
+`;
+
+    const report = parseSummaryMarkdown(input);
+    assert.equal(report.sections.length, 1);
+    assert.ok(report.sections[0].table);
+    assert.equal(report.sections[0].table!.caption, "推力比較");
+    assert.equal(report.sections[0].table!.rows.length, 1);
+  });
+
+  it("lifts glossary directive to report level", () => {
+    const glossaryJson = JSON.stringify([
+      { term: "ΔV", reading: "デルタブイ", definition: "速度変化量" },
+      { term: "Isp", reading: "比推力", definition: "推進効率" },
+    ]);
+    const input = `---
+slug: test
+title: Test
+summary: Summary
+---
+
+## 分析
+
+本文。
+
+## 用語集
+
+\`\`\`glossary:
+${glossaryJson}
+\`\`\`
+`;
+
+    const report = parseSummaryMarkdown(input);
+    // Glossary section should be removed (empty after directive extraction)
+    assert.equal(report.sections.length, 1);
+    assert.equal(report.sections[0].heading, "分析");
+    // Glossary should be at report level
+    assert.ok(report.glossary);
+    assert.equal(report.glossary!.length, 2);
+    assert.equal(report.glossary![0].term, "ΔV");
   });
 
   it("handles KaTeX formulas", () => {

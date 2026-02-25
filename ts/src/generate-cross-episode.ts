@@ -19,6 +19,13 @@ for (let i = 0; i < args.length; i++) {
 
 fs.mkdirSync(outDir, { recursive: true });
 
+// Check if MDX file exists (MDX is the preferred format)
+const mdPath = path.join(outDir, "cross-episode.md");
+if (fs.existsSync(mdPath)) {
+  console.log(`Skipped: ${mdPath} already exists (MDX format — edit .md directly)`);
+  process.exit(0);
+}
+
 const report = generateCrossEpisodeReport();
 const outPath = path.join(outDir, "cross-episode.json");
 fs.writeFileSync(outPath, JSON.stringify(report, null, 2));

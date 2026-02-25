@@ -19,6 +19,12 @@ for (let i = 0; i < args.length; i++) {
 
 fs.mkdirSync(outDir, { recursive: true });
 
+const mdPath = path.join(outDir, "science-accuracy.md");
+if (fs.existsSync(mdPath)) {
+  console.log(`Skipped: ${mdPath} already exists (MDX format — edit .md directly)`);
+  process.exit(0);
+}
+
 const report = generateScienceAccuracyReport();
 const outPath = path.join(outDir, "science-accuracy.json");
 fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
