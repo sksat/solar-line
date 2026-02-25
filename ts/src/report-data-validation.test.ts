@@ -13,14 +13,20 @@ import * as path from "node:path";
 import type { EpisodeReport, TransferAnalysis, DialogueQuote, SummaryReport, OrbitalDiagram, BurnMarker, TransferArc } from "./report-types.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
+import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
 
 const REPORTS_DIR = path.resolve(import.meta.dirname ?? ".", "..", "..", "reports");
 const EPISODES_DIR = path.join(REPORTS_DIR, "data", "episodes");
 
-/** Load an episode report JSON file */
+/** Load an episode report from either .md (MDX) or .json format */
 function loadEpisodeReport(epNum: number): EpisodeReport {
-  const filePath = path.join(EPISODES_DIR, `ep${String(epNum).padStart(2, "0")}.json`);
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  const slug = `ep${String(epNum).padStart(2, "0")}`;
+  const mdPath = path.join(EPISODES_DIR, `${slug}.md`);
+  if (fs.existsSync(mdPath)) {
+    return parseEpisodeMarkdown(fs.readFileSync(mdPath, "utf-8"));
+  }
+  const jsonPath = path.join(EPISODES_DIR, `${slug}.json`);
+  return JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
 }
 
 /** Load attributed dialogue JSON if it exists, null otherwise */
@@ -30,10 +36,11 @@ function loadDialogue(epNum: number): EpisodeDialogue | null {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
-/** Get all available episode numbers by scanning directory */
+/** Get all available episode numbers by scanning directory (supports .json and .md) */
 function getAvailableEpisodes(): number[] {
-  const files = fs.readdirSync(EPISODES_DIR).filter(f => /^ep\d{2}\.json$/.test(f));
-  return files.map(f => parseInt(f.slice(2, 4), 10)).sort((a, b) => a - b);
+  const files = fs.readdirSync(EPISODES_DIR).filter(f => /^ep\d{2}\.(json|md)$/.test(f));
+  const nums = new Set(files.map(f => parseInt(f.slice(2, 4), 10)));
+  return [...nums].sort((a, b) => a - b);
 }
 
 // ---------------------------------------------------------------------------
@@ -949,10 +956,15 @@ describe("report data: internal links in summary markdown", () => {
     });
   }
 
-  // Also check episode JSON files for internal links
+  // Also check episode files (JSON or MDX) for internal links
   for (const epNum of getAvailableEpisodes()) {
-    it(`ep${String(epNum).padStart(2, "0")}.json: all internal episode links are valid`, () => {
-      const filePath = path.join(EPISODES_DIR, `ep${String(epNum).padStart(2, "0")}.json`);
+    const slug = `ep${String(epNum).padStart(2, "0")}`;
+    const mdPath = path.join(EPISODES_DIR, `${slug}.md`);
+    const jsonPath = path.join(EPISODES_DIR, `${slug}.json`);
+    const filePath = fs.existsSync(mdPath) ? mdPath : jsonPath;
+    const fileLabel = path.basename(filePath);
+
+    it(`${fileLabel}: all internal episode links are valid`, () => {
       const content = fs.readFileSync(filePath, "utf-8");
       const episodeLinkPattern = /episodes\/([^)#"\\]+\.html)/g;
       let match: RegExpExecArray | null;
@@ -962,7 +974,7 @@ describe("report data: internal links in summary markdown", () => {
           brokenLinks.push(`episodes/${match[1]} not found`);
         }
       }
-      assert.deepStrictEqual(brokenLinks, [], `Broken episode links in ep${String(epNum).padStart(2, "0")}.json`);
+      assert.deepStrictEqual(brokenLinks, [], `Broken episode links in ${fileLabel}`);
     });
   }
 });

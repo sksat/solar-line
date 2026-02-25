@@ -13,6 +13,7 @@ import { computeTimeline } from "./timeline-analysis.ts";
 import { calendarToJD, planetLongitude, type PlanetName } from "./ephemeris.ts";
 import type { EpisodeReport, OrbitalDiagram, SummaryReport } from "./report-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
+import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
 
 const episodeDir = path.resolve(import.meta.dirname!, "..", "..", "reports", "data", "episodes");
 const summaryDir = path.resolve(import.meta.dirname!, "..", "..", "reports", "data", "summary");
@@ -28,8 +29,13 @@ function orbitIdToPlanet(orbitId: string): PlanetName | null {
 }
 
 function readEpisodeReport(ep: number): EpisodeReport {
-  const filename = `ep${String(ep).padStart(2, "0")}.json`;
-  return JSON.parse(fs.readFileSync(path.join(episodeDir, filename), "utf-8"));
+  const slug = `ep${String(ep).padStart(2, "0")}`;
+  const mdPath = path.join(episodeDir, `${slug}.md`);
+  if (fs.existsSync(mdPath)) {
+    return parseEpisodeMarkdown(fs.readFileSync(mdPath, "utf-8"));
+  }
+  const jsonPath = path.join(episodeDir, `${slug}.json`);
+  return JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
 }
 
 function getHeliocentricDiagrams(ep: number): OrbitalDiagram[] {

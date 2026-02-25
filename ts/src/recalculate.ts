@@ -164,7 +164,13 @@ const totalStart = performance.now();
   const episodes = episodeFilter ? [episodeFilter] : [1, 2, 3, 4, 5];
   console.log("--- Stamp Per-Analysis Reproduction Commands ---");
   for (const ep of episodes) {
-    const filename = `ep${String(ep).padStart(2, "0")}.json`;
+    const slug = `ep${String(ep).padStart(2, "0")}`;
+    // Skip MDX episodes — reproduction commands are already in the transfer directives
+    if (fs.existsSync(path.join(episodesDir, `${slug}.md`))) {
+      console.log(`  ${slug}.md (MDX format, skipping stamp)`);
+      continue;
+    }
+    const filename = `${slug}.json`;
     const filepath = path.join(episodesDir, filename);
     if (!fs.existsSync(filepath)) continue;
 

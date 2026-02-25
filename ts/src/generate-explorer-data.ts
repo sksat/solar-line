@@ -12,6 +12,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import type { EpisodeReport } from "./report-types.ts";
 import type { EpisodeDialogue } from "./subtitle-types.ts";
+import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
 
 /** Flat transfer record for SQL querying */
 interface FlatTransfer {
@@ -104,14 +105,33 @@ export function generateExplorerData(dataDir: string, dagStatePath?: string): Ex
   const transfers: FlatTransfer[] = [];
   const dialogue: FlatDialogueLine[] = [];
 
-  // Collect episode data
+  // Collect episode data (supports both .json and .md formats)
   if (fs.existsSync(episodesDir)) {
-    const epFiles = fs.readdirSync(episodesDir)
-      .filter(f => /^ep\d+\.json$/.test(f))
-      .sort();
+    const allFiles = fs.readdirSync(episodesDir).sort();
+    const jsonFiles = allFiles.filter(f => /^ep\d+\.json$/.test(f));
+    const mdFiles = allFiles.filter(f => /^ep\d+\.md$/.test(f));
+    const mdSlugs = new Set(mdFiles.map(f => f.replace(/\.md$/, "")));
 
-    for (const file of epFiles) {
-      const ep = readJsonFile<EpisodeReport>(path.join(episodesDir, file));
+    // Combine: .md files take priority over .json for the same slug
+    const epFiles: { file: string; format: "json" | "md" }[] = [];
+    for (const f of jsonFiles) {
+      const slug = f.replace(/\.json$/, "");
+      if (!mdSlugs.has(slug)) {
+        epFiles.push({ file: f, format: "json" });
+      }
+    }
+    for (const f of mdFiles) {
+      epFiles.push({ file: f, format: "md" });
+    }
+    epFiles.sort((a, b) => a.file.localeCompare(b.file));
+
+    for (const { file, format } of epFiles) {
+      let ep: EpisodeReport | null;
+      if (format === "md") {
+        ep = parseEpisodeMarkdown(fs.readFileSync(path.join(episodesDir, file), "utf-8"));
+      } else {
+        ep = readJsonFile<EpisodeReport>(path.join(episodesDir, file));
+      }
       if (!ep) continue;
 
       for (const t of ep.transfers) {

@@ -252,7 +252,13 @@ function updateCrossEpisodeDiagram(diagram: OrbitalDiagram): boolean {
 // ---- Process episode reports ----
 console.log("=== Episode Reports ===");
 for (let ep = 1; ep <= 5; ep++) {
-  const filename = `ep${String(ep).padStart(2, "0")}.json`;
+  const slug = `ep${String(ep).padStart(2, "0")}`;
+  // Skip MDX episodes — diagram angles are in the diagrams: directive
+  if (fs.existsSync(path.join(dataDir, `${slug}.md`))) {
+    console.log(`Skipping ${slug}.md (MDX format, edit diagrams: directive manually)`);
+    continue;
+  }
+  const filename = `${slug}.json`;
   const filepath = path.join(dataDir, filename);
 
   if (!fs.existsSync(filepath)) {

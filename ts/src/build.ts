@@ -11,6 +11,7 @@ import type { EpisodeReport, SiteManifest, SummaryReport, TranscriptionPageData,
 import type { EpisodeLines } from "./dialogue-extraction-types.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 import { parseSummaryMarkdown } from "./mdx-parser.ts";
+import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
 import {
   renderIndex,
   renderEpisode,
@@ -98,33 +99,63 @@ export function resolveDialogueReferences(
   return warnings;
 }
 
-/** Discover episode JSON files in data/episodes/ */
+/** Discover episode files in data/episodes/ (supports both .json and .md formats) */
 export function discoverEpisodes(dataDir: string): EpisodeReport[] {
   const episodesDir = path.join(dataDir, "data", "episodes");
   if (!fs.existsSync(episodesDir)) return [];
 
-  const files = fs.readdirSync(episodesDir)
+  const jsonFiles = fs.readdirSync(episodesDir)
     .filter(f => /^ep\d+\.json$/.test(f))
     .sort();
+  const mdFiles = fs.readdirSync(episodesDir)
+    .filter(f => /^ep\d+\.md$/.test(f))
+    .sort();
+
+  // Check for conflicts: same episode in both .json and .md
+  const jsonSlugs = new Set(jsonFiles.map(f => f.replace(/\.json$/, "")));
+  const mdSlugs = new Set(mdFiles.map(f => f.replace(/\.md$/, "")));
+  for (const slug of mdSlugs) {
+    if (jsonSlugs.has(slug)) {
+      throw new Error(
+        `Duplicate episode report: both ${slug}.json and ${slug}.md exist. ` +
+        `Remove one to resolve the conflict.`
+      );
+    }
+  }
 
   const episodes: EpisodeReport[] = [];
-  for (const file of files) {
+
+  // Load JSON episodes
+  for (const file of jsonFiles) {
     const report = readJsonFile<EpisodeReport>(path.join(episodesDir, file));
     if (!report) continue;
-
-    // Load dialogue data and validate references
-    const epNum = String(report.episode).padStart(2, "0");
-    const dialogueData = readJsonFile<EpisodeDialogue>(
-      path.join(episodesDir, `ep${epNum}_dialogue.json`),
-    );
-    const warnings = resolveDialogueReferences(report, dialogueData);
-    for (const w of warnings) {
-      console.warn(`⚠️  ${w}`);
-    }
-
+    loadDialogueAndValidate(report, episodesDir);
     episodes.push(report);
   }
+
+  // Load MDX episodes
+  for (const file of mdFiles) {
+    const content = fs.readFileSync(path.join(episodesDir, file), "utf-8");
+    const report = parseEpisodeMarkdown(content);
+    loadDialogueAndValidate(report, episodesDir);
+    episodes.push(report);
+  }
+
+  // Sort by episode number
+  episodes.sort((a, b) => a.episode - b.episode);
   return episodes;
+}
+
+/** Load dialogue data and validate references for an episode report */
+function loadDialogueAndValidate(report: EpisodeReport, episodesDir: string): void {
+  const epNum = String(report.episode).padStart(2, "0");
+  const dialogueData = readJsonFile<EpisodeDialogue>(
+    path.join(episodesDir, `ep${epNum}_dialogue.json`),
+  );
+  const warnings = resolveDialogueReferences(report, dialogueData);
+  for (const w of warnings) {
+    console.warn(`⚠️  ${w}`);
+  }
 }
 
 /** Session log metadata */
