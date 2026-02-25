@@ -248,6 +248,52 @@ describe("report data: time-series error band integrity", () => {
   }
 });
 
+describe("report data: error bands bracket nominal values", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const charts = report.timeSeriesCharts ?? [];
+
+    for (const chart of charts) {
+      for (const series of chart.series) {
+        if (series.yLow && series.yHigh) {
+          it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": yLow <= yHigh`, () => {
+            for (let i = 0; i < series.y.length; i++) {
+              assert.ok(
+                series.yLow![i] <= series.yHigh![i] + 0.01,
+                `yLow[${i}]=${series.yLow![i]} > yHigh[${i}]=${series.yHigh![i]}`
+              );
+            }
+          });
+
+          it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": has errorSource`, () => {
+            assert.ok(
+              series.errorSource,
+              "Series with error bands should specify errorSource"
+            );
+          });
+        }
+      }
+    }
+  }
+});
+
+describe("report data: all episodes have error bands on at least one chart", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    it(`ep${String(epNum).padStart(2, "0")} has at least one series with error bands`, () => {
+      const report = loadEpisodeReport(epNum);
+      const charts = report.timeSeriesCharts ?? [];
+      const hasErrorBands = charts.some(chart =>
+        chart.series.some(s => s.yLow && s.yHigh)
+      );
+      assert.ok(hasErrorBands, `Episode ${epNum} has no error bands on any chart`);
+    });
+  }
+});
+
 describe("report data: uncertainty ellipse referential integrity", () => {
   const episodes = getAvailableEpisodes();
 
