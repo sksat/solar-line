@@ -27,8 +27,10 @@ pub const SATURN_RING_A_OUTER_KM: f64 = 136_775.0;
 /// Saturn equatorial radius: 60,268 km
 pub const SATURN_EQUATORIAL_RADIUS_KM: f64 = 60_268.0;
 
-/// Enceladus orbital radius: ~238,042 km (outside ring system)
-pub const ENCELADUS_ORBITAL_RADIUS_KM: f64 = 238_042.0;
+/// Enceladus orbital radius: ~238,020 km (outside ring system)
+/// Note: NASA JPL gives semi-major axis 238,042 km; 238,020 km is used
+/// throughout EP02 calculations for internal consistency.
+pub const ENCELADUS_ORBITAL_RADIUS_KM: f64 = 238_020.0;
 
 // ── Uranus System ───────────────────────────────────────────────────
 
