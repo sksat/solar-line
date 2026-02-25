@@ -121,7 +121,7 @@
     ],
     "ringInnerKm": 66900,
     "ringOuterKm": 140180,
-    "enceladusOrbitKm": 238042,
+    "enceladusOrbitKm": 238020,
     "enceladusOutsideRings": true,
     "saturnZHeightAtArrival": {
       "planet": "saturn",
