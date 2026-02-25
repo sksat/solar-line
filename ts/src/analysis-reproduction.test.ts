@@ -281,6 +281,42 @@ describe("EP03 reproduction: Uranus/Titania capture", () => {
   });
 });
 
+describe("EP03 reproduction: Uranian moon comparison (IF analysis)", () => {
+  const r = analyzeEpisode3();
+  const mc = r.moonComparison;
+
+  it("uses v_inf = 2.0 km/s", () => {
+    assert.strictEqual(mc.vInfKms, 2.0);
+  });
+
+  it("Titania capture ΔV ≈ 0.37 km/s (matches report)", () => {
+    const titania = mc.moons.find(m => m.name === "TITANIA")!;
+    assertClose(titania.dvCaptureKms, 0.37, "dvCaptureKms", 0.02);
+  });
+
+  it("Titania orbit insertion ΔV ≈ 1.88 km/s (matches report)", () => {
+    const titania = mc.moons.find(m => m.name === "TITANIA")!;
+    assertClose(titania.dvOrbitInsertionKms, 1.88, "dvOrbitInsertionKms", 0.01);
+  });
+
+  it("Miranda has smallest capture ΔV but largest orbit insertion ΔV", () => {
+    const miranda = mc.moons.find(m => m.name === "MIRANDA")!;
+    const oberon = mc.moons.find(m => m.name === "OBERON")!;
+    assert.ok(miranda.dvCaptureKms < oberon.dvCaptureKms, "Miranda capture < Oberon capture");
+    assert.ok(miranda.dvOrbitInsertionKms > oberon.dvOrbitInsertionKms, "Miranda insertion > Oberon insertion");
+  });
+
+  it("all 5 major Uranian moons are included", () => {
+    assert.strictEqual(mc.moons.length, 5);
+    const names = mc.moons.map(m => m.name);
+    assert.ok(names.includes("MIRANDA"), "includes Miranda");
+    assert.ok(names.includes("ARIEL"), "includes Ariel");
+    assert.ok(names.includes("UMBRIEL"), "includes Umbriel");
+    assert.ok(names.includes("TITANIA"), "includes Titania");
+    assert.ok(names.includes("OBERON"), "includes Oberon");
+  });
+});
+
 describe("EP03 reproduction: mass feasibility", () => {
   const r = analyzeEpisode3();
   const m = r.massFeasibility;

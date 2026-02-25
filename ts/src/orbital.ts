@@ -71,6 +71,15 @@ export const ENCELADUS_ORBIT_RADIUS = 238_020;
 /** Uranus equatorial radius (km) — NASA fact sheet */
 export const URANUS_RADIUS = 25_559;
 
+/** Uranian moon orbital radii (km) — NASA Uranian satellite fact sheet */
+export const URANUS_MOON_ORBITS = {
+  MIRANDA: 129_390,
+  ARIEL: 191_020,
+  UMBRIEL: 266_300,
+  TITANIA: 435_910,
+  OBERON: 583_520,
+} as const;
+
 /** Titania orbital radius around Uranus (km) — NASA fact sheet */
 export const TITANIA_ORBIT_RADIUS = 435_910;
 

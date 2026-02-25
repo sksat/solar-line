@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-02-24T18:19:45.192Z",
+  "generatedAt": "2026-02-25T07:28:05.616Z",
   "description": "3D orbital analysis for SOLAR LINE — ecliptic z-heights, ring crossings, approach geometry",
   "coplanarApproximationValid": false,
-  "maxPlaneChangeFractionPercent": 1.5117651261007103,
+  "maxPlaneChangeFractionPercent": 1.5118213319414429,
   "transfers": [
     {
       "leg": "Mars→Jupiter (72h brachistochrone)",
@@ -28,7 +28,7 @@
       "outOfPlaneDistanceKm": 10533962.038557762,
       "outOfPlaneDistanceAU": 0.07041518698940788,
       "inclinationChangeDeg": 0.5354324340862424,
-      "planeChangeDvKmS": 21.568317451722734,
+      "planeChangeDvKmS": 39.707010767924565,
       "planeChangeFractionPercent": 0.4672512446213764
     },
     {
@@ -36,81 +36,81 @@
       "episode": 2,
       "departure": {
         "planet": "jupiter",
-        "jd": 2539820.5,
-        "date": "2241-09-10",
-        "zHeightKm": 17389923.425632868,
-        "zHeightAU": 0.11624445818821985,
-        "latitudeDeg": 1.2258528841713257,
-        "inclinationDeg": 1.2985146340862421
+        "jd": 2539821.5,
+        "date": "2241-09-11",
+        "zHeightKm": 17398447.126022175,
+        "zHeightAU": 0.11630143560607628,
+        "latitudeDeg": 1.226420479756264,
+        "inclinationDeg": 1.2985145798767965
       },
       "arrival": {
         "planet": "saturn",
-        "jd": 2539939.5,
-        "date": "2242-01-07",
-        "zHeightKm": 18926791.746614832,
-        "zHeightAU": 0.12651778837527822,
-        "latitudeDeg": 0.7929109302821866,
-        "inclinationDeg": 2.507411647638604
+        "jd": 2540276.5,
+        "date": "2242-12-10",
+        "zHeightKm": 30745488.573107146,
+        "zHeightAU": 0.20552089698364367,
+        "latitudeDeg": 1.2777616749584153,
+        "inclinationDeg": 2.5074830611909653
       },
-      "outOfPlaneDistanceKm": 1536868.3209819645,
-      "outOfPlaneDistanceAU": 0.010273330187058368,
-      "inclinationChangeDeg": 1.2088970135523618,
-      "planeChangeDvKmS": 0.31648262752609535,
-      "planeChangeFractionPercent": 1.0549420917536512
+      "outOfPlaneDistanceKm": 13347041.44708497,
+      "outOfPlaneDistanceAU": 0.0892194613775674,
+      "inclinationChangeDeg": 1.2089684813141688,
+      "planeChangeDvKmS": 0.3587015149279822,
+      "planeChangeFractionPercent": 1.0550044556705358
     },
     {
       "leg": "Saturn→Uranus (143h brachistochrone)",
       "episode": 3,
       "departure": {
         "planet": "saturn",
-        "jd": 2539942.5,
-        "date": "2242-01-10",
-        "zHeightKm": 19036447.934495524,
-        "zHeightAU": 0.12725079471666254,
-        "latitudeDeg": 0.7974537269665148,
-        "inclinationDeg": 2.5074122833675565
+        "jd": 2540278.5,
+        "date": "2242-12-12",
+        "zHeightKm": 30812134.952202503,
+        "zHeightAU": 0.20596640051109033,
+        "latitudeDeg": 1.2804648382812627,
+        "inclinationDeg": 2.5074834850102667
       },
       "arrival": {
         "planet": "uranus",
-        "jd": 2539948.5,
-        "date": "2242-01-16",
-        "zHeightKm": -14303601.570230164,
-        "zHeightAU": -0.09561367085841928,
-        "latitudeDeg": -0.2825719137944009,
-        "inclinationDeg": 0.7749910633812457
+        "jd": 2540283.5,
+        "date": "2242-12-17",
+        "zHeightKm": -16771944.649456361,
+        "zHeightAU": -0.11211352521915516,
+        "latitudeDeg": -0.33033497640304765,
+        "inclinationDeg": 0.7749978505133471
       },
-      "outOfPlaneDistanceKm": 33340049.504725687,
-      "outOfPlaneDistanceAU": 0.2228644655750818,
-      "inclinationChangeDeg": 1.732421219986311,
-      "planeChangeDvKmS": 50.795308236983864,
-      "planeChangeFractionPercent": 1.5117651261007103
+      "outOfPlaneDistanceKm": 47584079.601658866,
+      "outOfPlaneDistanceAU": 0.3180799257302455,
+      "inclinationChangeDeg": 1.7324856344969195,
+      "planeChangeDvKmS": 168.7797334979427,
+      "planeChangeFractionPercent": 1.5118213319414429
     },
     {
-      "leg": "Uranus→Earth (damaged ship)",
+      "leg": "Uranus→Earth (507h composite)",
       "episode": 4,
       "departure": {
         "planet": "uranus",
-        "jd": 2539952.5,
-        "date": "2242-01-20",
-        "zHeightKm": -14333481.94169714,
-        "zHeightAU": -0.09581340880473602,
-        "latitudeDeg": -0.2831518859556055,
-        "inclinationDeg": 0.774991144421629
+        "jd": 2540285.5,
+        "date": "2242-12-19",
+        "zHeightKm": -16786462.96019773,
+        "zHeightAU": -0.11221057413217402,
+        "latitudeDeg": -0.3306150267340954,
+        "inclinationDeg": 0.7749978910335387
       },
       "arrival": {
         "planet": "earth",
-        "jd": 2539973.5,
-        "date": "2242-02-10",
-        "zHeightKm": -56625.76933949506,
-        "zHeightAU": -0.0003785198885153321,
-        "latitudeDeg": -0.02199285299592369,
-        "inclinationDeg": -0.032519309924709104
+        "jd": 2540294.5,
+        "date": "2242-12-28",
+        "zHeightKm": -83752.58329953914,
+        "zHeightAU": -0.0005598514397808146,
+        "latitudeDeg": -0.032607926394455866,
+        "inclinationDeg": -0.032636812183436
       },
-      "outOfPlaneDistanceKm": 14276856.172357645,
-      "outOfPlaneDistanceAU": 0.09543488891622069,
-      "inclinationChangeDeg": 0.8075104543463382,
-      "planeChangeDvKmS": 21.140399292187432,
-      "planeChangeFractionPercent": 0.7046799764062478
+      "outOfPlaneDistanceKm": 16702710.376898192,
+      "outOfPlaneDistanceAU": 0.11165072269239319,
+      "inclinationChangeDeg": 0.8076347032169746,
+      "planeChangeDvKmS": 83.02407367407169,
+      "planeChangeFractionPercent": 0.7047884013079091
     }
   ],
   "saturnRingAnalysis": {
@@ -125,15 +125,15 @@
     "enceladusOutsideRings": true,
     "saturnZHeightAtArrival": {
       "planet": "saturn",
-      "jd": 2539939.5,
-      "date": "2242-01-07",
-      "zHeightKm": 18926791.746614832,
-      "zHeightAU": 0.12651778837527822,
-      "latitudeDeg": 0.7929109302821866,
-      "inclinationDeg": 2.507411647638604
+      "jd": 2540276.5,
+      "date": "2242-12-10",
+      "zHeightKm": 30745488.573107146,
+      "zHeightAU": 0.20552089698364367,
+      "latitudeDeg": 1.2777616749584153,
+      "inclinationDeg": 2.5074830611909653
     },
     "approachFromJupiter": {
-      "approachAngleToDeg": 26.839229419960436,
+      "approachAngleToDeg": 23.868220723910316,
       "description": "浅い角度（リング面にほぼ平行）"
     }
   },
@@ -147,13 +147,13 @@
     "titaniaOrbitKm": 436300,
     "ringOuterKm": 51149,
     "approachFromSaturn": {
-      "angleToDeg": 59.72861812470796,
+      "angleToDeg": 53.508909903501916,
       "isPolar": false,
       "isEquatorial": false,
       "description": "中緯度からの接近"
     },
     "approachFromUranus": {
-      "angleToDeg": 68.7649633314561,
+      "angleToDeg": 67.23043236757565,
       "isPolar": true,
       "isEquatorial": false,
       "description": "極方向からの接近（天王星赤道面にほぼ垂直）"
@@ -180,30 +180,30 @@
     },
     "saturn": {
       "planet": "saturn",
-      "jd": 2539939.5,
-      "date": "2242-01-07",
-      "zHeightKm": 18926791.746614832,
-      "zHeightAU": 0.12651778837527822,
-      "latitudeDeg": 0.7929109302821866,
-      "inclinationDeg": 2.507411647638604
+      "jd": 2540276.5,
+      "date": "2242-12-10",
+      "zHeightKm": 30745488.573107146,
+      "zHeightAU": 0.20552089698364367,
+      "latitudeDeg": 1.2777616749584153,
+      "inclinationDeg": 2.5074830611909653
     },
     "uranus": {
       "planet": "uranus",
-      "jd": 2539948.5,
-      "date": "2242-01-16",
-      "zHeightKm": -14303601.570230164,
-      "zHeightAU": -0.09561367085841928,
-      "latitudeDeg": -0.2825719137944009,
-      "inclinationDeg": 0.7749910633812457
+      "jd": 2540283.5,
+      "date": "2242-12-17",
+      "zHeightKm": -16771944.649456361,
+      "zHeightAU": -0.11211352521915516,
+      "latitudeDeg": -0.33033497640304765,
+      "inclinationDeg": 0.7749978505133471
     },
     "earth": {
       "planet": "earth",
-      "jd": 2539973.5,
-      "date": "2242-02-10",
-      "zHeightKm": -56625.76933949506,
-      "zHeightAU": -0.0003785198885153321,
-      "latitudeDeg": -0.02199285299592369,
-      "inclinationDeg": -0.032519309924709104
+      "jd": 2540294.5,
+      "date": "2242-12-28",
+      "zHeightKm": -83752.58329953914,
+      "zHeightAU": -0.0005598514397808146,
+      "latitudeDeg": -0.032607926394455866,
+      "inclinationDeg": -0.032636812183436
     }
   }
 }

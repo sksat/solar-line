@@ -36,6 +36,7 @@ import {
   ENCELADUS_ORBIT_RADIUS,
   URANUS_RADIUS,
   TITANIA_ORBIT_RADIUS,
+  URANUS_MOON_ORBITS,
 } from "./orbital.ts";
 
 /** 1 AU in km */
@@ -376,6 +377,48 @@ export function cruiseVelocityAnalysis() {
   };
 }
 
+// ─── Transfer 5b: Moon Comparison (IF analysis) ───
+
+/**
+ * Compare capture ΔV for different Uranian moons.
+ *
+ * Assumes a low v_inf after brachistochrone deceleration (default 2.0 km/s).
+ * For each moon, computes:
+ * - dv_capture: burn to become gravitationally bound (parabolic capture at moon's orbital radius)
+ * - dv_orbit_insertion: burn to circularize at moon's orbital radius
+ * - orbital period of the moon
+ *
+ * Source: NASA Uranian satellite fact sheet for orbital radii;
+ *         mu_Uranus = 5,793,939 km³/s² from orbital.ts
+ */
+export function uranianMoonComparison(vInfKms: number = 2.0) {
+  const moons = Object.entries(URANUS_MOON_ORBITS).map(([name, radiusKm]) => {
+    const vEsc = escapeVelocity(MU.URANUS, radiusKm);
+    const vCirc = circularVelocity(MU.URANUS, radiusKm);
+    const vHyp = Math.sqrt(vInfKms ** 2 + vEsc ** 2);
+    const dvCapture = vHyp - vEsc; // minimum capture (become bound)
+    const dvOrbitInsertion = vHyp - vCirc; // circularize at moon's orbit
+    const periodSec = orbitalPeriod(MU.URANUS, radiusKm);
+
+    return {
+      name,
+      orbitalRadiusKm: radiusKm,
+      vEscKms: vEsc,
+      vCircKms: vCirc,
+      vHypKms: vHyp,
+      dvCaptureKms: dvCapture,
+      dvOrbitInsertionKms: dvOrbitInsertion,
+      periodDays: periodSec / 86400,
+    };
+  });
+
+  return {
+    vInfKms,
+    muUranusKm3s2: MU.URANUS,
+    moons,
+  };
+}
+
 // ─── Full Analysis ───
 
 /**
@@ -406,6 +449,10 @@ export function analyzeEpisode3() {
   );
   const minTransferTime = minimumTransferTime(SU_DISTANCE_SCENARIOS.closest);
 
+  // Moon comparison IF analysis: low v_inf scenario (post-deceleration approach)
+  // Assumes ~2 km/s residual velocity after brachistochrone deceleration
+  const moonComparison = uranianMoonComparison(2.0);
+
   return {
     hohmann,
     saturnDeparture: departure,
@@ -415,5 +462,6 @@ export function analyzeEpisode3() {
     uranusCapture: capture,
     massFeasibility,
     minTransferTime,
+    moonComparison,
   };
 }

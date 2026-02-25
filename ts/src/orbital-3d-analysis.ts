@@ -76,15 +76,19 @@ interface TransferLeg {
 }
 
 // Key dates from the SOLAR LINE 2241-2242 timeline
+// Source: cross-episode.md full-route timeline + per-episode epochAnnotation
 const DEPARTURE_MARS = calendarToJD(2241, 9, 5);
 const ARRIVAL_JUPITER = calendarToJD(2241, 9, 8); // +72h
-const DEPARTURE_JUPITER = calendarToJD(2241, 9, 10); // shortly after
-const ARRIVAL_SATURN = calendarToJD(2242, 1, 7); // ~455 days ballistic from Jupiter
-const DEPARTURE_SATURN = calendarToJD(2242, 1, 10);
-const ARRIVAL_URANUS = calendarToJD(2242, 1, 16); // +143h
-const DEPARTURE_URANUS = calendarToJD(2242, 1, 20);
-const ARRIVAL_EARTH = calendarToJD(2242, 2, 10); // approximate
+const DEPARTURE_JUPITER = calendarToJD(2241, 9, 11); // 3 days at Jupiter system
+const ARRIVAL_SATURN = calendarToJD(2242, 12, 10); // ~455 days ballistic from Jupiter
+const DEPARTURE_SATURN = calendarToJD(2242, 12, 12); // 2 days at Enceladus
+const ARRIVAL_URANUS = calendarToJD(2242, 12, 17); // +143h (~6 days)
+const DEPARTURE_URANUS = calendarToJD(2242, 12, 19); // 2 days at Titania
+const ARRIVAL_EARTH = calendarToJD(2242, 12, 28); // 507h composite route (~21 days)
 
+// Transfer velocities: brachistochrone ΔV/2 (peak velocity) from calculation files
+// These are used to compute absolute plane-change ΔV costs.
+// The fraction (planeChangeDv / totalDv) equals sin(Δi/2) and is velocity-independent.
 const LEGS: TransferLeg[] = [
   {
     episode: 1,
@@ -93,7 +97,7 @@ const LEGS: TransferLeg[] = [
     arrival: "jupiter",
     departureJD: DEPARTURE_MARS,
     arrivalJD: ARRIVAL_JUPITER,
-    transferVelocityKmS: 2308, // ΔV/2 for brachistochrone
+    transferVelocityKmS: 4249, // ΔV/2 from ep01_calculations.json closest 72h: 8497/2
   },
   {
     episode: 2,
@@ -102,7 +106,7 @@ const LEGS: TransferLeg[] = [
     arrival: "saturn",
     departureJD: DEPARTURE_JUPITER,
     arrivalJD: ARRIVAL_SATURN,
-    transferVelocityKmS: 15, // ballistic drift ~15 km/s heliocentric
+    transferVelocityKmS: 17, // avg heliocentric: (18.99+14.31)/2 from ep02_calculations.json
   },
   {
     episode: 3,
@@ -111,16 +115,16 @@ const LEGS: TransferLeg[] = [
     arrival: "uranus",
     departureJD: DEPARTURE_SATURN,
     arrivalJD: ARRIVAL_URANUS,
-    transferVelocityKmS: 1680, // high-speed brachistochrone
+    transferVelocityKmS: 5582, // ΔV/2 from ep03_calculations.json closest: 11165/2
   },
   {
     episode: 4,
-    label: "Uranus→Earth (damaged ship)",
+    label: "Uranus→Earth (507h composite)",
     departure: "uranus",
     arrival: "earth",
     departureJD: DEPARTURE_URANUS,
     arrivalJD: ARRIVAL_EARTH,
-    transferVelocityKmS: 1500, // approximate
+    transferVelocityKmS: 5890, // ΔV/2 from ep05_calculations.json 500t scenario: 11780/2
   },
 ];
 
@@ -169,8 +173,8 @@ function analyzeTransfer3D(leg: TransferLeg): TransferAnalysis3D {
   const deltaI = Math.abs(arr.inclinationDeg - dep.inclinationDeg) * (Math.PI / 180);
   const planeChangeDv = 2 * leg.transferVelocityKmS * Math.abs(Math.sin(deltaI / 2));
 
-  // What fraction of the transfer ΔV is this plane change?
-  const totalDv = 2 * leg.transferVelocityKmS; // brachistochrone ΔV ≈ 2*v
+  // Fraction = planeChangeDv / totalDv = sin(Δi/2) — velocity-independent
+  const totalDv = 2 * leg.transferVelocityKmS; // brachistochrone ΔV ≈ 2 * peak_velocity
   const fractionPercent = totalDv > 0 ? (planeChangeDv / totalDv) * 100 : 0;
 
   return {

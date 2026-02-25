@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generatedAt": "2026-02-25T00:42:27.384Z",
+    "generatedAt": "2026-02-25T07:32:04.306Z",
     "reproductionCommand": "npm run recalculate -- --episode 3",
-    "durationMs": 0
+    "durationMs": 1
   },
   "hohmann": {
     "departureDv": 1.4919669562752116,
@@ -124,5 +124,61 @@
     "timeSec": 5309546.273708617,
     "timeHours": 1474.8739649190604,
     "timeDays": 61.45308187162752
+  },
+  "moonComparison": {
+    "vInfKms": 2,
+    "muUranusKm3s2": 5793939,
+    "moons": [
+      {
+        "name": "MIRANDA",
+        "orbitalRadiusKm": 129390,
+        "vEscKms": 9.463495951419672,
+        "vCircKms": 6.691702160980288,
+        "vHypKms": 9.672525814002075,
+        "dvCaptureKms": 0.20902986258240297,
+        "dvOrbitInsertionKms": 2.980823653021787,
+        "periodDays": 1.4061454176310801
+      },
+      {
+        "name": "ARIEL",
+        "orbitalRadiusKm": 191020,
+        "vEscKms": 7.788656248712704,
+        "vCircKms": 5.50741164979573,
+        "vHypKms": 8.041341067297882,
+        "dvCaptureKms": 0.2526848185851778,
+        "dvOrbitInsertionKms": 2.5339294175021516,
+        "periodDays": 2.522303994717149
+      },
+      {
+        "name": "UMBRIEL",
+        "orbitalRadiusKm": 266300,
+        "vEscKms": 6.596542637268579,
+        "vCircKms": 4.664460031198804,
+        "vHypKms": 6.893067152240887,
+        "dvCaptureKms": 0.29652451497230814,
+        "dvOrbitInsertionKms": 2.2286071210420833,
+        "periodDays": 4.1517951407857225
+      },
+      {
+        "name": "TITANIA",
+        "orbitalRadiusKm": 435910,
+        "vEscKms": 5.1558887876319845,
+        "vCircKms": 3.6457639247782634,
+        "vHypKms": 5.530206975369838,
+        "dvCaptureKms": 0.3743181877378534,
+        "dvOrbitInsertionKms": 1.8844430505915746,
+        "periodDays": 8.695096669430317
+      },
+      {
+        "name": "OBERON",
+        "orbitalRadiusKm": 583520,
+        "vEscKms": 4.4562965530825736,
+        "vCircKms": 3.1510775116629253,
+        "vHypKms": 4.884524436320861,
+        "dvCaptureKms": 0.42822788323828753,
+        "dvOrbitInsertionKms": 1.7334469246579358,
+        "periodDays": 13.466749619167972
+      }
+    ]
   }
 }
