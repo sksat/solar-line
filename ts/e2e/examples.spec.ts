@@ -118,9 +118,9 @@ test.describe("Orbital Animation Example", () => {
     expect(await svgs.count()).toBe(2); // animated + static
   });
 
-  test("animated diagram has data-animated attribute", async ({ page }) => {
+  test("animated diagram has data-animated attribute on container", async ({ page }) => {
     await page.goto("/examples/orbital-animation.html");
-    const animated = page.locator('svg[data-animated="true"]');
+    const animated = page.locator('.orbital-diagram[data-animated="true"]');
     expect(await animated.count()).toBe(1);
   });
 
@@ -131,12 +131,49 @@ test.describe("Orbital Animation Example", () => {
     expect(await circles.count()).toBeGreaterThanOrEqual(4);
   });
 
+  test("animation controls are present and functional", async ({ page }) => {
+    await page.goto("/examples/orbital-animation.html");
+    const controls = page.locator("#test-diagram .orbital-animation-controls");
+    await expect(controls).toBeVisible();
+    const playBtn = page.locator("#test-diagram .anim-play");
+    await expect(playBtn).toBeVisible();
+    const slider = page.locator("#test-diagram .anim-slider");
+    await expect(slider).toBeVisible();
+  });
+
+  test("ship marker is created and moves when animation plays", async ({ page }) => {
+    await page.goto("/examples/orbital-animation.html");
+
+    // Click play button to start animation
+    const playBtn = page.locator("#test-diagram .anim-play");
+    await playBtn.click();
+
+    // Wait for animation to progress
+    await page.waitForTimeout(2000);
+
+    // Pause to read position
+    await playBtn.click();
+
+    // The JS creates a .ship-marker circle dynamically and moves it along the path
+    const shipMarker = page.locator("#test-diagram .ship-marker");
+    expect(await shipMarker.count()).toBeGreaterThanOrEqual(1);
+
+    // Verify the marker is visible (opacity > 0)
+    const opacity = await shipMarker.first().getAttribute("opacity");
+    expect(Number(opacity)).toBeGreaterThan(0);
+
+    // Verify time display has advanced from 0h
+    const timeDisplay = page.locator("#test-diagram .time-display");
+    const timeText = await timeDisplay.textContent();
+    expect(timeText).not.toBe("0h");
+  });
+
   test("static diagram renders without animation controls", async ({ page }) => {
     await page.goto("/examples/orbital-animation.html");
     const staticDiagram = page.locator("#static-diagram svg");
     await expect(staticDiagram).toBeVisible();
     // Static diagram should not have animation controls
-    const staticControls = page.locator("#static-diagram .anim-controls");
+    const staticControls = page.locator("#static-diagram .orbital-animation-controls");
     expect(await staticControls.count()).toBe(0);
   });
 });
