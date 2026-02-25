@@ -249,6 +249,18 @@ test("body has dark theme background", async ({ page }) => {
   expect(bg).toBe("rgb(13, 17, 23)");
 });
 
+// --- No NaN in video timestamp links (regression for Task 165) ---
+
+test("no NaN in video timestamp links across all episode pages", async ({ page }) => {
+  for (const ep of manifest.episodes) {
+    const url = `/episodes/${ep.slug}.html`;
+    await page.goto(url);
+    const links = page.locator('a[href*="NaN"]');
+    const count = await links.count();
+    expect(count, `${url} should have no NaN in href attributes`).toBe(0);
+  }
+});
+
 // --- DAG Viewer: Temporal Slider ---
 
 test.describe("DAG Viewer Temporal Slider", () => {
