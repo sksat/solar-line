@@ -376,7 +376,7 @@ describe("layoutHtml", () => {
     const html = layoutHtml("Test Page", "<p>Hello</p>");
     assert.ok(html.includes("<!DOCTYPE html>"));
     assert.ok(html.includes("<html lang=\"ja\">"));
-    assert.ok(html.includes("Test Page — SOLAR LINE 考察"));
+    assert.ok(html.includes("Test Page — SOLAR LINE 考証"));
     assert.ok(html.includes("<p>Hello</p>"));
   });
 
@@ -520,7 +520,7 @@ describe("renderTransferCard", () => {
 // --- renderIndex ---
 
 const sampleManifest: SiteManifest = {
-  title: "SOLAR LINE 考察",
+  title: "SOLAR LINE 考証",
   generatedAt: "2026-02-23T00:00:00.000Z",
   episodes: [
     { episode: 1, title: "Departure", transferCount: 2, path: "episodes/ep-001.html" },
@@ -2503,13 +2503,13 @@ describe("layoutHtml OGP meta tags", () => {
     assert.ok(html.includes('<meta property="og:title"'));
     assert.ok(html.includes('<meta property="og:description"'));
     assert.ok(html.includes('<meta property="og:type" content="article">'));
-    assert.ok(html.includes('<meta property="og:site_name" content="SOLAR LINE 考察">'));
+    assert.ok(html.includes('<meta property="og:site_name" content="SOLAR LINE 考証">'));
     assert.ok(html.includes('<meta name="description"'));
   });
 
   it("uses default description when none provided", () => {
     const html = layoutHtml("テスト", "<p>x</p>");
-    assert.ok(html.includes("SFアニメ「SOLAR LINE」の軌道遷移をΔV計算で検証する考察プロジェクト"));
+    assert.ok(html.includes("SFアニメ「SOLAR LINE」の軌道遷移をΔV計算で検証する考証プロジェクト"));
   });
 
   it("uses custom description when provided", () => {
@@ -2528,7 +2528,7 @@ describe("layoutHtml OGP meta tags", () => {
 describe("renderIndex with summaryPages", () => {
   it("includes 総合分析 section when summaryPages present", () => {
     const manifest: SiteManifest = {
-      title: "SOLAR LINE 考察",
+      title: "SOLAR LINE 考証",
       generatedAt: "2026-02-23T00:00:00Z",
       episodes: [],
       logs: [],
@@ -2544,7 +2544,7 @@ describe("renderIndex with summaryPages", () => {
 
   it("does not include 総合分析 section when no summaryPages", () => {
     const manifest: SiteManifest = {
-      title: "SOLAR LINE 考察",
+      title: "SOLAR LINE 考証",
       generatedAt: "2026-02-23T00:00:00Z",
       episodes: [],
       logs: [],
@@ -2558,7 +2558,7 @@ describe("renderIndex with summaryPages", () => {
 
 describe("renderIndex enhanced content", () => {
   const enrichedManifest: SiteManifest = {
-    title: "SOLAR LINE 考察",
+    title: "SOLAR LINE 考証",
     generatedAt: "2026-02-23T00:00:00Z",
     episodes: [
       {
@@ -2630,7 +2630,7 @@ describe("renderIndex enhanced content", () => {
 
   it("hides stats section when no totalVerdicts", () => {
     const minimal: SiteManifest = {
-      title: "SOLAR LINE 考察",
+      title: "SOLAR LINE 考証",
       generatedAt: "2026-02-23T00:00:00Z",
       episodes: [{ episode: 1, title: "T", transferCount: 1, path: "episodes/ep-001.html" }],
       logs: [],
@@ -2660,7 +2660,7 @@ describe("renderIndex enhanced content", () => {
 
 describe("renderIndex reading guide and conclusion", () => {
   const enrichedManifest: SiteManifest = {
-    title: "SOLAR LINE 考察",
+    title: "SOLAR LINE 考証",
     generatedAt: "2026-02-23T00:00:00Z",
     episodes: [
       { episode: 1, title: "火星からガニメデへ", transferCount: 4, path: "episodes/ep-001.html", verdicts: { plausible: 1, conditional: 2, indeterminate: 0, implausible: 0, reference: 1 } },
@@ -2734,7 +2734,7 @@ describe("renderIndex reading guide and conclusion", () => {
 
 describe("renderIndex verdict legend and series links", () => {
   const manifest: SiteManifest = {
-    title: "SOLAR LINE 考察",
+    title: "SOLAR LINE 考証",
     generatedAt: "2026-02-23T00:00:00Z",
     episodes: [
       { episode: 1, title: "火星からガニメデへ", transferCount: 4, path: "episodes/ep-001.html" },
@@ -3794,7 +3794,7 @@ describe("renderTranscriptionPage", () => {
   it("includes back link to episode analysis", () => {
     const html = renderTranscriptionPage(phase1Only);
     assert.ok(html.includes("ep-001.html"));
-    assert.ok(html.includes("考察レポートに戻る"));
+    assert.ok(html.includes("考証レポートに戻る"));
   });
 
   it("includes navigation", () => {

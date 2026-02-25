@@ -1,5 +1,10 @@
 # 人間からの指示履歴
 
+## 2026-02-25 (commit c1d4a7a)
+
+16. **考証への rename 承認**: ADR-015 の選択肢 A（「SOLAR LINE 考察」→「SOLAR LINE 考証」）を承認 → Task 182
+17. **Orekit cross-validation 未実装の指摘**: cross_validation/ に Orekit 等の信頼できる外部ツールが使われていない → Task 183
+
 ## 2026-02-25 (commit 549d7ce)
 
 14. **描写整合性優先**: 1年超の行程は描写上不自然。人間のG耐性よりも描写との整合性を最優先して考証すべき → CLAUDE.md に反映

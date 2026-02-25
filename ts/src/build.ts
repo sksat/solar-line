@@ -1,5 +1,5 @@
 /**
- * Static site generator for SOLAR LINE 考察 reports.
+ * Static site generator for SOLAR LINE 考証 reports.
  * Reads JSON data + markdown logs from reports/ and outputs static HTML to dist/.
  *
  * Usage: node --experimental-strip-types src/build.ts [--out-dir <path>] [--data-dir <path>]
@@ -484,7 +484,7 @@ function sumVerdicts(all: VerdictCounts[]): VerdictCounts {
 export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summaries: SummaryReport[] = [], transcriptions: TranscriptionPageData[] = []): SiteManifest {
   const episodeVerdicts = episodes.map(ep => countVerdicts(ep));
   return {
-    title: "SOLAR LINE 考察",
+    title: "SOLAR LINE 考証",
     generatedAt: new Date().toISOString(),
     episodes: episodes.map((ep, i) => ({
       episode: ep.episode,

@@ -138,7 +138,7 @@ function seed(): DagState {
   addNode(dag, "report.attitude_control", "report", "姿勢制御精度・安定性レポート", [...allReportIds, "analysis.attitude_control"], {
     tags: ["summary"],
   });
-  addNode(dag, "report.communications", "report", "通信遅延と通信描写の考察", [...allReportIds, "analysis.communications"], {
+  addNode(dag, "report.communications", "report", "通信遅延と通信描写の考証", [...allReportIds, "analysis.communications"], {
     tags: ["summary"],
   });
   addNode(dag, "report.tech_overview", "report", "技術解説ページ", [...allReportIds], {

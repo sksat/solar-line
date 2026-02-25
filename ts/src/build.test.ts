@@ -119,7 +119,7 @@ describe("buildManifest", () => {
     ];
 
     const manifest = buildManifest(episodes, logs);
-    assert.equal(manifest.title, "SOLAR LINE 考察");
+    assert.equal(manifest.title, "SOLAR LINE 考証");
     assert.equal(manifest.episodes.length, 1);
     assert.equal(manifest.episodes[0].transferCount, 2);
     assert.equal(manifest.episodes[0].path, "episodes/ep-001.html");
@@ -226,7 +226,7 @@ describe("build (integration)", () => {
     build({ dataDir, outDir });
 
     const manifest = JSON.parse(fs.readFileSync(path.join(outDir, "manifest.json"), "utf-8"));
-    assert.equal(manifest.title, "SOLAR LINE 考察");
+    assert.equal(manifest.title, "SOLAR LINE 考証");
     assert.ok(Array.isArray(manifest.episodes));
     assert.ok(Array.isArray(manifest.logs));
     assert.ok(manifest.generatedAt);

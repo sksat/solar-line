@@ -775,10 +775,10 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
     `<a href="${basePath}/explorer/index.html">データ探索</a>`,
   ];
   const metaNav = `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">この考証について</button><span class="nav-dropdown-menu">${metaLinks.join("")}</span></span>`;
-  const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考察`;
+  const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考証`;
   const ogDescription = description
     ? escapeHtml(description)
-    : "SFアニメ「SOLAR LINE」の軌道遷移をΔV計算で検証する考察プロジェクト";
+    : "SFアニメ「SOLAR LINE」の軌道遷移をΔV計算で検証する考証プロジェクト";
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -788,7 +788,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <meta property="og:title" content="${fullTitle}">
 <meta property="og:description" content="${ogDescription}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="SOLAR LINE 考察">
+<meta property="og:site_name" content="SOLAR LINE 考証">
 <meta name="description" content="${ogDescription}">
 <style>${REPORT_CSS}</style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous">
@@ -803,7 +803,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}${metaNav}</nav>
 <div class="site-banner"><strong>⚠ ネタバレ注意:</strong> 本サイトはSFアニメ「SOLAR LINE」の内容を詳細に分析しています。未視聴の方はご注意ください。<br><strong>📝 AI生成コンテンツ:</strong> 本考証の大部分は AI（Claude Code 等）によって生成されています。内容の正確性については原作および引用元をご確認ください。</div>
 ${content}
-<footer>SOLAR LINE 考察 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a> | <a href="${basePath}/doc/solar_line_core/index.html">API Docs</a></footer>
+<footer>SOLAR LINE 考証 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a> | <a href="${basePath}/doc/solar_line_core/index.html">API Docs</a></footer>
 <script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement==="function"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}if(typeof hljs!=="undefined"){hljs.highlightAll()}if(typeof uPlot!=="undefined"){document.querySelectorAll(".uplot-chart").forEach(function(el){var dataEl=el.querySelector(".uplot-data");if(!dataEl)return;var cfg=JSON.parse(dataEl.textContent);var series=[{}];var data=[cfg.series[0].x];var bands=[];var dataIdx=1;cfg.series.forEach(function(s){series.push({label:s.label,stroke:s.color,width:2,dash:s.style==="dashed"?[6,3]:undefined});data.push(s.y);var mainIdx=dataIdx;dataIdx++;if(s.yLow&&s.yHigh){var c=s.color;var alpha=c.startsWith("#")?c+"33":c.replace(/[\\d.]+\\)/,"0.15)");series.push({label:s.label+" (下限)",show:false,stroke:"transparent",fill:undefined});data.push(s.yHigh);var hiIdx=dataIdx;dataIdx++;series.push({label:s.label+" (上限)",show:false,stroke:"transparent",fill:undefined});data.push(s.yLow);var loIdx=dataIdx;dataIdx++;bands.push({series:[hiIdx,loIdx],fill:alpha})}});var thresholdPlugin=cfg.thresholds&&cfg.thresholds.length?{hooks:{draw:[function(u){var ctx=u.ctx;cfg.thresholds.forEach(function(t){var yPos=u.valToPos(t.value,"y",true);ctx.save();ctx.strokeStyle=t.color;ctx.lineWidth=1.5;if(t.style==="dashed")ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(u.bbox.left,yPos);ctx.lineTo(u.bbox.left+u.bbox.width,yPos);ctx.stroke();ctx.fillStyle=t.color;ctx.font="11px sans-serif";ctx.textAlign="right";ctx.fillText(t.label,u.bbox.left+u.bbox.width-4,yPos-4);ctx.restore()})}]}}:undefined;var plugins=thresholdPlugin?[thresholdPlugin]:[];var opts={width:cfg.width||600,height:cfg.height||300,plugins:plugins,axes:[{label:cfg.xLabel,stroke:"#aaa",grid:{stroke:"#333"}},{label:cfg.yLabel,stroke:"#aaa",grid:{stroke:"#333"}}],series:series,bands:bands.length?bands:undefined};var target=el.querySelector(".uplot-target");new uPlot(opts,data,target)})}});</script>
 </body>
 </html>`;
@@ -821,18 +821,18 @@ export function renderIndex(manifest: SiteManifest, navEpisodes?: NavEpisode[]):
 
   // Project overview section
   const overview = `
-<h1>SOLAR LINE 考察</h1>
+<h1>SOLAR LINE 考証</h1>
 <p>『<a href="https://www.nicovideo.jp/user/5844196/series/531506">良いソフトウェアトーク劇場</a>』のSFシリーズ長編「SOLAR LINE」（全5話・ゆえぴこ氏制作）に描かれた軌道遷移を宇宙力学的に検証するプロジェクト。</p>
 <div class="card">
 <h3>作品紹介</h3>
 <p>「SOLAR LINE」は、小型貨物船ケストレル号の船長きりたんと船載AIケイが、火星から地球まで約35.9 AUの太陽系横断航路を駆け巡るSF物語です。作中では各遷移ごとにΔV（速度変化量）や加速度が具体的な数値で描かれています。</p>
-<p>本サイトでは、作中に登場する全${totalTransfers}件の軌道遷移について、brachistochrone（最速降下線）航法、ホーマン遷移、重力アシストなどの実際の軌道力学に基づく計算を行い、描写の妥当性を考察しています。SF作品としての許容を前提に、物語内の数値・時間・距離が整合しているかを検証します。</p>
+<p>本サイトでは、作中に登場する全${totalTransfers}件の軌道遷移について、brachistochrone（最速降下線）航法、ホーマン遷移、重力アシストなどの実際の軌道力学に基づく計算を行い、描写の妥当性を検証しています。SF作品としての許容を前提に、物語内の数値・時間・距離が整合しているかを検証します。</p>
 <p>航路: <strong>火星</strong> → <strong>ガニメデ</strong>（木星系） → <strong>エンケラドス</strong>（土星系） → <strong>タイタニア</strong>（天王星系） → <strong>地球</strong></p>
 <details style="margin-top:0.5rem">
 <summary style="cursor:pointer;color:var(--accent)">視聴リンク</summary>
 <ul style="margin-top:0.3rem">
 <li><a href="https://www.nicovideo.jp/user/5844196/series/531506" target="_blank" rel="noopener">ニコニコ動画（全5話）</a></li>
-<li><a href="https://www.youtube.com/watch?v=CQ_OkDjEwRk" target="_blank" rel="noopener">YouTube Part 1</a> / <a href="https://www.youtube.com/watch?v=YXZWJLKD7Oo" target="_blank" rel="noopener">Part 2</a> / <a href="https://www.youtube.com/watch?v=l1jjXpv17-E" target="_blank" rel="noopener">Part 3</a> / <a href="https://www.youtube.com/watch?v=1cTmWjYSlTM" target="_blank" rel="noopener">Part 4</a></li>
+<li><a href="https://www.youtube.com/watch?v=CQ_OkDjEwRk" target="_blank" rel="noopener">YouTube Part 1</a> / <a href="https://www.youtube.com/watch?v=YXZWJLKD7Oo" target="_blank" rel="noopener">Part 2</a> / <a href="https://www.youtube.com/watch?v=l1jjXpv17-E" target="_blank" rel="noopener">Part 3</a> / <a href="https://www.youtube.com/watch?v=1cTmWjYSlTM" target="_blank" rel="noopener">Part 4</a> / <a href="https://www.youtube.com/watch?v=_trGXYRF8-4" target="_blank" rel="noopener">Part 5</a></li>
 </ul>
 </details>
 </div>
@@ -902,7 +902,7 @@ ${summaryLine}
 <div class="card" style="border-left:4px solid var(--green);margin-top:1.5rem">
 <h3>この考証の結論</h3>
 <p>全${totalTransfers}件の軌道遷移を検証した結果、<strong>SOLAR LINE の軌道力学描写は高い整合性を持つ</strong>ことが分かりました。物理法則との明確な矛盾は0件。ΔV・所要時間・天体位置の数値は、brachistochrone航法やホーマン遷移の計算結果と概ね一致します。</p>
-<p>最大のミステリーは<strong>公称質量48,000t</strong>——作中のすべての加速度・所要時間を再現するには質量が~300tでなければ計算が合わず、真の質量は公称値の1%以下と推定されます。これは「非現実的」ではなく、シリーズ全体を貫く謎として考察しています。</p>
+<p>最大のミステリーは<strong>公称質量48,000t</strong>——作中のすべての加速度・所要時間を再現するには質量が~300tでなければ計算が合わず、真の質量は公称値の1%以下と推定されます。これは「非現実的」ではなく、シリーズ全体を貫く謎として考証しています。</p>
 <p>最もギリギリだったのは<strong>磁気ノズルの寿命</strong>——残り55時間38分に対し必要燃焼時間55時間12分、マージンわずか26分（0.78%）。全行程の成功確率は推定30〜46%です。</p>
 </div>`;
 
@@ -955,7 +955,7 @@ ${metaList}
 </ul>
 <p><em>生成日時: ${escapeHtml(manifest.generatedAt)}</em></p>`;
 
-  return layoutHtml("トップ", content, ".", manifest.summaryPages, "SFアニメ「SOLAR LINE」の全5話に描かれた軌道遷移をΔV計算・加速度分析で検証する考察プロジェクト", navEpisodes, manifest.metaPages);
+  return layoutHtml("トップ", content, ".", manifest.summaryPages, "SFアニメ「SOLAR LINE」の全5話に描かれた軌道遷移をΔV計算・加速度分析で検証する考証プロジェクト", navEpisodes, manifest.metaPages);
 }
 
 /** Map verdict to Japanese label */
@@ -1965,6 +1965,78 @@ ${presetButtons}
 <script type="module" src="../calculator.js"></script>`;
 }
 
+/** Japanese labels for known English result column keys */
+const resultKeyLabels: Record<string, string> = {
+  accelMs2: "加速度 (m/s²)",
+  accelG: "加速度 (G)",
+  minTimeHours: "最短時間 (h)",
+  reachable72hAU: "72h到達距離 (AU)",
+  deltaVKms: "ΔV (km/s)",
+  timeDays: "所要時間 (日)",
+  transitDays: "航行時間 (日)",
+  requiredAccelG: "必要加速度 (G)",
+  requiredThrustMN: "必要推力 (MN)",
+  feasibleAt300t: "300tで実現可",
+  feasibleAt48000t: "48000tで実現可",
+  accuracyPercent: "精度 (%)",
+  errorKm: "誤差 (km)",
+  marginKms: "マージン (km/s)",
+  marginFraction: "マージン比",
+  thrustRatio: "推力比",
+  cFraction: "対光速比",
+  heliocentricVKms: "日心速度 (km/s)",
+  actualMSv: "被曝量 (mSv)",
+  worstCaseMSv: "最悪値 (mSv)",
+  acuteEffects: "急性症状",
+  conclusion: "結論",
+  source: "出典",
+  difference_percent: "差異 (%)",
+  v_at_20RJ_computed: "20RJ計算速度",
+  v_at_20RJ_onscreen: "20RJ画面速度",
+  ganymede_relative_v: "ガニメデ相対速度",
+  v_escape: "脱出速度",
+  isHyperbolic: "双曲線軌道",
+  reachesSaturn: "土星到達",
+  orbit_captured: "捕捉可能",
+  consistentWith143h: "143h整合",
+  solarEscapeVKms: "太陽脱出速度 (km/s)",
+  escBurn: "脱出噴射",
+  cruiseBurn: "巡航噴射",
+  arrivalBurn: "到着噴射",
+  midcourseBurn: "中間修正",
+  totalBurns: "総噴射回数",
+  brachistochrone: "ブラキストクローネ",
+  transferTimeHoursAtAvgV: "平均速度での所要時間 (h)",
+  errorVsMarginRatio: "誤差/マージン比",
+  errorVsSOIPercent: "誤差/SOI比 (%)",
+  correctionToOrbitalRatio: "修正/軌道比",
+  nominalDeltaVMs: "公称ΔV (m/s)",
+  enhancedDeltaVMs: "増強ΔV (m/s)",
+  extremeDeltaVMs: "極端ΔV (m/s)",
+  nominalForceN: "公称力 (N)",
+  extremeForceN: "極端力 (N)",
+  nominalMissDistanceKm: "公称ミス距離 (km)",
+  extremeMissDistanceKm: "極端ミス距離 (km)",
+  icrpAnnualLimitMSv: "ICRP年間限度 (mSv)",
+  icrpEmergencyLimitMSv: "ICRP緊急限度 (mSv)",
+  nasaCareerLimitMSv: "NASA生涯限度 (mSv)",
+  realValueDeg: "実値 (°)",
+  linearity_65_100: "線形性 65-100%",
+  linearity_100_110: "線形性 100-110%",
+  thrust65pct_MN: "推力65% (MN)",
+  thrust100pct_MN: "推力100% (MN)",
+  thrust110pct_MN: "推力110% (MN)",
+  dvAvailable60sKms: "60s利用可能ΔV (km/s)",
+  dvEscapeKms: "脱出ΔV (km/s)",
+  v_perijove_before: "近木点前速度",
+  v_perijove_after: "近木点後速度",
+  v_perijove_1_5RJ: "1.5RJ近木点速度",
+  v_escape_1_5RJ: "1.5RJ脱出速度",
+  v_at_ganymede_orbit: "ガニメデ軌道速度",
+  circCaptureFeasible: "円捕捉可能",
+  minCaptureFeasible: "最小捕捉可能",
+};
+
 /** Render a scenario table row */
 function renderScenarioRow(s: ExplorationScenario): string {
   const cls = s.feasible ? "feasible" : "infeasible";
@@ -1988,7 +2060,7 @@ export function renderExploration(exp: ParameterExploration): string {
   const collapsedRows = collapsedScenarios.map(renderScenarioRow).join("\n");
 
   const resultHeaders = exp.scenarios.length > 0
-    ? Object.keys(exp.scenarios[0].results).map(k => `<th>${escapeHtml(k)}</th>`).join("")
+    ? Object.keys(exp.scenarios[0].results).map(k => `<th>${escapeHtml(resultKeyLabels[k] ?? k)}</th>`).join("")
     : "";
 
   const tableHead = `<thead><tr><th>シナリオ</th><th>パラメータ</th>${resultHeaders}<th>備考</th></tr></thead>`;
@@ -2580,7 +2652,7 @@ ${data.speakers ? `<tr><th>話者数</th><td>${data.speakers.length}人</td></tr
 ${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` : ""}
 <tr><th>帰属状態</th><td>${data.dialogue ? "Phase 2 完了（話者帰属済み）" : "Phase 1 のみ（話者未帰属）"}</td></tr>
 </table>
-<p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考察レポートに戻る</a></p>
+<p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考証レポートに戻る</a></p>
 </div>
 
 <div class="card layer-legend">
@@ -2793,7 +2865,7 @@ export function renderTaskDashboard(tasks: TaskDashboardEntry[], summaryPages?: 
 
   const rows = sorted.map(t => {
     const badge = `<span class="verdict ${statusClass(t.status)}">${statusLabel(t.status)}</span>`;
-    const summaryText = t.summary ? escapeHtml(t.summary) : "—";
+    const summaryText = t.summary ? inlineFormat(t.summary) : "—";
     const taskLink = `tasks/${String(t.number).padStart(3, "0")}.html`;
     return `<tr>
 <td>${t.number}</td>
@@ -2835,7 +2907,7 @@ ${rows}
 </tbody>
 </table>`;
 
-  return layoutHtml("タスク状況", content, "..", summaryPages, "SOLAR LINE 考察プロジェクトのタスク進捗ダッシュボード", navEpisodes, metaPages);
+  return layoutHtml("タスク状況", content, "..", summaryPages, "SOLAR LINE 考証プロジェクトのタスク進捗ダッシュボード", navEpisodes, metaPages);
 }
 
 /** Render an individual task page with full markdown content */
@@ -2895,7 +2967,7 @@ ${rows}
 </tbody>
 </table>`;
 
-  return layoutHtml("ADR 一覧", content, "../..", summaryPages, "SOLAR LINE 考察プロジェクトの設計判断記録", navEpisodes, metaPages);
+  return layoutHtml("ADR 一覧", content, "../..", summaryPages, "SOLAR LINE 考証プロジェクトの設計判断記録", navEpisodes, metaPages);
 }
 
 /** Render an individual ADR page */
@@ -2930,7 +3002,7 @@ ${rows}
 </tbody>
 </table>`;
 
-  return layoutHtml("アイデア一覧", content, "../..", summaryPages, "SOLAR LINE 考察プロジェクトのアイデア・メモ一覧", navEpisodes, metaPages);
+  return layoutHtml("アイデア一覧", content, "../..", summaryPages, "SOLAR LINE 考証プロジェクトのアイデア・メモ一覧", navEpisodes, metaPages);
 }
 
 /** Render an individual idea page */
@@ -2946,7 +3018,7 @@ export function renderIdeaPage(idea: IdeaRenderEntry, summaryPages?: SiteManifes
 export function renderExplorerPage(summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
   const content = `
 <h1>データエクスプローラー</h1>
-<p>DuckDB-WASM を使用して、SOLAR LINE 考察の全データを SQL で探索できます。</p>
+<p>DuckDB-WASM を使用して、SOLAR LINE 考証の全データを SQL で探索できます。</p>
 
 <div class="card">
 <div id="explorer-status" class="explorer-status">初期化中…</div>
