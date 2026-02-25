@@ -546,6 +546,16 @@ footer {
 .burn-label-text { pointer-events: none; font-family: "SFMono-Regular", Consolas, monospace; }
 .scale-ref { pointer-events: none; }
 .timeline-badge { pointer-events: none; }
+/* Transfer leg highlighting */
+.transfer-leg { cursor: pointer; transition: opacity 0.2s; }
+.orbital-diagram.leg-active .transfer-leg { opacity: 0.2; }
+.orbital-diagram.leg-active .transfer-leg.leg-highlight { opacity: 1; }
+.orbital-diagram.leg-active .transfer-leg.leg-highlight path { stroke-width: 3 !important; }
+.leg-tooltip {
+  position: absolute; padding: 0.3rem 0.6rem; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 4px; font-size: 0.8em; color: var(--fg); pointer-events: none; white-space: nowrap;
+  z-index: 10; transform: translate(-50%, -120%);
+}
 .timeline-bar {
   position: relative; height: 3.5rem; margin: 0.5rem auto 0; border-top: 1px solid var(--border);
 }
@@ -1397,8 +1407,8 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
   const hasScenarios = !!(diagram.scenarios && diagram.scenarios.length > 0);
   const primaryScenarioId = hasScenarios ? diagram.scenarios![0].id : undefined;
 
-  // Draw transfer arcs
-  const transferPaths = diagram.transfers.map((t, idx) => {
+  // Draw transfer arcs + burn markers (grouped per transfer for leg highlighting)
+  const transferGroups = diagram.transfers.map((t, idx) => {
     const fromOrbit = orbitMap.get(t.fromOrbitId);
     const toOrbit = orbitMap.get(t.toOrbitId);
     if (!fromOrbit || !toOrbit) return "";
@@ -1413,34 +1423,32 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     const isAlt = hasScenarios && t.scenarioId && t.scenarioId !== primaryScenarioId;
     const strokeW = isAlt ? "1.5" : "2";
     const opacity = isAlt ? ' stroke-opacity="0.6"' : "";
-    return `<path d="${pathD}" fill="none" stroke="${t.color}" stroke-width="${strokeW}"${dashArray}${opacity}${transferPathAttr}${scenarioAttr} marker-end="url(#${arrowId})"/>
+    const arcPath = `<path d="${pathD}" fill="none" stroke="${t.color}" stroke-width="${strokeW}"${dashArray}${opacity}${transferPathAttr}${scenarioAttr} marker-end="url(#${arrowId})"/>
     <marker id="${arrowId}" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="${t.color}"/></marker>`;
-  }).join("\n    ");
 
-  // Draw burn markers
-  const burnMarkersSvg = diagram.transfers.flatMap(t => {
-    if (!t.burnMarkers) return [];
-    const fromOrbit = orbitMap.get(t.fromOrbitId);
-    const toOrbit = orbitMap.get(t.toOrbitId);
-    if (!fromOrbit || !toOrbit) return [];
-    const fromPx = orbitPxMap.get(t.fromOrbitId)!;
-    const toPx = orbitPxMap.get(t.toOrbitId)!;
-    return t.burnMarkers.map(bm => {
-      // Place marker at appropriate orbit radius based on burn type
+    // Burn markers for this transfer
+    const burns = (t.burnMarkers ?? []).map(bm => {
       let r: number;
       if (bm.type === "acceleration") {
-        r = fromPx; // Departure burn at from-orbit
+        r = fromPx;
       } else if (bm.type === "capture" || bm.type === "deceleration") {
-        r = toPx; // Arrival/capture burn at to-orbit
+        r = toPx;
       } else {
-        r = (fromPx + toPx) / 2; // Midcourse at midpoint
+        r = (fromPx + toPx) / 2;
       }
       const mx = r * Math.cos(bm.angle);
       const my = -r * Math.sin(bm.angle);
       return `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="3" fill="var(--yellow)" stroke="var(--bg)" stroke-width="1"/>
     <text x="${(mx + 10).toFixed(1)}" y="${my.toFixed(1)}" fill="var(--yellow)" font-size="9" dominant-baseline="middle">${escapeHtml(bm.label)}</text>`;
-    });
+    }).join("\n      ");
+
+    return `<g class="transfer-leg" data-leg-idx="${idx}" data-leg-label="${escapeHtml(t.label)}">
+      ${arcPath}
+      ${burns}
+    </g>`;
   }).join("\n    ");
+  const transferPaths = transferGroups;
+  const burnMarkersSvg = "";
 
   // Draw scale reference circles (if scaleLegend provided)
   let scaleRefCircles = "";

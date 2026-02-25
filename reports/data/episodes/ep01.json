@@ -464,6 +464,102 @@
         "durationSeconds": 540000
       },
       "epochAnnotation": "想定年代: 2241-09-05～2241-09-08"
+    },
+    {
+      "id": "ep01-diagram-03",
+      "title": "木星中心座標: ペリジュピター減速と木星圏捕獲",
+      "description": "72時間brachistochrone遷移で木星に接近したケストレル号が、ペリジュピター（近木点1.5 RJ）で-2.3 km/sの減速噴射を行い木星重力圏に捕獲される過程。接近速度V∞=12.0 km/sの双曲線軌道から、わずか2.3 km/sの噴射でオーベルト効果により捕獲が成立する。捕獲後、ガニメデ軌道での相対速度は約1.6 km/sとなり、最終接近が可能。ガリレオ衛星の配置はスケール参照。",
+      "centerLabel": "木星",
+      "scaleMode": "sqrt",
+      "radiusUnit": "RJ",
+      "orbits": [
+        {
+          "id": "perijove",
+          "label": "近木点 (1.5 RJ)",
+          "radius": 1.5,
+          "color": "#f0883e",
+          "angle": 4.71
+        },
+        {
+          "id": "io",
+          "label": "イオ",
+          "radius": 5.9,
+          "color": "#d29922",
+          "angle": 1.57,
+          "meanMotion": 0.00004109
+        },
+        {
+          "id": "europa",
+          "label": "エウロパ",
+          "radius": 9.4,
+          "color": "#8b949e",
+          "angle": 2.36,
+          "meanMotion": 0.00002048
+        },
+        {
+          "id": "ganymede",
+          "label": "ガニメデ",
+          "radius": 15,
+          "color": "#58a6ff",
+          "angle": 3.14,
+          "meanMotion": 0.00001017
+        },
+        {
+          "id": "callisto",
+          "label": "カリスト",
+          "radius": 26.3,
+          "color": "#6e7681",
+          "angle": 4.19,
+          "meanMotion": 0.000004358
+        },
+        {
+          "id": "approach-point",
+          "label": "接近点 (50 RJ)",
+          "radius": 50,
+          "color": "#3fb950",
+          "angle": 0.3
+        }
+      ],
+      "transfers": [
+        {
+          "label": "双曲線接近軌道（V∞=12.0 km/s）",
+          "fromOrbitId": "approach-point",
+          "toOrbitId": "perijove",
+          "color": "#8b949e",
+          "style": "hyperbolic",
+          "startTime": 0,
+          "endTime": 36000
+        },
+        {
+          "label": "捕獲軌道（ペリジュピター→ガニメデ）",
+          "fromOrbitId": "perijove",
+          "toOrbitId": "ganymede",
+          "color": "#3fb950",
+          "style": "hyperbolic",
+          "burnMarkers": [
+            {
+              "angle": 4.71,
+              "label": "減速 ΔV = -2.3 km/s",
+              "startTime": 0,
+              "endTime": 180,
+              "type": "acceleration"
+            },
+            {
+              "angle": 3.14,
+              "label": "最終接近 (v_rel ≈ 1.6 km/s)",
+              "startTime": 28000,
+              "endTime": 36000,
+              "type": "capture"
+            }
+          ],
+          "startTime": 36000,
+          "endTime": 72000
+        }
+      ],
+      "viewRadius": 55,
+      "animation": {
+        "durationSeconds": 72000
+      }
     }
   ],
   "explorations": [

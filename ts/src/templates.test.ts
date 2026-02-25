@@ -1138,6 +1138,45 @@ describe("renderOrbitalDiagram", () => {
     const html = renderOrbitalDiagram(diagram);
     assert.ok(html.includes("<svg"));
   });
+
+  it("wraps transfers in <g class='transfer-leg'> groups with data attributes", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(html.includes('class="transfer-leg"'));
+    assert.ok(html.includes('data-leg-idx="0"'));
+    assert.ok(html.includes('data-leg-label="ブラキストクローネ遷移"'));
+  });
+
+  it("includes burn markers within transfer-leg group", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    // Burn marker text should appear inside the transfer-leg group
+    const legMatch = html.match(/<g class="transfer-leg"[^>]*>[\s\S]*?<\/g>/);
+    assert.ok(legMatch, "should have a transfer-leg group");
+    assert.ok(legMatch[0].includes("加速反転"), "burn marker should be inside the group");
+  });
+
+  it("renders multiple transfer-leg groups for multi-arc diagrams", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      id: "test-multi-leg",
+      orbits: [
+        { id: "a", label: "A", radius: 1, color: "#fff", angle: 0 },
+        { id: "b", label: "B", radius: 3, color: "#fff", angle: 1 },
+        { id: "c", label: "C", radius: 5, color: "#fff", angle: 2 },
+      ],
+      transfers: [
+        { label: "A→B", fromOrbitId: "a", toOrbitId: "b", color: "#f00", style: "hohmann" },
+        { label: "B→C", fromOrbitId: "b", toOrbitId: "c", color: "#0f0", style: "brachistochrone" },
+      ],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const legGroups = html.match(/<g class="transfer-leg"/g);
+    assert.ok(legGroups);
+    assert.equal(legGroups.length, 2);
+    assert.ok(html.includes('data-leg-idx="0"'));
+    assert.ok(html.includes('data-leg-idx="1"'));
+    assert.ok(html.includes('data-leg-label="A→B"'));
+    assert.ok(html.includes('data-leg-label="B→C"'));
+  });
 });
 
 describe("renderOrbitalDiagrams", () => {
@@ -1166,6 +1205,20 @@ describe("renderEpisode with diagrams", () => {
   it("omits diagram section when no diagrams", () => {
     const html = renderEpisode(sampleEpisodeReport);
     assert.ok(!html.includes("軌道遷移図"));
+  });
+});
+
+// --- Leg highlighting CSS ---
+
+describe("REPORT_CSS includes leg highlighting styles", () => {
+  it("includes transfer-leg hover styles", () => {
+    assert.ok(REPORT_CSS.includes(".transfer-leg"));
+    assert.ok(REPORT_CSS.includes(".leg-active"));
+    assert.ok(REPORT_CSS.includes(".leg-highlight"));
+  });
+
+  it("includes leg-tooltip styles", () => {
+    assert.ok(REPORT_CSS.includes(".leg-tooltip"));
   });
 });
 

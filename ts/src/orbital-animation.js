@@ -453,9 +453,105 @@ function initAllAnimations() {
   });
 }
 
+/**
+ * Transfer Leg Highlighting — hover/click to focus on individual transfer legs.
+ * Adds interactivity to .transfer-leg groups within orbital diagrams.
+ */
+function initLegHighlighting() {
+  var diagrams = document.querySelectorAll(".orbital-diagram");
+  for (var i = 0; i < diagrams.length; i++) {
+    initDiagramLegHighlight(diagrams[i]);
+  }
+}
+
+function initDiagramLegHighlight(diagramEl) {
+  var legs = diagramEl.querySelectorAll(".transfer-leg");
+  if (legs.length < 2) return; // No highlighting needed for single-leg diagrams
+
+  var tooltip = document.createElement("div");
+  tooltip.className = "leg-tooltip";
+  tooltip.style.display = "none";
+  diagramEl.style.position = "relative";
+  diagramEl.appendChild(tooltip);
+
+  var lockedIdx = -1; // -1 means no lock
+
+  for (var j = 0; j < legs.length; j++) {
+    (function (leg, idx) {
+      leg.addEventListener("mouseenter", function (e) {
+        if (lockedIdx >= 0) return; // Don't change highlight while locked
+        activateLeg(diagramEl, legs, idx, tooltip, e);
+      });
+      leg.addEventListener("mousemove", function (e) {
+        if (lockedIdx >= 0) return;
+        positionTooltip(tooltip, diagramEl, e);
+      });
+      leg.addEventListener("mouseleave", function () {
+        if (lockedIdx >= 0) return;
+        deactivateAll(diagramEl, legs, tooltip);
+      });
+      leg.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (lockedIdx === idx) {
+          // Clicking same leg unlocks
+          lockedIdx = -1;
+          deactivateAll(diagramEl, legs, tooltip);
+        } else {
+          lockedIdx = idx;
+          activateLeg(diagramEl, legs, idx, tooltip, e);
+        }
+      });
+    })(legs[j], j);
+  }
+
+  // Click outside any leg to unlock
+  diagramEl.addEventListener("click", function (e) {
+    if (e.target.closest(".transfer-leg")) return;
+    if (lockedIdx >= 0) {
+      lockedIdx = -1;
+      deactivateAll(diagramEl, legs, tooltip);
+    }
+  });
+}
+
+function activateLeg(diagramEl, legs, idx, tooltip, e) {
+  diagramEl.classList.add("leg-active");
+  for (var k = 0; k < legs.length; k++) {
+    if (k === idx) {
+      legs[k].classList.add("leg-highlight");
+    } else {
+      legs[k].classList.remove("leg-highlight");
+    }
+  }
+  var label = legs[idx].getAttribute("data-leg-label") || "";
+  tooltip.textContent = label;
+  tooltip.style.display = "block";
+  positionTooltip(tooltip, diagramEl, e);
+}
+
+function deactivateAll(diagramEl, legs, tooltip) {
+  diagramEl.classList.remove("leg-active");
+  for (var k = 0; k < legs.length; k++) {
+    legs[k].classList.remove("leg-highlight");
+  }
+  tooltip.style.display = "none";
+}
+
+function positionTooltip(tooltip, container, e) {
+  var rect = container.getBoundingClientRect();
+  var x = e.clientX - rect.left;
+  var y = e.clientY - rect.top;
+  tooltip.style.left = x + "px";
+  tooltip.style.top = y + "px";
+}
+
 // Start when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initAllAnimations);
-} else {
+function initAll() {
   initAllAnimations();
+  initLegHighlighting();
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAll);
+} else {
+  initAll();
 }
