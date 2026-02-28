@@ -424,6 +424,308 @@ export function minimumTransferTime(
   };
 }
 
+// ─── Trim-Thrust Transfer Simulation ───
+
+/** Trim thrust parameters */
+export const TRIM_THRUST = {
+  /** Trim thrust fraction of nominal (estimated 1%) */
+  fraction: 0.01,
+  /** Trim thrust in Newtons */
+  thrustN: KESTREL.thrustN * 0.01,
+  /** Ship mass (kg) — EP01-derived feasible mass */
+  massKg: 300_000,
+  /** Acceleration (km/s²) */
+  get accelKms2() {
+    return this.thrustN / this.massKg / 1000;
+  },
+  /** Specific impulse (s) */
+  isp: 1_000_000,
+} as const;
+
+/** Result of a single trim-thrust transfer simulation */
+export interface TrimThrustResult {
+  /** Thrust duration (days) */
+  thrustDays: number;
+  /** Total transfer time to reach Saturn's orbital radius (days) */
+  transferDays: number;
+  /** Total ΔV applied (km/s) */
+  deltaVKms: number;
+  /** Propellant mass fraction */
+  propellantFraction: number;
+  /** Heliocentric speed at Saturn orbital radius crossing (km/s) */
+  arrivalSpeedKms: number;
+  /** Radial speed component at arrival (km/s) */
+  arrivalRadialSpeedKms: number;
+  /** Tangential speed component at arrival (km/s) */
+  arrivalTangentialSpeedKms: number;
+  /** v_inf relative to Saturn (km/s) — approximate */
+  vInfAtSaturnKms: number;
+  /** Optimal thrust angle from tangential (degrees) */
+  thrustAngleDeg: number;
+}
+
+/**
+ * RK4 integration step for 2D heliocentric orbit with optional thrust.
+ *
+ * State: [x, y, vx, vy] (km, km/s)
+ * Thrust acceleration vector in km/s²
+ */
+function rk4Step(
+  state: [number, number, number, number],
+  dt: number,
+  thrustAccel: [number, number],
+): [number, number, number, number] {
+  const mu = MU.SUN;
+
+  function deriv(
+    s: [number, number, number, number],
+  ): [number, number, number, number] {
+    const [x, y, vx, vy] = s;
+    const r = Math.sqrt(x * x + y * y);
+    const r3 = r * r * r;
+    return [vx, vy, -mu * x / r3 + thrustAccel[0], -mu * y / r3 + thrustAccel[1]];
+  }
+
+  const k1 = deriv(state);
+  const s2: [number, number, number, number] = [
+    state[0] + k1[0] * dt / 2,
+    state[1] + k1[1] * dt / 2,
+    state[2] + k1[2] * dt / 2,
+    state[3] + k1[3] * dt / 2,
+  ];
+  const k2 = deriv(s2);
+  const s3: [number, number, number, number] = [
+    state[0] + k2[0] * dt / 2,
+    state[1] + k2[1] * dt / 2,
+    state[2] + k2[2] * dt / 2,
+    state[3] + k2[3] * dt / 2,
+  ];
+  const k3 = deriv(s3);
+  const s4: [number, number, number, number] = [
+    state[0] + k3[0] * dt,
+    state[1] + k3[1] * dt,
+    state[2] + k3[2] * dt,
+    state[3] + k3[3] * dt,
+  ];
+  const k4 = deriv(s4);
+
+  return [
+    state[0] + (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]) * dt / 6,
+    state[1] + (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) * dt / 6,
+    state[2] + (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]) * dt / 6,
+    state[3] + (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3]) * dt / 6,
+  ];
+}
+
+/**
+ * Simulate a trim-thrust transfer from Jupiter to Saturn's orbital radius.
+ *
+ * The ship departs Jupiter's orbit with v_inf directed at angle alphaDeg
+ * from the prograde (tangential) direction. Trim thrust is applied for
+ * thrustDays at angle betaDeg from the local tangential direction
+ * (positive = toward radial outward), then coasts ballistically.
+ *
+ * @param thrustDays Number of days to apply trim thrust (0 = pure ballistic)
+ * @param alphaDeg v_inf departure angle from prograde (degrees)
+ * @param betaDeg Thrust direction angle from tangential (degrees, 90 = radial out)
+ * @param maxDays Maximum simulation time (days)
+ * @returns Transfer time in days, or null if Saturn radius not reached
+ */
+function simulateTrimTransfer(
+  thrustDays: number,
+  alphaDeg: number,
+  betaDeg: number,
+  maxDays: number = 500,
+): { transferDays: number; arrivalState: [number, number, number, number] } | null {
+  const rJ = ORBIT_RADIUS.JUPITER;
+  const rS = ORBIT_RADIUS.SATURN;
+  const vJ = circularVelocity(MU.SUN, rJ);
+  const vInf = jupiterEscapeAnalysis().hyperbolicExcessKms;
+  const accel = TRIM_THRUST.thrustN / TRIM_THRUST.massKg / 1000; // km/s²
+
+  const alpha = (alphaDeg * Math.PI) / 180;
+  const beta = (betaDeg * Math.PI) / 180;
+
+  // Initial state: ship at Jupiter's orbital radius on +x axis
+  // Jupiter moves in +y direction (tangential)
+  // v_inf decomposed: cos(alpha) = tangential, sin(alpha) = radial outward
+  let state: [number, number, number, number] = [
+    rJ,
+    0,
+    vInf * Math.sin(alpha), // radial component
+    vJ + vInf * Math.cos(alpha), // tangential component
+  ];
+
+  const thrustSec = thrustDays * 86400;
+  const maxSec = maxDays * 86400;
+  const dtThrust = 60; // 1-minute steps during thrust
+  const dtCoast = 600; // 10-minute steps during coast
+
+  let t = 0;
+
+  while (t < maxSec) {
+    const [x, y] = state;
+    const r = Math.sqrt(x * x + y * y);
+
+    if (r >= rS) {
+      return { transferDays: t / 86400, arrivalState: state };
+    }
+
+    let thrustVec: [number, number] = [0, 0];
+    let dt: number;
+
+    if (t < thrustSec) {
+      // Compute local radial and tangential unit vectors
+      const rHat: [number, number] = [x / r, y / r];
+      const tHat: [number, number] = [-rHat[1], rHat[0]];
+
+      // Thrust direction: beta from tangential toward radial outward
+      thrustVec = [
+        accel * (Math.cos(beta) * tHat[0] + Math.sin(beta) * rHat[0]),
+        accel * (Math.cos(beta) * tHat[1] + Math.sin(beta) * rHat[1]),
+      ];
+      dt = dtThrust;
+    } else {
+      dt = dtCoast;
+    }
+
+    state = rk4Step(state, dt, thrustVec);
+    t += dt;
+  }
+
+  return null;
+}
+
+/**
+ * Find the optimal thrust angle (beta) for a given thrust duration
+ * that minimizes transfer time to Saturn's orbital radius.
+ */
+function optimizeThrustAngle(
+  thrustDays: number,
+  alphaDeg: number = 32,
+): { bestBetaDeg: number; bestTransferDays: number } {
+  let bestBeta = 0;
+  let bestTime = Infinity;
+
+  // Scan beta from -90° to +90° in 2° steps
+  for (let beta = -90; beta <= 90; beta += 2) {
+    const result = simulateTrimTransfer(thrustDays, alphaDeg, beta);
+    if (result && result.transferDays < bestTime) {
+      bestTime = result.transferDays;
+      bestBeta = beta;
+    }
+  }
+
+  // Refine with 0.5° steps around the best
+  for (let beta = bestBeta - 2; beta <= bestBeta + 2; beta += 0.5) {
+    const result = simulateTrimTransfer(thrustDays, 32, beta);
+    if (result && result.transferDays < bestTime) {
+      bestTime = result.transferDays;
+      bestBeta = beta;
+    }
+  }
+
+  return { bestBetaDeg: bestBeta, bestTransferDays: bestTime };
+}
+
+/**
+ * Comprehensive trim-thrust transfer analysis.
+ *
+ * Corrects the previous average-velocity approximation (which gave ~455 days)
+ * with proper 2D numerical orbit propagation. Key finding: pure ballistic
+ * transfer takes ~1000 days (the curved path is much longer than the radial
+ * distance). Trim thrust at 1% capacity dramatically shortens this.
+ */
+export function trimThrustTransferAnalysis(): TrimThrustResult[] {
+  const vInf = jupiterEscapeAnalysis().hyperbolicExcessKms;
+  const accel = TRIM_THRUST.thrustN / TRIM_THRUST.massKg / 1000; // km/s²
+  const saturnOrbV = circularVelocity(MU.SUN, ORBIT_RADIUS.SATURN);
+  const g0 = 9.80665 / 1000; // km/s²
+  const exhaustV = TRIM_THRUST.isp * g0; // km/s
+
+  const thrustDaysToTest = [0, 1, 3, 5, 7, 14, 30];
+  const results: TrimThrustResult[] = [];
+
+  for (const thrustDays of thrustDaysToTest) {
+    if (thrustDays === 0) {
+      // Pure ballistic: use optimal departure angle
+      const result = simulateTrimTransfer(0, 32, 0, 1500);
+      if (result) {
+        const [x, y, vx, vy] = result.arrivalState;
+        const r = Math.sqrt(x * x + y * y);
+        const speed = Math.sqrt(vx * vx + vy * vy);
+        const rHat: [number, number] = [x / r, y / r];
+        const vr = vx * rHat[0] + vy * rHat[1];
+        const vt = -vx * rHat[1] + vy * rHat[0];
+        results.push({
+          thrustDays: 0,
+          transferDays: result.transferDays,
+          deltaVKms: 0,
+          propellantFraction: 0,
+          arrivalSpeedKms: speed,
+          arrivalRadialSpeedKms: vr,
+          arrivalTangentialSpeedKms: vt,
+          vInfAtSaturnKms: Math.sqrt((vr) ** 2 + (vt - saturnOrbV) ** 2),
+          thrustAngleDeg: 0,
+        });
+      }
+      continue;
+    }
+
+    const { bestBetaDeg, bestTransferDays } = optimizeThrustAngle(thrustDays);
+    const result = simulateTrimTransfer(thrustDays, 32, bestBetaDeg);
+
+    if (result) {
+      const dv = accel * thrustDays * 86400;
+      const propFrac = 1 - Math.exp(-dv / exhaustV);
+
+      const [x, y, vx, vy] = result.arrivalState;
+      const r = Math.sqrt(x * x + y * y);
+      const speed = Math.sqrt(vx * vx + vy * vy);
+      const rHat: [number, number] = [x / r, y / r];
+      const vr = vx * rHat[0] + vy * rHat[1];
+      const vt = -vx * rHat[1] + vy * rHat[0];
+
+      results.push({
+        thrustDays,
+        transferDays: bestTransferDays,
+        deltaVKms: dv,
+        propellantFraction: propFrac,
+        arrivalSpeedKms: speed,
+        arrivalRadialSpeedKms: vr,
+        arrivalTangentialSpeedKms: vt,
+        vInfAtSaturnKms: Math.sqrt((vr) ** 2 + (vt - saturnOrbV) ** 2),
+        thrustAngleDeg: bestBetaDeg,
+      });
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Primary EP02 transfer scenario: 3-day trim thrust.
+ * This replaces the flawed 455-day average-velocity estimate.
+ */
+export function primaryTransferScenario() {
+  const allResults = trimThrustTransferAnalysis();
+  const primary = allResults.find((r) => r.thrustDays === 3);
+  const ballistic = allResults.find((r) => r.thrustDays === 0);
+  const fast = allResults.find((r) => r.thrustDays === 7);
+
+  return {
+    primary,
+    ballistic,
+    fast,
+    allScenarios: allResults,
+    correctionNote:
+      "Previous estimate of ~455 days used average-velocity over radial distance, " +
+      "which does not account for orbital curvature. Proper 2D orbit propagation " +
+      "shows pure ballistic transfer takes ~1000 days. Trim thrust (台詞: 'トリムのみ') " +
+      "at 1% capacity dramatically shortens transfer with negligible propellant cost.",
+  };
+}
+
 /**
  * Damaged thrust scenarios.
  * Ship's cooling is compromised — assume thrust is limited to some fraction.
@@ -483,6 +785,9 @@ export function analyzeEpisode2() {
   // Damaged thrust analysis
   const damagedThrust = damagedThrustScenarios();
 
+  // Trim-thrust transfer analysis (corrects previous 455-day estimate)
+  const trimThrust = primaryTransferScenario();
+
   return {
     hohmann,
     jupiterEscape: escape,
@@ -494,5 +799,6 @@ export function analyzeEpisode2() {
     brachistochrone30d: brach30d,
     brachistochrone90d: brach90d,
     damagedThrust,
+    trimThrust,
   };
 }

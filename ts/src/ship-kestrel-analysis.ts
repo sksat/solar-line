@@ -73,7 +73,7 @@ export function buildDamageTimeline(): EventTimeline {
       label: "木星圏脱出（トリムのみ）",
       description:
         "冷却系故障によりメインエンジン連続運転不可。トリム推力のみで木星圏を脱出し、太陽系双曲線軌道に乗る。",
-      stateChanges: ["推力: トリムのみ（≈0 MN実効）", "軌道: 弾道遷移（455日）"],
+      stateChanges: ["推力: トリムのみ（≈0 MN実効）", "軌道: トリム推力遷移（約87日）"],
     },
     {
       episode: 2,

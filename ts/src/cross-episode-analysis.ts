@@ -52,7 +52,7 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
   {
     episode: 2,
     route: "木星圏脱出 → 土星/エンケラドス",
-    transferTime: "約455日（無修正）",
+    transferTime: "約87日（トリム推力3日+巡航）",
     brachistochroneDeltaV: null, // not brachistochrone — ballistic
     massBoundaryT: null,
     thrustUsedMN: 0, // damaged, trim only
@@ -149,7 +149,7 @@ export function buildRouteContinuityTable(): ComparisonTable {
       },
       {
         metric: "遷移時間",
-        values: { 1: "72h", 2: "≈455日", 3: "143h 12m", 4: "8.3〜105日", 5: "※暫定（ep04継続）" },
+        values: { 1: "72h", 2: "≈87日", 3: "143h 12m", 4: "8.3〜105日", 5: "※暫定（ep04継続）" },
         status: "ok",
         note: "Brachistochrone前提で現実的",
       },
@@ -276,14 +276,14 @@ export function buildTimelineMarkdown(): string {
 
 ${eventLines.join("\n")}
 
-**全行程: ${timeline.totalDurationDays.toFixed(0)}日間** — 第2話の弾道遷移（約455日）が旅程の大部分を占める。
+**全行程: ${timeline.totalDurationDays.toFixed(0)}日間** — 第2話のトリム推力遷移（約87日）が旅程の大部分を占める。純粋な弾道軌道では約997日かかるところ、3日間のトリム推力により約87日に短縮された。
 
 ### 惑星配置の整合性
 
 各遷移について、出発時と到着時の惑星位置を計算した結果:
 
 1. **EP01 (火星→木星)**: 火星-木星最接近付近で出発。Brachistochrone遷移では位相角の制約は緩いが、距離が近いほどΔVが小さくなるため、最接近付近が最適。
-2. **EP02 (木星→土星)**: 木星脱出後の弾道遷移では、太陽系双曲線軌道で自然に土星に到達。455日の飛行時間中に土星が適切な位置に移動する必要があり、木星-土星間の位相角が重要。
+2. **EP02 (木星→土星)**: 木星脱出後のトリム推力遷移では、3日間の推力（ΔV ≈ 85 km/s）を加えることで、純粋弾道の約997日から約87日に大幅短縮。土星が約87日後に到着位置に存在する惑星配置が必要であり、木星-土星間の位相角が重要。
 3. **EP03 (土星→天王星)**: 143時間のBrachistochrone遷移。土星-天王星間距離は惑星配置によって9.6〜28.5 AUの範囲で変動する。
 4. **EP04-05 (天王星→地球)**: 約18.2 AUの帰還航路。天王星は公転周期84年のため、数日〜数か月の遷移時間中にほとんど移動しない。
 
@@ -329,7 +329,7 @@ export function generateCrossEpisodeReport(): SummaryReport {
 - 第4話: 帰還出発（天王星→地球）= 「新しいソーラーライン」の開拓
 - 第5話: 帰還完結（地球到着・捕捉）= ソーラーライン完結
 
-第2話の弾道遷移（約455日）のみがBrachistochroneではなく、損傷状態での受動的な軌道遷移である点も物語と整合する。全航路の合計距離は約35.9 AU。`,
+第2話のトリム推力遷移（約87日）のみがBrachistochroneではなく、損傷状態での制限的な軌道遷移である点も物語と整合する。純粋弾道では約997日を要するが、3日間のトリム推力（ΔV ≈ 85 km/s）で約87日に短縮。全航路の合計距離は約35.9 AU。`,
         table: buildRouteContinuityTable(),
       },
       {

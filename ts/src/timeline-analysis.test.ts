@@ -51,22 +51,22 @@ describe("computeTimeline", () => {
     assert.equal(timeline.events[0].durationHours, 72);
   });
 
-  it("EP02 duration is ~455 days", () => {
-    assert.equal(timeline.events[1].durationHours, 455 * 24);
+  it("EP02 duration is ~87 days (trim-thrust corrected)", () => {
+    assert.equal(timeline.events[1].durationHours, 87 * 24);
   });
 
   it("EP03 duration is 143 hours", () => {
     assert.equal(timeline.events[2].durationHours, 143);
   });
 
-  it("total journey is 400-600 days", () => {
+  it("total journey is 90-200 days (corrected from 400-600)", () => {
     assert.ok(
-      timeline.totalDurationDays > 400,
-      `total = ${timeline.totalDurationDays.toFixed(0)} days (expected > 400)`,
+      timeline.totalDurationDays > 90,
+      `total = ${timeline.totalDurationDays.toFixed(0)} days (expected > 90)`,
     );
     assert.ok(
-      timeline.totalDurationDays < 600,
-      `total = ${timeline.totalDurationDays.toFixed(0)} days (expected < 600)`,
+      timeline.totalDurationDays < 200,
+      `total = ${timeline.totalDurationDays.toFixed(0)} days (expected < 200)`,
     );
   });
 

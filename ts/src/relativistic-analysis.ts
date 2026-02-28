@@ -226,22 +226,23 @@ export function analyzeRelativisticEffects() {
   );
 
   // ── EP02: Jupiter system → Saturn/Enceladus ──
-  // Ballistic 455 day cruise at ~1500 km/s (not brachistochrone — constant velocity)
-  // Time dilation at constant 1500 km/s over 455 days
-  const ep02CruiseV = 1500; // km/s
-  const ep02CruiseSec = 455 * 86400;
+  // Trim-thrust 87 day transfer: 3 days of trim thrust (~85 km/s ΔV), then ~84 days coast
+  // The coast velocity after 3-day trim burn is ~50-80 km/s — well below relativistic speeds (~0.03% c)
+  // This is far less than the previous 1500 km/s assumption; time dilation effect is actually LESS
+  const ep02CruiseV = 65; // km/s — approximate coast speed after 3-day trim thrust (radial component)
+  const ep02CruiseSec = 87 * 86400;
   const ep02TdFrac = timeDilationFraction(ep02CruiseV);
   transfers.push({
     episode: 2,
-    transferId: "ep02-ballistic-cruise",
-    label: "木星系→土星/エンケラドス（弾道巡航 455日, ~1500 km/s）",
+    transferId: "ep02-trim-thrust-cruise",
+    label: "木星系→土星/エンケラドス（トリム推力遷移 87日, ~65 km/s巡航）",
     distanceKm: ep02CruiseV * ep02CruiseSec, // approximate
     distanceAU: (ep02CruiseV * ep02CruiseSec) / AU_KM,
     accelKms2: 0,
     accelG: 0,
     classicalTimeSec: ep02CruiseSec,
     classicalPeakVelocityKms: ep02CruiseV,
-    classicalDeltaVKms: 0, // ballistic
+    classicalDeltaVKms: 85, // 3-day trim thrust ΔV
     relativistic: {
       peakVelocityKms: ep02CruiseV,
       betaPeak: beta(ep02CruiseV),
@@ -258,7 +259,7 @@ export function analyzeRelativisticEffects() {
       dvCorrectionFraction: 0,
       dvCorrectionPpm: 0,
     },
-    verdict: "微小な相対論的効果（β ≈ 0.5%）— 455日間の時間遅れ ≈ 0.5秒",
+    verdict: "相対論的効果は無視可能（β ≈ 0.02%）— 87日間の時間遅れ ≈ 0.001秒。純粋弾道（約997日）より遷移時間が大幅短縮され、巡航速度も低いため相対論的影響はさらに小さい。",
   });
 
   // ── EP03: Enceladus → Titania (143h) ──

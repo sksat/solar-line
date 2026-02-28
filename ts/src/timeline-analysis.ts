@@ -6,7 +6,7 @@
  *
  * The story depicts a sequential journey:
  *   EP01: Mars → Ganymede (72h)
- *   EP02: Jupiter sphere → Saturn/Enceladus (~455 days ballistic)
+ *   EP02: Jupiter sphere → Saturn/Enceladus (~87 days with trim thrust)
  *   EP03: Enceladus → Titania (143h)
  *   EP04-05: Titania → Earth
  *
@@ -162,15 +162,24 @@ function findEP01Departure(searchStartJD: number): TimelineEvent {
 
 /**
  * EP02: Jupiter sphere → Saturn/Enceladus
- * After Jupiter escape, ~455 day ballistic coast to Saturn.
+ * With trim thrust (1% capacity, ~3 days), transfer takes ~87 days.
+ *
+ * Previous estimate of ~455 days was based on average-velocity over radial distance,
+ * which doesn't account for orbital curvature. Proper 2D orbit propagation shows:
+ * - Pure ballistic: ~997 days (not 455)
+ * - 3-day trim thrust: ~87 days (primary scenario)
+ * - 7-day trim thrust: ~41 days (fast variant)
+ *
+ * The dialogue says "トリムのみ" (trim only), which is the canonical justification
+ * for the thrust-assisted transfer. Propellant cost is negligible (~0.86%).
  */
 function findEP02Arrival(ep01ArrivalJD: number): TimelineEvent {
   // After some time at Jupiter (assume a few days for the episode events)
   const jupiterStayDays = 3; // story events at Jupiter
   const departureJD = ep01ArrivalJD + jupiterStayDays;
 
-  // ~455 days ballistic transfer (from EP02 analysis)
-  const transferDays = 455;
+  // ~87 days with 3-day trim thrust (corrected from flawed 455-day estimate)
+  const transferDays = 87;
   const arrivalJD = departureJD + transferDays;
 
   const jupLon = planetLongitude("jupiter", departureJD);
@@ -180,7 +189,8 @@ function findEP02Arrival(ep01ArrivalJD: number): TimelineEvent {
   return {
     episode: 2,
     transferId: "ep02-transfer-03",
-    description: "木星圏脱出 → 土星/エンケラドス (弾道軌道, ~455日)",
+    description:
+      "木星圏脱出 → 土星/エンケラドス (トリム推力3日 + 弾道巡航, ~87日)",
     departureJD,
     departureDate: jdToDateString(departureJD),
     arrivalJD,
@@ -192,7 +202,8 @@ function findEP02Arrival(ep01ArrivalJD: number): TimelineEvent {
     arrivalLongitude: satLon,
     phaseAngleAtDeparture: phase,
     notes:
-      "超双曲線軌道による弾道遷移。追加噴射なしで土星到達。",
+      "トリム推力（1%出力）3日間で軌道エネルギーを付加後、弾道巡航。推進剤消費 ~0.86%。" +
+      "旧推定値の455日は平均速度近似の計算誤差（正しい弾道値は~997日）。",
   };
 }
 
@@ -314,9 +325,9 @@ export function computeTimeline(searchStartJD: number): StoryTimeline {
   }
 
   // Check total journey time
-  if (totalDurationDays > 500) {
+  if (totalDurationDays > 100) {
     consistencyNotes.push(
-      `全行程: ${totalDurationDays.toFixed(0)} 日 — EP02の弾道遷移(~455日)が主要因`,
+      `全行程: ${totalDurationDays.toFixed(0)} 日 — EP02のトリム推力遷移(~87日)が主要因`,
     );
   }
 

@@ -1,9 +1,4 @@
 {
-  "_meta": {
-    "generatedAt": "2026-02-25T00:42:27.383Z",
-    "reproductionCommand": "npm run recalculate -- --episode 2",
-    "durationMs": 1
-  },
   "hohmann": {
     "departureDv": 1.8076602726468902,
     "arrivalDv": 1.5491053302937523,
@@ -157,5 +152,120 @@
       "minTimeClosestHours": 786.6516774773982,
       "minTimeClosestDays": 32.777153228224925
     }
-  ]
+  ],
+  "trimThrust": {
+    "primary": {
+      "thrustDays": 3,
+      "transferDays": 86.80555555555556,
+      "deltaVKms": 84.672,
+      "propellantFraction": 0.008596973967828436,
+      "arrivalSpeedKms": 91.58415403081875,
+      "arrivalRadialSpeedKms": 89.90580930344625,
+      "arrivalTangentialSpeedKms": 17.45287148388743,
+      "vInfAtSaturnKms": 90.24622751573962,
+      "thrustAngleDeg": 80.5
+    },
+    "ballistic": {
+      "thrustDays": 0,
+      "transferDays": 996.8194444444445,
+      "deltaVKms": 0,
+      "propellantFraction": 0,
+      "arrivalSpeedKms": 13.464831061508523,
+      "arrivalRadialSpeedKms": 9.208418245281765,
+      "arrivalTangentialSpeedKms": 9.82378282205621,
+      "vInfAtSaturnKms": 9.210635079285678,
+      "thrustAngleDeg": 0
+    },
+    "fast": {
+      "thrustDays": 7,
+      "transferDays": 41.125,
+      "deltaVKms": 197.568,
+      "propellantFraction": 0.019944747962375886,
+      "arrivalSpeedKms": 202.4501408221018,
+      "arrivalRadialSpeedKms": 201.6916769995421,
+      "arrivalTangentialSpeedKms": 17.507911011917564,
+      "vInfAtSaturnKms": 201.845794310963,
+      "thrustAngleDeg": 86
+    },
+    "allScenarios": [
+      {
+        "thrustDays": 0,
+        "transferDays": 996.8194444444445,
+        "deltaVKms": 0,
+        "propellantFraction": 0,
+        "arrivalSpeedKms": 13.464831061508523,
+        "arrivalRadialSpeedKms": 9.208418245281765,
+        "arrivalTangentialSpeedKms": 9.82378282205621,
+        "vInfAtSaturnKms": 9.210635079285678,
+        "thrustAngleDeg": 0
+      },
+      {
+        "thrustDays": 1,
+        "transferDays": 225.76388888888889,
+        "deltaVKms": 28.224,
+        "propellantFraction": 0.002873909432489108,
+        "arrivalSpeedKms": 39.252812986206536,
+        "arrivalRadialSpeedKms": 35.924989747055704,
+        "arrivalTangentialSpeedKms": 15.817030031078739,
+        "vInfAtSaturnKms": 36.455271695775295,
+        "thrustAngleDeg": 67
+      },
+      {
+        "thrustDays": 3,
+        "transferDays": 86.80555555555556,
+        "deltaVKms": 84.672,
+        "propellantFraction": 0.008596973967828436,
+        "arrivalSpeedKms": 91.58415403081875,
+        "arrivalRadialSpeedKms": 89.90580930344625,
+        "arrivalTangentialSpeedKms": 17.45287148388743,
+        "vInfAtSaturnKms": 90.24622751573962,
+        "thrustAngleDeg": 80.5
+      },
+      {
+        "thrustDays": 5,
+        "transferDays": 54.763888888888886,
+        "deltaVKms": 141.12,
+        "propellantFraction": 0.014287190633690106,
+        "arrivalSpeedKms": 146.73195560130222,
+        "arrivalRadialSpeedKms": 145.6304740762213,
+        "arrivalTangentialSpeedKms": 17.945244911049926,
+        "vInfAtSaturnKms": 145.86814646692352,
+        "thrustAngleDeg": 84
+      },
+      {
+        "thrustDays": 7,
+        "transferDays": 41.125,
+        "deltaVKms": 197.568,
+        "propellantFraction": 0.019944747962375886,
+        "arrivalSpeedKms": 202.4501408221018,
+        "arrivalRadialSpeedKms": 201.6916769995421,
+        "arrivalTangentialSpeedKms": 17.507911011917564,
+        "vInfAtSaturnKms": 201.845794310963,
+        "thrustAngleDeg": 86
+      },
+      {
+        "thrustDays": 14,
+        "transferDays": 25.96527777777778,
+        "deltaVKms": 395.136,
+        "propellantFraction": 0.03949170295346893,
+        "arrivalSpeedKms": 399.26453456942147,
+        "arrivalRadialSpeedKms": 398.8542309947193,
+        "arrivalTangentialSpeedKms": 18.096159331412156,
+        "vInfAtSaturnKms": 398.94424900404096,
+        "thrustAngleDeg": 88
+      },
+      {
+        "thrustDays": 30,
+        "transferDays": 23.058333333333334,
+        "deltaVKms": 846.72,
+        "propellantFraction": 0.08271899224188495,
+        "arrivalSpeedKms": 654.7396050559221,
+        "arrivalRadialSpeedKms": 654.3804801599738,
+        "arrivalTangentialSpeedKms": 21.68265699556031,
+        "vInfAtSaturnKms": 654.4916188697746,
+        "thrustAngleDeg": 88.5
+      }
+    ],
+    "correctionNote": "Previous estimate of ~455 days used average-velocity over radial distance, which does not account for orbital curvature. Proper 2D orbit propagation shows pure ballistic transfer takes ~1000 days. Trim thrust (台詞: 'トリムのみ') at 1% capacity dramatically shortens transfer with negligible propellant cost."
+  }
 }

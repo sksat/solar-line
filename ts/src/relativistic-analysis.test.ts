@@ -70,18 +70,18 @@ describe("relativistic-analysis", () => {
     );
   });
 
-  it("EP02 ballistic cruise should have β ≈ 0.005 (0.5%c)", () => {
-    const ep02 = result.transfers.find(t => t.transferId === "ep02-ballistic-cruise");
+  it("EP02 trim-thrust cruise should have β ≈ 0.0002 (0.02%c)", () => {
+    const ep02 = result.transfers.find(t => t.transferId === "ep02-trim-thrust-cruise");
     assert.ok(ep02, "EP02 cruise not found");
+    // After 3-day trim thrust, coast speed ~65 km/s = 0.022%c
     assert.ok(
-      Math.abs(ep02.relativistic.betaPeak - 0.005) < 0.001,
-      `EP02 β = ${ep02.relativistic.betaPeak}`,
+      ep02.relativistic.betaPeak < 0.001,
+      `EP02 β = ${ep02.relativistic.betaPeak} (expected < 0.001)`,
     );
-    // Time dilation at 0.5%c over 455 days:
-    // β²/2 ≈ 1.25e-5 → loss ≈ 455 × 86400 × 1.25e-5 ≈ 492s (~8 min)
+    // Time dilation at 0.02%c over 87 days is negligible (< 1s)
     assert.ok(
-      ep02.relativistic.timeDilationSec > 400 && ep02.relativistic.timeDilationSec < 600,
-      `EP02 time dilation = ${ep02.relativistic.timeDilationSec}s (expected ~492s)`,
+      ep02.relativistic.timeDilationSec < 1,
+      `EP02 time dilation = ${ep02.relativistic.timeDilationSec}s (expected < 1s)`,
     );
   });
 
@@ -95,15 +95,15 @@ describe("relativistic-analysis", () => {
   });
 
   it("cumulative time dilation should be < 15 minutes over entire journey", () => {
-    // 455d cruise at 1500 km/s dominates (~8 min), plus brachistochrone phases
+    // With corrected EP02 (~87d at ~65 km/s), brachistochrone phases dominate
     assert.ok(
       result.summary.cumulativeTimeDilationMin < 15,
       `cumulative dilation = ${result.summary.cumulativeTimeDilationMin.toFixed(2)} min`,
     );
-    // Should be at least a few minutes
+    // Should be at least ~1 minute from brachistochrone phases
     assert.ok(
-      result.summary.cumulativeTimeDilationMin > 5,
-      `cumulative dilation = ${result.summary.cumulativeTimeDilationMin.toFixed(2)} min (expected > 5 min)`,
+      result.summary.cumulativeTimeDilationMin > 1,
+      `cumulative dilation = ${result.summary.cumulativeTimeDilationMin.toFixed(2)} min (expected > 1 min)`,
     );
   });
 

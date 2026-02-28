@@ -1,6 +1,6 @@
 # Task 206: EP02 455-Day Transfer Fundamental Rethink
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Priority: CRITICAL — Human directive (phase 16)
 
@@ -28,7 +28,36 @@ The 455-day ballistic Jupiter→Saturn transfer is narratively unacceptable desp
 4. **Recalculate with proper orbit propagation**: Use Rust numerical integration instead of average-velocity approximation
 5. **Update all downstream**: EP02 report, cross-episode analysis, timeline, DAG
 
-## Key Parameters (Current)
+## Resolution
+
+### Finding: The 455-day estimate was a calculation error
+The previous calculation used average velocity over radial distance (`(v1 + v2) / 2 × dist`), which doesn't account for orbital curvature. Proper 2D numerical orbit propagation shows:
+- **Pure ballistic**: ~997 days (not 455) for the curved solar-hyperbolic trajectory
+- **3-day trim thrust**: ~87 days (primary scenario) — 0.86% propellant
+- **7-day trim thrust**: ~41 days (fast variant) — 2.0% propellant
+
+### Key insight: "トリムのみ" (trim only) is the solution
+The anime dialogue explicitly states the ship uses "trim only" thrust after Jupiter departure. This tiny thrust (1% capacity = 98 kN on 300t) delivers enormous ΔV (~84.7 km/s in 3 days) thanks to Isp = 10⁶ s, at negligible propellant cost.
+
+### New primary scenario
+- 3 days trim thrust (nearly radial outward, ~80.5° from tangential)
+- ~84 days ballistic coast (cold sleep depicted in anime)
+- Total: **~87 days** Jupiter → Saturn orbital radius
+- v∞ at Saturn: ~90 km/s (requires braking/capture phase)
+- Propellant: 0.86%
+
+### Verified by
+- Codex (gpt-5.2) physics consultation confirmed approach and numbers
+- 2D RK4 numerical integration (60s timestep during thrust, 600s coast)
+- 5 new pinned reproduction tests + 2 updated tests
+- All 988+ existing tests pass without regression
+
+### Impact
+- Total mission timeline: ~479 days → ~111 days
+- EP02 no longer dominates the timeline (was 95%, now ~78%)
+- Narratively acceptable — 87 days with cold sleep matches anime pacing
+
+## Key Parameters (Current — Legacy)
 - Departure: Jupiter 50 RJ, v∞ = 5.934 km/s, heliocentric v = 18.990 km/s
 - Arrival: Saturn/Enceladus, v∞ = 4.691 km/s
 - Transit: 455.26 days (current calculation)

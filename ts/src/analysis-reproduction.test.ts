@@ -174,7 +174,10 @@ describe("EP02 reproduction: heliocentric transfer orbit", () => {
     assert.strictEqual(t.reachesSaturn, true);
   });
 
-  it("transit time = 455.3 days", () => {
+  it("average-velocity transit estimate = 455.3 days (known to be inaccurate)", () => {
+    // NOTE: This is the legacy average-velocity-over-radial-distance estimate.
+    // Proper 2D orbit propagation shows ~997 days for pure ballistic.
+    // The trim-thrust analysis provides the corrected primary scenario (~87 days).
     assertClose(t.estimatedTransitDays!, 455.2612162741054, "estimatedTransitDays");
   });
 
@@ -210,6 +213,49 @@ describe("EP02 reproduction: Enceladus orbital info", () => {
 
   it("orbital period = 32.91 hours", () => {
     assertClose(e.orbitalPeriodHours, 32.907836215003556, "orbitalPeriodHours");
+  });
+});
+
+describe("EP02 reproduction: trim-thrust transfer (corrected)", () => {
+  const r = analyzeEpisode2();
+  const tt = r.trimThrust;
+
+  it("ballistic transfer ~997 days (not 455)", () => {
+    const ballistic = tt.ballistic!;
+    // Pure ballistic with optimal departure angle takes ~997 days
+    // (the old 455-day estimate was a calculation error)
+    assert.ok(ballistic.transferDays > 900, `ballistic should be >900d, got ${ballistic.transferDays}`);
+    assert.ok(ballistic.transferDays < 1100, `ballistic should be <1100d, got ${ballistic.transferDays}`);
+  });
+
+  it("3-day trim thrust → ~87 days (primary scenario)", () => {
+    const primary = tt.primary!;
+    assert.ok(primary.transferDays > 70, `should be >70d, got ${primary.transferDays}`);
+    assert.ok(primary.transferDays < 100, `should be <100d, got ${primary.transferDays}`);
+    assert.ok(primary.propellantFraction < 0.02, "propellant fraction <2%");
+  });
+
+  it("7-day trim thrust → ~41 days (fast variant)", () => {
+    const fast = tt.fast!;
+    assert.ok(fast.transferDays > 30, `should be >30d, got ${fast.transferDays}`);
+    assert.ok(fast.transferDays < 55, `should be <55d, got ${fast.transferDays}`);
+    assert.ok(fast.propellantFraction < 0.03, "propellant fraction <3%");
+  });
+
+  it("transfer time decreases monotonically with thrust duration", () => {
+    const scenarios = tt.allScenarios;
+    for (let i = 1; i < scenarios.length; i++) {
+      assert.ok(
+        scenarios[i].transferDays < scenarios[i - 1].transferDays,
+        `${scenarios[i].thrustDays}d should be faster than ${scenarios[i - 1].thrustDays}d`,
+      );
+    }
+  });
+
+  it("correction note documents the methodology change", () => {
+    assert.ok(tt.correctionNote.includes("455"));
+    assert.ok(tt.correctionNote.includes("1000"));
+    assert.ok(tt.correctionNote.includes("トリムのみ"));
   });
 });
 

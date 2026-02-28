@@ -80,11 +80,11 @@ interface TransferLeg {
 const DEPARTURE_MARS = calendarToJD(2241, 9, 5);
 const ARRIVAL_JUPITER = calendarToJD(2241, 9, 8); // +72h
 const DEPARTURE_JUPITER = calendarToJD(2241, 9, 11); // 3 days at Jupiter system
-const ARRIVAL_SATURN = calendarToJD(2242, 12, 10); // ~455 days ballistic from Jupiter
-const DEPARTURE_SATURN = calendarToJD(2242, 12, 12); // 2 days at Enceladus
-const ARRIVAL_URANUS = calendarToJD(2242, 12, 17); // +143h (~6 days)
-const DEPARTURE_URANUS = calendarToJD(2242, 12, 19); // 2 days at Titania
-const ARRIVAL_EARTH = calendarToJD(2242, 12, 28); // 507h composite route (~21 days)
+const ARRIVAL_SATURN = calendarToJD(2241, 12, 7); // ~87 days trim-thrust transfer from Jupiter (3-day trim + ~84-day coast)
+const DEPARTURE_SATURN = calendarToJD(2241, 12, 9); // 2 days at Enceladus
+const ARRIVAL_URANUS = calendarToJD(2241, 12, 15); // +143h (~6 days)
+const DEPARTURE_URANUS = calendarToJD(2241, 12, 17); // 2 days at Titania
+const ARRIVAL_EARTH = calendarToJD(2242, 1, 7); // 507h composite route (~21 days)
 
 // Transfer velocities: brachistochrone ΔV/2 (peak velocity) from calculation files
 // These are used to compute absolute plane-change ΔV costs.
@@ -101,7 +101,7 @@ const LEGS: TransferLeg[] = [
   },
   {
     episode: 2,
-    label: "Jupiter→Saturn (455d ballistic)",
+    label: "Jupiter→Saturn (87d trim-thrust transfer)",
     departure: "jupiter",
     arrival: "saturn",
     departureJD: DEPARTURE_JUPITER,

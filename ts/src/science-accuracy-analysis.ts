@@ -154,7 +154,7 @@ export function buildTransferComparisonTable(): ComparisonTable {
         metric: "作中遷移時間",
         values: {
           1: "72時間",
-          2: "≈455日",
+          2: "≈87日",
           3: "143時間",
           4: "8.3日（300t）",
           5: "507時間（≈21日）",
