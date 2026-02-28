@@ -186,6 +186,34 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes("margin-gauge"), "EP01 should have margin-gauge fence");
     assert.ok(content.includes('"actual": 299'), "should cite 299t mass boundary");
   });
+
+  it("Hohmann baseline ΔV: 10.15 km/s, ~3.1 years", () => {
+    assert.ok(content.includes("10.15"), "should cite Hohmann ΔV 10.15 km/s");
+    assert.ok(
+      content.includes("1,127") || content.includes("1127") || content.includes("3.1"),
+      "should cite Hohmann transfer time ~1127 days or ~3.1 years",
+    );
+  });
+
+  it("150h normal route: mass boundary 1297t, 0.77g", () => {
+    assert.ok(content.includes("1297") || content.includes("1,297"),
+      "should cite 150h mass boundary 1297t");
+    assert.ok(content.includes("0.77"),
+      "should cite 0.77g acceleration for 150h route");
+  });
+
+  it("HUD cross-check: vis-viva 17.92 km/s vs onscreen 17.8 km/s", () => {
+    assert.ok(content.includes("17.92"), "should cite computed vis-viva speed 17.92 km/s");
+    assert.ok(content.includes("17.8"), "should cite onscreen HUD value 17.8 km/s");
+    assert.ok(content.includes("0.67"), "should cite 0.67% error between computed and onscreen");
+  });
+
+  it("perijove capture: ΔV 2.3 km/s, Oberth ratio 8.2x", () => {
+    assert.ok(content.includes("2.3") && content.includes("km/s"),
+      "should cite perijove capture ΔV 2.3 km/s");
+    assert.ok(content.includes("8.2"),
+      "should cite Oberth ratio 8.2x at perijove");
+  });
 });
 
 describe("EP02 article content validation", () => {
@@ -212,6 +240,35 @@ describe("EP02 article content validation", () => {
   it("has margin gauge with escape velocity data", () => {
     assert.ok(content.includes("margin-gauge"), "EP02 should have margin-gauge fence");
     assert.ok(content.includes('"actual": 18.38'), "should cite 18.38 km/s heliocentric velocity");
+  });
+
+  it("Jupiter escape velocity at 50 RJ: 8.42 km/s", () => {
+    assert.ok(content.includes("8.42"),
+      "should cite escape velocity 8.42 km/s at 50 RJ");
+  });
+
+  it("heliocentric speed 18.99 km/s vs solar escape 18.46 km/s", () => {
+    assert.ok(content.includes("18.99"),
+      "should cite heliocentric speed 18.99 km/s");
+    assert.ok(content.includes("18.46"),
+      "should cite solar escape velocity 18.46 km/s");
+  });
+
+  it("Enceladus minimum capture ΔV: 0.61 km/s", () => {
+    assert.ok(content.includes("0.61"),
+      "should cite minimum capture ΔV 0.61 km/s at Enceladus");
+  });
+
+  it("Hohmann baseline: 3.36 km/s, ~10 years", () => {
+    assert.ok(content.includes("3.36"),
+      "should cite Hohmann ΔV 3.36 km/s for Jupiter→Saturn");
+    assert.ok(content.includes("3,672") || content.includes("3672") || content.includes("10年"),
+      "should cite ~3672 days or ~10 years transfer time");
+  });
+
+  it("ballistic transit ~997 days vs trim thrust ~87 days", () => {
+    assert.ok(content.includes("997"),
+      "should cite ballistic transit ~997 days");
   });
 });
 
@@ -309,6 +366,39 @@ describe("EP05 article content validation", () => {
     assert.ok(content.includes("margin-gauge"), "EP05 should have margin-gauge fence");
     assert.ok(content.includes('"actual": 55.2'), "should cite nozzle actual 55.2h");
     assert.ok(content.includes('"limit": 55.63'), "should cite nozzle limit 55.63h");
+  });
+
+  it("Oberth effect: ~3% efficiency gain at Jupiter flyby", () => {
+    assert.ok(content.includes("3%"),
+      "should cite 3% Oberth efficiency gain");
+    assert.ok(content.includes("オーベルト") || content.includes("Oberth"),
+      "should mention Oberth effect");
+  });
+
+  it("without flyby: burn time 56h51m, nozzle exceeded by 73 min", () => {
+    assert.ok(content.includes("56") && content.includes("51"),
+      "should cite 56h51m burn time without flyby");
+    assert.ok(content.includes("73"),
+      "should cite 73 min nozzle overrun without flyby");
+  });
+
+  it("300t scenario peak velocity: 7,604 km/s = 2.5%c", () => {
+    assert.ok(content.includes("7,604") || content.includes("7604"),
+      "should cite peak velocity 7,604 km/s");
+    assert.ok(content.includes("2.5%"),
+      "should cite 2.5% of speed of light");
+  });
+
+  it("LEO capture ΔV: 3.18 km/s (v∞≈0) vs moon orbit 0.42 km/s", () => {
+    assert.ok(content.includes("3.18"),
+      "should cite LEO capture ΔV 3.18 km/s");
+    assert.ok(content.includes("0.42"),
+      "should cite moon orbit minimum capture 0.42 km/s");
+  });
+
+  it("Oberth flyby saves 99 min of burn time", () => {
+    assert.ok(content.includes("99") && content.includes("分"),
+      "should cite 99分 burn time savings from Oberth");
   });
 });
 
