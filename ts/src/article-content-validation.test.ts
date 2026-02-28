@@ -933,6 +933,81 @@ describe("cross-episode.md content validation", () => {
     assert.ok(content.includes("ツィオルコフスキー"),
       "should reference Tsiolkovsky rocket equation");
   });
+
+  // --- 3D orbital analysis data consistency (vs 3d_orbital_analysis.json) ---
+
+  it("3D: Saturn ring approach angle ~9.3° (not 27°)", () => {
+    assert.ok(
+      content.includes("9.3°") || content.includes("約9.3"),
+      "should cite Saturn approach angle ~9.3° from 3D analysis",
+    );
+    assert.ok(
+      !content.includes("約27°") && !content.includes("接近角27°"),
+      "should NOT cite old 27° Saturn approach angle",
+    );
+  });
+
+  it("3D: Uranus approach from Saturn ~25.3° (equatorial, not polar)", () => {
+    assert.ok(
+      content.includes("25.3°") || content.includes("約25"),
+      "should cite ~25.3° Uranus approach angle from Saturn",
+    );
+    assert.ok(
+      content.includes("赤道方向"),
+      "should describe Uranus approach as equatorial direction",
+    );
+  });
+
+  it("3D: Uranus departure toward Earth ~14.3°", () => {
+    assert.ok(
+      content.includes("14.3°") || content.includes("約14"),
+      "should cite ~14.3° Uranus departure angle toward Earth",
+    );
+  });
+
+  it("3D: Z-height bar chart values match epoch (Mars +4047, Saturn +47708)", () => {
+    // Verify bar chart includes correct Z-heights, not old pre-epoch values
+    assert.ok(
+      content.includes("value: 4047") || content.includes("4,047"),
+      "Mars Z-height should be +4,047 thousand km",
+    );
+    assert.ok(
+      content.includes("value: 47708") || content.includes("47,708"),
+      "Saturn Z-height should be +47,708 thousand km",
+    );
+  });
+
+  it("3D: 面外距離 table cites EP02 54,052 (not 391)", () => {
+    assert.ok(
+      content.includes("54,052"),
+      "EP02 out-of-plane distance should be 54,052 thousand km",
+    );
+    assert.ok(
+      !content.includes('"2": "391"'),
+      "should NOT cite old EP02 out-of-plane distance of 391",
+    );
+  });
+
+  it("3D: plane change max fraction 1.51%", () => {
+    assert.ok(
+      content.includes("1.51%"),
+      "should cite max plane change fraction 1.51%",
+    );
+  });
+
+  it("3D: sideview diagram for Saturn ring crossing exists", () => {
+    assert.ok(
+      content.includes('"id": "saturn-ring-crossing"'),
+      "should have Saturn ring crossing side-view diagram",
+    );
+  });
+
+  it("3D: sideview diagram for Uranus approach exists", () => {
+    assert.ok(
+      content.includes('"id": "uranus-approach-geometry"'),
+      "should have Uranus approach geometry side-view diagram",
+    );
+  });
 });
 
 // ============================================================
