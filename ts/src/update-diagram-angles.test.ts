@@ -278,6 +278,78 @@ describe("burn marker angles aligned with planet positions", () => {
   });
 });
 
+describe("EP05 intermediate flyby burns match Jupiter orbit angle", () => {
+  it("Oberth burn and deceleration burn at Jupiter use Jupiter's static angle", () => {
+    const diagrams = getHeliocentricDiagrams(5);
+    // diagram-03 is the composite flyby route with Jupiter as waypoint
+    const flybyDiagram = diagrams.find((d) =>
+      d.transfers.some((t) => t.label?.includes("フライバイ")),
+    );
+    assert.ok(flybyDiagram, "EP05 should have a flyby diagram");
+
+    const jupOrbit = flybyDiagram.orbits.find(
+      (o) => o.id === "jupiter-orbit" || o.id === "jupiter",
+    );
+    assert.ok(jupOrbit?.angle !== undefined, "Jupiter orbit should have an angle");
+
+    // Find Jupiter-related burns across all arcs
+    for (const transfer of flybyDiagram.transfers) {
+      if (!transfer.burnMarkers) continue;
+      for (const burn of transfer.burnMarkers) {
+        if (burn.label.includes("木星") || burn.label.includes("Oberth")) {
+          assert.ok(
+            Math.abs(burn.angle - jupOrbit.angle!) < 0.001,
+            `"${burn.label}" angle ${burn.angle} should match Jupiter orbit angle ${jupOrbit.angle} ` +
+            `(diff: ${Math.abs(burn.angle - jupOrbit.angle!).toFixed(4)} rad)`,
+          );
+        }
+      }
+    }
+  });
+});
+
+describe("cross-episode burns snap to orbit static angles", () => {
+  it("all departure burns match their fromOrbit's static angle", () => {
+    const summary = loadSummaryBySlug(summaryDir, "cross-episode");
+    let fullRoute: OrbitalDiagram | undefined;
+    for (const section of summary.sections) {
+      for (const d of section.orbitalDiagrams ?? []) {
+        if (d.id === "full-route-diagram") fullRoute = d;
+      }
+    }
+    assert.ok(fullRoute, "full-route-diagram should exist");
+
+    const orbitAngles = new Map(
+      fullRoute.orbits.filter((o) => o.angle !== undefined).map((o) => [o.id, o.angle!]),
+    );
+
+    for (const transfer of fullRoute.transfers) {
+      if (!transfer.burnMarkers) continue;
+      for (const burn of transfer.burnMarkers) {
+        if (burn.type === "acceleration") {
+          const orbitAngle = orbitAngles.get(transfer.fromOrbitId);
+          if (orbitAngle !== undefined) {
+            assert.ok(
+              Math.abs(burn.angle - orbitAngle) < 0.001,
+              `"${burn.label}" angle ${burn.angle} should match orbit "${transfer.fromOrbitId}" ` +
+              `angle ${orbitAngle} (diff: ${Math.abs(burn.angle - orbitAngle).toFixed(4)} rad)`,
+            );
+          }
+        } else if (burn.type === "deceleration" || burn.type === "capture") {
+          const orbitAngle = orbitAngles.get(transfer.toOrbitId);
+          if (orbitAngle !== undefined) {
+            assert.ok(
+              Math.abs(burn.angle - orbitAngle) < 0.001,
+              `"${burn.label}" angle ${burn.angle} should match orbit "${transfer.toOrbitId}" ` +
+              `angle ${orbitAngle} (diff: ${Math.abs(burn.angle - orbitAngle).toFixed(4)} rad)`,
+            );
+          }
+        }
+      }
+    }
+  });
+});
+
 // --- Task 205: Animated body arrival alignment for real diagrams ---
 
 import { renderOrbitalDiagram } from "./templates.ts";
