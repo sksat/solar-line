@@ -1138,3 +1138,39 @@ describe("report data: animated diagram meanMotion consistency", () => {
     }
   }
 });
+
+// ---------------------------------------------------------------------------
+// Escape transfer direction validation (Task 254)
+// ---------------------------------------------------------------------------
+// Escape/departure transfers labeled as "脱出" should go outward (from inner
+// orbit to outer orbit), not inward toward the central body.
+
+describe("report data: escape transfer direction", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const ep = `ep${String(epNum).padStart(2, "0")}`;
+
+    for (const diagram of report.diagrams ?? []) {
+      const orbitMap = new Map(diagram.orbits.map(o => [o.id, o]));
+
+      for (const transfer of diagram.transfers) {
+        // Only check transfers labeled as escape/departure
+        if (!transfer.label.includes("脱出")) continue;
+
+        const fromOrbit = orbitMap.get(transfer.fromOrbitId);
+        const toOrbit = orbitMap.get(transfer.toOrbitId);
+        if (!fromOrbit || !toOrbit) continue;
+
+        it(`${ep} ${diagram.id}: escape transfer "${transfer.label}" goes outward`, () => {
+          assert.ok(
+            toOrbit.radius >= fromOrbit.radius,
+            `Escape transfer goes inward: from ${transfer.fromOrbitId} (${fromOrbit.radius} km) to ${transfer.toOrbitId} (${toOrbit.radius} km). ` +
+            `Should go outward (toOrbit radius >= fromOrbit radius).`
+          );
+        });
+      }
+    }
+  }
+});
