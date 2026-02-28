@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generatedAt": "2026-02-25T00:42:27.385Z",
+    "generatedAt": "2026-02-28T14:22:27.883Z",
     "reproductionCommand": "npm run recalculate -- --episode 5",
     "durationMs": 1
   },
@@ -604,6 +604,47 @@
     "threePercentBurnSavingMinutes": 99.36,
     "burnSavingExceedsMargin": true,
     "interpretation": "mission-level-composite"
+  },
+  "navigationAccuracy": {
+    "distanceKm": 2722861977,
+    "distanceAU": 18.2012081071686,
+    "positionErrorKm": 20,
+    "angularAccuracyRad": 7.34521256271522e-9,
+    "angularAccuracyDeg": 4.208496794700536e-7,
+    "angularAccuracyArcsec": 0.001515058846092193,
+    "angularAccuracyNrad": 7.34521256271522,
+    "relativePrecision": 7.34521256271522e-9,
+    "ep03Comparison": {
+      "angleDeg": 1.23,
+      "angleRad": 0.021467549799530253,
+      "errorKm": 14360000,
+      "ep05VsEp03Ratio": 2922658.7544247448
+    },
+    "realWorldComparisons": {
+      "newHorizonsPluto": {
+        "label": "New Horizons 冥王星フライバイ (2015, DSN支援)",
+        "distanceKm": 4936729733.099999,
+        "errorKm": 184,
+        "autonomous": false,
+        "angularAccuracyRad": 3.7271637287799804e-8
+      },
+      "newHorizonsStellar": {
+        "label": "New Horizons 自律恒星航法テスト (2025)",
+        "distanceKm": 8676676500.599998,
+        "errorKm": 6600000,
+        "autonomous": true,
+        "angularAccuracyRad": 0.0007606597672065263
+      },
+      "dsnDDOR": {
+        "label": "DSN DDOR角度精度",
+        "angularAccuracyNrad": 100
+      }
+    },
+    "vsNewHorizonsPluto": 9.2,
+    "vsNewHorizonsStellar": 330000,
+    "vsDsnDDOR": 13.614309884999999,
+    "vsHubble": 33.00201845556397,
+    "vsHumanEye": 39602.42214667676
   },
   "preliminary": false
 }
