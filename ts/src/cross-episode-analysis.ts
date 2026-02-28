@@ -8,7 +8,7 @@
  */
 
 import type { SummaryReport, ComparisonTable, ComparisonRow, OrbitalDiagram } from "./report-types.ts";
-import { computeTimeline, type TimelineEvent } from "./timeline-analysis.ts";
+import { computeTimeline, findOptimalEpoch, type TimelineEvent } from "./timeline-analysis.ts";
 import { calendarToJD, jdToDateString, planetPosition } from "./ephemeris.ts";
 import { KESTREL, THRUST_MN, NOMINAL_MASS_T, AU_KM } from "./kestrel.ts";
 
@@ -234,8 +234,8 @@ export function buildDeltaVScalingTable(): ComparisonTable {
 
 /** Build the planetary positions and timeline table */
 export function buildTimelineTable(): ComparisonTable {
-  // Use 2240 as a representative epoch for the SF timeline
-  const timeline = computeTimeline(calendarToJD(2240, 1, 1));
+  // Use optimal epoch where Saturn-Uranus conjunction aligns with EP03
+  const timeline = findOptimalEpoch();
 
   const rows: ComparisonRow[] = timeline.events.map((event) => ({
     metric: `EP${event.episode}: ${event.description.split("→")[0].trim()} → ${event.description.split("→").slice(-1)[0].trim()}`,
@@ -259,7 +259,8 @@ export function buildTimelineTable(): ComparisonTable {
 
 /** Generate timeline Markdown section content */
 export function buildTimelineMarkdown(): string {
-  const timeline = computeTimeline(calendarToJD(2240, 1, 1));
+  // Use optimal epoch where Saturn-Uranus conjunction aligns with EP03
+  const timeline = findOptimalEpoch();
 
   const DEG = 180 / Math.PI;
 
@@ -270,7 +271,7 @@ export function buildTimelineMarkdown(): string {
 
   return `これまでの分析では、各軌道遷移のΔV計算のみを行い、目的天体が到着時にその位置に実際に存在するかを検証していなかった。ここでは、JPLの平均軌道要素から惑星の黄経を計算し、各遷移が成立する惑星配置と太陽系日時を推定する。
 
-**前提**: 作品の時代設定は未特定だが、惑星配置の周期性から複数のエポックで計算可能。ここでは2240年代を代表例として使用する。
+**前提**: 作品の時代設定は未特定だが、惑星配置の周期性から複数のエポックで計算可能。EP03のBrachistochrone遷移は土星-天王星が近接する必要があるため、惑星配置の最適化により2210年代が最適エポックとして選択された。
 
 ### 推定タイムライン（検索開始: ${timeline.searchEpoch}）
 

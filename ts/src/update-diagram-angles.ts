@@ -13,8 +13,8 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { computeTimeline, type TimelineEvent } from "./timeline-analysis.ts";
-import { calendarToJD, planetLongitude, jdToDateString, type PlanetName } from "./ephemeris.ts";
+import { findOptimalEpoch, type TimelineEvent } from "./timeline-analysis.ts";
+import { planetLongitude, jdToDateString, type PlanetName } from "./ephemeris.ts";
 import type { EpisodeReport, OrbitalDiagram, SummaryReport, TransferArc } from "./report-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
 import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
@@ -32,8 +32,8 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 
-// Compute timeline anchored at 2240 (representative epoch)
-const timeline = computeTimeline(calendarToJD(2240, 1, 1));
+// Compute timeline using optimal epoch (Saturn-Uranus conjunction aligned with EP03)
+const timeline = findOptimalEpoch();
 
 /** Map orbit ID to PlanetName for angle lookup */
 function orbitIdToPlanet(orbitId: string): PlanetName | null {

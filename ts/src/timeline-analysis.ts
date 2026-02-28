@@ -368,6 +368,44 @@ export function searchMultipleEpochs(): StoryTimeline[] {
   return timelines;
 }
 
+/**
+ * Find the optimal epoch where Saturn-Uranus distance at EP03 departure
+ * is minimized while maintaining a valid Mars-Jupiter opposition for EP01.
+ *
+ * This resolves the distance inconsistency: the EP03 brachistochrone analysis
+ * requires Saturn and Uranus to be near conjunction (phase angle ≈ 0°, distance ≈ 9.6 AU).
+ * By searching across Mars-Jupiter oppositions in 2200-2270, we find the epoch
+ * where the timeline chain naturally lands EP03 near a Saturn-Uranus conjunction.
+ */
+export function findOptimalEpoch(): StoryTimeline {
+  const AU_KM = 149_597_870.7;
+  const startJD = calendarToJD(2200, 1, 1);
+  const endJD = calendarToJD(2270, 1, 1);
+  const step = 400; // days
+
+  let bestTimeline: StoryTimeline | null = null;
+  let bestSatUraDist = Infinity;
+
+  for (let jd = startJD; jd < endJD; jd += step) {
+    const tl = computeTimeline(jd);
+    const ep03 = tl.events[2];
+
+    const satPos = planetPosition("saturn", ep03.departureJD);
+    const uraPos = planetPosition("uranus", ep03.departureJD);
+    const dx = satPos.x - uraPos.x;
+    const dy = satPos.y - uraPos.y;
+    const dz = satPos.z - uraPos.z;
+    const distAU = Math.sqrt(dx * dx + dy * dy + dz * dz) / AU_KM;
+
+    if (distAU < bestSatUraDist) {
+      bestSatUraDist = distAU;
+      bestTimeline = tl;
+    }
+  }
+
+  return bestTimeline!;
+}
+
 /** Trim-thrust scenario for EP02 sensitivity analysis */
 export interface EP02Scenario {
   /** Thrust duration label */

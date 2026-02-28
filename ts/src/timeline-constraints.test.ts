@@ -9,16 +9,15 @@
 import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
 import {
-  computeTimeline,
+  findOptimalEpoch,
   ep02SensitivityAnalysis,
   narrativePlausibilityAnalysis,
   FIXED_DURATIONS,
   FIXED_TOTAL_DAYS,
 } from "./timeline-analysis.ts";
-import { calendarToJD } from "./ephemeris.ts";
 import { EPISODE_SUMMARIES } from "./cross-episode-analysis.ts";
 
-const timeline = computeTimeline(calendarToJD(2240, 1, 1));
+const timeline = findOptimalEpoch();
 
 describe("EP01 constraints", () => {
   const ep01 = timeline.events[0];

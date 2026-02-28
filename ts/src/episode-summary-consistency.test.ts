@@ -24,8 +24,7 @@ import { analyzeEpisode2 } from "./ep02-analysis.ts";
 import { analyzeEpisode3 } from "./ep03-analysis.ts";
 import { analyzeEpisode4 } from "./ep04-analysis.ts";
 import { analyzeEpisode5 } from "./ep05-analysis.ts";
-import { computeTimeline } from "./timeline-analysis.ts";
-import { calendarToJD } from "./ephemeris.ts";
+import { findOptimalEpoch } from "./timeline-analysis.ts";
 
 // --- Helpers ---
 
@@ -385,7 +384,7 @@ describe("MDX report↔TypeScript consistency", () => {
   });
 
   describe("epoch date consistency with computed timeline", () => {
-    const tl = computeTimeline(calendarToJD(2240, 1, 1));
+    const tl = findOptimalEpoch();
 
     // Episode MDX files should have epochAnnotation dates matching the computed timeline
     const expectedDates: Record<number, { departure: string; arrival: string }> = {};

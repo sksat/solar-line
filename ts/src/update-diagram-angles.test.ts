@@ -9,15 +9,15 @@ import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { computeTimeline } from "./timeline-analysis.ts";
-import { calendarToJD, planetLongitude, type PlanetName } from "./ephemeris.ts";
+import { findOptimalEpoch } from "./timeline-analysis.ts";
+import { planetLongitude, type PlanetName } from "./ephemeris.ts";
 import type { EpisodeReport, OrbitalDiagram, SummaryReport } from "./report-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
 import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
 
 const episodeDir = path.resolve(import.meta.dirname!, "..", "..", "reports", "data", "episodes");
 const summaryDir = path.resolve(import.meta.dirname!, "..", "..", "reports", "data", "summary");
-const timeline = computeTimeline(calendarToJD(2240, 1, 1));
+const timeline = findOptimalEpoch();
 
 function orbitIdToPlanet(orbitId: string): PlanetName | null {
   const map: Record<string, PlanetName> = {

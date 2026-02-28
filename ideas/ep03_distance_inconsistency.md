@@ -1,24 +1,11 @@
 # Idea: EP03 Distance Inconsistency Resolution
 
+## Status: RESOLVED (Task 264)
+
 ## Problem
-EP03 analysis uses Saturn-Uranus minimum distance (9.62 AU, phase angle ≈ 0°) for brachistochrone calculation, but the inferred epoch (2241-12-09) places the planets at 135.5° phase angle (distance 26.82 AU).
+EP03 analysis uses Saturn-Uranus minimum distance (9.62 AU, phase angle ≈ 0°) for brachistochrone calculation, but the previous epoch (2241-12-09) placed the planets at 135.5° phase angle (distance 26.82 AU).
 
-## Impact
-If the actual distance is 26.82 AU instead of 9.62 AU:
-- Required acceleration increases ~2.8x (proportional to distance for fixed time)
-- Mass boundary would decrease proportionally (≈162t instead of 452.5t)
-- ΔV would increase by ~√(2.8) ≈ 1.67x → ~18,600 km/s instead of 11,165 km/s
-- This cascades through cumulative ΔV, propellant budget, and mass timeline
+## Resolution
+Option 1 was implemented: re-derived the epoch using `findOptimalEpoch()` which searches for Mars-Jupiter oppositions in 2200-2270 that produce the best Saturn-Uranus conjunction at EP03 departure.
 
-## Resolution Options
-1. **Re-derive the epoch**: Find a Saturn-Uranus configuration where distance ≈ 9.62 AU. This requires phase angle ≈ 0° → find years when Saturn and Uranus are roughly aligned (same heliocentric longitude). Saturn-Uranus synodic period ≈ 45.3 years.
-2. **Re-analyze EP03 at 26.82 AU**: Accept the epoch, recalculate with the larger distance. This would fundamentally change EP03's analysis — higher ΔV, lower mass boundary.
-3. **Accept the inconsistency**: Note that the epoch is illustrative and EP03's analysis is based on a "best case" minimum distance scenario.
-
-## Priority
-HIGH — this is a data integrity issue that undermines the cross-episode timeline. The epoch should be consistent with the analysis assumptions.
-
-## Related
-- Task 263: Cross-episode report quality review (flagged but not resolved)
-- EP03 analysis: reports/data/episodes/ep03.md
-- Cross-episode: reports/data/summary/cross-episode.md (lines 688, 700)
+**Result**: Epoch anchored at 2214-10-27 (EP01 departure). EP03 departs 2215-01-30 with Saturn-Uranus at 9.36 AU (phase -11.1°), closely matching the 9.62 AU assumption used in the analysis. Inconsistency resolved.

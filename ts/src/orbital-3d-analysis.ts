@@ -15,7 +15,8 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { calendarToJD, jdToDateString, planetPosition, type PlanetName } from "./ephemeris.ts";
+import { jdToDateString, planetPosition, type PlanetName } from "./ephemeris.ts";
+import { findOptimalEpoch } from "./timeline-analysis.ts";
 
 const AU_KM = 149_597_870.7;
 
@@ -75,16 +76,17 @@ interface TransferLeg {
   transferVelocityKmS: number; // approximate average transfer velocity
 }
 
-// Key dates from the SOLAR LINE 2241-2242 timeline
-// Source: cross-episode.md full-route timeline + per-episode epochAnnotation
-const DEPARTURE_MARS = calendarToJD(2241, 9, 5);
-const ARRIVAL_JUPITER = calendarToJD(2241, 9, 8); // +72h
-const DEPARTURE_JUPITER = calendarToJD(2241, 9, 11); // 3 days at Jupiter system
-const ARRIVAL_SATURN = calendarToJD(2241, 12, 7); // ~87 days trim-thrust transfer from Jupiter (3-day trim + ~84-day coast)
-const DEPARTURE_SATURN = calendarToJD(2241, 12, 9); // 2 days at Enceladus
-const ARRIVAL_URANUS = calendarToJD(2241, 12, 15); // +143h (~6 days)
-const DEPARTURE_URANUS = calendarToJD(2241, 12, 17); // 2 days at Titania
-const ARRIVAL_EARTH = calendarToJD(2242, 1, 7); // 507h composite route (~21 days)
+// Key dates from optimal epoch timeline (Saturn-Uranus conjunction aligned with EP03)
+// Source: findOptimalEpoch() → cross-episode.md full-route timeline
+const _timeline = findOptimalEpoch();
+const DEPARTURE_MARS = _timeline.events[0].departureJD;
+const ARRIVAL_JUPITER = _timeline.events[0].arrivalJD;
+const DEPARTURE_JUPITER = _timeline.events[1].departureJD;
+const ARRIVAL_SATURN = _timeline.events[1].arrivalJD;
+const DEPARTURE_SATURN = _timeline.events[2].departureJD;
+const ARRIVAL_URANUS = _timeline.events[2].arrivalJD;
+const DEPARTURE_URANUS = _timeline.events[3].departureJD;
+const ARRIVAL_EARTH = _timeline.events[3].arrivalJD;
 
 // Transfer velocities: brachistochrone ΔV/2 (peak velocity) from calculation files
 // These are used to compute absolute plane-change ΔV costs.
