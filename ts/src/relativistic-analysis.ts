@@ -13,17 +13,16 @@
  * phase 15 (相対論効果検討).
  */
 
+import { KESTREL, EXHAUST_VELOCITY_KMS, AU_KM } from "./kestrel.ts";
+
 /** Speed of light in km/s (exact, SI) */
 const C_KM_S = 299_792.458;
 
-/** Isp of Kestrel's D-He³ fusion pulse drive (s) */
-const ISP_S = 1_000_000;
+/** Exhaust velocity (km/s) from shared constants */
+const VE_KMS = EXHAUST_VELOCITY_KMS;
 
-/** Exhaust velocity (km/s) = Isp × g₀ / 1000 */
-const VE_KMS = ISP_S * 9.80665 / 1000; // ≈ 9806.65 km/s
-
-/** Kestrel thrust (N) */
-const THRUST_N = 9_800_000;
+/** Kestrel thrust (N) from shared constants */
+const THRUST_N = KESTREL.thrustN;
 
 /** β = v/c */
 function beta(vKms: number): number {
@@ -114,8 +113,6 @@ interface TransferAnalysis {
   };
   verdict: string;
 }
-
-const AU_KM = 149_597_870.7;
 
 /**
  * Analyze relativistic effects for a brachistochrone transfer.
@@ -335,7 +332,7 @@ export function analyzeRelativisticEffects() {
     parameters: {
       speedOfLightKms: C_KM_S,
       exhaustVelocityKms: VE_KMS,
-      ispSeconds: ISP_S,
+      ispSeconds: KESTREL.ispS,
     },
   };
 }

@@ -34,21 +34,8 @@ import {
   URANUS_RADIUS,
   TITANIA_ORBIT_RADIUS,
 } from "./orbital.ts";
-
-/** 1 AU in km */
-const AU_KM = 149_597_870.7;
-
-/** Ship parameters — same Kestrel, now severely damaged */
-export const KESTREL = {
-  /** Maximum mass at standard load (kg) — worldbuilding doc */
-  massKg: 48_000_000,
-  /** Normal thrust (N) — worldbuilding doc */
-  thrustN: 9_800_000,
-  /** Peak thrust (N) — emergency "full burn" — worldbuilding doc */
-  peakThrustN: 10_700_000,
-  /** Damaged thrust at 65% output (N) — dialogue ~17:29 "出力は65%に設定" */
-  damagedThrustN: 6_370_000,
-} as const;
+import { KESTREL, AU_KM } from "./kestrel.ts";
+export { KESTREL };
 
 /** Episode 4 orbital parameters from dialogue */
 export const EP04_PARAMS = {

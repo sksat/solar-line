@@ -10,18 +10,19 @@
 import type { SummaryReport, ComparisonTable, ComparisonRow, OrbitalDiagram } from "./report-types.ts";
 import { computeTimeline, type TimelineEvent } from "./timeline-analysis.ts";
 import { calendarToJD, jdToDateString, planetPosition } from "./ephemeris.ts";
+import { KESTREL, THRUST_MN, NOMINAL_MASS_T, AU_KM } from "./kestrel.ts";
 
-/** Ship specifications from worldbuilding + episode depictions */
+/** Ship specifications from worldbuilding + episode depictions (derived from shared KESTREL) */
 export const SHIP_SPECS = {
   name: "ケストレル号",
-  nominalMassT: 48_000,
-  thrustMN: 9.8,
-  emergencyThrustMN: 10.7,
-  damagedThrustPercent: 65,
-  damagedThrustMN: 6.37,
-  engine: "TSF-43R Orion Micropulser",
-  fuel: "D-He³",
-  lengthM: 42.8,
+  nominalMassT: NOMINAL_MASS_T,
+  thrustMN: THRUST_MN,
+  emergencyThrustMN: KESTREL.peakThrustN / 1_000_000,
+  damagedThrustPercent: KESTREL.damagedThrustPercent,
+  damagedThrustMN: KESTREL.damagedThrustN / 1_000_000,
+  engine: KESTREL.engine,
+  fuel: KESTREL.fuel,
+  lengthM: KESTREL.lengthM,
 };
 
 /** Per-episode route and key findings */
@@ -260,7 +261,6 @@ export function buildTimelineTable(): ComparisonTable {
 export function buildTimelineMarkdown(): string {
   const timeline = computeTimeline(calendarToJD(2240, 1, 1));
 
-  const AU_KM = 149_597_870.7;
   const DEG = 180 / Math.PI;
 
   const eventLines = timeline.events.map((event) => {

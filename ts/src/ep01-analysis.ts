@@ -18,18 +18,11 @@ import {
   ORBIT_RADIUS,
   GANYMEDE_ORBIT_RADIUS,
 } from "./orbital.ts";
+import { KESTREL as KESTREL_BASE, AU_KM } from "./kestrel.ts";
 
-/** 1 AU in km */
-const AU_KM = 149_597_870.7;
-
-/** Ship parameters from worldbuilding document */
+/** Ship parameters — shared base + EP01-specific fields */
 export const KESTREL = {
-  /** Maximum mass at standard load (kg) */
-  massKg: 48_000_000,
-  /** Normal thrust (N) */
-  thrustN: 9_800_000,
-  /** Peak thrust (N) — emergency "full burn" */
-  peakThrustN: 10_700_000,
+  ...KESTREL_BASE,
   /** Cargo mass this trip (kg) */
   cargoKg: 42_300,
 } as const;

@@ -13,17 +13,18 @@ import type {
   TimelineEvent,
   ComparisonTable,
 } from "./report-types.ts";
+import { KESTREL, THRUST_MN, NOMINAL_MASS_T } from "./kestrel.ts";
 
 /** Ship baseline specifications from worldbuilding doc + EP01 */
 export const KESTREL_SPECS = {
   name: "ケストレル号 (Kestrel)",
   registry: "不明（民間貨物船）",
-  lengthM: 42.8,
-  engine: "TSF-43R Orion Micropulser",
+  lengthM: KESTREL.lengthM,
+  engine: KESTREL.engine,
   fuel: "D-He³（重水素-ヘリウム3）核融合パルス",
-  nominalThrustMN: 9.8,
-  emergencyThrustMN: 10.7,
-  statedMassT: 48_000,
+  nominalThrustMN: THRUST_MN,
+  emergencyThrustMN: KESTREL.peakThrustN / 1_000_000,
+  statedMassT: NOMINAL_MASS_T,
   estimatedActualMassT: "300〜500",
 };
 
