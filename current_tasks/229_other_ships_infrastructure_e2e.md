@@ -1,6 +1,6 @@
 # Task 229: E2E Tests for Other-Ships and Infrastructure Pages
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Goal
 Add Playwright E2E tests for the `other-ships` and `infrastructure` summary pages.
@@ -12,8 +12,8 @@ These are the only summary pages without dedicated E2E test coverage.
 - CLAUDE.md requires Playwright E2E tests to catch broken rendering and layout issues
 
 ## Acceptance Criteria
-- [ ] E2E tests for infrastructure.md page rendering (headings, content, navigation)
-- [ ] E2E tests for other-ships.md page rendering (headings, content, sections)
-- [ ] Tests verify no broken links, images, or layout issues
-- [ ] All existing tests continue to pass
-- [ ] CI green
+- [x] E2E tests for infrastructure.md page rendering (5 tests: sections, spaceports, governance table, cross-links, beacon systems)
+- [x] E2E tests for other-ships.md page rendering (7 tests: ship categories, orbital diagram, KaTeX math, tables, glossary, cross-links, nuclear torpedo section)
+- [x] Tests verify no broken links, images, or layout issues
+- [x] All existing tests continue to pass (126 total E2E, 1819 unit)
+- [x] CI green
