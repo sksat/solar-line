@@ -696,9 +696,13 @@ footer {
 .layer-dl dt { font-weight: 600; margin-top: 0.5rem; }
 .layer-dl dd { margin: 0.2rem 0 0 1.5rem; color: var(--muted); font-size: 0.9em; }
 .layer-badge { display: inline-block; padding: 0.1em 0.5em; border-radius: 3px; font-size: 0.75em; font-weight: 700; margin-right: 0.3em; vertical-align: middle; }
+.layer-0 { background: var(--accent); color: #fff; }
 .layer-3 { background: var(--green); color: #000; }
 .layer-2 { background: var(--yellow); color: #000; }
 .layer-1 { background: var(--muted); color: #fff; }
+.script-table .scene-setting td { padding: 0.2em 0.5em; }
+.script-table .stage-direction td { padding: 0.3em 0.5em; color: var(--muted); }
+.script-table .line-id { font-size: 0.7em; color: var(--muted); white-space: nowrap; }
 .tab-container { margin: 1rem 0; }
 .tab-buttons { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 0; flex-wrap: wrap; }
 .tab-btn { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; color: var(--muted); font-size: 0.9rem; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.2s, border-color 0.2s; }
@@ -2678,6 +2682,7 @@ function sourceLabel(source: string): string {
     case "youtube-manual": return "YouTube 手動字幕";
     case "manual": return "手動入力";
     case "whisper": return "Whisper STT";
+    case "script": return "公式脚本";
     default: return source;
   }
 }
@@ -2698,9 +2703,14 @@ export function renderTranscriptionPage(data: TranscriptionPageData, summaryPage
   const heading = `文字起こし — ${escapeHtml(epTitle)}`;
 
   // Collect all available sources for the source info card
-  const allSources: { label: string; count: number; model?: string }[] = [
+  const allSources: { label: string; count: number; model?: string }[] = [];
+  if (data.scriptSource) {
+    const scriptLineCount = data.scriptSource.scenes.reduce((sum, s) => sum + s.lines.length, 0);
+    allSources.push({ label: sourceLabel("script"), count: scriptLineCount });
+  }
+  allSources.push(
     { label: sourceLabel(data.sourceInfo.source), count: data.lines.length, model: data.sourceInfo.whisperModel },
-  ];
+  );
   if (data.additionalSources) {
     for (const src of data.additionalSources) {
       allSources.push({ label: sourceLabel(src.source), count: src.lines.length, model: src.whisperModel });
@@ -2725,6 +2735,7 @@ export function renderTranscriptionPage(data: TranscriptionPageData, summaryPage
 ${data.dialogue ? `<tr><th>帰属台詞数</th><td>${data.dialogue.length}行</td></tr>` : ""}
 ${data.speakers ? `<tr><th>話者数</th><td>${data.speakers.length}人</td></tr>` : ""}
 ${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` : ""}
+${data.scriptSource ? `<tr><th>公式脚本</th><td><a href="${escapeHtml(data.scriptSource.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(data.scriptSource.author)}</a></td></tr>` : ""}
 <tr><th>帰属状態</th><td>${data.dialogue ? "Phase 2 完了（話者帰属済み）" : "Phase 1 のみ（話者未帰属）"}</td></tr>
 </table>
 <p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考証レポートに戻る</a></p>
@@ -2732,8 +2743,10 @@ ${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` :
 
 <div class="card layer-legend">
 <h3>データレイヤー</h3>
-<p class="meta-note">文字起こしデータは3層に分けて管理しています。各タブは異なる処理段階のデータを表示します。</p>
-<dl class="layer-dl">
+<p class="meta-note">文字起こしデータは${data.scriptSource ? "4" : "3"}層に分けて管理しています。各タブは異なる処理段階のデータを表示します。</p>
+<dl class="layer-dl">${data.scriptSource ? `
+<dt><span class="layer-badge layer-0">Layer 0</span> 公式脚本（原作者による権威的テキスト）</dt>
+<dd>原作者が公開した脚本テキスト。台詞・ト書き・場面設定を含む最も権威的なソース。</dd>` : ""}
 <dt><span class="layer-badge layer-3">Layer 3</span> 修正版（話者帰属済み）</dt>
 <dd>文脈に基づいて話者を帰属し、テキストを修正したデータ。分析の基礎となる最終版。</dd>
 <dt><span class="layer-badge layer-2">Layer 2</span> 前処理済み（抽出・結合済み）</dt>
@@ -2761,6 +2774,35 @@ ${rows}
 
   // Build tab panels
   const tabs: { id: string; label: string; content: string }[] = [];
+
+  // Tab 0: Official script (Layer 0) — if available
+  if (data.scriptSource) {
+    const scriptRows: string[] = [];
+    for (const scene of data.scriptSource.scenes) {
+      scriptRows.push(`<tr class="scene-header"><td colspan="3">${escapeHtml(scene.title)}</td></tr>`);
+      scriptRows.push(`<tr class="scene-setting"><td colspan="3"><span class="meta-note">${escapeHtml(scene.setting)}</span></td></tr>`);
+      for (const line of scene.lines) {
+        if (line.isDirection) {
+          scriptRows.push(`<tr class="stage-direction"><td colspan="3"><em>${escapeHtml(line.text)}</em></td></tr>`);
+        } else {
+          const speakerLabel = line.speaker ? escapeHtml(line.speaker) + (line.speakerNote ? `<span class="meta-note">（${escapeHtml(line.speakerNote)}）</span>` : "") : "";
+          const textHtml = escapeHtml(line.text).replace(/\n/g, "<br>");
+          scriptRows.push(`<tr><td class="speaker">${speakerLabel}</td><td>「${textHtml}」</td><td class="line-id">${escapeHtml(line.lineId)}</td></tr>`);
+        }
+      }
+    }
+    tabs.push({
+      id: "script",
+      label: "Layer 0: 公式脚本（原作者テキスト）",
+      content: `<p class="meta-note">出典: <a href="${escapeHtml(data.scriptSource.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(data.scriptSource.sourceUrl)}</a>（${escapeHtml(data.scriptSource.author)}）</p>
+<table class="data-table script-table">
+<thead><tr><th>話者</th><th>台詞・ト書き</th><th>ID</th></tr></thead>
+<tbody>
+${scriptRows.join("\n")}
+</tbody>
+</table>`,
+    });
+  }
 
   // Tab 1: Corrected dialogue (Phase 2) — if available
   if (data.dialogue && data.scenes) {

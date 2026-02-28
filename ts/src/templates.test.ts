@@ -3991,6 +3991,95 @@ describe("renderTranscriptionPage", () => {
     const html = renderTranscriptionPage(data);
     assert.ok(html.includes("[large-v3]"));
   });
+
+  it("renders script source tab (Layer 0) when available", () => {
+    const data: TranscriptionPageData = {
+      ...phase2Done,
+      scriptSource: {
+        sourceUrl: "https://note.com/test/n/n12345",
+        author: "テスト作者",
+        scenes: [{
+          sceneId: "script-scene-01",
+          title: "シーン1：テストシーン",
+          setting: "内・テスト場所",
+          lines: [
+            { lineId: "ep02-sl-001", speaker: "主人公", speakerNote: null, text: "テスト台詞です" },
+            { lineId: "ep02-sl-002", speaker: "ケイ", speakerNote: "船内通信", text: "了解しました" },
+            { lineId: "ep02-sl-003", speaker: null, speakerNote: null, text: "（ト書きテスト）", isDirection: true },
+          ],
+        }],
+      },
+    };
+    const html = renderTranscriptionPage(data);
+    // Layer 0 tab should be present and first (active)
+    assert.ok(html.includes("Layer 0: 公式脚本（原作者テキスト）"));
+    assert.ok(html.includes('data-tab="script"'));
+    assert.ok(html.includes("script-table"));
+    // Script content
+    assert.ok(html.includes("テスト台詞です"));
+    assert.ok(html.includes("了解しました"));
+    assert.ok(html.includes("シーン1：テストシーン"));
+    assert.ok(html.includes("内・テスト場所"));
+    // Stage direction
+    assert.ok(html.includes("（ト書きテスト）"));
+    assert.ok(html.includes("<em>"));
+    // Speaker note
+    assert.ok(html.includes("（船内通信）"));
+    // Source attribution
+    assert.ok(html.includes("https://note.com/test/n/n12345"));
+    assert.ok(html.includes("テスト作者"));
+    // Layer legend should include Layer 0
+    assert.ok(html.includes("Layer 0"));
+    assert.ok(html.includes("公式脚本（原作者による権威的テキスト）"));
+  });
+
+  it("does not render Layer 0 tab when no script source", () => {
+    const html = renderTranscriptionPage(phase2Done);
+    assert.ok(!html.includes('data-tab="script"'));
+    assert.ok(!html.includes("Layer 0: 公式脚本（原作者テキスト）"));
+    // Layer 0 badge should not appear in legend
+    assert.ok(!html.includes('layer-badge layer-0'));
+  });
+
+  it("shows script source in source info card", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      scriptSource: {
+        sourceUrl: "https://note.com/test/n/n12345",
+        author: "テスト作者",
+        scenes: [{
+          sceneId: "s1", title: "S1", setting: "Setting",
+          lines: [{ lineId: "sl1", speaker: "A", speakerNote: null, text: "test" }],
+        }],
+      },
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("公式脚本"));
+    assert.ok(html.includes("テスト作者"));
+    // Script lines counted in source info
+    assert.ok(html.includes("公式脚本（1行）"));
+  });
+
+  it("script tab is first (active by default) when present", () => {
+    const data: TranscriptionPageData = {
+      ...phase2Done,
+      scriptSource: {
+        sourceUrl: "https://note.com/test",
+        author: "作者",
+        scenes: [{
+          sceneId: "s1", title: "S1", setting: "Setting",
+          lines: [{ lineId: "sl1", speaker: "A", speakerNote: null, text: "台詞" }],
+        }],
+      },
+    };
+    const html = renderTranscriptionPage(data);
+    // Script tab button should come first (be active)
+    const scriptTabIdx = html.indexOf('data-tab="script"');
+    const correctedTabIdx = html.indexOf('data-tab="corrected"');
+    assert.ok(scriptTabIdx < correctedTabIdx, "Script tab should appear before corrected tab");
+    // Script panel should be the active panel
+    assert.ok(html.includes('class="tab-panel active" id="tab-script"'));
+  });
 });
 
 // --- renderTranscriptionIndex ---

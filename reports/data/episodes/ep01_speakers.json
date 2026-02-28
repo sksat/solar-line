@@ -10,7 +10,7 @@
       "aliases": [
         "キリタン"
       ],
-      "notes": "小型貨物船ケストレルの船長兼パイロット。フリーランス。"
+      "notes": "小型貨物船ケストレルの船長兼パイロット。フリーランス。公式脚本での表記は「主人公」。"
     },
     {
       "id": "kestrel-ai",
@@ -29,14 +29,14 @@
       "nameJa": "依頼人",
       "nameEn": "Client",
       "aliases": [],
-      "notes": "72時間以内のガニメデ配送を依頼する人物。"
+      "notes": "72時間以内のガニメデ配送を依頼する人物。公式脚本での表記は「組合のオペレーター」。"
     },
     {
       "id": "rai",
       "nameJa": "船乗り",
       "nameEn": "Sailor",
       "aliases": [],
-      "notes": "名前不詳。きりたんの知人の船乗り。EP01で情報提供、EP05でガニメデから通信。"
+      "notes": "名前不詳。きりたんの腐れ縁のフリーの運び屋。EP01で情報提供、EP05でガニメデから通信。公式脚本での表記は「運び屋」。"
     },
     {
       "id": "mars-control",
@@ -53,7 +53,7 @@
       "notes": "ガニメデの入港管制。終盤で登場。"
     }
   ],
-  "attributionNotes": "話者判定は自動字幕のASR結果と作品コンテキスト（ニコニコ動画 sm45280425 および世界設定資料 note.com/yuepicos/n/n4da939fc40ed）に基づく。VOICEROID音声のASR精度が低いため、多くの台詞テキストは不正確。話者判定は発言の内容・文脈・場面構成から推定。confidence=uncertainの行は再確認が必要。",
+  "attributionNotes": "話者判定は自動字幕のASR結果と作品コンテキスト（ニコニコ動画 sm45280425 および世界設定資料 note.com/yuepicos/n/n4da939fc40ed）に基づく。公式脚本（note.com/yuepicos/n/n37649d99e32d）により話者名の照合を実施。VOICEROID音声のASR精度が低いため、多くの台詞テキストは不正確。話者判定は発言の内容・文脈・場面構成から推定。confidence=uncertainの行は再確認が必要。",
   "reviewedBy": "Claude Opus 4.6 (context-assisted, NOT fully automated)",
   "reviewedAt": "2026-02-23T00:00:00Z"
 }

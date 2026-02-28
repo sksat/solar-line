@@ -563,6 +563,61 @@ describe("discoverTranscriptions", () => {
     assert.equal(result[0].episode, 1);
     assert.equal(result[1].episode, 3);
   });
+
+  it("discovers script source (Layer 0)", () => {
+    const epDir = path.join(tmpDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    const lines = {
+      schemaVersion: 1, videoId: "test123", episode: 1,
+      sourceSubtitle: { language: "ja", source: "youtube-auto", rawContentHash: "abc" },
+      lines: [{ lineId: "ep01-line-001", startMs: 0, endMs: 1000, text: "test", rawEntryIds: ["cue-1"], mergeReasons: [] }],
+      extractedAt: "2026-02-28T00:00:00Z",
+      mergeConfig: { maxGapMs: 300, minCueDurationMs: 100 },
+    };
+    const script = {
+      schemaVersion: 1, episode: 1, videoId: "test123",
+      source: "script", sourceUrl: "https://note.com/test", author: "テスト作者", language: "ja",
+      extractedAt: "2026-02-28T00:00:00Z",
+      scenes: [{
+        sceneId: "script-scene-01", title: "シーン1：テスト", setting: "内・テスト",
+        lines: [
+          { lineId: "ep01-sl-001", speaker: "主人公", speakerNote: null, text: "テスト台詞" },
+          { lineId: "ep01-sl-002", speaker: null, speakerNote: null, text: "（ト書き）", isDirection: true },
+        ],
+      }],
+    };
+    fs.writeFileSync(path.join(epDir, "ep01_lines.json"), JSON.stringify(lines));
+    fs.writeFileSync(path.join(epDir, "ep01_script.json"), JSON.stringify(script));
+
+    const result = discoverTranscriptions(tmpDir);
+    assert.equal(result.length, 1);
+    assert.ok(result[0].scriptSource);
+    assert.equal(result[0].scriptSource!.sourceUrl, "https://note.com/test");
+    assert.equal(result[0].scriptSource!.author, "テスト作者");
+    assert.equal(result[0].scriptSource!.scenes.length, 1);
+    assert.equal(result[0].scriptSource!.scenes[0].lines.length, 2);
+    assert.equal(result[0].scriptSource!.scenes[0].lines[0].speaker, "主人公");
+    assert.equal(result[0].scriptSource!.scenes[0].lines[1].isDirection, true);
+  });
+
+  it("returns undefined scriptSource when no script file exists", () => {
+    const epDir = path.join(tmpDir, "data", "episodes");
+    fs.mkdirSync(epDir, { recursive: true });
+
+    const lines = {
+      schemaVersion: 1, videoId: "test123", episode: 1,
+      sourceSubtitle: { language: "ja", source: "whisper", rawContentHash: "abc" },
+      lines: [{ lineId: "ep01-line-001", startMs: 0, endMs: 1000, text: "test", rawEntryIds: ["cue-1"], mergeReasons: [] }],
+      extractedAt: "2026-02-28T00:00:00Z",
+      mergeConfig: { maxGapMs: 300, minCueDurationMs: 100 },
+    };
+    fs.writeFileSync(path.join(epDir, "ep01_lines.json"), JSON.stringify(lines));
+
+    const result = discoverTranscriptions(tmpDir);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].scriptSource, undefined);
+  });
 });
 
 // --- buildManifest with transcriptions ---

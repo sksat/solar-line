@@ -601,6 +601,23 @@ export interface TranscriptionPageData {
       mergeReasons: string[];
     }[];
   }[];
+  /** Official script source (Layer 0 — authoritative text from creator) */
+  scriptSource?: {
+    sourceUrl: string;
+    author: string;
+    scenes: {
+      sceneId: string;
+      title: string;
+      setting: string;
+      lines: {
+        lineId: string;
+        speaker: string | null;
+        speakerNote: string | null;
+        text: string;
+        isDirection?: boolean;
+      }[];
+    }[];
+  };
 }
 
 /** Site-wide manifest listing all available reports */

@@ -250,6 +250,27 @@ interface SpeakersFile {
   speakers: SpeakerEntry[];
 }
 
+/** Script file schema (Layer 0 — authoritative creator script) */
+interface ScriptFile {
+  schemaVersion: number;
+  episode: number;
+  source: "script";
+  sourceUrl: string;
+  author: string;
+  scenes: {
+    sceneId: string;
+    title: string;
+    setting: string;
+    lines: {
+      lineId: string;
+      speaker: string | null;
+      speakerNote: string | null;
+      text: string;
+      isDirection?: boolean;
+    }[];
+  }[];
+}
+
 /** Discover transcription data by reading lines, dialogue, and speakers files */
 export function discoverTranscriptions(dataDir: string): TranscriptionPageData[] {
   const episodesDir = path.join(dataDir, "data", "episodes");
@@ -292,6 +313,14 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       });
     }
 
+    // Discover script source (Layer 0 — authoritative creator script)
+    const scriptFile = readJsonFile<ScriptFile>(path.join(episodesDir, `ep${epNum}_script.json`));
+    const scriptSource = scriptFile ? {
+      sourceUrl: scriptFile.sourceUrl,
+      author: scriptFile.author,
+      scenes: scriptFile.scenes,
+    } : undefined;
+
     transcriptions.push({
       episode: lines.episode,
       videoId: lines.videoId,
@@ -330,6 +359,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       })) : null,
       title: dialogue ? dialogue.title : null,
       additionalSources: additionalSources.length > 0 ? additionalSources : undefined,
+      scriptSource,
     });
   }
   return transcriptions;

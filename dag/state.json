@@ -44,7 +44,8 @@
       "title": "話者判定済み台詞 EP01",
       "dependsOn": [
         "src.whisper.ep01",
-        "src.vtt.ep01"
+        "src.vtt.ep01",
+        "src.script.ep01"
       ],
       "status": "valid",
       "version": 2,
@@ -952,7 +953,8 @@
         "analysis.ep01.t02",
         "analysis.ep01.t03",
         "analysis.ep01.t04",
-        "src.dialogue.ep01"
+        "src.dialogue.ep01",
+        "src.script.ep01"
       ],
       "status": "valid",
       "version": 2,
@@ -1187,6 +1189,15 @@
       ],
       "notes": "Non-Kestrel ships, stations, navigation infrastructure, governance",
       "lastValidated": "2026-02-25T03:38:34.028Z"
+    },
+    "src.script.ep01": {
+      "id": "src.script.ep01",
+      "type": "data_source",
+      "title": "EP01 official script (note.com/yuepicos)",
+      "dependsOn": [],
+      "status": "valid",
+      "version": 2,
+      "lastValidated": "2026-02-28T09:26:50.669Z"
     }
   },
   "schemaVersion": 1
