@@ -192,6 +192,96 @@ test("EP01 has interactive brachistochrone calculator", async ({ page }) => {
   expect(await controls.count()).toBeGreaterThanOrEqual(1);
 });
 
+// --- Episode-specific tests (Task 250) ---
+
+test.describe("EP02-specific features", () => {
+  test("has margin gauge section", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    const gauges = page.locator(".margin-gauge");
+    expect(await gauges.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has 5 transfer analysis sections", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    const verdicts = page.locator(".verdict");
+    expect(await verdicts.count()).toBeGreaterThanOrEqual(5);
+  });
+
+  test("has timeseries chart for velocity or trajectory", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    const charts = page.locator(".uplot, .timeseries-chart");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
+  });
+});
+
+test.describe("EP03-specific features", () => {
+  test("has margin gauge with navigation accuracy", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    const gauges = page.locator(".margin-gauge");
+    expect(await gauges.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has velocity profile timeseries chart", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    const charts = page.locator(".uplot, .timeseries-chart");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has IF analysis sections (explorations)", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    // Explorations are rendered as subsections with questions
+    const explorations = page.locator("h3, h4");
+    expect(await explorations.count()).toBeGreaterThanOrEqual(3);
+  });
+});
+
+test.describe("EP04-specific features", () => {
+  test("has plasmoid radiation timeseries chart", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const charts = page.locator(".uplot, .timeseries-chart");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has margin gauge with radiation and shield data", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const gauges = page.locator(".margin-gauge");
+    expect(await gauges.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has 5 transfer analysis sections", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const verdicts = page.locator(".verdict");
+    expect(await verdicts.count()).toBeGreaterThanOrEqual(5);
+  });
+});
+
+test.describe("EP05-specific features", () => {
+  test("has nozzle lifespan timeseries chart", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    const charts = page.locator(".uplot, .timeseries-chart");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has margin gauge for nozzle lifespan", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    const gauges = page.locator(".margin-gauge");
+    expect(await gauges.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has interactive brachistochrone calculator", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    const calcSection = page.locator(".calc-section");
+    await expect(calcSection).toBeVisible();
+  });
+
+  test("has multiple IF-analysis explorations", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    // EP05 has the most explorations (Oberth, flyby, LEO capture, etc.)
+    const explorations = page.locator("h3, h4");
+    expect(await explorations.count()).toBeGreaterThanOrEqual(5);
+  });
+});
+
 // --- Summary pages ---
 
 const summaryPages: { title: string; slug: string; path: string }[] = manifest.summaryPages ?? [];
