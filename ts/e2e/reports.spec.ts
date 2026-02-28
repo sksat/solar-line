@@ -1026,3 +1026,65 @@ test.describe("Summary: ai-costs page", () => {
     expect(pageContent).toContain("97.3%");
   });
 });
+
+// --- Tech-overview page tests (Task 245) ---
+
+test.describe("Summary: tech-overview page", () => {
+  test("has all architecture sections", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await expect(page.locator("h2:has-text('プロジェクト概要')")).toBeVisible();
+    await expect(page.locator("h2:has-text('アーキテクチャ全体像')")).toBeVisible();
+    await expect(page.locator("h2:has-text('Rust 軌道力学コア')")).toBeVisible();
+    await expect(page.locator("h2:has-text('WASM ブリッジ')")).toBeVisible();
+    await expect(page.locator("h2:has-text('レポート生成パイプライン')")).toBeVisible();
+    await expect(page.locator("h2:has-text('テスト戦略')")).toBeVisible();
+  });
+
+  test("stats summary table has key metrics", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("完了タスク");
+    expect(pageContent).toContain("分析済み軌道遷移");
+    expect(pageContent).toContain("テスト数");
+    expect(pageContent).toContain("24 / 24");
+  });
+
+  test("verdict summary table shows plausible/conditional counts", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("plausible");
+    expect(pageContent).toContain("conditional");
+  });
+
+  test("integrator comparison table renders", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    // The 3-integrator comparison table (RK4, RK45, Störmer-Verlet)
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("RK4");
+    expect(pageContent).toContain("Dormand-Prince");
+    expect(pageContent).toContain("Störmer-Verlet");
+  });
+
+  test("code blocks render for WASM API examples", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    const codeBlocks = page.locator("pre code");
+    expect(await codeBlocks.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("feature checklist has completion marks", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    const pageContent = await page.textContent("body");
+    // Feature list uses ✅ marks
+    const checkmarks = (pageContent?.match(/✅/g) || []).length;
+    expect(checkmarks).toBeGreaterThanOrEqual(10);
+  });
+
+  test("Rust module list is comprehensive", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    const pageContent = await page.textContent("body");
+    // Key Rust modules should be mentioned
+    expect(pageContent).toContain("orbits.rs");
+    expect(pageContent).toContain("propagation.rs");
+    expect(pageContent).toContain("ephemeris.rs");
+  });
+});
