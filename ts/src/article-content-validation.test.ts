@@ -246,6 +246,12 @@ describe("EP04 article content validation", () => {
     assert.ok(content.includes("タイタニア"), "should mention Titania");
     assert.ok(content.includes("地球"), "should mention Earth");
   });
+
+  it("has margin gauge with radiation and shield data", () => {
+    assert.ok(content.includes("margin-gauge"), "EP04 should have margin-gauge fence");
+    assert.ok(content.includes('"actual": 480'), "should cite 480 mSv radiation");
+    assert.ok(content.includes('"limit": 500'), "should cite 500 mSv ICRP limit");
+  });
 });
 
 describe("EP05 article content validation", () => {
@@ -282,6 +288,12 @@ describe("EP05 article content validation", () => {
       content.includes("452.5"),
       "EP05 cross-episode mass boundary should cite 452.5t",
     );
+  });
+
+  it("has margin gauge with nozzle and radiation data", () => {
+    assert.ok(content.includes("margin-gauge"), "EP05 should have margin-gauge fence");
+    assert.ok(content.includes('"actual": 55.2'), "should cite nozzle actual 55.2h");
+    assert.ok(content.includes('"limit": 55.63'), "should cite nozzle limit 55.63h");
   });
 });
 

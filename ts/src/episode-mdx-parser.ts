@@ -42,6 +42,7 @@ import type {
   TimeSeriesChart,
   TransferDetailPage,
   GlossaryTerm,
+  MarginGauge,
 } from "./report-types.ts";
 
 /** Frontmatter fields for an episode report */
@@ -128,7 +129,7 @@ export function extractEpisodeDirectives(content: string): {
   directives: EpisodeDirective[];
 } {
   const directives: EpisodeDirective[] = [];
-  const fenceRegex = /^```(video-cards|dialogue-quotes|transfer|exploration|diagrams|timeseries-charts|detail-pages|glossary):?\s*\n([\s\S]*?)^```\s*$/gm;
+  const fenceRegex = /^```(video-cards|dialogue-quotes|transfer|exploration|diagrams|timeseries-charts|detail-pages|glossary|margin-gauge):?\s*\n([\s\S]*?)^```\s*$/gm;
 
   const markdown = content.replace(fenceRegex, (_match, type: string, inner: string) => {
     directives.push({ type, rawContent: inner.trim() });
@@ -164,6 +165,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
   let timeSeriesCharts: TimeSeriesChart[] | undefined;
   let detailPages: TransferDetailPage[] | undefined;
   let glossary: GlossaryTerm[] | undefined;
+  let marginGauges: MarginGauge[] | undefined;
 
   const { directives: preambleDirectives } = extractEpisodeDirectives(preamble);
   for (const d of preambleDirectives) {
@@ -236,6 +238,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
     ...(timeSeriesCharts && { timeSeriesCharts }),
     ...(detailPages && { detailPages }),
     ...(glossary && { glossary }),
+    ...(marginGauges && { marginGauges }),
   };
 
   return report;
@@ -260,6 +263,12 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
       case "glossary":
         glossary = JSON.parse(d.rawContent) as GlossaryTerm[];
         break;
+      case "margin-gauge": {
+        const gauge = JSON.parse(d.rawContent) as MarginGauge;
+        if (!marginGauges) marginGauges = [];
+        marginGauges.push(gauge);
+        break;
+      }
     }
   }
 }

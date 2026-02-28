@@ -2480,6 +2480,9 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
   if (report.timeSeriesCharts && report.timeSeriesCharts.length > 0) {
     tocItems.push('<li><a href="#section-timeseries">時系列グラフ</a></li>');
   }
+  if (report.marginGauges && report.marginGauges.length > 0) {
+    tocItems.push('<li><a href="#section-margin-gauges">マージン分析</a></li>');
+  }
   if (report.transfers.length > 0) {
     tocItems.push('<li><a href="#section-transfers">軌道遷移分析</a></li>');
     tocItems.push('<ul>');
@@ -2516,6 +2519,10 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     ? `<h2 id="section-timeseries">時系列グラフ</h2>\n${renderTimeSeriesCharts(report.timeSeriesCharts)}`
     : "";
 
+  const marginGaugeSectionWithId = report.marginGauges && report.marginGauges.length > 0
+    ? `<h2 id="section-margin-gauges">マージン分析</h2>\n${renderMarginGauges(report.marginGauges)}`
+    : "";
+
   const content = `
 <h1>第${report.episode}話: ${escapeHtml(report.title)}${provisionalBadge}</h1>
 ${videoSection}
@@ -2532,6 +2539,8 @@ ${dvChart}
 ${diagramSectionWithId}
 
 ${timeSeriesSectionWithId}
+
+${marginGaugeSectionWithId}
 
 <h2 id="section-transfers">軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}

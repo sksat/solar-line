@@ -830,4 +830,32 @@ test.describe("Margin gauge visualization", () => {
     const gaugeText = await page.locator("#mission-critical-margins").textContent();
     expect(gaugeText).toContain("余裕");
   });
+
+  test("EP04 has margin gauge for plasmoid encounter", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const gauge = page.locator("#ep04-critical-margins");
+    await expect(gauge).toBeVisible();
+    const text = await gauge.textContent();
+    expect(text).toContain("放射線被曝");
+    expect(text).toContain("磁気シールド");
+  });
+
+  test("EP05 has margin gauge for final approach", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    const gauge = page.locator("#ep05-critical-margins");
+    await expect(gauge).toBeVisible();
+    const text = await gauge.textContent();
+    expect(text).toContain("ノズル");
+    expect(text).toContain("余裕");
+  });
+
+  test("EP04 and EP05 have margin gauge TOC entry", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const tocLink = page.locator('a[href="#section-margin-gauges"]');
+    await expect(tocLink).toBeVisible();
+
+    await page.goto("/episodes/ep-005.html");
+    const tocLink2 = page.locator('a[href="#section-margin-gauges"]');
+    await expect(tocLink2).toBeVisible();
+  });
 });

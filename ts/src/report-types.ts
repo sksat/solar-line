@@ -372,6 +372,8 @@ export interface EpisodeReport {
   detailPages?: TransferDetailPage[];
   /** Glossary of technical terms used in this report */
   glossary?: GlossaryTerm[];
+  /** Margin gauges showing parameter proximity to limits */
+  marginGauges?: MarginGauge[];
 }
 
 /** A technical term definition for the glossary */

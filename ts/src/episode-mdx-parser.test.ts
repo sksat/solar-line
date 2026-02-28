@@ -153,6 +153,15 @@ More text`;
     assert.equal(directives[0].type, "detail-pages");
   });
 
+  it("extracts margin-gauge directive", () => {
+    const content = `\`\`\`margin-gauge:
+{ "id": "test-gauge", "title": "Test", "items": [{ "label": "A", "actual": 10, "limit": 100, "unit": "x" }] }
+\`\`\``;
+    const { directives } = extractEpisodeDirectives(content);
+    assert.equal(directives.length, 1);
+    assert.equal(directives[0].type, "margin-gauge");
+  });
+
   it("extracts multiple directives from a single block", () => {
     const content = `\`\`\`video-cards:
 [{ "provider": "youtube", "id": "abc" }]
