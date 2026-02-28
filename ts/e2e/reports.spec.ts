@@ -545,3 +545,132 @@ test.describe("Side-view SVG diagrams", () => {
     expect(await svg.locator("path").count()).toBeGreaterThanOrEqual(1);
   });
 });
+
+// --- Infrastructure page tests (Task 229) ---
+
+test.describe("Summary: infrastructure page", () => {
+  test("has all main sections", async ({ page }) => {
+    await page.goto("/summary/infrastructure.html");
+    // 5 main H2 sections
+    await expect(page.locator("h2:has-text('宇宙港・ステーション')")).toBeVisible();
+    await expect(page.locator("h2:has-text('航法インフラストラクチャ')")).toBeVisible();
+    await expect(page.locator("h2:has-text('統治機構')")).toBeVisible();
+    await expect(page.locator("h2:has-text('内苑と外苑の構造')")).toBeVisible();
+  });
+
+  test("has spaceport subsections for each episode", async ({ page }) => {
+    await page.goto("/summary/infrastructure.html");
+    await expect(page.locator("h3:has-text('ガニメデ中央港')")).toBeVisible();
+    await expect(page.locator("h3:has-text('エンケラドスステーション')")).toBeVisible();
+    await expect(page.locator("h3:has-text('タイタニア集合複合施設')")).toBeVisible();
+  });
+
+  test("governance comparison table renders", async ({ page }) => {
+    await page.goto("/summary/infrastructure.html");
+    const tables = page.locator("table");
+    expect(await tables.count()).toBeGreaterThanOrEqual(1);
+    // Table should have governance-related headers
+    const headerCells = tables.first().locator("th");
+    expect(await headerCells.count()).toBeGreaterThanOrEqual(3);
+  });
+
+  test("internal cross-links to related reports are valid", async ({ page }) => {
+    await page.goto("/summary/infrastructure.html");
+    // Should link to ship-kestrel and other-ships reports
+    const shipLink = page.locator('a[href*="ship-kestrel"]');
+    expect(await shipLink.count()).toBeGreaterThanOrEqual(1);
+    const otherShipsLink = page.locator('a[href*="other-ships"]');
+    expect(await otherShipsLink.count()).toBeGreaterThanOrEqual(1);
+    // Verify links resolve
+    for (const link of [shipLink.first(), otherShipsLink.first()]) {
+      const href = await link.getAttribute("href");
+      if (href) {
+        const response = await page.request.get(new URL(href, page.url()).href);
+        expect(response.status(), `Link ${href} should resolve`).toBe(200);
+      }
+    }
+  });
+
+  test("navigation infrastructure section covers beacon systems", async ({ page }) => {
+    await page.goto("/summary/infrastructure.html");
+    // Beacon subsections: 港湾航舎体系, ビーコン停波, 木星旧ビーコン網
+    await expect(page.locator("h3:has-text('港湾航舎体系')")).toBeVisible();
+    await expect(page.locator("h3:has-text('ビーコン停波')")).toBeVisible();
+    await expect(page.locator("h3:has-text('オービタルカーテン')")).toBeVisible();
+  });
+});
+
+// --- Other-ships page tests (Task 229) ---
+
+test.describe("Summary: other-ships page", () => {
+  test("has all ship category sections", async ({ page }) => {
+    await page.goto("/summary/other-ships.html");
+    await expect(page.locator("h2:has-text('正体不明の大型船')")).toBeVisible();
+    await expect(page.locator("h2:has-text('地球公安艦隊')")).toBeVisible();
+    await expect(page.locator("h2:has-text('地球保安艇')")).toBeVisible();
+    await expect(page.locator("h2:has-text('太陽系商船群')")).toBeVisible();
+  });
+
+  test("has orbital diagram for fleet transfer", async ({ page }) => {
+    await page.goto("/summary/other-ships.html");
+    const diagram = page.locator("#other-ships-fleet-saturn-uranus");
+    await expect(diagram).toBeVisible();
+    // Should contain SVG with orbit circles and transfer paths
+    const svg = diagram.locator("svg");
+    await expect(svg).toBeVisible();
+    const circles = svg.locator("circle");
+    expect(await circles.count()).toBeGreaterThanOrEqual(2);
+  });
+
+  test("renders KaTeX display math for brachistochrone calculations", async ({ page }) => {
+    await page.goto("/summary/other-ships.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    // Display math for acceleration and ΔV formulas
+    const displayMath = page.locator(".katex-display");
+    expect(await displayMath.count()).toBeGreaterThanOrEqual(3);
+  });
+
+  test("comparison tables render with correct structure", async ({ page }) => {
+    await page.goto("/summary/other-ships.html");
+    const tables = page.locator("table");
+    expect(await tables.count()).toBeGreaterThanOrEqual(3);
+    // At least one table should have 5+ columns (the multi-ship comparison)
+    let hasWideTable = false;
+    for (let i = 0; i < await tables.count(); i++) {
+      const ths = await tables.nth(i).locator("th").count();
+      if (ths >= 5) hasWideTable = true;
+    }
+    expect(hasWideTable).toBe(true);
+  });
+
+  test("has glossary terms with tooltips", async ({ page }) => {
+    await page.goto("/summary/other-ships.html");
+    const glossaryTerms = page.locator(".glossary-term");
+    expect(await glossaryTerms.count()).toBeGreaterThanOrEqual(1);
+    // Tooltip should have a definition
+    const tip = glossaryTerms.first().locator(".glossary-tip");
+    await expect(tip).toHaveAttribute("role", "tooltip");
+  });
+
+  test("internal cross-links to episode reports are valid", async ({ page }) => {
+    await page.goto("/summary/other-ships.html");
+    // Should link to episode pages
+    const epLinks = page.locator('a[href*="episodes/"]');
+    expect(await epLinks.count()).toBeGreaterThanOrEqual(1);
+    // Verify at least one episode link resolves
+    const href = await epLinks.first().getAttribute("href");
+    if (href) {
+      const response = await page.request.get(new URL(href, page.url()).href);
+      expect(response.status(), `Link ${href} should resolve`).toBe(200);
+    }
+  });
+
+  test("nuclear torpedo physics section has calculations", async ({ page }) => {
+    await page.goto("/summary/other-ships.html");
+    await expect(page.locator("h3:has-text('核魚雷迎撃の物理的不可能性')")).toBeVisible();
+    // This section should have KaTeX math for passage time calculation
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const katexInPage = page.locator(".katex");
+    expect(await katexInPage.count()).toBeGreaterThanOrEqual(1);
+  });
+});
