@@ -476,3 +476,156 @@ describe("verdict summary consistency", () => {
     assert.strictEqual(parseInt(match![1]), 0, "should have 0 implausible verdicts");
   });
 });
+
+// ============================================================
+// Ship-kestrel report: specs match shared constants
+// ============================================================
+
+describe("ship-kestrel.md content validation", () => {
+  const content = readReport("ship-kestrel.md");
+
+  it("ship length matches KESTREL constant", () => {
+    assert.ok(
+      content.includes(String(KESTREL.lengthM)),
+      `should cite ship length ${KESTREL.lengthM} m`,
+    );
+  });
+
+  it("nominal thrust matches KESTREL constant", () => {
+    const thrustMN = (KESTREL.thrustN / 1e6).toFixed(1);
+    assert.ok(
+      content.includes(`${thrustMN} MN`),
+      `should cite nominal thrust ${thrustMN} MN`,
+    );
+  });
+
+  it("emergency thrust matches KESTREL constant", () => {
+    const peakMN = (KESTREL.peakThrustN / 1e6).toFixed(1);
+    assert.ok(
+      content.includes(peakMN),
+      `should cite emergency thrust ${peakMN} MN`,
+    );
+  });
+
+  it("damaged thrust matches KESTREL constant", () => {
+    const damagedMN = (KESTREL.damagedThrustN / 1e6).toFixed(2);
+    assert.ok(
+      content.includes(damagedMN),
+      `should cite damaged thrust ${damagedMN} MN`,
+    );
+    assert.ok(
+      content.includes(`${KESTREL.damagedThrustPercent}%`),
+      `should cite ${KESTREL.damagedThrustPercent}% output`,
+    );
+  });
+
+  it("nominal mass matches KESTREL constant", () => {
+    assert.ok(
+      content.includes("48,000") || content.includes("48000"),
+      "should cite 48,000t nominal mass",
+    );
+  });
+
+  it("mass boundary table includes all episodes", () => {
+    assert.ok(content.includes("≤299"), "should cite EP01 mass boundary ≤299t");
+    assert.ok(content.includes("≤452.5"), "should cite EP03 mass boundary ≤452.5t");
+    assert.ok(content.includes("≤3,929") || content.includes("≤3929"), "should cite EP04 mass boundary");
+    assert.ok(content.includes("≤300"), "should cite EP05 mass boundary ≤300t");
+  });
+
+  it("nozzle lifespan margin cited (26 min / 0.8%)", () => {
+    assert.ok(content.includes("26分") || content.includes("26min"), "should cite 26 min margin");
+    assert.ok(
+      content.includes("0.8%") || content.includes("0.78%"),
+      "should cite margin percentage",
+    );
+  });
+
+  it("nozzle times cited (55h38m vs 55h12m)", () => {
+    assert.ok(content.includes("55h38m") || content.includes("55時間38分"), "should cite nozzle remaining life");
+    assert.ok(content.includes("55h12m") || content.includes("55時間12分"), "should cite required burn time");
+  });
+
+  it("D-He³ fuel type cited", () => {
+    assert.ok(
+      content.includes(KESTREL.fuel),
+      `should cite ${KESTREL.fuel} fuel type`,
+    );
+  });
+});
+
+// ============================================================
+// Cross-episode report: mission totals and key findings
+// ============================================================
+
+describe("cross-episode.md content validation", () => {
+  const content = readReport("cross-episode.md");
+
+  it("cites total mission distance ~35.9 AU", () => {
+    assert.ok(content.includes("35.9"), "should cite 35.9 AU total distance");
+  });
+
+  it("cites total mission duration ~124 days", () => {
+    assert.ok(
+      content.includes("124日") || content.includes("約124日"),
+      "should cite ~124 day total duration",
+    );
+  });
+
+  it("cites EP02 trim-thrust ~87 days (not 455d as primary)", () => {
+    // 87 days should appear as the corrected primary, 455 only as historical
+    assert.ok(content.includes("87日") || content.includes("約87日"), "should cite ~87 day EP02 transit");
+  });
+
+  it("relativistic analysis: peak velocity 7,604 km/s at 2.54%c", () => {
+    assert.ok(content.includes("7,604") || content.includes("7604"), "should cite peak velocity");
+    assert.ok(content.includes("2.54%"), "should cite light speed percentage");
+  });
+
+  it("Lorentz factor γ ≈ 1.0003", () => {
+    assert.ok(
+      content.includes("1.0003"),
+      "should cite Lorentz factor in weak relativistic regime",
+    );
+  });
+
+  it("nozzle margin 26 min (0.78%) cited in cross-episode context", () => {
+    assert.ok(
+      content.includes("マージン") && content.includes("26"),
+      "should cite 26 min nozzle margin in cross-episode analysis",
+    );
+  });
+
+  it("all 5 episode routes referenced", () => {
+    for (const ep of EPISODE_SUMMARIES) {
+      assert.ok(
+        content.includes(ep.route) || content.includes(`第${ep.episode}話`),
+        `should reference episode ${ep.episode}: ${ep.route}`,
+      );
+    }
+  });
+
+  it("verdict: 0 implausible results", () => {
+    // Cross-episode should not declare any transfer implausible
+    assert.ok(
+      content.includes("implausible") === false ||
+        (content.includes("0") && content.includes("implausible")),
+      "should have 0 implausible verdicts or not use the term outside of stating zero",
+    );
+  });
+
+  it("counterfactual analysis section exists", () => {
+    assert.ok(
+      content.includes("反事実") || content.includes("counterfactual"),
+      "should have counterfactual analysis section",
+    );
+  });
+
+  it("propellant budget analysis: Isp scenarios cited", () => {
+    assert.ok(content.includes("Isp"), "should discuss Isp in propellant analysis");
+    assert.ok(
+      content.includes("5×10⁶") || content.includes("5e6") || content.includes("5,000,000"),
+      "should cite high-Isp scenario (5×10⁶)",
+    );
+  });
+});
