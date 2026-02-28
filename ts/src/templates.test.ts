@@ -3172,6 +3172,35 @@ describe("renderOrbitalDiagram multi-scenario support", () => {
   });
 });
 
+describe("REPORT_CSS defines all referenced CSS custom properties", () => {
+  const requiredVars = ["--card-bg", "--muted", "--link", "--text-primary", "--text-secondary", "--text-muted"];
+  for (const v of requiredVars) {
+    it(`defines ${v} in :root`, () => {
+      // Extract the :root block from CSS
+      const rootMatch = REPORT_CSS.match(/:root\s*\{[^}]+\}/);
+      assert.ok(rootMatch, ":root block should exist");
+      assert.ok(rootMatch[0].includes(v), `${v} should be defined in :root`);
+    });
+  }
+});
+
+describe("REPORT_CSS diagram-description uses readable color", () => {
+  it("does not use #555 for diagram-description", () => {
+    assert.ok(!REPORT_CSS.includes(".diagram-description") || !REPORT_CSS.includes("color: #555"),
+      ".diagram-description should use a readable color, not #555");
+  });
+});
+
+describe("REPORT_CSS includes comparison table row-label and highlight", () => {
+  it("has .row-label styles", () => {
+    assert.ok(REPORT_CSS.includes("row-label"), "should have row-label CSS");
+  });
+
+  it("has .highlight styles", () => {
+    assert.ok(REPORT_CSS.includes("tr.highlight"), "should have tr.highlight CSS");
+  });
+});
+
 describe("REPORT_CSS includes scenario toggle styles", () => {
   it("has .scenario-toggles container styles", () => {
     assert.ok(REPORT_CSS.includes(".scenario-toggles"), "should have scenario-toggles CSS");
@@ -3300,6 +3329,18 @@ describe("renderEpisode table of contents", () => {
   it("includes verdict badges in TOC", () => {
     const html = renderEpisode(sampleEpisodeReport, undefined, 5);
     assert.ok(html.includes("verdict-plausible"));
+  });
+
+  it("nests transfer sub-items inside parent li (valid HTML)", () => {
+    const html = renderEpisode(sampleEpisodeReport, undefined, 5);
+    // The TOC should NOT have <li>...</li><ul> (invalid nesting)
+    // It SHOULD have <li>...<ul>...</ul></li>
+    assert.ok(!html.includes('軌道遷移分析</a></li>\n<ul>'),
+      "TOC should not close <li> before nested <ul>");
+    assert.ok(html.includes('軌道遷移分析</a>\n<ul>'),
+      "TOC should keep <li> open before nested <ul>");
+    assert.ok(html.includes('</ul></li>'),
+      "TOC should close both </ul> and </li> together");
   });
 });
 

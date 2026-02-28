@@ -289,6 +289,12 @@ export const REPORT_CSS = `
   --green: #3fb950;
   --red: #f85149;
   --yellow: #d29922;
+  --card-bg: #161b22;
+  --muted: #8b949e;
+  --link: #58a6ff;
+  --text-primary: #c9d1d9;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -508,7 +514,7 @@ footer {
 .dv-chart text { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
 .orbital-diagram { text-align: center; }
 .orbital-diagram svg { max-width: 100%; height: auto; }
-.diagram-description { text-align: left; font-size: 0.9rem; color: #555; margin: 0.25rem 1rem 0.75rem; line-height: 1.5; }
+.diagram-description { text-align: left; font-size: 0.9rem; color: var(--muted); margin: 0.25rem 1rem 0.75rem; line-height: 1.5; }
 .diagram-epoch { text-align: right; color: #888; margin: 0 1rem 0.5rem; }
 .uplot-chart { overflow-x: auto; }
 .uplot-chart .uplot-target { margin: 0 auto; }
@@ -603,6 +609,8 @@ footer {
 .comparison-table tr.status-ok td:first-child { border-left: 3px solid var(--green); }
 .comparison-table tr.status-warn td:first-child { border-left: 3px solid var(--yellow); }
 .comparison-table tr.status-conflict td:first-child { border-left: 3px solid var(--red); }
+.comparison-table td.row-label { font-weight: 600; color: var(--fg); white-space: nowrap; }
+.comparison-table tr.highlight { background: var(--surface); }
 .summary-section { margin: 2rem 0; }
 .summary-section h2 { border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
 .stats-grid .stat-row { display: flex; flex-wrap: wrap; gap: 1rem; }
@@ -2484,7 +2492,7 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     tocItems.push('<li><a href="#section-margin-gauges">マージン分析</a></li>');
   }
   if (report.transfers.length > 0) {
-    tocItems.push('<li><a href="#section-transfers">軌道遷移分析</a></li>');
+    tocItems.push('<li><a href="#section-transfers">軌道遷移分析</a>');
     tocItems.push('<ul>');
     for (const t of report.transfers) {
       const badge = verdictBadge(t.verdict);
@@ -2495,7 +2503,7 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
         tocItems.push(`<li><a href="#${escapeHtml(t.id)}">${escapeHtml(t.description)}</a> ${badge}</li>`);
       }
     }
-    tocItems.push('</ul>');
+    tocItems.push('</ul></li>');
   }
   if (report.glossary && report.glossary.length > 0) {
     tocItems.push('<li><a href="#section-glossary">用語集</a></li>');
