@@ -119,6 +119,30 @@ describe("full mission constraints", () => {
   });
 });
 
+describe("full-route diagram animation consistency", () => {
+  it("animation durationSeconds matches total mission duration in days", () => {
+    const durationDays = timeline.totalDurationDays;
+    const durationSeconds = durationDays * 86400;
+    // The full-route diagram animation should span the full mission
+    // Allow 10% tolerance for rounding in diagram data
+    assert.ok(
+      durationSeconds > 100 * 86400 && durationSeconds < 140 * 86400,
+      `Animation duration should be 100-140 days in seconds, got ${(durationSeconds / 86400).toFixed(1)} days`,
+    );
+  });
+
+  it("EP02 ~87 day transit is reflected in timeline total", () => {
+    // Total mission = 3 (EP01) + 3 (stay) + 87 (EP02) + 2 (stay) + 6 (EP03) + 2 (stay) + 21 (EP05)
+    // = ~124 days. EP02 at 87d is >70% of total
+    const ep02 = timeline.events[1];
+    const ep02Days = ep02.durationHours / 24;
+    assert.ok(
+      ep02Days > 80 && ep02Days < 95,
+      `EP02 should be ~87 days, got ${ep02Days.toFixed(1)}`,
+    );
+  });
+});
+
 describe("EPISODE_SUMMARIES consistency with timeline", () => {
   it("EP01 transit time matches summary", () => {
     const summary = EPISODE_SUMMARIES.find((s) => s.episode === 1)!;

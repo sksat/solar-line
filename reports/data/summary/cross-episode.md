@@ -261,20 +261,20 @@ bars:
       "color": "#3fb950",
       "style": "brachistochrone",
       "startTime": 0,
-      "endTime": 50000,
+      "endTime": 259200,
       "burnMarkers": [
         {
           "angle": 2.9604,
           "label": "EP1 加速",
           "startTime": 0,
-          "endTime": 25000,
+          "endTime": 129600,
           "type": "acceleration"
         },
         {
           "angle": 2.9929,
           "label": "EP1 減速",
-          "startTime": 25000,
-          "endTime": 50000,
+          "startTime": 129600,
+          "endTime": 259200,
           "type": "deceleration"
         }
       ]
@@ -285,21 +285,21 @@ bars:
       "toOrbitId": "saturn",
       "color": "#8b949e",
       "style": "hyperbolic",
-      "startTime": 55000,
-      "endTime": 300000,
+      "startTime": 518400,
+      "endTime": 8035200,
       "burnMarkers": [
         {
           "angle": 2.9929,
           "label": "EP2 木星圏脱出",
           "startTime": 0,
-          "endTime": 5000,
+          "endTime": 259200,
           "type": "acceleration"
         },
         {
           "angle": 2.2751,
           "label": "EP2 土星捕捉",
-          "startTime": 240000,
-          "endTime": 245000,
+          "startTime": 7257600,
+          "endTime": 7516800,
           "type": "capture"
         }
       ]
@@ -310,21 +310,21 @@ bars:
       "toOrbitId": "uranus",
       "color": "#ff6600",
       "style": "brachistochrone",
-      "startTime": 310000,
-      "endTime": 380000,
+      "startTime": 8208000,
+      "endTime": 8722800,
       "burnMarkers": [
         {
           "angle": 2.2751,
           "label": "EP3 加速",
           "startTime": 0,
-          "endTime": 35000,
+          "endTime": 257400,
           "type": "acceleration"
         },
         {
           "angle": 4.802,
           "label": "EP3 減速",
-          "startTime": 35000,
-          "endTime": 70000,
+          "startTime": 257400,
+          "endTime": 514800,
           "type": "deceleration"
         }
       ]
@@ -335,42 +335,42 @@ bars:
       "toOrbitId": "earth",
       "color": "#ff4444",
       "style": "brachistochrone",
-      "startTime": 390000,
-      "endTime": 520000,
+      "startTime": 8899200,
+      "endTime": 10724400,
       "burnMarkers": [
         {
           "angle": 4.8024,
           "label": "EP5 天王星脱出",
           "startTime": 0,
-          "endTime": 32500,
+          "endTime": 475200,
           "type": "acceleration"
         },
         {
           "angle": 2.993,
           "label": "EP5 木星フライバイ",
-          "startTime": 45000,
-          "endTime": 50000,
+          "startTime": 1350000,
+          "endTime": 1368000,
           "type": "midcourse"
         },
         {
           "angle": 1.7977,
           "label": "EP5 減速",
-          "startTime": 80000,
-          "endTime": 120000,
+          "startTime": 1468800,
+          "endTime": 1771200,
           "type": "deceleration"
         },
         {
           "angle": 1.7977,
           "label": "EP5 地球投入",
-          "startTime": 125000,
-          "endTime": 130000,
+          "startTime": 1789200,
+          "endTime": 1825200,
           "type": "capture"
         }
       ]
     }
   ],
   "animation": {
-    "durationSeconds": 520000
+    "durationSeconds": 10724400
   },
   "scaleLegend": {
     "label": "√スケール（模式図・実距離比ではない）",
@@ -407,19 +407,19 @@ bars:
       "orbitId": "jupiter"
     },
     {
-      "missionTime": 7776000,
-      "label": "T+90日 土星到着",
+      "missionTime": 8035200,
+      "label": "T+93日 土星到着",
       "badge": "③",
       "orbitId": "saturn"
     },
     {
-      "missionTime": 8294400,
-      "label": "T+96日 天王星到着",
+      "missionTime": 8722800,
+      "label": "T+101日 天王星到着",
       "badge": "④",
       "orbitId": "uranus"
     },
     {
-      "missionTime": 10713600,
+      "missionTime": 10724400,
       "label": "T+124日 地球帰還",
       "badge": "⑤",
       "orbitId": "earth"
