@@ -222,27 +222,26 @@ function updateCrossEpisodeDiagram(diagram: OrbitalDiagram): boolean {
     }
   }
 
-  // Update BurnMarker angles for each transfer leg
-  // Map transfer labels to timeline events by matching from/to orbit IDs
+  // Update BurnMarker angles to match their orbit's static angle.
+  // The orbit has meanMotion for animation, so burn markers should snap to
+  // the orbit's reference angle — the animation handles temporal offsets.
+  const orbitAngleMap = new Map(
+    diagram.orbits.filter(o => o.angle !== undefined).map(o => [o.id, o.angle!]),
+  );
   for (const transfer of diagram.transfers) {
-    const fromPlanet = orbitIdToPlanet(transfer.fromOrbitId);
-    const toPlanet = orbitIdToPlanet(transfer.toOrbitId);
-
-    // Find the matching timeline event
-    const matchingEvent = events.find(
-      (e) => e.departurePlanet === fromPlanet && e.arrivalPlanet === toPlanet,
-    );
-
-    if (matchingEvent && transfer.burnMarkers) {
-      for (const burn of transfer.burnMarkers) {
-        if (burn.type === "acceleration" && fromPlanet) {
-          const depAngle = planetLongitude(fromPlanet, matchingEvent.departureJD);
-          if (setAngle(diagram.id, `burn:${burn.label}`, burn, depAngle)) {
+    if (!transfer.burnMarkers) continue;
+    for (const burn of transfer.burnMarkers) {
+      if (burn.type === "acceleration") {
+        const orbitAngle = orbitAngleMap.get(transfer.fromOrbitId);
+        if (orbitAngle !== undefined) {
+          if (setAngle(diagram.id, `burn:${burn.label}`, burn, orbitAngle)) {
             updated = true;
           }
-        } else if ((burn.type === "deceleration" || burn.type === "capture") && toPlanet) {
-          const arrAngle = planetLongitude(toPlanet, matchingEvent.arrivalJD);
-          if (setAngle(diagram.id, `burn:${burn.label}`, burn, arrAngle)) {
+        }
+      } else if (burn.type === "deceleration" || burn.type === "capture") {
+        const orbitAngle = orbitAngleMap.get(transfer.toOrbitId);
+        if (orbitAngle !== undefined) {
+          if (setAngle(diagram.id, `burn:${burn.label}`, burn, orbitAngle)) {
             updated = true;
           }
         }
