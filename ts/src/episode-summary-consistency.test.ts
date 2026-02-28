@@ -24,6 +24,8 @@ import { analyzeEpisode2 } from "./ep02-analysis.ts";
 import { analyzeEpisode3 } from "./ep03-analysis.ts";
 import { analyzeEpisode4 } from "./ep04-analysis.ts";
 import { analyzeEpisode5 } from "./ep05-analysis.ts";
+import { computeTimeline } from "./timeline-analysis.ts";
+import { calendarToJD } from "./ephemeris.ts";
 
 // --- Helpers ---
 
@@ -322,10 +324,12 @@ describe("SHIP_SPECS↔analysis consistency", () => {
 // ============================================================
 
 describe("MDX report↔TypeScript consistency", () => {
-  const reportsDir = path.resolve(import.meta.dirname!, "../../reports/data/summary");
+  const summaryDir = path.resolve(import.meta.dirname!, "../../reports/data/summary");
+  const episodesDir = path.resolve(import.meta.dirname!, "../../reports/data/episodes");
 
-  function readMdx(filename: string): string {
-    return fs.readFileSync(path.join(reportsDir, filename), "utf-8");
+  function readMdx(filename: string, subdir: "summary" | "episodes" = "summary"): string {
+    const dir = subdir === "episodes" ? episodesDir : summaryDir;
+    return fs.readFileSync(path.join(dir, filename), "utf-8");
   }
 
   describe("cross-episode.md consistency", () => {
@@ -377,6 +381,60 @@ describe("MDX report↔TypeScript consistency", () => {
           );
         }
       }
+    });
+  });
+
+  describe("epoch date consistency with computed timeline", () => {
+    const tl = computeTimeline(calendarToJD(2240, 1, 1));
+
+    // Episode MDX files should have epochAnnotation dates matching the computed timeline
+    const expectedDates: Record<number, { departure: string; arrival: string }> = {};
+    for (const event of tl.events) {
+      expectedDates[event.episode] = {
+        departure: event.departureDate,
+        arrival: event.arrivalDate,
+      };
+    }
+
+    for (const ep of [1, 2, 3, 5]) {
+      // EP04 has a special reference annotation (48kt brachistochrone), skip exact check
+      const slug = `ep${String(ep).padStart(2, "0")}`;
+      const content = readMdx(`${slug}.md`, "episodes");
+
+      it(`EP${ep} epochAnnotation dates match computed timeline`, () => {
+        const expected = expectedDates[ep <= 4 ? ep : 4]; // EP05 uses EP04's departure
+        const depDate = ep === 5 ? expectedDates[4].departure : expected.departure;
+        const arrDate = ep === 5 ? expectedDates[4].arrival : expected.arrival;
+
+        assert.ok(
+          content.includes(depDate),
+          `EP${ep} should contain departure date ${depDate} in epochAnnotation`,
+        );
+        assert.ok(
+          content.includes(arrDate),
+          `EP${ep} should contain arrival date ${arrDate} in epochAnnotation`,
+        );
+      });
+    }
+
+    it("cross-episode.md timeline table dates match computed timeline", () => {
+      const content = readMdx("cross-episode.md", "summary");
+
+      // EP01
+      assert.ok(content.includes(`"1": "${expectedDates[1].departure} → ${expectedDates[1].arrival}"`),
+        "EP01 table date should match timeline");
+      // EP02
+      assert.ok(content.includes(`"2": "${expectedDates[2].departure} → ${expectedDates[2].arrival}"`),
+        "EP02 table date should match timeline");
+      // EP03
+      assert.ok(content.includes(`"3": "${expectedDates[3].departure} → ${expectedDates[3].arrival}"`),
+        "EP03 table date should match timeline");
+      // EP04
+      assert.ok(content.includes(`"4": "${expectedDates[4].departure}`),
+        "EP04 table date should match departure");
+      // EP05
+      assert.ok(content.includes(`"5": "${expectedDates[4].departure} → ${expectedDates[4].arrival}"`),
+        "EP05 table date should match timeline");
     });
   });
 
