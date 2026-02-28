@@ -513,3 +513,35 @@ test.describe("Transcription pages", () => {
     expect(panelText).not.toMatch(/\d{2}:\d{2}:\d{2}\.\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{3}/);
   });
 });
+
+// --- Side-view SVG diagram tests (Task 217) ---
+
+test.describe("Side-view SVG diagrams", () => {
+  test("cross-episode page has Saturn ring crossing side-view diagram", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const diagram = page.locator("#saturn-ring-crossing");
+    await expect(diagram).toBeVisible();
+    // Should contain an SVG with geometric elements
+    const svg = diagram.locator("svg");
+    await expect(svg).toBeVisible();
+    // Verify key elements: central body (circle), planes (lines), ring (ellipse)
+    expect(await svg.locator("circle").count()).toBeGreaterThanOrEqual(1);
+    expect(await svg.locator("line").count()).toBeGreaterThanOrEqual(2);
+    expect(await svg.locator("ellipse").count()).toBeGreaterThanOrEqual(1);
+    // Should have a description paragraph
+    const desc = diagram.locator(".diagram-description");
+    await expect(desc).toBeVisible();
+  });
+
+  test("cross-episode page has Uranus approach geometry side-view diagram", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const diagram = page.locator("#uranus-approach-geometry");
+    await expect(diagram).toBeVisible();
+    const svg = diagram.locator("svg");
+    await expect(svg).toBeVisible();
+    expect(await svg.locator("circle").count()).toBeGreaterThanOrEqual(1);
+    expect(await svg.locator("line").count()).toBeGreaterThanOrEqual(2);
+    // Should have angle annotations (path arcs)
+    expect(await svg.locator("path").count()).toBeGreaterThanOrEqual(1);
+  });
+});
