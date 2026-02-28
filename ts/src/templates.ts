@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, MarginGaugeItem } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -2730,6 +2730,84 @@ function renderBarChartFromData(chart: BarChart): string {
   })), chart.unit);
 }
 
+/** Determine the color for a margin gauge based on the remaining margin percentage */
+function marginGaugeColor(marginPercent: number): string {
+  if (marginPercent < 5) return "#e74c3c";    // red — critical
+  if (marginPercent < 20) return "#f39c12";   // yellow — tight
+  return "#27ae60";                            // green — safe
+}
+
+/** Render a single margin gauge item as an SVG horizontal bar */
+function renderMarginGaugeItem(item: MarginGaugeItem, y: number, barAreaWidth: number): string {
+  const barHeight = 28;
+  const labelWidth = 180;
+  const { actual, limit, unit, higherIsBetter } = item;
+
+  // Calculate the fill ratio and margin
+  let fillRatio: number;
+  let marginPercent: number;
+  if (higherIsBetter) {
+    // e.g. shield life: 14 min available vs 8 min needed → margin = (14-8)/14 = 43%
+    fillRatio = limit > 0 ? Math.min(actual / limit, 1.5) : 0;
+    marginPercent = actual > 0 ? ((actual - limit) / actual) * 100 : 0;
+  } else {
+    // e.g. radiation: 560 mSv actual vs 600 mSv limit → margin = (600-560)/600 = 6.7%
+    fillRatio = limit > 0 ? Math.min(actual / limit, 1.5) : 0;
+    marginPercent = limit > 0 ? ((limit - actual) / limit) * 100 : 0;
+  }
+
+  const color = marginGaugeColor(Math.max(0, marginPercent));
+  const fillWidth = Math.max(1, fillRatio * barAreaWidth);
+  const limitX = labelWidth + barAreaWidth; // limit mark is at 100%
+
+  const truncatedLabel = truncateLabel(item.label, 22);
+  const marginLabel = marginPercent >= 0
+    ? `余裕 ${marginPercent.toFixed(1)}%`
+    : `超過 ${Math.abs(marginPercent).toFixed(1)}%`;
+
+  return `<g>
+<text x="${labelWidth - 8}" y="${y + barHeight / 2 + 5}" fill="var(--fg)" text-anchor="end" font-size="12">${escapeHtml(truncatedLabel)}</text>
+<rect x="${labelWidth}" y="${y}" width="${barAreaWidth}" height="${barHeight}" rx="3" fill="var(--bg-alt, #f5f5f5)" opacity="0.3"/>
+<rect x="${labelWidth}" y="${y}" width="${Math.min(fillWidth, barAreaWidth)}" height="${barHeight}" rx="3" fill="${color}" opacity="0.85"/>
+${fillWidth > barAreaWidth ? `<rect x="${labelWidth + barAreaWidth}" y="${y}" width="${Math.min(fillWidth - barAreaWidth, 30)}" height="${barHeight}" rx="3" fill="#e74c3c" opacity="0.5"/>` : ""}
+<line x1="${limitX}" y1="${y - 2}" x2="${limitX}" y2="${y + barHeight + 2}" stroke="var(--fg)" stroke-width="2" stroke-dasharray="4,2"/>
+<text x="${limitX + 4}" y="${y - 4}" fill="var(--fg)" font-size="9" opacity="0.7">上限 ${formatNumericValue(limit, 1)} ${escapeHtml(unit)}</text>
+<text x="${labelWidth + Math.min(fillWidth, barAreaWidth) + 6}" y="${y + barHeight / 2 + 5}" fill="var(--fg)" font-size="11">${formatNumericValue(actual, 1)} ${escapeHtml(unit)} (${marginLabel})</text>
+</g>`;
+}
+
+/** Render a margin gauge panel with multiple gauge items */
+export function renderMarginGauge(gauge: MarginGauge): string {
+  const barHeight = 28;
+  const itemSpacing = 16;
+  const chartWidth = 700;
+  const labelWidth = 180;
+  const barAreaWidth = chartWidth - labelWidth - 180; // leave room for value text
+  const svgHeight = gauge.items.length * (barHeight + itemSpacing) + 20;
+
+  const descHtml = gauge.description
+    ? `<p class="diagram-description">${escapeHtml(gauge.description)}</p>`
+    : "";
+
+  const itemsSvg = gauge.items.map((item, i) => {
+    const y = i * (barHeight + itemSpacing) + 10;
+    return renderMarginGaugeItem(item, y, barAreaWidth);
+  }).join("\n");
+
+  return `<div class="card margin-gauge" id="${escapeHtml(gauge.id)}">
+<h4>${escapeHtml(gauge.title)}</h4>${descHtml}
+<svg viewBox="0 0 ${chartWidth} ${svgHeight}" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(gauge.title)}">
+${itemsSvg}
+</svg>
+</div>`;
+}
+
+/** Render multiple margin gauge panels */
+export function renderMarginGauges(gauges: MarginGauge[]): string {
+  if (gauges.length === 0) return "";
+  return gauges.map(renderMarginGauge).join("\n");
+}
+
 /** Render a time-series chart container with embedded JSON data for uPlot */
 export function renderTimeSeriesChart(chart: TimeSeriesChart): string {
   const descHtml = chart.description
@@ -2811,6 +2889,7 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const timeSeriesHtml = section.timeSeriesCharts ? renderTimeSeriesCharts(section.timeSeriesCharts) : "";
     const customTableHtml = section.comparisonTable ? renderCustomComparisonTable(section.comparisonTable) : "";
     const sideViewHtml = section.sideViewDiagrams ? renderSideViewDiagrams(section.sideViewDiagrams) : "";
+    const marginGaugeHtml = section.marginGauges ? renderMarginGauges(section.marginGauges) : "";
     const reproHtml = section.reproductionCommand
       ? `<details class="reproduction-command"><summary>再現コマンド</summary><pre><code>${escapeHtml(section.reproductionCommand)}</code></pre></details>`
       : "";
@@ -2822,6 +2901,7 @@ ${diagramHtml}
 ${sideViewHtml}
 ${barChartHtml}
 ${timeSeriesHtml}
+${marginGaugeHtml}
 ${timelineHtml}
 ${verificationHtml}
 ${tableHtml}

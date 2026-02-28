@@ -628,6 +628,20 @@ describe("cross-episode.md content validation", () => {
       "should cite high-Isp scenario (5×10⁶)",
     );
   });
+
+  it("margin gauge: has margin-gauge code fence", () => {
+    assert.ok(content.includes("margin-gauge"), "should have margin-gauge code fence");
+  });
+
+  it("margin gauge: nozzle margin 55.2h actual vs 55.63h limit", () => {
+    assert.ok(content.includes('"actual": 55.2'), "should cite nozzle actual 55.2h");
+    assert.ok(content.includes('"limit": 55.63'), "should cite nozzle limit 55.63h");
+  });
+
+  it("margin gauge: radiation 480 mSv and 600 mSv limit", () => {
+    assert.ok(content.includes('"actual": 480'), "should cite radiation actual 480 mSv");
+    assert.ok(content.includes('"limit": 500'), "should cite ICRP emergency limit 500 mSv");
+  });
 });
 
 // ============================================================

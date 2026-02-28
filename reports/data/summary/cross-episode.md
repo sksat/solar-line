@@ -1677,6 +1677,60 @@ SOLAR LINEでは各話のマージンが話を追うごとに縮小するが、�
 
 ### マージンの系列
 
+以下のゲージチャートは、各話のクリティカルパラメータが限界値にどこまで近づいたかを視覚的に示す。バーが限界線（破線）に近いほど「ギリギリ」であり、色が緑→黄→赤と変わることで危険度を表現する。
+
+```margin-gauge:
+{
+  "id": "mission-critical-margins",
+  "title": "ミッションクリティカルマージン一覧",
+  "description": "各話の最も厳しい制約パラメータと限界値の比較。バーの長さが実際値、破線が限界値を示す。赤=マージン5%未満（危機的）、黄=5-20%（緊張）、緑=20%超（安全）。",
+  "items": [
+    {
+      "label": "EP02: 脱出速度マージン",
+      "actual": 18.38,
+      "limit": 18.91,
+      "unit": "km/s",
+      "higherIsBetter": false
+    },
+    {
+      "label": "EP03: 航法誤差",
+      "actual": 0.2,
+      "limit": 1.0,
+      "unit": "°",
+      "higherIsBetter": false
+    },
+    {
+      "label": "EP04: シールド消費時間",
+      "actual": 8,
+      "limit": 14,
+      "unit": "min",
+      "higherIsBetter": false
+    },
+    {
+      "label": "EP04: 放射線被曝",
+      "actual": 480,
+      "limit": 500,
+      "unit": "mSv",
+      "higherIsBetter": false
+    },
+    {
+      "label": "EP05: ノズル使用時間",
+      "actual": 55.2,
+      "limit": 55.63,
+      "unit": "h",
+      "higherIsBetter": false
+    },
+    {
+      "label": "全航路: 累積被曝量",
+      "actual": 560,
+      "limit": 600,
+      "unit": "mSv",
+      "higherIsBetter": false
+    }
+  ]
+}
+```
+
 | 話 | 制約 | マージン | 失敗時の帰結 |
 |---|---|---|---|
 | EP02 | 太陽中心速度 vs 脱出速度 | 0.53 km/s (2.9%) | 楕円軌道に転落、土星に到達不能 |

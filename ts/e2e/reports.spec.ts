@@ -792,3 +792,42 @@ test.describe("Summary: ship-kestrel page", () => {
     expect(await glossaryTerms.count()).toBeGreaterThanOrEqual(1);
   });
 });
+
+// --- Margin gauge visualization tests (Task 238) ---
+
+test.describe("Margin gauge visualization", () => {
+  test("cross-episode page has margin gauge SVG", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const gauge = page.locator("#mission-critical-margins");
+    await expect(gauge).toBeVisible();
+    await expect(gauge.locator("svg")).toBeVisible();
+  });
+
+  test("margin gauge has correct CSS class", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const gauge = page.locator(".margin-gauge");
+    expect(await gauge.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("margin gauge displays all item labels", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const gaugeText = await page.locator("#mission-critical-margins").textContent();
+    expect(gaugeText).toContain("EP02");
+    expect(gaugeText).toContain("EP05");
+    expect(gaugeText).toContain("ノズル");
+  });
+
+  test("margin gauge shows limit markers", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const svg = page.locator("#mission-critical-margins svg");
+    // Limit markers are dashed lines
+    const dashedLines = svg.locator('line[stroke-dasharray]');
+    expect(await dashedLines.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("margin gauge shows margin percentages", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const gaugeText = await page.locator("#mission-critical-margins").textContent();
+    expect(gaugeText).toContain("余裕");
+  });
+});

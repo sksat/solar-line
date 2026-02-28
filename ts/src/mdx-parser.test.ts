@@ -204,6 +204,18 @@ Some text after.`;
     assert.equal(directives[0].type, "orbital-diagram");
   });
 
+  it("extracts margin-gauge directive", () => {
+    const content = `Text.
+
+\`\`\`margin-gauge:
+{ "id": "g1", "title": "Test Gauge", "items": [{ "label": "A", "actual": 10, "limit": 100, "unit": "km" }] }
+\`\`\``;
+
+    const { directives } = extractDirectives(content);
+    assert.equal(directives.length, 1);
+    assert.equal(directives[0].type, "margin-gauge");
+  });
+
   it("extracts multiple directives", () => {
     const content = `
 \`\`\`chart:bar
@@ -343,6 +355,26 @@ describe("applyDirectives", () => {
     const fields = result as Record<string, unknown>;
     assert.ok(fields._glossary);
     assert.equal((fields._glossary as unknown[]).length, 1);
+  });
+
+  it("accumulates multiple margin-gauge panels", () => {
+    const gauge1 = JSON.stringify({
+      id: "g1",
+      title: "Gauge 1",
+      items: [{ label: "Nozzle", actual: 55.2, limit: 55.63, unit: "h", higherIsBetter: true }],
+    });
+    const gauge2 = JSON.stringify({
+      id: "g2",
+      title: "Gauge 2",
+      items: [{ label: "Radiation", actual: 560, limit: 600, unit: "mSv" }],
+    });
+    const result = applyDirectives([
+      { type: "margin-gauge", rawContent: gauge1 },
+      { type: "margin-gauge", rawContent: gauge2 },
+    ]);
+    assert.equal(result.marginGauges!.length, 2);
+    assert.equal(result.marginGauges![0].id, "g1");
+    assert.equal(result.marginGauges![1].id, "g2");
   });
 
   it("throws on unknown directive type", () => {

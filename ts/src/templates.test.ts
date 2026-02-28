@@ -44,9 +44,11 @@ import {
   renderSideViewDiagram,
   renderSideViewDiagrams,
   validateTransferOverlap,
+  renderMarginGauge,
+  renderMarginGauges,
 } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm, SideViewDiagram } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -5554,5 +5556,107 @@ describe("renderOrbitalDiagram rejects overlapping transfers", () => {
       animation: { durationSeconds: 72000 },
     };
     assert.throws(() => renderOrbitalDiagram(diagram), /overlap/i);
+  });
+});
+
+// --- renderMarginGauge ---
+
+const sampleMarginGauge: MarginGauge = {
+  id: "test-margins",
+  title: "クリティカルマージン一覧",
+  description: "各パラメータが限界値にどこまで近づいたか",
+  items: [
+    { label: "ノズル残寿命", actual: 55.2, limit: 55.63, unit: "h", higherIsBetter: true },
+    { label: "累積放射線被曝", actual: 560, limit: 600, unit: "mSv" },
+    { label: "磁気シールド", actual: 14, limit: 8, unit: "min", higherIsBetter: true },
+  ],
+};
+
+describe("renderMarginGauge", () => {
+  it("renders an SVG with the gauge title", () => {
+    const html = renderMarginGauge(sampleMarginGauge);
+    assert.ok(html.includes("クリティカルマージン一覧"));
+    assert.ok(html.includes("<svg"));
+  });
+
+  it("renders description", () => {
+    const html = renderMarginGauge(sampleMarginGauge);
+    assert.ok(html.includes("diagram-description"));
+    assert.ok(html.includes("各パラメータが限界値にどこまで近づいたか"));
+  });
+
+  it("wraps in card div with id and margin-gauge class", () => {
+    const html = renderMarginGauge(sampleMarginGauge);
+    assert.ok(html.includes('id="test-margins"'));
+    assert.ok(html.includes('class="card margin-gauge"'));
+  });
+
+  it("renders all item labels", () => {
+    const html = renderMarginGauge(sampleMarginGauge);
+    assert.ok(html.includes("ノズル残寿命"));
+    assert.ok(html.includes("累積放射線被曝"));
+    assert.ok(html.includes("磁気シールド"));
+  });
+
+  it("renders limit markers with dashed lines", () => {
+    const html = renderMarginGauge(sampleMarginGauge);
+    assert.ok(html.includes("stroke-dasharray"));
+    assert.ok(html.includes("上限"));
+  });
+
+  it("shows margin percentage", () => {
+    const html = renderMarginGauge(sampleMarginGauge);
+    assert.ok(html.includes("余裕"));
+  });
+
+  it("renders red color for critical margins (<5%)", () => {
+    const criticalGauge: MarginGauge = {
+      id: "critical-test",
+      title: "Critical",
+      items: [{ label: "Nozzle", actual: 55.2, limit: 55.63, unit: "h", higherIsBetter: true }],
+    };
+    const html = renderMarginGauge(criticalGauge);
+    // 0.77% margin → red
+    assert.ok(html.includes("#e74c3c"));
+  });
+
+  it("renders green color for safe margins (>20%)", () => {
+    const safeGauge: MarginGauge = {
+      id: "safe-test",
+      title: "Safe",
+      items: [{ label: "Shield", actual: 14, limit: 8, unit: "min", higherIsBetter: true }],
+    };
+    const html = renderMarginGauge(safeGauge);
+    // 43% margin → green
+    assert.ok(html.includes("#27ae60"));
+  });
+
+  it("renders yellow color for tight margins (5-20%)", () => {
+    const tightGauge: MarginGauge = {
+      id: "tight-test",
+      title: "Tight",
+      items: [{ label: "Radiation", actual: 560, limit: 600, unit: "mSv" }],
+    };
+    const html = renderMarginGauge(tightGauge);
+    // 6.7% margin → yellow
+    assert.ok(html.includes("#f39c12"));
+  });
+
+  it("renders aria-label for accessibility", () => {
+    const html = renderMarginGauge(sampleMarginGauge);
+    assert.ok(html.includes('aria-label="クリティカルマージン一覧"'));
+  });
+});
+
+describe("renderMarginGauges", () => {
+  it("returns empty string for empty array", () => {
+    assert.equal(renderMarginGauges([]), "");
+  });
+
+  it("renders multiple gauge panels", () => {
+    const gauges: MarginGauge[] = [sampleMarginGauge, { ...sampleMarginGauge, id: "test-2", title: "Second" }];
+    const html = renderMarginGauges(gauges);
+    assert.ok(html.includes("test-margins"));
+    assert.ok(html.includes("test-2"));
   });
 });

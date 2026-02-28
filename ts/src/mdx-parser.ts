@@ -42,6 +42,7 @@ import type {
   ComparisonTable,
   VerificationTable,
   GlossaryTerm,
+  MarginGauge,
 } from "./report-types.ts";
 
 /** Frontmatter fields for a summary report */
@@ -155,7 +156,7 @@ export function extractDirectives(content: string): {
   const directives: ComponentDirective[] = [];
   // Match fenced code blocks with component-type language tags
   // Supported patterns: ```chart:bar, ```component:orbital-diagram, ```timeline, ```table:comparison, etc.
-  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer|glossary|sideview):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
+  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer|glossary|sideview|margin-gauge):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
 
   const markdown = content.replace(fenceRegex, (_match, prefix: string, suffix: string, inner: string) => {
     const type = suffix || prefix;
@@ -263,6 +264,12 @@ export function applyDirectives(directives: ComponentDirective[]): Partial<Summa
         const diagram = parseJsonDirective<SideViewDiagram>(d.rawContent);
         if (!result.sideViewDiagrams) result.sideViewDiagrams = [];
         result.sideViewDiagrams.push(diagram);
+        break;
+      }
+      case "margin-gauge": {
+        const gauge = parseJsonDirective<MarginGauge>(d.rawContent);
+        if (!result.marginGauges) result.marginGauges = [];
+        result.marginGauges.push(gauge);
         break;
       }
       case "glossary": {

@@ -550,6 +550,32 @@ export interface VerificationTable {
   rows: VerificationRow[];
 }
 
+/** A single gauge item showing actual vs limit for a critical parameter */
+export interface MarginGaugeItem {
+  /** Label for this parameter */
+  label: string;
+  /** Actual value achieved */
+  actual: number;
+  /** Limit value (threshold) */
+  limit: number;
+  /** Unit of measurement */
+  unit: string;
+  /** Whether higher actual is better (default: false = lower is better, i.e. staying under the limit) */
+  higherIsBetter?: boolean;
+}
+
+/** A margin gauge panel showing how close parameters are to their limits */
+export interface MarginGauge {
+  /** Unique ID for the gauge panel */
+  id: string;
+  /** Title of the gauge panel */
+  title: string;
+  /** Optional description */
+  description?: string;
+  /** Individual gauge items */
+  items: MarginGaugeItem[];
+}
+
 /** A section in a summary report */
 export interface SummarySection {
   /** Section heading */
@@ -578,6 +604,8 @@ export interface SummarySection {
     headers: string[];
     rows: { label: string; values: string[]; highlight?: boolean }[];
   };
+  /** Optional margin gauges showing parameter proximity to limits */
+  marginGauges?: MarginGauge[];
   /** Command to reproduce the numerical analysis for this section */
   reproductionCommand?: string;
 }
