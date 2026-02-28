@@ -929,3 +929,46 @@ describe("infrastructure.md content validation", () => {
     assert.ok(content.includes("other-ships"), "should cross-link to other-ships report");
   });
 });
+
+// ============================================================
+// AI Costs report: token usage, pricing, efficiency
+// ============================================================
+
+describe("ai-costs.md content validation", () => {
+  const content = readReport("ai-costs.md");
+
+  it("cites cache hit rate of 97.3%", () => {
+    assert.ok(content.includes("97.3%"), "should cite 97.3% cache hit rate");
+  });
+
+  it("cites total token count ~360M", () => {
+    assert.ok(
+      content.includes("3.6億") || content.includes("360M"),
+      "should cite ~360M total tokens",
+    );
+  });
+
+  it("Haiku subagent cost: $6.57", () => {
+    assert.ok(content.includes("$6.57"), "should cite $6.57 Haiku subagent cost");
+  });
+
+  it("API pricing for Opus 4.6: $5/MTok input, $25/MTok output", () => {
+    assert.ok(content.includes("$5/MTok"), "should cite Opus input pricing $5/MTok");
+    assert.ok(content.includes("$25/MTok"), "should cite Opus output pricing $25/MTok");
+  });
+
+  it("plan comparison includes Max Plan and API-only", () => {
+    assert.ok(content.includes("Max Plan"), "should cite Max Plan");
+    assert.ok(content.includes("API-only"), "should cite API-only plan");
+  });
+
+  it("efficiency measures documented", () => {
+    assert.ok(content.includes("TodoWrite"), "should mention TodoWrite optimization");
+    assert.ok(content.includes("max_turns"), "should mention max_turns scope limit");
+    assert.ok(content.includes("run_in_background"), "should mention background execution");
+  });
+
+  it("update method with ccusage command", () => {
+    assert.ok(content.includes("ccusage"), "should document ccusage update command");
+  });
+});

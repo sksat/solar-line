@@ -992,3 +992,37 @@ test.describe("Summary: communications page", () => {
     expect(pageContent).toContain("光速遅延");
   });
 });
+
+// --- AI Costs page tests (Task 244) ---
+
+test.describe("Summary: ai-costs page", () => {
+  test("has all main sections", async ({ page }) => {
+    await page.goto("/summary/ai-costs.html");
+    await expect(page.locator("h2:has-text('概要')")).toBeVisible();
+    await expect(page.locator("h2:has-text('トークン分布')")).toBeVisible();
+    await expect(page.locator("h2:has-text('コスト内訳')")).toBeVisible();
+    await expect(page.locator("h2:has-text('効率化施策')")).toBeVisible();
+    await expect(page.locator("h2:has-text('プラン別コスト比較')")).toBeVisible();
+  });
+
+  test("renders multiple data tables", async ({ page }) => {
+    await page.goto("/summary/ai-costs.html");
+    const tables = page.locator("table");
+    // ai-costs has 8 markdown tables with metrics and pricing
+    expect(await tables.count()).toBeGreaterThanOrEqual(6);
+  });
+
+  test("pricing tables have model names", async ({ page }) => {
+    await page.goto("/summary/ai-costs.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("Opus");
+    expect(pageContent).toContain("Sonnet");
+    expect(pageContent).toContain("Haiku");
+  });
+
+  test("cache hit rate is highlighted", async ({ page }) => {
+    await page.goto("/summary/ai-costs.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("97.3%");
+  });
+});
