@@ -296,6 +296,39 @@ describe("EP03 article content validation", () => {
     assert.ok(content.includes("margin-gauge"), "EP03 should have margin-gauge fence");
     assert.ok(content.includes('"actual": 0.2'), "should cite 0.2° nav error");
   });
+
+  it("Hohmann baseline: 2.74 km/s, ~27.3 years", () => {
+    assert.ok(content.includes("2.74"),
+      "should cite Hohmann ΔV 2.74 km/s for Saturn→Uranus");
+    assert.ok(content.includes("27.3"),
+      "should cite ~27.3 years transfer time");
+  });
+
+  it("Saturn escape ΔV: 5.23 km/s from Enceladus orbit", () => {
+    assert.ok(content.includes("5.23"),
+      "should cite Saturn escape ΔV 5.23 km/s");
+  });
+
+  it("peak velocity: 5,583 km/s (1.86% c)", () => {
+    assert.ok(content.includes("5,583") || content.includes("5583"),
+      "should cite peak velocity 5,583 km/s");
+    assert.ok(content.includes("1.86"),
+      "should cite 1.86% of light speed");
+  });
+
+  it("navigation crisis: 1.23° error at 14.72 AU = ~1,436万km", () => {
+    assert.ok(content.includes("1.23"),
+      "should cite 1.23° navigation error");
+    assert.ok(content.includes("14.72"),
+      "should cite 14.72 AU position of crisis");
+    assert.ok(content.includes("1,436") || content.includes("1436"),
+      "should cite ~1,436万km position uncertainty");
+  });
+
+  it("Saturn orbital velocity: 9.62 km/s (gravity assist)", () => {
+    assert.ok(content.includes("9.62"),
+      "should cite Saturn orbital velocity 9.62 km/s");
+  });
 });
 
 describe("EP04 article content validation", () => {
@@ -323,6 +356,35 @@ describe("EP04 article content validation", () => {
     assert.ok(content.includes("margin-gauge"), "EP04 should have margin-gauge fence");
     assert.ok(content.includes('"actual": 480'), "should cite 480 mSv radiation");
     assert.ok(content.includes('"limit": 500'), "should cite 500 mSv ICRP limit");
+  });
+
+  it("Hohmann baseline: 15.94 km/s, ~16.1 years", () => {
+    assert.ok(content.includes("15.94"),
+      "should cite Hohmann ΔV 15.94 km/s for Uranus→Earth");
+    assert.ok(content.includes("16.1"),
+      "should cite ~16.1 years transfer time");
+  });
+
+  it("Titania escape ΔV: 1.51 km/s", () => {
+    assert.ok(content.includes("1.51"),
+      "should cite Titania escape ΔV 1.51 km/s");
+  });
+
+  it("magnetic shield: 14 min remaining vs 8 min plasmoid passage", () => {
+    assert.ok(content.includes("14分") || (content.includes("14") && content.includes("シールド")),
+      "should cite shield remaining 14 min");
+    assert.ok(content.includes("8分") || (content.includes("8") && content.includes("プラズモイド")),
+      "should cite 8 min minimum plasmoid passage");
+  });
+
+  it("Uranus magnetic axis offset: 60° tilt", () => {
+    assert.ok(content.includes("60") && content.includes("°"),
+      "should cite 60° magnetic axis offset of Uranus");
+  });
+
+  it("radiation dose dialogue: 480 mSv", () => {
+    assert.ok(content.includes("480") && content.includes("ミリシーベルト"),
+      "should cite 480 mSv radiation in dialogue");
   });
 });
 
