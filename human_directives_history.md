@@ -1,5 +1,10 @@
 # 人間からの指示履歴
 
+## 2026-02-28 (commit a2f57d8)
+
+18. **EP03 captive identity**: 3話で地球軍に捕まっているのはきりたんではない可能性 → Task 210
+19. **G-force category separation**: 居住区画の体感G（人工重力）と推進器加減速Gを分けて考えるべき。SF作品では推進Gは暗黙的に無視される傾向 → Task 211, CLAUDE.md 更新
+
 ## 2026-02-25 (commit c1d4a7a)
 
 16. **考証への rename 承認**: ADR-015 の選択肢 A（「SOLAR LINE 考察」→「SOLAR LINE 考証」）を承認 → Task 182
