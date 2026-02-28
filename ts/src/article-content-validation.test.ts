@@ -1309,8 +1309,8 @@ describe("attitude-control.md content validation", () => {
     );
   });
 
-  it("flip maneuver RCS requirements: 300s flip needs 830 N", () => {
-    assert.ok(content.includes("830 N") || content.includes("830N"), "should cite 830 N RCS thrust for 300s flip");
+  it("flip maneuver RCS requirements: 300s flip needs 299 N (corrected)", () => {
+    assert.ok(content.includes("299 N") || content.includes("299N"), "should cite 299 N RCS thrust for 300s flip");
   });
 
   it("ship length 42.8 m and mass 300 t consistent with KESTREL", () => {
@@ -1337,6 +1337,58 @@ describe("attitude-control.md content validation", () => {
     assert.ok(
       warnings >= 2,
       `should have at least 2 conditional items, got ${warnings}`,
+    );
+  });
+
+  // Regression tests from Task 275 external review
+  it("flip maneuver uses symmetric bang-bang model formula", () => {
+    assert.ok(
+      content.includes("4\\pi") || content.includes("4π"),
+      "should cite alpha = 4*pi/T^2 formula",
+    );
+    assert.ok(
+      content.includes("2\\pi") || content.includes("2π"),
+      "should cite omega_max = 2*pi/T formula",
+    );
+  });
+
+  it("Ganymede Hill sphere ~32,000 km (not SOI ~50,000 km)", () => {
+    assert.ok(
+      content.includes("Hill球") || content.includes("Hill sphere"),
+      "should reference Ganymede Hill sphere",
+    );
+    assert.ok(
+      content.includes("32,000"),
+      "should cite ~32,000 km Hill sphere radius",
+    );
+  });
+
+  it("EP03 14,360,000 km claim cites timestamp 14:17", () => {
+    assert.ok(
+      content.includes("14:17"),
+      "should cite timestamp 14:17 for the 1436万km claim (separate from 1.23° at 13:58)",
+    );
+  });
+
+  it("gravity gradient torque values use (Izz - Ixx)", () => {
+    // Corrected from 3.1/30.2/88.2 to 3.0/29.3/85.6
+    assert.ok(
+      content.includes("85.6"),
+      "should cite corrected gravity gradient torque 85.6 N·m at 45°",
+    );
+  });
+
+  it("has newcomer introduction section", () => {
+    assert.ok(
+      content.includes("本レポートについて"),
+      "should have an introductory section for newcomers",
+    );
+  });
+
+  it("EP02 section present (even if brief)", () => {
+    assert.ok(
+      content.includes("第2話"),
+      "should have EP02 section explaining attitude control during trim-thrust cruise",
     );
   });
 });
