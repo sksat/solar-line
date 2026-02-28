@@ -863,3 +863,69 @@ describe("attitude-control.md content validation", () => {
     );
   });
 });
+
+// ============================================================
+// Infrastructure report: spaceports, nav infra, governance
+// ============================================================
+
+describe("infrastructure.md content validation", () => {
+  const content = readReport("infrastructure.md");
+
+  it("names all three major spaceports/stations", () => {
+    assert.ok(content.includes("ガニメデ中央港"), "should cite ガニメデ中央港");
+    assert.ok(content.includes("エンケラドスステーション"), "should cite エンケラドスステーション");
+    assert.ok(content.includes("タイタニア集合複合施設"), "should cite タイタニア集合複合施設");
+  });
+
+  it("port navigation system: 100+ years of operation", () => {
+    assert.ok(content.includes("100年以上"), "should cite 100+ year operation of beacon network");
+  });
+
+  it("beacon shutdown: ~700 ships affected", () => {
+    assert.ok(content.includes("700"), "should cite ~700 ships affected by beacon shutdown");
+  });
+
+  it("economic impact: ~10% of solar system economy", () => {
+    assert.ok(content.includes("10%"), "should cite 10% economic impact of beacon shutdown");
+  });
+
+  it("Enceladus station: joint ownership 50:50", () => {
+    assert.ok(
+      content.includes("50%") || content.includes("50:50"),
+      "should cite 50:50 ownership of Enceladus station",
+    );
+  });
+
+  it("Enceladus staffing: reduced from hundreds to 1", () => {
+    assert.ok(content.includes("数百人"), "should cite original staffing of hundreds");
+    assert.ok(content.includes("1名") || content.includes("管理人1名"), "should cite current staffing of 1");
+  });
+
+  it("governance comparison table has 5 organizations", () => {
+    // table:comparison block should list 5 governance bodies
+    assert.ok(content.includes("軌道公案機構"), "should cite 軌道公案機構");
+    assert.ok(content.includes("木星軌道連合"), "should cite 木星軌道連合");
+    assert.ok(content.includes("天王星自治有効機構"), "should cite 天王星自治有効機構");
+    assert.ok(content.includes("国際連合軌道交番機構"), "should cite 国際連合軌道交番機構");
+    assert.ok(content.includes("港湾航舎"), "should cite 港湾航舎");
+  });
+
+  it("inner/outer sphere structure explained", () => {
+    assert.ok(content.includes("内苑"), "should explain inner sphere (内苑)");
+    assert.ok(content.includes("外苑"), "should explain outer sphere (外苑)");
+  });
+
+  it("Titania transit time: 143h from Enceladus", () => {
+    assert.ok(content.includes("143"), "should cite ~143 hour transit to Titania");
+  });
+
+  it("nuclear torpedo range: 40 km effective kill radius", () => {
+    assert.ok(content.includes("40km") || content.includes("40 km"), "should cite 40 km kill radius");
+    assert.ok(content.includes("1メガトン"), "should cite 1 megaton warhead");
+  });
+
+  it("cross-links to ship-kestrel and other-ships reports", () => {
+    assert.ok(content.includes("ship-kestrel"), "should cross-link to ship-kestrel report");
+    assert.ok(content.includes("other-ships"), "should cross-link to other-ships report");
+  });
+});
