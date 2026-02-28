@@ -33,7 +33,7 @@
     },
     {
       "episode": 2,
-      "transfer": "Ballistic Jupiter→Saturn (455 days)",
+      "transfer": "Trim-thrust Jupiter→Saturn (~87 days)",
       "rk4_dt_seconds": 3600,
       "rk45_n_eval": 3283,
       "rk45_n_accept": 469,
@@ -54,7 +54,7 @@
       "position_diff_relative": 3.52e-10,
       "rk4_energy_drift": 7.93e-14,
       "symplectic_energy_drift": 2.53e-9,
-      "notes": "Symplectic integrator shows bounded energy oscillation as expected. Position agreement sub-km for 455-day coast."
+      "notes": "Symplectic integrator shows bounded energy oscillation as expected. Position agreement sub-km for trim-thrust transfer coast phase."
     },
     {
       "episode": 2,

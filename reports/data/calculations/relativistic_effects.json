@@ -58,12 +58,12 @@
     {
       "episode": 2,
       "transferId": "ep02-ballistic-cruise",
-      "label": "木星系→土星/エンケラドス（弾道巡航 455日, ~1500 km/s）",
+      "label": "木星系→土星/エンケラドス（トリム推力遷移 87日, ~1500 km/s）",
       "distanceKm": 58968000000,
       "distanceAU": 394.1767334259257,
       "accelKms2": 0,
       "accelG": 0,
-      "classicalTimeSec": 39312000,
+      "classicalTimeSec": 7516800,
       "classicalPeakVelocityKms": 1500,
       "classicalDeltaVKms": 0,
       "relativistic": {
@@ -71,14 +71,14 @@
         "betaPeak": 0.005003461427972281,
         "gammaPeak": 1.0000125175481602,
         "timeDilationPpm": 12.517391473232387,
-        "timeDilationSec": 492.08369359571157,
-        "coordinateTimeSec": 39312000,
-        "properTimeSec": 39311507.916306406,
+        "timeDilationSec": 94.09,
+        "coordinateTimeSec": 7516800,
+        "properTimeSec": 7516705.91,
         "keCorrectionPpm": 18.77636385971826,
         "dvCorrectionFraction": 0,
         "dvCorrectionPpm": 0
       },
-      "verdict": "微小な相対論的効果（β ≈ 0.5%）— 455日間の時間遅れ ≈ 0.5秒"
+      "verdict": "微小な相対論的効果（β ≈ 0.5%）— 87日間の時間遅れ ≈ 0.1秒"
     },
     {
       "episode": 3,

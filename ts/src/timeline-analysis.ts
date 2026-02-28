@@ -368,6 +368,144 @@ export function searchMultipleEpochs(): StoryTimeline[] {
   return timelines;
 }
 
+/** Trim-thrust scenario for EP02 sensitivity analysis */
+export interface EP02Scenario {
+  /** Thrust duration label */
+  label: string;
+  /** Days of trim thrust applied */
+  thrustDays: number;
+  /** Resulting transit time (days) */
+  transitDays: number;
+  /** Total mission duration (days) */
+  totalMissionDays: number;
+  /** EP02 fraction of total */
+  ep02FractionPercent: number;
+  /** 15-day coast as fraction of total */
+  coastFractionPercent: number;
+  /** Propellant cost (fraction) */
+  propellantFraction: number;
+}
+
+/**
+ * Fixed durations that don't change with EP02 transit time.
+ * All values from anime dialogue or direct depiction.
+ */
+export const FIXED_DURATIONS = {
+  ep01TransitDays: 3, // 72h
+  jupiterStayDays: 3,
+  saturnStayDays: 2,
+  ep03TransitDays: 143 / 24, // 143h = 5.96 days
+  uranusStayDays: 2,
+  ep05TransitDays: 507 / 24, // 507h = 21.125 days
+  coastDays: 375 / 24, // 375h = 15.625 days (within EP05)
+} as const;
+
+/** Sum of all fixed durations (excluding EP02) */
+export const FIXED_TOTAL_DAYS =
+  FIXED_DURATIONS.ep01TransitDays +
+  FIXED_DURATIONS.jupiterStayDays +
+  FIXED_DURATIONS.saturnStayDays +
+  FIXED_DURATIONS.ep03TransitDays +
+  FIXED_DURATIONS.uranusStayDays +
+  FIXED_DURATIONS.ep05TransitDays;
+
+/**
+ * Analyze how the total mission duration changes with EP02 trim-thrust scenarios.
+ *
+ * The EP02 transit is the only variable leg — all others are fixed by dialogue.
+ * Trim thrust results (from ep02-analysis.ts RK4 simulation):
+ *   0 days (pure ballistic) → ~997 days
+ *   1 day  → ~148 days
+ *   3 days → ~87 days (primary scenario)
+ *   5 days → ~59 days
+ *   7 days → ~41 days
+ *   14 days → ~23 days
+ *   30 days → ~14 days
+ */
+export function ep02SensitivityAnalysis(): EP02Scenario[] {
+  // Results from trimThrustTransferAnalysis() RK4 simulation
+  // (hardcoded here to avoid circular dependency with ep02-analysis)
+  const trimResults = [
+    { thrustDays: 0, transitDays: 997, propFrac: 0, label: "弾道のみ（推力なし）" },
+    { thrustDays: 1, transitDays: 148, propFrac: 0.0028, label: "トリム1日" },
+    { thrustDays: 3, transitDays: 87, propFrac: 0.0086, label: "トリム3日（現行推定）" },
+    { thrustDays: 5, transitDays: 59, propFrac: 0.0143, label: "トリム5日" },
+    { thrustDays: 7, transitDays: 41, propFrac: 0.0200, label: "トリム7日" },
+    { thrustDays: 14, transitDays: 23, propFrac: 0.0400, label: "トリム14日" },
+    { thrustDays: 30, transitDays: 14, propFrac: 0.0855, label: "トリム30日" },
+  ];
+
+  const coastDays = FIXED_DURATIONS.coastDays;
+
+  return trimResults.map((r) => {
+    const totalMission = FIXED_TOTAL_DAYS + r.transitDays;
+    return {
+      label: r.label,
+      thrustDays: r.thrustDays,
+      transitDays: r.transitDays,
+      totalMissionDays: totalMission,
+      ep02FractionPercent: (r.transitDays / totalMission) * 100,
+      coastFractionPercent: (coastDays / totalMission) * 100,
+      propellantFraction: r.propFrac,
+    };
+  });
+}
+
+/** Narrative plausibility metrics for the "15 days feels long" concern */
+export interface NarrativePlausibility {
+  /** EP02 transit scenario */
+  scenario: EP02Scenario;
+  /** Does 15 days being "long" feel consistent? */
+  coastFeelsLong: boolean;
+  /** Explanation */
+  reasoning: string;
+}
+
+/**
+ * Evaluate narrative plausibility: does 15 days feeling "long" make sense?
+ *
+ * The protagonist says "15日以上何もないのか" (ep05 04:21), implying 15 days
+ * of inactivity is surprisingly long. This constraint is about subjective
+ * perception relative to overall mission experience:
+ *
+ * - If total mission is ~1000 days, 15 days is nothing (1.5%) — doesn't feel long
+ * - If total mission is ~124 days, 15 days is 12.5% — somewhat long
+ * - If total mission is ~78 days, 15 days is 20% — feels quite long
+ * - If total mission is ~50 days, 15 days is 31% — very significant portion
+ *
+ * Note: きりたん's comment may also reflect boredom during an OTHERWISE
+ * eventful journey. The EP02 transit (~87 days with trim) had active
+ * engine management; EP03 was intense combat; EP04 had plasmoid encounter.
+ * The 15-day coast is the FIRST truly inactive period.
+ */
+export function narrativePlausibilityAnalysis(): NarrativePlausibility[] {
+  const scenarios = ep02SensitivityAnalysis();
+
+  return scenarios.map((s) => {
+    // Heuristic: 15 days feels "long" if it's >10% of total mission
+    // or if it's the longest single inactive stretch
+    const coastFraction = s.coastFractionPercent;
+    let coastFeelsLong: boolean;
+    let reasoning: string;
+
+    if (s.totalMissionDays > 500) {
+      coastFeelsLong = false;
+      reasoning = `全行程${s.totalMissionDays.toFixed(0)}日中の15日（${coastFraction.toFixed(1)}%）は短い — EP02の${s.transitDays}日巡航がはるかに長い`;
+    } else if (s.totalMissionDays > 150) {
+      coastFeelsLong = false;
+      reasoning = `全行程${s.totalMissionDays.toFixed(0)}日中の15日（${coastFraction.toFixed(1)}%）— EP02にも長い巡航区間があり、15日が特別長いとは感じにくい`;
+    } else if (s.totalMissionDays > 50) {
+      coastFeelsLong = true;
+      reasoning = `全行程${s.totalMissionDays.toFixed(0)}日中の15日（${coastFraction.toFixed(1)}%）— EP02巡航(${s.transitDays}日)後は常に激しいイベントが続き、初めての「無」の期間`;
+    } else {
+      coastFeelsLong = true;
+      reasoning = `全行程${s.totalMissionDays.toFixed(0)}日中の15日（${coastFraction.toFixed(1)}%）— 旅程の約3分の1が何もない区間`;
+    }
+
+    return { scenario: s, coastFeelsLong, reasoning };
+  });
+}
+
 /**
  * Compute angular positions for orbital diagram at a specific timeline event.
  * Returns angles for all relevant planets at both departure and arrival.
