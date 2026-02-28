@@ -1418,10 +1418,15 @@ describe("infrastructure.md content validation", () => {
     assert.ok(content.includes("10%"), "should cite 10% economic impact of beacon shutdown");
   });
 
-  it("Enceladus station: joint ownership 50:50", () => {
+  it("Enceladus station: joint ownership by Earth and Mars", () => {
     assert.ok(
-      content.includes("50%") || content.includes("50:50"),
-      "should cite 50:50 ownership of Enceladus station",
+      content.includes("合同所有"),
+      "should cite joint ownership of Enceladus station",
+    );
+    // 50:50 was removed — unsourced claim
+    assert.ok(
+      !content.includes("50:50"),
+      "should NOT cite unsourced 50:50 split",
     );
   });
 
@@ -1430,12 +1435,13 @@ describe("infrastructure.md content validation", () => {
     assert.ok(content.includes("1名") || content.includes("管理人1名"), "should cite current staffing of 1");
   });
 
-  it("governance comparison table has 5 organizations", () => {
-    // table:comparison block should list 5 governance bodies
+  it("governance comparison table has 6 organizations", () => {
+    // table:comparison block should list 6 governance bodies
     assert.ok(content.includes("軌道公案機構"), "should cite 軌道公案機構");
     assert.ok(content.includes("木星軌道連合"), "should cite 木星軌道連合");
     assert.ok(content.includes("天王星自治有効機構"), "should cite 天王星自治有効機構");
     assert.ok(content.includes("国際連合軌道交番機構"), "should cite 国際連合軌道交番機構");
+    assert.ok(content.includes("地球軌道港湾機構"), "should cite 地球軌道港湾機構");
     assert.ok(content.includes("港湾航舎"), "should cite 港湾航舎");
   });
 
@@ -1456,6 +1462,58 @@ describe("infrastructure.md content validation", () => {
   it("cross-links to ship-kestrel and other-ships reports", () => {
     assert.ok(content.includes("ship-kestrel"), "should cross-link to ship-kestrel report");
     assert.ok(content.includes("other-ships"), "should cross-link to other-ships report");
+  });
+
+  // --- Task 276 regression tests ---
+
+  it("nuclear torpedo quotes cite correct timestamps (12:07 and 12:26)", () => {
+    assert.ok(content.includes("(12:07)"), "should cite 12:07 for kill-radius quote");
+    assert.ok(content.includes("(12:26)"), "should cite 12:26 for political restriction quote");
+    assert.ok(!content.includes("(11:58)"), "should NOT cite wrong timestamp 11:58");
+  });
+
+  it("beacon shutdown: distinguishes 700 total from 数百隻 stopped", () => {
+    assert.ok(
+      content.includes("約700隻のうち数百隻"),
+      "should distinguish total fleet (700) from those stopped (数百隻)",
+    );
+  });
+
+  it("セイラ・アンダース scene describes 1G detention, not 航法記録開示", () => {
+    assert.ok(
+      content.includes("1G重力区画") && content.includes("拘束"),
+      "should describe 1G detention scene",
+    );
+    assert.ok(
+      !content.includes("航法記録開示を要求"),
+      "should NOT claim 航法記録開示 (inaccurate)",
+    );
+  });
+
+  it("地球軌道港湾機構 and 自由圏 are documented", () => {
+    assert.ok(content.includes("地球軌道港湾機構"), "should cite 地球軌道港湾機構");
+    assert.ok(content.includes("自由圏"), "should cite 自由圏 jurisdictional category");
+  });
+
+  it("オービタルカーテン has dialogue citation", () => {
+    assert.ok(
+      content.includes("無誘導での航行"),
+      "should cite ケイ's quote about unguided navigation beyond Orbital Curtain",
+    );
+  });
+
+  it("火星 as story starting point is documented", () => {
+    assert.ok(
+      content.includes("火星（出発地") || content.includes("物語の起点"),
+      "should document Mars as the story's starting point",
+    );
+  });
+
+  it("cross-links to communications report", () => {
+    assert.ok(
+      content.includes("communications"),
+      "should cross-link to communications report",
+    );
   });
 });
 
