@@ -5,3 +5,5 @@ Claim a task, work on it, commit your changes, and push to origin.
 ここに書く一時的な指示を認識したらまずこのファイルを commit し、タスク化したり Design Doc に反映したら追加内容を削除して commit することで、人間からの指示を git history に残すこと。
 以下追加指示（新しい記述を見逃さないようにするため、削除前に git diff を再確認すること。）
 ---
+
+- 第一話の脚本: https://note.com/yuepicos/n/n37649d99e32d
