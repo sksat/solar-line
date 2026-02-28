@@ -934,6 +934,24 @@ describe("cross-episode.md content validation", () => {
       "should reference Tsiolkovsky rocket equation");
   });
 
+  it("propellant budget: total ΔV matches cross-episode (36,156 km/s)", () => {
+    assert.ok(content.includes("36,156") || content.includes("36156"),
+      "should cite corrected total ΔV of 36,156 km/s (not old 31,500)");
+    assert.ok(!content.includes("31,500") && !content.includes("31500"),
+      "should NOT cite obsolete total ΔV of 31,500 km/s");
+  });
+
+  it("mass timeline chart uses corrected EP2 transit (~87 days, not ~455 days)", () => {
+    // The mass timeline x-axis should have Enceladus arrival around day 93, not day 458
+    assert.ok(!content.includes("457.96"),
+      "mass timeline should NOT use old 457.96-day Enceladus arrival");
+  });
+
+  it("nozzle margin percentage matches ep05 (0.78%)", () => {
+    assert.ok(content.includes("0.78%"),
+      "should cite nozzle margin as 0.78% (matching ep05 precision)");
+  });
+
   // --- 3D orbital analysis data consistency (vs 3d_orbital_analysis.json) ---
 
   it("3D: Saturn ring approach angle ~9.3° (not 27°)", () => {
