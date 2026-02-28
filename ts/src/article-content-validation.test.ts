@@ -743,3 +743,82 @@ describe("communications.md content validation", () => {
     );
   });
 });
+
+// ============================================================
+// Attitude-control report: physics calculations
+// ============================================================
+
+describe("attitude-control.md content validation", () => {
+  const content = readReport("attitude-control.md");
+
+  it("moment of inertia values for pitch/yaw and roll", () => {
+    assert.ok(
+      content.includes("45,796,000"),
+      "should cite pitch/yaw moment of inertia 45,796,000 kg·m²",
+    );
+    assert.ok(
+      content.includes("1,350,000"),
+      "should cite roll moment of inertia 1,350,000 kg·m²",
+    );
+  });
+
+  it("EP03 nav crisis: 1.23° angle and 14,390,000 km miss", () => {
+    assert.ok(content.includes("1.23°") || content.includes("1.23度"), "should cite 1.23° angle");
+    assert.ok(
+      content.includes("14,390,000") || content.includes("14{,}390{,}000"),
+      "should cite calculated miss distance 14,390,000 km",
+    );
+  });
+
+  it("EP03 nav crisis accuracy: 0.2% match with in-story value", () => {
+    assert.ok(
+      content.includes("0.2%"),
+      "should cite 0.2% accuracy between calculated and in-story values",
+    );
+  });
+
+  it("INS drift rate calculation: 0.01°/h × 143h = 1.43°", () => {
+    assert.ok(content.includes("0.01°/h"), "should cite INS drift rate 0.01°/h");
+    assert.ok(content.includes("1.43°"), "should cite accumulated drift 1.43°");
+  });
+
+  it("EP05 arrival precision: 20 km at 18.2 AU = 1.5 milliarcsec", () => {
+    assert.ok(content.includes("20 km") || content.includes("20km"), "should cite 20 km arrival precision");
+    assert.ok(content.includes("18.2 AU"), "should cite 18.2 AU distance");
+    assert.ok(
+      content.includes("1.5") && content.includes("milliarcsec"),
+      "should cite 1.5 milliarcsec angular precision",
+    );
+  });
+
+  it("flip maneuver RCS requirements: 300s flip needs 830 N", () => {
+    assert.ok(content.includes("830 N") || content.includes("830N"), "should cite 830 N RCS thrust for 300s flip");
+  });
+
+  it("ship length 42.8 m and mass 300 t consistent with KESTREL", () => {
+    assert.ok(content.includes("42.8"), "should cite ship length 42.8 m");
+    assert.ok(content.includes("300 t") || content.includes("300t"), "should cite estimated mass 300 t");
+  });
+
+  it("gravity gradient torque at LEO 400 km", () => {
+    assert.ok(content.includes("400 km"), "should cite LEO altitude 400 km");
+    assert.ok(
+      content.includes("重力傾斜トルク") || content.includes("gravity gradient"),
+      "should discuss gravity gradient torque",
+    );
+  });
+
+  it("evaluation table covers all 5 episodes with checkmarks", () => {
+    const checkmarks = (content.match(/✅/g) || []).length;
+    assert.ok(
+      checkmarks >= 5,
+      `should have at least 5 positive evaluations, got ${checkmarks}`,
+    );
+    // Should also mention conditional items (⚠️)
+    const warnings = (content.match(/⚠️/g) || []).length;
+    assert.ok(
+      warnings >= 2,
+      `should have at least 2 conditional items, got ${warnings}`,
+    );
+  });
+});
