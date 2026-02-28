@@ -50,7 +50,7 @@
       "acceleration_m_s2": 27.31,
       "acceleration_G": 2.78,
       "impliedMass_t_at9_8MN": 359,
-      "consistencyWithExistingAnalysis": "既存分析の質量境界（≤452t）と完全に整合。300-452t範囲の中間値。"
+      "consistencyWithExistingAnalysis": "既存分析の質量境界（≤452.5t）と完全に整合。300-452.5t範囲の中間値。"
     },
     "saturnEscape": {
       "deltaV_m_s": 4310,
