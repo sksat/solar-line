@@ -74,7 +74,7 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
   {
     episode: 4,
     route: "タイタニア（天王星）→ 地球（出発）",
-    transferTime: "8.3日（300t想定）〜105日（48,000t想定）",
+    transferTime: "507h（EP05複合航路の出発計画）",
     brachistochroneDeltaV: 1202, // at 48,000t, 65% thrust
     massBoundaryT: null, // wide range feasible
     thrustUsedMN: 6.37,
@@ -85,7 +85,7 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
   {
     episode: 5,
     route: "天王星→地球（到着・捕捉）",
-    transferTime: "8.3日（300t）〜105日（48,000t）※暫定",
+    transferTime: "507h（複合航路: 巡航375h + フライバイ + 地球投入）",
     brachistochroneDeltaV: 15207, // at 300t, 65% thrust
     massBoundaryT: null, // analysis pending subtitle data
     thrustUsedMN: 6.37,

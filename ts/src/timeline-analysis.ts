@@ -250,16 +250,24 @@ function findEP03Transfer(ep02ArrivalJD: number): TimelineEvent {
 
 /**
  * EP04-05: Titania (Uranus) → Earth
- * Brachistochrone transfer, duration depends on mass assumption
+ * Composite route, 507 hours (ep05 02:36 ケイ: "推定所要時間は507時間")
+ *
+ * The anime depicts a multi-phase route:
+ *   天王星脱出 → 巡航375h → 木星フライバイ → 減速 → 地球LEO投入
+ *
+ * Previous estimate of 8.3 days (199.2h) was from simple brachistochrone at
+ * 300t, but the depicted composite route with 375h coast to Jupiter is 507h.
+ * This is confirmed by きりたん's dialogue: 「15日以上何もないのか」
+ * (375h ≈ 15.6 days coast phase).
  */
 function findEP04Transfer(ep03ArrivalJD: number): TimelineEvent {
   // Events at Uranus: plasmoid encounter, fleet intercept, etc.
   const uranusStayDays = 2;
   const departureJD = ep03ArrivalJD + uranusStayDays;
 
-  // At 300t: ~8.3 days; at 48,000t: ~105 days. Use ~8 days for the story pace
-  const durationDays = 8.3;
-  const durationHours = durationDays * 24;
+  // 507h composite route from EP05 dialogue (ep05 02:36)
+  const durationHours = 507;
+  const durationDays = durationHours / 24; // ≈ 21.125 days
   const arrivalJD = departureJD + durationDays;
 
   const uraLon = planetLongitude("uranus", departureJD);
@@ -276,7 +284,7 @@ function findEP04Transfer(ep03ArrivalJD: number): TimelineEvent {
     episode: 4,
     transferId: "ep04-transfer-03",
     description:
-      "ティタニア (天王星) → 地球, brachistochrone",
+      "ティタニア (天王星) → 地球, 複合航路 507h",
     departureJD,
     departureDate: jdToDateString(departureJD),
     arrivalJD,
@@ -287,7 +295,7 @@ function findEP04Transfer(ep03ArrivalJD: number): TimelineEvent {
     departureLongitude: uraLon,
     arrivalLongitude: earthLon,
     phaseAngleAtDeparture: phase,
-    notes: `天王星-地球距離: ${(distKm / 149_597_870.7).toFixed(2)} AU`,
+    notes: `天王星-地球距離: ${(distKm / 149_597_870.7).toFixed(2)} AU; 巡航375h + フライバイ + 地球投入の複合航路`,
   };
 }
 

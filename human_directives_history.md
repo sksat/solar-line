@@ -1,5 +1,10 @@
 # 人間からの指示履歴
 
+## 2026-02-28 (commit a5cb826)
+
+20. **GitHub repo link**: Web page から GitHub repo へのリンクをもっと目立つ場所に → nav bar に追加
+21. **15日以上の描写制約**: EP05で「15日以上何もないのか」（巡航375h）という台詞あり。クロスエピソード分析のEP04-05遷移時間が8.3日（brachistochrone推定）だったが、作中の複合航路507hに修正。全行程 ~111日 → ~124日に更新。制約テスト（timeline-constraints.test.ts）を新設。
+
 ## 2026-02-28 (commit a2f57d8)
 
 18. **EP03 captive identity**: 3話で地球軍に捕まっているのはきりたんではない可能性 → Task 210

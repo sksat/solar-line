@@ -813,7 +813,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <script defer src="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.iife.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}${metaNav}</nav>
+<nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}${metaNav}<span class="nav-sep">|</span><a href="https://github.com/sksat/solar-line" target="_blank" rel="noopener">GitHub</a></nav>
 <div class="site-banner"><strong>⚠ ネタバレ注意:</strong> 本サイトはSFアニメ「SOLAR LINE」の内容を詳細に分析しています。未視聴の方はご注意ください。<br><strong>📝 AI生成コンテンツ:</strong> 本考証の大部分は AI（Claude Code 等）によって生成されています。内容の正確性については原作および引用元をご確認ください。</div>
 ${content}
 <footer>SOLAR LINE 考証 — <a href="https://claude.ai/code">Claude Code</a> により生成 | <a href="https://github.com/sksat/solar-line">GitHub</a> | <a href="${basePath}/doc/solar_line_core/index.html">API Docs</a></footer>

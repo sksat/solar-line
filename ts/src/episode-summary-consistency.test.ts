@@ -345,8 +345,8 @@ describe("MDX report↔TypeScript consistency", () => {
       );
     });
 
-    it("total mission timeline should reflect corrected EP02 (~111 days, not 479)", () => {
-      // With EP02 at ~87 days instead of 455, total mission is ~111 days
+    it("total mission timeline should reflect corrected EP02 (~124 days, not 479)", () => {
+      // With EP02 at ~87 days instead of 455, total mission is ~124 days
       // The MDX should not state 479 days as the total mission duration
       // unless explicitly discussing the legacy/old calculation
       const ep02 = analyzeEpisode2();
@@ -354,7 +354,7 @@ describe("MDX report↔TypeScript consistency", () => {
       // EP01: 3 days, EP03: ~6 days, EP04-05: ~21 days = ~30 days + EP02
       const approxTotal = ep02Days + 30;
       assert.ok(approxTotal < 200,
-        `corrected total mission should be ~111 days, not 479 (EP02=${ep02Days.toFixed(0)}d)`);
+        `corrected total mission should be ~124 days, not 479 (EP02=${ep02Days.toFixed(0)}d)`);
     });
 
     it("ΔV scaling table EP02 should not claim brachistochrone ΔV", () => {

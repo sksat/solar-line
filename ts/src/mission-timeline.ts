@@ -2,7 +2,7 @@
  * Mission Timeline Data Generation
  *
  * Computes multi-track time-series data spanning the full SOLAR LINE mission
- * (~111 days). Used for the cross-episode visual timeline visualization.
+ * (~124 days). Used for the cross-episode visual timeline visualization.
  *
  * Tracks:
  *   1. Distance from Sun (AU)
@@ -46,7 +46,7 @@ export interface MissionPhase {
 /**
  * Canonical mission phases derived from episode analyses.
  *
- * Timeline (2241-09-05 to 2241-12-25, ~111 days):
+ * Timeline (2241-09-05 to 2242-01-07, ~124 days):
  *   EP01: Day 0-3      Mars → Ganymede (72h brachistochrone)
  *   Stay: Day 3-6      Jupiter system events
  *   EP02: Day 6-93     Jupiter → Saturn/Enceladus (~87 days, trim thrust)
@@ -390,7 +390,7 @@ export function buildDistanceChart(): TimeSeriesChart {
     id: "mission-distance-timeline",
     title: "太陽からの距離（全ミッション）",
     description:
-      "約111日間の全ミッションにわたるケストレル号の太陽中心距離を示す。火星（1.5 AU）から天王星（19.2 AU）まで外側に移動した後、地球（1.0 AU）に帰還する様子が読み取れる。EP02の約87日間のトリム推力遷移（5→10 AU）が最も緩やかな勾配を示し、EP05の帰還航路（19→1 AU）が最も急峻。各話の時間帯を背景色で区分している。",
+      "約124日間の全ミッションにわたるケストレル号の太陽中心距離を示す。火星（1.5 AU）から天王星（19.2 AU）まで外側に移動した後、地球（1.0 AU）に帰還する様子が読み取れる。EP02の約87日間のトリム推力遷移（5→10 AU）が最も緩やかな勾配を示し、EP05の帰還航路（19→1 AU）が最も急峻。各話の時間帯を背景色で区分している。",
     xLabel: "ミッション経過 (日)",
     yLabel: "太陽中心距離 (AU)",
     width: 700,
