@@ -577,11 +577,97 @@ describe("other-ships.md content validation", () => {
     assert.ok(content.includes("商船群"), "should have merchant fleet section");
   });
 
-  it("nuclear torpedo pass-through time calculation is present", () => {
-    // 0.038 seconds = 2×40km / 2100 km/s
+  it("nuclear torpedo pass-through time calculation is present and consistent", () => {
+    // 0.038 seconds = 2×40km / 2100 km/s (the only correct value)
     assert.ok(
-      content.includes("0.038") || content.includes("0.019"),
-      "should cite nuclear torpedo pass-through time",
+      content.includes("0.038"),
+      "should cite nuclear torpedo pass-through time as 0.038 s",
+    );
+    assert.ok(
+      !content.includes("0.019"),
+      "should NOT cite the incorrect 0.019 s value (half of actual)",
+    );
+  });
+
+  // --- Task 277 regression tests ---
+
+  it("nuclear torpedo quote has correct timestamp (12:07, not 11:58)", () => {
+    assert.ok(
+      content.includes("殺傷半径は40km程度") && content.includes("12:07"),
+      "nuclear torpedo kill radius quote should have timestamp 12:07",
+    );
+  });
+
+  it("propellant ratio is ~0.51%, not 0.05%", () => {
+    assert.ok(
+      content.includes("0.51%"),
+      "propellant ratio should be ~0.51% for 50 km/s ΔV at Isp 10^6 s",
+    );
+    assert.ok(
+      !content.includes("~0.05%"),
+      "should NOT cite incorrect 0.05% propellant ratio",
+    );
+  });
+
+  it("EP04 fleet uses 9.36 AU epoch distance, not 10 AU", () => {
+    assert.ok(
+      content.includes("9.36 AU") || content.includes("9.4 AU"),
+      "should reference epoch-specific Saturn-Uranus distance (~9.36 AU)",
+    );
+  });
+
+  it("EP02 large ship quote has correct timestamp (17:31)", () => {
+    assert.ok(
+      content.includes("10倍以上") && content.includes("(17:31)"),
+      "EP02 large ship quote should have timestamp 17:31",
+    );
+  });
+
+  it("EP05 security boat quote has correct timestamp (14:31)", () => {
+    assert.ok(
+      content.includes("保安艇が2隻") && content.includes("(14:31)"),
+      "EP05 security boat quote should have timestamp 14:31",
+    );
+  });
+
+  it("includes EP03 保安艇エシュロン section", () => {
+    assert.ok(
+      content.includes("エシュロン"),
+      "should include EP03 security boat Echelon",
+    );
+    assert.ok(
+      content.includes("セイラ・アンダース"),
+      "should mention the officer Seira Anders",
+    );
+  });
+
+  it("includes EP01 pursuit ships section", () => {
+    assert.ok(
+      content.includes("火星の査察艇"),
+      "should mention Mars inspection boats from EP01",
+    );
+    assert.ok(
+      content.includes("追跡の発端"),
+      "should have EP01 pursuit origin section",
+    );
+  });
+
+  it("all dialogue quotes have timestamps", () => {
+    // All quotes in format "speakerName「text」" should be followed by (timestamp)
+    // Speaker names: きりたん, ケイ, 船乗り, エンケラドスの管理人
+    const quotePattern = /(?:きりたん|ケイ|船乗り|エンケラドスの管理人)「[^」]+」(?!\s*\()/g;
+    const quotesWithoutTimestamp: string[] = [];
+    let match: RegExpExecArray | null;
+    while ((match = quotePattern.exec(content)) !== null) {
+      // Skip if it's inside a JSON block (table/component/glossary definitions)
+      const before = content.substring(Math.max(0, match.index - 200), match.index);
+      if (before.includes('"definition"') || before.includes('"text"') || before.includes('"values"')) continue;
+      quotesWithoutTimestamp.push(match[0].substring(0, 50) + "...");
+    }
+    assert.deepStrictEqual(
+      quotesWithoutTimestamp,
+      [],
+      "all narrative dialogue quotes should have timestamps",
     );
   });
 });
