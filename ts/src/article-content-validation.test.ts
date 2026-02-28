@@ -278,6 +278,79 @@ describe("EP05 article content validation", () => {
 });
 
 // ============================================================
+// Other-ships report content validation
+// ============================================================
+
+describe("other-ships.md content validation", () => {
+  const content = readReport("other-ships.md");
+
+  it("has orbital diagrams for EP02, EP04, and EP05 ship encounters", () => {
+    assert.ok(
+      content.includes("other-ships-ep02-ambush"),
+      "should have EP02 large ship ambush diagram",
+    );
+    assert.ok(
+      content.includes("other-ships-fleet-saturn-uranus"),
+      "should have EP04 fleet diagram",
+    );
+    assert.ok(
+      content.includes("other-ships-ep05-intercept"),
+      "should have EP05 security boat intercept diagram",
+    );
+  });
+
+  it("EP02 ambush diagram references Saturn system and Enceladus", () => {
+    // The diagram should be Saturn-centric with Enceladus
+    assert.ok(
+      content.includes('"centerLabel": "土星"'),
+      "EP02 diagram should be Saturn-centric",
+    );
+    assert.ok(
+      content.includes('"label": "エンケラドス"'),
+      "EP02 diagram should show Enceladus orbit",
+    );
+  });
+
+  it("EP05 intercept diagram references Jupiter flyby geometry", () => {
+    assert.ok(
+      content.includes('"label": "木星'),
+      "EP05 diagram should show Jupiter",
+    );
+    assert.ok(
+      content.includes("保安艇派遣"),
+      "EP05 diagram should show security boat dispatch route",
+    );
+  });
+
+  it("all diagrams have descriptions", () => {
+    // Per CLAUDE.md: orbital diagrams should have descriptions
+    const diagramBlocks = content.split("component:orbital-diagram");
+    // First element is before any diagram, so skip it
+    for (let i = 1; i < diagramBlocks.length; i++) {
+      assert.ok(
+        diagramBlocks[i].includes('"description"'),
+        `orbital diagram ${i} should have a description field`,
+      );
+    }
+  });
+
+  it("references all 4 ship categories", () => {
+    assert.ok(content.includes("大型船"), "should have large ship section");
+    assert.ok(content.includes("公安艦隊"), "should have public safety fleet section");
+    assert.ok(content.includes("保安艇"), "should have security boat section");
+    assert.ok(content.includes("商船群"), "should have merchant fleet section");
+  });
+
+  it("nuclear torpedo pass-through time calculation is present", () => {
+    // 0.038 seconds = 2×40km / 2100 km/s
+    assert.ok(
+      content.includes("0.038") || content.includes("0.019"),
+      "should cite nuclear torpedo pass-through time",
+    );
+  });
+});
+
+// ============================================================
 // Cross-report consistency: same values in multiple reports
 // ============================================================
 

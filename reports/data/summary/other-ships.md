@@ -92,6 +92,73 @@ Isp が同等であれば質量比は変わらない。つまり**エンジン�
 }
 ```
 
+### 待ち伏せの軌道図
+
+以下は土星系での待ち伏せ配置の概念図である。ケストレルのエンケラドス捕獲軌道上に大型船が先回りして待機しており、相対速度0.12 km/sで遭遇する。
+
+```component:orbital-diagram
+{
+  "id": "other-ships-ep02-ambush",
+  "title": "大型船の待ち伏せ配置（第2話、土星中心座標）",
+  "description": "ケストレルがトリム推力遷移（約87日）で土星圏に接近する際、エンケラドス軌道近傍で正体不明の大型船が待ち伏せている状況を示す。大型船はケストレルの予測軌道を事前に計算し、ほぼ同一軌道に先回り投入されている（相対速度0.12 km/s）。このような精密配置が可能であることは、港湾航舎体系による軌道予測の信頼性と、大型船の推進能力（≥50 km/s ΔV）を証明している。",
+  "centerLabel": "土星",
+  "scaleMode": "sqrt",
+  "radiusUnit": "km",
+  "orbits": [
+    {
+      "id": "rings-outer",
+      "label": "環外縁 (F環)",
+      "radius": 140180,
+      "color": "#c9a84422"
+    },
+    {
+      "id": "enceladus",
+      "label": "エンケラドス",
+      "radius": 238020,
+      "color": "#58a6ff",
+      "angle": 2.09
+    },
+    {
+      "id": "tethys",
+      "label": "テティス",
+      "radius": 294619,
+      "color": "#8b949e",
+      "angle": 3.67
+    },
+    {
+      "id": "titan",
+      "label": "タイタン",
+      "radius": 1221870,
+      "color": "#d29922",
+      "angle": 4.19
+    },
+    {
+      "id": "approach-30rs",
+      "label": "接近点 (30 RS)",
+      "radius": 1808040,
+      "color": "#f8514944",
+      "angle": 5.5
+    }
+  ],
+  "transfers": [
+    {
+      "label": "ケストレル捕獲軌道（v∞=4.69 km/s）",
+      "fromOrbitId": "approach-30rs",
+      "toOrbitId": "enceladus",
+      "color": "#3fb950",
+      "style": "hyperbolic"
+    },
+    {
+      "label": "大型船待ち伏せ位置（相対速度0.12 km/s）",
+      "fromOrbitId": "titan",
+      "toOrbitId": "enceladus",
+      "color": "#ff6b6b",
+      "style": "hohmann"
+    }
+  ]
+}
+```
+
 ## 地球公安艦隊（第4話）
 
 第4話（13:18）、天王星系タイタニアに向けて接近中の地球の艦隊が検出される。
@@ -196,6 +263,60 @@ $$t_{\text{通過}} = \frac{2 \times 40\ \mathrm{km}}{2100\ \mathrm{km/s}} \appr
 $$a = \frac{2 \times 7.8 \times 10^8\ \mathrm{km}}{(t)^2}$$
 
 仮に72時間で到達しようとすると a ≈ 0.17 m/s²、ΔV ≈ 21.8 km/s となる。ケストレルの第1話ミッション（火星→ガニメデ72時間）と同等の機動力が必要であり、地球の軍用保安艇がこれを実現できることは作品世界の技術水準と整合する。
+
+### 木星圏迎撃の軌道図
+
+以下はケストレルの木星フライバイ経路と保安艇の待ち伏せ位置の概念図である。保安艇は地球から派遣され、ケストレルの予測フライバイ軌道上に先回りして配置されている。
+
+```component:orbital-diagram
+{
+  "id": "other-ships-ep05-intercept",
+  "title": "保安艇の木星圏迎撃配置（第5話、太陽中心座標）",
+  "description": "ケストレルが天王星→地球帰還の中継点として木星フライバイを行うルートに対し、地球保安艇2隻がフライバイ予測地点に先回り待機している状況。保安艇は港湾航舎体系の軌道データに基づいてケストレルの経路を予測したが、ケストレル側は木星旧式ビーコン網による欺瞞航跡でこれを回避。ケストレルの速度（~2,100 km/s）では核魚雷（殺傷半径40 km）の有効滞留時間が0.038秒に過ぎず、物理的に迎撃不可能。",
+  "centerLabel": "太陽",
+  "scaleMode": "sqrt",
+  "radiusUnit": "AU",
+  "orbits": [
+    {
+      "id": "earth-orbit",
+      "label": "地球 (1.0 AU)",
+      "radius": 1,
+      "color": "#4488ff",
+      "angle": 1.80
+    },
+    {
+      "id": "jupiter-orbit",
+      "label": "木星 (5.20 AU)",
+      "radius": 5.2,
+      "color": "#ffaa44",
+      "angle": 3.13
+    },
+    {
+      "id": "uranus-orbit",
+      "label": "天王星 (19.2 AU)",
+      "radius": 19.2,
+      "color": "#66dddd",
+      "angle": 4.80
+    }
+  ],
+  "transfers": [
+    {
+      "label": "ケストレル帰還航路（507h複合）",
+      "fromOrbitId": "uranus-orbit",
+      "toOrbitId": "earth-orbit",
+      "color": "#3fb950",
+      "style": "brachistochrone"
+    },
+    {
+      "label": "保安艇派遣（地球→木星）",
+      "fromOrbitId": "earth-orbit",
+      "toOrbitId": "jupiter-orbit",
+      "color": "#ff6b6b",
+      "style": "brachistochrone"
+    }
+  ]
+}
+```
 
 ## 太陽系商船群
 
