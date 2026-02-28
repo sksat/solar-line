@@ -125,6 +125,55 @@ describe("tech-overview.md content validation", () => {
     );
   });
 
+  it("body total test count matches stats table total", () => {
+    // Body says "X,XXXのテスト" and table says "テスト数 | X,XXX"
+    const tableMatch = content.match(
+      /テスト数 \| ([\d,]+)/,
+    );
+    const bodyMatch = content.match(/([\d,]+)のテスト/);
+    assert.ok(tableMatch, "stats table should have total test count");
+    assert.ok(bodyMatch, "body text should have total test count");
+    const tableTotal = tableMatch![1].replace(/,/g, "");
+    const bodyTotal = bodyMatch![1].replace(/,/g, "");
+    assert.strictEqual(
+      bodyTotal,
+      tableTotal,
+      `body total "${bodyTotal}" should match table total "${tableTotal}"`,
+    );
+  });
+
+  it("body TS test count matches stats table TS count", () => {
+    const tableMatch = content.match(/TS ([\d,]+)/);
+    const bodyMatch = content.match(
+      /TypeScript ユニットテスト.+?([\d,]+)件/,
+    );
+    assert.ok(tableMatch, "stats table should have TS count");
+    assert.ok(bodyMatch, "body should have TS unit test count");
+    const tableCount = tableMatch![1].replace(/,/g, "");
+    const bodyCount = bodyMatch![1].replace(/,/g, "");
+    assert.strictEqual(
+      bodyCount,
+      tableCount,
+      `body TS count "${bodyCount}" should match table TS count "${tableCount}"`,
+    );
+  });
+
+  it("body E2E test count matches stats table E2E count", () => {
+    const tableMatch = content.match(/E2E ([\d,]+)/);
+    const bodyMatch = content.match(
+      /Playwright E2E テスト.+?([\d,]+)件/,
+    );
+    assert.ok(tableMatch, "stats table should have E2E count");
+    assert.ok(bodyMatch, "body should have E2E test count");
+    const tableCount = tableMatch![1].replace(/,/g, "");
+    const bodyCount = bodyMatch![1].replace(/,/g, "");
+    assert.strictEqual(
+      bodyCount,
+      tableCount,
+      `body E2E count "${bodyCount}" should match table E2E count "${tableCount}"`,
+    );
+  });
+
   it("mentions all three integrator types in comparison", () => {
     assert.ok(content.includes("RK4"), "should mention RK4");
     assert.ok(
