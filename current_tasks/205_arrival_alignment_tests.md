@@ -1,6 +1,6 @@
 # Task 205: Orbital Animation Arrival Alignment Verification & Tests
 
-## Status: NOT STARTED
+## Status: DONE
 
 ## Priority: HIGH
 

@@ -1444,6 +1444,38 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
 
   const isAnimated = !!diagram.animation;
 
+  // For animated diagrams, compute reference times for each orbit.
+  // orbit.angle is correct at a specific animation time:
+  // - For departure bodies: at the transfer's startTime
+  // - For arrival bodies: at the transfer's endTime
+  // The animation initialAngle = orbit.angle - meanMotion * refTime
+  // so that at t=refTime, the animated position equals orbit.angle.
+  const orbitRefTime = new Map<string, number>();
+  if (isAnimated) {
+    for (const t of diagram.transfers) {
+      if (t.startTime === undefined || t.endTime === undefined) continue;
+      // Departure body should be at orbit.angle at startTime
+      if (!orbitRefTime.has(t.fromOrbitId)) {
+        orbitRefTime.set(t.fromOrbitId, t.startTime);
+      }
+      // Arrival body should be at orbit.angle at endTime
+      if (!orbitRefTime.has(t.toOrbitId)) {
+        orbitRefTime.set(t.toOrbitId, t.endTime);
+      }
+    }
+  }
+
+  /**
+   * Get the animated angle for an orbit at a given animation time.
+   * Uses the reference-time-corrected initialAngle.
+   */
+  function animatedAngleAt(orbit: OrbitDefinition, time: number): number {
+    const refTime = orbitRefTime.get(orbit.id) ?? 0;
+    const mm = orbit.meanMotion ?? 0;
+    const initialAngle = (orbit.angle ?? 0) - mm * refTime;
+    return initialAngle + mm * time;
+  }
+
   // Draw orbit labels and optional body dots
   const orbitLabels = diagram.orbits.map(orbit => {
     const r = orbitPxMap.get(orbit.id)!;
@@ -1525,7 +1557,17 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
     if (!fromOrbit || !toOrbit) return "";
     const fromPx = orbitPxMap.get(t.fromOrbitId)!;
     const toPx = orbitPxMap.get(t.toOrbitId)!;
-    const pathD = transferArcPath(t.style, fromOrbit, toOrbit, fromPx, toPx);
+    // For animated transfers, use the body's animated angle at transfer start/end
+    // so the arc matches where bodies actually are during the animation.
+    let arcFromOrbit = fromOrbit;
+    let arcToOrbit = toOrbit;
+    if (isAnimated && t.startTime !== undefined && t.endTime !== undefined) {
+      const fromAngleAtStart = animatedAngleAt(fromOrbit, t.startTime);
+      const toAngleAtEnd = animatedAngleAt(toOrbit, t.endTime);
+      arcFromOrbit = { ...fromOrbit, angle: fromAngleAtStart };
+      arcToOrbit = { ...toOrbit, angle: toAngleAtEnd };
+    }
+    const pathD = transferArcPath(t.style, arcFromOrbit, arcToOrbit, fromPx, toPx);
     const dashArray = t.style === "brachistochrone" ? ' stroke-dasharray="8 4"' : "";
     const arrowId = `arrow-${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}-${idx}`;
     const transferPathAttr = isAnimated ? ` data-transfer-path="${escapeHtml(t.fromOrbitId)}-${escapeHtml(t.toOrbitId)}-${idx}"` : "";
@@ -1707,13 +1749,17 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
       durationSeconds: diagram.animation.durationSeconds,
       orbits: diagram.orbits
         .filter(o => o.angle !== undefined)
-        .map(o => ({
+        .map(o => {
+          const mm = o.meanMotion ?? 0;
+          const refTime = orbitRefTime.get(o.id) ?? 0;
+          return {
           id: o.id,
-          initialAngle: o.angle!,
-          meanMotion: o.meanMotion ?? 0,
+          initialAngle: o.angle! - mm * refTime,
+          meanMotion: mm,
           radiusPx: orbitPxMap.get(o.id)!,
           color: o.color,
-        })),
+        };
+        }),
       scenarios: diagram.scenarios?.map(s => ({ id: s.id, label: s.label })),
       transfers: diagram.transfers
         .map((t, idx) => ({ t, idx }))

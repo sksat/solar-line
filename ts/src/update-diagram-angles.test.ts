@@ -253,3 +253,170 @@ describe("burn marker angles aligned with planet positions", () => {
     }
   });
 });
+
+// --- Task 205: Animated body arrival alignment for real diagrams ---
+
+import { renderOrbitalDiagram } from "./templates.ts";
+
+/**
+ * Extract animation JSON from rendered HTML.
+ */
+function extractAnimJson(html: string): {
+  durationSeconds: number;
+  orbits: Array<{ id: string; initialAngle: number; meanMotion: number; radiusPx: number }>;
+  transfers: Array<{ fromOrbitId: string; toOrbitId: string; startTime: number; endTime: number; pathId: string }>;
+} | null {
+  const m = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+  if (!m) return null;
+  return JSON.parse(m[1]);
+}
+
+/** Extract path endpoint coordinates */
+function extractEndpoint(html: string, pathId: string): { x: number; y: number } | null {
+  const pathRegex = new RegExp(`<path[^>]*data-transfer-path="${pathId}"[^>]*>`);
+  const elemMatch = html.match(pathRegex);
+  if (!elemMatch) return null;
+  const dMatch = elemMatch[0].match(/d="([^"]+)"/);
+  if (!dMatch) return null;
+  const d = dMatch[1];
+  const quadMatch = d.match(/Q\s+[\d.e+-]+\s+[\d.e+-]+\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+  if (quadMatch) return { x: parseFloat(quadMatch[1]), y: parseFloat(quadMatch[2]) };
+  const arcMatch = d.match(/A\s+[\d.e+-]+\s+[\d.e+-]+\s+[\d.e+-]+\s+[\d.e+-]+\s+[\d.e+-]+\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+  if (arcMatch) return { x: parseFloat(arcMatch[1]), y: parseFloat(arcMatch[2]) };
+  return null;
+}
+
+describe("Task 205: animated arrival alignment in episode diagrams", () => {
+  for (let ep = 1; ep <= 5; ep++) {
+    it(`EP${String(ep).padStart(2, "0")} animated diagrams: arrival bodies align at t=endTime`, () => {
+      const report = readEpisodeReport(ep);
+      const animatedDiagrams = (report.diagrams ?? []).filter(d => d.animation);
+
+      for (const diagram of animatedDiagrams) {
+        const html = renderOrbitalDiagram(diagram);
+        const animData = extractAnimJson(html);
+        if (!animData) continue;
+
+        for (const transfer of animData.transfers) {
+          const toOrbit = animData.orbits.find(o => o.id === transfer.toOrbitId);
+          if (!toOrbit || toOrbit.meanMotion === 0) continue;
+
+          // Compute animated position at t=endTime
+          const animAngle = toOrbit.initialAngle + toOrbit.meanMotion * transfer.endTime;
+          const r = toOrbit.radiusPx;
+          const animX = r * Math.cos(animAngle);
+          const animY = -r * Math.sin(animAngle);
+
+          const endpoint = extractEndpoint(html, transfer.pathId);
+          if (!endpoint) continue;
+
+          const dist = Math.sqrt((endpoint.x - animX) ** 2 + (endpoint.y - animY) ** 2);
+          assert.ok(
+            dist < 5,
+            `${diagram.id}: ${transfer.fromOrbitId}→${transfer.toOrbitId} arrival body at t=${transfer.endTime} ` +
+            `should match arc endpoint. distance=${dist.toFixed(1)}px`,
+          );
+        }
+      }
+    });
+  }
+
+  it("cross-episode full-route diagram: arrival bodies align at t=endTime", () => {
+    const summary = loadSummaryBySlug(summaryDir, "cross-episode");
+    for (const section of summary.sections) {
+      for (const diagram of section.orbitalDiagrams ?? []) {
+        if (!diagram.animation) continue;
+        const html = renderOrbitalDiagram(diagram);
+        const animData = extractAnimJson(html);
+        if (!animData) continue;
+
+        for (const transfer of animData.transfers) {
+          const toOrbit = animData.orbits.find(o => o.id === transfer.toOrbitId);
+          if (!toOrbit || toOrbit.meanMotion === 0) continue;
+
+          const animAngle = toOrbit.initialAngle + toOrbit.meanMotion * transfer.endTime;
+          const r = toOrbit.radiusPx;
+          const animX = r * Math.cos(animAngle);
+          const animY = -r * Math.sin(animAngle);
+
+          const endpoint = extractEndpoint(html, transfer.pathId);
+          if (!endpoint) continue;
+
+          const dist = Math.sqrt((endpoint.x - animX) ** 2 + (endpoint.y - animY) ** 2);
+          assert.ok(
+            dist < 5,
+            `${diagram.id}: ${transfer.fromOrbitId}→${transfer.toOrbitId} arrival alignment ` +
+            `distance=${dist.toFixed(1)}px (should be <5)`,
+          );
+        }
+      }
+    }
+  });
+
+  it("cross-episode: EP(N) arrival position ≈ EP(N+1) departure position", () => {
+    const summary = loadSummaryBySlug(summaryDir, "cross-episode");
+    let fullRoute: OrbitalDiagram | undefined;
+    for (const section of summary.sections) {
+      for (const d of section.orbitalDiagrams ?? []) {
+        if (d.id === "full-route-diagram") fullRoute = d;
+      }
+    }
+    if (!fullRoute?.animation) return;
+
+    const html = renderOrbitalDiagram(fullRoute);
+    const animData = extractAnimJson(html);
+    if (!animData) return;
+
+    // Sort transfers by startTime to get sequential legs
+    const sortedTransfers = [...animData.transfers].sort((a, b) => a.startTime - b.startTime);
+
+    for (let i = 0; i < sortedTransfers.length - 1; i++) {
+      const leg1 = sortedTransfers[i];
+      const leg2 = sortedTransfers[i + 1];
+
+      // Check if leg1's arrival orbit is leg2's departure orbit (intermediate body)
+      if (leg1.toOrbitId !== leg2.fromOrbitId) continue;
+
+      const body = animData.orbits.find(o => o.id === leg1.toOrbitId);
+      if (!body || body.meanMotion === 0) continue;
+
+      // Body position at leg1 arrival
+      const arrAngle = body.initialAngle + body.meanMotion * leg1.endTime;
+      // Body position at leg2 departure
+      const depAngle = body.initialAngle + body.meanMotion * leg2.startTime;
+
+      // Arrival endpoint of leg 1
+      const endpoint1 = extractEndpoint(html, leg1.pathId);
+      if (!endpoint1) continue;
+
+      // Start point of leg 2 (M x y)
+      const pathElem = html.match(new RegExp(`<path[^>]*data-transfer-path="${leg2.pathId}"[^>]*>`));
+      if (!pathElem) continue;
+      const mMatch = pathElem[0].match(/d="M\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+      if (!mMatch) continue;
+      const startX = parseFloat(mMatch[1]);
+      const startY = parseFloat(mMatch[2]);
+
+      // The animated body positions should be consistent
+      const r = body.radiusPx;
+      const arrX = r * Math.cos(arrAngle);
+      const arrY = -r * Math.sin(arrAngle);
+      const depX = r * Math.cos(depAngle);
+      const depY = -r * Math.sin(depAngle);
+
+      // Arrival body position should match leg1 arc endpoint
+      const arrDist = Math.sqrt((endpoint1.x - arrX) ** 2 + (endpoint1.y - arrY) ** 2);
+      assert.ok(
+        arrDist < 5,
+        `Leg ${i}: ${leg1.toOrbitId} arrival alignment distance=${arrDist.toFixed(1)}px`,
+      );
+
+      // Departure body position should match leg2 arc start
+      const depDist = Math.sqrt((startX - depX) ** 2 + (startY - depY) ** 2);
+      assert.ok(
+        depDist < 5,
+        `Leg ${i+1}: ${leg2.fromOrbitId} departure alignment distance=${depDist.toFixed(1)}px`,
+      );
+    }
+  });
+});

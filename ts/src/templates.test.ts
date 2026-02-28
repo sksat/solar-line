@@ -4627,6 +4627,271 @@ describe("Task 131: transfer arc arrival alignment", () => {
   });
 });
 
+// --- Task 205: Animated body arrival alignment ---
+
+/**
+ * Helper: extract animation JSON from rendered HTML.
+ */
+function extractAnimationJson(html: string): { durationSeconds: number; orbits: Array<{ id: string; initialAngle: number; meanMotion: number; radiusPx: number }>; transfers: Array<{ fromOrbitId: string; toOrbitId: string; startTime: number; endTime: number; pathId: string }> } | null {
+  const jsonMatch = html.match(/<script type="application\/json" class="orbital-animation-data">([\s\S]*?)<\/script>/);
+  if (!jsonMatch) return null;
+  return JSON.parse(jsonMatch[1]);
+}
+
+describe("Task 205: animated body arrival alignment", () => {
+  it("arrival body animated position at t=endTime matches arc endpoint", () => {
+    // The arrival body has meanMotion, so it moves during the animation.
+    // At t=endTime, the animated body must be at the arc endpoint.
+    const diagram: OrbitalDiagram = {
+      id: "test-arrival-animated",
+      title: "Animated arrival alignment",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "from", label: "出発", radius: 1.5, color: "#f00", angle: 0.5, meanMotion: 1e-7 },
+        { id: "to", label: "到着", radius: 5.0, color: "#0f0", angle: 2.3, meanMotion: 1e-8 },
+      ],
+      transfers: [{
+        label: "Brachistochrone",
+        fromOrbitId: "from",
+        toOrbitId: "to",
+        color: "#00f",
+        style: "brachistochrone",
+        startTime: 0,
+        endTime: 259200,
+      }],
+      animation: { durationSeconds: 259200 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const animData = extractAnimationJson(html);
+    assert.ok(animData, "should have animation data");
+
+    // Find arrival orbit in animation data
+    const toAnim = animData!.orbits.find(o => o.id === "to");
+    assert.ok(toAnim, "should find arrival orbit in animation data");
+
+    // Compute animated position at t=endTime
+    const transfer = animData!.transfers[0];
+    const animatedAngle = toAnim!.initialAngle + toAnim!.meanMotion * transfer.endTime;
+    const r = toAnim!.radiusPx;
+    const animatedX = r * Math.cos(animatedAngle);
+    const animatedY = -r * Math.sin(animatedAngle);
+
+    // Get arc endpoint
+    const endpoint = extractPathEndpoint(html, transfer.pathId);
+    assert.ok(endpoint, "should find transfer arc endpoint");
+
+    // They must match within tolerance
+    const dist = Math.sqrt((endpoint!.x - animatedX) ** 2 + (endpoint!.y - animatedY) ** 2);
+    assert.ok(dist < 3, `animated arrival body at t=${transfer.endTime} should match arc endpoint. ` +
+      `Animated: (${animatedX.toFixed(1)}, ${animatedY.toFixed(1)}), ` +
+      `Arc end: (${endpoint!.x.toFixed(1)}, ${endpoint!.y.toFixed(1)}), ` +
+      `distance=${dist.toFixed(1)}`);
+  });
+
+  it("departure body animated position at t=startTime matches arc start", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-departure-animated",
+      title: "Animated departure alignment",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "from", label: "出発", radius: 1.5, color: "#f00", angle: 0.5, meanMotion: 1e-7 },
+        { id: "to", label: "到着", radius: 5.0, color: "#0f0", angle: 2.3, meanMotion: 1e-8 },
+      ],
+      transfers: [{
+        label: "Brachistochrone",
+        fromOrbitId: "from",
+        toOrbitId: "to",
+        color: "#00f",
+        style: "brachistochrone",
+        startTime: 0,
+        endTime: 259200,
+      }],
+      animation: { durationSeconds: 259200 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const animData = extractAnimationJson(html);
+    assert.ok(animData, "should have animation data");
+
+    const fromAnim = animData!.orbits.find(o => o.id === "from");
+    assert.ok(fromAnim, "should find departure orbit in animation data");
+
+    const transfer = animData!.transfers[0];
+    const animatedAngle = fromAnim!.initialAngle + fromAnim!.meanMotion * transfer.startTime;
+    const r = fromAnim!.radiusPx;
+    const animatedX = r * Math.cos(animatedAngle);
+    const animatedY = -r * Math.sin(animatedAngle);
+
+    // Get arc start point
+    const pathElem = html.match(new RegExp(`<path[^>]*data-transfer-path="${transfer.pathId}"[^>]*>`));
+    assert.ok(pathElem, "should find transfer path element");
+    const match = pathElem![0].match(/d="M\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+    assert.ok(match, "should find path start point");
+    const startX = parseFloat(match![1]);
+    const startY = parseFloat(match![2]);
+
+    const dist = Math.sqrt((startX - animatedX) ** 2 + (startY - animatedY) ** 2);
+    assert.ok(dist < 3, `animated departure body at t=${transfer.startTime} should match arc start. ` +
+      `Animated: (${animatedX.toFixed(1)}, ${animatedY.toFixed(1)}), ` +
+      `Arc start: (${startX.toFixed(1)}, ${startY.toFixed(1)}), ` +
+      `distance=${dist.toFixed(1)}`);
+  });
+
+  it("multi-transfer: intermediate body aligned for both arrival and departure", () => {
+    // Body B is arrival of transfer 1 and departure of transfer 2
+    const diagram: OrbitalDiagram = {
+      id: "test-multi-intermediate",
+      title: "Intermediate body alignment",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "a", label: "A", radius: 1.5, color: "#f00", angle: 0.5, meanMotion: 1e-7 },
+        { id: "b", label: "B", radius: 5.0, color: "#0f0", angle: 2.3, meanMotion: 1.7e-8 },
+        { id: "c", label: "C", radius: 10.0, color: "#00f", angle: 4.0, meanMotion: 6.8e-9 },
+      ],
+      transfers: [
+        {
+          label: "A→B",
+          fromOrbitId: "a",
+          toOrbitId: "b",
+          color: "#ff0",
+          style: "brachistochrone",
+          startTime: 0,
+          endTime: 259200,
+        },
+        {
+          label: "B→C",
+          fromOrbitId: "b",
+          toOrbitId: "c",
+          color: "#0ff",
+          style: "brachistochrone",
+          startTime: 270000,
+          endTime: 520000,
+        },
+      ],
+      animation: { durationSeconds: 520000 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const animData = extractAnimationJson(html);
+    assert.ok(animData, "should have animation data");
+
+    const bAnim = animData!.orbits.find(o => o.id === "b");
+    assert.ok(bAnim, "should find intermediate orbit B");
+
+    // At t=259200 (arrival of A→B), B should be at arc endpoint of A→B
+    const transfer1 = animData!.transfers.find(t => t.fromOrbitId === "a" && t.toOrbitId === "b");
+    assert.ok(transfer1, "should find transfer A→B");
+    const arrivalAngle = bAnim!.initialAngle + bAnim!.meanMotion * transfer1!.endTime;
+    const r = bAnim!.radiusPx;
+    const arrivalX = r * Math.cos(arrivalAngle);
+    const arrivalY = -r * Math.sin(arrivalAngle);
+    const endpoint1 = extractPathEndpoint(html, transfer1!.pathId);
+    assert.ok(endpoint1, "should find A→B arc endpoint");
+    const dist1 = Math.sqrt((endpoint1!.x - arrivalX) ** 2 + (endpoint1!.y - arrivalY) ** 2);
+    assert.ok(dist1 < 3, `B at t=259200 (arrival) should match A→B arc endpoint, distance=${dist1.toFixed(1)}`);
+
+    // At t=270000 (departure of B→C), B should be at arc start of B→C
+    const transfer2 = animData!.transfers.find(t => t.fromOrbitId === "b" && t.toOrbitId === "c");
+    assert.ok(transfer2, "should find transfer B→C");
+    const departAngle = bAnim!.initialAngle + bAnim!.meanMotion * transfer2!.startTime;
+    const departX = r * Math.cos(departAngle);
+    const departY = -r * Math.sin(departAngle);
+    const pathElem = html.match(new RegExp(`<path[^>]*data-transfer-path="${transfer2!.pathId}"[^>]*>`));
+    assert.ok(pathElem, "should find B→C path");
+    const mMatch = pathElem![0].match(/d="M\s+([\d.e+-]+)\s+([\d.e+-]+)/);
+    assert.ok(mMatch, "should find B→C arc start");
+    const startX = parseFloat(mMatch![1]);
+    const startY = parseFloat(mMatch![2]);
+    const dist2 = Math.sqrt((startX - departX) ** 2 + (startY - departY) ** 2);
+    assert.ok(dist2 < 3, `B at t=270000 (departure) should match B→C arc start, distance=${dist2.toFixed(1)}`);
+  });
+
+  it("large drift scenario: long transfer with significant meanMotion", () => {
+    // EP04-like scenario: ~105 days transfer, planet drift should be handled
+    const durationS = 9_059_281; // ~105 days
+    const diagram: OrbitalDiagram = {
+      id: "test-large-drift",
+      title: "Large drift alignment",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "uranus", label: "天王星", radius: 19.19, color: "#66dddd", angle: 4.8, meanMotion: 2.37e-9 },
+        { id: "earth", label: "地球", radius: 1.0, color: "#4488ff", angle: 1.6, meanMotion: 1.991e-7 },
+      ],
+      transfers: [{
+        label: "Uranus→Earth",
+        fromOrbitId: "uranus",
+        toOrbitId: "earth",
+        color: "#ff0",
+        style: "brachistochrone",
+        startTime: 0,
+        endTime: durationS,
+      }],
+      animation: { durationSeconds: durationS },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const animData = extractAnimationJson(html);
+    assert.ok(animData, "should have animation data");
+
+    const earthAnim = animData!.orbits.find(o => o.id === "earth");
+    assert.ok(earthAnim, "should find Earth in animation data");
+
+    // Earth meanMotion * duration = 1.991e-7 * 9059281 ≈ 1.804 rad (103°)
+    // This is a huge drift — must be handled correctly
+    const transfer = animData!.transfers[0];
+    const animatedAngle = earthAnim!.initialAngle + earthAnim!.meanMotion * transfer.endTime;
+    const r = earthAnim!.radiusPx;
+    const animatedX = r * Math.cos(animatedAngle);
+    const animatedY = -r * Math.sin(animatedAngle);
+
+    const endpoint = extractPathEndpoint(html, transfer.pathId);
+    assert.ok(endpoint, "should find arc endpoint");
+
+    const dist = Math.sqrt((endpoint!.x - animatedX) ** 2 + (endpoint!.y - animatedY) ** 2);
+    // Earth drifts ~1.8 rad over 105 days — without fix this would be huge
+    assert.ok(dist < 3, `Earth at t=${durationS} should match arc endpoint despite 103° drift. ` +
+      `distance=${dist.toFixed(1)}`);
+  });
+
+  it("body with zero meanMotion is unaffected (no drift)", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-zero-drift",
+      title: "Zero meanMotion",
+      centerLabel: "太陽",
+      scaleMode: "sqrt",
+      radiusUnit: "AU",
+      orbits: [
+        { id: "from", label: "出発", radius: 1.5, color: "#f00", angle: 0.5 },
+        { id: "to", label: "到着", radius: 5.0, color: "#0f0", angle: 2.3 },
+      ],
+      transfers: [{
+        label: "Transfer",
+        fromOrbitId: "from",
+        toOrbitId: "to",
+        color: "#00f",
+        style: "brachistochrone",
+        startTime: 0,
+        endTime: 259200,
+      }],
+      animation: { durationSeconds: 259200 },
+    };
+    const html = renderOrbitalDiagram(diagram);
+    const animData = extractAnimationJson(html);
+    assert.ok(animData, "should have animation data");
+
+    const toAnim = animData!.orbits.find(o => o.id === "to");
+    assert.ok(toAnim, "should find arrival orbit");
+    // With zero meanMotion, initialAngle should equal orbit.angle
+    assert.strictEqual(toAnim!.meanMotion, 0);
+    assert.strictEqual(toAnim!.initialAngle, 2.3);
+  });
+});
+
 // --- renderGlossary ---
 
 describe("renderGlossary", () => {

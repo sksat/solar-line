@@ -176,6 +176,70 @@ test.describe("Orbital Animation Example", () => {
     const staticControls = page.locator("#static-diagram .orbital-animation-controls");
     expect(await staticControls.count()).toBe(0);
   });
+
+  test("Task 205: ship marker at animation end is near arrival body", async ({ page }) => {
+    await page.goto("/examples/orbital-animation.html");
+
+    // Scrub slider to end (max=1000)
+    const slider = page.locator("#test-diagram .anim-slider");
+    await slider.fill("1000");
+    await slider.dispatchEvent("input");
+    await page.waitForTimeout(500);
+
+    // Get ship marker position (last visible marker)
+    const shipPos = await page.evaluate(() => {
+      const container = document.querySelector("#test-diagram");
+      if (!container) return null;
+      const markers = container.querySelectorAll(".ship-marker");
+      for (const m of markers) {
+        const op = m.getAttribute("opacity");
+        if (op && Number(op) > 0) {
+          return {
+            cx: Number(m.getAttribute("cx")),
+            cy: Number(m.getAttribute("cy")),
+          };
+        }
+      }
+      return null;
+    });
+
+    // Get arrival body dot position (body should have been animated to its end position)
+    // Read animation data to find the arrival orbit of the last transfer
+    const arrivalInfo = await page.evaluate(() => {
+      const container = document.querySelector("#test-diagram");
+      if (!container) return null;
+      const script = container.querySelector(".orbital-animation-data");
+      if (!script) return null;
+      const data = JSON.parse(script.textContent!);
+      // Find last transfer
+      const transfers = data.transfers as Array<{ toOrbitId: string; endTime: number }>;
+      if (transfers.length === 0) return null;
+      const lastTransfer = transfers[transfers.length - 1];
+      const toOrbit = data.orbits.find((o: { id: string }) => o.id === lastTransfer.toOrbitId);
+      if (!toOrbit) return null;
+      // Find the animated body dot
+      const svg = container.querySelector("svg");
+      if (!svg) return null;
+      const dots = svg.querySelectorAll(`[data-orbit-id="${toOrbit.id}"]`);
+      for (const d of dots) {
+        if (d.tagName === "circle" && d.getAttribute("r") === "4") {
+          return {
+            cx: Number(d.getAttribute("cx")),
+            cy: Number(d.getAttribute("cy")),
+          };
+        }
+      }
+      return null;
+    });
+
+    if (shipPos && arrivalInfo) {
+      const dist = Math.sqrt(
+        (shipPos.cx - arrivalInfo.cx) ** 2 + (shipPos.cy - arrivalInfo.cy) ** 2,
+      );
+      // Ship should be near the arrival body at animation end
+      expect(dist).toBeLessThan(20);
+    }
+  });
 });
 
 // --- DAG Viewer Example ---

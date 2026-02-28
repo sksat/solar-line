@@ -42,11 +42,11 @@ h2 { color: #58a6ff; }
 
   <!-- Outer orbit (Jupiter-like) -->
   <circle cx="0" cy="0" r="180" fill="none" stroke="#f0883e" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="4 2"/>
-  <circle cx="-127" cy="127" r="4" fill="#f0883e" data-orbit-id="outer"/>
-  <text x="-139" y="139" fill="#f0883e" font-size="10" text-anchor="start" data-orbit-id="outer">外惑星</text>
+  <circle cx="-127" cy="-127.4" r="4" fill="#f0883e" data-orbit-id="outer"/>
+  <text x="-139" y="-139.4" fill="#f0883e" font-size="10" text-anchor="start" data-orbit-id="outer">外惑星</text>
 
   <!-- Transfer arc (brachistochrone) -->
-  <path d="M 80,0 Q 150,-100 -127,127" fill="none" stroke="#58a6ff" stroke-width="2"
+  <path d="M 80,0 Q 150,-100 -127,-127.4" fill="none" stroke="#58a6ff" stroke-width="2"
         data-transfer-path="inner-outer-0"
         data-start-time="0"
         data-end-time="259200"
@@ -59,7 +59,7 @@ h2 { color: #58a6ff; }
   "durationSeconds": 259200,
   "orbits": [
     {"id": "inner", "initialAngle": 0, "meanMotion": 0.0000034, "radiusPx": 80, "color": "#ff4444"},
-    {"id": "outer", "initialAngle": 2.356, "meanMotion": 0.0000003, "radiusPx": 180, "color": "#f0883e"}
+    {"id": "outer", "initialAngle": 2.2782, "meanMotion": 0.0000003, "radiusPx": 180, "color": "#f0883e"}
   ],
   "transfers": [
     {"pathId": "inner-outer-0", "fromOrbitId": "inner", "toOrbitId": "outer", "startTime": 0, "endTime": 259200, "color": "#58a6ff", "style": "brachistochrone", "burns": [
