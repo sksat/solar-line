@@ -374,3 +374,142 @@ test("glossary tooltips do not appear inside SVG elements", async ({ page }) => 
   const count = await svgTooltips.count();
   expect(count).toBe(0);
 });
+
+// --- KaTeX math rendering regression tests (Task 214) ---
+
+test.describe("KaTeX math rendering", () => {
+  test("EP01 renders inline math as KaTeX elements", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    // Wait for KaTeX auto-render to process the page
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const katexElements = page.locator(".katex");
+    const count = await katexElements.count();
+    // EP01 has multiple inline math expressions ($...$)
+    expect(count).toBeGreaterThanOrEqual(3);
+  });
+
+  test("no raw LaTeX syntax leaks into visible text on EP01", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const bodyText = await page.locator("body").innerText();
+    // These LaTeX commands should have been rendered by KaTeX, not shown as raw text
+    // Allow them inside code blocks but not in regular body text
+    const rawLatexPatterns = [
+      /(?<!`)\\frac\{/,
+      /(?<!`)\\sqrt\{/,
+      /(?<!`)\\leq\b/,
+      /(?<!`)\\times\b(?!.*<code)/,
+    ];
+    for (const pattern of rawLatexPatterns) {
+      const matches = bodyText.match(pattern);
+      expect(matches, `Raw LaTeX "${pattern}" should not appear in rendered text`).toBeNull();
+    }
+  });
+
+  test("cross-episode summary renders display math ($$...$$)", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    // Display math renders with .katex-display class
+    const displayMath = page.locator(".katex-display");
+    const count = await displayMath.count();
+    expect(count).toBeGreaterThanOrEqual(1);
+  });
+
+  test("KaTeX rendering produces no JS errors on EP04", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/episodes/ep-004.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const katexCount = await page.locator(".katex").count();
+    expect(katexCount).toBeGreaterThanOrEqual(1);
+    expect(errors).toEqual([]);
+  });
+
+  test("attitude-control summary renders math formulas", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const katexElements = page.locator(".katex");
+    expect(await katexElements.count()).toBeGreaterThanOrEqual(1);
+  });
+});
+
+// --- Transcription page E2E tests (Task 215) ---
+
+test.describe("Transcription pages", () => {
+  test("transcription index page loads and lists episodes", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/transcriptions/");
+    await expect(page.locator("h1")).toContainText("文字起こし");
+    // Should link to each episode's transcription page (relative hrefs like "ep-001.html")
+    const links = page.locator('a[href*="ep-"]');
+    expect(await links.count()).toBeGreaterThanOrEqual(5);
+    expect(errors).toEqual([]);
+  });
+
+  test("EP01 transcription has Layer 0 script tab (active by default)", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/transcriptions/ep-001.html");
+    // Tab container should exist
+    const tabContainer = page.locator(".tab-container");
+    await expect(tabContainer).toBeVisible();
+    // Layer 0 (script) tab should be present and active
+    const scriptTab = page.locator('.tab-btn[data-tab="script"]');
+    await expect(scriptTab).toBeVisible();
+    await expect(scriptTab).toHaveClass(/active/);
+    // Script panel should be visible
+    const scriptPanel = page.locator("#tab-script");
+    await expect(scriptPanel).toBeVisible();
+    // Should have a script table with dialogue lines
+    const scriptTable = scriptPanel.locator(".script-table");
+    await expect(scriptTable).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
+  test("EP01 transcription has 4 tabs (Layer 0/2/2/3)", async ({ page }) => {
+    await page.goto("/transcriptions/ep-001.html");
+    const tabs = page.locator(".tab-btn");
+    expect(await tabs.count()).toBe(4);
+  });
+
+  test("EP02 transcription has 3 tabs (no Layer 0 script)", async ({ page }) => {
+    await page.goto("/transcriptions/ep-002.html");
+    const tabs = page.locator(".tab-btn");
+    expect(await tabs.count()).toBe(3);
+    // No script tab
+    const scriptTab = page.locator('.tab-btn[data-tab="script"]');
+    expect(await scriptTab.count()).toBe(0);
+  });
+
+  test("tab switching shows correct panel", async ({ page }) => {
+    await page.goto("/transcriptions/ep-001.html");
+    // Click corrected (Layer 3) tab
+    const correctedTab = page.locator('.tab-btn[data-tab="corrected"]');
+    await correctedTab.click();
+    // Corrected panel should become visible
+    const correctedPanel = page.locator("#tab-corrected");
+    await expect(correctedPanel).toBeVisible();
+    // Script panel should be hidden
+    const scriptPanel = page.locator("#tab-script");
+    await expect(scriptPanel).not.toBeVisible();
+  });
+
+  test("transcription tables contain dialogue data", async ({ page }) => {
+    await page.goto("/transcriptions/ep-001.html");
+    // Script table should have rows with content
+    const scriptRows = page.locator("#tab-script .script-table tbody tr");
+    expect(await scriptRows.count()).toBeGreaterThanOrEqual(10);
+    // Switch to corrected tab to check dialogue table
+    await page.locator('.tab-btn[data-tab="corrected"]').click();
+    const dialogueRows = page.locator("#tab-corrected .dialogue-table tbody tr");
+    expect(await dialogueRows.count()).toBeGreaterThanOrEqual(10);
+  });
+
+  test("no raw VTT timing syntax in rendered transcription text", async ({ page }) => {
+    await page.goto("/transcriptions/ep-001.html");
+    // Switch to primary (VTT) tab
+    await page.locator('.tab-btn[data-tab="primary"]').click();
+    await page.waitForTimeout(200);
+    const panelText = await page.locator("#tab-primary").innerText();
+    // VTT timing lines like "00:01:23.456 --> 00:01:25.789" should not appear
+    expect(panelText).not.toMatch(/\d{2}:\d{2}:\d{2}\.\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{3}/);
+  });
+});
