@@ -611,15 +611,23 @@ test.describe("Summary: other-ships page", () => {
     await expect(page.locator("h2:has-text('太陽系商船群')")).toBeVisible();
   });
 
-  test("has orbital diagram for fleet transfer", async ({ page }) => {
+  test("has orbital diagrams for all ship encounters (EP02, EP04, EP05)", async ({ page }) => {
     await page.goto("/summary/other-ships.html");
-    const diagram = page.locator("#other-ships-fleet-saturn-uranus");
-    await expect(diagram).toBeVisible();
-    // Should contain SVG with orbit circles and transfer paths
-    const svg = diagram.locator("svg");
-    await expect(svg).toBeVisible();
-    const circles = svg.locator("circle");
-    expect(await circles.count()).toBeGreaterThanOrEqual(2);
+    // EP02 large ship ambush (Saturn-centric)
+    const ep02Diagram = page.locator("#other-ships-ep02-ambush");
+    await expect(ep02Diagram).toBeVisible();
+    await expect(ep02Diagram.locator("svg")).toBeVisible();
+    // EP04 public safety fleet (heliocentric)
+    const ep04Diagram = page.locator("#other-ships-fleet-saturn-uranus");
+    await expect(ep04Diagram).toBeVisible();
+    await expect(ep04Diagram.locator("svg")).toBeVisible();
+    // EP05 security boat intercept (heliocentric)
+    const ep05Diagram = page.locator("#other-ships-ep05-intercept");
+    await expect(ep05Diagram).toBeVisible();
+    await expect(ep05Diagram.locator("svg")).toBeVisible();
+    // All diagrams should have orbit circles
+    const allCircles = page.locator(".orbital-diagram svg circle");
+    expect(await allCircles.count()).toBeGreaterThanOrEqual(6);
   });
 
   test("renders KaTeX display math for brachistochrone calculations", async ({ page }) => {
