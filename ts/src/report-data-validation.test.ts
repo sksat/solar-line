@@ -10,7 +10,7 @@ import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { EpisodeReport, TransferAnalysis, DialogueQuote, SummaryReport, OrbitalDiagram, BurnMarker, TransferArc } from "./report-types.ts";
+import type { EpisodeReport, TransferAnalysis, DialogueQuote, SummaryReport, OrbitalDiagram, BurnMarker, TransferArc, MarginGauge } from "./report-types.ts";
 import { validateTransferOverlap } from "./templates.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
@@ -999,4 +999,99 @@ describe("report data: internal links in summary markdown", () => {
       assert.deepStrictEqual(brokenLinks, [], `Broken episode links in ${fileLabel}`);
     });
   }
+});
+
+// ---------------------------------------------------------------------------
+// Margin gauge data validation
+// ---------------------------------------------------------------------------
+
+describe("report data: margin gauge validation", () => {
+  const SUMMARY_DIR = path.join(REPORTS_DIR, "data", "summary");
+  const episodes = getAvailableEpisodes();
+
+  // Collect all margin gauges across the project
+  const allGauges: { source: string; gauge: MarginGauge }[] = [];
+
+  // Episode gauges
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    if (report.marginGauges) {
+      for (const g of report.marginGauges) {
+        allGauges.push({ source: `EP${String(epNum).padStart(2, "0")}`, gauge: g });
+      }
+    }
+  }
+
+  // Summary gauges
+  const summaryMdFiles = fs.readdirSync(SUMMARY_DIR).filter(f => f.endsWith(".md"));
+  for (const f of summaryMdFiles) {
+    const report = loadSummaryBySlug(SUMMARY_DIR, f.replace(".md", ""));
+    if (report) {
+      for (const section of report.sections) {
+        if (section.marginGauges) {
+          for (const g of section.marginGauges) {
+            allGauges.push({ source: f, gauge: g });
+          }
+        }
+      }
+    }
+  }
+
+  it("has margin gauges across reports", () => {
+    assert.ok(allGauges.length >= 5, `Expected at least 5 margin gauges, found ${allGauges.length}`);
+  });
+
+  it("all gauge IDs are unique", () => {
+    const ids = allGauges.map(g => g.gauge.id);
+    const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+    assert.deepStrictEqual(dupes, [], `Duplicate gauge IDs: ${dupes.join(", ")}`);
+  });
+
+  it("all gauge items have positive actual and limit values", () => {
+    const invalid: string[] = [];
+    for (const { source, gauge } of allGauges) {
+      for (const item of gauge.items) {
+        if (item.actual < 0) invalid.push(`${source}/${gauge.id}: ${item.label} actual=${item.actual} < 0`);
+        if (item.limit <= 0) invalid.push(`${source}/${gauge.id}: ${item.label} limit=${item.limit} <= 0`);
+      }
+    }
+    assert.deepStrictEqual(invalid, []);
+  });
+
+  it("all gauge items have non-empty labels and units", () => {
+    const invalid: string[] = [];
+    for (const { source, gauge } of allGauges) {
+      for (const item of gauge.items) {
+        if (!item.label.trim()) invalid.push(`${source}/${gauge.id}: empty label`);
+        if (!item.unit.trim()) invalid.push(`${source}/${gauge.id}: empty unit for ${item.label}`);
+      }
+    }
+    assert.deepStrictEqual(invalid, []);
+  });
+
+  it("all gauges have non-empty title and at least 1 item", () => {
+    const invalid: string[] = [];
+    for (const { source, gauge } of allGauges) {
+      if (!gauge.title.trim()) invalid.push(`${source}/${gauge.id}: empty title`);
+      if (gauge.items.length === 0) invalid.push(`${source}/${gauge.id}: no items`);
+    }
+    assert.deepStrictEqual(invalid, []);
+  });
+
+  it("EP05 nozzle margin consistent between episode and cross-episode", () => {
+    const ep05Gauge = allGauges.find(g => g.gauge.id === "ep05-critical-margins");
+    const crossGauge = allGauges.find(g => g.gauge.id === "mission-critical-margins");
+    assert.ok(ep05Gauge, "EP05 should have margin gauge");
+    assert.ok(crossGauge, "cross-episode should have margin gauge");
+
+    const ep05Nozzle = ep05Gauge!.gauge.items.find(i => i.label.includes("ノズル"));
+    const crossNozzle = crossGauge!.gauge.items.find(i => i.label.includes("ノズル"));
+    assert.ok(ep05Nozzle, "EP05 should have nozzle gauge item");
+    assert.ok(crossNozzle, "cross-episode should have nozzle gauge item");
+
+    assert.equal(ep05Nozzle!.actual, crossNozzle!.actual,
+      "nozzle actual should match between EP05 and cross-episode");
+    assert.equal(ep05Nozzle!.limit, crossNozzle!.limit,
+      "nozzle limit should match between EP05 and cross-episode");
+  });
 });
