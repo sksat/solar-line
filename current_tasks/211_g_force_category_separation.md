@@ -1,6 +1,6 @@
 # Task 211: G-Force Category Separation (Habitation G vs Propulsion G)
 
-## Status: NOT STARTED
+## Status: IN PROGRESS
 
 ## Priority: MEDIUM
 
