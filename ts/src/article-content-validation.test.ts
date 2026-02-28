@@ -1199,8 +1199,8 @@ describe("communications.md content validation", () => {
   it("verification summary has all checks passing", () => {
     const checkmarks = (content.match(/✅/g) || []).length;
     assert.ok(
-      checkmarks >= 7,
-      `should have at least 7 passing verification checks, got ${checkmarks}`,
+      checkmarks >= 10,
+      `should have at least 10 passing verification checks, got ${checkmarks}`,
     );
   });
 
@@ -1208,6 +1208,56 @@ describe("communications.md content validation", () => {
     assert.ok(
       content.includes("87日") || content.includes("約87日"),
       "should reference 87-day EP02 transit in communication delay context",
+    );
+  });
+
+  it("DSOC distance corrected: 267 Mbps at ~0.2 AU, not 1.8 AU", () => {
+    assert.ok(
+      content.includes("0.2 AU") || content.includes("3,100万"),
+      "should cite DSOC 267 Mbps at approximately 0.2 AU distance",
+    );
+    assert.ok(
+      !content.includes("1.8 AU（2億7千万 km）から 267 Mbps"),
+      "should NOT cite incorrect 1.8 AU for 267 Mbps achievement",
+    );
+  });
+
+  it("EP03 route distance uses updated epoch value ~9.6 AU", () => {
+    assert.ok(
+      content.includes("9.6 AU"),
+      "should use updated epoch distance of ~9.6 AU for Enceladus→Titania",
+    );
+  });
+
+  it("FSPL optical value corrected to ~362 dB", () => {
+    assert.ok(
+      content.includes("362"),
+      "should cite corrected FSPL optical value of ~362 dB",
+    );
+  });
+
+  it("EP02 beacon timing analysis included", () => {
+    assert.ok(
+      content.includes("ビーコンの時刻タグ"),
+      "should analyze EP02 beacon timing precision",
+    );
+  });
+
+  it("EP05 beacon blackout and deception scenes included", () => {
+    assert.ok(
+      content.includes("物流が完全に止まってる") || content.includes("ビーコン停波"),
+      "should include EP05 beacon blackout scene",
+    );
+    assert.ok(
+      content.includes("欺瞞航跡"),
+      "should include EP05 deception beacon scene",
+    );
+  });
+
+  it("introduction section for newcomers", () => {
+    assert.ok(
+      content.includes("本レポートについて"),
+      "should have introduction section for newcomers",
     );
   });
 });
