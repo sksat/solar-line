@@ -1539,6 +1539,25 @@ describe("renderTimeSeriesChart", () => {
     assert.ok(!html.includes("<script>alert"));
     assert.ok(html.includes("&lt;script&gt;"));
   });
+
+  it("includes regions in JSON data when specified", () => {
+    const chart: TimeSeriesChart = {
+      ...sampleTimeSeriesChart,
+      regions: [
+        { from: 0, to: 10, label: "Phase A", color: "rgba(0,0,255,0.1)" },
+        { from: 10, to: 20, label: "Phase B", color: "rgba(255,0,0,0.1)" },
+      ],
+    };
+    const html = renderTimeSeriesChart(chart);
+    assert.ok(html.includes('"regions"'));
+    assert.ok(html.includes("Phase A"));
+    assert.ok(html.includes("Phase B"));
+  });
+
+  it("includes empty regions array when no regions specified", () => {
+    const html = renderTimeSeriesChart(sampleTimeSeriesChart);
+    assert.ok(html.includes('"regions":[]'));
+  });
 });
 
 describe("renderTimeSeriesCharts", () => {

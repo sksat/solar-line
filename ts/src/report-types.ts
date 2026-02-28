@@ -396,6 +396,20 @@ export interface TimeSeriesChart {
   width?: number;
   /** Chart height in pixels (default: 300) */
   height?: number;
+  /** Optional vertical region bands (e.g. episode shading) */
+  regions?: TimeSeriesRegion[];
+}
+
+/** A vertical region band on a time-series chart (e.g. episode shading) */
+export interface TimeSeriesRegion {
+  /** Start X value */
+  from: number;
+  /** End X value */
+  to: number;
+  /** Label shown inside the region */
+  label: string;
+  /** CSS color with alpha (e.g. "rgba(88,166,255,0.12)") */
+  color: string;
 }
 
 /** A single data series in a time-series chart */
