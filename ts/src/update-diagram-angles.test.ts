@@ -209,6 +209,30 @@ describe("epoch annotations on heliocentric diagrams", () => {
   }
 });
 
+describe("EP04 custom epoch annotation is preserved", () => {
+  it("EP04 heliocentric diagram has custom parenthetical suffix", () => {
+    const diagrams = getHeliocentricDiagrams(4);
+    assert.ok(diagrams.length >= 1, "EP04 should have heliocentric diagrams");
+    const diagram = diagrams[0];
+    assert.ok(diagram.epochAnnotation, "EP04 should have epochAnnotation");
+    // EP04's annotation shows the 48kt/105-day reference scenario, not the actual 507h route
+    assert.ok(
+      diagram.epochAnnotation!.includes("（"),
+      "EP04 should have a custom parenthetical suffix",
+    );
+    assert.ok(
+      diagram.epochAnnotation!.includes("brachistochrone"),
+      "EP04 annotation should reference brachistochrone scenario",
+    );
+    // Departure date should match timeline
+    const event = timeline.events.find((e) => e.episode === 4)!;
+    assert.ok(
+      diagram.epochAnnotation!.includes(event.departureDate),
+      `EP04 annotation should contain departure date ${event.departureDate}`,
+    );
+  });
+});
+
 describe("burn marker angles aligned with planet positions", () => {
   it("EP01 acceleration burn near Mars longitude", () => {
     const event = timeline.events.find((e) => e.episode === 1)!;

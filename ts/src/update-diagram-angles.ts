@@ -17,6 +17,7 @@ import { computeTimeline, type TimelineEvent } from "./timeline-analysis.ts";
 import { calendarToJD, planetLongitude, jdToDateString, type PlanetName } from "./ephemeris.ts";
 import type { EpisodeReport, OrbitalDiagram, SummaryReport, TransferArc } from "./report-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
+import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
 
 const args = process.argv.slice(2);
 let dataDir = path.resolve("..", "reports", "data", "episodes");
@@ -132,34 +133,47 @@ function updateEpisodeDiagramAngles(diagram: OrbitalDiagram): boolean {
   }
 
   // Update BurnMarker angles based on planet positions
+  // Only update burns that reference the event's departure or arrival planet.
+  // Intermediate planets (e.g., Jupiter flyby in EP05's composite route) require
+  // flyby-specific timing that the event-level JD can't provide — skip those.
   for (const transfer of diagram.transfers) {
     const fromPlanet = orbitIdToPlanet(transfer.fromOrbitId);
     const toPlanet = orbitIdToPlanet(transfer.toOrbitId);
     if (transfer.burnMarkers) {
       for (const burn of transfer.burnMarkers) {
         if (burn.type === "acceleration" && fromPlanet) {
-          // Acceleration burn at departure planet position
-          const depAngle = planetLongitude(fromPlanet, event.departureJD);
-          if (setAngle(diagram.id, `burn:${burn.label}`, burn, depAngle)) {
-            updated = true;
+          if (fromPlanet === event.departurePlanet) {
+            const depAngle = planetLongitude(fromPlanet, event.departureJD);
+            if (setAngle(diagram.id, `burn:${burn.label}`, burn, depAngle)) {
+              updated = true;
+            }
           }
+          // Skip acceleration burns at intermediate planets
         } else if ((burn.type === "deceleration" || burn.type === "capture") && toPlanet) {
-          // Deceleration/capture burn at arrival planet position
-          const arrAngle = planetLongitude(toPlanet, event.arrivalJD);
-          if (setAngle(diagram.id, `burn:${burn.label}`, burn, arrAngle)) {
-            updated = true;
+          if (toPlanet === event.arrivalPlanet) {
+            const arrAngle = planetLongitude(toPlanet, event.arrivalJD);
+            if (setAngle(diagram.id, `burn:${burn.label}`, burn, arrAngle)) {
+              updated = true;
+            }
           }
+          // Skip deceleration/capture burns at intermediate planets
         }
         // midcourse burns are not tied to a planet — leave unchanged
       }
     }
   }
 
-  // Set epoch annotation
-  const epochStr = `想定年代: ${event.departureDate}～${event.arrivalDate}`;
-  if (diagram.epochAnnotation !== epochStr) {
-    console.log(`  ${diagram.id} epochAnnotation: "${epochStr}"`);
-    diagram.epochAnnotation = epochStr;
+  // Set epoch annotation — skip if it has a custom parenthetical suffix (manually curated)
+  const epochBase = `想定年代: ${event.departureDate}～${event.arrivalDate}`;
+  if (diagram.epochAnnotation && /（.*）$/.test(diagram.epochAnnotation)) {
+    // Annotation has custom parenthetical text — do not overwrite (manually curated)
+    // Only verify the departure date matches as a sanity check
+    if (!diagram.epochAnnotation.includes(event.departureDate)) {
+      console.log(`  ${diagram.id} WARNING: epochAnnotation departure date doesn't match timeline (${event.departureDate}). Manual review needed.`);
+    }
+  } else if (!diagram.epochAnnotation || diagram.epochAnnotation !== epochBase) {
+    console.log(`  ${diagram.id} epochAnnotation: "${epochBase}"`);
+    diagram.epochAnnotation = epochBase;
     updated = true;
   }
 
@@ -253,39 +267,63 @@ function updateCrossEpisodeDiagram(diagram: OrbitalDiagram): boolean {
 console.log("=== Episode Reports ===");
 for (let ep = 1; ep <= 5; ep++) {
   const slug = `ep${String(ep).padStart(2, "0")}`;
-  // Skip MDX episodes — diagram angles are in the diagrams: directive
-  if (fs.existsSync(path.join(dataDir, `${slug}.md`))) {
-    console.log(`Skipping ${slug}.md (MDX format, edit diagrams: directive manually)`);
-    continue;
-  }
-  const filename = `${slug}.json`;
-  const filepath = path.join(dataDir, filename);
+  const mdxPath = path.join(dataDir, `${slug}.md`);
+  const jsonPath = path.join(dataDir, `${slug}.json`);
 
-  if (!fs.existsSync(filepath)) {
-    console.log(`Skipping ${filename} (not found)`);
-    continue;
-  }
-
-  const report: EpisodeReport = JSON.parse(fs.readFileSync(filepath, "utf-8"));
-  if (!report.diagrams || report.diagrams.length === 0) {
-    console.log(`Skipping ${filename} (no diagrams)`);
-    continue;
-  }
-
-  console.log(`Processing ${filename}...`);
-  let fileUpdated = false;
-
-  for (const diagram of report.diagrams) {
-    if (updateEpisodeDiagramAngles(diagram)) {
-      fileUpdated = true;
+  if (fs.existsSync(mdxPath)) {
+    // MDX format: parse to get diagrams, modify, replace JSON blocks in raw content
+    const mdContent = fs.readFileSync(mdxPath, "utf-8");
+    const report = parseEpisodeMarkdown(mdContent);
+    if (!report.diagrams || report.diagrams.length === 0) {
+      console.log(`Skipping ${slug}.md (no diagrams)`);
+      continue;
     }
-  }
 
-  if (fileUpdated) {
-    fs.writeFileSync(filepath, JSON.stringify(report, null, 2) + "\n");
-    console.log(`  Updated ${filename}`);
+    console.log(`Processing ${slug}.md...`);
+    let fileUpdated = false;
+
+    for (const diagram of report.diagrams) {
+      if (updateEpisodeDiagramAngles(diagram)) {
+        fileUpdated = true;
+      }
+    }
+
+    if (fileUpdated) {
+      // Replace the diagrams: JSON block in the raw MDX file
+      const diagramsRegex = /```diagrams:\n([\s\S]*?)```/g;
+      const updatedContent = mdContent.replace(diagramsRegex, () => {
+        return "```diagrams:\n" + JSON.stringify(report.diagrams, null, 2) + "\n```";
+      });
+      fs.writeFileSync(mdxPath, updatedContent);
+      console.log(`  Updated ${slug}.md`);
+    } else {
+      console.log(`  No changes needed for ${slug}.md`);
+    }
+  } else if (fs.existsSync(jsonPath)) {
+    // JSON format: read, modify, write back
+    const report: EpisodeReport = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
+    if (!report.diagrams || report.diagrams.length === 0) {
+      console.log(`Skipping ${slug}.json (no diagrams)`);
+      continue;
+    }
+
+    console.log(`Processing ${slug}.json...`);
+    let fileUpdated = false;
+
+    for (const diagram of report.diagrams) {
+      if (updateEpisodeDiagramAngles(diagram)) {
+        fileUpdated = true;
+      }
+    }
+
+    if (fileUpdated) {
+      fs.writeFileSync(jsonPath, JSON.stringify(report, null, 2) + "\n");
+      console.log(`  Updated ${slug}.json`);
+    } else {
+      console.log(`  No changes needed for ${slug}.json`);
+    }
   } else {
-    console.log(`  No changes needed for ${filename}`);
+    console.log(`Skipping ${slug} (not found)`);
   }
 }
 
