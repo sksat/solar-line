@@ -682,3 +682,113 @@ test.describe("Summary: other-ships page", () => {
     expect(await katexInPage.count()).toBeGreaterThanOrEqual(1);
   });
 });
+
+// --- Attitude control page tests (Task 237) ---
+
+test.describe("Summary: attitude-control page", () => {
+  test("has all episode analysis sections", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    await expect(page.locator("h2:has-text('第1話')")).toBeVisible();
+    await expect(page.locator("h2:has-text('第3話')")).toBeVisible();
+    await expect(page.locator("h2:has-text('第4話')")).toBeVisible();
+    await expect(page.locator("h2:has-text('第5話')")).toBeVisible();
+  });
+
+  test("renders KaTeX display math for physics formulas", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    // Should have multiple math formulas (miss distance, torque, gravity gradient)
+    const katex = page.locator(".katex");
+    expect(await katex.count()).toBeGreaterThanOrEqual(3);
+  });
+
+  test("physics tables render with correct structure", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    // Should have multiple tables (pointing accuracy, flip maneuver, asymmetry, etc.)
+    const tables = page.locator("table");
+    expect(await tables.count()).toBeGreaterThanOrEqual(5);
+    // Tables should have headers
+    const headerCells = page.locator("table th");
+    expect(await headerCells.count()).toBeGreaterThanOrEqual(10);
+  });
+
+  test("evaluation summary table has verdict icons", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    // The conclusion section has a table with ✅ and ⚠️ verdict icons
+    const conclusionSection = page.locator("h2:has-text('結論')");
+    await expect(conclusionSection).toBeVisible();
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("✅");
+    expect(pageContent).toContain("⚠️");
+  });
+
+  test("has glossary terms with tooltips", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    const glossaryTerms = page.locator(".glossary-term");
+    expect(await glossaryTerms.count()).toBeGreaterThanOrEqual(1);
+  });
+});
+
+// --- Ship-kestrel page tests (Task 237) ---
+
+test.describe("Summary: ship-kestrel page", () => {
+  test("has all main analysis sections", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    await expect(page.locator("h2:has-text('基本仕様')")).toBeVisible();
+    await expect(page.locator("h2:has-text('損傷・修復')")).toBeVisible();
+    await expect(page.locator("h2:has-text('推力・加速度')")).toBeVisible();
+    await expect(page.locator("h2:has-text('質量の謎')")).toBeVisible();
+  });
+
+  test("damage timeline renders", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    // Timeline component renders with .event-timeline class
+    const timeline = page.locator(".event-timeline");
+    expect(await timeline.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("episode comparison tables render", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    // Should have episode tables (thrust/acceleration, mass boundary)
+    const tables = page.locator("table");
+    expect(await tables.count()).toBeGreaterThanOrEqual(3);
+    // Check for episode column headers
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("第1話");
+    expect(pageContent).toContain("第5話");
+  });
+
+  test("propellant budget timeseries chart renders", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    // The timeseries chart should render as a canvas or uplot container
+    const chartContainer = page.locator(".uplot, canvas, .timeseries-chart");
+    expect(await chartContainer.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("G-environment analysis section exists", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    await expect(page.locator("h2:has-text('G環境')")).toBeVisible();
+    // Should discuss 居住G and 推進G categories
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("居住G");
+    expect(pageContent).toContain("推進G");
+  });
+
+  test("hypothesis evaluation table renders", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("仮説");
+  });
+
+  test("internal cross-links to episode reports are valid", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    const epLinks = page.locator('a[href*="episodes/"]');
+    expect(await epLinks.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has glossary terms with tooltips", async ({ page }) => {
+    await page.goto("/summary/ship-kestrel.html");
+    const glossaryTerms = page.locator(".glossary-term");
+    expect(await glossaryTerms.count()).toBeGreaterThanOrEqual(1);
+  });
+});
