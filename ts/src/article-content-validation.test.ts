@@ -1724,4 +1724,48 @@ describe("ai-costs.md content validation", () => {
   it("update method with ccusage command", () => {
     assert.ok(content.includes("ccusage"), "should document ccusage update command");
   });
+
+  // Regression tests from Task 279 external review
+  it("task count is 278+ (not stale 261)", () => {
+    assert.ok(
+      !content.includes("261タスク"),
+      "should not contain stale task count 261",
+    );
+    assert.ok(content.includes("278"), "should cite current task count 278");
+  });
+
+  it("commit count is 400+ (not stale 390+)", () => {
+    assert.ok(
+      !content.includes("390+"),
+      "should not contain stale commit count 390+",
+    );
+    assert.ok(content.includes("400+"), "should cite current commit count 400+");
+  });
+
+  it("notes Haiku was replaced by Sonnet as default subagent model", () => {
+    assert.ok(
+      content.includes("Sonnet に変更") || content.includes("Sonnetデフォルト"),
+      "should document Haiku→Sonnet policy change",
+    );
+  });
+
+  it("has newcomer introduction section", () => {
+    assert.ok(
+      content.includes("はじめに"),
+      "should have introductory section for newcomers",
+    );
+  });
+
+  it("includes project scale metrics (test counts)", () => {
+    assert.ok(content.includes("2,083"), "should cite TS test count");
+    assert.ok(content.includes("377"), "should cite Rust test count");
+    assert.ok(content.includes("214"), "should cite E2E test count");
+  });
+
+  it("explains VMブート terminology", () => {
+    assert.ok(
+      content.includes("起動") && content.includes("終了"),
+      "should explain VMブート as startup-shutdown cycle",
+    );
+  });
 });
