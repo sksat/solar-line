@@ -142,7 +142,8 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 
 ## Quality Assurance
 
-- **Playwright E2E tests**: Add browser-based rendering tests to catch broken markdown tables, layout issues, and visual regressions. Use Playwright CLI.
+- **Playwright E2E tests**: Add browser-based rendering tests to catch broken markdown tables, layout issues, and visual regressions. Use Playwright CLI. Note: Playwright E2E tests verify **web page rendering** (components render, links work, no JS errors) — they are NOT article content tests.
+- **Article content TDD**: Distinguish web rendering tests from **article content verification tests**. Content tests validate that report text is consistent with source data (calculation outputs, transcription data, cross-episode parameters). Build these as TS unit tests (`npm test`), not Playwright, for fast feedback. Use TDD: write content assertions first, then edit reports to satisfy them. This ensures reports stay factually consistent as analysis evolves.
 - **Skill-ize workflows**: Define commonly repeated workflows (subtitle extraction, episode analysis, report review) as Claude Code Skills following Anthropic best practices.
 - **Session log display**: Separate agent-loop stdout summary from conversation log display. In conversation logs, label the assistant as "Assistant (model)". Support sub-agent display where possible. Link each log to its associated commit(s) with GitHub URLs.
 - **GitHub repo link**: The published GitHub Pages site must include a visible link to the source repository.
