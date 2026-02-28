@@ -1,6 +1,6 @@
 # Task 207: Episode↔Summary Analysis Consistency Tests
 
-## Status: NOT STARTED
+## Status: IN PROGRESS (claimed by session 2026-02-28)
 
 ## Priority: HIGH
 

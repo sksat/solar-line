@@ -65,9 +65,9 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
     route: "エンケラドス（土星）→ タイタニア（天王星）",
     transferTime: "143時間12分",
     brachistochroneDeltaV: 11165,
-    massBoundaryT: 452,
+    massBoundaryT: 452.5,
     thrustUsedMN: 9.8,
-    verdict: "条件付き（質量 ≤452t で成立）",
+    verdict: "条件付き（質量 ≤452.5t で成立）",
     departureBody: "エンケラドス（土星系）",
     arrivalBody: "タイタニア（天王星系）",
   },
@@ -115,7 +115,7 @@ export function buildShipSpecsTable(): ComparisonTable {
       },
       {
         metric: "質量境界値 (t)",
-        values: { 1: "≤299", 2: "—", 3: "≤452", 4: "≤3,929（30日）", 5: "※暫定" },
+        values: { 1: "≤299", 2: "—", 3: "≤452.5", 4: "≤3,929（30日）", 5: "※暫定" },
         status: "ok",
         note: "数百t程度が真の質量と推定",
       },
@@ -309,7 +309,7 @@ export function generateCrossEpisodeReport(): SummaryReport {
         markdown: `各話のBrachistochrone分析から導出される質量上限は以下の通り:
 
 - **第1話** (72h, 3.68 AU): ≤299 t @ 9.8 MN
-- **第3話** (143h12m, 9.62 AU): ≤452 t @ 9.8 MN
+- **第3話** (143h12m, 9.62 AU): ≤452.5 t @ 9.8 MN
 
 第3話の方が距離は2.6倍だが遷移時間も約2倍あるため、質量上限は299tより大きくなる。これは物理的に整合しており、「船の真の質量は数百t程度」という仮説を補強する。
 
@@ -393,7 +393,7 @@ export function generateCrossEpisodeReport(): SummaryReport {
 
 **唯一の系統的不整合:**
 - 公称質量48,000tでは全てのBrachistochrone遷移が桁違いに不可能
-- 真の質量は **300〜500t** 程度と推定（第1話: ≤299t, 第3話: ≤452t）
+- 真の質量は **300〜500t** 程度と推定（第1話: ≤299t, 第3話: ≤452.5t）
 - この不整合自体が作品の意図的な設定である可能性あり
 
 **第5話で注目すべき物理的ドラマ:**
