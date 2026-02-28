@@ -858,4 +858,13 @@ test.describe("Margin gauge visualization", () => {
     const tocLink2 = page.locator('a[href="#section-margin-gauges"]');
     await expect(tocLink2).toBeVisible();
   });
+
+  test("all 5 episodes have margin gauge sections", async ({ page }) => {
+    for (const ep of [1, 2, 3, 4, 5]) {
+      const epStr = String(ep).padStart(3, "0");
+      await page.goto(`/episodes/ep-${epStr}.html`);
+      const gauge = page.locator(".margin-gauge");
+      expect(await gauge.count()).toBeGreaterThanOrEqual(1);
+    }
+  });
 });

@@ -181,6 +181,11 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes("火星"), "should mention Mars");
     assert.ok(content.includes("ガニメデ"), "should mention Ganymede");
   });
+
+  it("has margin gauge with mass boundary 299t", () => {
+    assert.ok(content.includes("margin-gauge"), "EP01 should have margin-gauge fence");
+    assert.ok(content.includes('"actual": 299'), "should cite 299t mass boundary");
+  });
 });
 
 describe("EP02 article content validation", () => {
@@ -203,6 +208,11 @@ describe("EP02 article content validation", () => {
     assert.ok(content.includes("土星") || content.includes("エンケラドス"),
       "should mention Saturn or Enceladus");
   });
+
+  it("has margin gauge with escape velocity data", () => {
+    assert.ok(content.includes("margin-gauge"), "EP02 should have margin-gauge fence");
+    assert.ok(content.includes('"actual": 18.38'), "should cite 18.38 km/s heliocentric velocity");
+  });
 });
 
 describe("EP03 article content validation", () => {
@@ -223,6 +233,11 @@ describe("EP03 article content validation", () => {
       content.includes("452.5"),
       "EP03 mass boundary should be 452.5t (not 452)",
     );
+  });
+
+  it("has margin gauge with nav accuracy data", () => {
+    assert.ok(content.includes("margin-gauge"), "EP03 should have margin-gauge fence");
+    assert.ok(content.includes('"actual": 0.2'), "should cite 0.2° nav error");
   });
 });
 
