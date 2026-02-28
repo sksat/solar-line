@@ -288,7 +288,7 @@ describe("EP02 article content validation", () => {
 
   it("has margin gauge with escape velocity data", () => {
     assert.ok(content.includes("margin-gauge"), "EP02 should have margin-gauge fence");
-    assert.ok(content.includes('"actual": 18.38'), "should cite 18.38 km/s heliocentric velocity");
+    assert.ok(content.includes('"actual": 18.99'), "should cite 18.99 km/s heliocentric velocity in margin gauge");
   });
 
   it("Jupiter escape velocity at 50 RJ: 8.42 km/s", () => {
