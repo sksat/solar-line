@@ -704,6 +704,27 @@ describe("cross-report value consistency", () => {
       "cross-episode should cite ~35.9 AU total distance",
     );
   });
+
+  it("cross-episode should NOT contain stale 0.8% nozzle margin (must be 0.78%)", () => {
+    // Regression: ensure no "0.8%" without the precise "0.78%" nearby
+    assert.ok(!crossEpisode.includes("マージン26分（0.8%）"),
+      "cross-episode should not contain rounded 0.8% nozzle margin — use 0.78%");
+  });
+
+  it("margin-gauge EP02 uses calculation-file velocity values", () => {
+    // Regression: EP02 margin-gauge should use 18.99/18.46 from ep02_calculations.json
+    assert.ok(crossEpisode.includes("18.99"),
+      "cross-episode margin-gauge should reference heliocentric velocity 18.99 km/s");
+    assert.ok(crossEpisode.includes("18.46"),
+      "cross-episode margin-gauge should reference escape velocity 18.46 km/s");
+  });
+
+  it("LEO radius should be 6,771 km (not 6,778 km)", () => {
+    assert.ok(!crossEpisode.includes("6,778"),
+      "cross-episode should not contain incorrect LEO radius 6,778 km");
+    assert.ok(crossEpisode.includes("6,771"),
+      "cross-episode should cite correct LEO radius 6,771 km");
+  });
 });
 
 // ============================================================
