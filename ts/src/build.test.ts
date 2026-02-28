@@ -715,6 +715,18 @@ Just some text.`;
     assert.ok(task);
     assert.equal(task.status, "TODO");
   });
+
+  it("parses bold markdown status format (**Status:** DONE)", () => {
+    const content = `# Task 066: ccusage Cost Analysis
+
+**Status:** DONE
+
+**Priority:** HIGH`;
+    const task = parseTaskFile("066_ccusage_cost_analysis.md", content);
+    assert.ok(task);
+    assert.equal(task.number, 66);
+    assert.equal(task.status, "DONE");
+  });
 });
 
 // --- discoverTasks ---

@@ -389,9 +389,9 @@ export function parseTaskFile(filename: string, content: string): TaskEntry | nu
   const titleLine = lines.find(l => /^#\s+/.test(l));
   const title = titleLine ? titleLine.replace(/^#+\s*Task\s+\d+:\s*/, "").replace(/^#+\s*/, "").trim() : filename;
 
-  // Extract status
-  const statusLine = lines.find(l => /Status:\s*(DONE|TODO|IN_PROGRESS)/i.test(l));
-  const statusMatch = statusLine?.match(/Status:\s*(DONE|TODO|IN_PROGRESS)/i);
+  // Extract status (handles both "## Status: DONE" and "**Status:** DONE" formats)
+  const statusLine = lines.find(l => /Status:\*{0,2}\s*(DONE|TODO|IN_PROGRESS)/i.test(l));
+  const statusMatch = statusLine?.match(/Status:\*{0,2}\s*(DONE|TODO|IN_PROGRESS)/i);
   const status = (statusMatch?.[1]?.toUpperCase() ?? "TODO") as TaskEntry["status"];
 
   // Extract summary: first content paragraph after status heading
