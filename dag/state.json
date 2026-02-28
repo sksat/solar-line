@@ -1161,7 +1161,9 @@
       "id": "report.ai_costs",
       "type": "report",
       "title": "AI開発コスト分析",
-      "dependsOn": [],
+      "dependsOn": [
+        "report.tech_overview"
+      ],
       "status": "valid",
       "version": 2,
       "tags": [

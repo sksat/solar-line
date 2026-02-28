@@ -145,7 +145,7 @@ function seed(): DagState {
     tags: ["summary", "meta"],
     notes: "Contains DAG viewer, project metrics, architecture overview",
   });
-  addNode(dag, "report.ai_costs", "report", "AI開発コスト分析", [], {
+  addNode(dag, "report.ai_costs", "report", "AI開発コスト分析", ["report.tech_overview"], {
     tags: ["summary", "meta"],
     notes: "Token usage, cost distribution, efficiency metrics",
   });

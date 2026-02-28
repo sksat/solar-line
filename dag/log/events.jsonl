@@ -339,3 +339,4 @@
 {"timestamp":"2026-02-28T09:26:41.746Z","action":"dependency_added","nodeId":"report.ep01","detail":"→ src.script.ep01"}
 {"timestamp":"2026-02-28T09:26:41.957Z","action":"dependency_added","nodeId":"src.dialogue.ep01","detail":"→ src.script.ep01"}
 {"timestamp":"2026-02-28T09:26:50.669Z","action":"status_changed","nodeId":"src.script.ep01","detail":"pending → valid"}
+{"timestamp":"2026-02-28T17:50:51.332Z","action":"dependency_added","nodeId":"report.ai_costs","detail":"→ report.tech_overview"}
