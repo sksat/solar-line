@@ -893,7 +893,7 @@ describe("cross-episode.md content validation", () => {
     assert.ok(content.includes("5,424") || content.includes("5424"), "should cite Scenario A ΔV");
     assert.ok(content.includes("12,912") || content.includes("12912"), "should cite Scenario B ΔV");
     assert.ok(content.includes("18,893") || content.includes("18893"), "should cite Scenario C ΔV");
-    assert.ok(content.includes("36,071") || content.includes("36071"), "should cite actual route ΔV");
+    assert.ok(content.includes("36,156") || content.includes("36156"), "should cite actual route ΔV");
   });
 
   it("EP02 dominates timeline: ~87d is ~70% of mission", () => {
