@@ -629,3 +629,117 @@ describe("cross-episode.md content validation", () => {
     );
   });
 });
+
+// ============================================================
+// Science-accuracy report: verification scorecard
+// ============================================================
+
+describe("science-accuracy.md content validation", () => {
+  const content = readReport("science-accuracy.md");
+
+  it("scorecard totals: 15 items, 11 verified, 4 approximate, 0 discrepancy", () => {
+    assert.ok(content.includes("15項目"), "should cite 15 verification items");
+    assert.ok(content.includes("11件"), "should cite 11 verified");
+    assert.ok(content.includes("4件"), "should cite 4 approximate");
+    assert.ok(
+      content.includes("不一致**: 0件"),
+      "should have 0 discrepancies",
+    );
+  });
+
+  it("average accuracy 99.0%", () => {
+    assert.ok(
+      content.includes("99.0%"),
+      "should cite 99.0% average accuracy",
+    );
+  });
+
+  it("Uranus magnetic tilt: depicted 60°, reference 59.7°", () => {
+    assert.ok(content.includes("60°"), "should cite depicted tilt 60°");
+    assert.ok(content.includes("59.7°"), "should cite reference tilt 59.7°");
+  });
+
+  it("navigation error: 14,360,000 km at 99.8% accuracy", () => {
+    assert.ok(content.includes("14,360,000"), "should cite nav error distance");
+    assert.ok(content.includes("99.8%"), "should cite 99.8% accuracy");
+  });
+
+  it("radiation exposure: 480 mSv vs ICRP 500 mSv", () => {
+    assert.ok(content.includes("480 mSv"), "should cite 480 mSv exposure");
+    assert.ok(content.includes("500 mSv"), "should cite ICRP 500 mSv limit");
+  });
+
+  it("Brachistochrone ΔV scaling: EP1→EP3 ratio ~1.31", () => {
+    assert.ok(
+      content.includes("1.314") || content.includes("1.316") || content.includes("1.31"),
+      "should cite ΔV scaling ratio ~1.31",
+    );
+  });
+
+  it("references Voyager 2 and ICRP as sources", () => {
+    assert.ok(content.includes("Voyager 2"), "should reference Voyager 2");
+    assert.ok(content.includes("ICRP"), "should reference ICRP");
+  });
+
+  it("all status values in scorecard table are verified or approximate", () => {
+    const verifiedCount = (content.match(/"status": "verified"/g) || []).length;
+    const approxCount = (content.match(/"status": "approximate"/g) || []).length;
+    const discrepancyCount = (content.match(/"status": "discrepancy"/g) || []).length;
+    const unverifiedCount = (content.match(/"status": "unverified"/g) || []).length;
+
+    assert.strictEqual(verifiedCount, 11, `should have 11 verified, got ${verifiedCount}`);
+    assert.strictEqual(approxCount, 4, `should have 4 approximate, got ${approxCount}`);
+    assert.strictEqual(discrepancyCount, 0, `should have 0 discrepancy, got ${discrepancyCount}`);
+    assert.strictEqual(unverifiedCount, 0, `should have 0 unverified, got ${unverifiedCount}`);
+  });
+});
+
+// ============================================================
+// Communications report: light-speed delay consistency
+// ============================================================
+
+describe("communications.md content validation", () => {
+  const content = readReport("communications.md");
+
+  it("cites light speed constant", () => {
+    assert.ok(
+      content.includes("299,792.458") || content.includes("299{,}792.458"),
+      "should cite exact light speed constant",
+    );
+  });
+
+  it("communication classification: 4 tiers defined", () => {
+    assert.ok(content.includes("リアルタイム"), "should define real-time tier");
+    assert.ok(content.includes("準リアルタイム"), "should define quasi-real-time tier");
+    assert.ok(content.includes("遅延通信"), "should define delayed tier");
+    assert.ok(content.includes("深宇宙通信"), "should define deep space tier");
+  });
+
+  it("all 5 episodes analyzed", () => {
+    assert.ok(content.includes("第1話"), "should analyze EP01");
+    assert.ok(content.includes("第2話"), "should analyze EP02");
+    assert.ok(content.includes("第3話"), "should analyze EP03");
+    assert.ok(content.includes("第4話"), "should analyze EP04");
+    assert.ok(content.includes("第5話"), "should analyze EP05");
+  });
+
+  it("FSOC / DSOC technology reference", () => {
+    assert.ok(content.includes("FSOC"), "should reference FSOC technology");
+    assert.ok(content.includes("DSOC"), "should reference NASA DSOC");
+  });
+
+  it("verification summary has all checks passing", () => {
+    const checkmarks = (content.match(/✅/g) || []).length;
+    assert.ok(
+      checkmarks >= 7,
+      `should have at least 7 passing verification checks, got ${checkmarks}`,
+    );
+  });
+
+  it("87-day EP02 transit referenced in communication context", () => {
+    assert.ok(
+      content.includes("87日") || content.includes("約87日"),
+      "should reference 87-day EP02 transit in communication delay context",
+    );
+  });
+});
