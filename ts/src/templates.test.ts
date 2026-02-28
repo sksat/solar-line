@@ -43,6 +43,7 @@ import {
   renderSceneTimeline,
   renderSideViewDiagram,
   renderSideViewDiagrams,
+  validateTransferOverlap,
 } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm, SideViewDiagram } from "./report-types.ts";
@@ -5437,5 +5438,121 @@ describe("renderSideViewDiagrams", () => {
 
   it("returns empty string for empty array", () => {
     assert.equal(renderSideViewDiagrams([]), "");
+  });
+});
+
+// --- validateTransferOverlap ---
+
+describe("validateTransferOverlap", () => {
+  const baseDiagram: OrbitalDiagram = {
+    id: "test-overlap",
+    title: "Test",
+    centerLabel: "木星",
+    scaleMode: "sqrt",
+    radiusUnit: "RJ",
+    orbits: [
+      { id: "a", label: "A", radius: 1.5, color: "#f00", angle: 0 },
+      { id: "b", label: "B", radius: 5, color: "#0f0", angle: 1.57 },
+      { id: "c", label: "C", radius: 15, color: "#00f", angle: 3.14 },
+    ],
+    transfers: [],
+    animation: { durationSeconds: 72000 },
+  };
+
+  it("returns no errors for non-animated diagram", () => {
+    const diagram = { ...baseDiagram, animation: undefined, transfers: [
+      { label: "A→B", fromOrbitId: "a", toOrbitId: "b", color: "#f0f", style: "hyperbolic" as const, startTime: 0, endTime: 72000 },
+      { label: "B→C", fromOrbitId: "b", toOrbitId: "c", color: "#f0f", style: "hyperbolic" as const, startTime: 0, endTime: 72000 },
+    ] };
+    assert.deepEqual(validateTransferOverlap(diagram), []);
+  });
+
+  it("returns no errors for sequential non-overlapping transfers", () => {
+    const diagram = { ...baseDiagram, transfers: [
+      { label: "A→B", fromOrbitId: "a", toOrbitId: "b", color: "#f0f", style: "hyperbolic" as const, startTime: 0, endTime: 36000 },
+      { label: "B→C", fromOrbitId: "b", toOrbitId: "c", color: "#f0f", style: "hyperbolic" as const, startTime: 36000, endTime: 72000 },
+    ] };
+    assert.deepEqual(validateTransferOverlap(diagram), []);
+  });
+
+  it("returns no errors for adjacent transfers (startTime === endTime)", () => {
+    const diagram = { ...baseDiagram, transfers: [
+      { label: "A→B", fromOrbitId: "a", toOrbitId: "b", color: "#f0f", style: "hyperbolic" as const, startTime: 0, endTime: 36000 },
+      { label: "B→C", fromOrbitId: "b", toOrbitId: "c", color: "#f0f", style: "hyperbolic" as const, startTime: 36000, endTime: 72000 },
+    ] };
+    const errors = validateTransferOverlap(diagram);
+    assert.equal(errors.length, 0);
+  });
+
+  it("detects overlap in same scenario", () => {
+    const diagram = { ...baseDiagram, transfers: [
+      { label: "approach", fromOrbitId: "a", toOrbitId: "b", color: "#0f0", style: "hyperbolic" as const, scenarioId: "perijove", startTime: 0, endTime: 72000 },
+      { label: "capture", fromOrbitId: "b", toOrbitId: "c", color: "#0f0", style: "hyperbolic" as const, scenarioId: "perijove", startTime: 36000, endTime: 72000 },
+    ] };
+    const errors = validateTransferOverlap(diagram);
+    assert.equal(errors.length, 1);
+    assert.ok(errors[0].includes("overlap"));
+    assert.ok(errors[0].includes("perijove"));
+    assert.ok(errors[0].includes("approach"));
+    assert.ok(errors[0].includes("capture"));
+  });
+
+  it("detects overlap in default (no scenario) group", () => {
+    const diagram = { ...baseDiagram, transfers: [
+      { label: "leg1", fromOrbitId: "a", toOrbitId: "b", color: "#f0f", style: "hyperbolic" as const, startTime: 0, endTime: 50000 },
+      { label: "leg2", fromOrbitId: "b", toOrbitId: "c", color: "#f0f", style: "hyperbolic" as const, startTime: 30000, endTime: 72000 },
+    ] };
+    const errors = validateTransferOverlap(diagram);
+    assert.equal(errors.length, 1);
+    assert.ok(errors[0].includes("overlap"));
+  });
+
+  it("allows overlap across different scenarios", () => {
+    const diagram = { ...baseDiagram, transfers: [
+      { label: "fast route", fromOrbitId: "a", toOrbitId: "c", color: "#0f0", style: "hyperbolic" as const, scenarioId: "fast", startTime: 0, endTime: 72000 },
+      { label: "slow route", fromOrbitId: "a", toOrbitId: "c", color: "#f0f", style: "hyperbolic" as const, scenarioId: "slow", startTime: 0, endTime: 72000 },
+    ] };
+    assert.deepEqual(validateTransferOverlap(diagram), []);
+  });
+
+  it("skips transfers without startTime/endTime", () => {
+    const diagram = { ...baseDiagram, transfers: [
+      { label: "Hohmann (ref)", fromOrbitId: "a", toOrbitId: "c", color: "#888", style: "hohmann" as const },
+      { label: "active", fromOrbitId: "a", toOrbitId: "b", color: "#0f0", style: "brachistochrone" as const, startTime: 0, endTime: 72000 },
+    ] };
+    assert.deepEqual(validateTransferOverlap(diagram), []);
+  });
+
+  it("detects multiple overlaps in same scenario", () => {
+    const diagram = { ...baseDiagram, transfers: [
+      { label: "leg1", fromOrbitId: "a", toOrbitId: "b", color: "#f0f", style: "hyperbolic" as const, scenarioId: "s1", startTime: 0, endTime: 40000 },
+      { label: "leg2", fromOrbitId: "b", toOrbitId: "c", color: "#f0f", style: "hyperbolic" as const, scenarioId: "s1", startTime: 20000, endTime: 60000 },
+      { label: "leg3", fromOrbitId: "a", toOrbitId: "c", color: "#f0f", style: "hyperbolic" as const, scenarioId: "s1", startTime: 50000, endTime: 72000 },
+    ] };
+    const errors = validateTransferOverlap(diagram);
+    assert.equal(errors.length, 2); // leg1/leg2 overlap + leg2/leg3 overlap
+  });
+});
+
+describe("renderOrbitalDiagram rejects overlapping transfers", () => {
+  it("throws on same-scenario transfer overlap", () => {
+    const diagram: OrbitalDiagram = {
+      id: "test-reject-overlap",
+      title: "Test",
+      centerLabel: "木星",
+      scaleMode: "sqrt",
+      radiusUnit: "RJ",
+      orbits: [
+        { id: "a", label: "A", radius: 1.5, color: "#f00", angle: 0 },
+        { id: "b", label: "B", radius: 5, color: "#0f0", angle: 1.57 },
+        { id: "c", label: "C", radius: 15, color: "#00f", angle: 3.14 },
+      ],
+      transfers: [
+        { label: "A→B", fromOrbitId: "a", toOrbitId: "b", color: "#0f0", style: "hyperbolic", scenarioId: "s1", startTime: 0, endTime: 72000 },
+        { label: "B→C", fromOrbitId: "b", toOrbitId: "c", color: "#0f0", style: "hyperbolic", scenarioId: "s1", startTime: 36000, endTime: 72000 },
+      ],
+      animation: { durationSeconds: 72000 },
+    };
+    assert.throws(() => renderOrbitalDiagram(diagram), /overlap/i);
   });
 });

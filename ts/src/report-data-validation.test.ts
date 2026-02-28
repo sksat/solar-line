@@ -11,6 +11,7 @@ import * as assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { EpisodeReport, TransferAnalysis, DialogueQuote, SummaryReport, OrbitalDiagram, BurnMarker, TransferArc } from "./report-types.ts";
+import { validateTransferOverlap } from "./templates.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
 import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
@@ -204,6 +205,27 @@ describe("report data: diagram referential integrity", () => {
       it(`ep${String(epNum).padStart(2, "0")} ${diagram.id}: orbits have unique IDs`, () => {
         const ids = diagram.orbits.map(o => o.id);
         assert.equal(ids.length, orbitIds.size, `Duplicate orbit IDs in diagram ${diagram.id}`);
+      });
+    }
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Animated transfer overlap validation
+// ---------------------------------------------------------------------------
+
+describe("report data: no same-scenario transfer overlap in animated diagrams", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+
+    for (const diagram of report.diagrams ?? []) {
+      if (!diagram.animation) continue;
+
+      it(`ep${String(epNum).padStart(2, "0")} ${diagram.id}: animated transfers have non-overlapping time windows`, () => {
+        const errors = validateTransferOverlap(diagram);
+        assert.deepStrictEqual(errors, [], errors.join("\n"));
       });
     }
   }

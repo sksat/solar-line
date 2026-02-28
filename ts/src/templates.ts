@@ -1418,10 +1418,58 @@ function transferStyleLabel(style: TransferArc["style"]): string {
 }
 
 /**
+ * Validate that animated transfers within the same scenario do not have
+ * overlapping time windows. A ship cannot be in two places at once —
+ * each scenario's transfers must be sequentially non-overlapping.
+ *
+ * Returns an array of error messages (empty if valid).
+ */
+export function validateTransferOverlap(diagram: OrbitalDiagram): string[] {
+  if (!diagram.animation) return [];
+
+  const errors: string[] = [];
+  // Group animated transfers by scenario
+  const byScenario = new Map<string, { label: string; startTime: number; endTime: number }[]>();
+
+  for (const t of diagram.transfers) {
+    if (t.startTime === undefined || t.endTime === undefined) continue;
+    const key = t.scenarioId ?? "__default__";
+    if (!byScenario.has(key)) byScenario.set(key, []);
+    byScenario.get(key)!.push({ label: t.label, startTime: t.startTime, endTime: t.endTime });
+  }
+
+  for (const [scenario, transfers] of byScenario) {
+    // Sort by startTime for pairwise comparison
+    const sorted = [...transfers].sort((a, b) => a.startTime - b.startTime);
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const curr = sorted[i];
+      const next = sorted[i + 1];
+      // Overlap: next starts strictly before current ends
+      if (next.startTime < curr.endTime) {
+        const scenarioLabel = scenario === "__default__" ? "(no scenario)" : scenario;
+        errors.push(
+          `${diagram.id}: transfers overlap in scenario "${scenarioLabel}": ` +
+          `"${curr.label}" [${curr.startTime}, ${curr.endTime}] overlaps with ` +
+          `"${next.label}" [${next.startTime}, ${next.endTime}]`
+        );
+      }
+    }
+  }
+
+  return errors;
+}
+
+/**
  * Render an orbital transfer diagram as inline SVG.
  * Top-down view of orbital system with concentric orbits and transfer arcs.
  */
 export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
+  // Validate no same-scenario transfer overlap (fail fast at build time)
+  const overlapErrors = validateTransferOverlap(diagram);
+  if (overlapErrors.length > 0) {
+    throw new Error(`Transfer overlap in diagram ${diagram.id}:\n${overlapErrors.join("\n")}`);
+  }
+
   const size = 500;
   const cx = size / 2;
   const cy = size / 2;
