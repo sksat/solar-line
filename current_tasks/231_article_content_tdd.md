@@ -1,6 +1,6 @@
 # Task 231: Article Content TDD — Report Content Verification Tests
 
-## Status: TODO
+## Status: DONE
 
 ## Human Directive
 
@@ -38,8 +38,39 @@ Build a report content verification test suite within the TS test infrastructure
 - Task 094: Transcription-report sync validation
 - Various data validation tests in `ts/src/__tests__/`
 
-## Design Questions
+## Implementation
 
-- Should content tests be a separate test file (e.g. `report-content-validation.test.ts`)?
-- How to handle stats that change with each commit (task count, commit count)?
-- Should the test suite be aware of the DAG to know which reports need re-validation?
+Created `ts/src/article-content-validation.test.ts` with 31 tests covering:
+
+### Tech-overview stats freshness (7 tests)
+- Task count matches current_tasks/ (with ±5 tolerance for lag)
+- Rust test count in body text matches stats table
+- Body task count matches stats table
+- Total test count = sum of components
+- All 3 integrator types mentioned
+- Störmer-Verlet marked as ballistic only
+- DAG viewer mentions WASM
+
+### Per-episode article content (5 episodes, 16 tests total)
+- EP01: 72h transit, mass boundary, ΔV, Mars→Ganymede route
+- EP02: ~87d primary (not 455d), Jupiter/Saturn route
+- EP03: 143h transit, Enceladus→Titania, 452.5t boundary
+- EP04: 65% thrust, plasmoid exposure, Titania→Earth
+- EP05: 507h composite, nozzle margin, LEO 400km, Uranus→Earth
+
+### Cross-report consistency (6 tests)
+- 9.8 MN thrust in ship-kestrel + cross-episode
+- 48,000t mass in ship-kestrel + cross-episode
+- 6.37 MN / 65% in ship-kestrel
+- 24 transfers in tech-overview
+- KESTREL constants ↔ SHIP_SPECS sync
+- 全5話 referenced consistently
+
+### Verdict summary (2 tests)
+- Verdict counts sum to 24
+- Zero implausible verdicts
+
+### Design decisions resolved
+- Separate test file: YES (`article-content-validation.test.ts`)
+- Stats lag: task count allows ±5 tolerance; commit count not tested (changes too frequently)
+- DAG awareness: NOT needed — tests are comprehensive enough without it
