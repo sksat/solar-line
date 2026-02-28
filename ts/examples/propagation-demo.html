@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>軌道伝播デモ — 積分器比較</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card-bg: #161b22;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --red: #f85149;
+  --purple: #d2a8ff;
+}
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+h2 { color: var(--accent); font-size: 1.1em; margin-top: 24px; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin: 16px 0; }
+
+/* Preset buttons */
+#preset-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.preset-btn {
+  background: #21262d; color: var(--text); border: 1px solid var(--border);
+  padding: 6px 14px; cursor: pointer; border-radius: 4px; font-size: 0.9em;
+  transition: background 0.15s;
+}
+.preset-btn:hover { background: var(--border); }
+.preset-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: bold; }
+
+/* Controls */
+.controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 0.85em; color: var(--text-muted); }
+.control-group input {
+  background: #21262d; color: var(--text); border: 1px solid var(--border);
+  padding: 6px 10px; border-radius: 4px; font-family: monospace; font-size: 0.9em;
+}
+.control-group input:focus { outline: none; border-color: var(--accent); }
+#run-btn {
+  background: var(--green); color: var(--bg); border: none; padding: 8px 24px;
+  border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.95em;
+  margin-top: 12px;
+}
+#run-btn:hover { opacity: 0.9; }
+
+/* Status */
+.status-bar { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; }
+#engine-badge { font-size: 0.85em; color: var(--text-muted); background: #21262d; padding: 3px 10px; border-radius: 3px; }
+#run-status { font-size: 0.85em; color: var(--green); }
+#scenario-description { font-size: 0.9em; color: var(--text-muted); margin: 4px 0 12px 0; }
+
+/* Trajectory SVG */
+#trajectory-svg { display: block; margin: 0 auto; border: 1px solid var(--border); border-radius: 4px; }
+
+/* Comparison table */
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 12px 0; }
+.comparison-table th { background: #21262d; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); font-weight: 600; }
+.comparison-table td { padding: 6px 12px; border-bottom: 1px solid var(--border); font-family: monospace; font-size: 0.85em; }
+.comparison-table tr:hover td { background: #1c2128; }
+.val-good { color: var(--green); }
+.val-ok { color: #d29922; }
+.val-bad { color: var(--red); }
+
+/* Drift chart */
+.drift-bars { margin: 12px 0; }
+.bar-row { display: flex; align-items: center; margin: 8px 0; gap: 8px; }
+.bar-label { width: 180px; text-align: right; font-size: 0.85em; flex-shrink: 0; }
+.bar-container { flex: 1; height: 22px; background: #21262d; border-radius: 3px; position: relative; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; min-width: 2px; }
+.bar-value { font-size: 0.8em; color: var(--text-muted); min-width: 80px; font-family: monospace; }
+.drift-note { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; }
+
+/* Integrator legend */
+.legend { display: flex; gap: 16px; margin: 8px 0; font-size: 0.85em; }
+.legend-item { display: flex; align-items: center; gap: 4px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+/* Footer */
+.footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.8em; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<h1>軌道伝播デモ — 積分器比較</h1>
+<p>SOLAR LINE 考証で使用する3種類の数値積分器をブラウザ上で実行し、精度・性能を比較するインタラクティブデモです。</p>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#58a6ff"></span> RK4（固定刻み）</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3fb950"></span> RK45 Dormand-Prince（適応刻み）</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#d2a8ff"></span> Störmer-Verlet（辰巳型）</div>
+</div>
+
+<h2>シナリオ選択</h2>
+<div id="preset-buttons"></div>
+<div id="scenario-description"></div>
+
+<h2>パラメータ調整</h2>
+<div class="card">
+  <div class="controls">
+    <div class="control-group">
+      <label for="ctrl-dt">刻み幅 dt（秒）— RK4, Verlet用</label>
+      <input type="number" id="ctrl-dt" value="3600" step="any">
+    </div>
+    <div class="control-group">
+      <label for="ctrl-duration">伝播期間（日）</label>
+      <input type="number" id="ctrl-duration" value="365.25" step="any">
+    </div>
+    <div class="control-group">
+      <label for="ctrl-rtol">相対許容誤差 rtol — RK45用</label>
+      <input type="text" id="ctrl-rtol" value="1e-10">
+    </div>
+    <div class="control-group">
+      <label for="ctrl-atol">絶対許容誤差 atol — RK45用</label>
+      <input type="text" id="ctrl-atol" value="1e-10">
+    </div>
+  </div>
+  <button id="run-btn">実行</button>
+  <div class="status-bar">
+    <span id="engine-badge">エンジン: 読込中...</span>
+    <span id="run-status"></span>
+  </div>
+</div>
+
+<h2>軌道軌跡（RK4）</h2>
+<div class="card">
+  <svg id="trajectory-svg" viewBox="0 0 500 500" width="500" height="500">
+    <rect width="500" height="500" fill="#0d1117"/>
+    <text x="250" y="250" fill="#484f58" font-size="12" text-anchor="middle">WASMを読み込み中...</text>
+  </svg>
+</div>
+
+<h2>積分器比較</h2>
+<div class="card">
+  <div id="results-table">
+    <p style="color: var(--text-muted);">シナリオを選択して「実行」を押してください。</p>
+  </div>
+</div>
+
+<h2>エネルギードリフト比較</h2>
+<div class="card">
+  <div id="drift-chart">
+    <p style="color: var(--text-muted);">実行後に表示されます。</p>
+  </div>
+</div>
+
+<div class="footer">
+  <p>SOLAR LINE 考証 — 数値積分デモ。Rust → WASM (wasm-pack) でビルドされた軌道力学計算を使用。</p>
+  <p>積分器: RK4 (4次Runge-Kutta固定刻み) / RK45 Dormand-Prince (適応刻み, PI制御) / Störmer-Verlet (辰巳型leapfrog)</p>
+</div>
+
+<script type="module" src="../src/propagation-demo.js"></script>
+</body>
+</html>

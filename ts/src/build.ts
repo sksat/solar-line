@@ -788,6 +788,12 @@ export function build(config: BuildConfig): void {
     fs.copyFileSync(animSrc, path.join(outDir, "orbital-animation.js"));
   }
 
+  // Copy propagation demo JS for interactive integrator comparison
+  const propDemoSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "propagation-demo.js");
+  if (fs.existsSync(propDemoSrc)) {
+    fs.copyFileSync(propDemoSrc, path.join(outDir, "propagation-demo.js"));
+  }
+
   // Copy DAG viewer JS and state data for interactive visualization
   const dagViewerSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "dag-viewer.js");
   if (fs.existsSync(dagViewerSrc)) {

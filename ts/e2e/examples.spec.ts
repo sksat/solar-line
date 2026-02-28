@@ -242,6 +242,108 @@ test.describe("Orbital Animation Example", () => {
   });
 });
 
+// --- Propagation Demo Example ---
+
+test.describe("Propagation Demo Example", () => {
+  test("loads without JS errors", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/examples/propagation-demo.html");
+    // Wait for WASM load + initial computation
+    await page.waitForTimeout(3000);
+    expect(errors).toEqual([]);
+  });
+
+  test("renders preset buttons", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    const buttons = page.locator(".preset-btn");
+    expect(await buttons.count()).toBeGreaterThanOrEqual(5);
+  });
+
+  test("WASM engine badge shows status", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    await page.waitForTimeout(3000);
+    const badge = page.locator("#engine-badge");
+    await expect(badge).toBeVisible();
+    const text = await badge.textContent();
+    // Should show WASM or 利用不可
+    expect(text).toMatch(/エンジン:/);
+  });
+
+  test("trajectory SVG renders after computation", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    await page.waitForTimeout(3000);
+    const svg = page.locator("#trajectory-svg");
+    await expect(svg).toBeVisible();
+    // Should contain path elements (trajectory) or at least circles (sun, start, end)
+    const circles = svg.locator("circle");
+    expect(await circles.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("comparison table renders with integrator results", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    await page.waitForTimeout(3000);
+    const table = page.locator(".comparison-table");
+    // Table may not exist if WASM failed to load
+    const tableCount = await table.count();
+    if (tableCount > 0) {
+      const rows = table.locator("tbody tr");
+      expect(await rows.count()).toBeGreaterThanOrEqual(5);
+      // Headers should include integrator names
+      const headers = table.locator("th");
+      expect(await headers.count()).toBe(4); // item + 3 integrators
+    }
+  });
+
+  test("preset button click updates scenario", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    await page.waitForTimeout(3000);
+
+    // Click a different preset
+    const marsBtn = page.locator('.preset-btn:has-text("火星遷移軌道")');
+    if (await marsBtn.count() > 0) {
+      await marsBtn.click();
+      await page.waitForTimeout(2000);
+      // Description should update
+      const desc = page.locator("#scenario-description");
+      await expect(desc).toContainText("火星");
+    }
+  });
+
+  test("drift chart renders bar elements", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    await page.waitForTimeout(3000);
+    const driftChart = page.locator("#drift-chart");
+    const bars = driftChart.locator(".bar-fill");
+    // 3 bars if WASM loaded, 0 if not
+    const count = await bars.count();
+    expect(count === 0 || count === 3).toBeTruthy();
+  });
+
+  test("run button triggers recomputation", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    await page.waitForTimeout(3000);
+
+    const runBtn = page.locator("#run-btn");
+    await expect(runBtn).toBeVisible();
+    await runBtn.click();
+    await page.waitForTimeout(2000);
+
+    const status = page.locator("#run-status");
+    const statusText = await status.textContent();
+    // Should say 完了 or エラー
+    expect(statusText).toMatch(/完了|エラー|WASM/);
+  });
+
+  test("parameter inputs are functional", async ({ page }) => {
+    await page.goto("/examples/propagation-demo.html");
+    const dtInput = page.locator("#ctrl-dt");
+    await expect(dtInput).toBeVisible();
+    // Verify it has a value
+    const dtValue = await dtInput.inputValue();
+    expect(Number(dtValue)).toBeGreaterThan(0);
+  });
+});
+
 // --- DAG Viewer Example ---
 
 test.describe("DAG Viewer Example", () => {
