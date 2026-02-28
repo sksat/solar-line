@@ -341,9 +341,9 @@ describe("EP03 article content validation", () => {
     );
   });
 
-  it("has margin gauge with nav accuracy data", () => {
+  it("has margin gauge with nav discrepancy data", () => {
     assert.ok(content.includes("margin-gauge"), "EP03 should have margin-gauge fence");
-    assert.ok(content.includes('"actual": 0.2'), "should cite 0.2° nav error");
+    assert.ok(content.includes('"actual": 1.23'), "should cite 1.23° nav system discrepancy");
   });
 
   it("Hohmann baseline: 2.74 km/s, ~27.3 years", () => {
