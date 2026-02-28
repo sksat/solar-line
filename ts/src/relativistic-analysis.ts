@@ -306,10 +306,13 @@ export function analyzeRelativisticEffects() {
   const maxTdPpm = Math.max(...transfers.map(t => t.relativistic.timeDilationPpm));
   const maxDvCorrPpm = Math.max(...transfers.map(t => t.relativistic.dvCorrectionPpm));
 
-  // Cumulative time dilation over the entire 479-day journey
-  // Approximate by summing dilation from each transfer phase
+  // Cumulative time dilation summed across all analyzed transfer scenarios
   const totalDilationSec = transfers.reduce(
     (sum, t) => sum + t.relativistic.timeDilationSec,
+    0,
+  );
+  const totalTransferDays = transfers.reduce(
+    (sum, t) => sum + t.classicalTimeSec / 86400,
     0,
   );
 
@@ -327,7 +330,7 @@ export function analyzeRelativisticEffects() {
         `最大β = ${(maxBeta * 100).toFixed(3)}%c、` +
         `最大時間遅れ = ${maxTdPpm.toFixed(1)} ppm。` +
         "航法計算への影響は無視可能であり、古典力学による分析は妥当。" +
-        `全行程（479日）累積時間遅れ ≈ ${totalDilationSec.toFixed(1)}秒（${(totalDilationSec / 60).toFixed(2)}分）。`,
+        `全${transfers.length}シナリオ（計${Math.round(totalTransferDays)}日分）累積時間遅れ ≈ ${totalDilationSec.toFixed(1)}秒（${(totalDilationSec / 60).toFixed(2)}分）。`,
     },
     parameters: {
       speedOfLightKms: C_KM_S,

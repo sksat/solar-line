@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generatedAt": "2026-02-25T08:10:56.776Z",
+    "generatedAt": "2026-02-28T14:05:43.977Z",
     "reproductionCommand": "npm run recalculate",
-    "durationMs": 0
+    "durationMs": 1
   },
   "transfers": [
     {
@@ -57,28 +57,28 @@
     },
     {
       "episode": 2,
-      "transferId": "ep02-ballistic-cruise",
-      "label": "木星系→土星/エンケラドス（トリム推力遷移 87日, ~1500 km/s）",
-      "distanceKm": 58968000000,
-      "distanceAU": 394.1767334259257,
+      "transferId": "ep02-trim-thrust-cruise",
+      "label": "木星系→土星/エンケラドス（トリム推力遷移 87日, ~65 km/s巡航）",
+      "distanceKm": 488592000,
+      "distanceAU": 3.2660357912433846,
       "accelKms2": 0,
       "accelG": 0,
       "classicalTimeSec": 7516800,
-      "classicalPeakVelocityKms": 1500,
-      "classicalDeltaVKms": 0,
+      "classicalPeakVelocityKms": 65,
+      "classicalDeltaVKms": 85,
       "relativistic": {
-        "peakVelocityKms": 1500,
-        "betaPeak": 0.005003461427972281,
-        "gammaPeak": 1.0000125175481602,
-        "timeDilationPpm": 12.517391473232387,
-        "timeDilationSec": 94.09,
+        "peakVelocityKms": 65,
+        "betaPeak": 0.00021681666187879883,
+        "gammaPeak": 1.0000000235047333,
+        "timeDilationPpm": 0.02350473271572895,
+        "timeDilationSec": 0.17668037487759136,
         "coordinateTimeSec": 7516800,
-        "properTimeSec": 7516705.91,
-        "keCorrectionPpm": 18.77636385971826,
+        "properTimeSec": 7516799.823319625,
+        "keCorrectionPpm": 0.035597417236132856,
         "dvCorrectionFraction": 0,
         "dvCorrectionPpm": 0
       },
-      "verdict": "微小な相対論的効果（β ≈ 0.5%）— 87日間の時間遅れ ≈ 0.1秒"
+      "verdict": "相対論的効果は無視可能（β ≈ 0.02%）— 87日間の時間遅れ ≈ 0.001秒。純粋弾道（約997日）より遷移時間が大幅短縮され、巡航速度も低いため相対論的影響はさらに小さい。"
     },
     {
       "episode": 3,
@@ -162,9 +162,9 @@
     "maxGamma": 1.0004948334745898,
     "maxTimeDilationPpm": 494.58873552732376,
     "maxDvCorrectionPpm": 1317.4698014483072,
-    "cumulativeTimeDilationSec": 665.8783821833124,
-    "cumulativeTimeDilationMin": 11.09797303638854,
-    "conclusion": "全転送において相対論的補正は0.1%未満。最大β = 3.145%c、最大時間遅れ = 494.6 ppm。航法計算への影響は無視可能であり、古典力学による分析は妥当。全行程（479日）累積時間遅れ ≈ 665.9秒（11.10分）。"
+    "cumulativeTimeDilationSec": 173.97136896247844,
+    "cumulativeTimeDilationMin": 2.899522816041307,
+    "conclusion": "全転送において相対論的補正は0.1%未満。最大β = 3.145%c、最大時間遅れ = 494.6 ppm。航法計算への影響は無視可能であり、古典力学による分析は妥当。全6シナリオ（計136日分）累積時間遅れ ≈ 174.0秒（2.90分）。"
   },
   "parameters": {
     "speedOfLightKms": 299792.458,
