@@ -19,3 +19,10 @@ This merits further investigation:
 - Check if the creator has clarified anywhere
 
 This is significant because the plausibility verdict hinges on mass interpretation.
+
+## Status: RESOLVED
+
+Mass ambiguity extensively analyzed in ship-kestrel.md and cross-episode.md.
+Analysis uses 300-500t effective mass range; 48,000t nominal remains a mystery
+(cascading to ~67% of DAG nodes via param.ship_mass).
+EP01-05 all independently derive mass bounds consistent with 300-500t range.
