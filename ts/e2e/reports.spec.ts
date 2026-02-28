@@ -868,3 +868,127 @@ test.describe("Margin gauge visualization", () => {
     }
   });
 });
+
+// --- Science-accuracy page tests (Task 242) ---
+
+test.describe("Summary: science-accuracy page", () => {
+  test("has all main sections", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    await expect(page.locator("h2:has-text('検証方法')")).toBeVisible();
+    await expect(page.locator("h2:has-text('検証スコアカード')")).toBeVisible();
+    await expect(page.locator("h2:has-text('Brachistochrone力学の検証')")).toBeVisible();
+    await expect(page.locator("h2:has-text('実測データとの照合')")).toBeVisible();
+    await expect(page.locator("h2:has-text('航法精度の検証')")).toBeVisible();
+    await expect(page.locator("h2:has-text('総合評価')")).toBeVisible();
+  });
+
+  test("verification scorecard table renders with correct structure", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    const table = page.locator(".verification-table");
+    await expect(table).toBeVisible();
+    // Should have caption
+    const caption = table.locator("caption");
+    await expect(caption).toBeVisible();
+    // Should have header row with all columns
+    const headers = table.locator("thead th");
+    expect(await headers.count()).toBeGreaterThanOrEqual(6);
+    // Should have 15 data rows
+    const dataRows = table.locator("tbody tr");
+    expect(await dataRows.count()).toBe(15);
+  });
+
+  test("verification table has status badges", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    const badges = page.locator(".verification-badge");
+    expect(await badges.count()).toBeGreaterThanOrEqual(10);
+  });
+
+  test("verification table has external source links", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    const table = page.locator(".verification-table");
+    // Source cells should have clickable links (DOI, JPL, etc.)
+    const links = table.locator("a[href^='http']");
+    expect(await links.count()).toBeGreaterThanOrEqual(5);
+  });
+
+  test("episode comparison table renders", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    const compTable = page.locator(".comparison-table");
+    expect(await compTable.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has glossary terms with tooltips", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    const glossaryTerms = page.locator(".glossary-term");
+    expect(await glossaryTerms.count()).toBeGreaterThanOrEqual(1);
+    const tip = glossaryTerms.first().locator(".glossary-tip").first();
+    await expect(tip).toHaveAttribute("role", "tooltip");
+  });
+
+  test("internal cross-links to other reports are valid", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    const shipLink = page.locator('a[href*="ship-kestrel"]');
+    expect(await shipLink.count()).toBeGreaterThanOrEqual(1);
+    const href = await shipLink.first().getAttribute("href");
+    if (href) {
+      const response = await page.request.get(new URL(href, page.url()).href);
+      expect(response.status(), `Link ${href} should resolve`).toBe(200);
+    }
+  });
+});
+
+// --- Communications page tests (Task 242) ---
+
+test.describe("Summary: communications page", () => {
+  test("has all episode analysis sections", async ({ page }) => {
+    await page.goto("/summary/communications.html");
+    await expect(page.locator("h2:has-text('第1話')")).toBeVisible();
+    await expect(page.locator("h2:has-text('第2話')")).toBeVisible();
+    await expect(page.locator("h2:has-text('第3話')")).toBeVisible();
+    await expect(page.locator("h2:has-text('第4話')")).toBeVisible();
+    await expect(page.locator("h2:has-text('第5話')")).toBeVisible();
+  });
+
+  test("has communication delay profile table", async ({ page }) => {
+    await page.goto("/summary/communications.html");
+    // The 全話通貫 table with route/distance/delay columns
+    const tables = page.locator("table");
+    expect(await tables.count()).toBeGreaterThanOrEqual(3);
+    // Should contain AU distance values
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("AU");
+    expect(pageContent).toContain("深宇宙通信");
+  });
+
+  test("renders KaTeX display math for FSPL formulas", async ({ page }) => {
+    await page.goto("/summary/communications.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    // Display math ($$...$$) for FSPL calculations
+    const displayMath = page.locator(".katex-display");
+    expect(await displayMath.count()).toBeGreaterThanOrEqual(2);
+  });
+
+  test("has FSOC technical analysis section", async ({ page }) => {
+    await page.goto("/summary/communications.html");
+    await expect(page.locator("h2:has-text('可視光通信の技術的妥当性')")).toBeVisible();
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("FSOC");
+    expect(pageContent).toContain("DSOC");
+  });
+
+  test("has glossary terms with tooltips", async ({ page }) => {
+    await page.goto("/summary/communications.html");
+    const glossaryTerms = page.locator(".glossary-term");
+    expect(await glossaryTerms.count()).toBeGreaterThanOrEqual(1);
+    const tip = glossaryTerms.first().locator(".glossary-tip");
+    await expect(tip).toHaveAttribute("role", "tooltip");
+  });
+
+  test("conclusion section has evaluation", async ({ page }) => {
+    await page.goto("/summary/communications.html");
+    await expect(page.locator("h2:has-text('結論')")).toBeVisible();
+    const pageContent = await page.textContent("body");
+    // Should have scientific accuracy evaluation
+    expect(pageContent).toContain("光速遅延");
+  });
+});
