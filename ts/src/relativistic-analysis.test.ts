@@ -87,7 +87,7 @@ describe("relativistic-analysis", () => {
 
   it("summary should report max β < 5% and max ΔV correction < 1%", () => {
     assert.ok(result.summary.maxBetaPercent < 5, `max β = ${result.summary.maxBetaPercent}%`);
-    // Highest ΔV correction is EP05 at 300t: ~1317 ppm (~0.13%)
+    // Highest ΔV correction is EP05 at 300t (65% thrust): ~857 ppm (~0.09%)
     assert.ok(
       result.summary.maxDvCorrectionPpm < 10000,
       `max ΔV corr = ${result.summary.maxDvCorrectionPpm} ppm`,
@@ -131,5 +131,20 @@ describe("relativistic-analysis", () => {
       // Should contain Japanese characters
       assert.ok(/[\u3000-\u9FFF]/.test(t.verdict), `${t.transferId}: verdict not in Japanese`);
     }
+  });
+
+  it("EP05 peak velocity matches ep05-analysis (65% damaged thrust)", () => {
+    const ep05Transfer = result.transfers.find(t => t.transferId === "ep05-brach-300t");
+    assert.ok(ep05Transfer, "EP05 300t transfer should exist");
+    // EP05 operates at 65% thrust — peak velocity should be ~7604 km/s (~2.54%c)
+    // NOT ~9431 km/s (which would be full 9.8 MN thrust)
+    assert.ok(
+      ep05Transfer.classicalPeakVelocityKms < 8000,
+      `EP05 peak velocity ${ep05Transfer.classicalPeakVelocityKms.toFixed(0)} km/s should reflect 65% damaged thrust (<8000)`,
+    );
+    assert.ok(
+      ep05Transfer.relativistic.betaPeak < 0.03,
+      `EP05 β = ${(ep05Transfer.relativistic.betaPeak * 100).toFixed(2)}%c should be <3%c with damaged thrust`,
+    );
   });
 });

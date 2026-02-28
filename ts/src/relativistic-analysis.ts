@@ -284,10 +284,10 @@ export function analyzeRelativisticEffects() {
   );
 
   // ── EP05: Uranus → Earth (507h composite route) ──
-  // Highest-acceleration scenario (300t, max ΔV)
+  // EP05 operates at 65% thrust (damaged engine from EP04)
   const ep05DistKm = 2_722_862_130; // Uranus-Earth
   const ep05MassKg = 300_000; // 300t effective mass
-  const ep05AccelMs2 = THRUST_N / ep05MassKg; // ~32.7 m/s²
+  const ep05AccelMs2 = KESTREL.damagedThrustN / ep05MassKg; // ~21.2 m/s² (65% thrust)
   const ep05AccelKms2 = ep05AccelMs2 / 1000;
   const ep05TimeSec = Math.sqrt((4 * ep05DistKm * 1000) / ep05AccelMs2);
   transfers.push(

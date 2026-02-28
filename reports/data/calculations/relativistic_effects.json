@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generatedAt": "2026-02-28T14:05:43.977Z",
+    "generatedAt": "2026-02-28T14:12:55.910Z",
     "reproductionCommand": "npm run recalculate",
     "durationMs": 1
   },
@@ -136,35 +136,35 @@
       "label": "天王星→地球（300t、brachistochrone）",
       "distanceKm": 2722862130,
       "distanceAU": 18.20120912991043,
-      "accelKms2": 0.03266666666666666,
-      "accelG": 3.3310729623945656,
-      "classicalTimeSec": 577418.1235359305,
-      "classicalPeakVelocityKms": 9431.162684420198,
-      "classicalDeltaVKms": 18862.325368840397,
+      "accelKms2": 0.021233333333333337,
+      "accelG": 2.1651974255564683,
+      "classicalTimeSec": 716199.0369977792,
+      "classicalPeakVelocityKms": 7603.64644279309,
+      "classicalDeltaVKms": 15207.29288558618,
       "relativistic": {
-        "peakVelocityKms": 9427.664202177193,
-        "betaPeak": 0.03144730279431244,
-        "gammaPeak": 1.0004948334745898,
-        "timeDilationPpm": 494.58873552732376,
-        "timeDilationSec": 95.23487038863823,
-        "coordinateTimeSec": 577489.5505721403,
-        "properTimeSec": 577394.3157017516,
-        "keCorrectionPpm": 742.3114118849661,
-        "dvCorrectionFraction": 0.0013174698014483072,
-        "dvCorrectionPpm": 1317.4698014483072
+        "peakVelocityKms": 7601.812770339287,
+        "betaPeak": 0.025356917986039822,
+        "gammaPeak": 1.0003216417584835,
+        "timeDilationPpm": 321.53833832693215,
+        "timeDilationSec": 76.78280155174434,
+        "coordinateTimeSec": 716256.6245619843,
+        "properTimeSec": 716179.8417604326,
+        "keCorrectionPpm": 482.488497048239,
+        "dvCorrectionFraction": 0.0008568294719186098,
+        "dvCorrectionPpm": 856.8294719186098
       },
       "verdict": "測定可能な相対論的効果（β = 1-5%）— 補正は0.1%未満、航法精度に影響なし"
     }
   ],
   "summary": {
-    "maxBetaPeak": 0.03144730279431244,
-    "maxBetaPercent": 3.144730279431244,
-    "maxGamma": 1.0004948334745898,
-    "maxTimeDilationPpm": 494.58873552732376,
-    "maxDvCorrectionPpm": 1317.4698014483072,
-    "cumulativeTimeDilationSec": 173.97136896247844,
-    "cumulativeTimeDilationMin": 2.899522816041307,
-    "conclusion": "全転送において相対論的補正は0.1%未満。最大β = 3.145%c、最大時間遅れ = 494.6 ppm。航法計算への影響は無視可能であり、古典力学による分析は妥当。全6シナリオ（計136日分）累積時間遅れ ≈ 174.0秒（2.90分）。"
+    "maxBetaPeak": 0.025356917986039822,
+    "maxBetaPercent": 2.5356917986039824,
+    "maxGamma": 1.0003216417584835,
+    "maxTimeDilationPpm": 321.53833832693215,
+    "maxDvCorrectionPpm": 856.8294719186098,
+    "cumulativeTimeDilationSec": 155.51930012558455,
+    "cumulativeTimeDilationMin": 2.591988335426409,
+    "conclusion": "全転送において相対論的補正は0.1%未満。最大β = 2.536%c、最大時間遅れ = 321.5 ppm。航法計算への影響は無視可能であり、古典力学による分析は妥当。全6シナリオ（計137日分）累積時間遅れ ≈ 155.5秒（2.59分）。"
   },
   "parameters": {
     "speedOfLightKms": 299792.458,
