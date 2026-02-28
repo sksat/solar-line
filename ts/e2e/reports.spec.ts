@@ -1178,3 +1178,127 @@ test.describe("Summary: tech-overview page", () => {
     expect(pageContent).toContain("ephemeris.rs");
   });
 });
+
+// --- Task 260: EP05 detail sub-pages ---
+
+test.describe("EP05 detail sub-pages", () => {
+  test("brachistochrone sub-page loads with verdict and explorations", async ({ page }) => {
+    await page.goto("/episodes/ep-005/brachistochrone.html");
+    const pageContent = await page.textContent("body");
+    // Title and verdict
+    expect(pageContent).toContain("Brachistochrone遷移");
+    expect(pageContent).toContain("天王星→地球");
+    await expect(page.locator(".verdict")).toHaveCount(1);
+    // Has transfer analysis card
+    await expect(page.locator(".card#ep05-transfer-02")).toBeVisible();
+    // Has navigation back to parent episode
+    await expect(page.locator(".detail-page-nav")).toBeVisible();
+    // Has scenario tables
+    const scenarioTables = page.locator(".scenario-table");
+    expect(await scenarioTables.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("brachistochrone sub-page has orbital diagram section", async ({ page }) => {
+    await page.goto("/episodes/ep-005/brachistochrone.html");
+    // Diagram section exists
+    await expect(page.locator("#section-diagrams")).toBeVisible();
+  });
+
+  test("brachistochrone sub-page has verdict summary box", async ({ page }) => {
+    await page.goto("/episodes/ep-005/brachistochrone.html");
+    await expect(page.locator(".verdict-summary-box")).toBeVisible();
+  });
+
+  test("ignition-budget sub-page loads with verdict", async ({ page }) => {
+    await page.goto("/episodes/ep-005/ignition-budget.html");
+    const pageContent = await page.textContent("body");
+    // Title and verdict
+    expect(pageContent).toContain("点火回数バジェット");
+    expect(pageContent).toContain("ノズル寿命");
+    await expect(page.locator(".verdict")).toHaveCount(1);
+    // Has transfer analysis card
+    await expect(page.locator(".card#ep05-transfer-04")).toBeVisible();
+    // Has navigation back to parent episode
+    await expect(page.locator(".detail-page-nav")).toBeVisible();
+  });
+
+  test("ignition-budget sub-page has time-series chart section", async ({ page }) => {
+    await page.goto("/episodes/ep-005/ignition-budget.html");
+    await expect(page.locator("#section-timeseries")).toBeVisible();
+  });
+
+  test("sub-pages have site navigation and disclaimers", async ({ page }) => {
+    for (const subpage of ["brachistochrone", "ignition-budget"]) {
+      await page.goto(`/episodes/ep-005/${subpage}.html`);
+      // Top navigation bar (first nav element)
+      await expect(page.locator("nav").first()).toBeVisible();
+      // Spoiler/AI disclaimer banner
+      await expect(page.locator(".site-banner")).toBeVisible();
+    }
+  });
+});
+
+// --- Task 260: DuckDB Data Explorer ---
+
+test.describe("Data explorer page", () => {
+  test("loads with SQL query interface", async ({ page }) => {
+    await page.goto("/explorer/index.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("データエクスプローラー");
+    // SQL textarea with default query
+    const textarea = page.locator("#explorer-query");
+    await expect(textarea).toBeVisible();
+    const defaultQuery = await textarea.inputValue();
+    expect(defaultQuery).toContain("SELECT");
+  });
+
+  test("has execution controls", async ({ page }) => {
+    await page.goto("/explorer/index.html");
+    // Execute button
+    await expect(page.locator("#explorer-exec")).toBeVisible();
+    // Schema button
+    await expect(page.locator("#explorer-schema")).toBeVisible();
+  });
+
+  test("has preset query section", async ({ page }) => {
+    await page.goto("/explorer/index.html");
+    await expect(page.locator("#explorer-presets")).toBeVisible();
+  });
+
+  test("has navigation and disclaimers", async ({ page }) => {
+    await page.goto("/explorer/index.html");
+    await expect(page.locator("nav")).toBeVisible();
+    await expect(page.locator(".site-banner")).toBeVisible();
+  });
+});
+
+// --- Task 260: Meta task dashboard ---
+
+test.describe("Task dashboard", () => {
+  test("loads with progress summary", async ({ page }) => {
+    await page.goto("/meta/tasks.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("タスク状況ダッシュボード");
+    expect(pageContent).toContain("進捗概要");
+    // Progress bar SVG
+    await expect(page.locator("svg")).toBeVisible();
+  });
+
+  test("has task list with links to individual tasks", async ({ page }) => {
+    await page.goto("/meta/tasks.html");
+    // At least some task links
+    const taskLinks = page.locator('a[href*="tasks/"]');
+    expect(await taskLinks.count()).toBeGreaterThanOrEqual(50);
+  });
+
+  test("individual task page loads", async ({ page }) => {
+    await page.goto("/meta/tasks/001.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("Task 001");
+  });
+
+  test("has navigation", async ({ page }) => {
+    await page.goto("/meta/tasks.html");
+    await expect(page.locator("nav")).toBeVisible();
+  });
+});
