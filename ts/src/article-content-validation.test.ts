@@ -202,6 +202,54 @@ describe("tech-overview.md content validation", () => {
       "DAG section should mention WASM-backed analysis",
     );
   });
+
+  // Regression tests from Task 280 external review
+  it("has newcomer introduction section", () => {
+    assert.ok(
+      content.includes("はじめに"),
+      "should have introductory section for newcomers",
+    );
+  });
+
+  it("lists relativistic.rs and constants.rs modules", () => {
+    assert.ok(
+      content.includes("relativistic.rs"),
+      "should list relativistic.rs module",
+    );
+    assert.ok(
+      content.includes("constants.rs"),
+      "should list constants.rs module",
+    );
+  });
+
+  it("clarifies runtime vs dev dependencies for zero-dependency claim", () => {
+    assert.ok(
+      content.includes("ランタイム") || content.includes("実行時"),
+      "should clarify that zero-dependency claim is for runtime only",
+    );
+  });
+
+  it("has cross-links to related pages", () => {
+    assert.ok(
+      content.includes("/summary/ai-costs.html"),
+      "should link to ai-costs page",
+    );
+    assert.ok(
+      content.includes("/explorer/"),
+      "should link to DuckDB data explorer",
+    );
+    assert.ok(
+      content.includes("/summary/ship-kestrel.html"),
+      "should link to ship-kestrel page",
+    );
+  });
+
+  it("explains reference verdict category", () => {
+    assert.ok(
+      content.includes("reference") && content.includes("直接比較"),
+      "should explain what reference verdict means",
+    );
+  });
 });
 
 // ============================================================

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Superseded — Sonnet がデフォルトモデルに変更済み（CLAUDE.md 参照）
 
 ## Context
 
