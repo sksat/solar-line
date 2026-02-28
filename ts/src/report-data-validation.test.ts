@@ -1095,3 +1095,46 @@ describe("report data: margin gauge validation", () => {
       "nozzle limit should match between EP05 and cross-episode");
   });
 });
+
+// ---------------------------------------------------------------------------
+// Animated diagram: celestial body meanMotion consistency (Task 253)
+// ---------------------------------------------------------------------------
+// In animated diagrams, real celestial bodies (planets/moons) must have
+// meanMotion set so they move during animation. Reference/marker points
+// (approach-point, escape-point, etc.) are exempt.
+
+/** Orbit IDs that are spatial reference markers, not real orbiting bodies */
+const REFERENCE_POINT_IDS = new Set([
+  "perijove", "perijove-point", "approach-point", "escape-point",
+  "approach-25ru", "nav-crisis", "rings-inner", "rings-outer",
+  "uranus-surface", "leo", "geo", "earth-soi",
+]);
+
+describe("report data: animated diagram meanMotion consistency", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const ep = `ep${String(epNum).padStart(2, "0")}`;
+
+    for (const diagram of report.diagrams ?? []) {
+      if (!diagram.animation) continue;
+
+      // Find orbits with angle (visible bodies) that are NOT reference points
+      const realBodies = diagram.orbits.filter(
+        o => o.angle !== undefined && !REFERENCE_POINT_IDS.has(o.id)
+      );
+
+      if (realBodies.length === 0) continue;
+
+      it(`${ep} ${diagram.id}: all real celestial bodies have meanMotion`, () => {
+        const missing = realBodies.filter(o => !o.meanMotion || o.meanMotion === 0);
+        assert.deepStrictEqual(
+          missing.map(o => o.id),
+          [],
+          `Orbits with angle but no meanMotion (will appear static during animation): ${missing.map(o => o.id).join(", ")}`
+        );
+      });
+    }
+  }
+});
