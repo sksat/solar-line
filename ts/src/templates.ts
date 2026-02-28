@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -1832,6 +1832,170 @@ export function renderOrbitalDiagrams(diagrams: OrbitalDiagram[]): string {
   return `<h2>軌道遷移図</h2>\n${diagrams.map(renderOrbitalDiagram).join("\n")}`;
 }
 
+/** Render a side-view (cross-section) diagram showing 3D geometry */
+export function renderSideViewDiagram(diagram: SideViewDiagram): string {
+  const size = 500;
+  const cx = size / 2;
+  const cy = size / 2;
+  const centerR = diagram.centerRadius ?? 20;
+  const centerColor = diagram.centerColor ?? "var(--yellow)";
+
+  const svgParts: string[] = [];
+
+  // Draw each element
+  for (const el of diagram.elements) {
+    const toRad = (d: number) => (d * Math.PI) / 180;
+    switch (el.type) {
+      case "plane": {
+        // Draw a horizontal line through center representing a plane,
+        // optionally tilted by angleDeg
+        const angle = toRad(el.angleDeg ?? 0);
+        const len = (el.length ?? 0.8) * cx;
+        const x1 = -len * Math.cos(angle);
+        const y1 = len * Math.sin(angle);
+        const x2 = len * Math.cos(angle);
+        const y2 = -len * Math.sin(angle);
+        const dash = el.dashed ? ' stroke-dasharray="6 3"' : "";
+        svgParts.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${el.color}" stroke-width="1.5"${dash}/>`);
+        // Label at the right end
+        const lx = x2 + 8;
+        const ly = y2;
+        svgParts.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${el.color}" font-size="10" dominant-baseline="middle">${escapeHtml(el.label)}</text>`);
+        break;
+      }
+      case "axis": {
+        // Draw a line from center outward at angleDeg
+        const angle = toRad(el.angleDeg ?? 90);
+        const len = (el.length ?? 0.6) * cx;
+        const x2 = len * Math.cos(angle);
+        const y2 = -len * Math.sin(angle);
+        const dash = el.dashed ? ' stroke-dasharray="4 3"' : "";
+        svgParts.push(`<line x1="0" y1="0" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${el.color}" stroke-width="1.5"${dash}/>`);
+        // Arrowhead
+        const aLen = 8;
+        const aAngle = Math.atan2(-y2, x2);
+        const ax1 = x2 - aLen * Math.cos(aAngle - 0.3);
+        const ay1 = y2 + aLen * Math.sin(aAngle - 0.3);
+        const ax2 = x2 - aLen * Math.cos(aAngle + 0.3);
+        const ay2 = y2 + aLen * Math.sin(aAngle + 0.3);
+        svgParts.push(`<polygon points="${x2.toFixed(1)},${y2.toFixed(1)} ${ax1.toFixed(1)},${ay1.toFixed(1)} ${ax2.toFixed(1)},${ay2.toFixed(1)}" fill="${el.color}"/>`);
+        // Label beyond arrowhead
+        const lx = x2 + 14 * Math.cos(angle);
+        const ly = y2 - 14 * Math.sin(angle);
+        svgParts.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${el.color}" font-size="10" text-anchor="middle" dominant-baseline="middle">${escapeHtml(el.label)}</text>`);
+        break;
+      }
+      case "ring": {
+        // Draw an ellipse representing a ring system (viewed from the side = flattened)
+        const r = el.radius ?? 60;
+        const angle = toRad(el.angleDeg ?? 0);
+        // Ring seen from the side: semi-major = r, semi-minor = r * |sin(tilt)|
+        const semiMinor = Math.max(r * 0.08, r * Math.abs(Math.sin(angle)));
+        const rotDeg = -(el.angleDeg ?? 0);
+        const dash = el.dashed ? ' stroke-dasharray="3 2"' : "";
+        svgParts.push(`<ellipse cx="0" cy="0" rx="${r}" ry="${semiMinor.toFixed(1)}" fill="none" stroke="${el.color}" stroke-width="1.5" transform="rotate(${rotDeg})"${dash}/>`);
+        // Label
+        svgParts.push(`<text x="${(r + 10).toFixed(1)}" y="${(-semiMinor - 4).toFixed(1)}" fill="${el.color}" font-size="9" text-anchor="start">${escapeHtml(el.label)}</text>`);
+        break;
+      }
+      case "body": {
+        // Draw a body at a position
+        const angle = toRad(el.angleDeg ?? 0);
+        const r = el.radius ?? 40;
+        const bx = r * Math.cos(angle);
+        const by = -r * Math.sin(angle);
+        svgParts.push(`<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="4" fill="${el.color}"/>`);
+        svgParts.push(`<text x="${(bx + 8).toFixed(1)}" y="${by.toFixed(1)}" fill="${el.color}" font-size="10" dominant-baseline="middle">${escapeHtml(el.label)}</text>`);
+        break;
+      }
+      case "approach-vector": {
+        // Draw an arrow coming from outside toward center
+        const angle = toRad(el.angleDeg ?? 45);
+        const len = (el.length ?? 0.7) * cx;
+        const startR = len;
+        const endR = centerR + 10;
+        const x1 = startR * Math.cos(angle);
+        const y1 = -startR * Math.sin(angle);
+        const x2 = endR * Math.cos(angle);
+        const y2 = -endR * Math.sin(angle);
+        const dash = el.dashed ? ' stroke-dasharray="6 3"' : "";
+        svgParts.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${el.color}" stroke-width="2"${dash}/>`);
+        // Arrowhead pointing toward center
+        const aLen = 10;
+        const aAngle = Math.atan2(y1 - y2, x1 - x2);
+        const ax1 = x2 + aLen * Math.cos(aAngle - 0.35);
+        const ay1 = y2 + aLen * Math.sin(aAngle - 0.35);
+        const ax2 = x2 + aLen * Math.cos(aAngle + 0.35);
+        const ay2 = y2 + aLen * Math.sin(aAngle + 0.35);
+        svgParts.push(`<polygon points="${x2.toFixed(1)},${y2.toFixed(1)} ${ax1.toFixed(1)},${ay1.toFixed(1)} ${ax2.toFixed(1)},${ay2.toFixed(1)}" fill="${el.color}"/>`);
+        // Label near start of vector
+        const lx = x1 + 10 * Math.cos(angle + 0.3);
+        const ly = y1 - 10 * Math.sin(angle + 0.3);
+        svgParts.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${el.color}" font-size="10" dominant-baseline="middle">${escapeHtml(el.label)}</text>`);
+        break;
+      }
+      case "label": {
+        // Free-floating label at a position
+        const angle = toRad(el.angleDeg ?? 0);
+        const r = el.radius ?? 100;
+        const lx = r * Math.cos(angle);
+        const ly = -r * Math.sin(angle);
+        svgParts.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${el.color}" font-size="10" text-anchor="middle" dominant-baseline="middle">${escapeHtml(el.label)}</text>`);
+        break;
+      }
+    }
+  }
+
+  // Draw angle annotations
+  const angleAnnotations = (diagram.angleAnnotations ?? []).map(ann => {
+    const arcR = ann.arcRadius ?? 60;
+    const fromRad = (ann.fromDeg * Math.PI) / 180;
+    const toRad = (ann.toDeg * Math.PI) / 180;
+    // SVG arc from fromDeg to toDeg
+    const x1 = arcR * Math.cos(fromRad);
+    const y1 = -arcR * Math.sin(fromRad);
+    const x2 = arcR * Math.cos(toRad);
+    const y2 = -arcR * Math.sin(toRad);
+    const sweep = ann.toDeg > ann.fromDeg ? 0 : 1;
+    const largeArc = Math.abs(ann.toDeg - ann.fromDeg) > 180 ? 1 : 0;
+    // Label at midpoint of arc
+    const midRad = ((ann.fromDeg + ann.toDeg) / 2 * Math.PI) / 180;
+    const lx = (arcR + 14) * Math.cos(midRad);
+    const ly = -(arcR + 14) * Math.sin(midRad);
+    return `<path d="M${x1.toFixed(1)},${y1.toFixed(1)} A${arcR},${arcR} 0 ${largeArc},${sweep} ${x2.toFixed(1)},${y2.toFixed(1)}" fill="none" stroke="${ann.color}" stroke-width="1.5"/>
+    <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${ann.color}" font-size="11" font-weight="bold" text-anchor="middle" dominant-baseline="middle">${escapeHtml(ann.label)}</text>`;
+  }).join("\n    ");
+
+  const ariaLabel = `${diagram.title} — ${diagram.centerLabel}の側面図`;
+  const descHtml = diagram.description
+    ? `\n<p class="diagram-description">${escapeHtml(diagram.description)}</p>`
+    : "";
+  const svg = `<svg width="${size}" height="${size}" viewBox="${-cx} ${-cy} ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(ariaLabel)}">
+  <style>text { font-family: "SFMono-Regular", Consolas, monospace; }</style>
+  <g>
+    ${svgParts.join("\n    ")}
+
+    <!-- Angle annotations -->
+    ${angleAnnotations}
+
+    <!-- Central body -->
+    <circle cx="0" cy="0" r="${centerR}" fill="${centerColor}"/>
+    <text x="0" y="${centerR + 14}" fill="${centerColor}" font-size="11" text-anchor="middle">${escapeHtml(diagram.centerLabel)}</text>
+  </g>
+</svg>`;
+
+  return `<div class="card orbital-diagram" id="${escapeHtml(diagram.id)}">
+<h4>${escapeHtml(diagram.title)}</h4>${descHtml}
+${svg}
+</div>`;
+}
+
+/** Render multiple side-view diagrams */
+export function renderSideViewDiagrams(diagrams: SideViewDiagram[]): string {
+  if (diagrams.length === 0) return "";
+  return diagrams.map(renderSideViewDiagram).join("\n");
+}
+
 /** Episode-specific calculator defaults (must match calculator.js EPISODE_PRESETS) */
 interface CalcPresetDef { key: string; label: string }
 interface CalcEpConfig { defaults: { distanceAU: number; massT: number; timeH: number; thrustMN: number }; presets: CalcPresetDef[] }
@@ -2598,6 +2762,7 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const barChartHtml = section.barChart ? renderBarChartFromData(section.barChart) : "";
     const timeSeriesHtml = section.timeSeriesCharts ? renderTimeSeriesCharts(section.timeSeriesCharts) : "";
     const customTableHtml = section.comparisonTable ? renderCustomComparisonTable(section.comparisonTable) : "";
+    const sideViewHtml = section.sideViewDiagrams ? renderSideViewDiagrams(section.sideViewDiagrams) : "";
     const reproHtml = section.reproductionCommand
       ? `<details class="reproduction-command"><summary>再現コマンド</summary><pre><code>${escapeHtml(section.reproductionCommand)}</code></pre></details>`
       : "";
@@ -2606,6 +2771,7 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
 ${reproHtml}
 ${markdownToHtml(section.markdown, mdOpts)}
 ${diagramHtml}
+${sideViewHtml}
 ${barChartHtml}
 ${timeSeriesHtml}
 ${timelineHtml}

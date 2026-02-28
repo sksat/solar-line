@@ -37,6 +37,7 @@ import type {
   TimeSeriesDatum,
   TimeSeriesThreshold,
   OrbitalDiagram,
+  SideViewDiagram,
   EventTimeline,
   ComparisonTable,
   VerificationTable,
@@ -154,7 +155,7 @@ export function extractDirectives(content: string): {
   const directives: ComponentDirective[] = [];
   // Match fenced code blocks with component-type language tags
   // Supported patterns: ```chart:bar, ```component:orbital-diagram, ```timeline, ```table:comparison, etc.
-  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer|glossary):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
+  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer|glossary|sideview):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
 
   const markdown = content.replace(fenceRegex, (_match, prefix: string, suffix: string, inner: string) => {
     const type = suffix || prefix;
@@ -256,6 +257,12 @@ export function applyDirectives(directives: ComponentDirective[]): Partial<Summa
       }
       case "dag-viewer": {
         result.dagViewer = true;
+        break;
+      }
+      case "sideview": {
+        const diagram = parseJsonDirective<SideViewDiagram>(d.rawContent);
+        if (!result.sideViewDiagrams) result.sideViewDiagrams = [];
+        result.sideViewDiagrams.push(diagram);
         break;
       }
       case "glossary": {

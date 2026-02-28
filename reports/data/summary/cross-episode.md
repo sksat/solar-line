@@ -1314,6 +1314,29 @@ EP03（土星→天王星）が最大の面変更を要する理由は、天王�
 
 注目すべきは天王星が黄道面の**下方**に位置していることで、火星→木星→土星と上方を移動してきた航路が天王星で下方に転じる。地球は黄道面にほぼ位置している（定義上、黄道はほぼ地球軌道面）。
 
+```chart:bar
+caption: 各天体の黄道面からのZ高度
+unit: 千km
+bars:
+  - label: 火星 (EP01出発)
+    value: 6839
+    color: "#f85149"
+  - label: 木星 (EP01到着)
+    value: 17373
+    color: "#d29922"
+  - label: 土星 (EP02到着)
+    value: 30745
+    color: "#c9a844"
+  - label: 天王星 (EP03到着)
+    value: -16772
+    color: "#88ccee"
+    annotation: "黄道面の下方"
+  - label: 地球 (EP05到着)
+    value: -84
+    color: "#58a6ff"
+    annotation: "≈ 黄道面上"
+```
+
 ### 土星リング面交差解析
 
 第2話で木星から土星に接近する際のリング面との角度関係を分析した。
@@ -1325,6 +1348,28 @@ EP03（土星→天王星）が最大の面変更を要する理由は、天王�
 
 接近角24°は、リング面を大きく横切る必要がないことを意味する。エンケラドスがリングの外側にあることと合わせ、土星圏への進入にリング通過の危険は小さい。
 
+```sideview
+{
+  "id": "saturn-ring-crossing",
+  "title": "土星リング面交差ジオメトリ（側面図）",
+  "description": "木星方向からの接近角度とリング面の関係を側面視で表示。リング面に対して約24°の浅い角度で接近しており、リングを大きく横切る必要がない。エンケラドスはリング外縁よりもさらに外側に位置する。",
+  "centerLabel": "土星",
+  "centerColor": "#d29922",
+  "centerRadius": 22,
+  "elements": [
+    {"id": "ecliptic", "label": "黄道面", "color": "#8b949e", "type": "plane", "angleDeg": 0, "length": 0.85, "dashed": true},
+    {"id": "ring-plane", "label": "リング面 (26.7°)", "color": "#c9a844", "type": "plane", "angleDeg": 26.7, "length": 0.55},
+    {"id": "spin-axis", "label": "自転軸", "color": "#58a6ff", "type": "axis", "angleDeg": 116.7, "length": 0.45, "dashed": true},
+    {"id": "rings", "label": "環 (D環〜F環)", "color": "rgba(201, 168, 68, 0.5)", "type": "ring", "angleDeg": 26.7, "radius": 75},
+    {"id": "enceladus-orbit", "label": "エンケラドス軌道", "color": "rgba(88, 166, 255, 0.3)", "type": "ring", "angleDeg": 26.7, "radius": 110},
+    {"id": "approach", "label": "木星方向からの接近", "color": "#3fb950", "type": "approach-vector", "angleDeg": 24, "length": 0.75}
+  ],
+  "angleAnnotations": [
+    {"label": "23.9°", "angleDeg": 23.9, "color": "#f0e68c", "fromDeg": 0, "toDeg": 24, "arcRadius": 100}
+  ]
+}
+```
+
 ### 天王星接近幾何学
 
 天王星は自転軸傾斜角97.77°（ほぼ横倒し）という太陽系でも極めて特異な天体である。第3話で土星から天王星に接近する際の幾何学を分析した。
@@ -1335,6 +1380,29 @@ EP03（土星→天王星）が最大の面変更を要する理由は、天王�
 天王星の97.8°の自転軸傾斜により、黄道面に沿った接近（太陽系のほぼ全ての惑星間遷移）が天王星では赤道面にほぼ垂直な「極方向」接近となる。第3話で描写される「天王星系への25 RUからのエントリー」は、タイタニア軌道（435,910 km）を含むこの極方向接近と整合する。
 
 これは航法上の重要な意味を持つ: 天王星の衛星は赤道面付近を周回しているため、極方向接近では衛星軌道面を急角度で横切ることになり、ランデブーのタイミングが制約される。
+
+```sideview
+{
+  "id": "uranus-approach-geometry",
+  "title": "天王星接近ジオメトリ（側面図）",
+  "description": "天王星の極端な軸傾斜（97.8°）により、黄道面からの接近が赤道面に対してほぼ垂直な『極方向接近』となる。衛星（タイタニア等）は赤道面を周回するため、極方向接近では軌道面を急角度で横切る。",
+  "centerLabel": "天王星",
+  "centerColor": "#88ccee",
+  "centerRadius": 22,
+  "elements": [
+    {"id": "ecliptic", "label": "黄道面", "color": "#8b949e", "type": "plane", "angleDeg": 0, "length": 0.85, "dashed": true},
+    {"id": "equatorial", "label": "赤道面 (衛星軌道面)", "color": "#88ccee", "type": "plane", "angleDeg": 97.8, "length": 0.55},
+    {"id": "spin-axis", "label": "自転軸 (97.8°傾斜)", "color": "#58a6ff", "type": "axis", "angleDeg": 187.8, "length": 0.5},
+    {"id": "titania", "label": "タイタニア軌道", "color": "rgba(204, 136, 68, 0.4)", "type": "ring", "angleDeg": 97.8, "radius": 95},
+    {"id": "approach-saturn", "label": "土星方向からの接近", "color": "#3fb950", "type": "approach-vector", "angleDeg": 54, "length": 0.75},
+    {"id": "note-polar", "label": "極方向接近 ≈ 67°", "color": "#f85149", "type": "label", "angleDeg": 75, "radius": 170}
+  ],
+  "angleAnnotations": [
+    {"label": "54°", "angleDeg": 54, "color": "#f0e68c", "fromDeg": 97.8, "toDeg": 54, "arcRadius": 80},
+    {"label": "97.8°", "angleDeg": 97.8, "color": "#58a6ff", "fromDeg": 0, "toDeg": 97.8, "arcRadius": 130}
+  ]
+}
+```
 
 ```table:episode
 {

@@ -41,9 +41,11 @@ import {
   renderGlossary,
   wrapGlossaryTerms,
   renderSceneTimeline,
+  renderSideViewDiagram,
+  renderSideViewDiagrams,
 } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm, SideViewDiagram } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -5293,5 +5295,147 @@ describe("renderSceneTimeline", () => {
     const html = renderEpisode(report);
     assert.ok(html.includes("scene-timeline"), "episode page should include scene timeline");
     assert.ok(html.includes("シーンタイムライン"), "episode page should include timeline heading");
+  });
+});
+
+// --- renderSideViewDiagram ---
+
+const sampleSideView: SideViewDiagram = {
+  id: "test-sideview-01",
+  title: "土星リング面交差ジオメトリ",
+  description: "木星方向からの接近角度を示す",
+  centerLabel: "土星",
+  centerColor: "#d29922",
+  centerRadius: 25,
+  elements: [
+    { id: "ecliptic", label: "黄道面", color: "#888", type: "plane", angleDeg: 0, length: 0.9 },
+    { id: "ring-plane", label: "リング面", color: "#c9a844", type: "plane", angleDeg: 26.7, dashed: true },
+    { id: "spin-axis", label: "自転軸", color: "#58a6ff", type: "axis", angleDeg: 116.7, length: 0.5 },
+    { id: "approach", label: "木星方向", color: "#3fb950", type: "approach-vector", angleDeg: 24, length: 0.7 },
+  ],
+  angleAnnotations: [
+    { label: "23.9°", angleDeg: 23.9, color: "#ff6", fromDeg: 0, toDeg: 24, arcRadius: 80 },
+  ],
+};
+
+describe("renderSideViewDiagram", () => {
+  it("renders an SVG with the diagram title", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("土星リング面交差ジオメトリ"));
+    assert.ok(html.includes("<svg"));
+  });
+
+  it("renders description", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("diagram-description"));
+    assert.ok(html.includes("木星方向からの接近角度を示す"));
+  });
+
+  it("renders central body", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("土星"));
+    assert.ok(html.includes("#d29922"));
+  });
+
+  it("renders plane elements as lines", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("黄道面"));
+    assert.ok(html.includes("リング面"));
+  });
+
+  it("renders axis elements with arrowheads", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("自転軸"));
+    assert.ok(html.includes("polygon")); // arrowhead
+  });
+
+  it("renders approach vector with arrow", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("木星方向"));
+  });
+
+  it("renders angle annotations", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("23.9°"));
+  });
+
+  it("renders dashed lines for dashed elements", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("stroke-dasharray"));
+  });
+
+  it("wraps in card div with id", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes('id="test-sideview-01"'));
+    assert.ok(html.includes('class="card orbital-diagram"'));
+  });
+
+  it("renders aria-label", () => {
+    const html = renderSideViewDiagram(sampleSideView);
+    assert.ok(html.includes("側面図"));
+  });
+
+  it("renders body elements", () => {
+    const diagram: SideViewDiagram = {
+      id: "test-body",
+      title: "テスト",
+      centerLabel: "天王星",
+      elements: [
+        { id: "titania", label: "タイタニア", color: "#cc8844", type: "body", angleDeg: 45, radius: 100 },
+      ],
+    };
+    const html = renderSideViewDiagram(diagram);
+    assert.ok(html.includes("タイタニア"));
+    assert.ok(html.includes("r=\"4\"")); // body dot
+  });
+
+  it("renders label elements", () => {
+    const diagram: SideViewDiagram = {
+      id: "test-label",
+      title: "テスト",
+      centerLabel: "テスト",
+      elements: [
+        { id: "note", label: "注釈テキスト", color: "#fff", type: "label", angleDeg: 90, radius: 120 },
+      ],
+    };
+    const html = renderSideViewDiagram(diagram);
+    assert.ok(html.includes("注釈テキスト"));
+  });
+
+  it("renders ring elements as ellipses", () => {
+    const diagram: SideViewDiagram = {
+      id: "test-ring",
+      title: "テスト",
+      centerLabel: "土星",
+      elements: [
+        { id: "rings", label: "環", color: "#c9a844", type: "ring", angleDeg: 26.7, radius: 80 },
+      ],
+    };
+    const html = renderSideViewDiagram(diagram);
+    assert.ok(html.includes("ellipse"));
+    assert.ok(html.includes("環"));
+  });
+
+  it("omits description when not provided", () => {
+    const diagram: SideViewDiagram = {
+      id: "test-no-desc",
+      title: "テスト",
+      centerLabel: "テスト",
+      elements: [],
+    };
+    const html = renderSideViewDiagram(diagram);
+    assert.ok(!html.includes("diagram-description"));
+  });
+});
+
+describe("renderSideViewDiagrams", () => {
+  it("renders multiple diagrams", () => {
+    const html = renderSideViewDiagrams([sampleSideView, { ...sampleSideView, id: "test-02" }]);
+    assert.ok(html.includes("test-sideview-01"));
+    assert.ok(html.includes("test-02"));
+  });
+
+  it("returns empty string for empty array", () => {
+    assert.equal(renderSideViewDiagrams([]), "");
   });
 });

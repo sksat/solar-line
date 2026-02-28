@@ -245,6 +245,59 @@ export interface TrajectoryVariation {
   spread: number;
 }
 
+/** A labeled element in a side-view diagram */
+export interface SideViewElement {
+  /** Unique identifier */
+  id: string;
+  /** Display label */
+  label: string;
+  /** CSS color */
+  color: string;
+  /** Position: angle in degrees from horizontal (for angular elements) or absolute position */
+  angleDeg?: number;
+  /** Position: distance from center (arbitrary units, auto-scaled) */
+  radius?: number;
+  /** Element type */
+  type: "plane" | "axis" | "ring" | "body" | "approach-vector" | "label";
+  /** If true, draw as dashed */
+  dashed?: boolean;
+  /** Length as fraction of diagram size (0-1) for lines/axes */
+  length?: number;
+}
+
+/** A side-view (cross-section) diagram showing 3D geometry from a lateral perspective */
+export interface SideViewDiagram {
+  /** Unique identifier */
+  id: string;
+  /** Diagram title */
+  title: string;
+  /** Description explaining the diagram */
+  description?: string;
+  /** Central body label */
+  centerLabel: string;
+  /** Central body color */
+  centerColor?: string;
+  /** Central body radius in pixels */
+  centerRadius?: number;
+  /** Elements to draw */
+  elements: SideViewElement[];
+  /** Angle annotations: pairs of elements showing the angle between them */
+  angleAnnotations?: {
+    /** Label for the angle, e.g. "23.9°" */
+    label: string;
+    /** Angle value in degrees */
+    angleDeg: number;
+    /** CSS color for the annotation arc */
+    color: string;
+    /** Starting angle of the arc (degrees from horizontal) */
+    fromDeg: number;
+    /** Ending angle of the arc (degrees from horizontal) */
+    toDeg: number;
+    /** Radius of the annotation arc in pixels */
+    arcRadius?: number;
+  }[];
+}
+
 /** An orbital transfer diagram rendered as inline SVG */
 export interface OrbitalDiagram {
   /** Unique identifier, e.g. "ep01-diagram-01" */
@@ -515,6 +568,8 @@ export interface SummarySection {
   dagViewer?: boolean;
   /** Optional bar chart */
   barChart?: BarChart;
+  /** Optional side-view (cross-section) diagrams */
+  sideViewDiagrams?: SideViewDiagram[];
   /** Optional time-series charts (rendered via uPlot) */
   timeSeriesCharts?: TimeSeriesChart[];
   /** Optional comparison table with custom headers (for non-episode tables) */
