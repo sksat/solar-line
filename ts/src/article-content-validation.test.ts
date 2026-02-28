@@ -669,6 +669,51 @@ describe("cross-episode.md content validation", () => {
     assert.ok(content.includes('"actual": 480'), "should cite radiation actual 480 mSv");
     assert.ok(content.includes('"limit": 500'), "should cite ICRP emergency limit 500 mSv");
   });
+
+  it("margin chain probability: 30-46%", () => {
+    assert.ok(
+      content.includes("30") && content.includes("46%"),
+      "should cite chain success probability 30-46%",
+    );
+  });
+
+  it("coupling mechanisms: state vector description", () => {
+    assert.ok(
+      content.includes("ヤコビアン") || content.includes("Jacobian"),
+      "should mention Jacobian/sensitivity analysis",
+    );
+  });
+
+  it("navigation precision evolution: EP03→EP05, ~290万倍", () => {
+    assert.ok(
+      content.includes("290万"),
+      "should cite 290万 times precision improvement from EP03 to EP05",
+    );
+  });
+
+  it("EP05 arrival precision: 20 km at 18.2 AU", () => {
+    assert.ok(content.includes("20 km") || content.includes("20km"), "should cite 20 km arrival precision");
+    assert.ok(content.includes("18.2 AU"), "should cite 18.2 AU distance");
+  });
+
+  it("cumulative radiation: 560 mSv vs NASA 600 mSv limit", () => {
+    assert.ok(content.includes("560"), "should cite ~560 mSv cumulative radiation");
+    assert.ok(content.includes("600 mSv") || content.includes('"limit": 600'), "should cite NASA 600 mSv limit");
+  });
+
+  it("counterfactual scenarios: all 4 alternatives compared", () => {
+    assert.ok(content.includes("5,424") || content.includes("5424"), "should cite Scenario A ΔV");
+    assert.ok(content.includes("12,912") || content.includes("12912"), "should cite Scenario B ΔV");
+    assert.ok(content.includes("18,893") || content.includes("18893"), "should cite Scenario C ΔV");
+    assert.ok(content.includes("36,071") || content.includes("36071"), "should cite actual route ΔV");
+  });
+
+  it("EP02 dominates timeline: ~87d is ~70% of mission", () => {
+    assert.ok(
+      content.includes("78%") || content.includes("70%"),
+      "should cite EP02 as majority of mission duration",
+    );
+  });
 });
 
 // ============================================================
