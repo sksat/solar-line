@@ -902,6 +902,37 @@ describe("cross-episode.md content validation", () => {
       "should cite EP02 as majority of mission duration",
     );
   });
+
+  it("cold sleep constraint: used only in EP02", () => {
+    assert.ok(content.includes("コールドスリープ"),
+      "should discuss cold sleep constraint");
+    assert.ok(content.includes("第2話のみ") || content.includes("EP02のみ"),
+      "should state cold sleep is explicitly depicted only in EP02");
+  });
+
+  it("EP04-05 no cold sleep: 507h ≈ 21 days continuous", () => {
+    assert.ok(
+      content.includes("507時間") || content.includes("507h"),
+      "should cite 507h EP04-05 no-cold-sleep transit",
+    );
+    assert.ok(content.includes("21日") || content.includes("21 day"),
+      "should cite ~21 days continuous operation");
+  });
+
+  it("engine designation TSF-43R cited", () => {
+    assert.ok(content.includes("TSF-43R"),
+      "should cite engine designation TSF-43R");
+  });
+
+  it("effective mass range 300-500t cited", () => {
+    assert.ok(content.includes("300") && content.includes("500t"),
+      "should cite 300-500t effective mass range");
+  });
+
+  it("propellant budget: Tsiolkovsky equation referenced", () => {
+    assert.ok(content.includes("ツィオルコフスキー"),
+      "should reference Tsiolkovsky rocket equation");
+  });
 });
 
 // ============================================================
