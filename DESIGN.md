@@ -1,4 +1,4 @@
-# SOLAR LINE 考察
+# SOLAR LINE 考証
 
 SOLAR LINE はゆえぴこ氏が制作・公開している『良いソフトウェアトーク劇場』の SF シリーズ長編。
 

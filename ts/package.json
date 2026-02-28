@@ -2,7 +2,7 @@
   "name": "solar-line",
   "version": "0.1.0",
   "private": true,
-  "description": "SOLAR LINE 考察 — scripts and reports",
+  "description": "SOLAR LINE 考証 — scripts and reports",
   "type": "module",
   "scripts": {
     "test": "node --test src/**/*.test.ts",

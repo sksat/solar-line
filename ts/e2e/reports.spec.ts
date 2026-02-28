@@ -1,5 +1,5 @@
 /**
- * E2E tests for SOLAR LINE 考察 report rendering.
+ * E2E tests for SOLAR LINE 考証 report rendering.
  *
  * Verifies:
  * - All pages load without errors

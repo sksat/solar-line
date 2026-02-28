@@ -1,8 +1,8 @@
-# SOLAR LINE 考察
+# SOLAR LINE 考証
 
-SFアニメシリーズ「SOLAR LINE」（『[良いソフトウェアトーク劇場](https://www.nicovideo.jp/user/5844196/series/531506)』by ゆえぴこ）に描かれた軌道遷移の妥当性を、実際の軌道力学に基づくΔV計算・加速度分析で検証する考察プロジェクト。
+SFアニメシリーズ「SOLAR LINE」（『[良いソフトウェアトーク劇場](https://www.nicovideo.jp/user/5844196/series/531506)』by ゆえぴこ）に描かれた軌道遷移の妥当性を、実際の軌道力学に基づくΔV計算・加速度分析で検証する考証プロジェクト。
 
-**[考察サイト (GitHub Pages)](https://sksat.github.io/solar-line/)**
+**[考証サイト (GitHub Pages)](https://sksat.github.io/solar-line/)**
 
 ## 概要
 
