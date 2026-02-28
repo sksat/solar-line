@@ -619,6 +619,42 @@ describe("cross-report value consistency", () => {
       );
     }
   });
+
+  it("EP01 mass boundary 299t cited in ship-kestrel and cross-episode", () => {
+    assert.ok(shipKestrel.includes("299"), "ship-kestrel should cite 299t mass boundary");
+    assert.ok(crossEpisode.includes("299"), "cross-episode should cite 299t mass boundary");
+  });
+
+  it("EP03 mass boundary 452.5t cited in ship-kestrel and cross-episode", () => {
+    assert.ok(shipKestrel.includes("452.5"), "ship-kestrel should cite 452.5t mass boundary");
+    assert.ok(crossEpisode.includes("452.5"), "cross-episode should cite 452.5t mass boundary");
+  });
+
+  it("nozzle margin 26 min (0.78%) cited in cross-episode", () => {
+    assert.ok(crossEpisode.includes("26分") || crossEpisode.includes("26"),
+      "cross-episode should cite nozzle margin 26 min");
+    assert.ok(crossEpisode.includes("0.78"),
+      "cross-episode should cite 0.78% nozzle margin");
+  });
+
+  it("EP05 composite route 507h cited in cross-episode", () => {
+    assert.ok(crossEpisode.includes("507"),
+      "cross-episode should cite 507h composite route");
+  });
+
+  it("D-He³ fuel type cited consistently", () => {
+    assert.ok(shipKestrel.includes("D-He³"),
+      "ship-kestrel should cite D-He³ fuel");
+    assert.ok(crossEpisode.includes("D-He³"),
+      "cross-episode should cite D-He³ fuel");
+  });
+
+  it("total route distance ~35.9 AU cited in cross-episode", () => {
+    assert.ok(
+      crossEpisode.includes("35.9") || crossEpisode.includes("35.88"),
+      "cross-episode should cite ~35.9 AU total distance",
+    );
+  });
 });
 
 // ============================================================
