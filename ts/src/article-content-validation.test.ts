@@ -1246,6 +1246,86 @@ describe("science-accuracy.md content validation", () => {
     assert.strictEqual(discrepancyCount, 0, `should have 0 discrepancy, got ${discrepancyCount}`);
     assert.strictEqual(unverifiedCount, 0, `should have 0 unverified, got ${unverifiedCount}`);
   });
+
+  // Regression: Issue 1 — nav error formula must use remaining distance (4.48 AU), not total solar distance (14.72 AU)
+  it("navigation error formula uses remaining distance to Uranus (4.48 AU)", () => {
+    assert.ok(
+      content.includes("残距離") && content.includes("4.48 AU"),
+      "should reference remaining distance 4.48 AU, not total solar distance",
+    );
+    assert.ok(
+      content.includes("6.704×10⁸"),
+      "should use 6.704×10⁸ km (4.48 AU) in formula, not 2.202×10⁹ km",
+    );
+  });
+
+  // Regression: Issue 2 — EP02 shortening factor must be 42×, not 8×
+  it("EP02 shortening factor is 42× (Hohmann vs trim-thrust)", () => {
+    assert.ok(
+      content.includes('"2": "42×'),
+      "EP02 shortening factor should be 42×, not 8×",
+    );
+    assert.ok(
+      !content.includes('"2": "8×'),
+      "EP02 shortening factor should NOT be 8×",
+    );
+  });
+
+  // Regression: Issue 3 — newcomer introduction section exists
+  it("has newcomer introduction section", () => {
+    assert.ok(
+      content.includes("## はじめに"),
+      "should have an introduction section for newcomers",
+    );
+    assert.ok(
+      content.includes("ケストレル号"),
+      "introduction should mention the ship Kestrel",
+    );
+  });
+
+  // Regression: Issue 7 — EP02 trim-thrust arrival velocity limitation acknowledged
+  it("acknowledges EP02 trim-thrust arrival velocity limitation", () => {
+    assert.ok(
+      content.includes("トリム推力到達速度") || content.includes("v∞≈90"),
+      "should mention the EP02 trim-thrust arrival velocity issue",
+    );
+  });
+
+  // Regression: Issue 10 — episode report navigation links
+  it("contains links to episode reports", () => {
+    assert.ok(
+      content.includes("../episodes/ep-002.html"),
+      "should link to EP02 report",
+    );
+    assert.ok(
+      content.includes("../episodes/ep-003.html"),
+      "should link to EP03 report",
+    );
+    assert.ok(
+      content.includes("../episodes/ep-004.html"),
+      "should link to EP04 report",
+    );
+  });
+
+  // Regression: Issue 11 — glossary completeness
+  it("glossary includes Brachistochrone, RK4, ICRP, plasmoid terms", () => {
+    assert.ok(
+      content.includes('"term": "Brachistochrone遷移"'),
+      "glossary should include Brachistochrone",
+    );
+    assert.ok(
+      content.includes('"term": "RK4"'),
+      "glossary should include RK4",
+    );
+    assert.ok(
+      content.includes('"term": "ICRP"'),
+      "glossary should include ICRP",
+    );
+    assert.ok(
+      content.includes('"term": "プラズモイド"'),
+      "glossary should include plasmoid",
+    );
+  });
 });
 
 // ============================================================
