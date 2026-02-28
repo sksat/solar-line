@@ -26,9 +26,27 @@
       ]
     },
     {
-      "id": "earth-officer",
-      "nameJa": "地球軍関係者",
-      "nameEn": "Earth Military Officer",
+      "id": "port-authority-officer",
+      "nameJa": "軌道港湾機構職員",
+      "nameEn": "Orbital Port Authority Officer",
+      "aliases": []
+    },
+    {
+      "id": "lia-orpheus",
+      "nameJa": "リア・オルフェウス",
+      "nameEn": "Lia Orpheus",
+      "aliases": []
+    },
+    {
+      "id": "muse",
+      "nameJa": "ミューズ",
+      "nameEn": "Muse",
+      "aliases": []
+    },
+    {
+      "id": "seira-anders",
+      "nameJa": "セイラ・アンダース",
+      "nameEn": "Seira Anders",
       "aliases": []
     },
     {
@@ -51,7 +69,7 @@
       "id": "ep03-scene-02",
       "startMs": 80000,
       "endMs": 130000,
-      "description": "停船命令 — 地球側が惑星間輸送協定に基づき緊急執行権を行使"
+      "description": "停船命令 — 軌道港湾機構が惑星間輸送協定に基づき緊急執行権を行使"
     },
     {
       "id": "ep03-scene-03",
@@ -69,13 +87,13 @@
       "id": "ep03-scene-05",
       "startMs": 380000,
       "endMs": 530000,
-      "description": "拘束 — 地球の重力区画で1Gに苦しむきりたん、尋問"
+      "description": "拘束 — 保安艇エシュロン（土星低軌道）でリア・オルフェウスが1G重力区画に拘束、軌道港湾機構弁務官セイラ・アンダースによる尋問"
     },
     {
       "id": "ep03-scene-06",
       "startMs": 530000,
       "endMs": 620000,
-      "description": "尋問 — 航法鍵と航案ネットワーク、ケストレルの特殊性"
+      "description": "尋問続行 — セイラがリアとミューズにガニメデ行き船舶（ケストレル）との通信記録を追及"
     },
     {
       "id": "ep03-scene-07",
@@ -168,8 +186,8 @@
       "lineId": "ep03-dl-004"
     },
     {
-      "speakerId": "earth-officer",
-      "speakerName": "地球軍関係者",
+      "speakerId": "port-authority-officer",
+      "speakerName": "軌道港湾機構職員",
       "text": "本域は木星軌道連合の試験に服しますが、現在惑星間輸送協定附則第5号に基づき当機構は臨時の生命緊急執行権を行使しています。貴船の航権は現在軌道公案機構監督にあります。直ちに主推進を停止し冷却モードへ移行してください。姿勢制御を固定し、相対速度を維持してください",
       "startMs": 84680,
       "endMs": 108910,
@@ -560,24 +578,24 @@
       "lineId": "ep03-dl-027"
     },
     {
-      "speakerId": "kestrel-ai",
-      "speakerName": "ケイ",
+      "speakerId": "muse",
+      "speakerName": "ミューズ",
       "text": "大丈夫ですか？ 心拍数が増えていますが",
       "startMs": 380440,
       "endMs": 383790,
       "sceneId": "ep03-scene-05",
-      "confidence": "inferred",
+      "confidence": "high",
       "rawEntryIds": [
         "cue-153"
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "AIがきりたんの体調を心配。1G環境下。",
+      "note": "リアの船載AI「ミューズ」がリアの体調を心配。保安艇エシュロンの1G重力区画内。映像で保安艇エシュロン艦内（土星低軌道）のテロップ確認。",
       "lineId": "ep03-dl-028"
     },
     {
-      "speakerId": "kiritan",
-      "speakerName": "きりたん",
+      "speakerId": "lia-orpheus",
+      "speakerName": "リア・オルフェウス",
       "text": "大丈夫なわけないだろう。私は火星生まれなんだ。1Gは重すぎる",
       "startMs": 383800,
       "endMs": 391029,
@@ -589,28 +607,28 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんが火星生まれであることが明かされる。外園居住者は0.8G環境。ASR「1位は」→「1Gは」修正。",
+      "note": "リア・オルフェウスが火星生まれであることが明かされる。外園居住者は0.8G環境。映像でセイラが「あなたはリア・オルフェウス…火星自治連邦の公民権を持ち」と呼称。ASR「1位は」→「1Gは」修正。",
       "lineId": "ep03-dl-029"
     },
     {
-      "speakerId": "earth-officer",
-      "speakerName": "地球軍関係者",
+      "speakerId": "seira-anders",
+      "speakerName": "セイラ・アンダース",
       "text": "これが地球です",
       "startMs": 391039,
       "endMs": 398350,
       "sceneId": "ep03-scene-05",
-      "confidence": "inferred",
+      "confidence": "high",
       "rawEntryIds": [
         "cue-159"
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "地球側の挑発。1G環境を指して。",
+      "note": "軌道港湾機構弁務官セイラ・アンダースの挑発。保安艇の1G重力区画を指して「これが地球です」。映像で「国際連合・軌道港湾機構…弁務官セイラ・アンダース」と名乗り確認。",
       "lineId": "ep03-dl-030"
     },
     {
-      "speakerId": "earth-officer",
-      "speakerName": "地球軍関係者",
+      "speakerId": "seira-anders",
+      "speakerName": "セイラ・アンダース",
       "text": "哀れですね。あなたたち外園居住者は0.8Gの低重力環境に適応し、もはや地球の重力にすら耐えられない",
       "startMs": 403560,
       "endMs": 418000,
@@ -624,23 +642,23 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "地球側の見下し。外園と内園の格差を象徴。ASR「外収居住者」→「外園居住者」修正。",
+      "note": "セイラが外園居住者の身体的劣勢を嘲笑。外園と内園の格差を象徴する台詞。ASR「外収居住者」→「外園居住者」修正。",
       "lineId": "ep03-dl-031"
     },
     {
-      "speakerId": "kiritan",
-      "speakerName": "きりたん",
+      "speakerId": "lia-orpheus",
+      "speakerName": "リア・オルフェウス",
       "text": "趣味が悪いよな、地球人は",
       "startMs": 428000,
       "endMs": 433390,
       "sceneId": "ep03-scene-05",
-      "confidence": "inferred",
+      "confidence": "high",
       "rawEntryIds": [
         "cue-175"
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "きりたんの返し。EP03-line-005と同じフレーズ（繰り返し）。",
+      "note": "リアの返し。口調がきりたんに類似（火星生まれの運び屋同士の共通性）。",
       "lineId": "ep03-dl-032"
     },
     {
