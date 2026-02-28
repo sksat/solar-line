@@ -275,6 +275,14 @@ describe("EP05 article content validation", () => {
     );
     assert.ok(content.includes("地球"), "should mention Earth");
   });
+
+  it("cross-episode mass boundary cites 452.5t (not 452t)", () => {
+    // Task 228 corrected EP03 mass boundary to 452.5t — EP05 cross-references must match
+    assert.ok(
+      content.includes("452.5"),
+      "EP05 cross-episode mass boundary should cite 452.5t",
+    );
+  });
 });
 
 // ============================================================
