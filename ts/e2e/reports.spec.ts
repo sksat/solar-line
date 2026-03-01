@@ -520,6 +520,34 @@ test.describe("KaTeX math rendering", () => {
     const katexElements = page.locator(".katex");
     expect(await katexElements.count()).toBeGreaterThanOrEqual(1);
   });
+
+  test("EP02 renders inline math for velocity expressions", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const katexElements = page.locator(".katex");
+    // EP02 has v_helio, v_esc, Delta V expressions
+    expect(await katexElements.count()).toBeGreaterThanOrEqual(3);
+  });
+
+  test("no raw LaTeX syntax leaks on EP02", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const bodyText = await page.locator("body").innerText();
+    // v_{text{helio}} and similar LaTeX should be rendered, not raw
+    const rawPatterns = [/(?<!`)\\frac\{/, /(?<!`)\\text\{/, /(?<!`)\\approx\b/];
+    for (const pattern of rawPatterns) {
+      expect(bodyText.match(pattern), `Raw LaTeX "${pattern}" should not appear`).toBeNull();
+    }
+  });
+
+  test("KaTeX rendering produces no JS errors on EP02", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/episodes/ep-002.html");
+    await page.waitForSelector(".katex", { timeout: 10000 });
+    const katexCount = await page.locator(".katex").count();
+    expect(katexCount).toBeGreaterThanOrEqual(1);
+    expect(errors).toEqual([]);
+  });
 });
 
 // --- Transcription page E2E tests (Task 215) ---
