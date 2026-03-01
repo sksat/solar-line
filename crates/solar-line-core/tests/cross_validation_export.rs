@@ -216,7 +216,33 @@ mod export {
                 m, e, sol.eccentric_anomaly.value(), nu.value(), sol.residual, comma
             ));
         }
-        results.push_str("    ]\n");
+        results.push_str("    ],\n");
+
+        // Anomaly round-trip: M → ν → M (verify full chain)
+        let rt_cases = [(1.0, 0.3), (2.5, 0.6), (0.3, 0.05)];
+        results.push_str("    \"anomaly_roundtrips\": [\n");
+        for (i, &(m, e)) in rt_cases.iter().enumerate() {
+            let ecc = Eccentricity::elliptical(e).unwrap();
+            let nu = kepler::mean_to_true_anomaly(Radians(m), ecc).unwrap();
+            let m_back = kepler::true_to_mean_anomaly(nu, ecc);
+            let comma = if i < rt_cases.len() - 1 { "," } else { "" };
+            results.push_str(&format!(
+                "      {{\"M_in\": {:.15e}, \"e\": {:.15e}, \"nu\": {:.15e}, \"M_out\": {:.15e}}}{}\n",
+                m, e, nu.value(), m_back.value(), comma
+            ));
+        }
+        results.push_str("    ],\n");
+
+        // Mean motion: n = sqrt(μ/a³) (rad/s)
+        let n_earth = kepler::mean_motion(mu::SUN, orbit_radius::EARTH);
+        results.push_str(&format!("    \"mean_motion_earth\": {:.15e},\n", n_earth));
+        let n_mars = kepler::mean_motion(mu::SUN, orbit_radius::MARS);
+        results.push_str(&format!("    \"mean_motion_mars\": {:.15e},\n", n_mars));
+        let n_jupiter = kepler::mean_motion(mu::SUN, orbit_radius::JUPITER);
+        results.push_str(&format!(
+            "    \"mean_motion_jupiter\": {:.15e}\n",
+            n_jupiter
+        ));
         results.push_str("  },\n");
 
         // === SOI radii ===
@@ -841,8 +867,44 @@ mod export {
         let time_ej =
             ephemeris::hohmann_transfer_time(ephemeris::Planet::Earth, ephemeris::Planet::Jupiter);
         results.push_str(&format!(
-            "    \"hohmann_time_earth_jupiter_days\": {:.15e}\n",
+            "    \"hohmann_time_earth_jupiter_days\": {:.15e},\n",
             time_ej.value() / 86400.0
+        ));
+
+        // Phase angles at J2000
+        let pa_em =
+            ephemeris::phase_angle(ephemeris::Planet::Earth, ephemeris::Planet::Mars, j2000);
+        results.push_str(&format!(
+            "    \"phase_angle_earth_mars_j2000_rad\": {:.15e},\n",
+            pa_em.value()
+        ));
+
+        let pa_ej =
+            ephemeris::phase_angle(ephemeris::Planet::Earth, ephemeris::Planet::Jupiter, j2000);
+        results.push_str(&format!(
+            "    \"phase_angle_earth_jupiter_j2000_rad\": {:.15e},\n",
+            pa_ej.value()
+        ));
+
+        // Next Hohmann window from J2000
+        let window_em = ephemeris::next_hohmann_window(
+            ephemeris::Planet::Earth,
+            ephemeris::Planet::Mars,
+            j2000,
+        );
+        results.push_str(&format!(
+            "    \"next_window_earth_mars_jd\": {:.15e},\n",
+            window_em.unwrap()
+        ));
+
+        let window_ej = ephemeris::next_hohmann_window(
+            ephemeris::Planet::Earth,
+            ephemeris::Planet::Jupiter,
+            j2000,
+        );
+        results.push_str(&format!(
+            "    \"next_window_earth_jupiter_jd\": {:.15e}\n",
+            window_ej.unwrap()
         ));
 
         results.push_str("  }\n");

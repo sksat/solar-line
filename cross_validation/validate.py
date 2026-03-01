@@ -355,6 +355,38 @@ def main():
             M_norm += 2.0 * math.pi
         vr.check(f"kepler_residual[M={M_val:.2f},e={e_val:.1f}]", M_check, M_norm, rel_tol=1e-13)
 
+    # Anomaly round-trip: M → ν → M
+    print("=== Validating Kepler anomaly round-trips ===")
+    for i, rt in enumerate(k["anomaly_roundtrips"]):
+        M_in, e_val, nu_rust, M_out = rt["M_in"], rt["e"], rt["nu"], rt["M_out"]
+        # Independent Python: M → E → ν
+        E_py = solve_kepler(M_in, e_val)
+        nu_py = eccentric_to_true_anomaly(E_py, e_val)
+        vr.check(f"anomaly_rt_nu[M={M_in},e={e_val}]", nu_rust, nu_py, rel_tol=1e-10)
+        # ν → E → M round-trip
+        E_back = 2.0 * math.atan2(
+            math.sqrt(1.0 - e_val) * math.sin(nu_py / 2.0),
+            math.sqrt(1.0 + e_val) * math.cos(nu_py / 2.0)
+        )
+        M_back = E_back - e_val * math.sin(E_back)
+        # Normalize to [0, 2π)
+        M_back = M_back % (2.0 * math.pi)
+        if M_back < 0:
+            M_back += 2.0 * math.pi
+        M_out_norm = M_out % (2.0 * math.pi)
+        if M_out_norm < 0:
+            M_out_norm += 2.0 * math.pi
+        vr.check(f"anomaly_rt_M[M={M_in},e={e_val}]", M_out_norm, M_back, rel_tol=1e-10)
+
+    # Mean motion: n = sqrt(μ/a³)
+    print("=== Validating mean motion ===")
+    n_earth_py = math.sqrt(c["mu_sun"] / c["r_earth"] ** 3)
+    vr.check("mean_motion_earth", k["mean_motion_earth"], n_earth_py)
+    n_mars_py = math.sqrt(c["mu_sun"] / c["r_mars"] ** 3)
+    vr.check("mean_motion_mars", k["mean_motion_mars"], n_mars_py)
+    n_jupiter_py = math.sqrt(c["mu_sun"] / c["r_jupiter"] ** 3)
+    vr.check("mean_motion_jupiter", k["mean_motion_jupiter"], n_jupiter_py)
+
     # --- SOI radii ---
     print("=== Validating SOI radii ===")
     s = rust["soi"]

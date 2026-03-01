@@ -763,6 +763,55 @@ def main():
     check("Hohmann time Earth→Jupiter (days)", eph["hohmann_time_earth_jupiter_days"],
           hohmann_transfer_time_days(r_earth_orb, r_jupiter_orb, mu_sun))
 
+    # Phase angles at J2000
+    py_earth_lon = planet_position_py("earth", j2000_jd)[0]
+    py_mars_lon = planet_position_py("mars", j2000_jd)[0]
+    py_jupiter_lon = planet_position_py("jupiter", j2000_jd)[0]
+
+    # phase_angle = lon2 - lon1, normalized to (-π, π]
+    def normalize_signed(a):
+        a = a % (2.0 * math.pi)
+        if a > math.pi:
+            a -= 2.0 * math.pi
+        return a
+
+    pa_em_py = normalize_signed(py_mars_lon - py_earth_lon)
+    check("phase angle Earth→Mars J2000 (rad)", eph["phase_angle_earth_mars_j2000_rad"],
+          pa_em_py, rel_tol=1e-8)
+
+    pa_ej_py = normalize_signed(py_jupiter_lon - py_earth_lon)
+    check("phase angle Earth→Jupiter J2000 (rad)", eph["phase_angle_earth_jupiter_j2000_rad"],
+          pa_ej_py, rel_tol=1e-8)
+
+    # Next Hohmann window verification
+    # At the returned JD, the phase angle should equal the required Hohmann phase angle
+    required_phase_em = eph["hohmann_phase_earth_mars_rad"]
+    window_jd_em = eph["next_window_earth_mars_jd"]
+    # Compute phase angle at window
+    em_at_window = planet_position_py("earth", window_jd_em)
+    mars_at_window = planet_position_py("mars", window_jd_em)
+    phase_at_window_em = normalize_signed(mars_at_window[0] - em_at_window[0])
+    # Window phase should match required phase within 0.1° (bisection tolerance)
+    check("window Earth→Mars phase match", phase_at_window_em,
+          required_phase_em, rel_tol=0.01)
+
+    required_phase_ej = eph["hohmann_phase_earth_jupiter_rad"]
+    window_jd_ej = eph["next_window_earth_jupiter_jd"]
+    ej_at_window = planet_position_py("earth", window_jd_ej)
+    jupiter_at_window = planet_position_py("jupiter", window_jd_ej)
+    phase_at_window_ej = normalize_signed(jupiter_at_window[0] - ej_at_window[0])
+    check("window Earth→Jupiter phase match", phase_at_window_ej,
+          required_phase_ej, rel_tol=0.01)
+
+    # Window should be within one synodic period from J2000
+    j2000_jd_val = 2_451_545.0
+    window_offset_em = window_jd_em - j2000_jd_val
+    synodic_em = eph["synodic_earth_mars_days"]
+    assert window_offset_em > 0 and window_offset_em < synodic_em * 1.2, \
+        f"Earth→Mars window {window_offset_em:.0f}d should be within synodic period {synodic_em:.0f}d"
+    print(f"  ✓ window Earth→Mars within synodic ({window_offset_em:.0f}d < {synodic_em:.0f}d)")
+    passed += 1
+
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")
     total = passed + failed
