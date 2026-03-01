@@ -37,3 +37,11 @@ echo "=== Step 5: Run EP02 trim-thrust cross-validation ==="
 echo ""
 echo "=== Step 6: Run supplementary module cross-validation ==="
 "${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_supplementary.py" --json "${JSON_OUT}"
+
+echo ""
+echo "=== Step 7: Export and validate DAG graph algorithms ==="
+DAG_JSON="${SCRIPT_DIR}/dag_values.json"
+cargo test --test dag_export -- --nocapture 2>/dev/null \
+  | grep -v '^running\|^test \|^$\|test result' \
+  > "${DAG_JSON}"
+"${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_dag.py"
