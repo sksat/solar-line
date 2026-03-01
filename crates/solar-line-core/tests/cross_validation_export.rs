@@ -7,16 +7,16 @@
 
 #[cfg(test)]
 mod export {
+    use solar_line_core::attitude;
     use solar_line_core::constants::{mu, orbit_radius, reference_orbits, G0_M_S2};
     use solar_line_core::flyby;
     use solar_line_core::kepler;
     use solar_line_core::orbits;
+    use solar_line_core::plasmoid;
     use solar_line_core::propagation::*;
+    use solar_line_core::relativistic;
     use solar_line_core::units::{Eccentricity, Km, KmPerSec, Radians, Seconds};
     use solar_line_core::vec3::Vec3;
-    use solar_line_core::attitude;
-    use solar_line_core::plasmoid;
-    use solar_line_core::relativistic;
 
     #[test]
     fn export_values() {
@@ -339,12 +339,14 @@ mod export {
             Seconds(365.25 * 86400.0),
             KmPerSec(0.01 * relativistic::C_KM_S),
         );
-        results.push_str(&format!("    \"time_loss_1yr_001c\": {:.15e},\n", loss_1yr.value()));
+        results.push_str(&format!(
+            "    \"time_loss_1yr_001c\": {:.15e},\n",
+            loss_1yr.value()
+        ));
 
         // KE correction factor at 2.5% c
-        let ke_025c = relativistic::kinetic_energy_correction_factor(
-            KmPerSec(0.025 * relativistic::C_KM_S),
-        );
+        let ke_025c =
+            relativistic::kinetic_energy_correction_factor(KmPerSec(0.025 * relativistic::C_KM_S));
         results.push_str(&format!("    \"ke_correction_025c\": {:.15e},\n", ke_025c));
 
         // Classical vs relativistic delta-V
@@ -352,21 +354,39 @@ mod export {
         let mr_10 = 10.0_f64;
         let dv_classical = relativistic::classical_delta_v(ve_fusion, mr_10);
         let dv_relativ = relativistic::relativistic_delta_v(ve_fusion, mr_10);
-        results.push_str(&format!("    \"dv_classical_ve9807_mr10\": {:.15e},\n", dv_classical.value()));
-        results.push_str(&format!("    \"dv_relativistic_ve9807_mr10\": {:.15e},\n", dv_relativ.value()));
+        results.push_str(&format!(
+            "    \"dv_classical_ve9807_mr10\": {:.15e},\n",
+            dv_classical.value()
+        ));
+        results.push_str(&format!(
+            "    \"dv_relativistic_ve9807_mr10\": {:.15e},\n",
+            dv_relativ.value()
+        ));
         let correction = relativistic::delta_v_correction_fraction(ve_fusion, mr_10);
-        results.push_str(&format!("    \"dv_correction_fraction\": {:.15e},\n", correction));
+        results.push_str(&format!(
+            "    \"dv_correction_fraction\": {:.15e},\n",
+            correction
+        ));
 
         // Brachistochrone proper time (Mars-Jupiter EP01)
         let d_mj = Km(550_630_800.0);
         let a_ep01 = 0.032_783; // km/s²
         let (t_coord, t_proper) = relativistic::brachistochrone_times(d_mj, a_ep01);
-        results.push_str(&format!("    \"brach_t_coord_ep01\": {:.15e},\n", t_coord.value()));
-        results.push_str(&format!("    \"brach_t_proper_ep01\": {:.15e},\n", t_proper.value()));
+        results.push_str(&format!(
+            "    \"brach_t_coord_ep01\": {:.15e},\n",
+            t_coord.value()
+        ));
+        results.push_str(&format!(
+            "    \"brach_t_proper_ep01\": {:.15e},\n",
+            t_proper.value()
+        ));
 
         // Peak velocity
         let v_peak = relativistic::brachistochrone_peak_velocity(d_mj, a_ep01);
-        results.push_str(&format!("    \"brach_v_peak_ep01\": {:.15e},\n", v_peak.value()));
+        results.push_str(&format!(
+            "    \"brach_v_peak_ep01\": {:.15e},\n",
+            v_peak.value()
+        ));
 
         // Effects summary at 7600 km/s
         let (gamma_7600, beta_7600, td_ppm_7600, ke_ppm_7600) =
@@ -385,7 +405,10 @@ mod export {
 
         // Required pointing for 10 km miss
         let theta_10km = attitude::required_pointing_rad(20.0, 3600.0, 10.0);
-        results.push_str(&format!("    \"req_pointing_20_3600_10km\": {:.15e},\n", theta_10km));
+        results.push_str(&format!(
+            "    \"req_pointing_20_3600_10km\": {:.15e},\n",
+            theta_10km
+        ));
 
         // Flip angular rate: 60s flip
         let flip_rate = attitude::flip_angular_rate(60.0);
@@ -397,7 +420,10 @@ mod export {
 
         // Flip RCS torque: 300t, 5m, 60s flip, 10s ramp
         let flip_torque = attitude::flip_rcs_torque(300_000.0, 5.0, 60.0, 10.0);
-        results.push_str(&format!("    \"flip_torque_300t_5m_60s_10s\": {:.15e},\n", flip_torque));
+        results.push_str(&format!(
+            "    \"flip_torque_300t_5m_60s_10s\": {:.15e},\n",
+            flip_torque
+        ));
 
         // Velocity error from pointing: 20 m/s², 3600s, 0.001 rad
         let v_err = attitude::velocity_error_from_pointing(20.0, 3600.0, 0.001);
@@ -405,13 +431,23 @@ mod export {
 
         // Accuracy to pointing error: 99.8%
         let theta_998 = attitude::accuracy_to_pointing_error_rad(0.998);
-        results.push_str(&format!("    \"pointing_from_998_accuracy\": {:.15e},\n", theta_998));
+        results.push_str(&format!(
+            "    \"pointing_from_998_accuracy\": {:.15e},\n",
+            theta_998
+        ));
 
         // Gravity gradient torque: Earth GM, 7000 km, 300t, 100m, 45°
         let gg_torque = attitude::gravity_gradient_torque(
-            3.986e14, 7_000_000.0, 300_000.0, 100.0, std::f64::consts::FRAC_PI_4,
+            3.986e14,
+            7_000_000.0,
+            300_000.0,
+            100.0,
+            std::f64::consts::FRAC_PI_4,
         );
-        results.push_str(&format!("    \"gg_torque_earth_7000km\": {:.15e}\n", gg_torque));
+        results.push_str(&format!(
+            "    \"gg_torque_earth_7000km\": {:.15e}\n",
+            gg_torque
+        ));
         results.push_str("  },\n");
 
         // === Plasmoid ===
@@ -432,21 +468,57 @@ mod export {
 
         // Full EP04 nominal scenario
         let ep04_nom = plasmoid::plasmoid_perturbation(
-            2.0e-9, 0.05e6, 150_000.0, 7854.0, 480.0, 48_000_000.0, 34_920.0,
+            2.0e-9,
+            0.05e6,
+            150_000.0,
+            7854.0,
+            480.0,
+            48_000_000.0,
+            34_920.0,
         );
-        results.push_str(&format!("    \"ep04_nom_p_mag\": {:.15e},\n", ep04_nom.magnetic_pressure_pa));
-        results.push_str(&format!("    \"ep04_nom_p_ram\": {:.15e},\n", ep04_nom.ram_pressure_pa));
-        results.push_str(&format!("    \"ep04_nom_force\": {:.15e},\n", ep04_nom.force_n));
-        results.push_str(&format!("    \"ep04_nom_dv\": {:.15e},\n", ep04_nom.velocity_perturbation_m_s));
-        results.push_str(&format!("    \"ep04_nom_miss\": {:.15e},\n", ep04_nom.miss_distance_km));
+        results.push_str(&format!(
+            "    \"ep04_nom_p_mag\": {:.15e},\n",
+            ep04_nom.magnetic_pressure_pa
+        ));
+        results.push_str(&format!(
+            "    \"ep04_nom_p_ram\": {:.15e},\n",
+            ep04_nom.ram_pressure_pa
+        ));
+        results.push_str(&format!(
+            "    \"ep04_nom_force\": {:.15e},\n",
+            ep04_nom.force_n
+        ));
+        results.push_str(&format!(
+            "    \"ep04_nom_dv\": {:.15e},\n",
+            ep04_nom.velocity_perturbation_m_s
+        ));
+        results.push_str(&format!(
+            "    \"ep04_nom_miss\": {:.15e},\n",
+            ep04_nom.miss_distance_km
+        ));
 
         // EP04 extreme scenario
         let ep04_ext = plasmoid::plasmoid_perturbation(
-            50.0e-9, 5.0e6, 500_000.0, 7854.0, 480.0, 48_000_000.0, 34_920.0,
+            50.0e-9,
+            5.0e6,
+            500_000.0,
+            7854.0,
+            480.0,
+            48_000_000.0,
+            34_920.0,
         );
-        results.push_str(&format!("    \"ep04_ext_force\": {:.15e},\n", ep04_ext.force_n));
-        results.push_str(&format!("    \"ep04_ext_dv\": {:.15e},\n", ep04_ext.velocity_perturbation_m_s));
-        results.push_str(&format!("    \"ep04_ext_miss\": {:.15e}\n", ep04_ext.miss_distance_km));
+        results.push_str(&format!(
+            "    \"ep04_ext_force\": {:.15e},\n",
+            ep04_ext.force_n
+        ));
+        results.push_str(&format!(
+            "    \"ep04_ext_dv\": {:.15e},\n",
+            ep04_ext.velocity_perturbation_m_s
+        ));
+        results.push_str(&format!(
+            "    \"ep04_ext_miss\": {:.15e}\n",
+            ep04_ext.miss_distance_km
+        ));
         results.push_str("  }\n");
 
         results.push_str("}\n");
