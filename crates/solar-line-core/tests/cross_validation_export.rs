@@ -191,6 +191,118 @@ mod export {
         results.push_str(&format!("    \"m0_kestrel_ep01\": {:.15e}\n", m0));
         results.push_str("  },\n");
 
+        // === Specific energy & angular momentum ===
+        results.push_str("  \"orbital_energy\": {\n");
+        let eps_leo = orbits::specific_energy(mu::EARTH, reference_orbits::LEO_RADIUS);
+        results.push_str(&format!("    \"eps_leo\": {:.15e},\n", eps_leo));
+        let eps_geo = orbits::specific_energy(mu::EARTH, reference_orbits::GEO_RADIUS);
+        results.push_str(&format!("    \"eps_geo\": {:.15e},\n", eps_geo));
+        let eps_earth_sun = orbits::specific_energy(mu::SUN, orbit_radius::EARTH);
+        results.push_str(&format!("    \"eps_earth_sun\": {:.15e},\n", eps_earth_sun));
+        let h_leo = orbits::specific_angular_momentum(
+            mu::EARTH,
+            reference_orbits::LEO_RADIUS,
+            Eccentricity::elliptical(0.0).unwrap(),
+        );
+        results.push_str(&format!("    \"h_leo_circular\": {:.15e},\n", h_leo));
+        let h_mars = orbits::specific_angular_momentum(
+            mu::SUN,
+            orbit_radius::MARS,
+            Eccentricity::elliptical(0.0934).unwrap(),
+        );
+        results.push_str(&format!("    \"h_mars_e0934\": {:.15e}\n", h_mars));
+        results.push_str("  },\n");
+
+        // === Mass flow rate & jet power ===
+        results.push_str("  \"propulsion\": {\n");
+        let ve_1e6 = orbits::exhaust_velocity(1_000_000.0);
+        let mdot = orbits::mass_flow_rate(9.8e6, ve_1e6);
+        results.push_str(&format!("    \"mdot_98MN_isp1e6\": {:.15e},\n", mdot));
+        let jet_p = orbits::jet_power(9.8e6, ve_1e6);
+        results.push_str(&format!("    \"jet_power_98MN_isp1e6\": {:.15e},\n", jet_p));
+        let ve_450 = orbits::exhaust_velocity(450.0);
+        let mdot_chem = orbits::mass_flow_rate(1.0e6, ve_450);
+        results.push_str(&format!("    \"mdot_1MN_isp450\": {:.15e},\n", mdot_chem));
+        let jet_p_chem = orbits::jet_power(1.0e6, ve_450);
+        results.push_str(&format!(
+            "    \"jet_power_1MN_isp450\": {:.15e}\n",
+            jet_p_chem
+        ));
+        results.push_str("  },\n");
+
+        // === Elements to state vector ===
+        results.push_str("  \"elements_to_state\": {\n");
+        // Test case 1: circular equatorial LEO
+        let e_circ = Eccentricity::elliptical(0.0).unwrap();
+        let elem1 = orbits::OrbitalElements {
+            semi_major_axis: Km(6778.0),
+            eccentricity: e_circ,
+            inclination: Radians(0.0),
+            raan: Radians(0.0),
+            arg_periapsis: Radians(0.0),
+            true_anomaly: Radians(0.0),
+        };
+        let sv1 = orbits::elements_to_state_vector(mu::EARTH, &elem1);
+        results.push_str("    \"circular_leo\": {\n");
+        results.push_str(&format!("      \"px\": {:.15e},\n", sv1.position.x.value()));
+        results.push_str(&format!("      \"py\": {:.15e},\n", sv1.position.y.value()));
+        results.push_str(&format!("      \"pz\": {:.15e},\n", sv1.position.z.value()));
+        results.push_str(&format!("      \"vx\": {:.15e},\n", sv1.velocity.x.value()));
+        results.push_str(&format!("      \"vy\": {:.15e},\n", sv1.velocity.y.value()));
+        results.push_str(&format!("      \"vz\": {:.15e}\n", sv1.velocity.z.value()));
+        results.push_str("    },\n");
+        // Test case 2: eccentric inclined orbit
+        let e_ecc = Eccentricity::elliptical(0.2).unwrap();
+        let elem2 = orbits::OrbitalElements {
+            semi_major_axis: Km(10000.0),
+            eccentricity: e_ecc,
+            inclination: Radians(0.5),
+            raan: Radians(1.0),
+            arg_periapsis: Radians(2.0),
+            true_anomaly: Radians(1.5),
+        };
+        let sv2 = orbits::elements_to_state_vector(mu::EARTH, &elem2);
+        results.push_str("    \"eccentric_inclined\": {\n");
+        results.push_str(&format!("      \"a\": {:.15e},\n", 10000.0));
+        results.push_str(&format!("      \"e\": {:.15e},\n", 0.2));
+        results.push_str(&format!("      \"i\": {:.15e},\n", 0.5));
+        results.push_str(&format!("      \"raan\": {:.15e},\n", 1.0));
+        results.push_str(&format!("      \"w\": {:.15e},\n", 2.0));
+        results.push_str(&format!("      \"nu\": {:.15e},\n", 1.5));
+        results.push_str(&format!("      \"px\": {:.15e},\n", sv2.position.x.value()));
+        results.push_str(&format!("      \"py\": {:.15e},\n", sv2.position.y.value()));
+        results.push_str(&format!("      \"pz\": {:.15e},\n", sv2.position.z.value()));
+        results.push_str(&format!("      \"vx\": {:.15e},\n", sv2.velocity.x.value()));
+        results.push_str(&format!("      \"vy\": {:.15e},\n", sv2.velocity.y.value()));
+        results.push_str(&format!("      \"vz\": {:.15e}\n", sv2.velocity.z.value()));
+        results.push_str("    },\n");
+        // Test case 3: high eccentricity solar orbit (Halley-like)
+        let e_halley = Eccentricity::elliptical(0.967).unwrap();
+        let elem3 = orbits::OrbitalElements {
+            semi_major_axis: Km(2.667e9),
+            eccentricity: e_halley,
+            inclination: Radians(2.8387),
+            raan: Radians(0.99559),
+            arg_periapsis: Radians(1.87176),
+            true_anomaly: Radians(0.5),
+        };
+        let sv3 = orbits::elements_to_state_vector(mu::SUN, &elem3);
+        results.push_str("    \"halley_like\": {\n");
+        results.push_str(&format!("      \"a\": {:.15e},\n", 2.667e9));
+        results.push_str(&format!("      \"e\": {:.15e},\n", 0.967));
+        results.push_str(&format!("      \"i\": {:.15e},\n", 2.8387));
+        results.push_str(&format!("      \"raan\": {:.15e},\n", 0.99559));
+        results.push_str(&format!("      \"w\": {:.15e},\n", 1.87176));
+        results.push_str(&format!("      \"nu\": {:.15e},\n", 0.5));
+        results.push_str(&format!("      \"px\": {:.15e},\n", sv3.position.x.value()));
+        results.push_str(&format!("      \"py\": {:.15e},\n", sv3.position.y.value()));
+        results.push_str(&format!("      \"pz\": {:.15e},\n", sv3.position.z.value()));
+        results.push_str(&format!("      \"vx\": {:.15e},\n", sv3.velocity.x.value()));
+        results.push_str(&format!("      \"vy\": {:.15e},\n", sv3.velocity.y.value()));
+        results.push_str(&format!("      \"vz\": {:.15e}\n", sv3.velocity.z.value()));
+        results.push_str("    }\n");
+        results.push_str("  },\n");
+
         // === Kepler equation ===
         results.push_str("  \"kepler\": {\n");
         // Test cases: (M, e) → E
@@ -240,8 +352,41 @@ mod export {
         results.push_str(&format!("    \"mean_motion_mars\": {:.15e},\n", n_mars));
         let n_jupiter = kepler::mean_motion(mu::SUN, orbit_radius::JUPITER);
         results.push_str(&format!(
-            "    \"mean_motion_jupiter\": {:.15e}\n",
+            "    \"mean_motion_jupiter\": {:.15e},\n",
             n_jupiter
+        ));
+
+        // Individual anomaly conversions: true↔eccentric, eccentric→mean
+        let conv_cases = [(1.0, 0.3), (2.5, 0.6), (0.5, 0.05), (3.0, 0.9)];
+        results.push_str("    \"anomaly_conversions\": [\n");
+        for (ci, &(nu_val, e_val)) in conv_cases.iter().enumerate() {
+            let ecc = Eccentricity::elliptical(e_val).unwrap();
+            let big_e = kepler::true_to_eccentric_anomaly(Radians(nu_val), ecc);
+            let m_from_e = kepler::eccentric_to_mean_anomaly(big_e, ecc);
+            let nu_back = kepler::eccentric_to_true_anomaly(big_e, ecc);
+            let comma = if ci < conv_cases.len() - 1 { "," } else { "" };
+            results.push_str(&format!(
+                "      {{\"nu_in\": {:.15e}, \"e\": {:.15e}, \"E\": {:.15e}, \"M\": {:.15e}, \"nu_back\": {:.15e}}}{}\n",
+                nu_val, e_val, big_e.value(), m_from_e.value(), nu_back.value(), comma
+            ));
+        }
+        results.push_str("    ],\n");
+
+        // Propagate mean anomaly
+        let m0 = Radians(0.5);
+        let n_test = kepler::mean_motion(mu::SUN, orbit_radius::EARTH);
+        let dt_half_orbit =
+            Seconds(orbits::orbital_period(mu::SUN, orbit_radius::EARTH).value() / 2.0);
+        let m_half = kepler::propagate_mean_anomaly(m0, n_test, dt_half_orbit);
+        results.push_str(&format!(
+            "    \"propagate_m0_05_half_orbit\": {:.15e},\n",
+            m_half.value()
+        ));
+        let dt_full = Seconds(orbits::orbital_period(mu::SUN, orbit_radius::EARTH).value());
+        let m_full = kepler::propagate_mean_anomaly(m0, n_test, dt_full);
+        results.push_str(&format!(
+            "    \"propagate_m0_05_full_orbit\": {:.15e}\n",
+            m_full.value()
         ));
         results.push_str("  },\n");
 
@@ -288,6 +433,30 @@ mod export {
             fb_pow.v_periapsis
         ));
         results.push_str(&format!("      \"v_inf_out\": {:.15e}\n", fb_pow.v_inf_out));
+        results.push_str("    },\n");
+
+        // Heliocentric exit velocity
+        let planet_vel = [0.0, 13.07, 0.0]; // Jupiter orbital velocity ~13.07 km/s
+        let v_helio = flyby::heliocentric_exit_velocity(planet_vel, &fb);
+        results.push_str("    \"heliocentric_exit\": {\n");
+        results.push_str(&format!("      \"planet_vx\": {:.15e},\n", planet_vel[0]));
+        results.push_str(&format!("      \"planet_vy\": {:.15e},\n", planet_vel[1]));
+        results.push_str(&format!("      \"planet_vz\": {:.15e},\n", planet_vel[2]));
+        results.push_str(&format!(
+            "      \"v_inf_out_dir_x\": {:.15e},\n",
+            fb.v_inf_out_dir[0]
+        ));
+        results.push_str(&format!(
+            "      \"v_inf_out_dir_y\": {:.15e},\n",
+            fb.v_inf_out_dir[1]
+        ));
+        results.push_str(&format!(
+            "      \"v_inf_out_dir_z\": {:.15e},\n",
+            fb.v_inf_out_dir[2]
+        ));
+        results.push_str(&format!("      \"helio_vx\": {:.15e},\n", v_helio[0]));
+        results.push_str(&format!("      \"helio_vy\": {:.15e},\n", v_helio[1]));
+        results.push_str(&format!("      \"helio_vz\": {:.15e}\n", v_helio[2]));
         results.push_str("    }\n");
         results.push_str("  },\n");
 
@@ -597,7 +766,40 @@ mod export {
         ));
 
         // Speed of light constant
-        results.push_str(&format!("    \"c_km_s\": {:.15e}\n", comms::C_KM_S));
+        results.push_str(&format!("    \"c_km_s\": {:.15e},\n", comms::C_KM_S));
+
+        // Planet light delay at J2000 (end-to-end ephemeris+comms)
+        let j2000_jd = 2_451_545.0_f64;
+        let pld_em =
+            comms::planet_light_delay(ephemeris::Planet::Earth, ephemeris::Planet::Mars, j2000_jd);
+        results.push_str(&format!(
+            "    \"planet_delay_earth_mars_j2000_s\": {:.15e},\n",
+            pld_em
+        ));
+        let pld_ej = comms::planet_light_delay(
+            ephemeris::Planet::Earth,
+            ephemeris::Planet::Jupiter,
+            j2000_jd,
+        );
+        results.push_str(&format!(
+            "    \"planet_delay_earth_jupiter_j2000_s\": {:.15e},\n",
+            pld_ej
+        ));
+
+        // Distance between positions (using known planet positions at J2000)
+        let earth_pos_j2000 = ephemeris::planet_position(ephemeris::Planet::Earth, j2000_jd);
+        let mars_pos_j2000 = ephemeris::planet_position(ephemeris::Planet::Mars, j2000_jd);
+        let jupiter_pos_j2000 = ephemeris::planet_position(ephemeris::Planet::Jupiter, j2000_jd);
+        let dist_em = comms::distance_between_positions(&earth_pos_j2000, &mars_pos_j2000);
+        results.push_str(&format!(
+            "    \"dist_earth_mars_j2000_km\": {:.15e},\n",
+            dist_em.value()
+        ));
+        let dist_ej = comms::distance_between_positions(&earth_pos_j2000, &jupiter_pos_j2000);
+        results.push_str(&format!(
+            "    \"dist_earth_jupiter_j2000_km\": {:.15e}\n",
+            dist_ej.value()
+        ));
         results.push_str("  },\n");
 
         // === Mass Timeline (Tsiolkovsky) ===

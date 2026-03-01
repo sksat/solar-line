@@ -458,6 +458,149 @@ def main():
     # scipy should also return near start
     vr.check("prop_scipy_return_r", r_final, r_leo, rel_tol=1e-4)
 
+    # --- Orbital energy & angular momentum ---
+    print("=== Validating specific energy & angular momentum ===")
+    oe = rust["orbital_energy"]
+    vr.check("eps_leo", oe["eps_leo"], -c["mu_earth"] / (2.0 * c["r_leo"]))
+    vr.check("eps_geo", oe["eps_geo"], -c["mu_earth"] / (2.0 * c["r_geo"]))
+    vr.check("eps_earth_sun", oe["eps_earth_sun"], -c["mu_sun"] / (2.0 * c["r_earth"]))
+    # h = sqrt(mu * a * (1 - e^2)), circular e=0 → h = sqrt(mu * a)
+    vr.check("h_leo_circular", oe["h_leo_circular"],
+             math.sqrt(c["mu_earth"] * c["r_leo"]))
+    # Mars e=0.0934
+    vr.check("h_mars_e0934", oe["h_mars_e0934"],
+             math.sqrt(c["mu_sun"] * c["r_mars"] * (1.0 - 0.0934**2)))
+
+    # --- Propulsion: mass flow rate & jet power ---
+    print("=== Validating mass flow rate & jet power ===")
+    pr = rust["propulsion"]
+    ve_1e6 = exhaust_velocity(1_000_000.0)
+    # mdot = F / (ve * 1000)  (convert km/s to m/s)
+    vr.check("mdot_98MN_isp1e6", pr["mdot_98MN_isp1e6"], 9.8e6 / (ve_1e6 * 1000.0))
+    # jet_power = 0.5 * F * ve * 1000
+    vr.check("jet_power_98MN_isp1e6", pr["jet_power_98MN_isp1e6"],
+             0.5 * 9.8e6 * ve_1e6 * 1000.0)
+    ve_450 = exhaust_velocity(450.0)
+    vr.check("mdot_1MN_isp450", pr["mdot_1MN_isp450"], 1.0e6 / (ve_450 * 1000.0))
+    vr.check("jet_power_1MN_isp450", pr["jet_power_1MN_isp450"],
+             0.5 * 1.0e6 * ve_450 * 1000.0)
+
+    # --- Elements to state vector ---
+    print("=== Validating elements_to_state_vector ===")
+    ets = rust["elements_to_state"]
+
+    # Circular LEO: position at (a, 0, 0), velocity at (0, v_circ, 0)
+    circ = ets["circular_leo"]
+    vr.check("circ_leo_px", circ["px"], 6778.0)
+    vr.check("circ_leo_py", circ["py"], 0.0, abs_tol=1e-10)
+    vr.check("circ_leo_pz", circ["pz"], 0.0, abs_tol=1e-10)
+    v_circ_leo = math.sqrt(c["mu_earth"] / 6778.0)
+    vr.check("circ_leo_vx", circ["vx"], 0.0, abs_tol=1e-10)
+    vr.check("circ_leo_vy", circ["vy"], v_circ_leo)
+    vr.check("circ_leo_vz", circ["vz"], 0.0, abs_tol=1e-10)
+
+    # Eccentric inclined orbit: verify energy and angular momentum conservation
+    ecc_test = ets["eccentric_inclined"]
+    a_e, e_e = ecc_test["a"], ecc_test["e"]
+    r_sv = math.sqrt(ecc_test["px"]**2 + ecc_test["py"]**2 + ecc_test["pz"]**2)
+    v_sv = math.sqrt(ecc_test["vx"]**2 + ecc_test["vy"]**2 + ecc_test["vz"]**2)
+    eps_sv = 0.5 * v_sv**2 - c["mu_earth"] / r_sv
+    eps_elem = -c["mu_earth"] / (2.0 * a_e)
+    vr.check("ets_energy_consistency", eps_sv, eps_elem, rel_tol=1e-10)
+    # Angular momentum: h = |r x v|
+    rx, ry, rz = ecc_test["px"], ecc_test["py"], ecc_test["pz"]
+    vvx, vvy, vvz = ecc_test["vx"], ecc_test["vy"], ecc_test["vz"]
+    hx = ry * vvz - rz * vvy
+    hy = rz * vvx - rx * vvz
+    hz = rx * vvy - ry * vvx
+    h_sv = math.sqrt(hx**2 + hy**2 + hz**2)
+    h_elem = math.sqrt(c["mu_earth"] * a_e * (1.0 - e_e**2))
+    vr.check("ets_angular_momentum", h_sv, h_elem, rel_tol=1e-10)
+
+    # Halley-like orbit: verify energy conservation
+    halley = ets["halley_like"]
+    a_h, e_h = halley["a"], halley["e"]
+    r_h = math.sqrt(halley["px"]**2 + halley["py"]**2 + halley["pz"]**2)
+    v_h = math.sqrt(halley["vx"]**2 + halley["vy"]**2 + halley["vz"]**2)
+    eps_h_sv = 0.5 * v_h**2 - c["mu_sun"] / r_h
+    eps_h_elem = -c["mu_sun"] / (2.0 * a_h)
+    vr.check("ets_halley_energy", eps_h_sv, eps_h_elem, rel_tol=1e-10)
+
+    # --- Kepler anomaly conversions ---
+    print("=== Validating anomaly conversions ===")
+    for i, conv in enumerate(k["anomaly_conversions"]):
+        nu_in = conv["nu_in"]
+        e_val = conv["e"]
+        # true → eccentric: tan(E/2) = sqrt((1-e)/(1+e)) * tan(ν/2)
+        E_py = 2.0 * math.atan2(
+            math.sqrt(1.0 - e_val) * math.sin(nu_in / 2.0),
+            math.sqrt(1.0 + e_val) * math.cos(nu_in / 2.0)
+        )
+        # Normalize to [0, 2π)
+        E_py = E_py % (2.0 * math.pi)
+        if E_py < 0:
+            E_py += 2.0 * math.pi
+        vr.check(f"conv_E[nu={nu_in},e={e_val}]", conv["E"], E_py, rel_tol=1e-10)
+        # eccentric → mean: M = E - e*sin(E)
+        M_py = E_py - e_val * math.sin(E_py)
+        M_py = M_py % (2.0 * math.pi)
+        if M_py < 0:
+            M_py += 2.0 * math.pi
+        vr.check(f"conv_M[nu={nu_in},e={e_val}]", conv["M"], M_py, rel_tol=1e-10)
+        # E → ν round-trip
+        nu_back_py = eccentric_to_true_anomaly(E_py, e_val)
+        nu_in_norm = nu_in % (2.0 * math.pi)
+        if nu_in_norm < 0:
+            nu_in_norm += 2.0 * math.pi
+        vr.check(f"conv_nu_rt[nu={nu_in},e={e_val}]", conv["nu_back"], nu_back_py, rel_tol=1e-10)
+
+    # --- Propagate mean anomaly ---
+    print("=== Validating propagate_mean_anomaly ===")
+    n_earth = math.sqrt(c["mu_sun"] / c["r_earth"]**3)
+    T_earth = orbital_period(c["mu_sun"], c["r_earth"])
+    # Half orbit: M = 0.5 + π (normalized)
+    m_half_py = (0.5 + n_earth * T_earth / 2.0) % (2.0 * math.pi)
+    vr.check("propagate_half_orbit", k["propagate_m0_05_half_orbit"], m_half_py, rel_tol=1e-10)
+    # Full orbit: should return to M = 0.5
+    m_full_py = (0.5 + n_earth * T_earth) % (2.0 * math.pi)
+    vr.check("propagate_full_orbit", k["propagate_m0_05_full_orbit"], m_full_py, rel_tol=1e-10)
+
+    # --- Heliocentric exit velocity ---
+    print("=== Validating heliocentric exit velocity ===")
+    he = rust["flyby"]["heliocentric_exit"]
+    # v_helio = v_planet + v_inf_out * dir
+    helio_vx_py = he["planet_vx"] + fb["unpowered_jupiter"]["v_inf_out"] * he["v_inf_out_dir_x"]
+    helio_vy_py = he["planet_vy"] + fb["unpowered_jupiter"]["v_inf_out"] * he["v_inf_out_dir_y"]
+    helio_vz_py = he["planet_vz"] + fb["unpowered_jupiter"]["v_inf_out"] * he["v_inf_out_dir_z"]
+    # Use the Rust-exported v_inf_out and dir (to avoid double-counting differences)
+    vr.check("helio_exit_vx", he["helio_vx"], helio_vx_py)
+    vr.check("helio_exit_vy", he["helio_vy"], helio_vy_py)
+    vr.check("helio_exit_vz", he["helio_vz"], helio_vz_py)
+
+    # --- Comms: planet light delay & distance ---
+    print("=== Validating comms planet light delay ===")
+    cm = rust["comms"]
+    # planet_delay = distance / c
+    # Verify delay = dist / c_km_s
+    dist_em = cm["dist_earth_mars_j2000_km"]
+    vr.check("planet_delay_em_consistency",
+             cm["planet_delay_earth_mars_j2000_s"],
+             dist_em / cm["c_km_s"])
+    dist_ej = cm["dist_earth_jupiter_j2000_km"]
+    vr.check("planet_delay_ej_consistency",
+             cm["planet_delay_earth_jupiter_j2000_s"],
+             dist_ej / cm["c_km_s"])
+    # Sanity: Earth-Mars delay ~3-22 min at J2000
+    delay_em_min = cm["planet_delay_earth_mars_j2000_s"] / 60.0
+    assert 3.0 < delay_em_min < 22.0, f"Earth-Mars delay {delay_em_min:.1f} min out of range"
+    vr.passed += 1
+    vr.details.append(f"  [PASS] planet_delay_em_range: {delay_em_min:.1f} min in [3,22]")
+    # Earth-Jupiter delay ~30-52 min
+    delay_ej_min = cm["planet_delay_earth_jupiter_j2000_s"] / 60.0
+    assert 30.0 < delay_ej_min < 55.0, f"Earth-Jupiter delay {delay_ej_min:.1f} min out of range"
+    vr.passed += 1
+    vr.details.append(f"  [PASS] planet_delay_ej_range: {delay_ej_min:.1f} min in [30,55]")
+
     # Print summary
     print(vr.summary())
 

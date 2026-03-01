@@ -812,6 +812,77 @@ def main():
     print(f"  ✓ window Earth→Mars within synodic ({window_offset_em:.0f}d < {synodic_em:.0f}d)")
     passed += 1
 
+    # ── Elements to state vector (independent Python impl) ──────
+    print("\n=== elements_to_state_vector cross-validation ===")
+    ets = rust["elements_to_state"]
+
+    def elements_to_state_py(mu_val, a, e, inc, raan, w, nu):
+        """Independent Python: Keplerian elements → Cartesian state vector."""
+        # Semi-latus rectum
+        p = a * (1.0 - e * e)
+        # Distance
+        r = p / (1.0 + e * math.cos(nu))
+        # Position in perifocal (PQW) frame
+        x_pqw = r * math.cos(nu)
+        y_pqw = r * math.sin(nu)
+        # Velocity in PQW frame
+        mu_over_p = math.sqrt(mu_val / p)
+        vx_pqw = -mu_over_p * math.sin(nu)
+        vy_pqw = mu_over_p * (e + math.cos(nu))
+        # Rotation matrix (Ω, i, ω → inertial)
+        cw, sw = math.cos(w), math.sin(w)
+        ci, si = math.cos(inc), math.sin(inc)
+        cr, sr = math.cos(raan), math.sin(raan)
+        r11 = cr * cw - sr * sw * ci
+        r21 = sr * cw + cr * sw * ci
+        r31 = sw * si
+        r12 = -cr * sw - sr * cw * ci
+        r22 = -sr * sw + cr * cw * ci
+        r32 = cw * si
+        px = r11 * x_pqw + r12 * y_pqw
+        py = r21 * x_pqw + r22 * y_pqw
+        pz = r31 * x_pqw + r32 * y_pqw
+        vx = r11 * vx_pqw + r12 * vy_pqw
+        vy = r21 * vx_pqw + r22 * vy_pqw
+        vz = r31 * vx_pqw + r32 * vy_pqw
+        return (px, py, pz, vx, vy, vz)
+
+    mu_earth = rust["constants"]["mu_earth"]
+    mu_sun = rust["constants"]["mu_sun"]
+
+    # Circular LEO
+    px, py, pz, vx, vy, vz = elements_to_state_py(
+        mu_earth, 6778.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+    circ = ets["circular_leo"]
+    check("ets_circ_px", circ["px"], px)
+    check("ets_circ_py", circ["py"], py, abs_tol=1e-10)
+    check("ets_circ_pz", circ["pz"], pz, abs_tol=1e-10)
+    check("ets_circ_vx", circ["vx"], vx, abs_tol=1e-10)
+    check("ets_circ_vy", circ["vy"], vy)
+    check("ets_circ_vz", circ["vz"], vz, abs_tol=1e-10)
+
+    # Eccentric inclined
+    ei = ets["eccentric_inclined"]
+    px, py, pz, vx, vy, vz = elements_to_state_py(
+        mu_earth, ei["a"], ei["e"], ei["i"], ei["raan"], ei["w"], ei["nu"])
+    check("ets_ecc_px", ei["px"], px)
+    check("ets_ecc_py", ei["py"], py)
+    check("ets_ecc_pz", ei["pz"], pz)
+    check("ets_ecc_vx", ei["vx"], vx)
+    check("ets_ecc_vy", ei["vy"], vy)
+    check("ets_ecc_vz", ei["vz"], vz)
+
+    # Halley-like (high eccentricity solar orbit)
+    hl = ets["halley_like"]
+    px, py, pz, vx, vy, vz = elements_to_state_py(
+        mu_sun, hl["a"], hl["e"], hl["i"], hl["raan"], hl["w"], hl["nu"])
+    check("ets_halley_px", hl["px"], px)
+    check("ets_halley_py", hl["py"], py)
+    check("ets_halley_pz", hl["pz"], pz)
+    check("ets_halley_vx", hl["vx"], vx)
+    check("ets_halley_vy", hl["vy"], vy)
+    check("ets_halley_vz", hl["vz"], vz)
+
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")
     total = passed + failed
