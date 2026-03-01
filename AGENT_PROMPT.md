@@ -6,5 +6,3 @@ Claim a task, work on it, commit your changes, push to origin, check CI status.
 以下追加指示（新しい記述を見逃さないようにするため、削除前に git diff を再確認すること。）
 
 ---
-
-- 単なる task refresh は task として扱う必要はない。同じことの繰り返しになってしまう。
