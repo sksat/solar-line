@@ -1,6 +1,6 @@
 # Task 341: Screenshot Citations in Reports
 
-## Status: NOT_STARTED
+## Status: DONE
 
 ## Description
 When analysis is based on information read from video frames, screenshots may be cited in reports for evidence. Must follow fair-use guidelines.

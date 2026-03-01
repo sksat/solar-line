@@ -1168,6 +1168,108 @@ def main():
     check("uranus_2215_lon", eph["uranus_2215_lon_rad"], py_u2_lon)
     check("uranus_2215_dist_au", eph["uranus_2215_dist_au"], py_u2_dist)
 
+    # arrival_position: simply planet_position at departure + transfer_time
+    # Jupiter after 72h from J2000
+    arr_jd_jup = j2000_jd + 72.0 * 3600.0 / 86400.0
+    py_arr_jup = planet_position_py("jupiter", arr_jd_jup)
+    check("arrival Jupiter 72h lon", eph["arrival_jupiter_72h_lon_rad"], py_arr_jup[0])
+    check("arrival Jupiter 72h x_km", eph["arrival_jupiter_72h_x_km"], py_arr_jup[2])
+    check("arrival Jupiter 72h y_km", eph["arrival_jupiter_72h_y_km"], py_arr_jup[3])
+
+    # Mars after 259d Hohmann from J2000
+    arr_jd_mars = j2000_jd + 259.0
+    py_arr_mars = planet_position_py("mars", arr_jd_mars)
+    check("arrival Mars 259d lon", eph["arrival_mars_259d_lon_rad"], py_arr_mars[0])
+    check("arrival Mars 259d x_km", eph["arrival_mars_259d_x_km"], py_arr_mars[2])
+    check("arrival Mars 259d y_km", eph["arrival_mars_259d_y_km"], py_arr_mars[3])
+
+    # ── Ship-planet comm delay & timeline ──────────────────────────
+    print("\n═══ Ship-planet comm delay & timeline cross-validation ═══")
+    sc = rust["ship_comms"]
+
+    # ship_planet_light_delay: ship at Mars position → Earth
+    # Independent: dist(ship_xy, earth_xy) / c
+    py_earth_pos = planet_position_py("earth", j2000_jd)
+    py_mars_pos = planet_position_py("mars", j2000_jd)
+    py_jup_pos = planet_position_py("jupiter", j2000_jd)
+
+    # Ship at Mars → Earth delay
+    dx = py_mars_pos[2] - py_earth_pos[2]  # x_km
+    dy = py_mars_pos[3] - py_earth_pos[3]  # y_km
+    py_delay_mars = math.sqrt(dx**2 + dy**2) / C_KM_S
+    check("ship@Mars→Earth delay", sc["delay_ship_at_mars_to_earth_s"], py_delay_mars)
+
+    # Ship at Jupiter → Earth delay
+    dx = py_jup_pos[2] - py_earth_pos[2]
+    dy = py_jup_pos[3] - py_earth_pos[3]
+    py_delay_jup = math.sqrt(dx**2 + dy**2) / C_KM_S
+    check("ship@Jupiter→Earth delay", sc["delay_ship_at_jupiter_to_earth_s"], py_delay_jup)
+
+    # Ship at origin (Sun) → Earth delay
+    dx = 0.0 - py_earth_pos[2]
+    dy = 0.0 - py_earth_pos[3]
+    py_delay_origin = math.sqrt(dx**2 + dy**2) / C_KM_S
+    check("ship@origin→Earth delay", sc["delay_ship_at_origin_to_earth_s"], py_delay_origin)
+
+    # comm_timeline_linear: Mars→Jupiter, 72h, 5 steps
+    # Independent implementation:
+    dep_pos = planet_position_py("mars", j2000_jd)
+    arr_jd_tl = j2000_jd + 72.0 * 3600.0 / 86400.0
+    arr_pos = planet_position_py("jupiter", arr_jd_tl)
+    travel_time_s = 72.0 * 3600.0
+    n_steps = 5
+
+    check("timeline count", sc["timeline_count"], n_steps + 1)
+
+    # First entry (frac=0): ship at departure position
+    py_first_ship_x = dep_pos[2]
+    py_first_ship_y = dep_pos[3]
+    py_first_jd = j2000_jd
+    py_first_earth = planet_position_py("earth", py_first_jd)
+    dx = py_first_ship_x - py_first_earth[2]
+    dy = py_first_ship_y - py_first_earth[3]
+    py_first_delay = math.sqrt(dx**2 + dy**2) / C_KM_S
+    check("timeline first elapsed_s", sc["timeline_first_elapsed_s"], 0.0, abs_tol=1e-10)
+    check("timeline first ship_x", sc["timeline_first_ship_x"], py_first_ship_x)
+    check("timeline first ship_y", sc["timeline_first_ship_y"], py_first_ship_y)
+    check("timeline first delay_s", sc["timeline_first_delay_s"], py_first_delay)
+
+    # Mid entry: Rust uses timeline[len/2] = timeline[6/2] = timeline[3], frac=3/5
+    mid_frac = ((n_steps + 1) // 2) / n_steps  # (5+1)//2=3, 3/5 = 0.6
+    mid_elapsed = mid_frac * travel_time_s
+    mid_jd = j2000_jd + mid_elapsed / 86400.0
+    py_mid_ship_x = dep_pos[2] + mid_frac * (arr_pos[2] - dep_pos[2])
+    py_mid_ship_y = dep_pos[3] + mid_frac * (arr_pos[3] - dep_pos[3])
+    py_mid_earth = planet_position_py("earth", mid_jd)
+    dx = py_mid_ship_x - py_mid_earth[2]
+    dy = py_mid_ship_y - py_mid_earth[3]
+    py_mid_delay = math.sqrt(dx**2 + dy**2) / C_KM_S
+    check("timeline mid elapsed_s", sc["timeline_mid_elapsed_s"], mid_elapsed)
+    check("timeline mid ship_x", sc["timeline_mid_ship_x"], py_mid_ship_x)
+    check("timeline mid ship_y", sc["timeline_mid_ship_y"], py_mid_ship_y)
+    check("timeline mid delay_s", sc["timeline_mid_delay_s"], py_mid_delay)
+
+    # Last entry (frac=1.0): ship at arrival position
+    py_last_ship_x = arr_pos[2]
+    py_last_ship_y = arr_pos[3]
+    py_last_jd = arr_jd_tl
+    py_last_earth = planet_position_py("earth", py_last_jd)
+    dx = py_last_ship_x - py_last_earth[2]
+    dy = py_last_ship_y - py_last_earth[3]
+    py_last_delay = math.sqrt(dx**2 + dy**2) / C_KM_S
+    check("timeline last elapsed_s", sc["timeline_last_elapsed_s"], travel_time_s)
+    check("timeline last ship_x", sc["timeline_last_ship_x"], py_last_ship_x)
+    check("timeline last ship_y", sc["timeline_last_ship_y"], py_last_ship_y)
+    check("timeline last delay_s", sc["timeline_last_delay_s"], py_last_delay)
+
+    # ── Out-of-plane distance (orbital_3d) ─────────────────────────
+    print("\n═══ Out-of-plane distance cross-validation ═══")
+    # Independent: |z_planet2 - z_planet1| at given JD
+    py_mars_z = py_mars_pos[4]   # z_km at J2000
+    py_jup_z = py_jup_pos[4]     # z_km at J2000
+    py_oop = abs(py_jup_z - py_mars_z)
+    check("out-of-plane Mars-Jupiter J2000", o3d["oop_mars_jupiter_j2000_km"], py_oop)
+
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")
     total = passed + failed

@@ -176,7 +176,46 @@ mod export {
 
         // Cycle detection (should be None for this DAG)
         let cycle = dag.detect_cycle();
-        results.push_str(&format!("  \"has_cycle\": {}\n", cycle.is_some()));
+        results.push_str(&format!("  \"has_cycle\": {},\n", cycle.is_some()));
+
+        // Subgraph: nodes matching Parameter type, depth 1
+        let mut sub_param = dag.subgraph(|n| n.node_type == NodeType::Parameter, 1);
+        sub_param.sort();
+        results.push_str(&format!("  \"subgraph_param_d1\": {:?},\n", sub_param));
+
+        // Subgraph: nodes matching Report type, depth 2
+        let mut sub_report = dag.subgraph(|n| n.node_type == NodeType::Report, 2);
+        sub_report.sort();
+        results.push_str(&format!("  \"subgraph_report_d2\": {:?},\n", sub_report));
+
+        // count_crossings: arranged to avoid crossings
+        let positions_nocross: Vec<(f64, f64)> = vec![
+            (0.0, 0.0),  // node 0 (root)
+            (1.0, 1.0),  // node 1
+            (1.0, -1.0), // node 2
+            (2.0, 0.5),  // node 3
+            (2.0, -0.5), // node 4
+            (3.0, 0.0),  // node 5
+            (4.0, 0.0),  // node 6 (orphan)
+        ];
+        let crossings_nocross = dag.count_crossings(&positions_nocross);
+        results.push_str(&format!(
+            "  \"crossings_nocross\": {},\n",
+            crossings_nocross
+        ));
+
+        // count_crossings: swap nodes 3 and 4 y-positions to force crossings
+        let positions_cross: Vec<(f64, f64)> = vec![
+            (0.0, 0.0),  // node 0
+            (1.0, 1.0),  // node 1
+            (1.0, -1.0), // node 2
+            (2.0, -0.5), // node 3 (swapped)
+            (2.0, 0.5),  // node 4 (swapped)
+            (3.0, 0.0),  // node 5
+            (4.0, 0.0),  // node 6
+        ];
+        let crossings_cross = dag.count_crossings(&positions_cross);
+        results.push_str(&format!("  \"crossings_cross\": {}\n", crossings_cross));
 
         results.push_str("}\n");
         println!("{}", results);

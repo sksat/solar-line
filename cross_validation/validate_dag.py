@@ -144,6 +144,65 @@ def main():
     print("=== Validating cycle detection ===")
     check("has_cycle", rust["has_cycle"], not nx.is_directed_acyclic_graph(G))
 
+    # --- Subgraph extraction ---
+    print("=== Validating subgraph extraction ===")
+    # Node types in test graph: 0=DataSource, 1=Parameter, 2=Parameter,
+    # 3=Analysis, 4=Analysis, 5=Report, 6=Task
+    # Subgraph(Parameter, depth=1): seeds={1,2}, expand upstream/downstream 1 hop
+    # Upstream 1 hop from 1: {0}; upstream 1 hop from 2: {0}
+    # Downstream 1 hop from 1: {3,4}; downstream 1 hop from 2: {3,4}
+    # Total: {0,1,2,3,4}
+    nx_sub_param = sorted({0, 1, 2, 3, 4})
+    check("subgraph_param_d1", sorted(rust["subgraph_param_d1"]), nx_sub_param)
+
+    # Subgraph(Report, depth=2): seeds={5}, expand upstream/downstream 2 hops
+    # Upstream 1 hop from 5: {3,4}; upstream 2 hops: {3,4}→{1,2}
+    # Downstream 1 hop from 5: {} (leaf); downstream 2 hops: {}
+    # Total: {1,2,3,4,5}
+    nx_sub_report = sorted({1, 2, 3, 4, 5})
+    check("subgraph_report_d2", sorted(rust["subgraph_report_d2"]), nx_sub_report)
+
+    # --- Edge crossing count ---
+    print("=== Validating edge crossing count ===")
+    # Independent crossing count implementation
+    def segments_cross(p1, p2, p3, p4):
+        """Check if segment (p1,p2) crosses (p3,p4) using cross product."""
+        def cross(o, a, b):
+            return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+        d1 = cross(p3, p4, p1)
+        d2 = cross(p3, p4, p2)
+        d3 = cross(p1, p2, p3)
+        d4 = cross(p1, p2, p4)
+        if ((d1 > 0 and d2 < 0) or (d1 < 0 and d2 > 0)) and \
+           ((d3 > 0 and d4 < 0) or (d3 < 0 and d4 > 0)):
+            return True
+        return False
+
+    def count_crossings_py(positions, edges_list):
+        segs = [(positions[u], positions[v]) for u, v in edges_list]
+        count = 0
+        for i in range(len(segs)):
+            for j in range(i + 1, len(segs)):
+                if segments_cross(segs[i][0], segs[i][1], segs[j][0], segs[j][1]):
+                    count += 1
+        return count
+
+    edges = [(e[0], e[1]) for e in rust["graph"]["edges"]]
+
+    pos_nocross = [
+        (0.0, 0.0), (1.0, 1.0), (1.0, -1.0),
+        (2.0, 0.5), (2.0, -0.5), (3.0, 0.0), (4.0, 0.0)
+    ]
+    py_crossings_nocross = count_crossings_py(pos_nocross, edges)
+    check("crossings_nocross", rust["crossings_nocross"], py_crossings_nocross)
+
+    pos_cross = [
+        (0.0, 0.0), (1.0, 1.0), (1.0, -1.0),
+        (2.0, -0.5), (2.0, 0.5), (3.0, 0.0), (4.0, 0.0)
+    ]
+    py_crossings_cross = count_crossings_py(pos_cross, edges)
+    check("crossings_cross", rust["crossings_cross"], py_crossings_cross)
+
     # Summary
     print()
     print("=" * 70)

@@ -1614,10 +1614,133 @@ mod export {
             j2000,
         );
         results.push_str(&format!(
-            "    \"next_window_earth_jupiter_jd\": {:.15e}\n",
+            "    \"next_window_earth_jupiter_jd\": {:.15e},\n",
             window_ej.unwrap()
         ));
 
+        // arrival_position: Jupiter after 72h transfer from J2000
+        let arr_pos_jup =
+            ephemeris::arrival_position(ephemeris::Planet::Jupiter, j2000, Seconds(72.0 * 3600.0));
+        results.push_str(&format!(
+            "    \"arrival_jupiter_72h_lon_rad\": {:.15e},\n",
+            arr_pos_jup.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"arrival_jupiter_72h_x_km\": {:.15e},\n",
+            arr_pos_jup.x
+        ));
+        results.push_str(&format!(
+            "    \"arrival_jupiter_72h_y_km\": {:.15e},\n",
+            arr_pos_jup.y
+        ));
+
+        // arrival_position: Mars after 259-day Hohmann from J2000
+        let arr_pos_mars =
+            ephemeris::arrival_position(ephemeris::Planet::Mars, j2000, Seconds(259.0 * 86400.0));
+        results.push_str(&format!(
+            "    \"arrival_mars_259d_lon_rad\": {:.15e},\n",
+            arr_pos_mars.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"arrival_mars_259d_x_km\": {:.15e},\n",
+            arr_pos_mars.x
+        ));
+        results.push_str(&format!(
+            "    \"arrival_mars_259d_y_km\": {:.15e}\n",
+            arr_pos_mars.y
+        ));
+        results.push_str("  },\n");
+
+        // === Ship-planet comm delay & timeline ===
+        results.push_str("  \"ship_comms\": {\n");
+
+        // ship_planet_light_delay: ship at Mars J2000 position → Earth delay
+        let mars_pos = ephemeris::planet_position(ephemeris::Planet::Mars, j2000);
+        let delay_mars_earth =
+            comms::ship_planet_light_delay(mars_pos.x, mars_pos.y, ephemeris::Planet::Earth, j2000);
+        results.push_str(&format!(
+            "    \"delay_ship_at_mars_to_earth_s\": {:.15e},\n",
+            delay_mars_earth
+        ));
+
+        // ship_planet_light_delay: ship at Jupiter J2000 position → Earth delay
+        let jup_pos = ephemeris::planet_position(ephemeris::Planet::Jupiter, j2000);
+        let delay_jup_earth =
+            comms::ship_planet_light_delay(jup_pos.x, jup_pos.y, ephemeris::Planet::Earth, j2000);
+        results.push_str(&format!(
+            "    \"delay_ship_at_jupiter_to_earth_s\": {:.15e},\n",
+            delay_jup_earth
+        ));
+
+        // ship_planet_light_delay: ship at origin (Sun) → Earth delay
+        let delay_origin_earth =
+            comms::ship_planet_light_delay(0.0, 0.0, ephemeris::Planet::Earth, j2000);
+        results.push_str(&format!(
+            "    \"delay_ship_at_origin_to_earth_s\": {:.15e},\n",
+            delay_origin_earth
+        ));
+
+        // comm_timeline_linear: Mars→Jupiter, 72h, 5 steps
+        let timeline = comms::comm_timeline_linear(
+            ephemeris::Planet::Mars,
+            ephemeris::Planet::Jupiter,
+            j2000,
+            72.0 * 3600.0,
+            5,
+        );
+        results.push_str(&format!("    \"timeline_count\": {},\n", timeline.len()));
+        // Export first, middle, and last entries
+        let first = &timeline[0];
+        results.push_str(&format!(
+            "    \"timeline_first_elapsed_s\": {:.15e},\n",
+            first.elapsed_s
+        ));
+        results.push_str(&format!(
+            "    \"timeline_first_ship_x\": {:.15e},\n",
+            first.ship_x
+        ));
+        results.push_str(&format!(
+            "    \"timeline_first_ship_y\": {:.15e},\n",
+            first.ship_y
+        ));
+        results.push_str(&format!(
+            "    \"timeline_first_delay_s\": {:.15e},\n",
+            first.delay_to_earth_s
+        ));
+        let mid = &timeline[timeline.len() / 2];
+        results.push_str(&format!(
+            "    \"timeline_mid_elapsed_s\": {:.15e},\n",
+            mid.elapsed_s
+        ));
+        results.push_str(&format!(
+            "    \"timeline_mid_ship_x\": {:.15e},\n",
+            mid.ship_x
+        ));
+        results.push_str(&format!(
+            "    \"timeline_mid_ship_y\": {:.15e},\n",
+            mid.ship_y
+        ));
+        results.push_str(&format!(
+            "    \"timeline_mid_delay_s\": {:.15e},\n",
+            mid.delay_to_earth_s
+        ));
+        let last = &timeline[timeline.len() - 1];
+        results.push_str(&format!(
+            "    \"timeline_last_elapsed_s\": {:.15e},\n",
+            last.elapsed_s
+        ));
+        results.push_str(&format!(
+            "    \"timeline_last_ship_x\": {:.15e},\n",
+            last.ship_x
+        ));
+        results.push_str(&format!(
+            "    \"timeline_last_ship_y\": {:.15e},\n",
+            last.ship_y
+        ));
+        results.push_str(&format!(
+            "    \"timeline_last_delay_s\": {:.15e}\n",
+            last.delay_to_earth_s
+        ));
         results.push_str("  }\n");
 
         results.push_str("}\n");
