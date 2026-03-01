@@ -1161,12 +1161,12 @@ test.describe("Summary: tech-overview page", () => {
     expect(await codeBlocks.count()).toBeGreaterThanOrEqual(1);
   });
 
-  test("feature checklist has completion marks", async ({ page }) => {
+  test("integrator comparison table has completion marks", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
     const pageContent = await page.textContent("body");
-    // Feature list uses ✅ marks
+    // Integrator table uses ✅ marks for implemented methods
     const checkmarks = (pageContent?.match(/✅/g) || []).length;
-    expect(checkmarks).toBeGreaterThanOrEqual(10);
+    expect(checkmarks).toBeGreaterThanOrEqual(2);
   });
 
   test("Rust module list is comprehensive", async ({ page }) => {

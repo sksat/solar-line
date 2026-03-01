@@ -1817,20 +1817,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 283+ (not stale 261 or 282)", () => {
+  it("task count is 284+ (not stale 261 or 283)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("283"), "should cite current task count 283");
+    assert.ok(content.includes("284"), "should cite current task count 284");
   });
 
-  it("commit count is 418+ (not stale 410+)", () => {
+  it("commit count is 420+ (not stale 418+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("418+"), "should cite current commit count 418+");
+    assert.ok(content.includes("420+"), "should cite current commit count 420+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -1848,7 +1848,7 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,105"), "should cite TS test count");
+    assert.ok(content.includes("2,142"), "should cite TS test count");
     assert.ok(content.includes("377"), "should cite Rust test count");
     assert.ok(content.includes("214"), "should cite E2E test count");
   });
@@ -1858,5 +1858,70 @@ describe("ai-costs.md content validation", () => {
       content.includes("起動") && content.includes("終了"),
       "should explain VMブート as startup-shutdown cycle",
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Transcription accuracy data validation
+// ---------------------------------------------------------------------------
+describe("Transcription accuracy data", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const accuracyPath = path.join(calcDir, "transcription_accuracy.json");
+  const exists = fs.existsSync(accuracyPath);
+
+  let data: {
+    generatedAt: string;
+    episodes: {
+      episode: number;
+      scriptDialogueLines: number;
+      comparisons: {
+        sourceType: string;
+        corpusCharacterAccuracy: number;
+        meanLineCharacterAccuracy: number;
+        medianLineCharacterAccuracy: number;
+        asrLineCount: number;
+        matchedLines: number;
+      }[];
+    }[];
+  };
+
+  if (exists) {
+    data = JSON.parse(fs.readFileSync(accuracyPath, "utf8"));
+  }
+
+  it("accuracy report file exists", { skip: !exists ? "no accuracy data" : undefined }, () => {
+    assert.ok(data.episodes.length >= 1, "should have at least EP01");
+  });
+
+  it("EP01 has both VTT and Whisper comparisons", { skip: !exists ? "no data" : undefined }, () => {
+    const ep1 = data.episodes.find(e => e.episode === 1);
+    assert.ok(ep1, "EP01 should exist");
+    assert.equal(ep1.scriptDialogueLines, 229, "EP01 script has 229 dialogue lines");
+    assert.equal(ep1.comparisons.length, 2, "EP01 should have 2 comparisons (VTT + Whisper)");
+  });
+
+  it("VTT corpus accuracy is ~68%", { skip: !exists ? "no data" : undefined }, () => {
+    const ep1 = data.episodes.find(e => e.episode === 1);
+    const vtt = ep1?.comparisons.find(c => c.sourceType === "youtube-auto");
+    assert.ok(vtt, "VTT comparison should exist");
+    assert.ok(vtt.corpusCharacterAccuracy >= 0.65 && vtt.corpusCharacterAccuracy <= 0.72,
+      `VTT accuracy ${vtt.corpusCharacterAccuracy} should be ~68%`);
+  });
+
+  it("Whisper corpus accuracy is ~83%", { skip: !exists ? "no data" : undefined }, () => {
+    const ep1 = data.episodes.find(e => e.episode === 1);
+    const whisper = ep1?.comparisons.find(c => c.sourceType === "whisper-medium");
+    assert.ok(whisper, "Whisper comparison should exist");
+    assert.ok(whisper.corpusCharacterAccuracy >= 0.80 && whisper.corpusCharacterAccuracy <= 0.87,
+      `Whisper accuracy ${whisper.corpusCharacterAccuracy} should be ~83%`);
+  });
+
+  it("Whisper outperforms VTT at corpus level", { skip: !exists ? "no data" : undefined }, () => {
+    const ep1 = data.episodes.find(e => e.episode === 1);
+    const vtt = ep1?.comparisons.find(c => c.sourceType === "youtube-auto");
+    const whisper = ep1?.comparisons.find(c => c.sourceType === "whisper-medium");
+    assert.ok(vtt && whisper, "both comparisons should exist");
+    assert.ok(whisper.corpusCharacterAccuracy > vtt.corpusCharacterAccuracy,
+      "Whisper should have higher corpus accuracy than VTT");
   });
 });

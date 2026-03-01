@@ -321,6 +321,26 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       scenes: scriptFile.scenes,
     } : undefined;
 
+    // Load accuracy metrics from pre-computed accuracy report (if available)
+    const accuracyPath = path.join(dataDir, "data", "calculations", "transcription_accuracy.json");
+    let accuracyMetrics: TranscriptionPageData["accuracyMetrics"];
+    if (fs.existsSync(accuracyPath)) {
+      const accuracyData = readJsonFile<{
+        episodes: { episode: number; comparisons: { sourceType: string; corpusCharacterAccuracy: number; meanLineCharacterAccuracy: number; medianLineCharacterAccuracy: number }[] }[];
+      }>(accuracyPath);
+      if (accuracyData) {
+        const epAccuracy = accuracyData.episodes.find(e => e.episode === lines.episode);
+        if (epAccuracy) {
+          accuracyMetrics = epAccuracy.comparisons.map(c => ({
+            sourceType: c.sourceType,
+            corpusCharacterAccuracy: c.corpusCharacterAccuracy,
+            meanLineCharacterAccuracy: c.meanLineCharacterAccuracy,
+            medianLineCharacterAccuracy: c.medianLineCharacterAccuracy,
+          }));
+        }
+      }
+    }
+
     transcriptions.push({
       episode: lines.episode,
       videoId: lines.videoId,
@@ -360,6 +380,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       title: dialogue ? dialogue.title : null,
       additionalSources: additionalSources.length > 0 ? additionalSources : undefined,
       scriptSource,
+      accuracyMetrics,
     });
   }
   return transcriptions;

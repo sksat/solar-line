@@ -700,6 +700,13 @@ export interface TranscriptionPageData {
       mergeReasons: string[];
     }[];
   }[];
+  /** Transcription accuracy metrics (computed against official script, if available) */
+  accuracyMetrics?: {
+    sourceType: string;
+    corpusCharacterAccuracy: number;
+    meanLineCharacterAccuracy: number;
+    medianLineCharacterAccuracy: number;
+  }[];
   /** Official script source (Layer 0 — authoritative text from creator) */
   scriptSource?: {
     sourceUrl: string;

@@ -3049,6 +3049,7 @@ ${data.speakers ? `<tr><th>話者数</th><td>${data.speakers.length}人</td></tr
 ${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` : ""}
 ${data.scriptSource ? `<tr><th>公式脚本</th><td><a href="${escapeHtml(data.scriptSource.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(data.scriptSource.author)}</a></td></tr>` : ""}
 <tr><th>帰属状態</th><td>${data.dialogue ? "Phase 2 完了（話者帰属済み）" : "Phase 1 のみ（話者未帰属）"}</td></tr>
+${data.accuracyMetrics && data.accuracyMetrics.length > 0 ? `<tr><th>文字精度</th><td>${data.accuracyMetrics.map(m => `${escapeHtml(m.sourceType)}: ${(m.corpusCharacterAccuracy * 100).toFixed(1)}%`).join("、")}<br><span class="meta-note">公式脚本に対するコーパスレベル文字一致率</span></td></tr>` : ""}
 </table>
 <p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考証レポートに戻る</a></p>
 </div>

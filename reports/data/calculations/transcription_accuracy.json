@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-03-01T00:58:04.724Z",
+  "episodes": [
+    {
+      "episode": 1,
+      "scriptDialogueLines": 229,
+      "comparisons": [
+        {
+          "sourceType": "youtube-auto",
+          "asrLineCount": 87,
+          "corpusCharacterAccuracy": 0.683,
+          "meanLineCharacterAccuracy": 0.086,
+          "medianLineCharacterAccuracy": 0,
+          "matchedLines": 84,
+          "worstLines": [
+            {
+              "scriptLineId": "ep01-sl-090",
+              "speaker": "ケイ",
+              "scriptText": "木星の磁気嵐は当時から２倍以上の規模になっています\n単純な比較は出来ません",
+              "matchedText": "54321",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-091",
+              "speaker": "ケイ",
+              "scriptText": "それに何十隻もの船が　嵐の回廊に挑んで失敗してきました\n…わずか14時間の短縮のためにです\n周回航路を取れば　安全にガニメデに到達できます\nわざわざ無謀な航路をとって\n命を危険にさらす必要は無いのではないでしょうか",
+              "matchedText": "[音楽]",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-092",
+              "speaker": "ケイ",
+              "scriptText": "荷を届けることが　あなたの仕事です",
+              "matchedText": "",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-093",
+              "speaker": "主人公",
+              "scriptText": "そうかもね",
+              "matchedText": "",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-094",
+              "speaker": "主人公",
+              "scriptText": "いつかこの手で通ってみたいね",
+              "matchedText": "",
+              "characterAccuracy": 0
+            }
+          ]
+        },
+        {
+          "sourceType": "whisper-medium",
+          "asrLineCount": 419,
+          "corpusCharacterAccuracy": 0.826,
+          "meanLineCharacterAccuracy": 0.83,
+          "medianLineCharacterAccuracy": 0.9,
+          "matchedLines": 229,
+          "worstLines": [
+            {
+              "scriptLineId": "ep01-sl-213",
+              "speaker": "ケイ",
+              "scriptText": "…５…４…３…２…１　…点火",
+              "matchedText": "回路を抜けるには高点速度が速いように",
+              "characterAccuracy": 0.056
+            },
+            {
+              "scriptLineId": "ep01-sl-069",
+              "speaker": "ケイ",
+              "scriptText": "…５…４…３…２…１　…点火",
+              "matchedText": "地球圏の保安定と火星圏の囁定",
+              "characterAccuracy": 0.071
+            },
+            {
+              "scriptLineId": "ep01-sl-179",
+              "speaker": "ケイ",
+              "scriptText": "…５…４…３…２…１　…点火",
+              "matchedText": "時期のズルの焦点ズレによって",
+              "characterAccuracy": 0.071
+            },
+            {
+              "scriptLineId": "ep01-sl-048",
+              "speaker": "ケイ",
+              "scriptText": "外部状態…問題なし\n外郭クラック無し　RCSノズル解氷\n主機プレヒート温度…412度　適正値\n燃料残量は問題なし\n冷却系圧力…　１次系2.34メガパスカル\n２次系1.18メガパスカル　問題なし",
+              "matchedText": "プラスマイナス180秒速度48.9キロメートル毎秒問題なし",
+              "characterAccuracy": 0.107
+            },
+            {
+              "scriptLineId": "ep01-sl-206",
+              "speaker": "主人公",
+              "scriptText": "このタイミングでかよ…",
+              "matchedText": "こちらガニメデコントロール",
+              "characterAccuracy": 0.154
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

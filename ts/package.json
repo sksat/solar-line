@@ -28,6 +28,7 @@
     "dag:sync": "node --experimental-strip-types src/dag-task-sync.ts",
     "analyze-3d": "node --experimental-strip-types src/orbital-3d-analysis.ts",
     "review-diagrams": "node --experimental-strip-types src/review-diagrams.ts",
+    "transcription-accuracy": "node --experimental-strip-types src/transcription-accuracy-report.ts",
     "cross-validate": "bash ../cross_validation/run.sh",
     "diarize": "python3 src/diarize.py",
     "diarize:evaluate": "python3 src/diarize-evaluate.py",
