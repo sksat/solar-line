@@ -584,6 +584,17 @@ describe("EP05 article content validation", () => {
     assert.ok(content.includes("99") && content.includes("分"),
       "should cite 99分 burn time savings from Oberth");
   });
+
+  it("satellite perturbation analysis: 2-body approximation validated", () => {
+    assert.ok(content.includes("衛星摂動"),
+      "should discuss satellite perturbation");
+    assert.ok(content.includes("0.57%"),
+      "should cite 0.57% perturbation fraction");
+    assert.ok(content.includes("8.6 m/s") || content.includes("8.6m/s"),
+      "should cite max perturbation ~8.6 m/s");
+    assert.ok(content.includes("2体近似"),
+      "should validate 2-body approximation");
+  });
 });
 
 // ============================================================

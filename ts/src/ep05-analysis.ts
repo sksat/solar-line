@@ -37,6 +37,8 @@ import {
   LEO_ALTITUDE,
   TITANIA_ORBIT_RADIUS,
   JUPITER_RADIUS,
+  URANUS_MOON_ORBITS,
+  URANUS_MOON_GM,
 } from "./orbital.ts";
 import { KESTREL, AU_KM } from "./kestrel.ts";
 export { KESTREL };
@@ -621,6 +623,96 @@ export function navigationAccuracyAnalysis() {
 }
 
 // ─── Full Analysis ───
+
+/**
+ * Uranian satellite perturbation analysis for escape trajectory.
+ *
+ * The current escape model is two-body (Uranus-only gravity).
+ * This function quantifies how much the 5 major Uranian moons
+ * (Miranda, Ariel, Umbriel, Titania, Oberon) would perturb the
+ * hyperbolic escape trajectory from Titania orbit.
+ */
+export function uranianSatellitePerturbationAnalysis() {
+  const moons = [
+    { name: "Miranda", gm: URANUS_MOON_GM.MIRANDA, orbit: URANUS_MOON_ORBITS.MIRANDA },
+    { name: "Ariel", gm: URANUS_MOON_GM.ARIEL, orbit: URANUS_MOON_ORBITS.ARIEL },
+    { name: "Umbriel", gm: URANUS_MOON_GM.UMBRIEL, orbit: URANUS_MOON_ORBITS.UMBRIEL },
+    { name: "Titania", gm: URANUS_MOON_GM.TITANIA, orbit: URANUS_MOON_ORBITS.TITANIA },
+    { name: "Oberon", gm: URANUS_MOON_GM.OBERON, orbit: URANUS_MOON_ORBITS.OBERON },
+  ];
+
+  // Escape velocity from Titania orbit (two-body, Uranus)
+  const vEscTitaniaOrbit = escapeVelocity(MU.URANUS, TITANIA_ORBIT_RADIUS);
+  // Circular velocity at Titania orbit
+  const vCircTitania = circularVelocity(MU.URANUS, TITANIA_ORBIT_RADIUS);
+  // ΔV to escape
+  const dvEscape = vEscTitaniaOrbit - vCircTitania;
+
+  const results = moons.map(moon => {
+    // Hill sphere radius: r_H = a * (m_moon / (3 * m_uranus))^(1/3)
+    const hillSphereKm = moon.orbit * Math.pow(moon.gm / (3 * MU.URANUS), 1 / 3);
+
+    // GM ratio: how strong is the moon's gravity vs Uranus at the same distance
+    const gmRatio = moon.gm / MU.URANUS;
+
+    // Maximum gravitational acceleration from the moon at closest approach
+    // Worst case: passing through the moon's orbit at minimum distance
+    // For a moon on the same orbit (Titania), closest approach = ~moon radius (~800 km)
+    // For other moons, closest approach = |orbit_ship - orbit_moon| (when orbits cross)
+    const distFromTitaniaOrbit = Math.abs(moon.orbit - TITANIA_ORBIT_RADIUS);
+    // Minimum distance during escape (from hyperbolic trajectory)
+    // Ship departs Titania orbit radially outward; closest approach to inner moons
+    // is the orbital radius difference. For Titania itself, use Hill sphere as reference.
+    const minDistKm = moon.name === "Titania"
+      ? hillSphereKm  // Already leaving Titania, so start at Hill sphere boundary
+      : Math.max(distFromTitaniaOrbit, 1000); // At least 1000 km
+
+    // Gravitational acceleration at minimum distance (km/s²)
+    const accelKms2 = moon.gm / (minDistKm * minDistKm);
+
+    // Time to cross the perturbation zone (Hill sphere or equivalent)
+    // Ship speed near Titania: ~escape velocity ≈ 5.16 km/s
+    const shipSpeedKms = vEscTitaniaOrbit;
+    const crossingTimeS = (2 * hillSphereKm) / shipSpeedKms;
+
+    // Maximum ΔV perturbation: a * t (impulse approximation)
+    const maxDeltaVKms = accelKms2 * crossingTimeS;
+
+    // Angular deflection estimate (radians): ΔV_perp / v_ship
+    const deflectionRad = maxDeltaVKms / shipSpeedKms;
+    const deflectionDeg = deflectionRad * (180 / Math.PI);
+
+    return {
+      name: moon.name,
+      gmKm3s2: moon.gm,
+      orbitRadiusKm: moon.orbit,
+      hillSphereKm,
+      gmRatio,
+      minDistKm,
+      accelKms2,
+      crossingTimeS,
+      maxDeltaVPerturbationKms: maxDeltaVKms,
+      deflectionDeg,
+    };
+  });
+
+  // Total worst-case perturbation (all moons aligned, extremely unlikely)
+  const totalMaxDvKms = results.reduce((sum, m) => sum + m.maxDeltaVPerturbationKms, 0);
+  const dvEscapeKms = dvEscape;
+
+  const conclusion = `天王星系5大衛星の重力摂動は最大でも合計 ${(totalMaxDvKms * 1000).toFixed(1)} m/s ` +
+    `（脱出ΔV ${dvEscapeKms.toFixed(2)} km/s の ${(totalMaxDvKms / dvEscapeKms * 100).toFixed(2)}%）と極めて小さい。` +
+    `個別の衛星による最大偏向角は ${results.reduce((max, m) => Math.max(max, m.deflectionDeg), 0).toFixed(4)}° 以下。` +
+    `双曲線脱出軌道の2体近似は十分な精度であり、衛星摂動は航法精度に対して無視できる水準。`;
+
+  return {
+    moons: results,
+    totalMaxDvKms,
+    dvEscapeKms,
+    perturbationFraction: totalMaxDvKms / dvEscapeKms,
+    conclusion,
+  };
+}
 
 /**
  * Full Episode 5 analysis combining all transfers.

@@ -80,6 +80,15 @@ export const URANUS_MOON_ORBITS = {
   OBERON: 583_520,
 } as const;
 
+/** Uranian moon gravitational parameters (km³/s²) — JPL SSD (Jacobson & Park 2025) */
+export const URANUS_MOON_GM = {
+  MIRANDA: 4.3,
+  ARIEL: 83.5,
+  UMBRIEL: 85.1,
+  TITANIA: 226.9,
+  OBERON: 205.3,
+} as const;
+
 /** Titania orbital radius around Uranus (km) — NASA fact sheet */
 export const TITANIA_ORBIT_RADIUS = 435_910;
 

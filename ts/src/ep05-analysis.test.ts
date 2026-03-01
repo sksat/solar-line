@@ -16,6 +16,7 @@ import {
   nozzleLifespanAnalysis,
   oberthEffectAnalysis,
   analyzeEpisode5,
+  uranianSatellitePerturbationAnalysis,
   KESTREL,
   EP05_PARAMS,
   UE_DISTANCE_SCENARIOS,
@@ -416,5 +417,51 @@ describe("EP05 Full Analysis", () => {
     assert.ok(a.nozzleLifespan.marginPercent < 1);
     assert.equal(a.oberthEffect.claimedEfficiencyPercent, 3);
     assert.ok(a.oberthEffect.burnSavingExceedsMargin);
+  });
+});
+
+describe("Uranian satellite perturbation analysis", () => {
+  it("computes Hill sphere radii for all 5 major moons", () => {
+    const result = uranianSatellitePerturbationAnalysis();
+    assert.strictEqual(result.moons.length, 5);
+    for (const m of result.moons) {
+      assert.ok(m.hillSphereKm > 0, `${m.name} Hill sphere should be positive`);
+      assert.ok(m.hillSphereKm < m.orbitRadiusKm,
+        `${m.name} Hill sphere should be smaller than orbital radius`);
+    }
+  });
+
+  it("Oberon has the largest Hill sphere (farthest from Uranus)", () => {
+    const result = uranianSatellitePerturbationAnalysis();
+    const oberon = result.moons.find(m => m.name === "Oberon")!;
+    for (const m of result.moons) {
+      if (m.name !== "Oberon") {
+        assert.ok(oberon.hillSphereKm >= m.hillSphereKm,
+          `Oberon Hill sphere should be >= ${m.name}'s`);
+      }
+    }
+  });
+
+  it("perturbation ratio (moon GM / Uranus GM) is very small for all moons", () => {
+    const result = uranianSatellitePerturbationAnalysis();
+    for (const m of result.moons) {
+      assert.ok(m.gmRatio < 1e-4,
+        `${m.name} GM ratio should be < 10⁻⁴, got ${m.gmRatio.toExponential(2)}`);
+    }
+  });
+
+  it("maximum ΔV perturbation from any single moon is small compared to escape ΔV", () => {
+    const result = uranianSatellitePerturbationAnalysis();
+    // Escape ΔV from Titania orbit is ~1.51 km/s
+    for (const m of result.moons) {
+      assert.ok(m.maxDeltaVPerturbationKms < 0.1,
+        `${m.name} max ΔV perturbation should be < 0.1 km/s, got ${m.maxDeltaVPerturbationKms.toFixed(4)}`);
+    }
+  });
+
+  it("summary concludes perturbations are negligible for navigation", () => {
+    const result = uranianSatellitePerturbationAnalysis();
+    assert.ok(result.conclusion.includes("無視") || result.conclusion.includes("小さ"),
+      "conclusion should indicate perturbations are small/negligible");
   });
 });
