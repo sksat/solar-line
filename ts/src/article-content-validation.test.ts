@@ -1838,6 +1838,20 @@ describe("communications.md content validation", () => {
     const maxDistAU = maxDelay / 8.317;
     assert.ok(maxDistAU >= 18 && maxDistAU <= 22, `implied max distance ${maxDistAU.toFixed(1)} AU should be ~20 AU`);
   });
+
+  it("STELLAR-INS AUTONOMOUS: EP05 all-beacon blackout as comms infrastructure failure", () => {
+    assert.ok(content.includes("STELLAR-INS") || content.includes("恒星慣性"),
+      "should discuss STELLAR-INS autonomous navigation mode in comms context");
+    assert.ok(content.includes("AUTONOMOUS") || content.includes("自律航法"),
+      "should discuss autonomous navigation forced by beacon unavailability");
+  });
+
+  it("COIAS orbital cross alert: real-world Subaru analogue", () => {
+    assert.ok(content.includes("COIAS"),
+      "should discuss COIAS as communication/navigation infrastructure");
+    assert.ok(content.includes("すばる") || content.includes("Subaru"),
+      "should reference Subaru Telescope as COIAS real-world analogue");
+  });
 });
 
 // ============================================================
