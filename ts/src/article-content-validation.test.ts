@@ -633,6 +633,13 @@ describe("EP05 article content validation", () => {
       "should discuss thrust degradation, throttle control, or thrust variation across burns");
   });
 
+  it("has acceleration evolution timeseries chart", () => {
+    assert.ok(content.includes("ep05-acceleration-evolution"),
+      "should have acceleration evolution chart ID");
+    assert.ok(content.includes("等推力理論値"),
+      "chart should have constant-thrust reference line");
+  });
+
   it("Saturn ring ice particle: 110 MJ impact energy verified", () => {
     assert.ok(content.includes("110") && (content.includes("MJ") || content.includes("メガジュール")),
       "should cite 110 MJ impact energy from onscreen data");
