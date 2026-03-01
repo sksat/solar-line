@@ -1817,20 +1817,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 298+ (not stale 261 or 296)", () => {
+  it("task count is 299+ (not stale 261 or 298)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("298"), "should cite current task count 298");
+    assert.ok(content.includes("299"), "should cite current task count 299");
   });
 
-  it("commit count is 437+ (not stale 427+)", () => {
+  it("commit count is 438+ (not stale 427+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("437+"), "should cite current commit count 437+");
+    assert.ok(content.includes("438+"), "should cite current commit count 438+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {

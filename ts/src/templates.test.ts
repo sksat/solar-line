@@ -47,6 +47,7 @@ import {
   renderMarginGauge,
   renderMarginGauges,
 } from "./templates.ts";
+import type { NavEpisode } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge } from "./report-types.ts";
 
@@ -445,8 +446,8 @@ describe("layoutHtml", () => {
   });
 
   it("nav dropdown buttons have ARIA attributes", () => {
-    const eps: NavEpisode[] = [{ episode: 1, path: "ep01.html" }];
-    const summaries: SiteManifest["summaryPages"] = [{ title: "クロスエピソード", path: "summary/cross.html" }];
+    const eps: NavEpisode[] = [{ episode: 1, title: "第1話", path: "ep01.html" }];
+    const summaries: SiteManifest["summaryPages"] = [{ title: "クロスエピソード", slug: "cross-episode", summary: "全話横断分析", path: "summary/cross.html" }];
     const html = layoutHtml("Test", "<p>ok</p>", ".", summaries, undefined, eps);
     assert.ok(html.includes('aria-haspopup="true"'), "dropdown buttons should have aria-haspopup");
     assert.ok(html.includes('aria-expanded="false"'), "dropdown buttons should have aria-expanded");
