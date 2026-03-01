@@ -1714,6 +1714,17 @@ describe("attitude-control.md content validation", () => {
       "should have EP02 section explaining attitude control during trim-thrust cruise",
     );
   });
+
+  it("has flip maneuver RCS bar chart", () => {
+    assert.ok(
+      content.includes("```chart:bar"),
+      "should have a bar chart directive",
+    );
+    assert.ok(
+      content.includes("フリップ") && content.includes("RCS"),
+      "bar chart should reference flip maneuver RCS",
+    );
+  });
 });
 
 // ============================================================
