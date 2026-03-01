@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-01T02:58:05.281Z",
+  "generatedAt": "2026-03-01T04:57:29.523Z",
   "episodes": [
     {
       "episode": 1,
@@ -137,6 +137,51 @@
               "scriptText": "はあ…",
               "matchedText": "超積力は?",
               "characterAccuracy": 0.2
+            }
+          ]
+        },
+        {
+          "sourceType": "video-ocr",
+          "asrLineCount": 21,
+          "corpusCharacterAccuracy": 0.101,
+          "meanLineCharacterAccuracy": 0.007,
+          "medianLineCharacterAccuracy": 0,
+          "matchedLines": 18,
+          "worstLines": [
+            {
+              "scriptLineId": "ep01-sl-020",
+              "speaker": "主人公",
+              "scriptText": "どう思う…？",
+              "matchedText": "束の回廊では数時間ありましたが ダイレクトエントリーの場合\nターゲットウィンドウは土5分です-… 必要Avはマイナス2.3kmjs",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-021",
+              "speaker": "ケイ",
+              "scriptText": "「嵐の回廊」は　現在利用が原則禁止となっている航路です\n木星磁気圏による磁気嵐ドリフトを　真正面から突っ切る航路になります\n木星の重力圏へ落下し　磁気嵐の中でイオの重力アシストを受けて軌道を変え\nペリジュピター・オーバースで　ガニメデの再接近軌道をとります\nオーバースのウィンドウは長く見積もっても数時間…\nタイミングがずれれば　木星の重力に捕まって落下します\nまともな人間が取る航路ではありません",
+              "matchedText": "",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-022",
+              "speaker": "主人公",
+              "scriptText": "「まともな人間」はフリーにはならないからね",
+              "matchedText": "",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-023",
+              "speaker": "主人公",
+              "scriptText": "…で　報酬は？",
+              "matchedText": "",
+              "characterAccuracy": 0
+            },
+            {
+              "scriptLineId": "ep01-sl-024",
+              "speaker": "組合のオペレーター",
+              "scriptText": "…通常料金の３倍　遅延は一時間ごとに15%減額\n港湾税は免除　タグ船はガニメデ側で手配とのことです",
+              "matchedText": "",
+              "characterAccuracy": 0
             }
           ]
         }

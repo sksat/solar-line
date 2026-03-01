@@ -8,8 +8,10 @@ import {
   corpusAccuracy,
   findBestMatch,
   compareTranscriptions,
+  ocrToEpisodeLines,
   type ScriptFileData,
   type ScriptLine,
+  type OcrFileData,
 } from "./transcription-accuracy.ts";
 import type { EpisodeLines, ExtractedLine } from "./dialogue-extraction-types.ts";
 
@@ -405,5 +407,149 @@ describe("EP01 Whisper turbo accuracy", () => {
   it("turbo source type is whisper-turbo", { skip: !scriptExists || !turboExists }, () => {
     const report = compareTranscriptions(scriptData, turboData);
     assert.equal(report.sourceType, "whisper-turbo");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// ocrToEpisodeLines
+// ---------------------------------------------------------------------------
+describe("ocrToEpisodeLines", () => {
+  const makeOcrData = (frames: OcrFileData["frames"]): OcrFileData => ({
+    episode: 1,
+    sourceType: "video-ocr",
+    ocrEngine: "tesseract-5.3.0",
+    ocrLanguages: { subtitle: "jpn", hud: "eng" },
+    preprocessingMethod: "grayscale-threshold",
+    framesDir: "raw_data/frames/ep01",
+    extractedAt: "2026-03-01T00:00:00Z",
+    frames,
+    summary: { totalFrames: frames.length, framesWithSubtitle: frames.filter(f => f.subtitleText).length, framesWithHud: 0 },
+  });
+
+  it("converts OCR frames to EpisodeLines format", () => {
+    const ocr = makeOcrData([
+      { index: 0, timestampSec: 47, timestampFormatted: "00:47", description: "test", filename: "f0.jpg", subtitleText: "テスト字幕", hudText: null },
+      { index: 1, timestampSec: 72, timestampFormatted: "01:12", description: "test2", filename: "f1.jpg", subtitleText: "二番目の字幕", hudText: null },
+    ]);
+    const result = ocrToEpisodeLines(ocr);
+    assert.equal(result.lines.length, 2);
+    assert.equal(result.sourceSubtitle.source, "video-ocr");
+    assert.equal(result.episode, 1);
+    assert.equal(result.videoId, "CQ_OkDjEwRk");
+  });
+
+  it("assigns sequential line IDs", () => {
+    const ocr = makeOcrData([
+      { index: 0, timestampSec: 10, timestampFormatted: "00:10", description: "", filename: "f0.jpg", subtitleText: "一行目", hudText: null },
+      { index: 1, timestampSec: 20, timestampFormatted: "00:20", description: "", filename: "f1.jpg", subtitleText: "二行目", hudText: null },
+    ]);
+    const result = ocrToEpisodeLines(ocr);
+    assert.equal(result.lines[0].lineId, "ep01-ocr-001");
+    assert.equal(result.lines[1].lineId, "ep01-ocr-002");
+  });
+
+  it("skips frames with null/empty subtitleText", () => {
+    const ocr = makeOcrData([
+      { index: 0, timestampSec: 10, timestampFormatted: "00:10", description: "", filename: "f0.jpg", subtitleText: "有効", hudText: null },
+      { index: 1, timestampSec: 20, timestampFormatted: "00:20", description: "", filename: "f1.jpg", subtitleText: null, hudText: "eng" },
+      { index: 2, timestampSec: 30, timestampFormatted: "00:30", description: "", filename: "f2.jpg", subtitleText: "", hudText: null },
+      { index: 3, timestampSec: 40, timestampFormatted: "00:40", description: "", filename: "f3.jpg", subtitleText: "   ", hudText: null },
+    ]);
+    const result = ocrToEpisodeLines(ocr);
+    assert.equal(result.lines.length, 1);
+    assert.equal(result.lines[0].text, "有効");
+  });
+
+  it("sets timestamps from frame timestampSec", () => {
+    const ocr = makeOcrData([
+      { index: 0, timestampSec: 120, timestampFormatted: "02:00", description: "", filename: "f0.jpg", subtitleText: "テスト", hudText: null },
+    ]);
+    const result = ocrToEpisodeLines(ocr);
+    assert.equal(result.lines[0].startMs, 120000);
+    assert.equal(result.lines[0].endMs, 125000);
+  });
+
+  it("stores filename in rawEntryIds", () => {
+    const ocr = makeOcrData([
+      { index: 0, timestampSec: 10, timestampFormatted: "00:10", description: "", filename: "frame_000_10s.jpg", subtitleText: "テスト", hudText: null },
+    ]);
+    const result = ocrToEpisodeLines(ocr);
+    assert.deepEqual(result.lines[0].rawEntryIds, ["frame_000_10s.jpg"]);
+  });
+
+  it("handles episode 5 video ID", () => {
+    const ocr = makeOcrData([]);
+    ocr.episode = 5;
+    const result = ocrToEpisodeLines(ocr);
+    assert.equal(result.videoId, "_trGXYRF8-4");
+    assert.equal(result.episode, 5);
+  });
+
+  it("produces valid EpisodeLines for compareTranscriptions", () => {
+    const ocr = makeOcrData([
+      { index: 0, timestampSec: 47, timestampFormatted: "00:47", description: "", filename: "f0.jpg", subtitleText: "テスト字幕", hudText: null },
+    ]);
+    const lines = ocrToEpisodeLines(ocr);
+    const script: ScriptFileData = {
+      episode: 1,
+      scenes: [{ sceneId: "s1", lines: [{ lineId: "l1", speaker: "A", text: "テスト字幕" }] }],
+    };
+    const report = compareTranscriptions(script, lines);
+    assert.equal(report.sourceType, "video-ocr");
+    assert.equal(report.corpusCharacterAccuracy, 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// EP01 OCR real data accuracy
+// ---------------------------------------------------------------------------
+describe("EP01 OCR real data accuracy", () => {
+  const dataDir = join(__dirname_local, "..", "..", "reports", "data", "episodes");
+  const scriptExists = existsSync(join(dataDir, "ep01_script.json"));
+  const ocrExists = existsSync(join(dataDir, "ep01_ocr.json"));
+
+  let scriptData: ScriptFileData;
+  let ocrLines: EpisodeLines;
+
+  if (scriptExists) {
+    scriptData = JSON.parse(readFileSync(join(dataDir, "ep01_script.json"), "utf8"));
+  }
+  if (ocrExists) {
+    const ocrData: OcrFileData = JSON.parse(readFileSync(join(dataDir, "ep01_ocr.json"), "utf8"));
+    ocrLines = ocrToEpisodeLines(ocrData);
+  }
+
+  it("OCR produces 21 lines from EP01", { skip: !ocrExists }, () => {
+    assert.equal(ocrLines.lines.length, 21);
+  });
+
+  it("OCR sourceType is video-ocr", { skip: !scriptExists || !ocrExists }, () => {
+    const report = compareTranscriptions(scriptData, ocrLines);
+    assert.equal(report.sourceType, "video-ocr");
+  });
+
+  it("OCR corpus accuracy is between 0.1 and 0.7", { skip: !scriptExists || !ocrExists }, () => {
+    const report = compareTranscriptions(scriptData, ocrLines);
+    // Tesseract OCR on Japanese anime subtitles is expected to be quite poor
+    // This establishes a baseline for future OCR improvement tracking
+    console.log(`  OCR corpus accuracy: ${(report.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+    console.log(`  OCR mean line accuracy: ${(report.meanLineCharacterAccuracy * 100).toFixed(1)}%`);
+    console.log(`  OCR lines: ${ocrLines.lines.length} vs script: 229`);
+    assert.ok(report.corpusCharacterAccuracy >= 0.1,
+      `OCR accuracy extremely low: ${(report.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+    assert.ok(report.corpusCharacterAccuracy <= 0.7,
+      `OCR accuracy surprisingly high: ${(report.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+  });
+
+  it("OCR accuracy < Whisper turbo accuracy", { skip: !scriptExists || !ocrExists }, () => {
+    const turboPath = join(dataDir, "ep01_lines_whisper_turbo.json");
+    if (!existsSync(turboPath)) return;
+    const turboData: EpisodeLines = JSON.parse(readFileSync(turboPath, "utf8"));
+    const ocrReport = compareTranscriptions(scriptData, ocrLines);
+    const turboReport = compareTranscriptions(scriptData, turboData);
+    console.log(`  OCR: ${(ocrReport.corpusCharacterAccuracy * 100).toFixed(1)}% vs Turbo: ${(turboReport.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+    // OCR from sparse frames should be worse than continuous Whisper transcription
+    assert.ok(ocrReport.corpusCharacterAccuracy < turboReport.corpusCharacterAccuracy,
+      "OCR should have lower accuracy than Whisper turbo");
   });
 });

@@ -646,7 +646,7 @@ export interface TranscriptionPageData {
   videoId: string;
   /** Source subtitle info */
   sourceInfo: {
-    source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
+    source: "youtube-auto" | "youtube-manual" | "manual" | "whisper" | "video-ocr";
     language: string;
     /** Whisper model size (only for source="whisper") */
     whisperModel?: string;
@@ -688,7 +688,7 @@ export interface TranscriptionPageData {
   title: string | null;
   /** Additional raw sources (e.g. Whisper when primary is VTT, or VTT when primary is Whisper) */
   additionalSources?: {
-    source: "youtube-auto" | "youtube-manual" | "manual" | "whisper";
+    source: "youtube-auto" | "youtube-manual" | "manual" | "whisper" | "video-ocr";
     language: string;
     /** Whisper model size (only for source="whisper") */
     whisperModel?: string;

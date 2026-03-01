@@ -14,8 +14,10 @@ import { fileURLToPath } from "node:url";
 import {
   compareTranscriptions,
   extractScriptDialogue,
+  ocrToEpisodeLines,
   type ScriptFileData,
   type AccuracyReport,
+  type OcrFileData,
 } from "./transcription-accuracy.ts";
 import type { EpisodeLines } from "./dialogue-extraction-types.ts";
 
@@ -102,6 +104,39 @@ function generateReport(): FullAccuracyReport {
       console.log(`  Mean line accuracy: ${(report.meanLineCharacterAccuracy * 100).toFixed(1)}%`);
       console.log(`  Median line accuracy: ${(report.medianLineCharacterAccuracy * 100).toFixed(1)}%`);
       console.log(`  Lines: ${asrData.lines.length} ASR vs ${dialogueLines.length} script`);
+    }
+
+    // Also check for OCR data
+    const ocrFile = join(dataDir, `ep${epNum}_ocr.json`);
+    if (existsSync(ocrFile)) {
+      const ocrData: OcrFileData = JSON.parse(readFileSync(ocrFile, "utf8"));
+      const ocrLines = ocrToEpisodeLines(ocrData);
+      const report = compareTranscriptions(script, ocrLines);
+
+      const sorted = [...report.lineResults].sort((a, b) => a.characterAccuracy - b.characterAccuracy);
+      const worstLines = sorted.slice(0, 5).map(r => ({
+        scriptLineId: r.scriptLineId,
+        speaker: r.speaker,
+        scriptText: r.scriptText,
+        matchedText: r.matchedText,
+        characterAccuracy: Math.round(r.characterAccuracy * 1000) / 1000,
+      }));
+
+      comparisons.push({
+        sourceType: report.sourceType,
+        asrLineCount: ocrLines.lines.length,
+        corpusCharacterAccuracy: Math.round(report.corpusCharacterAccuracy * 1000) / 1000,
+        meanLineCharacterAccuracy: Math.round(report.meanLineCharacterAccuracy * 1000) / 1000,
+        medianLineCharacterAccuracy: Math.round(report.medianLineCharacterAccuracy * 1000) / 1000,
+        matchedLines: report.matchedLines,
+        worstLines,
+      });
+
+      console.log(`EP${epNum} vs ${report.sourceType}:`);
+      console.log(`  Corpus accuracy: ${(report.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+      console.log(`  Mean line accuracy: ${(report.meanLineCharacterAccuracy * 100).toFixed(1)}%`);
+      console.log(`  Median line accuracy: ${(report.medianLineCharacterAccuracy * 100).toFixed(1)}%`);
+      console.log(`  Lines: ${ocrLines.lines.length} OCR frames vs ${dialogueLines.length} script`);
     }
 
     episodes.push({

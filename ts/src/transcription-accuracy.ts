@@ -11,7 +11,88 @@
  *    text similarity of temporally overlapping windows. Report per-line accuracy.
  */
 
-import type { EpisodeLines, ExtractedLine } from "./dialogue-extraction-types.ts";
+import type { EpisodeLines, ExtractedLine, MergeConfig } from "./dialogue-extraction-types.ts";
+
+// ---------------------------------------------------------------------------
+// OCR data types
+// ---------------------------------------------------------------------------
+
+/** A single frame from video OCR extraction */
+export interface OcrFrame {
+  index: number;
+  timestampSec: number;
+  timestampFormatted: string;
+  description: string;
+  filename: string;
+  subtitleText: string | null;
+  hudText: string | null;
+}
+
+/** Complete OCR extraction data for one episode */
+export interface OcrFileData {
+  episode: number;
+  sourceType: string;
+  ocrEngine: string;
+  ocrLanguages: { subtitle: string; hud: string };
+  preprocessingMethod: string;
+  framesDir: string;
+  extractedAt: string;
+  frames: OcrFrame[];
+  summary: { totalFrames: number; framesWithSubtitle: number; framesWithHud: number };
+}
+
+// ---------------------------------------------------------------------------
+// OCR → EpisodeLines conversion
+// ---------------------------------------------------------------------------
+
+/**
+ * Convert OCR frame data into EpisodeLines format for accuracy comparison.
+ *
+ * Each frame with non-empty subtitleText becomes one ExtractedLine.
+ * Timestamps are derived from the frame's timestampSec.
+ */
+export function ocrToEpisodeLines(ocrData: OcrFileData): EpisodeLines {
+  const lines: ExtractedLine[] = [];
+  const videoIds: Record<number, string> = {
+    1: "CQ_OkDjEwRk", 2: "YXZWJLKD7Oo", 3: "l1jjXpv17-E",
+    4: "1cTmWjYSlTM", 5: "_trGXYRF8-4",
+  };
+
+  for (const frame of ocrData.frames) {
+    if (!frame.subtitleText || frame.subtitleText.trim().length === 0) continue;
+    const epStr = String(ocrData.episode).padStart(2, "0");
+    const idxStr = String(lines.length + 1).padStart(3, "0");
+    lines.push({
+      lineId: `ep${epStr}-ocr-${idxStr}`,
+      startMs: frame.timestampSec * 1000,
+      endMs: frame.timestampSec * 1000 + 5000, // assume ~5s display per frame
+      text: frame.subtitleText,
+      rawEntryIds: [frame.filename],
+      mergeReasons: [],
+    });
+  }
+
+  // Compute a simple hash of the OCR content for the rawContentHash field
+  const contentForHash = ocrData.frames.map(f => f.subtitleText || "").join("|");
+  let hash = 0;
+  for (let i = 0; i < contentForHash.length; i++) {
+    hash = ((hash << 5) - hash + contentForHash.charCodeAt(i)) | 0;
+  }
+
+  return {
+    schemaVersion: 1,
+    videoId: videoIds[ocrData.episode] || "unknown",
+    episode: ocrData.episode,
+    sourceSubtitle: {
+      language: ocrData.ocrLanguages.subtitle,
+      source: "video-ocr",
+      rawContentHash: `ocr-${Math.abs(hash).toString(16)}`,
+    },
+    lines,
+    extractedAt: ocrData.extractedAt,
+    mergeConfig: { maxGapMs: 0, minCueDurationMs: 0 },
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Types
