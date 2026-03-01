@@ -184,7 +184,7 @@ function renderMarkdownTable(lines: string[], inlineOpts?: { autoLinkEpisodes: b
   }
   out.push("</tbody></table>");
 
-  return out.join("");
+  return `<div class="table-wrap">${out.join("")}</div>`;
 }
 
 /**
@@ -340,6 +340,10 @@ pre code.hljs { background: transparent; padding: 0; }
 .dag-temporal-slider { width: 140px; height: 4px; cursor: pointer; accent-color: var(--accent, #58a6ff); }
 .dag-slider-info { font-size: 0.7em; color: var(--text-secondary); white-space: nowrap; min-width: 6em; }
 @keyframes dagPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 0.15; } }
+.table-wrap { overflow-x: auto; margin: 1rem 0; }
+.table-wrap > table:not([class]) { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+.table-wrap > table:not([class]) th { color: #8b949e; font-weight: 600; font-size: 0.85em; padding: 0.5rem 0.6rem; border-bottom: 2px solid var(--border); text-align: left; white-space: nowrap; }
+.table-wrap > table:not([class]) td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); }
 .bar-chart-container { margin: 1rem 0; overflow-x: auto; }
 .bar-chart-container figure { margin: 0; }
 .chart-caption { font-size: 0.9em; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); }
@@ -722,7 +726,7 @@ footer {
 .tab-btn { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; color: var(--muted); font-size: 0.9rem; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.2s, border-color 0.2s; }
 .tab-btn:hover { color: var(--fg); }
 .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
-.tab-panel { display: none; padding-top: 0.5rem; }
+.tab-panel { display: none; padding-top: 0.5rem; overflow-x: auto; }
 .tab-panel.active { display: block; }
 @media (max-width: 600px) {
   body { padding: 1rem 0.5rem; }
@@ -737,6 +741,7 @@ footer {
   .verification-table { font-size: 0.75em; }
   .timeline-track { padding-left: 1.5rem; }
   .data-table { font-size: 0.75em; }
+  .table-wrap > table:not([class]) { font-size: 0.8em; }
   .dialogue-table .speaker { font-size: 0.8em; }
   .video-card { flex: 1 1 100%; min-width: 0; }
   .orbital-animation-controls { flex-wrap: wrap; }
@@ -2816,13 +2821,13 @@ export function renderComparisonTable(table: ComparisonTable): string {
     return `<tr class="status-${row.status}"><td>${inlineFormat(row.metric)}</td>${cells}<td class="note">${escapeHtml(row.note)}</td></tr>`;
   }).join("\n");
 
-  return `<table class="comparison-table">
+  return `<div class="table-wrap"><table class="comparison-table">
 <caption>${escapeHtml(table.caption)}</caption>
 <thead><tr><th>パラメータ</th>${epHeaders}<th>整合性</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
-</table>`;
+</table></div>`;
 }
 
 /** Render an event timeline as a vertical timeline visualization */
@@ -3048,7 +3053,7 @@ export function renderCustomComparisonTable(table: { caption: string; headers: s
     return `<tr${cls}><td class="row-label">${escapeHtml(row.label)}</td>${cells}</tr>`;
   }).join("\n");
 
-  return `<div class="comparison-table">
+  return `<div class="comparison-table" style="overflow-x:auto">
 <table>
 <caption>${escapeHtml(table.caption)}</caption>
 <thead><tr><th></th>${headerCells}</tr></thead>
@@ -3269,12 +3274,12 @@ ${data.agreementMetrics && data.agreementMetrics.length > 0 ? renderAgreementCha
     ).join("\n");
     speakerSection = `
 <h2>話者一覧</h2>
-<table class="data-table">
+<div class="table-wrap"><table class="data-table">
 <thead><tr><th>名前</th><th>ID</th><th>備考</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
-</table>`;
+</table></div>`;
   }
 
   // Build tab panels
@@ -3511,12 +3516,12 @@ ${accuracyCell}${agreementCell}<td><span class="${phaseClass}">${phase}</span></
 <p>合計: ${transcriptions.length}エピソード / ${totalLines}抽出行 / ${totalDialogue}帰属台詞</p>
 </div>
 
-<table class="data-table">
+<div class="table-wrap"><table class="data-table">
 <thead><tr><th>話数</th><th>タイトル</th><th>ソース</th><th>抽出行</th><th>帰属台詞</th><th>話者</th>${accuracyHeader}${agreementHeader}<th>状態</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
-</table>
+</table></div>
 ${hasAccuracy || hasAgreement ? `<div class="card" style="font-size:0.85em;margin-top:1rem">
 <p><strong>精度</strong>: 公式脚本との文字一致率（最良ソース）。<strong>ソース間一致</strong>: 全ソースペア間の平均一致率。詳細は各話のページを参照。</p>
 <p style="margin-top:0.3rem"><span class="accuracy-high">■</span> 80%以上 <span class="accuracy-mid">■</span> 60〜80% <span class="accuracy-low">■</span> 60%未満</p>
@@ -3590,12 +3595,12 @@ ${ipWidth > 0 ? `<rect x="${1 + doneWidth}" y="1" width="${ipWidth}" height="24"
 </p>
 </div>
 
-<table class="data-table">
+<div class="table-wrap"><table class="data-table">
 <thead><tr><th>#</th><th>タスク名</th><th>状態</th><th>概要</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
-</table>`;
+</table></div>`;
 
   return layoutHtml("タスク状況", content, "..", summaryPages, "SOLAR LINE 考証プロジェクトのタスク進捗ダッシュボード", navEpisodes, metaPages);
 }
@@ -3650,12 +3655,12 @@ export function renderADRIndex(adrs: ADRRenderEntry[], summaryPages?: SiteManife
 <h1>Architecture Decision Records (ADR)</h1>
 <p>プロジェクトの設計判断を記録した ADR 一覧です。各 ADR は特定の設計上の決定とその理由を文書化しています。</p>
 ${proposedSection}
-<table class="data-table">
+<div class="table-wrap"><table class="data-table">
 <thead><tr><th>番号</th><th>タイトル</th><th>状態</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
-</table>`;
+</table></div>`;
 
   return layoutHtml("ADR 一覧", content, "../..", summaryPages, "SOLAR LINE 考証プロジェクトの設計判断記録", navEpisodes, metaPages);
 }
@@ -3685,12 +3690,12 @@ export function renderIdeasIndex(ideas: IdeaRenderEntry[], summaryPages?: SiteMa
   const content = `
 <h1>アイデア・メモ</h1>
 <p>今後の分析や機能拡張のアイデアを記録したメモ一覧です。</p>
-<table class="data-table">
+<div class="table-wrap"><table class="data-table">
 <thead><tr><th>タイトル</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
-</table>`;
+</table></div>`;
 
   return layoutHtml("アイデア一覧", content, "../..", summaryPages, "SOLAR LINE 考証プロジェクトのアイデア・メモ一覧", navEpisodes, metaPages);
 }
