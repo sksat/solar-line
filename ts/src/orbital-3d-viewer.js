@@ -10,6 +10,17 @@ import { CSS2DRenderer, CSS2DObject } from "three/addons/renderers/CSS2DRenderer
 let scene, camera, renderer, labelRenderer, controls;
 let currentSceneGroup = null;
 
+// ── Timeline animation state ──
+let timelineData = null;
+let timelinePlaying = false;
+let timelineAnimFrameId = null;
+let timelineLastTimestamp = null;
+let timelineCurrentDay = 0;
+let shipMarker3D = null;
+let planetMeshes = {}; // name → THREE.Mesh
+let planetLabels = {}; // name → CSS2DObject
+let transferCurves = []; // Array of { curve, startDay, endDay, episode }
+
 // ── Constants matching orbital-3d-viewer-data.ts ──
 const AU_TO_SCENE = 5;
 
@@ -401,6 +412,194 @@ function createLabel(text, color) {
   div.style.whiteSpace = "nowrap";
   const label = new CSS2DObject(div);
   return label;
+}
+
+// ── Timeline animation ──
+
+/**
+ * Load timeline data and set up animation structures.
+ * Called after loadScene() for the full-route scene.
+ */
+export function loadTimeline(timeline) {
+  timelineData = timeline;
+  timelineCurrentDay = 0;
+  timelinePlaying = false;
+  transferCurves = [];
+
+  if (!timeline || !currentSceneGroup) return;
+
+  // Store references to planet meshes and labels for position updates
+  planetMeshes = {};
+  planetLabels = {};
+  currentSceneGroup.traverse((obj) => {
+    if (obj.isMesh && obj.name && obj.name !== "origin") {
+      planetMeshes[obj.name] = obj;
+    }
+    if (obj.isCSS2DObject && obj.element) {
+      // Match label to planet by proximity check (labels are near planets)
+      const text = obj.element.textContent;
+      for (const orbit of timeline.orbits) {
+        const displayName = {
+          mars: "Mars", jupiter: "Jupiter", saturn: "Saturn",
+          uranus: "Uranus", earth: "Earth",
+        }[orbit.name];
+        if (text === displayName) {
+          planetLabels[orbit.name] = obj;
+        }
+      }
+    }
+  });
+
+  // Build bezier curves for each transfer arc (matching addTransferArc logic)
+  for (let i = 0; i < timeline.transfers.length; i++) {
+    const t = timeline.transfers[i];
+    const arcData = currentSceneGroup.parent
+      ? null
+      : null; // We'll reconstruct from orbit data
+
+    // Get from/to positions from timeline orbits at transfer start/end times
+    const fromOrbit = getOrbitForTransfer(timeline, t, true);
+    const toOrbit = getOrbitForTransfer(timeline, t, false);
+
+    if (fromOrbit && toOrbit) {
+      const fromPos = planetPosAtDay(fromOrbit, t.startDay);
+      const toPos = planetPosAtDay(toOrbit, t.endDay);
+
+      const from = new THREE.Vector3(fromPos[0], fromPos[2], fromPos[1]);
+      const to = new THREE.Vector3(toPos[0], toPos[2], toPos[1]);
+      const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
+      const dist = from.distanceTo(to);
+      mid.y += dist * 0.15;
+
+      const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
+      transferCurves.push({
+        curve,
+        startDay: t.startDay,
+        endDay: t.endDay,
+        episode: t.episode,
+      });
+    }
+  }
+
+  // Create ship marker (a bright sphere)
+  if (shipMarker3D) {
+    currentSceneGroup.remove(shipMarker3D);
+  }
+  const shipGeo = new THREE.SphereGeometry(0.2, 12, 12);
+  const shipMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  shipMarker3D = new THREE.Mesh(shipGeo, shipMat);
+  shipMarker3D.visible = false;
+  currentSceneGroup.add(shipMarker3D);
+}
+
+/** Map transfer to departure/arrival orbit */
+function getOrbitForTransfer(timeline, transfer, isDeparture) {
+  // Transfer label format: "Mars→Jupiter (72h brachistochrone)"
+  // Use episode to index: ep1=Mars→Jupiter, ep2=Jupiter→Saturn, etc.
+  const episodeRoutes = {
+    1: { from: "mars", to: "jupiter" },
+    2: { from: "jupiter", to: "saturn" },
+    3: { from: "saturn", to: "uranus" },
+    4: { from: "uranus", to: "earth" },
+  };
+  const route = episodeRoutes[transfer.episode];
+  if (!route) return null;
+  const planet = isDeparture ? route.from : route.to;
+  return timeline.orbits.find((o) => o.name === planet) || null;
+}
+
+/** Compute planet position at a given day offset */
+function planetPosAtDay(orbit, day) {
+  const angle = orbit.initialAngle + orbit.meanMotionPerDay * day;
+  const x = orbit.radiusScene * Math.cos(angle);
+  const y = orbit.radiusScene * Math.sin(angle);
+  return [x, y, orbit.z];
+}
+
+/**
+ * Update the 3D scene for a given mission day.
+ */
+export function updateTimelineFrame(day) {
+  if (!timelineData || !currentSceneGroup) return;
+  timelineCurrentDay = Math.max(0, Math.min(timelineData.totalDays, day));
+
+  // Update planet positions
+  for (const orbit of timelineData.orbits) {
+    const [x, y, z] = planetPosAtDay(orbit, timelineCurrentDay);
+    const mesh = planetMeshes[orbit.name];
+    if (mesh) {
+      mesh.position.set(x, z, y); // three.js Y-up: swap y/z
+    }
+    const label = planetLabels[orbit.name];
+    if (label) {
+      const r = mesh ? mesh.geometry.parameters.radius : 0.15;
+      label.position.set(x, z + r + 0.3, y);
+    }
+  }
+
+  // Update ship marker along active transfer
+  if (shipMarker3D) {
+    let shipVisible = false;
+    for (const tc of transferCurves) {
+      if (timelineCurrentDay >= tc.startDay && timelineCurrentDay <= tc.endDay) {
+        const progress =
+          (timelineCurrentDay - tc.startDay) / (tc.endDay - tc.startDay);
+        const point = tc.curve.getPoint(Math.max(0, Math.min(1, progress)));
+        shipMarker3D.position.copy(point);
+        shipMarker3D.visible = true;
+        // Color ship marker by episode
+        const epColor = EPISODE_COLORS[tc.episode] || 0xffffff;
+        shipMarker3D.material.color.set(epColor);
+        shipVisible = true;
+        break;
+      }
+    }
+    if (!shipVisible) {
+      shipMarker3D.visible = false;
+    }
+  }
+}
+
+/**
+ * Start/stop timeline playback.
+ */
+export function setTimelinePlaying(playing) {
+  timelinePlaying = playing;
+  if (playing) {
+    timelineLastTimestamp = null;
+    function animateTimeline(timestamp) {
+      if (!timelinePlaying) return;
+      if (timelineLastTimestamp === null) timelineLastTimestamp = timestamp;
+      const dtMs = timestamp - timelineLastTimestamp;
+      timelineLastTimestamp = timestamp;
+      // Playback: complete mission in ~15 seconds of wall time
+      const playbackRate = timelineData.totalDays / 15;
+      timelineCurrentDay += (dtMs / 1000) * playbackRate;
+      if (timelineCurrentDay >= timelineData.totalDays) {
+        timelineCurrentDay = timelineData.totalDays;
+        timelinePlaying = false;
+        // Notify UI
+        if (window._onTimelineEnd) window._onTimelineEnd();
+      }
+      updateTimelineFrame(timelineCurrentDay);
+      // Notify UI of current day
+      if (window._onTimelineUpdate) window._onTimelineUpdate(timelineCurrentDay);
+      if (timelinePlaying) {
+        timelineAnimFrameId = requestAnimationFrame(animateTimeline);
+      }
+    }
+    timelineAnimFrameId = requestAnimationFrame(animateTimeline);
+  } else {
+    if (timelineAnimFrameId) {
+      cancelAnimationFrame(timelineAnimFrameId);
+      timelineAnimFrameId = null;
+    }
+    timelineLastTimestamp = null;
+  }
+}
+
+export function getTimelineCurrentDay() {
+  return timelineCurrentDay;
 }
 
 // ── Cleanup ──

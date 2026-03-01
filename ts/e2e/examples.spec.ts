@@ -409,4 +409,28 @@ test.describe("3D Orbital Viewer Example", () => {
     const link = page.locator("#back-link");
     await expect(link).toHaveAttribute("href", "../");
   });
+
+  test("has timeline controls in DOM", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    // Timeline controls exist (hidden by default, activated by JS when data loads)
+    const tlControls = page.locator("#timeline-controls");
+    await expect(tlControls).toBeAttached();
+    await expect(page.locator("#timeline-play")).toBeAttached();
+    await expect(page.locator("#timeline-slider")).toBeAttached();
+    await expect(page.locator("#timeline-time")).toBeAttached();
+  });
+
+  test("timeline slider has correct aria attributes", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const slider = page.locator("#timeline-slider");
+    await expect(slider).toHaveAttribute("aria-label", "ミッションタイムライン");
+    await expect(slider).toHaveAttribute("min", "0");
+    await expect(slider).toHaveAttribute("max", "1000");
+  });
+
+  test("timeline play button has aria-label", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const playBtn = page.locator("#timeline-play");
+    await expect(playBtn).toHaveAttribute("aria-label", "再生");
+  });
 });

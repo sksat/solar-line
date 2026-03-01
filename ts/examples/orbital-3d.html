@@ -48,6 +48,30 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
   background: rgba(13,17,23,0.8); padding: 8px 12px; border-radius: 4px;
   font-size: 0.8em; color: var(--text-muted);
 }
+#timeline-controls {
+  display: none; /* shown only for full-route scene */
+  padding: 8px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--card-bg);
+  align-items: center; gap: 12px;
+}
+#timeline-controls.active { display: flex; }
+#timeline-controls button {
+  background: #21262d; color: var(--text); border: 1px solid var(--border);
+  width: 36px; height: 36px; cursor: pointer; border-radius: 4px;
+  font-size: 1.1em; display: flex; align-items: center; justify-content: center;
+}
+#timeline-controls button:hover { background: var(--border); }
+#timeline-slider {
+  flex: 1; accent-color: var(--accent); cursor: pointer;
+}
+#timeline-time {
+  font-size: 0.85em; color: var(--accent); min-width: 80px; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+#timeline-label {
+  font-size: 0.8em; color: var(--text-muted); min-width: 200px;
+}
 #loading {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -80,6 +104,13 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
       <p>左のプリセットボタンで表示シーンを切り替えます。</p>
     </div>
   </div>
+  <div id="timeline-controls">
+    <button id="timeline-play" aria-label="再生">&#x25b6;</button>
+    <input type="range" id="timeline-slider" min="0" max="1000" value="0"
+           aria-label="ミッションタイムライン" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000">
+    <span id="timeline-time">0日</span>
+    <span id="timeline-label"></span>
+  </div>
 </div>
 
 <script type="importmap">
@@ -91,7 +122,7 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
 }
 </script>
 <script type="module">
-import { initViewer, loadScene, updateInfoPanel } from "../src/orbital-3d-viewer.js";
+import { initViewer, loadScene, updateInfoPanel, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay } from "../src/orbital-3d-viewer.js";
 
 // ── Load analysis data ──
 const analysisDataUrl = "../reports/data/calculations/3d_orbital_analysis.json";
@@ -107,6 +138,7 @@ const PLANET_COLORS = {
 const EPISODE_COLORS = { 1: "#ff6644", 2: "#ffaa22", 3: "#44cc88", 4: "#4488ff", 5: "#ff4444" };
 const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, enceladus: 0.08, titania: 0.08 };
 const ORBIT_RADII_AU = { mars: 1.524, jupiter: 5.203, saturn: 9.537, uranus: 19.19, earth: 1.0 };
+const ORBITAL_PERIODS_DAYS = { mars: 686.97, jupiter: 4332.59, saturn: 10759.22, uranus: 30688.5, earth: 365.256 };
 
 function zFromAU(zAU) { return zAU * AU_TO_SCENE * 10; }
 
@@ -119,6 +151,7 @@ function planetXY(planet, index) {
 
 function prepareFullRouteScene(data) {
   const planetOrder = ["mars", "jupiter", "saturn", "uranus", "earth"];
+  const initialAngles = [Math.PI*0.1, Math.PI*0.35, Math.PI*0.55, Math.PI*0.75, Math.PI*1.85];
   const planets = planetOrder.map((name, i) => {
     const p = data.planetaryZHeightsAtEpoch[name];
     const pos = planetXY(name, i);
@@ -133,10 +166,38 @@ function prepareFullRouteScene(data) {
       fromPos: [fp.x, fp.y, fp.z], toPos: [tp.x, tp.y, tp.z],
       episode: t.episode, color: EPISODE_COLORS[t.episode], label: t.leg };
   });
+
+  // Build timeline data
+  const firstJd = data.transfers[0]?.departure.jd ?? 0;
+  const lastJd = data.transfers[data.transfers.length - 1]?.arrival.jd ?? firstJd;
+  const totalDays = lastJd - firstJd;
+
+  const orbits = planetOrder.map((name, i) => {
+    const p = data.planetaryZHeightsAtEpoch[name];
+    const period = ORBITAL_PERIODS_DAYS[name] || 1;
+    return {
+      name,
+      radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+      initialAngle: initialAngles[i],
+      meanMotionPerDay: (2 * Math.PI) / period,
+      z: zFromAU(p?.zHeightAU ?? 0),
+    };
+  });
+
+  const transfers = data.transfers.map(t => ({
+    startDay: t.departure.jd - firstJd,
+    endDay: t.arrival.jd - firstJd,
+    episode: t.episode,
+    label: t.leg,
+  }));
+
+  const timeline = { totalDays, orbits, transfers };
+
   return { type: "full-route", title: "ケストレル号全航路 — 3D黄道面ビュー",
     description: "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を10倍誇張して表示。土星が最も黄道面から離れ（+0.32 AU）、木星はわずかに下方（-0.04 AU）。",
     planets, transferArcs,
-    eclipticPlane: { type: "ecliptic", normal: [0,0,1], z: 0, color: "#334455", opacity: 0.15, label: "黄道面" }
+    eclipticPlane: { type: "ecliptic", normal: [0,0,1], z: 0, color: "#334455", opacity: 0.15, label: "黄道面" },
+    timeline,
   };
 }
 
@@ -202,7 +263,131 @@ async function init() {
   loadScene(scenes["full-route"]);
   updateInfoPanel(infoPanel, scenes["full-route"]);
 
-  // Preset buttons
+  // ── Timeline controls ──
+  const tlControls = document.getElementById("timeline-controls");
+  const tlPlayBtn = document.getElementById("timeline-play");
+  const tlSlider = document.getElementById("timeline-slider");
+  const tlTime = document.getElementById("timeline-time");
+  const tlLabel = document.getElementById("timeline-label");
+  let isPlaying = false;
+
+  function formatDays(days) {
+    if (days < 1) {
+      const h = Math.round(days * 24);
+      return h + "時間";
+    }
+    if (days < 30) {
+      const d = Math.floor(days);
+      const h = Math.round((days - d) * 24);
+      return h > 0 ? d + "日" + h + "時間" : d + "日";
+    }
+    return Math.round(days) + "日";
+  }
+
+  function getActiveTransferLabel(day, timeline) {
+    if (!timeline) return "";
+    for (const t of timeline.transfers) {
+      if (day >= t.startDay && day <= t.endDay) {
+        return t.label;
+      }
+    }
+    // Between transfers — find which gap
+    for (let i = 0; i < timeline.transfers.length - 1; i++) {
+      const prev = timeline.transfers[i];
+      const next = timeline.transfers[i + 1];
+      if (day > prev.endDay && day < next.startDay) {
+        return "遷移間（停泊中）";
+      }
+    }
+    return "";
+  }
+
+  function updateTimelineUI(day, timeline) {
+    if (!timeline) return;
+    const progress = timeline.totalDays > 0 ? (day / timeline.totalDays) * 1000 : 0;
+    tlSlider.value = Math.round(progress);
+    tlSlider.setAttribute("aria-valuenow", String(Math.round(progress)));
+    tlTime.textContent = formatDays(day);
+    tlLabel.textContent = getActiveTransferLabel(day, timeline);
+  }
+
+  function activateTimeline(sceneData) {
+    const timeline = sceneData.timeline;
+    if (timeline) {
+      loadTimeline(timeline);
+      tlControls.classList.add("active");
+      updateTimelineUI(0, timeline);
+      updateTimelineFrame(0);
+
+      // Callback from animation loop
+      window._onTimelineUpdate = (day) => updateTimelineUI(day, timeline);
+      window._onTimelineEnd = () => {
+        isPlaying = false;
+        tlPlayBtn.textContent = "\u25b6";
+        tlPlayBtn.setAttribute("aria-label", "再生");
+      };
+    } else {
+      tlControls.classList.remove("active");
+      setTimelinePlaying(false);
+      isPlaying = false;
+    }
+  }
+
+  tlPlayBtn.addEventListener("click", () => {
+    const timeline = scenes["full-route"]?.timeline;
+    if (!timeline) return;
+    if (isPlaying) {
+      isPlaying = false;
+      setTimelinePlaying(false);
+      tlPlayBtn.textContent = "\u25b6";
+      tlPlayBtn.setAttribute("aria-label", "再生");
+    } else {
+      // Reset to start if at end
+      if (getTimelineCurrentDay() >= timeline.totalDays) {
+        updateTimelineFrame(0);
+        updateTimelineUI(0, timeline);
+      }
+      isPlaying = true;
+      setTimelinePlaying(true);
+      tlPlayBtn.textContent = "\u23f8";
+      tlPlayBtn.setAttribute("aria-label", "一時停止");
+    }
+  });
+
+  tlSlider.addEventListener("input", () => {
+    const timeline = scenes["full-route"]?.timeline;
+    if (!timeline) return;
+    const val = parseFloat(tlSlider.value);
+    const day = (val / 1000) * timeline.totalDays;
+    updateTimelineFrame(day);
+    updateTimelineUI(day, timeline);
+    // Pause on manual scrub
+    if (isPlaying) {
+      isPlaying = false;
+      setTimelinePlaying(false);
+      tlPlayBtn.textContent = "\u25b6";
+      tlPlayBtn.setAttribute("aria-label", "再生");
+    }
+  });
+
+  // ── Preset buttons ──
+  function switchScene(sceneKey) {
+    const sceneData = scenes[sceneKey];
+    if (!sceneData) return;
+
+    // Stop any running animation
+    if (isPlaying) {
+      isPlaying = false;
+      setTimelinePlaying(false);
+      tlPlayBtn.textContent = "\u25b6";
+      tlPlayBtn.setAttribute("aria-label", "再生");
+    }
+
+    loadScene(sceneData);
+    updateInfoPanel(infoPanel, sceneData);
+    activateTimeline(sceneData);
+  }
+
   document.querySelectorAll(".preset-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".preset-btn").forEach(b => {
@@ -211,15 +396,12 @@ async function init() {
       });
       btn.classList.add("active");
       btn.setAttribute("aria-pressed", "true");
-
-      const sceneKey = btn.dataset.scene;
-      const sceneData = scenes[sceneKey];
-      if (sceneData) {
-        loadScene(sceneData);
-        updateInfoPanel(infoPanel, sceneData);
-      }
+      switchScene(btn.dataset.scene);
     });
   });
+
+  // Activate timeline for default scene
+  activateTimeline(scenes["full-route"]);
 }
 
 init().catch(err => console.error("3D viewer init error:", err));

@@ -72,6 +72,39 @@ export interface PlaneData {
   z?: number;
 }
 
+export interface TimelineTransfer {
+  /** Start time in days from mission start */
+  startDay: number;
+  /** End time in days from mission start */
+  endDay: number;
+  /** Episode number */
+  episode: number;
+  /** Label */
+  label: string;
+}
+
+export interface TimelineOrbit {
+  /** Planet name */
+  name: string;
+  /** Orbital radius in scene units */
+  radiusScene: number;
+  /** Initial angle at mission start (radians) */
+  initialAngle: number;
+  /** Mean angular velocity (radians per day) */
+  meanMotionPerDay: number;
+  /** Z position in scene units */
+  z: number;
+}
+
+export interface TimelineData {
+  /** Total mission duration in days */
+  totalDays: number;
+  /** Planet orbits for animation */
+  orbits: TimelineOrbit[];
+  /** Transfer legs with start/end times */
+  transfers: TimelineTransfer[];
+}
+
 export interface SceneData {
   type: "full-route" | "saturn-ring" | "uranus-approach";
   title: string;
@@ -82,6 +115,8 @@ export interface SceneData {
   rings?: RingData[];
   axes?: AxisData[];
   planes?: PlaneData[];
+  /** Timeline data for animation (full-route only) */
+  timeline?: TimelineData;
 }
 
 // ── Constants ──
@@ -130,6 +165,22 @@ const ORBIT_RADII_AU: Record<string, number> = {
   earth: 1.0,
 };
 
+/** Orbital periods in days (sidereal) */
+const ORBITAL_PERIODS_DAYS: Record<string, number> = {
+  mars: 686.97,
+  jupiter: 4332.59,
+  saturn: 10759.22,
+  uranus: 30688.5,
+  earth: 365.256,
+};
+
+/** Mean motion in radians per day */
+export function meanMotionPerDay(planet: string): number {
+  const period = ORBITAL_PERIODS_DAYS[planet];
+  if (!period) return 0;
+  return (2 * Math.PI) / period;
+}
+
 // ── Helper functions ──
 
 /** Convert AU z-height to scene z coordinate */
@@ -164,6 +215,37 @@ function planetXY(
   };
 }
 
+/**
+ * Compute planet XYZ position at a given time offset from mission start.
+ * Returns [x, y, z] in scene coordinates.
+ */
+export function planetPositionAtTime(
+  orbit: TimelineOrbit,
+  daysSinceStart: number,
+): [number, number, number] {
+  const angle = orbit.initialAngle + orbit.meanMotionPerDay * daysSinceStart;
+  const x = orbit.radiusScene * Math.cos(angle);
+  const y = orbit.radiusScene * Math.sin(angle);
+  return [x, y, orbit.z];
+}
+
+/**
+ * Format days into human-readable Japanese string.
+ */
+export function formatDaysJa(days: number): string {
+  if (days < 1) {
+    const hours = Math.round(days * 24);
+    return `${hours}時間`;
+  }
+  if (days < 30) {
+    const d = Math.floor(days);
+    const h = Math.round((days - d) * 24);
+    if (h === 0) return `${d}日`;
+    return `${d}日${h}時間`;
+  }
+  return `${Math.round(days)}日`;
+}
+
 // ── Scene preparation functions ──
 
 /** Prepare full solar-system route scene showing all 4 transfer legs with z-height */
@@ -171,8 +253,8 @@ export function prepareFullRouteScene(data: {
   transfers: Array<{
     leg: string;
     episode: number;
-    departure: { planet: string; zHeightAU: number; latitudeDeg: number };
-    arrival: { planet: string; zHeightAU: number; latitudeDeg: number };
+    departure: { planet: string; jd: number; zHeightAU: number; latitudeDeg: number };
+    arrival: { planet: string; jd: number; zHeightAU: number; latitudeDeg: number };
   }>;
   planetaryZHeightsAtEpoch: Record<
     string,
@@ -208,6 +290,44 @@ export function prepareFullRouteScene(data: {
     };
   });
 
+  // Build timeline data from transfer JD dates
+  const firstJd = data.transfers[0]?.departure.jd ?? 0;
+  const lastJd =
+    data.transfers[data.transfers.length - 1]?.arrival.jd ?? firstJd;
+  const totalDays = lastJd - firstJd;
+
+  const planetOrder2 = ["mars", "jupiter", "saturn", "uranus", "earth"];
+  const initialAngles = [
+    Math.PI * 0.1,
+    Math.PI * 0.35,
+    Math.PI * 0.55,
+    Math.PI * 0.75,
+    Math.PI * 1.85,
+  ];
+  const timelineOrbits: TimelineOrbit[] = planetOrder2.map((name, i) => {
+    const pData = data.planetaryZHeightsAtEpoch[name];
+    return {
+      name,
+      radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+      initialAngle: initialAngles[i],
+      meanMotionPerDay: meanMotionPerDay(name),
+      z: zFromAU(pData?.zHeightAU ?? 0),
+    };
+  });
+
+  const timelineTransfers: TimelineTransfer[] = data.transfers.map((t) => ({
+    startDay: t.departure.jd - firstJd,
+    endDay: t.arrival.jd - firstJd,
+    episode: t.episode,
+    label: t.leg,
+  }));
+
+  const timeline: TimelineData = {
+    totalDays,
+    orbits: timelineOrbits,
+    transfers: timelineTransfers,
+  };
+
   return {
     type: "full-route",
     title: "ケストレル号全航路 — 3D黄道面ビュー",
@@ -223,6 +343,7 @@ export function prepareFullRouteScene(data: {
       opacity: 0.15,
       label: "黄道面",
     },
+    timeline,
   };
 }
 

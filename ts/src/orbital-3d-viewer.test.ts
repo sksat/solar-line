@@ -6,12 +6,17 @@ import {
   prepareFullRouteScene,
   prepareSaturnScene,
   prepareUranusScene,
+  planetPositionAtTime,
+  meanMotionPerDay,
+  formatDaysJa,
   type SceneData,
   type PlanetData,
   type TransferArcData,
   type RingData,
   type AxisData,
   type PlaneData,
+  type TimelineData,
+  type TimelineOrbit,
   AU_TO_SCENE,
 } from "./orbital-3d-viewer-data.ts";
 
@@ -189,6 +194,149 @@ describe("orbital-3d-viewer-data", () => {
       assert.ok(scene.rings, "Uranus should have rings");
       const ring = scene.rings![0];
       assert.strictEqual(ring.outerRadius, 51149);
+    });
+  });
+
+  describe("timeline data (full-route)", () => {
+    const scene = prepareFullRouteScene(analysisData);
+    const timeline = scene.timeline!;
+
+    it("full-route scene includes timeline data", () => {
+      assert.ok(timeline, "full-route scene should have timeline");
+    });
+
+    it("timeline has correct total mission duration (~124 days)", () => {
+      assert.ok(timeline.totalDays > 100, `totalDays should be >100, got ${timeline.totalDays}`);
+      assert.ok(timeline.totalDays < 150, `totalDays should be <150, got ${timeline.totalDays}`);
+    });
+
+    it("timeline has 5 planet orbits", () => {
+      assert.strictEqual(timeline.orbits.length, 5);
+      const names = timeline.orbits.map((o: TimelineOrbit) => o.name);
+      assert.deepStrictEqual(names, ["mars", "jupiter", "saturn", "uranus", "earth"]);
+    });
+
+    it("planet orbits have positive mean motion", () => {
+      for (const orbit of timeline.orbits) {
+        assert.ok(orbit.meanMotionPerDay > 0, `${orbit.name} mean motion should be positive`);
+        assert.ok(orbit.radiusScene > 0, `${orbit.name} radius should be positive`);
+      }
+    });
+
+    it("inner planets orbit faster than outer planets", () => {
+      const earth = timeline.orbits.find((o: TimelineOrbit) => o.name === "earth")!;
+      const mars = timeline.orbits.find((o: TimelineOrbit) => o.name === "mars")!;
+      const jupiter = timeline.orbits.find((o: TimelineOrbit) => o.name === "jupiter")!;
+      const uranus = timeline.orbits.find((o: TimelineOrbit) => o.name === "uranus")!;
+      assert.ok(earth.meanMotionPerDay > mars.meanMotionPerDay);
+      assert.ok(mars.meanMotionPerDay > jupiter.meanMotionPerDay);
+      assert.ok(jupiter.meanMotionPerDay > uranus.meanMotionPerDay);
+    });
+
+    it("timeline has 4 transfer legs", () => {
+      assert.strictEqual(timeline.transfers.length, 4);
+    });
+
+    it("transfers are chronologically ordered", () => {
+      for (let i = 1; i < timeline.transfers.length; i++) {
+        assert.ok(
+          timeline.transfers[i].startDay >= timeline.transfers[i - 1].endDay,
+          `transfer ${i} should start after transfer ${i - 1} ends`,
+        );
+      }
+    });
+
+    it("first transfer starts at day 0", () => {
+      assert.strictEqual(timeline.transfers[0].startDay, 0);
+    });
+
+    it("last transfer ends at totalDays", () => {
+      const last = timeline.transfers[timeline.transfers.length - 1];
+      assert.ok(
+        Math.abs(last.endDay - timeline.totalDays) < 0.001,
+        `last transfer endDay should equal totalDays`,
+      );
+    });
+  });
+
+  describe("meanMotionPerDay", () => {
+    it("Earth orbital period is ~365.256 days", () => {
+      const mm = meanMotionPerDay("earth");
+      const period = (2 * Math.PI) / mm;
+      assert.ok(Math.abs(period - 365.256) < 0.01);
+    });
+
+    it("Mars orbits slower than Earth", () => {
+      assert.ok(meanMotionPerDay("earth") > meanMotionPerDay("mars"));
+    });
+
+    it("returns 0 for unknown planet", () => {
+      assert.strictEqual(meanMotionPerDay("pluto"), 0);
+    });
+  });
+
+  describe("planetPositionAtTime", () => {
+    const orbit: TimelineOrbit = {
+      name: "test",
+      radiusScene: 10,
+      initialAngle: 0,
+      meanMotionPerDay: Math.PI / 180, // 1 deg/day
+      z: 1.5,
+    };
+
+    it("at time 0, planet is at initial angle", () => {
+      const [x, y, z] = planetPositionAtTime(orbit, 0);
+      assert.ok(Math.abs(x - 10) < 0.001, "x should be radius");
+      assert.ok(Math.abs(y - 0) < 0.001, "y should be 0");
+      assert.strictEqual(z, 1.5);
+    });
+
+    it("at 90 days (90°), planet has moved quarter orbit", () => {
+      const [x, y, z] = planetPositionAtTime(orbit, 90);
+      assert.ok(Math.abs(x - 0) < 0.001, `x should be ~0, got ${x}`);
+      assert.ok(Math.abs(y - 10) < 0.001, `y should be ~10, got ${y}`);
+      assert.strictEqual(z, 1.5);
+    });
+
+    it("at 180 days (180°), planet is opposite start", () => {
+      const [x, y, z] = planetPositionAtTime(orbit, 180);
+      assert.ok(Math.abs(x - (-10)) < 0.001);
+      assert.ok(Math.abs(y - 0) < 0.001);
+    });
+
+    it("z position stays constant (ecliptic height doesn't change)", () => {
+      const [, , z1] = planetPositionAtTime(orbit, 0);
+      const [, , z2] = planetPositionAtTime(orbit, 50);
+      const [, , z3] = planetPositionAtTime(orbit, 100);
+      assert.strictEqual(z1, z2);
+      assert.strictEqual(z2, z3);
+    });
+  });
+
+  describe("formatDaysJa", () => {
+    it("formats hours for less than 1 day", () => {
+      assert.strictEqual(formatDaysJa(0.5), "12時間");
+    });
+
+    it("formats days and hours for short durations", () => {
+      assert.strictEqual(formatDaysJa(3), "3日");
+      assert.strictEqual(formatDaysJa(3.5), "3日12時間");
+    });
+
+    it("formats rounded days for long durations", () => {
+      assert.strictEqual(formatDaysJa(124), "124日");
+    });
+  });
+
+  describe("Saturn and Uranus scenes have no timeline", () => {
+    it("Saturn scene has no timeline", () => {
+      const scene = prepareSaturnScene(analysisData);
+      assert.strictEqual(scene.timeline, undefined);
+    });
+
+    it("Uranus scene has no timeline", () => {
+      const scene = prepareUranusScene(analysisData);
+      assert.strictEqual(scene.timeline, undefined);
     });
   });
 });
