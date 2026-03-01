@@ -1241,6 +1241,34 @@ describe("cross-episode.md content validation", () => {
       "should have Uranus approach geometry side-view diagram",
     );
   });
+
+  it("EP02 v∞ resolution: two-phase model referenced", () => {
+    assert.ok(
+      content.includes("2相モデル") || content.includes("二相モデル"),
+      "should reference two-phase model for EP02 v∞ resolution",
+    );
+  });
+
+  it("EP02 v∞ resolution: capture ΔV 2-3 km/s (not 0.61 km/s as primary)", () => {
+    // The old 0.61 km/s parabolic capture should not be the primary value;
+    // the two-phase model gives capture ΔV of 2-3 km/s range
+    assert.ok(
+      content.includes("2〜3 km/s") || content.includes("捕獲ΔV≈2.9"),
+      "should cite two-phase capture ΔV in 2-3 km/s range",
+    );
+    // 0.61 km/s should no longer appear as the primary Saturn capture value
+    assert.ok(
+      !content.includes("捕捉 $\\Delta V$ は最小 0.61"),
+      "should NOT cite 0.61 km/s as the primary Saturn capture ΔV",
+    );
+  });
+
+  it("EP02 sensitivity note: mentions two-phase vs single-phase distinction", () => {
+    assert.ok(
+      content.includes("単相モデル") || content.includes("順行加速のみの単相"),
+      "sensitivity analysis should clarify single-phase vs two-phase model",
+    );
+  });
 });
 
 // ============================================================
@@ -1789,20 +1817,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 278+ (not stale 261)", () => {
+  it("task count is 282+ (not stale 261 or 278)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("278"), "should cite current task count 278");
+    assert.ok(content.includes("282"), "should cite current task count 282");
   });
 
-  it("commit count is 400+ (not stale 390+)", () => {
+  it("commit count is 410+ (not stale 390+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("400+"), "should cite current commit count 400+");
+    assert.ok(content.includes("410+"), "should cite current commit count 410+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -1820,7 +1848,7 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,083"), "should cite TS test count");
+    assert.ok(content.includes("2,105"), "should cite TS test count");
     assert.ok(content.includes("377"), "should cite Rust test count");
     assert.ok(content.includes("214"), "should cite E2E test count");
   });
