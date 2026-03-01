@@ -553,6 +553,34 @@ describe("EP04 article content validation", () => {
     assert.ok(content.includes("480") && content.includes("ミリシーベルト"),
       "should cite 480 mSv radiation in dialogue");
   });
+
+  it("burns-remaining discrepancy: HUD 1-2 vs dialogue 3-4 with timeline", () => {
+    assert.ok(content.includes("1-2") || content.includes("1〜2"),
+      "should cite HUD display of 1-2 burns maximum");
+    assert.ok(content.includes("3-4") || content.includes("3〜4") || content.includes("3回、最大4回"),
+      "should cite dialogue 3-4 burns");
+  });
+
+  it("onscreen plasmoid B-field 180-340 nT vs Rust extreme 50 nT", () => {
+    assert.ok(content.includes("180") && content.includes("340"),
+      "should cite onscreen B-field range 180-340 nT");
+    assert.ok(content.includes("3.6") || content.includes("6.8"),
+      "should cite ratio vs Rust extreme scenario");
+  });
+
+  it("intercept velocity 18.3 km/s: below Uranus escape velocity", () => {
+    assert.ok(content.includes("18.3"),
+      "should cite onscreen intercept velocity 18.3 km/s");
+    assert.ok(content.includes("21.3") || content.includes("脱出速度"),
+      "should compare to Uranus escape velocity");
+  });
+
+  it("periapsis altitude 6.50 RU: between Miranda and Ariel orbits", () => {
+    assert.ok(content.includes("6.50") || content.includes("6.5"),
+      "should cite periapsis altitude 6.50 RU");
+    assert.ok(content.includes("ミランダ") || content.includes("アリエル"),
+      "should place periapsis between Miranda and Ariel orbits");
+  });
 });
 
 describe("EP05 article content validation", () => {
