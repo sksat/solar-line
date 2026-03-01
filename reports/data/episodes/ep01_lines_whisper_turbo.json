@@ -1,0 +1,3791 @@
+{
+  "schemaVersion": 1,
+  "videoId": "CQ_OkDjEwRk",
+  "episode": 1,
+  "sourceSubtitle": {
+    "language": "ja",
+    "source": "whisper",
+    "rawContentHash": "aeed0f61063b1481439b7f96c8520e8829c180a4da57cf196a5c31370abbf733",
+    "whisperModel": "turbo"
+  },
+  "lines": [
+    {
+      "lineId": "ep01-line-001",
+      "startMs": 0,
+      "endMs": 5520,
+      "text": "結露まだ残ってる",
+      "rawEntryIds": [
+        "whisper-0"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-002",
+      "startMs": 5520,
+      "endMs": 11040,
+      "text": "K、ブロア出力3割上げて",
+      "rawEntryIds": [
+        "whisper-1"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-003",
+      "startMs": 11040,
+      "endMs": 15220,
+      "text": "港湾環境データ更新、相対湿度47%",
+      "rawEntryIds": [
+        "whisper-2"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-004",
+      "startMs": 15220,
+      "endMs": 19060,
+      "text": "補助RCSベーンを閉じることを推奨します",
+      "rawEntryIds": [
+        "whisper-3"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-005",
+      "startMs": 19060,
+      "endMs": 22160,
+      "text": "ブロアだけで何とかしようとするものではありません",
+      "rawEntryIds": [
+        "whisper-4"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-006",
+      "startMs": 22160,
+      "endMs": 24380,
+      "text": "わかってるよ、それぐらい",
+      "rawEntryIds": [
+        "whisper-5"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-007",
+      "startMs": 24380,
+      "endMs": 28240,
+      "text": "あなたはまた、冷却待ちの口実を作ろうとしています",
+      "rawEntryIds": [
+        "whisper-6"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-008",
+      "startMs": 28240,
+      "endMs": 33780,
+      "text": "主貨物区画、衝撃吸収ユニットの死んだ針、復帰してる?",
+      "rawEntryIds": [
+        "whisper-7"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-009",
+      "startMs": 34360,
+      "endMs": 37120,
+      "text": "針は死んでいません、動いていないだけです",
+      "rawEntryIds": [
+        "whisper-8"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-010",
+      "startMs": 37120,
+      "endMs": 41740,
+      "text": "この船もオンボロだからね、念には念を入れないと",
+      "rawEntryIds": [
+        "whisper-9"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-011",
+      "startMs": 41740,
+      "endMs": 46240,
+      "text": "反応質量タンクのスロッシング指数が低いね",
+      "rawEntryIds": [
+        "whisper-10"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-012",
+      "startMs": 46240,
+      "endMs": 52620,
+      "text": "荷がないために後部感性が低く、微小な姿勢変化で駅面波が立ちやすい状態です",
+      "rawEntryIds": [
+        "whisper-11"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-013",
+      "startMs": 52620,
+      "endMs": 55200,
+      "text": "じゃあ腹持ちすれば問題ないか",
+      "rawEntryIds": [
+        "whisper-12"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-014",
+      "startMs": 55200,
+      "endMs": 58520,
+      "text": "後部骨格の歪み癖は改善なし",
+      "rawEntryIds": [
+        "whisper-13"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-015",
+      "startMs": 58520,
+      "endMs": 64620,
+      "text": "フルバーン推進時、磁気ノズルの焦点ずれにより効率が最大で3%変動します",
+      "rawEntryIds": [
+        "whisper-14"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-016",
+      "startMs": 64620,
+      "endMs": 67820,
+      "text": "それがいいんじゃないの",
+      "rawEntryIds": [
+        "whisper-15"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-017",
+      "startMs": 67820,
+      "endMs": 71460,
+      "text": "クセ者ほど可愛いんだよ",
+      "rawEntryIds": [
+        "whisper-16"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-018",
+      "startMs": 71460,
+      "endMs": 73740,
+      "text": "緊急依頼が1本入っています",
+      "rawEntryIds": [
+        "whisper-17"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-019",
+      "startMs": 73740,
+      "endMs": 76140,
+      "text": "ガニメで中央口へ72時間以内",
+      "rawEntryIds": [
+        "whisper-18"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-020",
+      "startMs": 76140,
+      "endMs": 79000,
+      "text": "封印コンテナ2機、危険物指定なし",
+      "rawEntryIds": [
+        "whisper-19"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-021",
+      "startMs": 79000,
+      "endMs": 83160,
+      "text": "えらい急ぐね、普通は150時間はかけるルートだけど",
+      "rawEntryIds": [
+        "whisper-20"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-022",
+      "startMs": 83160,
+      "endMs": 87660,
+      "text": "ガニメでの優先券テーブルは大型船で埋まっています",
+      "rawEntryIds": [
+        "whisper-21"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-023",
+      "startMs": 87660,
+      "endMs": 89360,
+      "text": "あなたは裏口枠です",
+      "rawEntryIds": [
+        "whisper-22"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-024",
+      "startMs": 89360,
+      "endMs": 93920,
+      "text": "港湾ネットの噂ですが、コンテナの中身はガニメでの未来そのものだとか",
+      "rawEntryIds": [
+        "whisper-23"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-025",
+      "startMs": 93920,
+      "endMs": 96180,
+      "text": "そんなものフリーに頼るなよ",
+      "rawEntryIds": [
+        "whisper-24"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-026",
+      "startMs": 96180,
+      "endMs": 101580,
+      "text": "ガニメでまで72時間以内に輸送するには、嵐の回廊を通過する必要があります",
+      "rawEntryIds": [
+        "whisper-25"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-027",
+      "startMs": 101580,
+      "endMs": 104880,
+      "text": "まともな輸送会社が受け負う仕事ではありません",
+      "rawEntryIds": [
+        "whisper-26"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-028",
+      "startMs": 104880,
+      "endMs": 106040,
+      "text": "どう思う?",
+      "rawEntryIds": [
+        "whisper-27"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-029",
+      "startMs": 106040,
+      "endMs": 110540,
+      "text": "嵐の回廊は、現在利用が原則禁止となっている航路です",
+      "rawEntryIds": [
+        "whisper-28"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-030",
+      "startMs": 110540,
+      "endMs": 116040,
+      "text": "木星磁気圏による磁気嵐ドリフトを真正面から突っ切る航路になります",
+      "rawEntryIds": [
+        "whisper-29"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-031",
+      "startMs": 116040,
+      "endMs": 122040,
+      "text": "木星の重力圏へ落下し、磁気嵐の中で世の重力アシストを受けて軌道を変え",
+      "rawEntryIds": [
+        "whisper-30"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-032",
+      "startMs": 122040,
+      "endMs": 126040,
+      "text": "ペリジュピターオーバースでガニメでの最接近軌道を取ります",
+      "rawEntryIds": [
+        "whisper-31"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-033",
+      "startMs": 126040,
+      "endMs": 129040,
+      "text": "オーバースのウィンドウは長く見積もっても数時間",
+      "rawEntryIds": [
+        "whisper-32"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-034",
+      "startMs": 129040,
+      "endMs": 133040,
+      "text": "タイミングがずれれば木星の重力に捕まって落下します",
+      "rawEntryIds": [
+        "whisper-33"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-035",
+      "startMs": 133040,
+      "endMs": 135740,
+      "text": "まともな人間が取る航路ではありません",
+      "rawEntryIds": [
+        "whisper-34"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-036",
+      "startMs": 135740,
+      "endMs": 138700,
+      "text": "まともな人間はフリーにはならないからね",
+      "rawEntryIds": [
+        "whisper-35"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-037",
+      "startMs": 138700,
+      "endMs": 141400,
+      "text": "で、報酬は?",
+      "rawEntryIds": [
+        "whisper-36"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-038",
+      "startMs": 141840,
+      "endMs": 145820,
+      "text": "通常料金の3倍、遅延は1時間ごとに15%減額",
+      "rawEntryIds": [
+        "whisper-37"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-039",
+      "startMs": 145820,
+      "endMs": 149720,
+      "text": "公安税は免除、タグ船はガニメで側で手配とのことです",
+      "rawEntryIds": [
+        "whisper-38"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-040",
+      "startMs": 149720,
+      "endMs": 151620,
+      "text": "裏口にしては破格だな",
+      "rawEntryIds": [
+        "whisper-39"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-041",
+      "startMs": 151620,
+      "endMs": 154580,
+      "text": "破格でも受け負うフリーがいなかったということです",
+      "rawEntryIds": [
+        "whisper-40"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-042",
+      "startMs": 154580,
+      "endMs": 156180,
+      "text": "まともな人間ならね",
+      "rawEntryIds": [
+        "whisper-41"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-043",
+      "startMs": 156180,
+      "endMs": 158560,
+      "text": "あんたたちの取り分は?",
+      "rawEntryIds": [
+        "whisper-42"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-044",
+      "startMs": 159280,
+      "endMs": 160500,
+      "text": "今回は3割です",
+      "rawEntryIds": [
+        "whisper-43"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-045",
+      "startMs": 160500,
+      "endMs": 162940,
+      "text": "1割、こっちは命がけなんだ",
+      "rawEntryIds": [
+        "whisper-44"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-046",
+      "startMs": 162940,
+      "endMs": 166640,
+      "text": "この場で受けてくれるのであれば",
+      "rawEntryIds": [
+        "whisper-45"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-047",
+      "startMs": 166640,
+      "endMs": 169800,
+      "text": "わかった、受けるよ",
+      "rawEntryIds": [
+        "whisper-46"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-048",
+      "startMs": 169800,
+      "endMs": 171660,
+      "text": "契約成立です",
+      "rawEntryIds": [
+        "whisper-47"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-049",
+      "startMs": 171660,
+      "endMs": 173620,
+      "text": "コンテナはこちらで運び込みます",
+      "rawEntryIds": [
+        "whisper-48"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-050",
+      "startMs": 173620,
+      "endMs": 174380,
+      "text": "よろしく",
+      "rawEntryIds": [
+        "whisper-49"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-051",
+      "startMs": 174380,
+      "endMs": 178320,
+      "text": "では私は木星の観光名所でも探しておきます",
+      "rawEntryIds": [
+        "whisper-50"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-052",
+      "startMs": 178320,
+      "endMs": 180360,
+      "text": "怒るなよ",
+      "rawEntryIds": [
+        "whisper-51"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-053",
+      "startMs": 180360,
+      "endMs": 181900,
+      "text": "呆れているだけです",
+      "rawEntryIds": [
+        "whisper-52"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-054",
+      "startMs": 181900,
+      "endMs": 187740,
+      "text": "はあちなみに木星に落ち始めたらフルバースでも脱出できないよね",
+      "rawEntryIds": [
+        "whisper-53",
+        "whisper-54"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-055",
+      "startMs": 187740,
+      "endMs": 193120,
+      "text": "運良くペリジを押し上げられても数時間で放射線に焼かれてアビオニクスが死にます",
+      "rawEntryIds": [
+        "whisper-55"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-056",
+      "startMs": 193120,
+      "endMs": 194600,
+      "text": "考えないでおこう",
+      "rawEntryIds": [
+        "whisper-56"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-057",
+      "startMs": 194600,
+      "endMs": 197400,
+      "text": "こちら火星光完成",
+      "rawEntryIds": [
+        "whisper-57"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-058",
+      "startMs": 197400,
+      "endMs": 199400,
+      "text": "火星光湾法に基づいて",
+      "rawEntryIds": [
+        "whisper-58"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-059",
+      "startMs": 199400,
+      "endMs": 202500,
+      "text": "光湾周辺5万キロまではRCS推進のみ",
+      "rawEntryIds": [
+        "whisper-59"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-060",
+      "startMs": 202500,
+      "endMs": 205120,
+      "text": "核融合パルス式の使用は禁止です",
+      "rawEntryIds": [
+        "whisper-60"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-061",
+      "startMs": 205120,
+      "endMs": 207580,
+      "text": "安全距離内での式転化は",
+      "rawEntryIds": [
+        "whisper-61"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-062",
+      "startMs": 207580,
+      "endMs": 211340,
+      "text": "自動的に罰金と放射線警報の発令対象となります",
+      "rawEntryIds": [
+        "whisper-62"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-063",
+      "startMs": 211340,
+      "endMs": 214640,
+      "text": "式許可は回収マーカー通過後に発行します",
+      "rawEntryIds": [
+        "whisper-63"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-064",
+      "startMs": 214640,
+      "endMs": 217880,
+      "text": "了解免許を手放す気はまだないので",
+      "rawEntryIds": [
+        "whisper-64"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-065",
+      "startMs": 217880,
+      "endMs": 221380,
+      "text": "式転化許可券までの航路設定完了",
+      "rawEntryIds": [
+        "whisper-65"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-066",
+      "startMs": 221380,
+      "endMs": 224960,
+      "text": "現行RCSプロファイルで到達まで22分",
+      "rawEntryIds": [
+        "whisper-66"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-067",
+      "startMs": 224960,
+      "endMs": 226980,
+      "text": "ビフォーメインアップチェックリスト",
+      "rawEntryIds": [
+        "whisper-67"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-068",
+      "startMs": 226980,
+      "endMs": 229200,
+      "text": "外部状態問題なし",
+      "rawEntryIds": [
+        "whisper-68"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-069",
+      "startMs": 229200,
+      "endMs": 230820,
+      "text": "外角クラックなし",
+      "rawEntryIds": [
+        "whisper-69"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-070",
+      "startMs": 230820,
+      "endMs": 232640,
+      "text": "RCSノズル開票",
+      "rawEntryIds": [
+        "whisper-70"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-071",
+      "startMs": 232640,
+      "endMs": 235880,
+      "text": "式プレヒート温度412度",
+      "rawEntryIds": [
+        "whisper-71"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-072",
+      "startMs": 235880,
+      "endMs": 238640,
+      "text": "適正値燃料残量は問題なし",
+      "rawEntryIds": [
+        "whisper-72"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-073",
+      "startMs": 238640,
+      "endMs": 240300,
+      "text": "冷却計圧力",
+      "rawEntryIds": [
+        "whisper-73"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-074",
+      "startMs": 240300,
+      "endMs": 242780,
+      "text": "一時計2.34メガパスカル",
+      "rawEntryIds": [
+        "whisper-74"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-075",
+      "startMs": 242780,
+      "endMs": 245140,
+      "text": "二時計1.18メガパスカル",
+      "rawEntryIds": [
+        "whisper-75"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-076",
+      "startMs": 245140,
+      "endMs": 246180,
+      "text": "問題なし",
+      "rawEntryIds": [
+        "whisper-76"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-077",
+      "startMs": 246180,
+      "endMs": 249060,
+      "text": "ビフォーメインアップチェックリストコンプリート",
+      "rawEntryIds": [
+        "whisper-77"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-078",
+      "startMs": 249060,
+      "endMs": 251480,
+      "text": "あんたも座れば",
+      "rawEntryIds": [
+        "whisper-78"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-079",
+      "startMs": 251480,
+      "endMs": 253720,
+      "text": "座ることに意味があるのなら",
+      "rawEntryIds": [
+        "whisper-79"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-080",
+      "startMs": 253720,
+      "endMs": 257200,
+      "text": "何のために機械が人型になったと思ってんのさ",
+      "rawEntryIds": [
+        "whisper-80"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-081",
+      "startMs": 257200,
+      "endMs": 261820,
+      "text": "全く人型にしろとは頼んでいません",
+      "rawEntryIds": [
+        "whisper-81",
+        "whisper-82"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-082",
+      "startMs": 261820,
+      "endMs": 262780,
+      "text": "そうかい",
+      "rawEntryIds": [
+        "whisper-83"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-083",
+      "startMs": 263780,
+      "endMs": 267920,
+      "text": "じゃあな火星また来るよ",
+      "rawEntryIds": [
+        "whisper-84"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-084",
+      "startMs": 267920,
+      "endMs": 270720,
+      "text": "不安なら受けなければよかったのでは",
+      "rawEntryIds": [
+        "whisper-85"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-085",
+      "startMs": 270720,
+      "endMs": 273120,
+      "text": "そうだな後悔してる",
+      "rawEntryIds": [
+        "whisper-86"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-086",
+      "startMs": 273120,
+      "endMs": 275740,
+      "text": "そうですか",
+      "rawEntryIds": [
+        "whisper-87"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-087",
+      "startMs": 275740,
+      "endMs": 278340,
+      "text": "火星の視直径",
+      "rawEntryIds": [
+        "whisper-88"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-088",
+      "startMs": 278340,
+      "endMs": 280320,
+      "text": "後方カメラで52度",
+      "rawEntryIds": [
+        "whisper-89"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-089",
+      "startMs": 280320,
+      "endMs": 281640,
+      "text": "極寒を確認",
+      "rawEntryIds": [
+        "whisper-90"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-090",
+      "startMs": 281640,
+      "endMs": 283240,
+      "text": "外周マーカー",
+      "rawEntryIds": [
+        "whisper-91"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-091",
+      "startMs": 283240,
+      "endMs": 284640,
+      "text": "レーダー圏内に入りました",
+      "rawEntryIds": [
+        "whisper-92"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-092",
+      "startMs": 284640,
+      "endMs": 287060,
+      "text": "こちら火星交換性",
+      "rawEntryIds": [
+        "whisper-93"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-093",
+      "startMs": 287060,
+      "endMs": 289040,
+      "text": "機器は安全圏外に到達",
+      "rawEntryIds": [
+        "whisper-94"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-094",
+      "startMs": 289040,
+      "endMs": 291660,
+      "text": "核融合パルス式の点火を許可します",
+      "rawEntryIds": [
+        "whisper-95"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-095",
+      "startMs": 291660,
+      "endMs": 293700,
+      "text": "安全な航海を",
+      "rawEntryIds": [
+        "whisper-96"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-096",
+      "startMs": 293700,
+      "endMs": 295360,
+      "text": "感謝する",
+      "rawEntryIds": [
+        "whisper-97"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-097",
+      "startMs": 295360,
+      "endMs": 298900,
+      "text": "そちらの空をあまり明るくしないように心がけるよ",
+      "rawEntryIds": [
+        "whisper-98"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-098",
+      "startMs": 298900,
+      "endMs": 301300,
+      "text": "メインアップ準備",
+      "rawEntryIds": [
+        "whisper-99"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-099",
+      "startMs": 301300,
+      "endMs": 304100,
+      "text": "DHE3カートリッジ1番装填",
+      "rawEntryIds": [
+        "whisper-100"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-100",
+      "startMs": 304100,
+      "endMs": 305220,
+      "text": "核融合パルスロ",
+      "rawEntryIds": [
+        "whisper-101"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-101",
+      "startMs": 305220,
+      "endMs": 308180,
+      "text": "点火温度到達まで8秒",
+      "rawEntryIds": [
+        "whisper-102"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-102",
+      "startMs": 308180,
+      "endMs": 309380,
+      "text": "重力影響",
+      "rawEntryIds": [
+        "whisper-103"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-103",
+      "startMs": 309380,
+      "endMs": 310740,
+      "text": "許容範囲内",
+      "rawEntryIds": [
+        "whisper-104"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-104",
+      "startMs": 310740,
+      "endMs": 311780,
+      "text": "推進補助室",
+      "rawEntryIds": [
+        "whisper-105"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-105",
+      "startMs": 311780,
+      "endMs": 313060,
+      "text": "RCS圧",
+      "rawEntryIds": [
+        "whisper-106"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-106",
+      "startMs": 313060,
+      "endMs": 315940,
+      "text": "安定巡航加速で鳴らす",
+      "rawEntryIds": [
+        "whisper-107",
+        "whisper-108"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-107",
+      "startMs": 315940,
+      "endMs": 318340,
+      "text": "いきなりフルバーンは骨格に悪いから",
+      "rawEntryIds": [
+        "whisper-109"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-108",
+      "startMs": 318340,
+      "endMs": 322180,
+      "text": "了解露出力は65%に設定",
+      "rawEntryIds": [
+        "whisper-110",
+        "whisper-111"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-109",
+      "startMs": 322180,
+      "endMs": 325340,
+      "text": "想定水力は6.3メガニュートン",
+      "rawEntryIds": [
+        "whisper-112"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-110",
+      "startMs": 325340,
+      "endMs": 326120,
+      "text": "コンファーム",
+      "rawEntryIds": [
+        "whisper-113"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-111",
+      "startMs": 326120,
+      "endMs": 328600,
+      "text": "行こう",
+      "rawEntryIds": [
+        "whisper-114"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-112",
+      "startMs": 328600,
+      "endMs": 330400,
+      "text": "メインアップ",
+      "rawEntryIds": [
+        "whisper-115"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-113",
+      "startMs": 330400,
+      "endMs": 332640,
+      "text": "主機アームド",
+      "rawEntryIds": [
+        "whisper-116"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-114",
+      "startMs": 332640,
+      "endMs": 334380,
+      "text": "衝撃に備えてください",
+      "rawEntryIds": [
+        "whisper-117"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-115",
+      "startMs": 334380,
+      "endMs": 335820,
+      "text": "放射線レベル",
+      "rawEntryIds": [
+        "whisper-118"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-116",
+      "startMs": 335820,
+      "endMs": 336780,
+      "text": "許容範囲内",
+      "rawEntryIds": [
+        "whisper-119"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-117",
+      "startMs": 336780,
+      "endMs": 339940,
+      "text": "543",
+      "rawEntryIds": [
+        "whisper-120",
+        "whisper-121",
+        "whisper-122"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-118",
+      "startMs": 339940,
+      "endMs": 343400,
+      "text": "21天下",
+      "rawEntryIds": [
+        "whisper-123",
+        "whisper-124",
+        "whisper-125"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-119",
+      "startMs": 343400,
+      "endMs": 353080,
+      "text": "これだけ離れても火星からは見えてるんだろうな",
+      "rawEntryIds": [
+        "whisper-126"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-120",
+      "startMs": 353080,
+      "endMs": 356100,
+      "text": "25万キロまでは肉眼にて視認できます",
+      "rawEntryIds": [
+        "whisper-127"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-121",
+      "startMs": 356100,
+      "endMs": 359020,
+      "text": "流れ星だと思ってくれればいいけど",
+      "rawEntryIds": [
+        "whisper-128"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-122",
+      "startMs": 359020,
+      "endMs": 361420,
+      "text": "火星の住民も慣れっ子ですから",
+      "rawEntryIds": [
+        "whisper-129"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-123",
+      "startMs": 361420,
+      "endMs": 363260,
+      "text": "なんとも思わないでしょうね",
+      "rawEntryIds": [
+        "whisper-130"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-124",
+      "startMs": 363260,
+      "endMs": 365260,
+      "text": "お前夢がねえよな",
+      "rawEntryIds": [
+        "whisper-131"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-125",
+      "startMs": 365260,
+      "endMs": 368300,
+      "text": "夢で船が動かせるのであれば",
+      "rawEntryIds": [
+        "whisper-132"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-126",
+      "startMs": 368300,
+      "endMs": 370260,
+      "text": "そういうところだぞ",
+      "rawEntryIds": [
+        "whisper-133"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-127",
+      "startMs": 370260,
+      "endMs": 374080,
+      "text": "露出力65%",
+      "rawEntryIds": [
+        "whisper-134"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-128",
+      "startMs": 374080,
+      "endMs": 377120,
+      "text": "推進効率-1.8%",
+      "rawEntryIds": [
+        "whisper-135"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-129",
+      "startMs": 377120,
+      "endMs": 378360,
+      "text": "骨格歪み",
+      "rawEntryIds": [
+        "whisper-136"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-130",
+      "startMs": 378360,
+      "endMs": 379540,
+      "text": "許容範囲内",
+      "rawEntryIds": [
+        "whisper-137"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-131",
+      "startMs": 379540,
+      "endMs": 382180,
+      "text": "どちらに?",
+      "rawEntryIds": [
+        "whisper-138"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-132",
+      "startMs": 382660,
+      "endMs": 383260,
+      "text": "メスルーム",
+      "rawEntryIds": [
+        "whisper-139"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-133",
+      "startMs": 383260,
+      "endMs": 384360,
+      "text": "お腹減った",
+      "rawEntryIds": [
+        "whisper-140"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-134",
+      "startMs": 384360,
+      "endMs": 386720,
+      "text": "そうですか",
+      "rawEntryIds": [
+        "whisper-141"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-135",
+      "startMs": 393260,
+      "endMs": 395260,
+      "text": "ここはメスルームではありませんよ",
+      "rawEntryIds": [
+        "whisper-142"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-136",
+      "startMs": 395880,
+      "endMs": 399220,
+      "text": "迷うのは人生だけにしてください",
+      "rawEntryIds": [
+        "whisper-143"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-137",
+      "startMs": 399220,
+      "endMs": 401260,
+      "text": "別に迷ったつもりはないけど",
+      "rawEntryIds": [
+        "whisper-144"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-138",
+      "startMs": 402260,
+      "endMs": 404260,
+      "text": "そうでしょうか",
+      "rawEntryIds": [
+        "whisper-145"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-139",
+      "startMs": 404260,
+      "endMs": 408820,
+      "text": "木星の嵐の回廊",
+      "rawEntryIds": [
+        "whisper-146"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-140",
+      "startMs": 408820,
+      "endMs": 412260,
+      "text": "このルートを開拓したのは私の親父なんだよね",
+      "rawEntryIds": [
+        "whisper-147"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-141",
+      "startMs": 412260,
+      "endMs": 415220,
+      "text": "港湾公社から独立した後",
+      "rawEntryIds": [
+        "whisper-148"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-142",
+      "startMs": 415220,
+      "endMs": 419320,
+      "text": "小型貨物船で木星圏への速達配送をするために",
+      "rawEntryIds": [
+        "whisper-149"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-143",
+      "startMs": 419320,
+      "endMs": 425320,
+      "text": "木星赤道面の磁気嵐を横断して最短距離でガニメデに向かう航路を編み出した",
+      "rawEntryIds": [
+        "whisper-150"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-144",
+      "startMs": 425320,
+      "endMs": 427320,
+      "text": "回廊を抜けるには",
+      "rawEntryIds": [
+        "whisper-151"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-145",
+      "startMs": 427320,
+      "endMs": 431320,
+      "text": "光転速度が速いイオにぴったり軌道を差し込むだけじゃなく",
+      "rawEntryIds": [
+        "whisper-152"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-146",
+      "startMs": 431320,
+      "endMs": 434320,
+      "text": "イオの超積力による機体の歪みや",
+      "rawEntryIds": [
+        "whisper-153"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-147",
+      "startMs": 434320,
+      "endMs": 438320,
+      "text": "イオの火山活動によるセンサー系の乱れにも対処しなくちゃならない",
+      "rawEntryIds": [
+        "whisper-154"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-148",
+      "startMs": 438320,
+      "endMs": 443320,
+      "text": "回廊を抜けてもペリジュピターでのオーバースに失敗すれば",
+      "rawEntryIds": [
+        "whisper-155"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-149",
+      "startMs": 443320,
+      "endMs": 451320,
+      "text": "木星の重力井戸に深く入りすぎたまま軌道が閉じ大気圏に捉えられ跡形もなく飲み込まれる",
+      "rawEntryIds": [
+        "whisper-156"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-150",
+      "startMs": 451320,
+      "endMs": 454320,
+      "text": "まともな人間が取る航路じゃない",
+      "rawEntryIds": [
+        "whisper-157"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-151",
+      "startMs": 454320,
+      "endMs": 457320,
+      "text": "でも親父だけはすべて成功してきた",
+      "rawEntryIds": [
+        "whisper-158"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-152",
+      "startMs": 457320,
+      "endMs": 461320,
+      "text": "木星の磁気嵐は当時から2倍以上の規模になっています",
+      "rawEntryIds": [
+        "whisper-159"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-153",
+      "startMs": 461320,
+      "endMs": 463320,
+      "text": "単純な比較はできません",
+      "rawEntryIds": [
+        "whisper-160"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-154",
+      "startMs": 463320,
+      "endMs": 468320,
+      "text": "それに何十隻もの船が嵐の回廊に挑んで失敗してきました",
+      "rawEntryIds": [
+        "whisper-161"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-155",
+      "startMs": 468320,
+      "endMs": 471320,
+      "text": "わずか14時間の短縮のためにです",
+      "rawEntryIds": [
+        "whisper-162"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-156",
+      "startMs": 471320,
+      "endMs": 475320,
+      "text": "周回航路を取れば安全にガニメデに到達できます",
+      "rawEntryIds": [
+        "whisper-163"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-157",
+      "startMs": 475320,
+      "endMs": 481320,
+      "text": "わざわざ無謀な航路を取って命を危険にさらす必要はないのではないでしょうか",
+      "rawEntryIds": [
+        "whisper-164"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-158",
+      "startMs": 481320,
+      "endMs": 485320,
+      "text": "2を届けることがあなたの仕事です",
+      "rawEntryIds": [
+        "whisper-165"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-159",
+      "startMs": 485320,
+      "endMs": 489320,
+      "text": "そうかもね",
+      "rawEntryIds": [
+        "whisper-166"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-160",
+      "startMs": 489320,
+      "endMs": 493320,
+      "text": "いつかこの手で通ってみたいね",
+      "rawEntryIds": [
+        "whisper-167"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-161",
+      "startMs": 493320,
+      "endMs": 496320,
+      "text": "周回航路のプランも作っておいて",
+      "rawEntryIds": [
+        "whisper-168"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-162",
+      "startMs": 496320,
+      "endMs": 498320,
+      "text": "負けず嫌いですね",
+      "rawEntryIds": [
+        "whisper-169"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-163",
+      "startMs": 498320,
+      "endMs": 499320,
+      "text": "馬鹿だな",
+      "rawEntryIds": [
+        "whisper-170"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-164",
+      "startMs": 499320,
+      "endMs": 502320,
+      "text": "船は夢が動かすんだよ",
+      "rawEntryIds": [
+        "whisper-171"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-165",
+      "startMs": 504320,
+      "endMs": 506320,
+      "text": "馬鹿ですね",
+      "rawEntryIds": [
+        "whisper-172"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-166",
+      "startMs": 506320,
+      "endMs": 509320,
+      "text": "船を動かすのは重水素とヘリウム3です",
+      "rawEntryIds": [
+        "whisper-173"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-167",
+      "startMs": 509320,
+      "endMs": 512320,
+      "text": "そういうところ誰に似たんだか",
+      "rawEntryIds": [
+        "whisper-174"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-168",
+      "startMs": 512320,
+      "endMs": 515320,
+      "text": "航路前方に不明な船舶と光信号あり",
+      "rawEntryIds": [
+        "whisper-175"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-169",
+      "startMs": 515320,
+      "endMs": 517320,
+      "text": "通常商業ルートには該当せず",
+      "rawEntryIds": [
+        "whisper-176"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-170",
+      "startMs": 517320,
+      "endMs": 520320,
+      "text": "発進間隔は一定ですが",
+      "rawEntryIds": [
+        "whisper-177"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-171",
+      "startMs": 520320,
+      "endMs": 522320,
+      "text": "不合方式が古いです",
+      "rawEntryIds": [
+        "whisper-178"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-172",
+      "startMs": 522320,
+      "endMs": 524320,
+      "text": "公安のビーコンじゃないな",
+      "rawEntryIds": [
+        "whisper-179"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-173",
+      "startMs": 524320,
+      "endMs": 526320,
+      "text": "識別パターンは非公式",
+      "rawEntryIds": [
+        "whisper-180"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-174",
+      "startMs": 526320,
+      "endMs": 529320,
+      "text": "接近速度は相対0.3km毎秒",
+      "rawEntryIds": [
+        "whisper-181"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-175",
+      "startMs": 529320,
+      "endMs": 532320,
+      "text": "こちらの航路に合わせる動きをとっています",
+      "rawEntryIds": [
+        "whisper-182"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-176",
+      "startMs": 532320,
+      "endMs": 537320,
+      "text": "こんなオンボロ小型船にちょっかいをかけてくる奴は一人しかいない",
+      "rawEntryIds": [
+        "whisper-183"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-177",
+      "startMs": 537320,
+      "endMs": 539320,
+      "text": "賢をつないで",
+      "rawEntryIds": [
+        "whisper-184"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-178",
+      "startMs": 539320,
+      "endMs": 540320,
+      "text": "つなぎます",
+      "rawEntryIds": [
+        "whisper-185"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-179",
+      "startMs": 540320,
+      "endMs": 546320,
+      "text": "火星を出てすぐこんなところで会うなんてね",
+      "rawEntryIds": [
+        "whisper-186"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-180",
+      "startMs": 546320,
+      "endMs": 548320,
+      "text": "偶然ってやつかな",
+      "rawEntryIds": [
+        "whisper-187"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-181",
+      "startMs": 548320,
+      "endMs": 553320,
+      "text": "私もこんなところでお前の耳障りな声を聞くとは思わなかったよ",
+      "rawEntryIds": [
+        "whisper-188"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-182",
+      "startMs": 553320,
+      "endMs": 556320,
+      "text": "偶然でこんなところに来る奴はいない",
+      "rawEntryIds": [
+        "whisper-189"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-183",
+      "startMs": 556320,
+      "endMs": 558320,
+      "text": "お前、例の依頼受けたらしいな",
+      "rawEntryIds": [
+        "whisper-190"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-184",
+      "startMs": 558320,
+      "endMs": 560320,
+      "text": "だったらなんだよ",
+      "rawEntryIds": [
+        "whisper-191"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-185",
+      "startMs": 560320,
+      "endMs": 562320,
+      "text": "お前の罪に人間だぞ",
+      "rawEntryIds": [
+        "whisper-192"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-186",
+      "startMs": 562320,
+      "endMs": 566320,
+      "text": "は?お前が優先スロットで火星を出発した直後",
+      "rawEntryIds": [
+        "whisper-193",
+        "whisper-194"
+      ],
+      "mergeReasons": [
+        "small_gap"
+      ]
+    },
+    {
+      "lineId": "ep01-line-187",
+      "startMs": 566320,
+      "endMs": 568320,
+      "text": "公安回線がロックダウンされた",
+      "rawEntryIds": [
+        "whisper-195"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-188",
+      "startMs": 568320,
+      "endMs": 573320,
+      "text": "直後に火星の佐々木亭が何隻も木星方向に出発していくのが見えた",
+      "rawEntryIds": [
+        "whisper-196"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-189",
+      "startMs": 573320,
+      "endMs": 578320,
+      "text": "噂だと地球圏の保安亭も同じく木星に向けて動き出してるらしい",
+      "rawEntryIds": [
+        "whisper-197"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-190",
+      "startMs": 578320,
+      "endMs": 583320,
+      "text": "地球圏の保安亭と火星圏の佐々木亭どっちも本気で探してる",
+      "rawEntryIds": [
+        "whisper-198"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-191",
+      "startMs": 583320,
+      "endMs": 586320,
+      "text": "組合は私を打ったのか",
+      "rawEntryIds": [
+        "whisper-199"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-192",
+      "startMs": 586320,
+      "endMs": 588320,
+      "text": "売られたなら火星圏で抑えられてる",
+      "rawEntryIds": [
+        "whisper-200"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-193",
+      "startMs": 588320,
+      "endMs": 590320,
+      "text": "それは嬉しいね",
+      "rawEntryIds": [
+        "whisper-201"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-194",
+      "startMs": 590320,
+      "endMs": 594320,
+      "text": "火星と地球の間で暗号化通信が複数回走ってる",
+      "rawEntryIds": [
+        "whisper-202"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-195",
+      "startMs": 594320,
+      "endMs": 598320,
+      "text": "あいつらが強調することなんて生のコンテナ以外ありえない",
+      "rawEntryIds": [
+        "whisper-203"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-196",
+      "startMs": 598320,
+      "endMs": 601320,
+      "text": "あいつらは機械頼みの送船しかできないから",
+      "rawEntryIds": [
+        "whisper-204"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-197",
+      "startMs": 601320,
+      "endMs": 604320,
+      "text": "接触は木星へのエントリーだろうな",
+      "rawEntryIds": [
+        "whisper-205"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-198",
+      "startMs": 604320,
+      "endMs": 607320,
+      "text": "2を回収されたらそのまま落とされるぞ",
+      "rawEntryIds": [
+        "whisper-206"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-199",
+      "startMs": 607320,
+      "endMs": 608320,
+      "text": "それどうも",
+      "rawEntryIds": [
+        "whisper-207"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-200",
+      "startMs": 608320,
+      "endMs": 610320,
+      "text": "あいつらにとってみれば",
+      "rawEntryIds": [
+        "whisper-208"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-201",
+      "startMs": 610320,
+      "endMs": 614320,
+      "text": "嵐の回廊もそこまで難易度が高い航路じゃない",
+      "rawEntryIds": [
+        "whisper-209"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-202",
+      "startMs": 614320,
+      "endMs": 616320,
+      "text": "なんとかして逃げ切れ",
+      "rawEntryIds": [
+        "whisper-210"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-203",
+      "startMs": 616320,
+      "endMs": 619320,
+      "text": "なんとかして逃げ切れね",
+      "rawEntryIds": [
+        "whisper-211"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-204",
+      "startMs": 619320,
+      "endMs": 622320,
+      "text": "まったくとんでもない荷をつかまされたな",
+      "rawEntryIds": [
+        "whisper-212"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-205",
+      "startMs": 622320,
+      "endMs": 626320,
+      "text": "コンテナの外部放射線射兵レベルはA30でした",
+      "rawEntryIds": [
+        "whisper-213"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-206",
+      "startMs": 626320,
+      "endMs": 629320,
+      "text": "あのコンテナほとんどが射兵材かよ",
+      "rawEntryIds": [
+        "whisper-214"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-207",
+      "startMs": 629320,
+      "endMs": 632320,
+      "text": "通常の貨物にしては射兵が高すぎますし",
+      "rawEntryIds": [
+        "whisper-215"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-208",
+      "startMs": 632320,
+      "endMs": 636320,
+      "text": "植物や飼料をわざわざ急行便に乗せる意味がありません",
+      "rawEntryIds": [
+        "whisper-216"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-209",
+      "startMs": 636320,
+      "endMs": 639320,
+      "text": "高射兵かつ急行となれば生きていて",
+      "rawEntryIds": [
+        "whisper-217"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-210",
+      "startMs": 639320,
+      "endMs": 643320,
+      "text": "放射線被曝を避けなければならない対象が",
+      "rawEntryIds": [
+        "whisper-218"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-211",
+      "startMs": 643320,
+      "endMs": 645320,
+      "text": "格納されていると考えるのが妥当です",
+      "rawEntryIds": [
+        "whisper-219"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-212",
+      "startMs": 645320,
+      "endMs": 648320,
+      "text": "じゃあ人間だな",
+      "rawEntryIds": [
+        "whisper-220"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-213",
+      "startMs": 648320,
+      "endMs": 653320,
+      "text": "お前これ本気で言ってんのか",
+      "rawEntryIds": [
+        "whisper-221"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-214",
+      "startMs": 653320,
+      "endMs": 656320,
+      "text": "あなたの要望をすべて叶えるとすると",
+      "rawEntryIds": [
+        "whisper-222"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-215",
+      "startMs": 656320,
+      "endMs": 659320,
+      "text": "木星への直接エントリーしか方法はありません",
+      "rawEntryIds": [
+        "whisper-223"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-216",
+      "startMs": 659320,
+      "endMs": 662320,
+      "text": "木星赤道面にフルバーンでエントリーし",
+      "rawEntryIds": [
+        "whisper-224"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-217",
+      "startMs": 662320,
+      "endMs": 665320,
+      "text": "高エネルギー直接繊維でガニメデに接近します",
+      "rawEntryIds": [
+        "whisper-225"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-218",
+      "startMs": 665320,
+      "endMs": 667320,
+      "text": "この航路であれば",
+      "rawEntryIds": [
+        "whisper-226"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-219",
+      "startMs": 667320,
+      "endMs": 671320,
+      "text": "嵐の回廊よりもさらに10時間早くガニメデに到達できます",
+      "rawEntryIds": [
+        "whisper-227"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-220",
+      "startMs": 671320,
+      "endMs": 675320,
+      "text": "オーバース時の木星高度は1.5RJ",
+      "rawEntryIds": [
+        "whisper-228"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-221",
+      "startMs": 675320,
+      "endMs": 679320,
+      "text": "超積力による機体応力は数百トン相当です",
+      "rawEntryIds": [
+        "whisper-229"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-222",
+      "startMs": 679320,
+      "endMs": 682320,
+      "text": "小型船なら耐えられる可能性がありますが",
+      "rawEntryIds": [
+        "whisper-230"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-223",
+      "startMs": 682320,
+      "endMs": 685320,
+      "text": "地球や火星の大型艇ではまず耐えられないでしょうね",
+      "rawEntryIds": [
+        "whisper-231"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-224",
+      "startMs": 685320,
+      "endMs": 687320,
+      "text": "この船だって耐えられないだろ",
+      "rawEntryIds": [
+        "whisper-232"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-225",
+      "startMs": 687320,
+      "endMs": 691320,
+      "text": "85%の確率で基礎骨格が破断します",
+      "rawEntryIds": [
+        "whisper-233"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-226",
+      "startMs": 691320,
+      "endMs": 693320,
+      "text": "終わってんじゃねえか",
+      "rawEntryIds": [
+        "whisper-234"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-227",
+      "startMs": 693320,
+      "endMs": 696320,
+      "text": "乗務員は重力保護で守られますから大丈夫ですよ",
+      "rawEntryIds": [
+        "whisper-235"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-228",
+      "startMs": 696320,
+      "endMs": 699320,
+      "text": "船が空中分解するまではな",
+      "rawEntryIds": [
+        "whisper-236"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-229",
+      "startMs": 699320,
+      "endMs": 701320,
+      "text": "オーバースのウィンドウは?",
+      "rawEntryIds": [
+        "whisper-237"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-230",
+      "startMs": 701320,
+      "endMs": 703320,
+      "text": "嵐の回廊では数時間ありましたが",
+      "rawEntryIds": [
+        "whisper-238"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-231",
+      "startMs": 703320,
+      "endMs": 705320,
+      "text": "ダイレクトエントリーの場合",
+      "rawEntryIds": [
+        "whisper-239"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-232",
+      "startMs": 705320,
+      "endMs": 708320,
+      "text": "ターゲットウィンドウはプラスマイナス5分です",
+      "rawEntryIds": [
+        "whisper-240"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-233",
+      "startMs": 708320,
+      "endMs": 712320,
+      "text": "必要デルタVはマイナス2.3km毎秒",
+      "rawEntryIds": [
+        "whisper-241"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-234",
+      "startMs": 712320,
+      "endMs": 716320,
+      "text": "中央を180秒以上外せばガニメデ交差は消失",
+      "rawEntryIds": [
+        "whisper-242"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-235",
+      "startMs": 716320,
+      "endMs": 718320,
+      "text": "実木星の重力井戸に落ちます",
+      "rawEntryIds": [
+        "whisper-243"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-236",
+      "startMs": 718320,
+      "endMs": 723320,
+      "text": "その前にアビオが焼き切れて放射線に焼かれそうだな",
+      "rawEntryIds": [
+        "whisper-244"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-237",
+      "startMs": 723320,
+      "endMs": 726320,
+      "text": "木星大気にじっくり潰されるよりはマシですね",
+      "rawEntryIds": [
+        "whisper-245"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-238",
+      "startMs": 726320,
+      "endMs": 729320,
+      "text": "考えたくもない",
+      "rawEntryIds": [
+        "whisper-246"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-239",
+      "startMs": 729320,
+      "endMs": 732320,
+      "text": "それでどうしますか?",
+      "rawEntryIds": [
+        "whisper-247"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-240",
+      "startMs": 732320,
+      "endMs": 735320,
+      "text": "どうもこうもやってやるしかないだろ",
+      "rawEntryIds": [
+        "whisper-248"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-241",
+      "startMs": 735320,
+      "endMs": 739320,
+      "text": "どうせ追手につかまればそれで終わりなんだ",
+      "rawEntryIds": [
+        "whisper-249"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-242",
+      "startMs": 739320,
+      "endMs": 741320,
+      "text": "かけてみようぜ",
+      "rawEntryIds": [
+        "whisper-250"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-243",
+      "startMs": 741320,
+      "endMs": 743320,
+      "text": "そうこなくちゃですね",
+      "rawEntryIds": [
+        "whisper-251"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-244",
+      "startMs": 743320,
+      "endMs": 745320,
+      "text": "お前なんか楽しんでないか",
+      "rawEntryIds": [
+        "whisper-252"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-245",
+      "startMs": 745320,
+      "endMs": 749320,
+      "text": "木星大気の風は時速480kmなんですって",
+      "rawEntryIds": [
+        "whisper-253"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-246",
+      "startMs": 749320,
+      "endMs": 751320,
+      "text": "やめろって縁起でもない",
+      "rawEntryIds": [
+        "whisper-254"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-247",
+      "startMs": 751320,
+      "endMs": 754320,
+      "text": "ビフォーエントリーチェックリスト",
+      "rawEntryIds": [
+        "whisper-255"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-248",
+      "startMs": 754320,
+      "endMs": 757320,
+      "text": "露心401度で安定、冷却済み",
+      "rawEntryIds": [
+        "whisper-256"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-249",
+      "startMs": 757320,
+      "endMs": 762320,
+      "text": "一時骨格応力値105%、設計値範囲内",
+      "rawEntryIds": [
+        "whisper-257"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-250",
+      "startMs": 762320,
+      "endMs": 766320,
+      "text": "放射線時期フィールド、到着時残寿命42分",
+      "rawEntryIds": [
+        "whisper-258"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-251",
+      "startMs": 766320,
+      "endMs": 768320,
+      "text": "そんなに短いか",
+      "rawEntryIds": [
+        "whisper-259"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-252",
+      "startMs": 768320,
+      "endMs": 771320,
+      "text": "ダイレクトエントリーでは高放射圏に直接突っ込みますから",
+      "rawEntryIds": [
+        "whisper-260"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-253",
+      "startMs": 771320,
+      "endMs": 774320,
+      "text": "持つだけマシか",
+      "rawEntryIds": [
+        "whisper-261"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-254",
+      "startMs": 774320,
+      "endMs": 776320,
+      "text": "高放計算",
+      "rawEntryIds": [
+        "whisper-262"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-255",
+      "startMs": 776320,
+      "endMs": 778320,
+      "text": "ペリジュピター到達予測まで残り11時間42分",
+      "rawEntryIds": [
+        "whisper-263"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-256",
+      "startMs": 778320,
+      "endMs": 780320,
+      "text": "オーバーアスウィンドウ",
+      "rawEntryIds": [
+        "whisper-264"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-257",
+      "startMs": 780320,
+      "endMs": 782320,
+      "text": "プラスマイナス5分",
+      "rawEntryIds": [
+        "whisper-265"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-258",
+      "startMs": 782320,
+      "endMs": 784320,
+      "text": "180秒以内、分かってる",
+      "rawEntryIds": [
+        "whisper-266"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-259",
+      "startMs": 784320,
+      "endMs": 790320,
+      "text": "お前気が狂ったか?",
+      "rawEntryIds": [
+        "whisper-267"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-260",
+      "startMs": 790320,
+      "endMs": 792320,
+      "text": "開口一番失礼なやつだな",
+      "rawEntryIds": [
+        "whisper-268"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-261",
+      "startMs": 792320,
+      "endMs": 795320,
+      "text": "お前が木星への直撃コースにいるからだろうが",
+      "rawEntryIds": [
+        "whisper-269"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-262",
+      "startMs": 795320,
+      "endMs": 797320,
+      "text": "そうだった、今思い出したよ",
+      "rawEntryIds": [
+        "whisper-270"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-263",
+      "startMs": 797320,
+      "endMs": 798320,
+      "text": "バカか",
+      "rawEntryIds": [
+        "whisper-271"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-264",
+      "startMs": 798320,
+      "endMs": 802320,
+      "text": "というかついてきてたのかよ、気持ち悪いな",
+      "rawEntryIds": [
+        "whisper-272"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-265",
+      "startMs": 802320,
+      "endMs": 805320,
+      "text": "嵐の回廊のエントリーで合流しようと思ってたんだよ",
+      "rawEntryIds": [
+        "whisper-273"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-266",
+      "startMs": 805320,
+      "endMs": 808320,
+      "text": "そしたら急に方向変えやがって",
+      "rawEntryIds": [
+        "whisper-274"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-267",
+      "startMs": 808320,
+      "endMs": 810320,
+      "text": "エントリーまで残り30秒",
+      "rawEntryIds": [
+        "whisper-275"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-268",
+      "startMs": 810320,
+      "endMs": 811320,
+      "text": "フルバーンで突っ込む",
+      "rawEntryIds": [
+        "whisper-276"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-269",
+      "startMs": 811320,
+      "endMs": 813320,
+      "text": "お前今なんつった",
+      "rawEntryIds": [
+        "whisper-277"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-270",
+      "startMs": 813320,
+      "endMs": 816320,
+      "text": "了解、露出力は100%で設定",
+      "rawEntryIds": [
+        "whisper-278"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-271",
+      "startMs": 816320,
+      "endMs": 819320,
+      "text": "想定水力は9.8MN",
+      "rawEntryIds": [
+        "whisper-279"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-272",
+      "startMs": 819320,
+      "endMs": 821320,
+      "text": "メインアップ",
+      "rawEntryIds": [
+        "whisper-280"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-273",
+      "startMs": 822320,
+      "endMs": 825320,
+      "text": "主機アームド、衝撃に備えてください",
+      "rawEntryIds": [
+        "whisper-281"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-274",
+      "startMs": 825320,
+      "endMs": 827320,
+      "text": "放射線レベル、許容範囲内",
+      "rawEntryIds": [
+        "whisper-282"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-275",
+      "startMs": 827320,
+      "endMs": 829320,
+      "text": "何か言い残すことはあるか",
+      "rawEntryIds": [
+        "whisper-283"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-276",
+      "startMs": 829320,
+      "endMs": 831320,
+      "text": "こっちのセリフだバカ",
+      "rawEntryIds": [
+        "whisper-284"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-277",
+      "startMs": 831320,
+      "endMs": 833320,
+      "text": "ガニメで出会おうぜ",
+      "rawEntryIds": [
+        "whisper-285"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-278",
+      "startMs": 833320,
+      "endMs": 840320,
+      "text": "5、4、3、2、1、点火",
+      "rawEntryIds": [
+        "whisper-286"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-279",
+      "startMs": 840320,
+      "endMs": 856320,
+      "text": "加速良好、進入コース安定",
+      "rawEntryIds": [
+        "whisper-287"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-280",
+      "startMs": 856320,
+      "endMs": 860320,
+      "text": "嵐の回廊じゃ味わえない光景だな、きっと",
+      "rawEntryIds": [
+        "whisper-288"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-281",
+      "startMs": 860320,
+      "endMs": 863320,
+      "text": "どうでしょう、ペリジュピターの景色は違うかもしれませんが",
+      "rawEntryIds": [
+        "whisper-289"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-282",
+      "startMs": 864320,
+      "endMs": 866320,
+      "text": "デカすぎて距離感がつかめなくなるな",
+      "rawEntryIds": [
+        "whisper-290"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-283",
+      "startMs": 867320,
+      "endMs": 869320,
+      "text": "ガリレオ探査機の気分ですね",
+      "rawEntryIds": [
+        "whisper-291"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-284",
+      "startMs": 869320,
+      "endMs": 871320,
+      "text": "それ木星に突っ込んだ探査機だろ",
+      "rawEntryIds": [
+        "whisper-292"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-285",
+      "startMs": 872320,
+      "endMs": 873320,
+      "text": "我々の先輩です",
+      "rawEntryIds": [
+        "whisper-293"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-286",
+      "startMs": 874320,
+      "endMs": 875320,
+      "text": "だからやめろって",
+      "rawEntryIds": [
+        "whisper-294"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-287",
+      "startMs": 877320,
+      "endMs": 878320,
+      "text": "まだ後悔してますか?",
+      "rawEntryIds": [
+        "whisper-295"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-288",
+      "startMs": 878320,
+      "endMs": 881320,
+      "text": "今更後悔してももう遅いだろ",
+      "rawEntryIds": [
+        "whisper-296"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-289",
+      "startMs": 881320,
+      "endMs": 882320,
+      "text": "エントリーしちゃったんだから",
+      "rawEntryIds": [
+        "whisper-297"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-290",
+      "startMs": 883320,
+      "endMs": 885320,
+      "text": "まあそうですね、今更です",
+      "rawEntryIds": [
+        "whisper-298"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-291",
+      "startMs": 886320,
+      "endMs": 889320,
+      "text": "しかしでっかいな、木星ってのは近寄ると",
+      "rawEntryIds": [
+        "whisper-299"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-292",
+      "startMs": 889320,
+      "endMs": 893320,
+      "text": "直径は火星の11倍、質量は318倍です",
+      "rawEntryIds": [
+        "whisper-300"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-293",
+      "startMs": 894320,
+      "endMs": 897320,
+      "text": "熱い大気の下には液体水素の海があります",
+      "rawEntryIds": [
+        "whisper-301"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-294",
+      "startMs": 898320,
+      "endMs": 899320,
+      "text": "聞かなきゃよかったよ",
+      "rawEntryIds": [
+        "whisper-302"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-295",
+      "startMs": 901320,
+      "endMs": 903320,
+      "text": "残り1分で磁気圏境界通過",
+      "rawEntryIds": [
+        "whisper-303"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-296",
+      "startMs": 904320,
+      "endMs": 906320,
+      "text": "磁気シールドは最大出力を維持",
+      "rawEntryIds": [
+        "whisper-304"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-297",
+      "startMs": 907320,
+      "endMs": 908320,
+      "text": "被爆計0点リセット",
+      "rawEntryIds": [
+        "whisper-305"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-298",
+      "startMs": 909320,
+      "endMs": 910320,
+      "text": "引き返しますか?",
+      "rawEntryIds": [
+        "whisper-306"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-299",
+      "startMs": 910320,
+      "endMs": 912320,
+      "text": "それは引き返せるときに言ってくれ",
+      "rawEntryIds": [
+        "whisper-307"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-300",
+      "startMs": 913320,
+      "endMs": 914320,
+      "text": "次回から気をつけます",
+      "rawEntryIds": [
+        "whisper-308"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-301",
+      "startMs": 915320,
+      "endMs": 916320,
+      "text": "そうだな",
+      "rawEntryIds": [
+        "whisper-309"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-302",
+      "startMs": 919320,
+      "endMs": 922320,
+      "text": "近点到達まで残り4分50秒",
+      "rawEntryIds": [
+        "whisper-310"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-303",
+      "startMs": 923320,
+      "endMs": 925320,
+      "text": "オーバースウィンド、プラスマイナス180秒",
+      "rawEntryIds": [
+        "whisper-311"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-304",
+      "startMs": 926320,
+      "endMs": 929320,
+      "text": "速度48.9km毎秒、問題なし",
+      "rawEntryIds": [
+        "whisper-312"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-305",
+      "startMs": 930320,
+      "endMs": 932320,
+      "text": "線外放射線レベル上昇中",
+      "rawEntryIds": [
+        "whisper-313"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-306",
+      "startMs": 933320,
+      "endMs": 934320,
+      "text": "現在毎時8シーベルト",
+      "rawEntryIds": [
+        "whisper-314"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-307",
+      "startMs": 935320,
+      "endMs": 936320,
+      "text": "直シールドは稼働中",
+      "rawEntryIds": [
+        "whisper-315"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-308",
+      "startMs": 937320,
+      "endMs": 938320,
+      "text": "超積力は?",
+      "rawEntryIds": [
+        "whisper-316"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-309",
+      "startMs": 939320,
+      "endMs": 942320,
+      "text": "超積力による機体応力は現在130%",
+      "rawEntryIds": [
+        "whisper-317"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-310",
+      "startMs": 943320,
+      "endMs": 945320,
+      "text": "設計上の許容値を上回っています",
+      "rawEntryIds": [
+        "whisper-318"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-311",
+      "startMs": 946320,
+      "endMs": 950320,
+      "text": "直ノズルの焦点ズレによってエンジン出力が6%低下中",
+      "rawEntryIds": [
+        "whisper-319"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-312",
+      "startMs": 950320,
+      "endMs": 952320,
+      "text": "このタイミングでかよ",
+      "rawEntryIds": [
+        "whisper-320"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-313",
+      "startMs": 953320,
+      "endMs": 954320,
+      "text": "オーバース準備",
+      "rawEntryIds": [
+        "whisper-321"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-314",
+      "startMs": 955320,
+      "endMs": 956320,
+      "text": "出力はピークに設定",
+      "rawEntryIds": [
+        "whisper-322"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-315",
+      "startMs": 957320,
+      "endMs": 958320,
+      "text": "規定値を超えています",
+      "rawEntryIds": [
+        "whisper-323"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-316",
+      "startMs": 959320,
+      "endMs": 961320,
+      "text": "フルバースを超える出力はフロの熱余裕を圧縮します",
+      "rawEntryIds": [
+        "whisper-324"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-317",
+      "startMs": 962320,
+      "endMs": 963320,
+      "text": "足りないよりマシだろ",
+      "rawEntryIds": [
+        "whisper-325"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-318",
+      "startMs": 966320,
+      "endMs": 968320,
+      "text": "了解、ピーク出力に設定",
+      "rawEntryIds": [
+        "whisper-326"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-319",
+      "startMs": 969320,
+      "endMs": 970320,
+      "text": "オーバース時間を再計算しました",
+      "rawEntryIds": [
+        "whisper-327"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-320",
+      "startMs": 971320,
+      "endMs": 973320,
+      "text": "近点まで残り15秒",
+      "rawEntryIds": [
+        "whisper-328"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-321",
+      "startMs": 974320,
+      "endMs": 976320,
+      "text": "直ノズル温度920K",
+      "rawEntryIds": [
+        "whisper-329"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-322",
+      "startMs": 977320,
+      "endMs": 978320,
+      "text": "上昇中、オーバース準備",
+      "rawEntryIds": [
+        "whisper-330"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-323",
+      "startMs": 978320,
+      "endMs": 980320,
+      "text": "4.520K",
+      "rawEntryIds": [
+        "whisper-331"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-324",
+      "startMs": 981320,
+      "endMs": 983320,
+      "text": "指揮アームで、衝撃に備えてください",
+      "rawEntryIds": [
+        "whisper-332"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-325",
+      "startMs": 984320,
+      "endMs": 986320,
+      "text": "放射線レベル、許容範囲内",
+      "rawEntryIds": [
+        "whisper-333"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-326",
+      "startMs": 987320,
+      "endMs": 992320,
+      "text": "5、4、3、2、1、点火",
+      "rawEntryIds": [
+        "whisper-334"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-327",
+      "startMs": 1003320,
+      "endMs": 1005320,
+      "text": "エンジン出力110%",
+      "rawEntryIds": [
+        "whisper-335"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-328",
+      "startMs": 1005320,
+      "endMs": 1008320,
+      "text": "想定水力10.7MN",
+      "rawEntryIds": [
+        "whisper-336"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-329",
+      "startMs": 1009320,
+      "endMs": 1012320,
+      "text": "デルタV進行、残り1.8km毎秒",
+      "rawEntryIds": [
+        "whisper-337"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-330",
+      "startMs": 1013320,
+      "endMs": 1016320,
+      "text": "船が鳴いてる",
+      "rawEntryIds": [
+        "whisper-338"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-331",
+      "startMs": 1017320,
+      "endMs": 1018320,
+      "text": "随分余裕じゃないですか",
+      "rawEntryIds": [
+        "whisper-339"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-332",
+      "startMs": 1019320,
+      "endMs": 1022320,
+      "text": "余裕だったらこんな恥ずかしいこと言わないだろ",
+      "rawEntryIds": [
+        "whisper-340"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-333",
+      "startMs": 1022320,
+      "endMs": 1023320,
+      "text": "記録しました",
+      "rawEntryIds": [
+        "whisper-341"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-334",
+      "startMs": 1023320,
+      "endMs": 1027320,
+      "text": "記録しました、モイ",
+      "rawEntryIds": [
+        "whisper-342"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-335",
+      "startMs": 1028320,
+      "endMs": 1032320,
+      "text": "デルタV進行、残り0.3km毎秒",
+      "rawEntryIds": [
+        "whisper-343"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-336",
+      "startMs": 1032320,
+      "endMs": 1036320,
+      "text": "磁気ノズルの応力歪み、許容値を超過",
+      "rawEntryIds": [
+        "whisper-344"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-337",
+      "startMs": 1036320,
+      "endMs": 1041320,
+      "text": "デルタV到達、オーバース終了",
+      "rawEntryIds": [
+        "whisper-345"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-338",
+      "startMs": 1041320,
+      "endMs": 1051320,
+      "text": "コース確定、ガニメで交差軌道に乗りました",
+      "rawEntryIds": [
+        "whisper-346"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-339",
+      "startMs": 1051320,
+      "endMs": 1054320,
+      "text": "水深系に損傷7%",
+      "rawEntryIds": [
+        "whisper-347"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-340",
+      "startMs": 1055320,
+      "endMs": 1059320,
+      "text": "磁気ノズルのコイル応力は、限界値を17秒間超過しました",
+      "rawEntryIds": [
+        "whisper-348"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-341",
+      "startMs": 1060320,
+      "endMs": 1070320,
+      "text": "正直、もう二度とあんな近くでは見たくないな",
+      "rawEntryIds": [
+        "whisper-349"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-342",
+      "startMs": 1070320,
+      "endMs": 1073320,
+      "text": "船体温度、近交点に復帰しました",
+      "rawEntryIds": [
+        "whisper-350"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-343",
+      "startMs": 1074320,
+      "endMs": 1075320,
+      "text": "改めて報告します",
+      "rawEntryIds": [
+        "whisper-351"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-344",
+      "startMs": 1076320,
+      "endMs": 1079320,
+      "text": "磁気ノズルの一部が蘇生変形を起こしています",
+      "rawEntryIds": [
+        "whisper-352"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-345",
+      "startMs": 1080320,
+      "endMs": 1082320,
+      "text": "長時間の高出力運転は危険です",
+      "rawEntryIds": [
+        "whisper-353"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-346",
+      "startMs": 1083320,
+      "endMs": 1084320,
+      "text": "ちょっとは干渉に浸らせろよ",
+      "rawEntryIds": [
+        "whisper-354"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-347",
+      "startMs": 1085320,
+      "endMs": 1086320,
+      "text": "座ってただけでしょ",
+      "rawEntryIds": [
+        "whisper-355"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-348",
+      "startMs": 1087320,
+      "endMs": 1088320,
+      "text": "ナビがそれ言う",
+      "rawEntryIds": [
+        "whisper-356"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-349",
+      "startMs": 1091320,
+      "endMs": 1092320,
+      "text": "おい、やったな",
+      "rawEntryIds": [
+        "whisper-357"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-350",
+      "startMs": 1093320,
+      "endMs": 1094320,
+      "text": "干渉に浸らせろよ",
+      "rawEntryIds": [
+        "whisper-358"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-351",
+      "startMs": 1095320,
+      "endMs": 1096320,
+      "text": "港湾ネットはお前の話で持ちきりだぞ",
+      "rawEntryIds": [
+        "whisper-359"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-352",
+      "startMs": 1097320,
+      "endMs": 1098320,
+      "text": "木製にダイレクトエントリーしたってな",
+      "rawEntryIds": [
+        "whisper-360"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-353",
+      "startMs": 1098320,
+      "endMs": 1100320,
+      "text": "もう二度とごめんだけどな",
+      "rawEntryIds": [
+        "whisper-361"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-354",
+      "startMs": 1101320,
+      "endMs": 1104320,
+      "text": "地球と火星の奴らはのんきに周回航路に回ったよ",
+      "rawEntryIds": [
+        "whisper-362"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-355",
+      "startMs": 1105320,
+      "endMs": 1106320,
+      "text": "お前の24時間前を走ってる",
+      "rawEntryIds": [
+        "whisper-363"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-356",
+      "startMs": 1107320,
+      "endMs": 1109320,
+      "text": "なぁ、後でログ見せてくれよ",
+      "rawEntryIds": [
+        "whisper-364"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-357",
+      "startMs": 1110320,
+      "endMs": 1111320,
+      "text": "ベリジュキターの景色ってどうだった?",
+      "rawEntryIds": [
+        "whisper-365"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-358",
+      "startMs": 1112320,
+      "endMs": 1115320,
+      "text": "磁気フィールドと木製プラズマとのフラッシュで何も見えなかったよ",
+      "rawEntryIds": [
+        "whisper-366"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-359",
+      "startMs": 1116320,
+      "endMs": 1117320,
+      "text": "なんだよ、それつまんねえな",
+      "rawEntryIds": [
+        "whisper-367"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-360",
+      "startMs": 1118320,
+      "endMs": 1119320,
+      "text": "悪かったね",
+      "rawEntryIds": [
+        "whisper-368"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-361",
+      "startMs": 1121320,
+      "endMs": 1122320,
+      "text": "今度は誰?",
+      "rawEntryIds": [
+        "whisper-369"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-362",
+      "startMs": 1123320,
+      "endMs": 1124320,
+      "text": "おそらくガニメデコーの完成かと",
+      "rawEntryIds": [
+        "whisper-370"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-363",
+      "startMs": 1125320,
+      "endMs": 1126320,
+      "text": "ああ、そりゃそうか",
+      "rawEntryIds": [
+        "whisper-371"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-364",
+      "startMs": 1126320,
+      "endMs": 1128320,
+      "text": "こちらガニメデコントロール",
+      "rawEntryIds": [
+        "whisper-372"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-365",
+      "startMs": 1129320,
+      "endMs": 1131320,
+      "text": "見てたぞお前の軌道、なんてやつだ",
+      "rawEntryIds": [
+        "whisper-373"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-366",
+      "startMs": 1132320,
+      "endMs": 1133320,
+      "text": "そりゃどうも",
+      "rawEntryIds": [
+        "whisper-374"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-367",
+      "startMs": 1134320,
+      "endMs": 1135320,
+      "text": "お疲れさん、と言いたいところだが",
+      "rawEntryIds": [
+        "whisper-375"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-368",
+      "startMs": 1136320,
+      "endMs": 1137320,
+      "text": "ガニメデはお前の入港を許可できない",
+      "rawEntryIds": [
+        "whisper-376"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-369",
+      "startMs": 1138320,
+      "endMs": 1141320,
+      "text": "なにそれ、冗談にしちゃ立ちが悪いけど",
+      "rawEntryIds": [
+        "whisper-377"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-370",
+      "startMs": 1142320,
+      "endMs": 1145320,
+      "text": "冗談ではない、お前が運んできた積み荷をガニメデに降ろすわけにはいかない",
+      "rawEntryIds": [
+        "whisper-378"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-371",
+      "startMs": 1146320,
+      "endMs": 1148320,
+      "text": "なんだよ、じゃあ戻れってのか",
+      "rawEntryIds": [
+        "whisper-379"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-372",
+      "startMs": 1148320,
+      "endMs": 1151320,
+      "text": "すまないわ、他の港を渡ってくれ",
+      "rawEntryIds": [
+        "whisper-380"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-373",
+      "startMs": 1151320,
+      "endMs": 1152320,
+      "text": "お前の港を渡ってくれ",
+      "rawEntryIds": [
+        "whisper-381"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-374",
+      "startMs": 1153320,
+      "endMs": 1154320,
+      "text": "お前の港を渡ってくれ",
+      "rawEntryIds": [
+        "whisper-382"
+      ],
+      "mergeReasons": []
+    },
+    {
+      "lineId": "ep01-line-375",
+      "startMs": 1155320,
+      "endMs": 1156320,
+      "text": "お前の港を渡ってくれ",
+      "rawEntryIds": [
+        "whisper-383"
+      ],
+      "mergeReasons": []
+    }
+  ],
+  "extractedAt": "2026-03-01T02:04:49.637Z",
+  "mergeConfig": {
+    "maxGapMs": 300,
+    "minCueDurationMs": 100
+  }
+}

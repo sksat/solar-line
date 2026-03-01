@@ -1897,7 +1897,7 @@ describe("Transcription accuracy data", () => {
     const ep1 = data.episodes.find(e => e.episode === 1);
     assert.ok(ep1, "EP01 should exist");
     assert.equal(ep1.scriptDialogueLines, 229, "EP01 script has 229 dialogue lines");
-    assert.equal(ep1.comparisons.length, 2, "EP01 should have 2 comparisons (VTT + Whisper)");
+    assert.ok(ep1.comparisons.length >= 3, "EP01 should have ≥3 comparisons (VTT + Whisper medium + turbo)");
   });
 
   it("VTT corpus accuracy is ~68%", { skip: !exists ? "no data" : undefined }, () => {
@@ -1923,5 +1923,22 @@ describe("Transcription accuracy data", () => {
     assert.ok(vtt && whisper, "both comparisons should exist");
     assert.ok(whisper.corpusCharacterAccuracy > vtt.corpusCharacterAccuracy,
       "Whisper should have higher corpus accuracy than VTT");
+  });
+
+  it("Whisper turbo corpus accuracy is ~91%", { skip: !exists ? "no data" : undefined }, () => {
+    const ep1 = data.episodes.find(e => e.episode === 1);
+    const turbo = ep1?.comparisons.find(c => c.sourceType === "whisper-turbo");
+    assert.ok(turbo, "Turbo comparison should exist");
+    assert.ok(turbo.corpusCharacterAccuracy >= 0.88 && turbo.corpusCharacterAccuracy <= 0.95,
+      `Turbo accuracy ${turbo.corpusCharacterAccuracy} should be ~91%`);
+  });
+
+  it("Whisper turbo outperforms medium", { skip: !exists ? "no data" : undefined }, () => {
+    const ep1 = data.episodes.find(e => e.episode === 1);
+    const medium = ep1?.comparisons.find(c => c.sourceType === "whisper-medium");
+    const turbo = ep1?.comparisons.find(c => c.sourceType === "whisper-turbo");
+    assert.ok(medium && turbo, "both comparisons should exist");
+    assert.ok(turbo.corpusCharacterAccuracy > medium.corpusCharacterAccuracy,
+      "Turbo should have higher corpus accuracy than medium");
   });
 });

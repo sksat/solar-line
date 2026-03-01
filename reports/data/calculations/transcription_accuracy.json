@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-01T00:58:04.724Z",
+  "generatedAt": "2026-03-01T02:58:05.281Z",
   "episodes": [
     {
       "episode": 1,
@@ -92,6 +92,51 @@
               "scriptText": "このタイミングでかよ…",
               "matchedText": "こちらガニメデコントロール",
               "characterAccuracy": 0.154
+            }
+          ]
+        },
+        {
+          "sourceType": "whisper-turbo",
+          "asrLineCount": 375,
+          "corpusCharacterAccuracy": 0.914,
+          "meanLineCharacterAccuracy": 0.885,
+          "medianLineCharacterAccuracy": 0.958,
+          "matchedLines": 229,
+          "worstLines": [
+            {
+              "scriptLineId": "ep01-sl-213",
+              "speaker": "ケイ",
+              "scriptText": "…５…４…３…２…１　…点火",
+              "matchedText": "船体温度、近交点に復帰しました",
+              "characterAccuracy": 0.071
+            },
+            {
+              "scriptLineId": "ep01-sl-242",
+              "speaker": "主人公",
+              "scriptText": "今度は誰…？",
+              "matchedText": "直シールドは稼働中",
+              "characterAccuracy": 0.111
+            },
+            {
+              "scriptLineId": "ep01-sl-204",
+              "speaker": "主人公",
+              "scriptText": "潮汐力は…？",
+              "matchedText": "長時間の高出力運転は危険です",
+              "characterAccuracy": 0.143
+            },
+            {
+              "scriptLineId": "ep01-sl-240",
+              "speaker": "主人公",
+              "scriptText": "悪かったね…",
+              "matchedText": "港湾公社から独立した後",
+              "characterAccuracy": 0.182
+            },
+            {
+              "scriptLineId": "ep01-sl-038",
+              "speaker": "主人公",
+              "scriptText": "はあ…",
+              "matchedText": "超積力は?",
+              "characterAccuracy": 0.2
             }
           ]
         }

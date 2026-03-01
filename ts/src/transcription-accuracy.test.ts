@@ -361,3 +361,49 @@ describe("EP01 real data accuracy", () => {
     // Note: we don't assert Whisper > VTT since both may struggle with VOICEROID
   });
 });
+
+// ---------------------------------------------------------------------------
+// EP01 Whisper turbo accuracy test
+// ---------------------------------------------------------------------------
+describe("EP01 Whisper turbo accuracy", () => {
+  const dataDir = join(__dirname_local, "..", "..", "reports", "data", "episodes");
+  const scriptExists = existsSync(join(dataDir, "ep01_script.json"));
+  const turboExists = existsSync(join(dataDir, "ep01_lines_whisper_turbo.json"));
+
+  let scriptData: ScriptFileData;
+  let turboData: EpisodeLines;
+  let mediumData: EpisodeLines;
+
+  if (scriptExists) {
+    scriptData = JSON.parse(readFileSync(join(dataDir, "ep01_script.json"), "utf8"));
+  }
+  if (turboExists) {
+    turboData = JSON.parse(readFileSync(join(dataDir, "ep01_lines_whisper_turbo.json"), "utf8"));
+  }
+  const mediumExists = existsSync(join(dataDir, "ep01_lines_whisper.json"));
+  if (mediumExists) {
+    mediumData = JSON.parse(readFileSync(join(dataDir, "ep01_lines_whisper.json"), "utf8"));
+  }
+
+  it("turbo corpus accuracy is above 0.88", { skip: !scriptExists || !turboExists }, () => {
+    const report = compareTranscriptions(scriptData, turboData);
+    assert.ok(report.corpusCharacterAccuracy >= 0.88,
+      `Turbo accuracy unexpectedly low: ${(report.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+    console.log(`  Turbo corpus accuracy: ${(report.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+    console.log(`  Turbo mean line accuracy: ${(report.meanLineCharacterAccuracy * 100).toFixed(1)}%`);
+    console.log(`  Turbo median line accuracy: ${(report.medianLineCharacterAccuracy * 100).toFixed(1)}%`);
+  });
+
+  it("turbo accuracy > medium accuracy", { skip: !scriptExists || !turboExists || !mediumExists }, () => {
+    const turboReport = compareTranscriptions(scriptData, turboData);
+    const mediumReport = compareTranscriptions(scriptData, mediumData);
+    console.log(`  Medium: ${(mediumReport.corpusCharacterAccuracy * 100).toFixed(1)}% vs Turbo: ${(turboReport.corpusCharacterAccuracy * 100).toFixed(1)}%`);
+    assert.ok(turboReport.corpusCharacterAccuracy > mediumReport.corpusCharacterAccuracy,
+      "Turbo should outperform medium model");
+  });
+
+  it("turbo source type is whisper-turbo", { skip: !scriptExists || !turboExists }, () => {
+    const report = compareTranscriptions(scriptData, turboData);
+    assert.equal(report.sourceType, "whisper-turbo");
+  });
+});
