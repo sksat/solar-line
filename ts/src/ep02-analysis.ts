@@ -1058,6 +1058,9 @@ export function analyzeEpisode2() {
   // Self-consistent arrival velocity analysis (resolves v∞ inconsistency)
   const arrivalConsistency = arrivalVelocityConsistencyAnalysis();
 
+  // Jupiter radiation belt analysis
+  const jupiterRadiation = jupiterRadiationAnalysis();
+
   return {
     hohmann,
     jupiterEscape: escape,
@@ -1071,5 +1074,130 @@ export function analyzeEpisode2() {
     damagedThrust,
     trimThrust,
     arrivalConsistency,
+    jupiterRadiation,
+  };
+}
+
+// ─── Jupiter Radiation Belt Analysis ───
+
+/**
+ * Jupiter radiation belt dose model.
+ *
+ * Piecewise power-law model calibrated to Galileo-era measurements:
+ * - Europa (9.4 RJ): ~5,400 krad/year behind 100 mil Al → 0.616 krad/h
+ * - Ganymede (15 RJ): ~540 krad/year → 0.0616 krad/h
+ * - Callisto (26 RJ): ~1 krad/year → 0.000114 krad/h
+ *
+ * Analytical integration: Dose = ∫ D(r) dr / v_r
+ * For D(r) = D0 * (r/r0)^(-α), this has a closed-form solution.
+ */
+interface RadiationRegion {
+  rMinRJ: number;
+  rMaxRJ: number;
+  d0KradPerH: number;
+  r0RJ: number;
+  alpha: number;
+}
+
+const RJ_KM = 71_492;
+
+const RADIATION_REGIONS: RadiationRegion[] = [
+  // Inner belt (6-15 RJ): Europa to Ganymede
+  { rMinRJ: 6, rMaxRJ: 15, d0KradPerH: 0.616, r0RJ: 9.4, alpha: 4.92 },
+  // Middle magnetosphere (15-30 RJ): Ganymede to beyond Callisto
+  { rMinRJ: 15, rMaxRJ: 30, d0KradPerH: 0.0616, r0RJ: 15, alpha: 9.5 },
+  // Outer magnetosphere (30-63 RJ)
+  { rMinRJ: 30, rMaxRJ: 100,
+    d0KradPerH: 0.0616 * Math.pow(30 / 15, -9.5),
+    r0RJ: 30, alpha: 2.0 },
+];
+
+const MAGNETOPAUSE_RJ = 63;
+
+function doseRateKradH(rRJ: number): number {
+  if (rRJ >= MAGNETOPAUSE_RJ || rRJ < 0) return 0;
+  for (const reg of RADIATION_REGIONS) {
+    if (rRJ >= reg.rMinRJ && rRJ < reg.rMaxRJ) {
+      return reg.d0KradPerH * Math.pow(rRJ / reg.r0RJ, -reg.alpha);
+    }
+  }
+  return 0;
+}
+
+function analyticalDoseSegment(
+  region: RadiationRegion,
+  rStartRJ: number,
+  rEndRJ: number,
+  vRadialKms: number,
+): number {
+  if (Math.abs(vRadialKms) < 1e-10) return 0;
+  const alpha = region.alpha;
+  const d0 = region.d0KradPerH;
+  const r0 = region.r0RJ;
+  const vRJperH = vRadialKms * 3600 / RJ_KM;
+
+  const a = Math.min(rStartRJ, rEndRJ);
+  const b = Math.max(rStartRJ, rEndRJ);
+  const coeff = d0 * Math.pow(r0, alpha) / Math.abs(vRJperH);
+
+  if (Math.abs(alpha - 1) < 1e-10) {
+    return coeff * (Math.log(b) - Math.log(a));
+  }
+  const exp = 1 - alpha;
+  return coeff * (Math.pow(b, exp) - Math.pow(a, exp)) / exp;
+}
+
+function transitDoseKrad(rStartRJ: number, rEndRJ: number, vRadialKms: number): number {
+  const effectiveEnd = Math.min(rEndRJ, MAGNETOPAUSE_RJ);
+  let totalDose = 0;
+  for (const region of RADIATION_REGIONS) {
+    const segStart = Math.max(rStartRJ, region.rMinRJ);
+    const segEnd = Math.min(effectiveEnd, region.rMaxRJ);
+    if (segStart < segEnd) {
+      totalDose += analyticalDoseSegment(region, segStart, segEnd, vRadialKms);
+    }
+  }
+  return totalDose;
+}
+
+function jupiterRadiationAnalysis() {
+  const departureRateKradH = doseRateKradH(15.0);
+  const shieldBudget42min = departureRateKradH * (42 / 60);
+
+  // Find minimum survival velocity (binary search)
+  let vLow = 1, vHigh = 200;
+  for (let i = 0; i < 60; i++) {
+    const vMid = (vLow + vHigh) / 2;
+    if (transitDoseKrad(15, 50, vMid) < shieldBudget42min) vHigh = vMid;
+    else vLow = vMid;
+  }
+  const minSurvivalVelocityKms = (vLow + vHigh) / 2;
+
+  const scenarios = [
+    { label: "弾道脱出 7 km/s", vRadialKms: 7 },
+    { label: "加速脱出 60 km/s", vRadialKms: 60 },
+    { label: "損傷状態 20 km/s", vRadialKms: 20 },
+  ].map(s => {
+    const dose = transitDoseKrad(15, 50, s.vRadialKms);
+    const transitTimeH = (50 - 15) * RJ_KM / s.vRadialKms / 3600;
+    return {
+      ...s,
+      transitTimeH: Math.round(transitTimeH * 10) / 10,
+      accumulatedDoseKrad: Math.round(dose * 1e6) / 1e6,
+      shieldSurvives: dose < shieldBudget42min,
+      doseFractionOfBudget: Math.round(dose / shieldBudget42min * 1000) / 1000,
+    };
+  });
+
+  return {
+    departureRateKradH: Math.round(departureRateKradH * 1e6) / 1e6,
+    shieldBudget42minKrad: Math.round(shieldBudget42min * 1e6) / 1e6,
+    minSurvivalVelocityKms: Math.round(minSurvivalVelocityKms * 10) / 10,
+    scenarios,
+    doseRateProfile: [10, 12, 15, 17, 20, 25, 30, 40, 50].map(r => ({
+      distanceRJ: r,
+      rateKradH: Math.round(doseRateKradH(r) * 1e8) / 1e8,
+    })),
+    calibrationNote: "Galileo DDD: Europa ~5400 krad/yr, Ganymede ~540 krad/yr, Callisto ~1 krad/yr (behind 100 mil Al)",
   };
 }

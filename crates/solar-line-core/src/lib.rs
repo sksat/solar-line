@@ -4,6 +4,7 @@ pub mod constants;
 pub mod dag;
 pub mod ephemeris;
 pub mod flyby;
+pub mod jupiter_radiation;
 pub mod kepler;
 pub mod mass_timeline;
 pub mod orbital_3d;

@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generatedAt": "2026-03-01T14:46:42.055Z",
+    "generatedAt": "2026-03-01T20:52:09.418Z",
     "reproductionCommand": "npm run recalculate",
-    "durationMs": 1
+    "durationMs": 0
   },
   "transfers": [
     {

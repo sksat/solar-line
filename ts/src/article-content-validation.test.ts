@@ -392,6 +392,25 @@ describe("EP02 article content validation", () => {
       "EP02 should cite the v∞≈90 km/s problem from prograde-only model"
     );
   });
+
+  it("Jupiter radiation belt quantitative analysis (ep02-exploration-07)", () => {
+    assert.ok(
+      content.includes("ep02-exploration-07"),
+      "EP02 should have radiation belt exploration (ep02-exploration-07)"
+    );
+    assert.ok(
+      content.includes("50.4") || content.includes("50 km/s") || content.includes("最小生存"),
+      "EP02 should cite minimum survival velocity (~50 km/s) for shield"
+    );
+    assert.ok(
+      content.includes("0.062") || content.includes("0.0616"),
+      "EP02 should cite dose rate at Ganymede orbit (~0.062 krad/h)"
+    );
+    assert.ok(
+      content.includes("Galileo") || content.includes("DDD"),
+      "EP02 radiation analysis should reference Galileo calibration data"
+    );
+  });
 });
 
 describe("EP03 article content validation", () => {

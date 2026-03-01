@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generatedAt": "2026-03-01T14:46:42.051Z",
+    "generatedAt": "2026-03-01T20:52:09.413Z",
     "reproductionCommand": "npm run recalculate -- --episode 2",
-    "durationMs": 6007
+    "durationMs": 5858
   },
   "hohmann": {
     "departureDv": 1.8076602726468902,
@@ -466,5 +466,75 @@
       }
     ],
     "summary": "トリムのみ制約下で加速のみに3日間使用すると87日で到着するが、v∞≈90 km/sで土星捕獲は不可能。加速＋減速の2相モデル、または弾道軌道＋方向制御のみの解釈が物理的に整合する。Isp=10⁶sにより推進剤は制約にならず（84.7 km/sでも消費0.87%）、損傷状態での推力持続時間が実質的な制約。"
+  },
+  "jupiterRadiation": {
+    "departureRateKradH": 0.0616,
+    "shieldBudget42minKrad": 0.04312,
+    "minSurvivalVelocityKms": 50.4,
+    "scenarios": [
+      {
+        "label": "弾道脱出 7 km/s",
+        "vRadialKms": 7,
+        "transitTimeH": 99.3,
+        "accumulatedDoseKrad": 0.310441,
+        "shieldSurvives": false,
+        "doseFractionOfBudget": 7.199
+      },
+      {
+        "label": "加速脱出 60 km/s",
+        "vRadialKms": 60,
+        "transitTimeH": 11.6,
+        "accumulatedDoseKrad": 0.036218,
+        "shieldSurvives": true,
+        "doseFractionOfBudget": 0.84
+      },
+      {
+        "label": "損傷状態 20 km/s",
+        "vRadialKms": 20,
+        "transitTimeH": 34.8,
+        "accumulatedDoseKrad": 0.108654,
+        "shieldSurvives": false,
+        "doseFractionOfBudget": 2.52
+      }
+    ],
+    "doseRateProfile": [
+      {
+        "distanceRJ": 10,
+        "rateKradH": 0.45432826
+      },
+      {
+        "distanceRJ": 12,
+        "rateKradH": 0.18526698
+      },
+      {
+        "distanceRJ": 15,
+        "rateKradH": 0.0616
+      },
+      {
+        "distanceRJ": 17,
+        "rateKradH": 0.01875784
+      },
+      {
+        "distanceRJ": 20,
+        "rateKradH": 0.00400556
+      },
+      {
+        "distanceRJ": 25,
+        "rateKradH": 0.00048086
+      },
+      {
+        "distanceRJ": 30,
+        "rateKradH": 0.00008507
+      },
+      {
+        "distanceRJ": 40,
+        "rateKradH": 0.00004785
+      },
+      {
+        "distanceRJ": 50,
+        "rateKradH": 0.00003063
+      }
+    ],
+    "calibrationNote": "Galileo DDD: Europa ~5400 krad/yr, Ganymede ~540 krad/yr, Callisto ~1 krad/yr (behind 100 mil Al)"
   }
 }
