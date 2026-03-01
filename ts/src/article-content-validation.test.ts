@@ -870,6 +870,15 @@ describe("cross-report value consistency", () => {
     assert.ok(crossEpisode.includes("6,771"),
       "cross-episode should cite correct LEO radius 6,771 km");
   });
+
+  it("full-route diagram has PiP insets for Jupiter, Saturn, and Uranus systems", () => {
+    assert.ok(crossEpisode.includes('"inset-jupiter"'),
+      "cross-episode full-route should have Jupiter inset");
+    assert.ok(crossEpisode.includes('"inset-saturn"'),
+      "cross-episode full-route should have Saturn inset");
+    assert.ok(crossEpisode.includes('"inset-uranus"'),
+      "cross-episode full-route should have Uranus inset");
+  });
 });
 
 // ============================================================

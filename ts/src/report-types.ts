@@ -332,6 +332,32 @@ export interface OrbitalDiagram {
   uncertaintyEllipses?: UncertaintyEllipse[];
   /** Trajectory variation overlays showing parameter sensitivity */
   trajectoryVariations?: TrajectoryVariation[];
+  /** Picture-in-picture inset sub-diagrams showing local planetary system detail */
+  insets?: InsetDiagram[];
+}
+
+/** A picture-in-picture inset sub-diagram embedded within a parent OrbitalDiagram */
+export interface InsetDiagram {
+  /** Unique identifier */
+  id: string;
+  /** Short title shown above the inset, e.g. "木星系" */
+  title: string;
+  /** Orbit ID in the parent diagram to anchor the inset near */
+  anchorOrbitId: string;
+  /** Position of the inset relative to the anchor. Determines which corner/region. */
+  position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  /** Label for the central body of the inset, e.g. "木星" */
+  centerLabel: string;
+  /** Radius unit for the inset (e.g. "RJ", "km") */
+  radiusUnit?: string;
+  /** Maximum radius to display */
+  viewRadius?: number;
+  /** Scale mode for the inset (default: "sqrt") */
+  scaleMode?: "linear" | "sqrt" | "log";
+  /** Orbits within the inset */
+  orbits: OrbitDefinition[];
+  /** Transfer arcs within the inset */
+  transfers: TransferArc[];
 }
 
 /** Specifies which transfers should be rendered as separate detail sub-pages */

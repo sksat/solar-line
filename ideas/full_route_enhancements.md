@@ -28,6 +28,14 @@
    - TimelineAnnotation badges on diagram + horizontal timeline bar
    - Mars departure → Ganymede → Saturn → Uranus → Earth waypoints
 
+5. **Picture-in-picture insets**: ✅ DONE (Task 300)
+   - InsetDiagram type added to OrbitalDiagram
+   - renderInsetDiagrams() renders mini-diagrams in SVG corners
+   - Full-route diagram has Jupiter/Saturn/Uranus system insets
+   - Connector lines link insets to parent orbit positions
+
 ## Remaining Ideas
-- Cross-episode full-route diagram could include small inset sub-diagrams (picture-in-picture) rather than separate diagrams
+- ~~Cross-episode full-route diagram could include small inset sub-diagrams (picture-in-picture) rather than separate diagrams~~ ✅ DONE (Task 300)
 - ~~Leg highlighting could include episode navigation links (click a leg → go to that episode's analysis)~~ ✅ DONE (Task 163)
+
+**RESOLVED**: All enhancement ideas implemented.

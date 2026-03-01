@@ -425,7 +425,89 @@ bars:
       "orbitId": "earth"
     }
   ],
-  "epochAnnotation": "想定年代: 2214-10-27～2215-02-28 (全124日間)"
+  "epochAnnotation": "想定年代: 2214-10-27～2215-02-28 (全124日間)",
+  "insets": [
+    {
+      "id": "inset-jupiter",
+      "title": "木星系（EP1到着・EP2出発）",
+      "anchorOrbitId": "jupiter",
+      "position": "top-right",
+      "centerLabel": "木星",
+      "radiusUnit": "RJ",
+      "viewRadius": 55,
+      "scaleMode": "sqrt",
+      "orbits": [
+        { "id": "perijove", "label": "近木点 (1.5 RJ)", "radius": 1.5, "color": "#f0883e", "angle": 4.71 },
+        { "id": "ganymede", "label": "ガニメデ", "radius": 15, "color": "#58a6ff", "angle": 3.14 },
+        { "id": "approach-point", "label": "接近点", "radius": 50, "color": "#3fb950", "angle": 0.3 }
+      ],
+      "transfers": [
+        {
+          "label": "双曲線接近",
+          "fromOrbitId": "approach-point",
+          "toOrbitId": "perijove",
+          "color": "#8b949e",
+          "style": "hyperbolic"
+        },
+        {
+          "label": "捕獲→ガニメデ",
+          "fromOrbitId": "perijove",
+          "toOrbitId": "ganymede",
+          "color": "#3fb950",
+          "style": "hyperbolic"
+        }
+      ]
+    },
+    {
+      "id": "inset-saturn",
+      "title": "土星系（EP2到着）",
+      "anchorOrbitId": "saturn",
+      "position": "bottom-right",
+      "centerLabel": "土星",
+      "radiusUnit": "km",
+      "viewRadius": 1800000,
+      "scaleMode": "sqrt",
+      "orbits": [
+        { "id": "rings", "label": "環（F環）", "radius": 140180, "color": "#daa520" },
+        { "id": "enceladus", "label": "エンケラドス", "radius": 238020, "color": "#58a6ff", "angle": 2.09 },
+        { "id": "titan", "label": "タイタン", "radius": 1221870, "color": "#d29922", "angle": 4.19 },
+        { "id": "saturn-approach", "label": "接近", "radius": 1808040, "color": "#f8514944", "angle": 5.5 }
+      ],
+      "transfers": [
+        {
+          "label": "捕獲軌道",
+          "fromOrbitId": "saturn-approach",
+          "toOrbitId": "enceladus",
+          "color": "#3fb950",
+          "style": "hyperbolic"
+        }
+      ]
+    },
+    {
+      "id": "inset-uranus",
+      "title": "天王星系（EP3到着・EP4-5出発）",
+      "anchorOrbitId": "uranus",
+      "position": "bottom-left",
+      "centerLabel": "天王星",
+      "radiusUnit": "km",
+      "viewRadius": 640000,
+      "scaleMode": "linear",
+      "orbits": [
+        { "id": "uranus-surface", "label": "天王星表面", "radius": 25559, "color": "#88ccee" },
+        { "id": "titania", "label": "タイタニア", "radius": 435910, "color": "#cc8844", "angle": 1.2 },
+        { "id": "uranus-approach", "label": "接近", "radius": 638975, "color": "#ff4444", "angle": 2.8 }
+      ],
+      "transfers": [
+        {
+          "label": "捕獲→タイタニア",
+          "fromOrbitId": "uranus-approach",
+          "toOrbitId": "titania",
+          "color": "#44ff44",
+          "style": "hyperbolic"
+        }
+      ]
+    }
+  ]
 }
 ```
 

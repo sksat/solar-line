@@ -46,10 +46,11 @@ import {
   validateTransferOverlap,
   renderMarginGauge,
   renderMarginGauges,
+  renderInsetDiagrams,
 } from "./templates.ts";
 import type { NavEpisode } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, OrbitalDiagram, AnimationConfig, ScaleLegend, TimelineAnnotation, ComparisonTable, SummaryReport, VerdictCounts, EventTimeline, VerificationTable, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, InsetDiagram } from "./report-types.ts";
 
 // --- escapeHtml ---
 
@@ -5861,5 +5862,136 @@ describe("renderMarginGauges", () => {
     const html = renderMarginGauges(gauges);
     assert.ok(html.includes("test-margins"));
     assert.ok(html.includes("test-2"));
+  });
+});
+
+// --- renderInsetDiagrams (Task 300: Picture-in-picture) ---
+
+const sampleInset: InsetDiagram = {
+  id: "inset-jupiter",
+  title: "木星系",
+  anchorOrbitId: "jupiter",
+  position: "top-right",
+  centerLabel: "木星",
+  radiusUnit: "RJ",
+  viewRadius: 55,
+  scaleMode: "sqrt",
+  orbits: [
+    { id: "ganymede", label: "ガニメデ", radius: 15, color: "#58a6ff", angle: 3.14 },
+    { id: "approach", label: "接近点", radius: 50, color: "#3fb950", angle: 0.3 },
+  ],
+  transfers: [
+    {
+      label: "捕獲",
+      fromOrbitId: "approach",
+      toOrbitId: "ganymede",
+      color: "#3fb950",
+      style: "hyperbolic",
+    },
+  ],
+};
+
+describe("renderInsetDiagrams", () => {
+  const parentOrbitMap = new Map([
+    ["jupiter", { id: "jupiter", label: "木星", radius: 5.203, color: "#dd8844", angle: 1.38 }],
+    ["saturn", { id: "saturn", label: "土星", radius: 9.58, color: "#daa520", angle: 2.87 }],
+  ]);
+  const parentOrbitPxMap = new Map([
+    ["jupiter", 100],
+    ["saturn", 150],
+  ]);
+
+  it("returns empty string for empty insets array", () => {
+    assert.equal(renderInsetDiagrams([], parentOrbitPxMap, parentOrbitMap), "");
+  });
+
+  it("renders inset with correct data-inset-id", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes('data-inset-id="inset-jupiter"'));
+  });
+
+  it("renders inset title", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes("木星系"));
+  });
+
+  it("renders center label", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes(">木星</text>"));
+  });
+
+  it("renders orbit circles in inset", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes('stroke="#58a6ff"'));
+    assert.ok(html.includes('stroke="#3fb950"'));
+  });
+
+  it("renders transfer arcs in inset", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    // Transfer arc should have a path element
+    assert.ok(html.includes("<path"));
+    assert.ok(html.includes("marker-end"));
+  });
+
+  it("renders body dots for orbits with angles", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes('fill="#58a6ff"'));
+    assert.ok(html.includes("ガニメデ"));
+  });
+
+  it("renders connector line to parent orbit", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes("<line"));
+    assert.ok(html.includes('stroke-dasharray="4 3"'));
+  });
+
+  it("renders radiusUnit label", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes("RJ"));
+  });
+
+  it("renders background rect with rounded corners", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes('rx="6"'));
+    assert.ok(html.includes('fill-opacity="0.85"'));
+  });
+
+  it("renders multiple insets", () => {
+    const inset2: InsetDiagram = {
+      ...sampleInset,
+      id: "inset-saturn",
+      title: "土星系",
+      anchorOrbitId: "saturn",
+      position: "bottom-right",
+      centerLabel: "土星",
+    };
+    const html = renderInsetDiagrams([sampleInset, inset2], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes('data-inset-id="inset-jupiter"'));
+    assert.ok(html.includes('data-inset-id="inset-saturn"'));
+    assert.ok(html.includes("木星系"));
+    assert.ok(html.includes("土星系"));
+  });
+
+  it("has orbital-inset CSS class", () => {
+    const html = renderInsetDiagrams([sampleInset], parentOrbitPxMap, parentOrbitMap);
+    assert.ok(html.includes('class="orbital-inset"'));
+  });
+});
+
+describe("renderOrbitalDiagram with insets", () => {
+  it("renders insets within the SVG when present", () => {
+    const diagram: OrbitalDiagram = {
+      ...sampleDiagram,
+      insets: [sampleInset],
+    };
+    const html = renderOrbitalDiagram(diagram);
+    assert.ok(html.includes('data-inset-id="inset-jupiter"'));
+    assert.ok(html.includes("orbital-inset"));
+  });
+
+  it("renders normally without insets", () => {
+    const html = renderOrbitalDiagram(sampleDiagram);
+    assert.ok(!html.includes("orbital-inset"));
+    assert.ok(!html.includes("data-inset-id"));
   });
 });

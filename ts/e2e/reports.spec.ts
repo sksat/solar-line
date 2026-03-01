@@ -683,6 +683,33 @@ test.describe("Side-view SVG diagrams", () => {
   });
 });
 
+// --- PiP inset sub-diagrams (Task 300) ---
+
+test.describe("Picture-in-picture inset diagrams", () => {
+  test("cross-episode full-route has Jupiter inset", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const inset = page.locator('[data-inset-id="inset-jupiter"]');
+    await expect(inset).toBeVisible();
+    // Should contain orbit circles and transfer arcs
+    expect(await inset.locator("circle").count()).toBeGreaterThanOrEqual(2);
+    expect(await inset.locator("path").count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("cross-episode full-route has Saturn inset", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const inset = page.locator('[data-inset-id="inset-saturn"]');
+    await expect(inset).toBeVisible();
+    expect(await inset.locator("circle").count()).toBeGreaterThanOrEqual(2);
+  });
+
+  test("cross-episode full-route has Uranus inset", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const inset = page.locator('[data-inset-id="inset-uranus"]');
+    await expect(inset).toBeVisible();
+    expect(await inset.locator("circle").count()).toBeGreaterThanOrEqual(2);
+  });
+});
+
 // --- Infrastructure page tests (Task 229) ---
 
 test.describe("Summary: infrastructure page", () => {

@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, MarginGaugeItem } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, MarginGaugeItem, InsetDiagram } from "./report-types.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -1541,6 +1541,114 @@ export function validateTransferOverlap(diagram: OrbitalDiagram): string[] {
 }
 
 /**
+ * Render picture-in-picture inset sub-diagrams as SVG groups.
+ * Each inset shows a zoomed-in local planetary system with orbits and transfers.
+ * Returns SVG markup to be embedded within the parent diagram's <g>.
+ */
+export function renderInsetDiagrams(
+  insets: InsetDiagram[],
+  parentOrbitPxMap: Map<string, number>,
+  parentOrbitMap: Map<string, OrbitDefinition>,
+): string {
+  if (insets.length === 0) return "";
+
+  const insetSize = 120; // px width/height of each inset
+  const insetPlotR = insetSize / 2 - 16; // margin for labels inside inset
+  const padding = 8; // padding from SVG edge
+
+  // Position each inset in its designated corner (relative to center 0,0 of parent 500×500)
+  const positionMap: Record<InsetDiagram["position"], { x: number; y: number }> = {
+    "top-left":     { x: -250 + padding, y: -250 + padding },
+    "top-right":    { x: 250 - insetSize - padding, y: -250 + padding },
+    "bottom-left":  { x: -250 + padding, y: 250 - insetSize - padding },
+    "bottom-right": { x: 250 - insetSize - padding, y: 250 - insetSize - padding },
+  };
+
+  return insets.map(inset => {
+    const pos = positionMap[inset.position];
+    const insetCx = pos.x + insetSize / 2;
+    const insetCy = pos.y + insetSize / 2;
+
+    const mode = inset.scaleMode ?? "sqrt";
+    const maxOrbitR = inset.viewRadius ?? Math.max(...inset.orbits.map(o => o.radius));
+
+    // Build orbit lookup and pixel radii
+    const insetOrbitMap = new Map(inset.orbits.map(o => [o.id, o]));
+    const insetOrbitPxMap = new Map<string, number>();
+    for (const orbit of inset.orbits) {
+      insetOrbitPxMap.set(orbit.id, scaleRadius(orbit.radius, maxOrbitR, insetPlotR, mode, 6));
+    }
+
+    // Draw orbits
+    const orbits = inset.orbits.map(orbit => {
+      const r = insetOrbitPxMap.get(orbit.id)!;
+      return `<circle cx="0" cy="0" r="${r.toFixed(1)}" fill="none" stroke="${orbit.color}" stroke-width="0.7" stroke-opacity="0.4" stroke-dasharray="3 1.5"/>`;
+    }).join("\n      ");
+
+    // Draw body dots and labels (only for orbits with angle)
+    const labels = inset.orbits.filter(o => o.angle !== undefined).map(orbit => {
+      const r = insetOrbitPxMap.get(orbit.id)!;
+      const bx = r * Math.cos(orbit.angle!);
+      const by = -r * Math.sin(orbit.angle!);
+      // Short label: just the name without radius info
+      const shortLabel = orbit.label.replace(/\s*\(.*\)/, "");
+      const lx = (r + 8) * Math.cos(orbit.angle!);
+      const ly = -(r + 8) * Math.sin(orbit.angle!);
+      return `<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="2.5" fill="${orbit.color}"/>
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${orbit.color}" font-size="7" text-anchor="middle" dominant-baseline="middle">${escapeHtml(shortLabel)}</text>`;
+    }).join("\n      ");
+
+    // Draw transfer arcs
+    const transfers = inset.transfers.map((t, idx) => {
+      const fromOrbit = insetOrbitMap.get(t.fromOrbitId);
+      const toOrbit = insetOrbitMap.get(t.toOrbitId);
+      if (!fromOrbit || !toOrbit) return "";
+      const fromPx = insetOrbitPxMap.get(t.fromOrbitId)!;
+      const toPx = insetOrbitPxMap.get(t.toOrbitId)!;
+      const pathD = transferArcPath(t.style, fromOrbit, toOrbit, fromPx, toPx);
+      const dashArray = t.style === "brachistochrone" ? ' stroke-dasharray="5 3"' : "";
+      const arrowId = `inset-arrow-${escapeHtml(inset.id)}-${idx}`;
+      return `<path d="${pathD}" fill="none" stroke="${t.color}" stroke-width="1.5"${dashArray} marker-end="url(#${arrowId})"/>
+      <marker id="${arrowId}" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="${t.color}"/></marker>`;
+    }).filter(s => s.length > 0).join("\n      ");
+
+    // Center body
+    const centerBody = `<circle cx="0" cy="0" r="4" fill="var(--yellow)"/>
+      <text x="0" y="12" fill="var(--yellow)" font-size="7" text-anchor="middle">${escapeHtml(inset.centerLabel)}</text>`;
+
+    // Title above inset
+    const titleY = -insetSize / 2 - 4;
+    const title = `<text x="0" y="${titleY}" fill="var(--fg)" font-size="8" text-anchor="middle" font-weight="bold">${escapeHtml(inset.title)}</text>`;
+
+    // Connector line from inset center to the anchor orbit's body position in the parent
+    let connector = "";
+    const anchorOrbit = parentOrbitMap.get(inset.anchorOrbitId);
+    const anchorPx = parentOrbitPxMap.get(inset.anchorOrbitId);
+    if (anchorOrbit && anchorPx !== undefined && anchorOrbit.angle !== undefined) {
+      const ax = anchorPx * Math.cos(anchorOrbit.angle);
+      const ay = -anchorPx * Math.sin(anchorOrbit.angle);
+      connector = `<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${insetCx.toFixed(1)}" y2="${insetCy.toFixed(1)}" stroke="var(--fg)" stroke-width="0.5" stroke-opacity="0.3" stroke-dasharray="4 3"/>`;
+    }
+
+    // Unit label
+    const unitLabel = inset.radiusUnit
+      ? `<text x="${insetSize / 2 - 4}" y="${insetSize / 2 - 4}" fill="var(--fg)" font-size="6" text-anchor="end" fill-opacity="0.5">${escapeHtml(inset.radiusUnit)}</text>`
+      : "";
+
+    return `${connector}
+    <g transform="translate(${insetCx.toFixed(1)}, ${insetCy.toFixed(1)})" class="orbital-inset" data-inset-id="${escapeHtml(inset.id)}">
+      <rect x="${(-insetSize / 2).toFixed(1)}" y="${(-insetSize / 2).toFixed(1)}" width="${insetSize}" height="${insetSize}" rx="6" fill="var(--bg)" fill-opacity="0.85" stroke="var(--fg)" stroke-width="0.5" stroke-opacity="0.3"/>
+      ${title}
+      ${orbits}
+      ${labels}
+      ${transfers}
+      ${centerBody}
+      ${unitLabel}
+    </g>`;
+  }).join("\n    ");
+}
+
+/**
  * Render an orbital transfer diagram as inline SVG.
  * Top-down view of orbital system with concentric orbits and transfer arcs.
  */
@@ -1866,6 +1974,9 @@ export function renderOrbitalDiagram(diagram: OrbitalDiagram): string {
 
     <!-- Timeline badges -->
     ${timelineBadges}
+
+    <!-- Inset sub-diagrams (picture-in-picture) -->
+    ${diagram.insets && diagram.insets.length > 0 ? renderInsetDiagrams(diagram.insets, orbitPxMap, orbitMap) : ""}
   </g>
 
   <!-- Legend -->
