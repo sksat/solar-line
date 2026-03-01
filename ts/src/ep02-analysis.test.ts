@@ -19,6 +19,7 @@ import {
   minimumTransferTime,
   damagedThrustScenarios,
   analyzeEpisode2,
+  arrivalVelocityConsistencyAnalysis,
   EP02_PARAMS,
   JS_DISTANCE_SCENARIOS,
   distanceInAU,
@@ -314,5 +315,73 @@ describe("Episode 2: full analysis", () => {
   it("Jupiter escape confirms 10.3 km/s is unbound", () => {
     const result = analyzeEpisode2();
     assert.equal(result.jupiterEscape.isUnbound, true);
+  });
+
+  it("arrival consistency analysis is included", () => {
+    const result = analyzeEpisode2();
+    assert.ok(result.arrivalConsistency);
+    assert.ok(result.arrivalConsistency.progradeOnly);
+    assert.ok(result.arrivalConsistency.ballistic);
+    assert.ok(result.arrivalConsistency.allTwoPhase.length > 0);
+  });
+});
+
+describe("Episode 2: arrival velocity consistency", () => {
+  it("prograde-only 3-day model has v∞ >> 10 km/s (uncapturable without further burns)", () => {
+    const result = arrivalVelocityConsistencyAnalysis();
+    assert.ok(result.progradeOnly, "prograde-only result should exist");
+    assert.ok(result.progradeOnly!.vInfKms > 50,
+      `prograde v∞ should be >> 50 km/s, got ${result.progradeOnly!.vInfKms.toFixed(1)}`);
+    assert.ok(result.progradeOnly!.captureDeltaVKms > 30,
+      "capture ΔV should be very high for prograde-only");
+  });
+
+  it("ballistic has moderate v∞ ≈ 9 km/s (natural from Jupiter escape state)", () => {
+    const result = arrivalVelocityConsistencyAnalysis();
+    assert.ok(result.ballistic);
+    assert.ok(result.ballistic!.vInfKms > 5 && result.ballistic!.vInfKms < 15,
+      `ballistic v∞ should be 5-15 km/s, got ${result.ballistic!.vInfKms.toFixed(1)}`);
+    assert.ok(result.ballistic!.captureDeltaVKms < 5,
+      "ballistic capture ΔV should be manageable");
+  });
+
+  it("balanced two-phase (1.5d+1.5d) reduces v∞ to ~10 km/s", () => {
+    const result = arrivalVelocityConsistencyAnalysis();
+    const balanced = result.allTwoPhase.find(
+      (r) => r.accelDays === 1.5 && r.decelDays === 1.5
+    );
+    assert.ok(balanced, "1.5d+1.5d scenario should exist");
+    assert.ok(balanced!.vInfAtSaturnKms < 15,
+      `balanced v∞ should be < 15 km/s, got ${balanced!.vInfAtSaturnKms.toFixed(1)}`);
+    assert.ok(balanced!.captureMinDeltaVKms < 5,
+      "capture ΔV should be < 5 km/s for balanced scenario");
+  });
+
+  it("3d+3d two-phase achieves ~107 day transit with moderate v∞", () => {
+    const result = arrivalVelocityConsistencyAnalysis();
+    const accel3decel3 = result.allTwoPhase.find(
+      (r) => r.accelDays === 3 && r.decelDays === 3
+    );
+    assert.ok(accel3decel3, "3d+3d scenario should exist");
+    assert.ok(accel3decel3!.transferDays > 90 && accel3decel3!.transferDays < 130,
+      `3d+3d transit should be ~107 days, got ${accel3decel3!.transferDays.toFixed(0)}`);
+    assert.ok(accel3decel3!.vInfAtSaturnKms < 15,
+      `3d+3d v∞ should be moderate, got ${accel3decel3!.vInfAtSaturnKms.toFixed(1)}`);
+  });
+
+  it("propellant fraction is negligible at Isp=10⁶ s for all scenarios", () => {
+    const result = arrivalVelocityConsistencyAnalysis();
+    for (const s of result.allTwoPhase) {
+      assert.ok(s.totalWithCapturePropFraction < 0.05,
+        `propellant should be < 5%, got ${(s.totalWithCapturePropFraction * 100).toFixed(1)}% ` +
+        `for ${s.accelDays}d+${s.decelDays}d`);
+    }
+  });
+
+  it("summary describes the v∞ inconsistency resolution", () => {
+    const result = arrivalVelocityConsistencyAnalysis();
+    assert.ok(result.summary.includes("トリムのみ"));
+    assert.ok(result.summary.includes("v∞"));
+    assert.ok(result.summary.includes("Isp"));
   });
 });

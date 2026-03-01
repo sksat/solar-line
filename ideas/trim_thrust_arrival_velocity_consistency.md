@@ -1,40 +1,38 @@
 # Trim-Thrust Arrival Velocity Consistency Issue
 
+## Status: RESOLVED (Task 281)
+
 ## Problem
 
-The EP02 analysis uses a **hybrid model** that combines:
+The EP02 analysis used a **hybrid model** that combined:
 - **Transit time** from the trim-thrust propagation (87 days with 3-day thrust)
 - **Saturn v∞** from the ballistic hyperbolic model (4.69 km/s)
 
-These are physically incompatible. The trim-thrust propagation shows:
+These were physically incompatible. The prograde-only trim-thrust model showed:
 - 3-day thrust: arrival v∞ = 90.25 km/s (at Saturn's orbital radius)
 - Ballistic: arrival v∞ = 9.21 km/s (after 997 days)
-- Simple vis-viva: v∞ = 4.69 km/s (ignores orbital curvature)
 
-If the ship fires prograde for 3 days (ΔV = 84.7 km/s), it crosses Saturn's orbital radius in 87 days but at ~91.6 km/s — far too fast for the 0.61 km/s capture ΔV.
+## Resolution: Two-Phase Model
 
-## Root Cause
+Implemented a 2-phase (accel + decel) trim-thrust model with RK4 propagation:
 
-The current trim-thrust model (`ep02-analysis.ts::trimThrustTransferAnalysis`) applies constant prograde thrust (optimized angle) for N days, then coasts. It correctly computes when the ship crosses Saturn's orbital radius. However, it doesn't model:
+| Scenario | Accel | Decel | Transit | v∞ (km/s) | Capture ΔV | Propellant |
+|---|---|---|---|---|---|---|
+| Prograde only | 3d | 0d | 87d | 90.3 | 74.1 km/s | 1.61% |
+| Balanced | 1.5d | 1.5d | 166d | 10.5 | 2.9 km/s | 0.89% |
+| Extended | 3d | 3d | 107d | 10.7 | 3.0 km/s | 1.74% |
+| Ballistic | 0d | 0d | 997d | 9.2 | 2.2 km/s | 0.02% |
 
-1. **Deceleration before Saturn**: The ship would need to flip and brake before arriving
-2. **Course correction vs acceleration**: "Trim only" might mean direction changes, not speed increases
-3. **Saturn SOI entry dynamics**: The propagation doesn't switch to Saturn-centric frame at SOI
+Key insight: With Isp = 10⁶ s (D-He³ fusion), propellant is NOT the constraint
+(all scenarios < 2%). The constraint is damaged-ship thrust duration.
 
-## Possible Resolutions
+The ballistic v∞ = 4.69 km/s remains valid as a conservative lower bound.
+The v∞ = 9.2 km/s from full 2D propagation is more accurate for the ballistic case.
 
-1. **Reinterpret "trim" as course correction**: The 3-day thrust applies primarily cross-track corrections to redirect toward Saturn, with minimal net speed increase. This would reduce arrival v∞ but also increase transit time.
+## Consultation
 
-2. **Add a deceleration phase**: After 3 days of acceleration and coast, the ship performs a deceleration burn near Saturn. This requires propellant but the 0.86% consumption is compatible with having fuel reserves.
-
-3. **Use the ballistic model for capture analysis**: Accept that the "87 days" is approximate and the actual Saturn arrival conditions are better described by the ballistic model (v∞ ≈ 9.2 km/s). The trim thrust primarily ensures the ship reaches Saturn at all, not that it arrives at a specific speed.
-
-4. **Saturn gravitational capture**: With v∞ = 4.69 km/s (ballistic hyperbolic), the minimum capture ΔV at Enceladus orbit is 0.61 km/s. With v∞ = 9.21 km/s (propagated ballistic), it's significantly higher. Need to recalculate.
-
-## Status
-
-Documented as a known inconsistency in the EP02 report text. The analysis text now notes the discrepancy and flags it for future investigation.
-
-## Priority: MEDIUM
-
-This doesn't affect the story's plausibility verdict (conditional), but it weakens the quantitative analysis of the Saturn approach/capture sequence.
+gpt-5.2 physics consultation confirmed:
+- 98 kN on 300t is "main engine class" by conventional standards, but at Isp = 10⁶ s
+  the propellant cost is negligible (0.87% for 84.7 km/s)
+- "Trim" should be interpreted as course correction + deceleration, not pure prograde
+- Ballistic v∞ naturally follows from the Jupiter escape state (v_helio slightly > v_esc_solar)

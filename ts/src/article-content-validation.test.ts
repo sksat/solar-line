@@ -367,6 +367,17 @@ describe("EP02 article content validation", () => {
     assert.ok(content.includes("997"),
       "should cite ballistic transit ~997 days");
   });
+
+  it("v∞ consistency analysis with two-phase model", () => {
+    assert.ok(
+      content.includes("2相モデル") || content.includes("加速＋減速"),
+      "EP02 should describe two-phase (accel+decel) model for v∞ consistency"
+    );
+    assert.ok(
+      content.includes("v∞≈90"),
+      "EP02 should cite the v∞≈90 km/s problem from prograde-only model"
+    );
+  });
 });
 
 describe("EP03 article content validation", () => {
@@ -1331,11 +1342,15 @@ describe("science-accuracy.md content validation", () => {
     );
   });
 
-  // Regression: Issue 7 — EP02 trim-thrust arrival velocity limitation acknowledged
-  it("acknowledges EP02 trim-thrust arrival velocity limitation", () => {
+  // Regression: Issue 7 — EP02 trim-thrust arrival velocity resolved
+  it("acknowledges EP02 trim-thrust arrival velocity resolution", () => {
     assert.ok(
       content.includes("トリム推力到達速度") || content.includes("v∞≈90"),
       "should mention the EP02 trim-thrust arrival velocity issue",
+    );
+    assert.ok(
+      content.includes("解決済み") || content.includes("2相モデル"),
+      "should indicate the v∞ issue has been resolved",
     );
   });
 

@@ -715,6 +715,276 @@ export function primaryTransferScenario() {
   };
 }
 
+// ─── Self-Consistent Arrival Velocity Analysis ───
+
+/** Result of a two-phase (accel + decel) trim-thrust simulation */
+export interface TwoPhaseResult {
+  /** Outward thrust duration (days) */
+  accelDays: number;
+  /** Deceleration duration (days) */
+  decelDays: number;
+  /** Total transfer time (days) */
+  transferDays: number;
+  /** Total ΔV applied in transit (km/s) — accel + decel */
+  totalDeltaVKms: number;
+  /** ΔV for acceleration phase (km/s) */
+  accelDeltaVKms: number;
+  /** ΔV for deceleration phase (km/s) */
+  decelDeltaVKms: number;
+  /** Propellant mass fraction (transit only) */
+  propellantFraction: number;
+  /** v∞ relative to Saturn at arrival (km/s) */
+  vInfAtSaturnKms: number;
+  /** Minimum capture ΔV at Enceladus orbit (km/s) */
+  captureMinDeltaVKms: number;
+  /** Total ΔV including capture (km/s) */
+  totalWithCaptureDeltaVKms: number;
+  /** Total propellant fraction including capture */
+  totalWithCapturePropFraction: number;
+}
+
+/**
+ * Two-phase trim-thrust transfer: accelerate outward, then decelerate before Saturn.
+ *
+ * Resolves the v∞ inconsistency: prograde-only model gives v∞ ≈ 90 km/s
+ * at Saturn (uncapturable), but with a deceleration phase the ship can arrive
+ * with manageable v∞.
+ *
+ * With Isp = 10⁶ s (D-He³ fusion), even 84.7 km/s ΔV consumes only ~0.87%
+ * propellant, so ΔV budget is not propellant-limited but thrust-duration-limited.
+ */
+function simulateTwoPhaseTransfer(
+  accelDays: number,
+  decelDays: number,
+  alphaDeg: number = 32,
+  maxDays: number = 1500,
+): { transferDays: number; arrivalState: [number, number, number, number] } | null {
+  const rJ = ORBIT_RADIUS.JUPITER;
+  const rS = ORBIT_RADIUS.SATURN;
+  const vJ = circularVelocity(MU.SUN, rJ);
+  const vInf = jupiterEscapeAnalysis().hyperbolicExcessKms;
+  const accel = TRIM_THRUST.thrustN / TRIM_THRUST.massKg / 1000; // km/s²
+
+  const alpha = (alphaDeg * Math.PI) / 180;
+
+  let state: [number, number, number, number] = [
+    rJ,
+    0,
+    vInf * Math.sin(alpha),
+    vJ + vInf * Math.cos(alpha),
+  ];
+
+  const accelSec = accelDays * 86400;
+  const decelSec = decelDays * 86400;
+  const maxSec = maxDays * 86400;
+  const dtThrust = 60;
+  const dtCoast = 600;
+
+  let t = 0;
+  let phase: "accel" | "coast" | "decel" | "done" = accelDays > 0 ? "accel" : "coast";
+  let decelStarted = false;
+  let decelTimeRemaining = decelSec;
+
+  while (t < maxSec) {
+    const [x, y, vx, vy] = state;
+    const r = Math.sqrt(x * x + y * y);
+
+    if (r >= rS) {
+      return { transferDays: t / 86400, arrivalState: state };
+    }
+
+    let thrustVec: [number, number] = [0, 0];
+    let dt: number;
+
+    if (phase === "accel" && t < accelSec) {
+      // Outward thrust (beta ≈ 80° from tangential = nearly radial outward)
+      const rHat: [number, number] = [x / r, y / r];
+      const tHat: [number, number] = [-rHat[1], rHat[0]];
+      const beta = (80 * Math.PI) / 180;
+      thrustVec = [
+        accel * (Math.cos(beta) * tHat[0] + Math.sin(beta) * rHat[0]),
+        accel * (Math.cos(beta) * tHat[1] + Math.sin(beta) * rHat[1]),
+      ];
+      dt = dtThrust;
+    } else if (phase === "accel") {
+      phase = "coast";
+      dt = dtCoast;
+    } else if (phase === "coast") {
+      const vr = (vx * x + vy * y) / r;
+      const distToSaturn = rS - r;
+      if (vr > 0 && distToSaturn > 0) {
+        const estTimeToSaturn = distToSaturn / vr;
+        if (estTimeToSaturn <= decelSec * 1.05 && decelDays > 0 && !decelStarted) {
+          phase = "decel";
+          decelStarted = true;
+          decelTimeRemaining = decelSec;
+        }
+      }
+      dt = dtCoast;
+    } else if (phase === "decel" && decelTimeRemaining > 0) {
+      // Retrograde thrust: opposite to velocity direction
+      const speed = Math.sqrt(vx * vx + vy * vy);
+      if (speed > 0) {
+        thrustVec = [
+          -accel * vx / speed,
+          -accel * vy / speed,
+        ];
+      }
+      dt = dtThrust;
+      decelTimeRemaining -= dt;
+    } else {
+      phase = "done";
+      dt = dtCoast;
+    }
+
+    state = rk4Step(state, dt, thrustVec);
+    t += dt;
+  }
+
+  return null;
+}
+
+/**
+ * Analyze two-phase trim-thrust transfers with various accel/decel splits.
+ *
+ * For "トリムのみ" with varying thrust budgets, explore how splitting
+ * between acceleration and deceleration affects arrival v∞.
+ */
+export function twoPhaseAnalysis(): TwoPhaseResult[] {
+  const accel = TRIM_THRUST.thrustN / TRIM_THRUST.massKg / 1000; // km/s²
+  const saturnOrbV = circularVelocity(MU.SUN, ORBIT_RADIUS.SATURN);
+  const g0 = 9.80665 / 1000; // km/s²
+  const exhaustV = TRIM_THRUST.isp * g0; // km/s
+
+  const scenarios: { accelDays: number; decelDays: number }[] = [
+    // Pure acceleration (existing model, for comparison)
+    { accelDays: 3, decelDays: 0 },
+    // Balanced splits of a 3-day budget
+    { accelDays: 2, decelDays: 1 },
+    { accelDays: 1.5, decelDays: 1.5 },
+    { accelDays: 1, decelDays: 2 },
+    // Acceleration + separate deceleration budget
+    { accelDays: 3, decelDays: 1 },
+    { accelDays: 3, decelDays: 2 },
+    { accelDays: 3, decelDays: 3 },
+    // Pure ballistic + deceleration only
+    { accelDays: 0, decelDays: 3 },
+  ];
+
+  const results: TwoPhaseResult[] = [];
+
+  for (const { accelDays, decelDays } of scenarios) {
+    const sim = simulateTwoPhaseTransfer(accelDays, decelDays);
+    if (!sim) continue;
+
+    const accelDv = accel * accelDays * 86400;
+    const decelDv = accel * decelDays * 86400;
+    const totalDv = accelDv + decelDv;
+    const propFrac = 1 - Math.exp(-totalDv / exhaustV);
+
+    const [x, y, vx, vy] = sim.arrivalState;
+    const r = Math.sqrt(x * x + y * y);
+    const rHat: [number, number] = [x / r, y / r];
+    const vr = vx * rHat[0] + vy * rHat[1];
+    const vt = -vx * rHat[1] + vy * rHat[0];
+    const vInfSaturn = Math.sqrt(vr ** 2 + (vt - saturnOrbV) ** 2);
+
+    // Compute capture ΔV at Enceladus orbit for this arrival v∞
+    const capture = saturnCaptureAnalysis(vInfSaturn);
+    const totalWithCapture = totalDv + capture.dvMinCaptureKms;
+    const totalWithCaptureProp = 1 - Math.exp(-totalWithCapture / exhaustV);
+
+    results.push({
+      accelDays,
+      decelDays,
+      transferDays: sim.transferDays,
+      totalDeltaVKms: totalDv,
+      accelDeltaVKms: accelDv,
+      decelDeltaVKms: decelDv,
+      propellantFraction: propFrac,
+      vInfAtSaturnKms: vInfSaturn,
+      captureMinDeltaVKms: capture.dvMinCaptureKms,
+      totalWithCaptureDeltaVKms: totalWithCapture,
+      totalWithCapturePropFraction: totalWithCaptureProp,
+    });
+  }
+
+  return results;
+}
+
+/**
+ * Summary of EP02 v∞ consistency analysis.
+ *
+ * Three plausible interpretations of "トリムのみ":
+ * 1. Prograde-only: 87 days transit, v∞ ≈ 90 km/s (uncapturable without further burns)
+ * 2. Two-phase (accel + decel): longer transit but capturable v∞
+ * 3. Course correction only: ballistic transit (~997 days), trim for B-plane targeting
+ */
+export function arrivalVelocityConsistencyAnalysis() {
+  const twoPhase = twoPhaseAnalysis();
+  const prograde = trimThrustTransferAnalysis();
+  const ballistic = prograde.find((r) => r.thrustDays === 0);
+  const prograde3d = prograde.find((r) => r.thrustDays === 3);
+
+  // Find the scenario that minimizes total ΔV including capture
+  const bestEfficiency = twoPhase.length > 0
+    ? twoPhase.reduce((a, b) =>
+        a.totalWithCaptureDeltaVKms < b.totalWithCaptureDeltaVKms ? a : b
+      )
+    : null;
+
+  // Find the fastest scenario where v∞ < 15 km/s (moderate capture ΔV)
+  const moderateVInf = twoPhase.filter((r) => r.vInfAtSaturnKms < 15);
+  const fastestModerate = moderateVInf.length > 0
+    ? moderateVInf.reduce((a, b) =>
+        a.transferDays < b.transferDays ? a : b
+      )
+    : null;
+
+  return {
+    progradeOnly: prograde3d ? {
+      transferDays: prograde3d.transferDays,
+      vInfKms: prograde3d.vInfAtSaturnKms,
+      deltaVKms: prograde3d.deltaVKms,
+      captureDeltaVKms: saturnCaptureAnalysis(prograde3d.vInfAtSaturnKms).dvMinCaptureKms,
+      interpretation: "全推力を加速に使用（最速だが到着速度が高い）",
+    } : null,
+    ballistic: ballistic ? {
+      transferDays: ballistic.transferDays,
+      vInfKms: ballistic.vInfAtSaturnKms,
+      captureDeltaVKms: saturnCaptureAnalysis(ballistic.vInfAtSaturnKms).dvMinCaptureKms,
+      interpretation: "純弾道（推力なし）、v∞は自然な値",
+    } : null,
+    bestEfficiency: bestEfficiency ? {
+      accelDays: bestEfficiency.accelDays,
+      decelDays: bestEfficiency.decelDays,
+      transferDays: bestEfficiency.transferDays,
+      vInfKms: bestEfficiency.vInfAtSaturnKms,
+      totalDeltaVKms: bestEfficiency.totalWithCaptureDeltaVKms,
+      propellantFraction: bestEfficiency.totalWithCapturePropFraction,
+      captureDeltaVKms: bestEfficiency.captureMinDeltaVKms,
+      interpretation: "総ΔV（遷移＋捕獲）最小のシナリオ",
+    } : null,
+    fastestModerate: fastestModerate ? {
+      accelDays: fastestModerate.accelDays,
+      decelDays: fastestModerate.decelDays,
+      transferDays: fastestModerate.transferDays,
+      vInfKms: fastestModerate.vInfAtSaturnKms,
+      totalDeltaVKms: fastestModerate.totalWithCaptureDeltaVKms,
+      propellantFraction: fastestModerate.totalWithCapturePropFraction,
+      captureDeltaVKms: fastestModerate.captureMinDeltaVKms,
+      interpretation: "捕獲可能な最速シナリオ（v∞ < 15 km/s）",
+    } : null,
+    allTwoPhase: twoPhase,
+    summary:
+      "トリムのみ制約下で加速のみに3日間使用すると87日で到着するが、" +
+      "v∞≈90 km/sで土星捕獲は不可能。加速＋減速の2相モデル、または" +
+      "弾道軌道＋方向制御のみの解釈が物理的に整合する。" +
+      "Isp=10⁶sにより推進剤は制約にならず（84.7 km/sでも消費0.87%）、" +
+      "損傷状態での推力持続時間が実質的な制約。",
+  };
+}
+
 /**
  * Damaged thrust scenarios.
  * Ship's cooling is compromised — assume thrust is limited to some fraction.
@@ -777,6 +1047,9 @@ export function analyzeEpisode2() {
   // Trim-thrust transfer analysis (corrects previous 455-day estimate)
   const trimThrust = primaryTransferScenario();
 
+  // Self-consistent arrival velocity analysis (resolves v∞ inconsistency)
+  const arrivalConsistency = arrivalVelocityConsistencyAnalysis();
+
   return {
     hohmann,
     jupiterEscape: escape,
@@ -789,5 +1062,6 @@ export function analyzeEpisode2() {
     brachistochrone90d: brach90d,
     damagedThrust,
     trimThrust,
+    arrivalConsistency,
   };
 }
