@@ -47,6 +47,7 @@ import {
   renderMarginGauge,
   renderMarginGauges,
   renderInsetDiagrams,
+  renderJourneyOverview,
 } from "./templates.ts";
 import type { NavEpisode } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
@@ -2893,6 +2894,104 @@ describe("renderIndex verdict legend and series links", () => {
   it("uses dynamic transfer count in overview", () => {
     const html = renderIndex(manifest);
     assert.ok(html.includes("全4件の軌道遷移"), "should use dynamic total transfer count");
+  });
+});
+
+// --- renderJourneyOverview ---
+
+describe("renderJourneyOverview", () => {
+  const html = renderJourneyOverview();
+
+  it("renders all 5 journey legs", () => {
+    for (let ep = 1; ep <= 5; ep++) {
+      assert.ok(html.includes(`第${ep}話`), `should include EP${ep}`);
+    }
+  });
+
+  it("includes all route waypoints", () => {
+    const waypoints = ["火星", "ガニメデ", "エンケラドス", "タイタニア", "天王星", "地球"];
+    for (const wp of waypoints) {
+      assert.ok(html.includes(wp), `should include waypoint ${wp}`);
+    }
+  });
+
+  it("includes distance and duration for each leg", () => {
+    assert.ok(html.includes("3.68 AU"), "EP01 distance");
+    assert.ok(html.includes("72h"), "EP01 duration");
+    assert.ok(html.includes("87日"), "EP02 duration");
+    assert.ok(html.includes("9.62 AU"), "EP03 distance");
+    assert.ok(html.includes("143h"), "EP03 duration");
+    assert.ok(html.includes("507h"), "EP05 duration");
+  });
+
+  it("includes margin indicators with correct colors", () => {
+    assert.ok(html.includes("var(--green)"), "comfortable margin should use green");
+    assert.ok(html.includes("var(--yellow)"), "tight margin should use yellow");
+    assert.ok(html.includes("var(--red)"), "critical margin should use red");
+  });
+
+  it("includes margin labels in Japanese", () => {
+    assert.ok(html.includes("余裕あり"), "comfortable label");
+    assert.ok(html.includes("綱渡り"), "tight label");
+    assert.ok(html.includes("限界"), "critical label");
+  });
+
+  it("includes narrative stakes for each leg", () => {
+    assert.ok(html.includes("契約違反"), "EP01 stakes");
+    assert.ok(html.includes("放射線シールド"), "EP02 stakes");
+    assert.ok(html.includes("航法系が不一致"), "EP03 stakes");
+    assert.ok(html.includes("プラズモイド"), "EP04 stakes");
+    assert.ok(html.includes("磁気ノズル"), "EP05 stakes");
+  });
+
+  it("includes transfer method for each leg", () => {
+    assert.ok(html.includes("Brachistochrone"), "brachistochrone method");
+    assert.ok(html.includes("トリム推力"), "trim thrust method");
+    assert.ok(html.includes("65%推力"), "damaged thrust method");
+    assert.ok(html.includes("複合航路"), "composite route method");
+  });
+
+  it("includes links to episode pages", () => {
+    assert.ok(html.includes('href="episodes/ep-001.html"'), "EP01 link");
+    assert.ok(html.includes('href="episodes/ep-002.html"'), "EP02 link");
+    assert.ok(html.includes('href="episodes/ep-003.html"'), "EP03 link");
+    assert.ok(html.includes('href="episodes/ep-004.html"'), "EP04 link");
+    assert.ok(html.includes('href="episodes/ep-005.html"'), "EP05 link");
+  });
+
+  it("includes connectors between legs", () => {
+    const connectorCount = (html.match(/journey-connector/g) || []).length;
+    assert.equal(connectorCount, 4, "should have 4 connectors between 5 legs");
+  });
+
+  it("has section heading and description", () => {
+    assert.ok(html.includes("航路概要"), "section heading");
+    assert.ok(html.includes("35.9 AU"), "total distance in description");
+    assert.ok(html.includes("124日間"), "total duration in description");
+  });
+});
+
+describe("renderIndex includes journey overview", () => {
+  const manifest: SiteManifest = {
+    title: "SOLAR LINE 考証",
+    generatedAt: "2026-03-01T00:00:00Z",
+    episodes: [
+      { episode: 1, title: "火星からガニメデへ", transferCount: 4, path: "episodes/ep-001.html" },
+    ],
+    logs: [],
+  };
+
+  it("includes journey overview section in index page", () => {
+    const html = renderIndex(manifest);
+    assert.ok(html.includes("航路概要"), "index should contain journey overview heading");
+    assert.ok(html.includes("journey-overview"), "index should contain journey-overview class");
+  });
+
+  it("journey overview appears before conclusion", () => {
+    const html = renderIndex(manifest);
+    const journeyPos = html.indexOf("航路概要");
+    const conclusionPos = html.indexOf("この考証の結論");
+    assert.ok(journeyPos < conclusionPos, "journey overview should appear before conclusion");
   });
 });
 

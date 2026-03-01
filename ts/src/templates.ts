@@ -627,6 +627,21 @@ footer {
 .summary-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
 .summary-card h3 { margin-top: 0; }
 .summary-card p { font-size: 0.9em; color: #8b949e; margin-bottom: 0; }
+.journey-overview { display: flex; flex-direction: column; gap: 0; margin: 0.5rem 0 1.5rem; }
+.journey-leg { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; }
+.journey-leg-header { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.journey-ep { font-weight: 700; font-size: 0.8em; color: var(--accent); min-width: 3.5em; }
+.journey-route { font-weight: 600; color: #f0f6fc; }
+.journey-margin { font-size: 0.75em; padding: 0.1em 0.5em; border-radius: 3px; color: #000; font-weight: 600; margin-left: auto; }
+.journey-leg-metrics { display: flex; gap: 1rem; font-size: 0.85em; color: var(--muted); margin-top: 0.3rem; }
+.journey-leg-note { font-size: 0.8em; color: var(--yellow); margin-top: 0.2rem; }
+.journey-leg-stakes { font-size: 0.85em; color: var(--fg); margin-top: 0.3rem; line-height: 1.5; }
+.journey-connector { text-align: center; color: var(--border); font-size: 0.8em; line-height: 1; padding: 0.15rem 0; }
+@media (max-width: 600px) {
+  .journey-leg-header { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+  .journey-margin { margin-left: 0; }
+  .journey-leg-metrics { flex-wrap: wrap; gap: 0.5rem; }
+}
 .toc { font-size: 0.9em; }
 .toc h3 { margin: 0 0 0.5rem; font-size: 1em; }
 .toc ul { list-style: none; padding-left: 0; }
@@ -847,6 +862,123 @@ function verdictBadge(verdict: string): string {
   return `<span class="verdict verdict-${verdict}">${label}</span>`;
 }
 
+/** Journey leg data for the overview visualization */
+interface JourneyLeg {
+  episode: number;
+  from: string;
+  to: string;
+  distanceAU: string;
+  duration: string;
+  method: string;
+  marginLevel: "comfortable" | "tight" | "critical";
+  marginNote: string;
+  narrativeStakes: string;
+}
+
+const JOURNEY_LEGS: JourneyLeg[] = [
+  {
+    episode: 1,
+    from: "火星",
+    to: "ガニメデ",
+    distanceAU: "3.68",
+    duration: "72h",
+    method: "Brachistochrone",
+    marginLevel: "tight",
+    marginNote: "質量≤299t必須",
+    narrativeStakes: "納期72時間——超過すれば契約違反で廃業。極限質量で全力加速、ペリジュピター捕獲に賭ける",
+  },
+  {
+    episode: 2,
+    from: "木星系",
+    to: "エンケラドス",
+    distanceAU: "4.4",
+    duration: "87日",
+    method: "トリム推力",
+    marginLevel: "comfortable",
+    marginNote: "巡航主体（全行程の70%）",
+    narrativeStakes: "損傷した放射線シールドで木星放射線帯を脱出。長い巡航中に応急修理を重ねる",
+  },
+  {
+    episode: 3,
+    from: "エンケラドス",
+    to: "タイタニア",
+    distanceAU: "9.62",
+    duration: "143h",
+    method: "Brachistochrone",
+    marginLevel: "tight",
+    marginNote: "航法精度99.8%要求",
+    narrativeStakes: "誘導ビーコンのない外縁航路。2つの航法系が不一致——人間の判断でコースを選ぶ",
+  },
+  {
+    episode: 4,
+    from: "タイタニア",
+    to: "天王星脱出",
+    distanceAU: "18.2",
+    duration: "~30日",
+    method: "65%推力",
+    marginLevel: "critical",
+    marginNote: "点火回数3-4回が限界",
+    narrativeStakes: "プラズモイド直撃で被曝480mSv。エンジン損傷、推力65%に低下——帰れるのか",
+  },
+  {
+    episode: 5,
+    from: "天王星圏",
+    to: "地球",
+    distanceAU: "18.2",
+    duration: "507h",
+    method: "複合航路",
+    marginLevel: "critical",
+    marginNote: "ノズル余命26分（0.78%）",
+    narrativeStakes: "磁気ノズル残寿命ギリギリの綱渡り。4回の点火で太陽系を横断し、LEO 400kmに帰還",
+  },
+];
+
+/** Render the journey overview strip for the landing page */
+export function renderJourneyOverview(): string {
+  const marginColors: Record<JourneyLeg["marginLevel"], string> = {
+    comfortable: "var(--green)",
+    tight: "var(--yellow)",
+    critical: "var(--red)",
+  };
+  const marginLabels: Record<JourneyLeg["marginLevel"], string> = {
+    comfortable: "余裕あり",
+    tight: "綱渡り",
+    critical: "限界",
+  };
+
+  const legs = JOURNEY_LEGS.map(leg => {
+    const color = marginColors[leg.marginLevel];
+    const label = marginLabels[leg.marginLevel];
+    const epSlug = `ep-${String(leg.episode).padStart(3, "0")}`;
+    const epLink = `episodes/${epSlug}.html`;
+    return `<div class="journey-leg">
+<div class="journey-leg-header">
+  <a href="${epLink}" class="journey-ep">第${leg.episode}話</a>
+  <span class="journey-route">${escapeHtml(leg.from)} → ${escapeHtml(leg.to)}</span>
+  <span class="journey-margin" style="background:${color}">${label}</span>
+</div>
+<div class="journey-leg-metrics">
+  <span>${escapeHtml(leg.distanceAU)} AU</span>
+  <span>${escapeHtml(leg.duration)}</span>
+  <span>${escapeHtml(leg.method)}</span>
+</div>
+<div class="journey-leg-note">${escapeHtml(leg.marginNote)}</div>
+<div class="journey-leg-stakes">${escapeHtml(leg.narrativeStakes)}</div>
+</div>`;
+  });
+
+  const connectors = legs.map((leg, i) =>
+    i < legs.length - 1 ? leg + `<div class="journey-connector" aria-hidden="true">▼</div>` : leg
+  ).join("\n");
+
+  return `
+<h2>航路概要 — 全5話の旅程</h2>
+<p style="color:var(--muted);font-size:0.9em;margin-bottom:1rem">火星から地球まで約35.9 AU・124日間。各区間のマージンと物語上の賭け金を一覧で示す。</p>
+<div class="journey-overview">
+${connectors}
+</div>`;
+}
+
 /** Render the site index page */
 export function renderIndex(manifest: SiteManifest, navEpisodes?: NavEpisode[]): string {
   const totalTransfers = manifest.episodes.reduce((sum, ep) => sum + ep.transferCount, 0);
@@ -971,8 +1103,12 @@ ${summaryLine}
 <p>作中の通信描写はすべて光速遅延を正しく反映。NASAの深宇宙通信技術（DSOC）との比較でも整合する、作品のこだわりポイント。</p>
 </div>`;
 
+  // Journey overview — visual summary of the full route
+  const journeyOverview = renderJourneyOverview();
+
   const content = `${overview}
 ${statsSection}
+${journeyOverview}
 ${conclusionSection}
 ${readingGuide}
 

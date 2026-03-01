@@ -91,6 +91,17 @@ test("index page has key findings section", async ({ page }) => {
   await expect(page.locator("text=ノズル寿命")).toBeVisible();
 });
 
+test("index page has journey overview section", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("text=航路概要")).toBeVisible();
+  const legs = page.locator(".journey-leg");
+  expect(await legs.count()).toBe(5);
+  await expect(page.locator(".journey-margin").first()).toBeVisible();
+  // Check that episode links exist within journey legs
+  const epLinks = page.locator(".journey-ep");
+  expect(await epLinks.count()).toBe(5);
+});
+
 // --- Episode pages ---
 
 const episodes: { episode: number; path: string }[] = manifest.episodes;
