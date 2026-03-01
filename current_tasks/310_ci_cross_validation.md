@@ -1,6 +1,6 @@
 # Task 310: Add Supplementary Cross-validation to CI
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Description
 1. Add `validate_supplementary.py` to CI `cross-validate` job (only needs numpy/scipy, already installed)
