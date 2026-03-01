@@ -1,6 +1,6 @@
 # Task 323: RK45 Adaptive Propagation Cross-Validation
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Description
 Add cross-validation for the Dormand-Prince RK45 adaptive integrator.
