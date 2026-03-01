@@ -180,6 +180,44 @@ SOLAR LINE は、太陽系を舞台にした SF アニメシリーズである�
 }
 ```
 
+```chart:bar
+caption: 定量検証可能な項目の精度（8項目）
+unit: "%"
+bars:
+  - label: 天王星磁場傾斜角
+    value: 99.5
+    color: "#22c55e"
+    annotation: "EP4, 60° vs 59.7°"
+  - label: 航法誤差伝播距離
+    value: 99.8
+    color: "#22c55e"
+    annotation: "EP3, 14,360,000 km"
+  - label: ΔVスケーリング比
+    value: 100
+    color: "#22c55e"
+    annotation: "EP1→EP3, 1.314"
+  - label: 巡航速度 3000 km/s
+    value: 93
+    color: "#eab308"
+    annotation: "EP3, vs 2791 km/s"
+  - label: 全航路距離 35.9 AU
+    value: 100
+    color: "#22c55e"
+    annotation: "EP5, JPL軌道要素"
+  - label: LEO 400km軌道速度
+    value: 100
+    color: "#22c55e"
+    annotation: "EP5, 7.67 km/s"
+  - label: ノズル寿命マージン
+    value: 100
+    color: "#22c55e"
+    annotation: "EP5, 26分"
+  - label: RK4エネルギー保存
+    value: 99.99
+    color: "#22c55e"
+    annotation: "検証手法, <10⁻⁹"
+```
+
 ## Brachistochrone力学の検証
 
 SOLAR LINE の軌道遷移の大部分はBrachistochrone遷移（最短時間軌道）で描かれている。Brachistochrone遷移は連続推力で加速→折返し→減速する方式で、以下の方程式に従う:

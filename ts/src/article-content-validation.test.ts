@@ -1426,6 +1426,26 @@ describe("science-accuracy.md content validation", () => {
       "glossary should include plasmoid",
     );
   });
+
+  it("has accuracy bar chart visualization", () => {
+    assert.ok(
+      content.includes("```chart:bar"),
+      "should have a bar chart directive",
+    );
+    assert.ok(
+      content.includes("検証精度") || content.includes("精度"),
+      "bar chart should reference accuracy",
+    );
+  });
+
+  it("bar chart includes key accuracy values", () => {
+    // 99.5% for Uranus magnetic tilt
+    assert.ok(content.includes("99.5"), "should include 99.5% accuracy item");
+    // 99.8% for navigation error
+    assert.ok(content.includes("99.8"), "should include 99.8% accuracy item");
+    // 93% for cruise velocity
+    assert.ok(content.includes("value: 93"), "should include 93% cruise velocity accuracy");
+  });
 });
 
 // ============================================================
@@ -1863,20 +1883,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 328+ (not stale 261 or 326)", () => {
+  it("task count is 330+ (not stale 261 or 328)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("328"), "should cite current task count 328");
+    assert.ok(content.includes("330"), "should cite current task count 330");
   });
 
-  it("commit count is 467+ (not stale 465+)", () => {
+  it("commit count is 470+ (not stale 467+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("467+"), "should cite current commit count 467+");
+    assert.ok(content.includes("470+"), "should cite current commit count 470+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -1894,8 +1914,8 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,225"), "should cite TS test count");
-    assert.ok(content.includes("377"), "should cite Rust test count");
+    assert.ok(content.includes("2,231"), "should cite TS test count");
+    assert.ok(content.includes("378"), "should cite Rust test count");
     assert.ok(content.includes("223"), "should cite E2E test count");
   });
 
