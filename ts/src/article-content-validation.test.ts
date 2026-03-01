@@ -1817,20 +1817,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 288+ (not stale 261 or 285)", () => {
+  it("task count is 290+ (not stale 261 or 288)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("288"), "should cite current task count 288");
+    assert.ok(content.includes("290"), "should cite current task count 290");
   });
 
-  it("commit count is 425+ (not stale 420+)", () => {
+  it("commit count is 427+ (not stale 425+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("425+"), "should cite current commit count 425+");
+    assert.ok(content.includes("427+"), "should cite current commit count 427+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -1848,7 +1848,7 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,147"), "should cite TS test count");
+    assert.ok(content.includes("2,173"), "should cite TS test count");
     assert.ok(content.includes("377"), "should cite Rust test count");
     assert.ok(content.includes("214"), "should cite E2E test count");
   });
