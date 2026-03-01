@@ -614,8 +614,152 @@ mod export {
             symp_ecc.pos.x.value()
         ));
         results.push_str(&format!(
-            "    \"symp_ecc_final_y\": {:.15e}\n",
+            "    \"symp_ecc_final_y\": {:.15e},\n",
             symp_ecc.pos.y.value()
+        ));
+
+        // ── State initializers ──────────────────────────────────────
+        // circular_orbit_state
+        let circ_state = circular_orbit_state(mu::EARTH, reference_orbits::LEO_RADIUS);
+        results.push_str(&format!(
+            "    \"circ_state_px\": {:.15e},\n",
+            circ_state.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"circ_state_vy\": {:.15e},\n",
+            circ_state.vel.y.value()
+        ));
+        // elliptical_orbit_state_at_periapsis
+        let ecc_state = elliptical_orbit_state_at_periapsis(mu::EARTH, Km(10000.0), 0.5);
+        results.push_str(&format!(
+            "    \"ecc_state_px\": {:.15e},\n",
+            ecc_state.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"ecc_state_vy\": {:.15e},\n",
+            ecc_state.vel.y.value()
+        ));
+
+        // ── Thrust profile propagation ──────────────────────────────
+        // ConstantPrograde: LEO orbit with small prograde thrust for 1 orbit
+        let thrust_accel = 1e-5; // 0.01 mm/s² — small but measurable
+        let config_cp = IntegratorConfig {
+            dt: 10.0,
+            mu: mu::EARTH,
+            thrust: ThrustProfile::ConstantPrograde {
+                accel_km_s2: thrust_accel,
+            },
+        };
+        let cp_final = propagate_final(&circ_state, &config_cp, period.value());
+        results.push_str(&format!("    \"cp_accel_km_s2\": {:.15e},\n", thrust_accel));
+        results.push_str(&format!(
+            "    \"cp_duration_s\": {:.15e},\n",
+            period.value()
+        ));
+        results.push_str(&format!(
+            "    \"cp_final_x\": {:.15e},\n",
+            cp_final.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"cp_final_y\": {:.15e},\n",
+            cp_final.pos.y.value()
+        ));
+        results.push_str(&format!(
+            "    \"cp_final_vx\": {:.15e},\n",
+            cp_final.vel.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"cp_final_vy\": {:.15e},\n",
+            cp_final.vel.y.value()
+        ));
+        results.push_str(&format!(
+            "    \"cp_final_r\": {:.15e},\n",
+            cp_final.radius()
+        ));
+        results.push_str(&format!(
+            "    \"cp_final_speed\": {:.15e},\n",
+            cp_final.speed()
+        ));
+
+        // Brachistochrone: LEO with accel-then-decel over half orbit
+        let half_period = period.value() / 2.0;
+        let brach_accel = 1e-5;
+        let config_brach = IntegratorConfig {
+            dt: 10.0,
+            mu: mu::EARTH,
+            thrust: ThrustProfile::Brachistochrone {
+                accel_km_s2: brach_accel,
+                flip_time: half_period / 2.0,
+            },
+        };
+        let brach_final = propagate_final(&circ_state, &config_brach, half_period);
+        results.push_str(&format!(
+            "    \"brach_accel_km_s2\": {:.15e},\n",
+            brach_accel
+        ));
+        results.push_str(&format!(
+            "    \"brach_duration_s\": {:.15e},\n",
+            half_period
+        ));
+        results.push_str(&format!(
+            "    \"brach_flip_time_s\": {:.15e},\n",
+            half_period / 2.0
+        ));
+        results.push_str(&format!(
+            "    \"brach_final_x\": {:.15e},\n",
+            brach_final.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"brach_final_y\": {:.15e},\n",
+            brach_final.pos.y.value()
+        ));
+        results.push_str(&format!(
+            "    \"brach_final_vx\": {:.15e},\n",
+            brach_final.vel.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"brach_final_vy\": {:.15e},\n",
+            brach_final.vel.y.value()
+        ));
+        results.push_str(&format!(
+            "    \"brach_final_r\": {:.15e},\n",
+            brach_final.radius()
+        ));
+        results.push_str(&format!(
+            "    \"brach_final_speed\": {:.15e},\n",
+            brach_final.speed()
+        ));
+
+        // RK45 with ConstantPrograde thrust — compare adaptive vs fixed step
+        let config_rk45_cp = AdaptiveConfig {
+            mu: mu::EARTH,
+            thrust: ThrustProfile::ConstantPrograde {
+                accel_km_s2: thrust_accel,
+            },
+            rtol: 1e-10,
+            atol: 1e-12,
+            h_init: 10.0,
+            h_min: 0.001,
+            h_max: 60.0,
+            max_steps: 100_000,
+        };
+        let (rk45_cp_final, _) =
+            propagate_adaptive_final(&circ_state, &config_rk45_cp, period.value());
+        results.push_str(&format!(
+            "    \"rk45_cp_final_x\": {:.15e},\n",
+            rk45_cp_final.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_cp_final_y\": {:.15e},\n",
+            rk45_cp_final.pos.y.value()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_cp_final_r\": {:.15e},\n",
+            rk45_cp_final.radius()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_cp_final_speed\": {:.15e}\n",
+            rk45_cp_final.speed()
         ));
         results.push_str("  },\n");
 
@@ -1360,6 +1504,56 @@ mod export {
         results.push_str(&format!(
             "    \"phase_angle_earth_jupiter_j2000_rad\": {:.15e},\n",
             pa_ej.value()
+        ));
+
+        // Uranus at J2000
+        let uranus_j2000 = ephemeris::planet_position(ephemeris::Planet::Uranus, j2000);
+        results.push_str(&format!(
+            "    \"uranus_j2000_lon_rad\": {:.15e},\n",
+            uranus_j2000.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"uranus_j2000_dist_au\": {:.15e},\n",
+            uranus_j2000.distance.value() / au_km
+        ));
+        results.push_str(&format!(
+            "    \"uranus_j2000_x_km\": {:.15e},\n",
+            uranus_j2000.x
+        ));
+        results.push_str(&format!(
+            "    \"uranus_j2000_y_km\": {:.15e},\n",
+            uranus_j2000.y
+        ));
+
+        // Neptune at J2000
+        let neptune_j2000 = ephemeris::planet_position(ephemeris::Planet::Neptune, j2000);
+        results.push_str(&format!(
+            "    \"neptune_j2000_lon_rad\": {:.15e},\n",
+            neptune_j2000.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"neptune_j2000_dist_au\": {:.15e},\n",
+            neptune_j2000.distance.value() / au_km
+        ));
+        results.push_str(&format!(
+            "    \"neptune_j2000_x_km\": {:.15e},\n",
+            neptune_j2000.x
+        ));
+        results.push_str(&format!(
+            "    \"neptune_j2000_y_km\": {:.15e},\n",
+            neptune_j2000.y
+        ));
+
+        // Uranus at a later epoch (2215, story epoch)
+        let jd_2215 = ephemeris::calendar_to_jd(2215, 1, 1.0);
+        let uranus_2215 = ephemeris::planet_position(ephemeris::Planet::Uranus, jd_2215);
+        results.push_str(&format!(
+            "    \"uranus_2215_lon_rad\": {:.15e},\n",
+            uranus_2215.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"uranus_2215_dist_au\": {:.15e},\n",
+            uranus_2215.distance.value() / au_km
         ));
 
         // Next Hohmann window from J2000
