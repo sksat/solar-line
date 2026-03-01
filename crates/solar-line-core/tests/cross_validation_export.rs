@@ -8,6 +8,7 @@
 #[cfg(test)]
 mod export {
     use solar_line_core::attitude;
+    use solar_line_core::comms;
     use solar_line_core::constants::{mu, orbit_radius, reference_orbits, G0_M_S2};
     use solar_line_core::flyby;
     use solar_line_core::kepler;
@@ -519,6 +520,55 @@ mod export {
             "    \"ep04_ext_miss\": {:.15e}\n",
             ep04_ext.miss_distance_km
         ));
+        results.push_str("  },\n");
+
+        // === Communications ===
+        results.push_str("  \"comms\": {\n");
+        let au_km = 149_597_870.7_f64;
+
+        // Light time at 1 AU
+        let lt_1au = comms::light_time_seconds(Km(au_km));
+        results.push_str(&format!("    \"lt_1au_s\": {:.15e},\n", lt_1au));
+
+        // Light time in minutes at 1 AU
+        let lt_1au_min = comms::light_time_minutes(Km(au_km));
+        results.push_str(&format!("    \"lt_1au_min\": {:.15e},\n", lt_1au_min));
+
+        // Round-trip at 1 AU
+        let rt_1au = comms::round_trip_light_time(Km(au_km));
+        results.push_str(&format!("    \"rt_1au_s\": {:.15e},\n", rt_1au));
+
+        // Light time at 5.2 AU (Jupiter distance)
+        let lt_jupiter = comms::light_time_seconds(Km(5.2 * au_km));
+        results.push_str(&format!("    \"lt_52au_s\": {:.15e},\n", lt_jupiter));
+
+        // Light time at 0 km
+        let lt_zero = comms::light_time_seconds(Km(0.0));
+        results.push_str(&format!("    \"lt_zero\": {:.15e},\n", lt_zero));
+
+        // Free-space path loss: X-band (8.4 GHz) at 1 AU
+        let fspl_xband_1au = comms::free_space_path_loss_db(au_km, 8.4e9);
+        results.push_str(&format!(
+            "    \"fspl_xband_1au\": {:.15e},\n",
+            fspl_xband_1au
+        ));
+
+        // FSPL at 5 AU
+        let fspl_xband_5au = comms::free_space_path_loss_db(5.0 * au_km, 8.4e9);
+        results.push_str(&format!(
+            "    \"fspl_xband_5au\": {:.15e},\n",
+            fspl_xband_5au
+        ));
+
+        // FSPL optical (1550 nm = 193.4 THz) at 1 AU
+        let fspl_optical_1au = comms::free_space_path_loss_db(au_km, 193.4e12);
+        results.push_str(&format!(
+            "    \"fspl_optical_1au\": {:.15e},\n",
+            fspl_optical_1au
+        ));
+
+        // Speed of light constant
+        results.push_str(&format!("    \"c_km_s\": {:.15e}\n", comms::C_KM_S));
         results.push_str("  }\n");
 
         results.push_str("}\n");

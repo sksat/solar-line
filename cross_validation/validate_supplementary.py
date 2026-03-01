@@ -327,6 +327,38 @@ def main():
     check("EP04 ext Δv", p["ep04_ext_dv"], ep04_ext["dv"])
     check("EP04 ext miss", p["ep04_ext_miss"], ep04_ext["miss_km"])
 
+    # ── Communications ──────────────────────────────────────────
+    print("\n═══ Communications module cross-validation ═══")
+    cm = rust["comms"]
+    au_km = 149_597_870.7
+
+    # Speed of light constant
+    check("c (km/s)", cm["c_km_s"], C_KM_S)
+
+    # Light time: t = d / c
+    py_lt_1au = au_km / C_KM_S
+    check("light time 1 AU", cm["lt_1au_s"], py_lt_1au)
+    check("light time 1 AU (min)", cm["lt_1au_min"], py_lt_1au / 60.0)
+    check("round-trip 1 AU", cm["rt_1au_s"], 2.0 * py_lt_1au)
+    check("light time 5.2 AU", cm["lt_52au_s"], 5.2 * au_km / C_KM_S)
+    check("light time 0 km", cm["lt_zero"], 0.0, abs_tol=1e-30)
+
+    # FSPL = 20·log₁₀(d_m) + 20·log₁₀(f_Hz) + 20·log₁₀(4π/c_m_s)
+    def fspl_db(dist_km, freq_hz):
+        d_m = dist_km * 1000.0
+        c_m_s = C_KM_S * 1000.0
+        return (20.0 * math.log10(d_m) + 20.0 * math.log10(freq_hz)
+                + 20.0 * math.log10(4.0 * math.pi / c_m_s))
+
+    check("FSPL X-band 1 AU", cm["fspl_xband_1au"], fspl_db(au_km, 8.4e9))
+    check("FSPL X-band 5 AU", cm["fspl_xband_5au"], fspl_db(5.0 * au_km, 8.4e9))
+    check("FSPL optical 1 AU", cm["fspl_optical_1au"], fspl_db(au_km, 193.4e12))
+
+    # Verify FSPL distance scaling: +14 dB for 5x distance (20·log₁₀(5) ≈ 13.98)
+    fspl_diff = cm["fspl_xband_5au"] - cm["fspl_xband_1au"]
+    py_fspl_diff = 20.0 * math.log10(5.0)
+    check("FSPL 5x distance scaling", fspl_diff, py_fspl_diff)
+
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")
     total = passed + failed
