@@ -907,6 +907,12 @@ test.describe("Summary: attitude-control page", () => {
     const glossaryTerms = page.locator(".glossary-term");
     expect(await glossaryTerms.count()).toBeGreaterThanOrEqual(1);
   });
+
+  test("has flip maneuver RCS bar chart", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    const chart = page.locator('svg[aria-label*="フリップ時間"]');
+    await expect(chart).toBeVisible();
+  });
 });
 
 // --- Ship-kestrel page tests (Task 237) ---
@@ -1115,6 +1121,12 @@ test.describe("Summary: science-accuracy page", () => {
       expect(response.status(), `Link ${href} should resolve`).toBe(200);
     }
   });
+
+  test("has accuracy bar chart SVG", async ({ page }) => {
+    await page.goto("/summary/science-accuracy.html");
+    const chart = page.locator('svg[aria-label*="定量検証"]');
+    await expect(chart).toBeVisible();
+  });
 });
 
 // --- Communications page tests (Task 242) ---
@@ -1212,6 +1224,12 @@ test.describe("Summary: ai-costs page", () => {
     await page.goto("/summary/ai-costs.html");
     const pageContent = await page.textContent("body");
     expect(pageContent).toContain("97.3%");
+  });
+
+  test("has plan cost comparison bar chart", async ({ page }) => {
+    await page.goto("/summary/ai-costs.html");
+    const chart = page.locator('svg[aria-label*="プラン別コスト"]');
+    await expect(chart).toBeVisible();
   });
 });
 
