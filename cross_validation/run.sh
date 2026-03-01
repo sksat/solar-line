@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Cross-validate Rust orbital mechanics against independent Python implementations.
+# Cross-validate Rust modules against independent Python implementations.
 # Requires: cargo, python3 with numpy, scipy, poliastro, astropy
 set -euo pipefail
 
@@ -29,3 +29,7 @@ echo "=== Step 3: Run scipy cross-validation ==="
 echo ""
 echo "=== Step 4: Run poliastro cross-validation ==="
 "${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_poliastro.py" --json "${JSON_OUT}"
+
+echo ""
+echo "=== Step 5: Run supplementary module cross-validation ==="
+"${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_supplementary.py" --json "${JSON_OUT}"
