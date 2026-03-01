@@ -280,6 +280,35 @@ def compute_test_timeline(
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Orbital 3D Geometry — independent implementations
+# ═══════════════════════════════════════════════════════════════════════
+
+def ra_dec_to_ecliptic(ra_deg: float, dec_deg: float, eps_deg: float = 23.4393):
+    """Convert RA/Dec (equatorial) to ecliptic unit vector.
+
+    This is the IAU J2000 pole direction conversion used in orbital_3d.rs
+    for both Saturn's ring plane normal and Uranus's spin axis.
+    """
+    ra = math.radians(ra_deg)
+    dec = math.radians(dec_deg)
+    eps = math.radians(eps_deg)
+
+    # Equatorial unit vector
+    eq_x = math.cos(dec) * math.cos(ra)
+    eq_y = math.cos(dec) * math.sin(ra)
+    eq_z = math.sin(dec)
+
+    # Rotate to ecliptic (around x-axis by -ε)
+    ecl_x = eq_x
+    ecl_y = eq_y * math.cos(eps) + eq_z * math.sin(eps)
+    ecl_z = -eq_y * math.sin(eps) + eq_z * math.cos(eps)
+
+    # Normalize
+    mag = math.sqrt(ecl_x**2 + ecl_y**2 + ecl_z**2)
+    return (ecl_x / mag, ecl_y / mag, ecl_z / mag)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Validation harness
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -468,6 +497,45 @@ def main():
     check("timeline final propellant", mt["timeline_final_propellant_kg"], tl["final_propellant_kg"])
     check("timeline total consumed", mt["timeline_total_consumed_kg"], tl["total_consumed_kg"])
     check("timeline propellant margin", mt["timeline_propellant_margin"], tl["margin"])
+
+    # ── Orbital 3D Geometry ─────────────────────────────────────
+    print("\n═══ Orbital 3D geometry cross-validation ═══")
+    o3d = rust["orbital_3d"]
+
+    # Constants (obliquity angles)
+    check("Saturn obliquity (rad)", o3d["saturn_obliquity_rad"],
+          math.radians(26.73))
+    check("Uranus obliquity (rad)", o3d["uranus_obliquity_rad"],
+          math.radians(97.77))
+
+    # Ring/orbit dimensions
+    check("Saturn ring inner (km)", o3d["saturn_ring_inner_km"], 66_900.0)
+    check("Saturn ring outer (km)", o3d["saturn_ring_outer_km"], 140_180.0)
+    check("Enceladus orbit radius (km)", o3d["enceladus_orbital_radius_km"], 238_020.0)
+
+    # Saturn ring plane normal at J2000
+    # IAU J2000 Saturn pole: RA=40.589°, Dec=83.537°
+    py_saturn = ra_dec_to_ecliptic(40.589, 83.537)
+    check("Saturn normal x", o3d["saturn_normal_x"], py_saturn[0])
+    check("Saturn normal y", o3d["saturn_normal_y"], py_saturn[1])
+    check("Saturn normal z", o3d["saturn_normal_z"], py_saturn[2])
+
+    # Verify Saturn normal is unit vector
+    saturn_mag = math.sqrt(
+        o3d["saturn_normal_x"]**2 + o3d["saturn_normal_y"]**2 + o3d["saturn_normal_z"]**2)
+    check("Saturn normal magnitude", saturn_mag, 1.0)
+
+    # Uranus spin axis in ecliptic
+    # IAU J2000 Uranus pole: RA=257.311°, Dec=-15.175°
+    py_uranus = ra_dec_to_ecliptic(257.311, -15.175)
+    check("Uranus axis x", o3d["uranus_axis_x"], py_uranus[0])
+    check("Uranus axis y", o3d["uranus_axis_y"], py_uranus[1])
+    check("Uranus axis z", o3d["uranus_axis_z"], py_uranus[2])
+
+    # Verify Uranus axis is unit vector
+    uranus_mag = math.sqrt(
+        o3d["uranus_axis_x"]**2 + o3d["uranus_axis_y"]**2 + o3d["uranus_axis_z"]**2)
+    check("Uranus axis magnitude", uranus_mag, 1.0)
 
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")

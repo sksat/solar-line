@@ -13,6 +13,7 @@ mod export {
     use solar_line_core::flyby;
     use solar_line_core::kepler;
     use solar_line_core::mass_timeline;
+    use solar_line_core::orbital_3d;
     use solar_line_core::orbits;
     use solar_line_core::plasmoid;
     use solar_line_core::propagation::*;
@@ -667,6 +668,54 @@ mod export {
             "    \"timeline_propellant_margin\": {:.15e}\n",
             margin
         ));
+        results.push_str("  },\n");
+
+        // === Orbital 3D Geometry ===
+        results.push_str("  \"orbital_3d\": {\n");
+
+        // Constants
+        results.push_str(&format!(
+            "    \"saturn_obliquity_rad\": {:.15e},\n",
+            orbital_3d::SATURN_OBLIQUITY_RAD
+        ));
+        results.push_str(&format!(
+            "    \"uranus_obliquity_rad\": {:.15e},\n",
+            orbital_3d::URANUS_OBLIQUITY_RAD
+        ));
+        results.push_str(&format!(
+            "    \"saturn_ring_inner_km\": {:.15e},\n",
+            orbital_3d::SATURN_RING_INNER_KM
+        ));
+        results.push_str(&format!(
+            "    \"saturn_ring_outer_km\": {:.15e},\n",
+            orbital_3d::SATURN_RING_OUTER_KM
+        ));
+        results.push_str(&format!(
+            "    \"enceladus_orbital_radius_km\": {:.15e},\n",
+            orbital_3d::ENCELADUS_ORBITAL_RADIUS_KM
+        ));
+
+        // Saturn ring plane normal at J2000 (RA/Dec → ecliptic conversion)
+        let j2000 = 2_451_545.0_f64;
+        let saturn_normal = orbital_3d::saturn_ring_plane_normal(j2000);
+        results.push_str(&format!(
+            "    \"saturn_normal_x\": {:.15e},\n",
+            saturn_normal.x
+        ));
+        results.push_str(&format!(
+            "    \"saturn_normal_y\": {:.15e},\n",
+            saturn_normal.y
+        ));
+        results.push_str(&format!(
+            "    \"saturn_normal_z\": {:.15e},\n",
+            saturn_normal.z
+        ));
+
+        // Uranus spin axis in ecliptic (RA/Dec → ecliptic conversion)
+        let uranus_axis = orbital_3d::uranus_spin_axis_ecliptic();
+        results.push_str(&format!("    \"uranus_axis_x\": {:.15e},\n", uranus_axis.x));
+        results.push_str(&format!("    \"uranus_axis_y\": {:.15e},\n", uranus_axis.y));
+        results.push_str(&format!("    \"uranus_axis_z\": {:.15e}\n", uranus_axis.z));
         results.push_str("  }\n");
 
         results.push_str("}\n");
