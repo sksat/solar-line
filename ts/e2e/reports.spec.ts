@@ -535,6 +535,22 @@ test.describe("Transcription pages", () => {
     expect(errors).toEqual([]);
   });
 
+  test("transcription index shows accuracy and agreement columns", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/transcriptions/");
+    // Should have accuracy and agreement column headers
+    const headers = page.locator("thead th");
+    const headerTexts = await headers.allTextContents();
+    expect(headerTexts).toContain("精度");
+    expect(headerTexts).toContain("ソース間一致");
+    // Should show color-coded accuracy values
+    const accuracyCells = page.locator(".accuracy-high, .accuracy-mid, .accuracy-low");
+    expect(await accuracyCells.count()).toBeGreaterThan(0);
+    // Should have legend explaining the colors
+    await expect(page.locator("text=80%以上")).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
   test("EP01 transcription has Layer 0 script tab (active by default)", async ({ page }) => {
     const errors = collectConsoleErrors(page);
     await page.goto("/transcriptions/ep-001.html");

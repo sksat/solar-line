@@ -700,6 +700,9 @@ footer {
 .confidence-uncertain { background: var(--red); color: #fff; }
 .phase-done { color: var(--green); font-weight: 600; }
 .phase-partial { color: var(--yellow); font-weight: 600; }
+.accuracy-high { color: var(--green); font-weight: 600; }
+.accuracy-mid { color: var(--yellow); font-weight: 600; }
+.accuracy-low { color: #ff6b6b; font-weight: 600; }
 .meta-note { font-size: 0.85em; color: var(--muted); }
 .layer-legend { background: var(--card-bg); }
 .layer-legend h3 { margin-top: 0; font-size: 1rem; }
@@ -3440,8 +3443,19 @@ ${rows}
 </table>`;
 }
 
+/** Format accuracy percentage with color coding */
+function accuracyBadge(value: number): string {
+  const pct = (value * 100).toFixed(1);
+  const cls = value >= 0.8 ? "accuracy-high" : value >= 0.6 ? "accuracy-mid" : "accuracy-low";
+  return `<span class="${cls}">${pct}%</span>`;
+}
+
 /** Render the transcription index page */
 export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[], summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  // Check if any episode has accuracy or agreement data
+  const hasAccuracy = transcriptions.some(t => t.accuracyMetrics && t.accuracyMetrics.length > 0);
+  const hasAgreement = transcriptions.some(t => t.agreementMetrics && t.agreementMetrics.length > 0);
+
   const rows = transcriptions.map(t => {
     const epTitle = t.title ?? `第${t.episode}話`;
     const link = `ep-${String(t.episode).padStart(3, "0")}.html`;
@@ -3449,6 +3463,30 @@ export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[]
     const phaseClass = t.dialogue ? "phase-done" : "phase-partial";
     const sourceCount = 1 + (t.additionalSources?.length ?? 0);
     const sourceNames = [sourceLabel(t.sourceInfo.source), ...(t.additionalSources?.map(s => sourceLabel(s.source)) ?? [])].join("、");
+
+    // Best accuracy (highest corpus accuracy among sources)
+    let accuracyCell = "";
+    if (hasAccuracy) {
+      if (t.accuracyMetrics && t.accuracyMetrics.length > 0) {
+        const best = t.accuracyMetrics.reduce((a, b) =>
+          b.corpusCharacterAccuracy > a.corpusCharacterAccuracy ? b : a);
+        accuracyCell = `<td>${accuracyBadge(best.corpusCharacterAccuracy)}</td>`;
+      } else {
+        accuracyCell = "<td>—</td>";
+      }
+    }
+
+    // Average pairwise agreement
+    let agreementCell = "";
+    if (hasAgreement) {
+      if (t.agreementMetrics && t.agreementMetrics.length > 0) {
+        const avg = t.agreementMetrics.reduce((sum, m) => sum + m.agreement, 0) / t.agreementMetrics.length;
+        agreementCell = `<td>${accuracyBadge(avg)}</td>`;
+      } else {
+        agreementCell = "<td>—</td>";
+      }
+    }
+
     return `<tr>
 <td><a href="${link}">第${t.episode}話</a></td>
 <td>${escapeHtml(epTitle)}</td>
@@ -3456,12 +3494,15 @@ export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[]
 <td>${t.lines.length}</td>
 <td>${t.dialogue ? t.dialogue.length : "—"}</td>
 <td>${t.speakers ? t.speakers.length : "—"}</td>
-<td><span class="${phaseClass}">${phase}</span></td>
+${accuracyCell}${agreementCell}<td><span class="${phaseClass}">${phase}</span></td>
 </tr>`;
   }).join("\n");
 
   const totalLines = transcriptions.reduce((sum, t) => sum + t.lines.length, 0);
   const totalDialogue = transcriptions.reduce((sum, t) => sum + (t.dialogue?.length ?? 0), 0);
+
+  const accuracyHeader = hasAccuracy ? "<th>精度</th>" : "";
+  const agreementHeader = hasAgreement ? "<th>ソース間一致</th>" : "";
 
   const content = `
 <h1>文字起こしデータ</h1>
@@ -3471,11 +3512,15 @@ export function renderTranscriptionIndex(transcriptions: TranscriptionPageData[]
 </div>
 
 <table class="data-table">
-<thead><tr><th>話数</th><th>タイトル</th><th>ソース</th><th>抽出行</th><th>帰属台詞</th><th>話者</th><th>状態</th></tr></thead>
+<thead><tr><th>話数</th><th>タイトル</th><th>ソース</th><th>抽出行</th><th>帰属台詞</th><th>話者</th>${accuracyHeader}${agreementHeader}<th>状態</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
-</table>`;
+</table>
+${hasAccuracy || hasAgreement ? `<div class="card" style="font-size:0.85em;margin-top:1rem">
+<p><strong>精度</strong>: 公式脚本との文字一致率（最良ソース）。<strong>ソース間一致</strong>: 全ソースペア間の平均一致率。詳細は各話のページを参照。</p>
+<p style="margin-top:0.3rem"><span class="accuracy-high">■</span> 80%以上 <span class="accuracy-mid">■</span> 60〜80% <span class="accuracy-low">■</span> 60%未満</p>
+</div>` : ""}`;
 
   return layoutHtml("文字起こしデータ", content, "..", summaryPages, "SOLAR LINE 全エピソードの文字起こし・台詞データ一覧", navEpisodes, metaPages);
 }

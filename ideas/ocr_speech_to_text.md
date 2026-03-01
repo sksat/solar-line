@@ -1,5 +1,12 @@
 # Idea: OCR / Speech-to-Text Infrastructure for Subtitles
 
+## Status: RESOLVED
+
+All three approaches have been implemented:
+1. **OCR on video frames**: Tesseract 5.3 pipeline (Task 289), OCR transcription tab (Task 291), OCR accuracy comparison (Task 293)
+2. **Speech-to-text**: Whisper medium (Task 009) + Whisper large-v3-turbo (Task 285). EP01 turbo accuracy: 91.4%
+3. **Multi-source comparison**: Inter-source agreement charts (Task 298), accuracy bar charts (Task 297)
+
 ## Background
 YouTube auto-generated VTT subtitles are unreliable for VOICEROID content.
 Human directive: build OCR and speech-to-text infrastructure as additional subtitle sources.

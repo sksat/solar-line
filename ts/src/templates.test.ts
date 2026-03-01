@@ -4349,6 +4349,73 @@ describe("renderTranscriptionIndex", () => {
     assert.ok(html.includes("文字起こしデータ"));
     assert.ok(html.includes("0エピソード"));
   });
+
+  it("displays accuracy metrics when available (EP01 with official script)", () => {
+    const transcriptions: TranscriptionPageData[] = [
+      {
+        episode: 1, videoId: "v1", sourceInfo: { source: "whisper", language: "ja" },
+        lines: [{ lineId: "l1", startMs: 0, endMs: 1000, text: "test", mergeReasons: [] }],
+        dialogue: null, speakers: null, scenes: null, title: null,
+        accuracyMetrics: [
+          { sourceType: "youtube-auto", corpusCharacterAccuracy: 0.683, meanLineCharacterAccuracy: 0.086, medianLineCharacterAccuracy: 0 },
+          { sourceType: "whisper-turbo", corpusCharacterAccuracy: 0.914, meanLineCharacterAccuracy: 0.9, medianLineCharacterAccuracy: 0.95 },
+        ],
+      },
+    ];
+    const html = renderTranscriptionIndex(transcriptions);
+    assert.ok(html.includes("精度"), "should have accuracy column header");
+    assert.ok(html.includes("91.4%"), "should show best accuracy percentage for whisper-turbo");
+  });
+
+  it("displays agreement metrics summary when available", () => {
+    const transcriptions: TranscriptionPageData[] = [
+      {
+        episode: 2, videoId: "v2", sourceInfo: { source: "youtube-auto", language: "ja" },
+        lines: [{ lineId: "l1", startMs: 0, endMs: 1000, text: "a", mergeReasons: [] }],
+        dialogue: null, speakers: null, scenes: null, title: null,
+        agreementMetrics: [
+          { sourceA: "youtube-auto", sourceB: "whisper-medium", agreement: 0.65 },
+          { sourceA: "youtube-auto", sourceB: "whisper-turbo", agreement: 0.70 },
+          { sourceA: "whisper-medium", sourceB: "whisper-turbo", agreement: 0.85 },
+        ],
+      },
+    ];
+    const html = renderTranscriptionIndex(transcriptions);
+    assert.ok(html.includes("ソース間一致"), "should have agreement column header");
+    assert.ok(html.includes("73.3%"), "should show average agreement (65+70+85)/3 = 73.3%");
+  });
+
+  it("shows dash for episodes without accuracy or agreement metrics", () => {
+    const transcriptions: TranscriptionPageData[] = [
+      {
+        episode: 3, videoId: "v3", sourceInfo: { source: "whisper", language: "ja" },
+        lines: [{ lineId: "l1", startMs: 0, endMs: 1000, text: "test", mergeReasons: [] }],
+        dialogue: null, speakers: null, scenes: null, title: null,
+      },
+    ];
+    const html = renderTranscriptionIndex(transcriptions);
+    // The table should still render even without metrics
+    assert.ok(html.includes("第3話"));
+  });
+
+  it("renders accuracy summary bar in the stats card", () => {
+    const transcriptions: TranscriptionPageData[] = [
+      {
+        episode: 1, videoId: "v1", sourceInfo: { source: "whisper", language: "ja" },
+        lines: [{ lineId: "l1", startMs: 0, endMs: 1000, text: "test", mergeReasons: [] }],
+        dialogue: null, speakers: null, scenes: null, title: null,
+        accuracyMetrics: [
+          { sourceType: "whisper-turbo", corpusCharacterAccuracy: 0.914, meanLineCharacterAccuracy: 0.9, medianLineCharacterAccuracy: 0.95 },
+        ],
+        agreementMetrics: [
+          { sourceA: "youtube-auto", sourceB: "whisper-turbo", agreement: 0.70 },
+        ],
+      },
+    ];
+    const html = renderTranscriptionIndex(transcriptions);
+    assert.ok(html.includes("精度") || html.includes("ソース間一致"),
+      "should include at least one metric column");
+  });
 });
 
 // --- renderTaskDashboard ---

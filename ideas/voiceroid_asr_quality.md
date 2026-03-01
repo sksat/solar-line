@@ -1,5 +1,13 @@
 # VOICEROID ASR Quality Issue
 
+## Status: RESOLVED
+
+Mitigations implemented:
+- Whisper medium (Task 009) + large-v3-turbo (Task 285): EP01 accuracy 82.6% → 91.4%
+- Speaker diarization investigated (Task 056): general-purpose diarization not viable for VOICEROID (80.3% accuracy)
+- Multi-source comparison infrastructure (Tasks 297, 298): accuracy + agreement charts on transcription pages
+- OCR pipeline (Task 289): captures on-screen text as additional source
+
 ## Problem
 YouTube's auto-generated subtitles for SOLAR LINE have very poor accuracy.
 The series uses VOICEROID/software-talk voices (CeVIO, VOICEVOX, etc.) which
