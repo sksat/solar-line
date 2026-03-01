@@ -1233,6 +1233,13 @@ describe("ship-kestrel.md content validation", () => {
       `should cite ${KESTREL.fuel} fuel type`,
     );
   });
+
+  it("EP04 burn-count margin: HUD 1-2 BURNS → dialogue 3-4回 after repair", () => {
+    assert.ok(content.includes("1-2") || content.includes("1〜2"),
+      "should cite HUD 1-2 BURNS MAXIMUM pre-repair reading");
+    assert.ok(content.includes("3-4") || content.includes("3〜4") || content.includes("3回"),
+      "should cite post-repair 3-4 burn count");
+  });
 });
 
 // ============================================================
