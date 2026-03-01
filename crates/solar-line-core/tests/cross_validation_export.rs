@@ -61,6 +61,10 @@ mod export {
             orbit_radius::SATURN.value()
         ));
         results.push_str(&format!(
+            "    \"mu_neptune\": {:.15e},\n",
+            mu::NEPTUNE.value()
+        ));
+        results.push_str(&format!(
             "    \"r_uranus\": {:.15e},\n",
             orbit_radius::URANUS.value()
         ));
@@ -134,8 +138,30 @@ mod export {
             dv1_ej.value()
         ));
         results.push_str(&format!(
-            "    \"earth_jupiter_dv2\": {:.15e}\n",
+            "    \"earth_jupiter_dv2\": {:.15e},\n",
             dv2_ej.value()
+        ));
+        // Earth to Saturn
+        let (dv1_es, dv2_es) =
+            orbits::hohmann_transfer_dv(mu::SUN, orbit_radius::EARTH, orbit_radius::SATURN);
+        results.push_str(&format!(
+            "    \"earth_saturn_dv1\": {:.15e},\n",
+            dv1_es.value()
+        ));
+        results.push_str(&format!(
+            "    \"earth_saturn_dv2\": {:.15e},\n",
+            dv2_es.value()
+        ));
+        // Earth to Uranus
+        let (dv1_eu, dv2_eu) =
+            orbits::hohmann_transfer_dv(mu::SUN, orbit_radius::EARTH, orbit_radius::URANUS);
+        results.push_str(&format!(
+            "    \"earth_uranus_dv1\": {:.15e},\n",
+            dv1_eu.value()
+        ));
+        results.push_str(&format!(
+            "    \"earth_uranus_dv2\": {:.15e}\n",
+            dv2_eu.value()
         ));
         results.push_str("  },\n");
 
@@ -155,6 +181,16 @@ mod export {
         results.push_str(&format!(
             "    \"jupiter_days\": {:.15e},\n",
             t_jupiter.value() / 86400.0
+        ));
+        let t_saturn = orbits::orbital_period(mu::SUN, orbit_radius::SATURN);
+        results.push_str(&format!(
+            "    \"saturn_days\": {:.15e},\n",
+            t_saturn.value() / 86400.0
+        ));
+        let t_uranus = orbits::orbital_period(mu::SUN, orbit_radius::URANUS);
+        results.push_str(&format!(
+            "    \"uranus_days\": {:.15e},\n",
+            t_uranus.value() / 86400.0
         ));
         let t_leo = orbits::orbital_period(mu::EARTH, reference_orbits::LEO_RADIUS);
         results.push_str(&format!(
@@ -397,7 +433,12 @@ mod export {
         let soi_earth = flyby::soi_radius(orbit_radius::EARTH, mu::EARTH, mu::SUN);
         results.push_str(&format!("    \"earth_km\": {:.15e},\n", soi_earth.value()));
         let soi_saturn = flyby::soi_radius(orbit_radius::SATURN, mu::SATURN, mu::SUN);
-        results.push_str(&format!("    \"saturn_km\": {:.15e}\n", soi_saturn.value()));
+        results.push_str(&format!(
+            "    \"saturn_km\": {:.15e},\n",
+            soi_saturn.value()
+        ));
+        let soi_uranus = flyby::soi_radius(orbit_radius::URANUS, mu::URANUS, mu::SUN);
+        results.push_str(&format!("    \"uranus_km\": {:.15e}\n", soi_uranus.value()));
         results.push_str("  },\n");
 
         // === Flyby ===

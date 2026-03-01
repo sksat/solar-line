@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 from astropy import units as u
-from poliastro.bodies import Earth, Mars, Jupiter, Saturn, Sun
+from poliastro.bodies import Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Sun
 from poliastro.maneuver import Maneuver
 from poliastro.twobody import Orbit
 import poliastro
@@ -109,6 +109,12 @@ def main():
     vr.check("mu_jupiter", c["mu_jupiter"], mu_jupiter_pa, rel_tol=3e-4)
     vr.check("mu_saturn", c["mu_saturn"], mu_saturn_pa, rel_tol=1e-4)
 
+    # Uranus and Neptune GM
+    mu_uranus_pa = Uranus.k.to(u.km**3 / u.s**2).value
+    mu_neptune_pa = Neptune.k.to(u.km**3 / u.s**2).value
+    vr.check("mu_uranus", c["mu_uranus"], mu_uranus_pa, rel_tol=1e-4)
+    vr.check("mu_neptune", c["mu_neptune"], mu_neptune_pa, rel_tol=1e-4)
+
     # ═══════════════════════════════════════════════════════════════
     # 2. Circular orbit velocities via poliastro Orbit objects
     # ═══════════════════════════════════════════════════════════════
@@ -161,6 +167,22 @@ def main():
     vr.check("hohmann_earth_jupiter_dv1", rust["hohmann"]["earth_jupiter_dv1"], dv1_ej, rel_tol=1e-3)
     vr.check("hohmann_earth_jupiter_dv2", rust["hohmann"]["earth_jupiter_dv2"], dv2_ej, rel_tol=1e-3)
 
+    # Earth → Saturn (heliocentric) — EP02 relevance
+    r_saturn = c["r_saturn"] * u.km
+    hohmann_earth_saturn = Maneuver.hohmann(earth_circ, r_saturn)
+    dv1_es = math.sqrt(sum(v**2 for v in hohmann_earth_saturn.impulses[0][1].to(u.km / u.s).value))
+    dv2_es = math.sqrt(sum(v**2 for v in hohmann_earth_saturn.impulses[1][1].to(u.km / u.s).value))
+    vr.check("hohmann_earth_saturn_dv1", rust["hohmann"]["earth_saturn_dv1"], dv1_es, rel_tol=1e-3)
+    vr.check("hohmann_earth_saturn_dv2", rust["hohmann"]["earth_saturn_dv2"], dv2_es, rel_tol=1e-3)
+
+    # Earth → Uranus (heliocentric) — EP03/EP05 relevance
+    r_uranus = c["r_uranus"] * u.km
+    hohmann_earth_uranus = Maneuver.hohmann(earth_circ, r_uranus)
+    dv1_eu = math.sqrt(sum(v**2 for v in hohmann_earth_uranus.impulses[0][1].to(u.km / u.s).value))
+    dv2_eu = math.sqrt(sum(v**2 for v in hohmann_earth_uranus.impulses[1][1].to(u.km / u.s).value))
+    vr.check("hohmann_earth_uranus_dv1", rust["hohmann"]["earth_uranus_dv1"], dv1_eu, rel_tol=1e-3)
+    vr.check("hohmann_earth_uranus_dv2", rust["hohmann"]["earth_uranus_dv2"], dv2_eu, rel_tol=1e-3)
+
     # ═══════════════════════════════════════════════════════════════
     # 4. Orbital periods via poliastro
     # ═══════════════════════════════════════════════════════════════
@@ -180,6 +202,16 @@ def main():
     jupiter_period_pa = jupiter_orbit.period.to(u.day).value
     vr.check("jupiter_period_days", rust["periods"]["jupiter_days"], jupiter_period_pa, rel_tol=1e-3)
 
+    # Saturn orbital period
+    saturn_orbit = Orbit.circular(Sun, alt=(r_saturn - Sun.R))
+    saturn_period_pa = saturn_orbit.period.to(u.day).value
+    vr.check("saturn_period_days", rust["periods"]["saturn_days"], saturn_period_pa, rel_tol=1e-3)
+
+    # Uranus orbital period
+    uranus_orbit = Orbit.circular(Sun, alt=(r_uranus - Sun.R))
+    uranus_period_pa = uranus_orbit.period.to(u.day).value
+    vr.check("uranus_period_days", rust["periods"]["uranus_days"], uranus_period_pa, rel_tol=1e-3)
+
     # LEO period
     leo_period_pa = leo_orbit.period.to(u.min).value
     vr.check("leo_period_minutes", rust["periods"]["leo_minutes"], leo_period_pa, rel_tol=1e-3)
@@ -195,9 +227,12 @@ def main():
     soi_earth_pa = (c["r_earth"] * (mu_earth_pa / mu_sun_pa) ** 0.4)
     soi_saturn_pa = (c["r_saturn"] * (mu_saturn_pa / mu_sun_pa) ** 0.4)
 
+    soi_uranus_pa = (c["r_uranus"] * (mu_uranus_pa / mu_sun_pa) ** 0.4)
+
     vr.check("soi_jupiter", rust["soi"]["jupiter_km"], soi_jupiter_pa, rel_tol=1e-3)
     vr.check("soi_earth", rust["soi"]["earth_km"], soi_earth_pa, rel_tol=1e-3)
     vr.check("soi_saturn", rust["soi"]["saturn_km"], soi_saturn_pa, rel_tol=1e-3)
+    vr.check("soi_uranus", rust["soi"]["uranus_km"], soi_uranus_pa, rel_tol=1e-3)
 
     # Cross-check against known literature values
     vr.check("soi_jupiter_known_48Mkm", soi_jupiter_pa / 1e6, 48.2, rel_tol=0.03)
@@ -221,8 +256,71 @@ def main():
     tof_analytical_ej = math.pi * math.sqrt(a_transfer_ej**3 / c["mu_sun"]) / 86400.0
     vr.check("hohmann_earth_jupiter_tof_days", tof_analytical_ej, tof_earth_jupiter, rel_tol=1e-3)
 
+    # Earth → Saturn transfer time
+    tof_earth_saturn = hohmann_earth_saturn.get_total_time().to(u.day).value
+    a_transfer_es = (c["r_earth"] + c["r_saturn"]) / 2.0
+    tof_analytical_es = math.pi * math.sqrt(a_transfer_es**3 / c["mu_sun"]) / 86400.0
+    vr.check("hohmann_earth_saturn_tof_days", tof_analytical_es, tof_earth_saturn, rel_tol=1e-3)
+
+    # Earth → Uranus transfer time
+    tof_earth_uranus = hohmann_earth_uranus.get_total_time().to(u.day).value
+    a_transfer_eu = (c["r_earth"] + c["r_uranus"]) / 2.0
+    tof_analytical_eu = math.pi * math.sqrt(a_transfer_eu**3 / c["mu_sun"]) / 86400.0
+    vr.check("hohmann_earth_uranus_tof_days", tof_analytical_eu, tof_earth_uranus, rel_tol=1e-3)
+
     # ═══════════════════════════════════════════════════════════════
-    # 7. Orbit propagation energy conservation
+    # 7. Flyby geometry validation
+    # ═══════════════════════════════════════════════════════════════
+    print("=== Validating flyby geometry ===")
+
+    # Unpowered Jupiter flyby: v_inf=10 km/s, r_periapsis=200,000 km
+    # Compute independent hyperbolic flyby geometry with poliastro's constants
+    fb = rust["flyby"]["unpowered_jupiter"]
+    v_inf = fb["v_inf_in"]
+    r_peri_fb = fb["r_periapsis"]
+
+    # Hyperbolic orbit geometry: a = -mu/v_inf^2, e = 1 - r_p/a
+    a_hyp = -mu_jupiter_pa / (v_inf ** 2)
+    e_hyp = 1.0 - r_peri_fb / a_hyp
+
+    # Turn angle: delta = 2 * arcsin(1/e)
+    turn_angle_pa = 2.0 * math.asin(1.0 / e_hyp)
+    vr.check("flyby_turn_angle_rad", fb["turn_angle_rad"], turn_angle_pa, rel_tol=1e-3)
+
+    # Periapsis velocity: v_p = sqrt(v_inf^2 + 2*mu/r_p)
+    v_peri_pa = math.sqrt(v_inf**2 + 2.0 * mu_jupiter_pa / r_peri_fb)
+    vr.check("flyby_v_periapsis", fb["v_periapsis"], v_peri_pa, rel_tol=1e-3)
+
+    # Unpowered flyby conserves v_inf magnitude
+    vr.check("flyby_v_inf_conserved", fb["v_inf_out"], v_inf, rel_tol=1e-10)
+
+    # Powered flyby: additional checks
+    fb_pow = rust["flyby"]["powered_jupiter"]
+    burn_dv = fb_pow["burn_dv"]  # 1 km/s
+
+    # Periapsis velocity after burn = v_peri_unpowered + dv
+    # Use Rust's own GM for consistency (the ~0.02% Jupiter GM difference between
+    # Rust/DE430 and poliastro/DE440 is already validated in the constants section)
+    mu_j_rust = c["mu_jupiter"]
+    v_peri_rust = math.sqrt(v_inf**2 + 2.0 * mu_j_rust / r_peri_fb)
+    v_peri_pow_expected = v_peri_rust + burn_dv
+    vr.check("powered_flyby_v_periapsis", fb_pow["v_periapsis"], v_peri_pow_expected, rel_tol=1e-10)
+
+    # Exit v_inf from energy: v_inf_out = sqrt(v_peri_pow^2 - 2*mu/r_p)
+    # Compare Rust vs poliastro's independent calculation using poliastro's GM
+    v_peri_pow_pa = v_peri_pa + burn_dv
+    v_inf_out_pa = math.sqrt(v_peri_pow_pa**2 - 2.0 * mu_jupiter_pa / r_peri_fb)
+    vr.check("powered_flyby_v_inf_out", fb_pow["v_inf_out"], v_inf_out_pa, rel_tol=1e-3)
+
+    # Oberth effect: v_inf gain should exceed raw burn dv (qualitative check)
+    v_inf_gain = fb_pow["v_inf_out"] - v_inf
+    assert v_inf_gain > burn_dv, f"Oberth amplification failed: gain={v_inf_gain} <= burn={burn_dv}"
+    # Cross-validate the Oberth amplification factor against poliastro's GM
+    v_inf_gain_pa = v_inf_out_pa - v_inf
+    vr.check("oberth_gain_magnitude", v_inf_gain, v_inf_gain_pa, rel_tol=1e-2)
+
+    # ═══════════════════════════════════════════════════════════════
+    # 8. Orbit propagation energy conservation
     # ═══════════════════════════════════════════════════════════════
     print("=== Validating orbital energy ===")
 
