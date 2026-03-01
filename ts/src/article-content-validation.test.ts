@@ -948,6 +948,13 @@ describe("other-ships.md content validation", () => {
       "all narrative dialogue quotes should have timestamps",
     );
   });
+
+  it("EP02 large ship vessel ID: MPA-MC-SCV-02814 from navigation HUD", () => {
+    assert.ok(content.includes("MPA-MC-SCV-02814"),
+      "should cite the onscreen vessel ID MPA-MC-SCV-02814");
+    assert.ok(content.includes("MPA") && (content.includes("火星") || content.includes("Mars")),
+      "should connect MPA prefix to Mars Port Authority");
+  });
 });
 
 // ============================================================
