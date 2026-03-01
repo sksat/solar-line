@@ -784,10 +784,10 @@ export interface NavEpisode {
 
 export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"], description?: string, episodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
   const episodeNav = episodes && episodes.length > 0
-    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">各話分析</button><span class="nav-dropdown-menu">${episodes.map(ep => `<a href="${basePath}/${ep.path}">第${ep.episode}話</a>`).join("")}</span></span>`
+    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">各話分析</button><span class="nav-dropdown-menu" role="menu">${episodes.map(ep => `<a href="${basePath}/${ep.path}" role="menuitem">第${ep.episode}話</a>`).join("")}</span></span>`
     : "";
   const summaryNav = summaryPages && summaryPages.length > 0
-    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">総合分析</button><span class="nav-dropdown-menu">${summaryPages.map(p => `<a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`).join("")}</span></span>`
+    ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">総合分析</button><span class="nav-dropdown-menu" role="menu">${summaryPages.map(p => `<a href="${basePath}/${p.path}" role="menuitem">${escapeHtml(p.title)}</a>`).join("")}</span></span>`
     : "";
   const metaLinks = [
     ...(metaPages || []).map(p => `<a href="${basePath}/${p.path}">${escapeHtml(p.title)}</a>`),
@@ -798,7 +798,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
     `<a href="${basePath}/meta/ideas/index.html">アイデア</a>`,
     `<a href="${basePath}/explorer/index.html">データ探索</a>`,
   ];
-  const metaNav = `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn">この考証について</button><span class="nav-dropdown-menu">${metaLinks.join("")}</span></span>`;
+  const metaNav = `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">この考証について</button><span class="nav-dropdown-menu" role="menu">${metaLinks.join("")}</span></span>`;
   const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考証`;
   const ogDescription = description
     ? escapeHtml(description)
@@ -3192,15 +3192,15 @@ ${rows.join("\n")}
     dialogueSection = `<h2>${escapeHtml(tabs[0].label)}</h2>\n${tabs[0].content}`;
   } else {
     const tabButtons = tabs.map((t, i) =>
-      `<button class="tab-btn${i === 0 ? " active" : ""}" data-tab="${t.id}">${escapeHtml(t.label)}</button>`
+      `<button class="tab-btn${i === 0 ? " active" : ""}" role="tab" aria-selected="${i === 0 ? "true" : "false"}" aria-controls="tab-${t.id}" data-tab="${t.id}">${escapeHtml(t.label)}</button>`
     ).join("\n");
     const tabPanels = tabs.map((t, i) =>
-      `<div class="tab-panel${i === 0 ? " active" : ""}" id="tab-${t.id}">\n${t.content}\n</div>`
+      `<div class="tab-panel${i === 0 ? " active" : ""}" id="tab-${t.id}" role="tabpanel">\n${t.content}\n</div>`
     ).join("\n");
     dialogueSection = `
 <h2>台詞データ</h2>
 <div class="tab-container">
-<div class="tab-buttons">
+<div class="tab-buttons" role="tablist">
 ${tabButtons}
 </div>
 ${tabPanels}
@@ -3211,9 +3211,10 @@ ${tabPanels}
   var panels = document.querySelectorAll('.tab-panel');
   btns.forEach(function(btn){
     btn.addEventListener('click', function(){
-      btns.forEach(function(b){ b.classList.remove('active'); });
+      btns.forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
       panels.forEach(function(p){ p.classList.remove('active'); });
       btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
       var panel = document.getElementById('tab-' + btn.getAttribute('data-tab'));
       if(panel) panel.classList.add('active');
     });
@@ -3353,7 +3354,7 @@ export function renderTaskDashboard(tasks: TaskDashboardEntry[], summaryPages?: 
 <h3>進捗概要</h3>
 <p>合計: ${total}タスク / 完了: ${done} / 進行中: ${inProgress} / 未着手: ${todo}</p>
 <p>完了率: ${pct}%</p>
-<svg width="${barWidth + 2}" height="26" style="display:block;margin:8px 0">
+<svg width="${barWidth + 2}" height="26" style="display:block;margin:8px 0" role="img" aria-label="タスク進捗: 完了${done}件、進行中${inProgress}件、未着手${todo}件（${pct}%）">
 <rect x="1" y="1" width="${barWidth}" height="24" rx="4" fill="#333" stroke="#555"/>
 <rect x="1" y="1" width="${doneWidth}" height="24" rx="4" fill="#4caf50"/>
 ${ipWidth > 0 ? `<rect x="${1 + doneWidth}" y="1" width="${ipWidth}" height="24" fill="#ff9800"/>` : ""}
@@ -3497,7 +3498,7 @@ export function renderExplorerPage(summaryPages?: SiteManifest["summaryPages"], 
 <div class="card">
 <h3>SQL クエリ</h3>
 <div class="explorer-input-wrap">
-<textarea id="explorer-query" class="explorer-query" rows="4" placeholder="SELECT * FROM transfers LIMIT 10">SELECT episode, id, description, computedDeltaV AS dv_km_s, verdict FROM transfers ORDER BY episode, id</textarea>
+<textarea id="explorer-query" class="explorer-query" rows="4" aria-label="SQLクエリ入力" placeholder="SELECT * FROM transfers LIMIT 10">SELECT episode, id, description, computedDeltaV AS dv_km_s, verdict FROM transfers ORDER BY episode, id</textarea>
 <div class="explorer-actions">
 <button id="explorer-exec" class="explorer-btn">実行 (Ctrl+Enter)</button>
 <button id="explorer-schema" class="explorer-btn explorer-btn-secondary">スキーマ表示</button>

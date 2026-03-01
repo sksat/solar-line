@@ -346,7 +346,11 @@ function initCalculator() {
   const presetBtns = document.querySelectorAll("[data-preset]");
   for (const btn of presetBtns) {
     const key = btn.getAttribute("data-preset");
-    btn.addEventListener("click", () => applyPreset(key));
+    btn.addEventListener("click", () => {
+      presetBtns.forEach(b => b.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      applyPreset(key);
+    });
   }
 
   // Fallback: bind by id prefix for backward compatibility

@@ -444,6 +444,16 @@ describe("layoutHtml", () => {
     assert.ok(bannerIdx < contentIdx, "banner should appear before content");
   });
 
+  it("nav dropdown buttons have ARIA attributes", () => {
+    const eps: NavEpisode[] = [{ episode: 1, path: "ep01.html" }];
+    const summaries: SiteManifest["summaryPages"] = [{ title: "クロスエピソード", path: "summary/cross.html" }];
+    const html = layoutHtml("Test", "<p>ok</p>", ".", summaries, undefined, eps);
+    assert.ok(html.includes('aria-haspopup="true"'), "dropdown buttons should have aria-haspopup");
+    assert.ok(html.includes('aria-expanded="false"'), "dropdown buttons should have aria-expanded");
+    assert.ok(html.includes('role="menu"'), "dropdown menus should have role=menu");
+    assert.ok(html.includes('role="menuitem"'), "dropdown menu items should have role=menuitem");
+  });
+
   it("inline JS contains valid regex syntax for uPlot color alpha replacement", () => {
     // Regression test: backslashes in regex inside template literals must be double-escaped.
     // Without this, /[\d.]+\)/ becomes /[d.]+)/ in the HTML output, causing a browser JS error.
@@ -3987,6 +3997,11 @@ describe("renderTranscriptionPage", () => {
     // Tab switching script
     assert.ok(html.includes("tab-btn"));
     assert.ok(html.includes("tab-panel"));
+    // ARIA tab pattern
+    assert.ok(html.includes('role="tablist"'), "tab buttons container should have role=tablist");
+    assert.ok(html.includes('role="tab"'), "tab buttons should have role=tab");
+    assert.ok(html.includes('aria-selected="true"'), "active tab should have aria-selected=true");
+    assert.ok(html.includes('role="tabpanel"'), "tab panels should have role=tabpanel");
   });
 
   it("renders single tab without tab UI when Phase 1 only", () => {
@@ -4253,6 +4268,9 @@ describe("renderTaskDashboard", () => {
     assert.ok(html.includes("完了"), "should show done badge");
     assert.ok(html.includes("進行中"), "should show in-progress badge");
     assert.ok(html.includes("未着手"), "should show todo badge");
+    // Accessibility: progress bar SVG
+    assert.ok(html.includes('role="img"'), "progress bar SVG should have role=img");
+    assert.ok(html.includes('aria-label="タスク進捗:'), "progress bar SVG should have aria-label");
   });
 
   it("sorts in-progress first, then todo, then done", () => {

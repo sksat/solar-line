@@ -26,6 +26,15 @@ celestial body positions, and transfer trajectories for visual clarity.
 High — visual diagrams would significantly improve report readability.
 Start with static SVG, upgrade to interactive later.
 
+## Status: RESOLVED
+
+All three approaches implemented:
+- Static SVG diagrams via `renderOrbitalDiagram()` in templates.ts (all 5 episodes)
+- Interactive WASM-powered diagrams with animation controls (orbital-animation.js)
+- Multi-pattern scenario comparison with scenario toggle buttons
+- Uncertainty ellipses, timeline annotations, scale legends all supported
+- 15+ diagrams across 5 episodes + cross-episode full-route diagram
+
 ## Related
 - Task 008 (Episode 2 — Jupiter escape → Saturn trajectory)
 - Task 012 (report enrichment)
