@@ -567,8 +567,55 @@ mod export {
             final_ecc.pos.y.value()
         ));
         results.push_str(&format!(
-            "    \"rk45_ecc_final_r\": {:.15e}\n",
+            "    \"rk45_ecc_final_r\": {:.15e},\n",
             final_ecc.radius()
+        ));
+        // Störmer-Verlet symplectic: 10 LEO orbits
+        let symp_10 = propagate_symplectic_final(&state, mu::EARTH, 10.0, duration_10);
+        let e_symp10 = symp_10.specific_energy(mu::EARTH);
+        results.push_str(&format!(
+            "    \"symp_10orbits_final_energy\": {:.15e},\n",
+            e_symp10
+        ));
+        results.push_str(&format!(
+            "    \"symp_10orbits_energy_drift\": {:.15e},\n",
+            (e_symp10 - e0).abs() / e0.abs()
+        ));
+        results.push_str(&format!(
+            "    \"symp_10orbits_final_r\": {:.15e},\n",
+            symp_10.radius()
+        ));
+        results.push_str(&format!(
+            "    \"symp_10orbits_final_x\": {:.15e},\n",
+            symp_10.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"symp_10orbits_final_y\": {:.15e},\n",
+            symp_10.pos.y.value()
+        ));
+
+        // Störmer-Verlet: eccentric orbit (same as RK45 test case)
+        let symp_ecc = propagate_symplectic_final(&state_ecc, mu::EARTH, 10.0, period_ecc.value());
+        let e_symp_ecc = symp_ecc.specific_energy(mu::EARTH);
+        results.push_str(&format!(
+            "    \"symp_ecc_final_energy\": {:.15e},\n",
+            e_symp_ecc
+        ));
+        results.push_str(&format!(
+            "    \"symp_ecc_energy_drift\": {:.15e},\n",
+            (e_symp_ecc - e0_ecc).abs() / e0_ecc.abs()
+        ));
+        results.push_str(&format!(
+            "    \"symp_ecc_final_r\": {:.15e},\n",
+            symp_ecc.radius()
+        ));
+        results.push_str(&format!(
+            "    \"symp_ecc_final_x\": {:.15e},\n",
+            symp_ecc.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"symp_ecc_final_y\": {:.15e}\n",
+            symp_ecc.pos.y.value()
         ));
         results.push_str("  },\n");
 
@@ -770,6 +817,27 @@ mod export {
             ep04_nom.miss_distance_km
         ));
 
+        // Sub-function: plasmoid_force_n
+        let force_test = plasmoid::plasmoid_force_n(1.5e-9, 7854.0);
+        results.push_str(&format!("    \"force_15e9_7854\": {:.15e},\n", force_test));
+
+        // Sub-function: velocity_perturbation_m_s
+        let vp_test = plasmoid::velocity_perturbation_m_s(0.5, 480.0, 48_000_000.0);
+        results.push_str(&format!("    \"vp_05n_480s_48Mt\": {:.15e},\n", vp_test));
+
+        // Sub-function: miss_distance_from_perturbation_km
+        let miss_test = plasmoid::miss_distance_from_perturbation_km(0.001, 30.0 * 86400.0);
+        results.push_str(&format!("    \"miss_0001ms_30d\": {:.15e},\n", miss_test));
+
+        // Sub-function: correction_dv_m_s
+        let corr_test = plasmoid::correction_dv_m_s(0.005);
+        results.push_str(&format!("    \"correction_0005\": {:.15e},\n", corr_test));
+        let corr_neg = plasmoid::correction_dv_m_s(-0.003);
+        results.push_str(&format!(
+            "    \"correction_neg_0003\": {:.15e},\n",
+            corr_neg
+        ));
+
         // EP04 extreme scenario
         let ep04_ext = plasmoid::plasmoid_perturbation(
             50.0e-9,
@@ -871,8 +939,42 @@ mod export {
         ));
         let dist_ej = comms::distance_between_positions(&earth_pos_j2000, &jupiter_pos_j2000);
         results.push_str(&format!(
-            "    \"dist_earth_jupiter_j2000_km\": {:.15e}\n",
+            "    \"dist_earth_jupiter_j2000_km\": {:.15e},\n",
             dist_ej.value()
+        ));
+
+        // Planet distance range (min/max)
+        let (d_min_em, d_max_em) =
+            comms::planet_distance_range(ephemeris::Planet::Earth, ephemeris::Planet::Mars);
+        results.push_str(&format!(
+            "    \"dist_range_earth_mars_min_km\": {:.15e},\n",
+            d_min_em.value()
+        ));
+        results.push_str(&format!(
+            "    \"dist_range_earth_mars_max_km\": {:.15e},\n",
+            d_max_em.value()
+        ));
+        let (d_min_ej, d_max_ej) =
+            comms::planet_distance_range(ephemeris::Planet::Earth, ephemeris::Planet::Jupiter);
+        results.push_str(&format!(
+            "    \"dist_range_earth_jupiter_min_km\": {:.15e},\n",
+            d_min_ej.value()
+        ));
+        results.push_str(&format!(
+            "    \"dist_range_earth_jupiter_max_km\": {:.15e},\n",
+            d_max_ej.value()
+        ));
+
+        // Planet light delay range
+        let (lt_min_em, lt_max_em) =
+            comms::planet_light_delay_range(ephemeris::Planet::Earth, ephemeris::Planet::Mars);
+        results.push_str(&format!(
+            "    \"lt_range_earth_mars_min_s\": {:.15e},\n",
+            lt_min_em
+        ));
+        results.push_str(&format!(
+            "    \"lt_range_earth_mars_max_s\": {:.15e}\n",
+            lt_max_em
         ));
         results.push_str("  },\n");
 
@@ -1018,7 +1120,105 @@ mod export {
         let uranus_axis = orbital_3d::uranus_spin_axis_ecliptic();
         results.push_str(&format!("    \"uranus_axis_x\": {:.15e},\n", uranus_axis.x));
         results.push_str(&format!("    \"uranus_axis_y\": {:.15e},\n", uranus_axis.y));
-        results.push_str(&format!("    \"uranus_axis_z\": {:.15e}\n", uranus_axis.z));
+        results.push_str(&format!("    \"uranus_axis_z\": {:.15e},\n", uranus_axis.z));
+
+        // Saturn ring crossing: spacecraft 500,000 km above ring plane approaching Saturn
+        let ring_normal_j2000 = orbital_3d::saturn_ring_plane_normal(j2000);
+        let sc_pos = Vec3::new(
+            ring_normal_j2000.x * 500_000.0,
+            ring_normal_j2000.y * 500_000.0,
+            ring_normal_j2000.z * 500_000.0,
+        );
+        let sc_vel = Vec3::new(
+            -ring_normal_j2000.x,
+            -ring_normal_j2000.y,
+            -ring_normal_j2000.z,
+        );
+        let rc = orbital_3d::saturn_ring_crossing(sc_pos, sc_vel, j2000);
+        results.push_str(&format!("    \"rc_crosses\": {},\n", rc.crosses_ring_plane));
+        results.push_str(&format!(
+            "    \"rc_crossing_dist_km\": {:.15e},\n",
+            rc.crossing_distance_km.unwrap_or(0.0)
+        ));
+        results.push_str(&format!("    \"rc_within_rings\": {},\n", rc.within_rings));
+        results.push_str(&format!(
+            "    \"rc_z_offset_km\": {:.15e},\n",
+            rc.z_offset_at_closest_km
+        ));
+        results.push_str(&format!(
+            "    \"rc_approach_angle_rad\": {:.15e},\n",
+            rc.approach_angle_to_ring_plane.value()
+        ));
+
+        // Uranus approach analysis: from ecliptic x-direction
+        let approach_dir = Vec3::new(1.0, 0.0, 0.0);
+        let ua = orbital_3d::uranus_approach_analysis(approach_dir, 100_000.0);
+        results.push_str(&format!(
+            "    \"ua_eq_ecliptic_angle_rad\": {:.15e},\n",
+            ua.equatorial_ecliptic_angle.value()
+        ));
+        results.push_str(&format!("    \"ua_is_polar\": {},\n", ua.is_polar_approach));
+        results.push_str(&format!(
+            "    \"ua_is_equatorial\": {},\n",
+            ua.is_equatorial_approach
+        ));
+        results.push_str(&format!(
+            "    \"ua_approach_to_eq_rad\": {:.15e},\n",
+            ua.approach_to_equatorial.value()
+        ));
+        results.push_str(&format!(
+            "    \"ua_ring_clearance_km\": {:.15e},\n",
+            ua.ring_clearance_km
+        ));
+
+        // Ecliptic z-heights
+        let z_earth_j2000 = orbital_3d::ecliptic_z_height(ephemeris::Planet::Earth, j2000);
+        results.push_str(&format!(
+            "    \"z_earth_j2000_km\": {:.15e},\n",
+            z_earth_j2000.value()
+        ));
+        let z_jupiter_j2000 = orbital_3d::ecliptic_z_height(ephemeris::Planet::Jupiter, j2000);
+        results.push_str(&format!(
+            "    \"z_jupiter_j2000_km\": {:.15e},\n",
+            z_jupiter_j2000.value()
+        ));
+        let max_z_jupiter = orbital_3d::max_ecliptic_z_height(ephemeris::Planet::Jupiter);
+        results.push_str(&format!(
+            "    \"max_z_jupiter_km\": {:.15e},\n",
+            max_z_jupiter.value()
+        ));
+        let max_z_saturn = orbital_3d::max_ecliptic_z_height(ephemeris::Planet::Saturn);
+        results.push_str(&format!(
+            "    \"max_z_saturn_km\": {:.15e},\n",
+            max_z_saturn.value()
+        ));
+
+        // Out-of-plane distance
+        let oop_mars_jup = orbital_3d::out_of_plane_distance(
+            ephemeris::Planet::Mars,
+            ephemeris::Planet::Jupiter,
+            j2000,
+        );
+        results.push_str(&format!(
+            "    \"oop_mars_jupiter_j2000_km\": {:.15e},\n",
+            oop_mars_jup.value()
+        ));
+
+        // Transfer inclination penalty
+        let (inc_change, dv_penalty) = orbital_3d::transfer_inclination_penalty(
+            ephemeris::Planet::Earth,
+            ephemeris::Planet::Jupiter,
+            j2000,
+            30.0,
+        );
+        results.push_str(&format!(
+            "    \"tip_earth_jupiter_inc_rad\": {:.15e},\n",
+            inc_change.value()
+        ));
+        results.push_str(&format!(
+            "    \"tip_earth_jupiter_dv\": {:.15e}\n",
+            dv_penalty
+        ));
         results.push_str("  },\n");
 
         // === Ephemeris ===

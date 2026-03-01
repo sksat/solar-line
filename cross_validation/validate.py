@@ -643,6 +643,221 @@ def main():
     vr.passed += 1
     vr.details.append(f"  [PASS] planet_delay_ej_range: {delay_ej_min:.1f} min in [30,55]")
 
+    # --- Störmer-Verlet symplectic propagation ---
+    print("=== Validating Störmer-Verlet symplectic propagation ===")
+    # 10 LEO orbits: energy drift should be extremely small (symplectic preserves energy)
+    symp_drift = prop["symp_10orbits_energy_drift"]
+    vr.check("symp_10orbit_drift_small", symp_drift, 0.0, abs_tol=1e-10)
+    # Should return near original radius
+    vr.check("symp_10orbit_return_r", prop["symp_10orbits_final_r"], r_leo, rel_tol=1e-5)
+    # Energy should match initial energy
+    vr.check("symp_10orbit_energy_match", prop["symp_10orbits_final_energy"],
+             prop["leo_init_energy"], rel_tol=1e-10)
+
+    # Eccentric orbit: energy drift small
+    symp_ecc_drift = prop["symp_ecc_energy_drift"]
+    vr.check("symp_ecc_drift_small", symp_ecc_drift, 0.0, abs_tol=1e-7)
+    # Should return near periapsis
+    vr.check("symp_ecc_return_r", prop["symp_ecc_final_r"], r_peri_test, rel_tol=1e-4)
+
+    # Independent scipy Störmer-Verlet implementation for comparison
+    # Implement leapfrog/Störmer-Verlet in Python
+    def stormer_verlet(mu_sv, x0, y0, vx0, vy0, dt_sv, duration_sv):
+        """Störmer-Verlet leapfrog integrator (2D, no z)."""
+        n_steps_sv = int(math.ceil(duration_sv / dt_sv))
+        px, py = x0, y0
+        pvx, pvy = vx0, vy0
+        for step in range(n_steps_sv):
+            h = duration_sv - step * dt_sv if step == n_steps_sv - 1 else dt_sv
+            h = min(h, duration_sv - step * dt_sv)
+            # Half-step velocity
+            r = math.sqrt(px**2 + py**2)
+            r3 = r**3
+            ax = -mu_sv * px / r3
+            ay = -mu_sv * py / r3
+            hh = 0.5 * h
+            pvx += hh * ax
+            pvy += hh * ay
+            # Full-step position
+            px += h * pvx
+            py += h * pvy
+            # Half-step velocity (new position)
+            r = math.sqrt(px**2 + py**2)
+            r3 = r**3
+            ax = -mu_sv * px / r3
+            ay = -mu_sv * py / r3
+            pvx += hh * ax
+            pvy += hh * ay
+        r_f = math.sqrt(px**2 + py**2)
+        v_f = math.sqrt(pvx**2 + pvy**2)
+        energy_f = 0.5 * v_f**2 - mu_sv / r_f
+        return px, py, pvx, pvy, r_f, energy_f
+
+    # Python Störmer-Verlet for 10 LEO orbits
+    px_sv, py_sv, _, _, r_sv_f, e_sv_f = stormer_verlet(
+        c["mu_earth"], r_leo, 0.0, 0.0, v_circ, 10.0, 10.0 * period)
+    e_drift_sv_py = abs(e_sv_f - e_init) / abs(e_init)
+    vr.check("py_sv_10orbit_drift_small", e_drift_sv_py, 0.0, abs_tol=1e-10)
+    vr.check("py_sv_10orbit_return_r", r_sv_f, r_leo, rel_tol=1e-5)
+    # Rust and Python SV should agree closely
+    vr.check("sv_drift_rust_vs_py",
+             prop["symp_10orbits_energy_drift"], e_drift_sv_py, rel_tol=0.5)
+
+    # Python SV for eccentric orbit
+    _, _, _, _, r_sv_ecc, e_sv_ecc = stormer_verlet(
+        c["mu_earth"], r_peri_test, 0.0, 0.0, v_peri_test, 10.0, period_ecc)
+    e_drift_sv_ecc = abs(e_sv_ecc - e_init_ecc) / abs(e_init_ecc)
+    vr.check("py_sv_ecc_drift_small", e_drift_sv_ecc, 0.0, abs_tol=1e-7)
+    vr.check("py_sv_ecc_return_r", r_sv_ecc, r_peri_test, rel_tol=1e-4)
+
+    # --- Orbital 3D geometry ---
+    print("=== Validating orbital 3D geometry ===")
+    o3d = rust["orbital_3d"]
+
+    # Saturn ring plane normal: verify it's a unit vector
+    nx, ny, nz = o3d["saturn_normal_x"], o3d["saturn_normal_y"], o3d["saturn_normal_z"]
+    norm_mag = math.sqrt(nx**2 + ny**2 + nz**2)
+    vr.check("saturn_normal_unit", norm_mag, 1.0, rel_tol=1e-10)
+
+    # Independent calculation of Saturn pole in ecliptic
+    # IAU J2000 pole: RA=40.589°, Dec=83.537°
+    ra_rad = math.radians(40.589)
+    dec_rad = math.radians(83.537)
+    eps_rad = math.radians(23.4393)  # Earth's obliquity
+    eq_x = math.cos(dec_rad) * math.cos(ra_rad)
+    eq_y = math.cos(dec_rad) * math.sin(ra_rad)
+    eq_z = math.sin(dec_rad)
+    ecl_x = eq_x
+    ecl_y = eq_y * math.cos(eps_rad) + eq_z * math.sin(eps_rad)
+    ecl_z = -eq_y * math.sin(eps_rad) + eq_z * math.cos(eps_rad)
+    ecl_mag = math.sqrt(ecl_x**2 + ecl_y**2 + ecl_z**2)
+    vr.check("saturn_normal_x", nx, ecl_x / ecl_mag, rel_tol=1e-10)
+    vr.check("saturn_normal_y", ny, ecl_y / ecl_mag, rel_tol=1e-10)
+    vr.check("saturn_normal_z", nz, ecl_z / ecl_mag, rel_tol=1e-10)
+
+    # Uranus spin axis: verify unit vector + independent calc
+    ux, uy, uz = o3d["uranus_axis_x"], o3d["uranus_axis_y"], o3d["uranus_axis_z"]
+    u_mag = math.sqrt(ux**2 + uy**2 + uz**2)
+    vr.check("uranus_axis_unit", u_mag, 1.0, rel_tol=1e-10)
+
+    # IAU J2000 pole: RA=257.311°, Dec=-15.175°
+    u_ra = math.radians(257.311)
+    u_dec = math.radians(-15.175)
+    u_eq_x = math.cos(u_dec) * math.cos(u_ra)
+    u_eq_y = math.cos(u_dec) * math.sin(u_ra)
+    u_eq_z = math.sin(u_dec)
+    u_ecl_x = u_eq_x
+    u_ecl_y = u_eq_y * math.cos(eps_rad) + u_eq_z * math.sin(eps_rad)
+    u_ecl_z = -u_eq_y * math.sin(eps_rad) + u_eq_z * math.cos(eps_rad)
+    u_ecl_mag = math.sqrt(u_ecl_x**2 + u_ecl_y**2 + u_ecl_z**2)
+    vr.check("uranus_axis_x", ux, u_ecl_x / u_ecl_mag, rel_tol=1e-10)
+    vr.check("uranus_axis_y", uy, u_ecl_y / u_ecl_mag, rel_tol=1e-10)
+    vr.check("uranus_axis_z", uz, u_ecl_z / u_ecl_mag, rel_tol=1e-10)
+
+    # Ring crossing: spacecraft approaching along normal
+    # pos = normal * 500000, vel = -normal
+    # Crossing should occur at t=500000 (normalized velocity)
+    # crossing_pos = pos + vel * t = normal*500000 + (-normal)*500000 = (0,0,0) → dist = 0
+    vr.check("rc_crosses", o3d["rc_crosses"], True)
+    vr.check("rc_crossing_at_origin", o3d["rc_crossing_dist_km"], 0.0, abs_tol=1.0)
+    # Approach angle should be ~90° (perpendicular to ring plane)
+    vr.check("rc_approach_angle_90deg", o3d["rc_approach_angle_rad"],
+             math.pi / 2.0, rel_tol=1e-10)
+    # z_offset should equal 500000 (above ring plane by 500k km)
+    vr.check("rc_z_offset", o3d["rc_z_offset_km"], 500_000.0, rel_tol=1e-10)
+
+    # Uranus approach: equatorial-ecliptic angle
+    # Uranus spin axis is nearly in ecliptic, so angle from ecliptic north is ~90°
+    # equatorial_ecliptic_angle = acos(spin_axis · (0,0,1))
+    spin_dot_z = uz  # dot product with (0,0,1)
+    expected_angle = math.acos(spin_dot_z)
+    vr.check("ua_eq_ecliptic_angle", o3d["ua_eq_ecliptic_angle_rad"],
+             expected_angle, rel_tol=1e-10)
+
+    # Approach from (1,0,0): angle to Uranus equatorial plane
+    approach_dot_axis = abs(ux)  # (1,0,0) · spin_axis
+    approach_to_axis = math.acos(approach_dot_axis)
+    expected_eq_angle = math.pi / 2.0 - approach_to_axis
+    vr.check("ua_approach_to_eq", o3d["ua_approach_to_eq_rad"],
+             expected_eq_angle, rel_tol=1e-10)
+
+    # Ring clearance: 100,000 km > ring outer edge 51,149 km
+    vr.check("ua_ring_clearance_positive", o3d["ua_ring_clearance_km"],
+             100_000.0 - 51_149.0, rel_tol=1e-10)
+
+    # Ecliptic z-heights: independent check
+    # Earth z should be near zero at J2000
+    vr.check("z_earth_j2000_small", abs(o3d["z_earth_j2000_km"]) / 149_597_870.7,
+             0.0, abs_tol=0.01)
+
+    # max_z_jupiter: a * sin(i) ≈ 5.2 AU * sin(1.3°) ≈ 0.118 AU
+    max_z_jup_au = o3d["max_z_jupiter_km"] / 149_597_870.7
+    vr.check("max_z_jupiter_au", max_z_jup_au, 0.118, rel_tol=0.15)
+
+    # max_z_saturn: a * sin(i) ≈ 9.54 AU * sin(2.49°) ≈ 0.414 AU
+    max_z_sat_au = o3d["max_z_saturn_km"] / 149_597_870.7
+    vr.check("max_z_saturn_au", max_z_sat_au, 0.414, rel_tol=0.15)
+
+    # Transfer inclination penalty: 2 * v * sin(Δi/2)
+    inc_rad = o3d["tip_earth_jupiter_inc_rad"]
+    dv_pen_py = 2.0 * 30.0 * math.sin(inc_rad / 2.0)
+    vr.check("tip_dv_penalty", o3d["tip_earth_jupiter_dv"], dv_pen_py, rel_tol=1e-10)
+
+    # --- Plasmoid sub-functions ---
+    print("=== Validating plasmoid sub-functions ===")
+    pl = rust["plasmoid"]
+
+    # plasmoid_force_n: F = pressure * area
+    vr.check("force_sub", pl["force_15e9_7854"], 1.5e-9 * 7854.0)
+
+    # velocity_perturbation_m_s: F*t/m
+    vr.check("vp_sub", pl["vp_05n_480s_48Mt"], 0.5 * 480.0 / 48_000_000.0)
+
+    # miss_distance_from_perturbation_km: dv * t / 1000
+    vr.check("miss_sub", pl["miss_0001ms_30d"],
+             0.001 * 30.0 * 86400.0 / 1000.0)
+
+    # correction_dv_m_s: |dv|
+    vr.check("correction_pos", pl["correction_0005"], 0.005)
+    vr.check("correction_neg", pl["correction_neg_0003"], 0.003)
+
+    # Verify sub-functions compose to match full perturbation
+    # EP04 nominal: p_mag + p_ram → force → dv → miss
+    MU_0 = 1.256637062e-6
+    PROTON_MASS = 1.672621924e-27
+    p_mag_py = (2.0e-9)**2 / (2.0 * MU_0)
+    vr.check("ep04_nom_pmag", pl["ep04_nom_p_mag"], p_mag_py)
+    rho_py = 0.05e6 * PROTON_MASS
+    p_ram_py = 0.5 * rho_py * (150_000.0)**2
+    vr.check("ep04_nom_pram", pl["ep04_nom_p_ram"], p_ram_py)
+    force_py = (p_mag_py + p_ram_py) * 7854.0
+    vr.check("ep04_nom_force", pl["ep04_nom_force"], force_py)
+    dv_py = force_py * 480.0 / 48_000_000.0
+    vr.check("ep04_nom_dv", pl["ep04_nom_dv"], dv_py)
+    miss_py = dv_py * 34_920.0 / 1000.0
+    vr.check("ep04_nom_miss", pl["ep04_nom_miss"], miss_py)
+
+    # --- Comms extras: distance range and light delay range ---
+    print("=== Validating comms distance/delay ranges ===")
+    # Earth-Mars: min = |r_mars - r_earth|, max = r_mars + r_earth
+    d_min_em_py = abs(c["r_mars"] - c["r_earth"])
+    d_max_em_py = c["r_mars"] + c["r_earth"]
+    vr.check("dist_range_em_min", cm["dist_range_earth_mars_min_km"], d_min_em_py)
+    vr.check("dist_range_em_max", cm["dist_range_earth_mars_max_km"], d_max_em_py)
+
+    # Earth-Jupiter
+    d_min_ej_py = abs(c["r_jupiter"] - c["r_earth"])
+    d_max_ej_py = c["r_jupiter"] + c["r_earth"]
+    vr.check("dist_range_ej_min", cm["dist_range_earth_jupiter_min_km"], d_min_ej_py)
+    vr.check("dist_range_ej_max", cm["dist_range_earth_jupiter_max_km"], d_max_ej_py)
+
+    # Light delay range = distance / c
+    c_km_s = cm["c_km_s"]
+    vr.check("lt_range_em_min", cm["lt_range_earth_mars_min_s"],
+             d_min_em_py / c_km_s)
+    vr.check("lt_range_em_max", cm["lt_range_earth_mars_max_s"],
+             d_max_em_py / c_km_s)
+
     # Print summary
     print(vr.summary())
 
