@@ -458,6 +458,48 @@ def main():
     # scipy should also return near start
     vr.check("prop_scipy_return_r", r_final, r_leo, rel_tol=1e-4)
 
+    # --- RK45 adaptive propagation (scipy RK45 vs Rust RK45) ---
+    print("=== Validating RK45 adaptive propagation ===")
+    # 10 LEO orbits: compare energy drift and return-to-start
+    rk45_drift = prop["rk45_10orbits_energy_drift"]
+    vr.check("rk45_10orbit_drift_small", rk45_drift, 0.0, abs_tol=1e-7)
+
+    # scipy RK45 for 10 orbits
+    _, _, _, _, _, _, r_10_py, _, e_10_py = propagate_kepler_scipy(
+        c["mu_earth"], r_leo, v_circ, 10.0 * period)
+    e_drift_10_py = abs(e_10_py - e_init) / abs(e_init)
+    vr.check("scipy_rk45_10orbit_drift_small", e_drift_10_py, 0.0, abs_tol=1e-7)
+
+    # Both should return near original radius
+    vr.check("rk45_10orbit_return_r", prop["rk45_10orbits_final_r"], r_leo, rel_tol=1e-5)
+    vr.check("scipy_10orbit_return_r", r_10_py, r_leo, rel_tol=1e-5)
+
+    # Eccentric orbit: e=0.5, a=10000 km, 1 period
+    a_ecc_test = 10000.0
+    e_ecc_test = 0.5
+    r_peri_test = a_ecc_test * (1.0 - e_ecc_test)
+    v_peri_test = math.sqrt(c["mu_earth"] * (2.0 / r_peri_test - 1.0 / a_ecc_test))
+    period_ecc = orbital_period(c["mu_earth"], a_ecc_test)
+    e_init_ecc = 0.5 * v_peri_test**2 - c["mu_earth"] / r_peri_test
+
+    # Verify initial conditions match
+    vr.check("rk45_ecc_init_r", prop["rk45_ecc_init_r"], r_peri_test)
+    vr.check("rk45_ecc_init_v", prop["rk45_ecc_init_v"], v_peri_test)
+    vr.check("rk45_ecc_init_energy", prop["rk45_ecc_init_energy"], e_init_ecc)
+
+    # Energy drift should be small
+    vr.check("rk45_ecc_drift_small", prop["rk45_ecc_energy_drift"], 0.0, abs_tol=1e-8)
+
+    # scipy propagation for eccentric orbit
+    _, _, _, _, _, _, r_ecc_py, _, e_ecc_py = propagate_kepler_scipy(
+        c["mu_earth"], r_peri_test, v_peri_test, period_ecc)
+    e_drift_ecc_py = abs(e_ecc_py - e_init_ecc) / abs(e_init_ecc)
+    vr.check("scipy_ecc_drift_small", e_drift_ecc_py, 0.0, abs_tol=1e-8)
+
+    # Both should return near periapsis
+    vr.check("rk45_ecc_return_r", prop["rk45_ecc_final_r"], r_peri_test, rel_tol=1e-5)
+    vr.check("scipy_ecc_return_r", r_ecc_py, r_peri_test, rel_tol=1e-5)
+
     # --- Orbital energy & angular momentum ---
     print("=== Validating specific energy & angular momentum ===")
     oe = rust["orbital_energy"]

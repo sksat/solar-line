@@ -493,8 +493,82 @@ mod export {
             final_state.pos.y.value()
         ));
         results.push_str(&format!(
-            "    \"leo_final_r\": {:.15e}\n",
+            "    \"leo_final_r\": {:.15e},\n",
             final_state.radius()
+        ));
+
+        // RK45 adaptive: 10 LEO orbits for energy drift comparison
+        let config_rk45 = AdaptiveConfig {
+            mu: mu::EARTH,
+            thrust: ThrustProfile::None,
+            rtol: 1e-10,
+            atol: 1e-12,
+            h_init: 10.0,
+            h_min: 0.001,
+            h_max: 60.0,
+            max_steps: 100_000,
+        };
+        let duration_10 = 10.0 * period.value();
+        let (final_rk45, n_eval_rk45) = propagate_adaptive_final(&state, &config_rk45, duration_10);
+        let e_rk45 = final_rk45.specific_energy(mu::EARTH);
+        results.push_str(&format!(
+            "    \"rk45_10orbits_final_energy\": {:.15e},\n",
+            e_rk45
+        ));
+        results.push_str(&format!(
+            "    \"rk45_10orbits_energy_drift\": {:.15e},\n",
+            (e_rk45 - e0).abs() / e0.abs()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_10orbits_final_r\": {:.15e},\n",
+            final_rk45.radius()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_10orbits_final_x\": {:.15e},\n",
+            final_rk45.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_10orbits_final_y\": {:.15e},\n",
+            final_rk45.pos.y.value()
+        ));
+        results.push_str(&format!("    \"rk45_10orbits_n_eval\": {},\n", n_eval_rk45));
+
+        // RK45: eccentric orbit (e=0.5, a=10000 km)
+        let a_ecc = 10000.0_f64;
+        let e_ecc_val = 0.5_f64;
+        // At periapsis: r = a*(1-e), v = sqrt(mu*(2/r - 1/a))
+        let r_peri = a_ecc * (1.0 - e_ecc_val);
+        let v_peri = (mu::EARTH.value() * (2.0 / r_peri - 1.0 / a_ecc)).sqrt();
+        let state_ecc = PropState::new(
+            Vec3::new(Km(r_peri), Km(0.0), Km(0.0)),
+            Vec3::new(KmPerSec(0.0), KmPerSec(v_peri), KmPerSec(0.0)),
+        );
+        let period_ecc = orbits::orbital_period(mu::EARTH, Km(a_ecc));
+        let e0_ecc = state_ecc.specific_energy(mu::EARTH);
+        let (final_ecc, _) = propagate_adaptive_final(&state_ecc, &config_rk45, period_ecc.value());
+        let ef_ecc = final_ecc.specific_energy(mu::EARTH);
+        results.push_str(&format!("    \"rk45_ecc_init_r\": {:.15e},\n", r_peri));
+        results.push_str(&format!("    \"rk45_ecc_init_v\": {:.15e},\n", v_peri));
+        results.push_str(&format!("    \"rk45_ecc_init_energy\": {:.15e},\n", e0_ecc));
+        results.push_str(&format!(
+            "    \"rk45_ecc_final_energy\": {:.15e},\n",
+            ef_ecc
+        ));
+        results.push_str(&format!(
+            "    \"rk45_ecc_energy_drift\": {:.15e},\n",
+            (ef_ecc - e0_ecc).abs() / e0_ecc.abs()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_ecc_final_x\": {:.15e},\n",
+            final_ecc.pos.x.value()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_ecc_final_y\": {:.15e},\n",
+            final_ecc.pos.y.value()
+        ));
+        results.push_str(&format!(
+            "    \"rk45_ecc_final_r\": {:.15e}\n",
+            final_ecc.radius()
         ));
         results.push_str("  },\n");
 

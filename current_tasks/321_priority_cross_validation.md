@@ -1,6 +1,6 @@
 # Task 321: Priority Cross-Validation Additions
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Description
 Add cross-validation for high-priority uncovered functions:
