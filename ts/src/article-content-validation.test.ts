@@ -614,6 +614,31 @@ describe("EP05 article content validation", () => {
     assert.ok(content.includes("2体近似"),
       "should validate 2-body approximation");
   });
+
+  // --- Task 358: Onscreen crossref integration ---
+
+  it("acceleration evolution across 4 burns: non-monotonic pattern", () => {
+    // EP05 onscreen crossref shows burn accelerations: 16.38 → 13.66 → 10.92 → 15.02 m/s²
+    assert.ok(content.includes("16.38") || content.includes("16.4"),
+      "should cite Burn 1 (Uranus Escape) acceleration ~16.38 m/s²");
+    assert.ok(content.includes("10.92") || content.includes("10.9"),
+      "should cite Burn 3 (Mars Deceleration) acceleration ~10.92 m/s²");
+    assert.ok(content.includes("15.02") || content.includes("15.0"),
+      "should cite Burn 4 (Earth Capture) acceleration ~15.02 m/s²");
+  });
+
+  it("acceleration evolution: discusses thrust degradation or throttle control", () => {
+    assert.ok(
+      content.includes("ノズル劣化") || content.includes("スロットル") || content.includes("推力変化"),
+      "should discuss thrust degradation, throttle control, or thrust variation across burns");
+  });
+
+  it("Saturn ring ice particle: 110 MJ impact energy verified", () => {
+    assert.ok(content.includes("110") && (content.includes("MJ") || content.includes("メガジュール")),
+      "should cite 110 MJ impact energy from onscreen data");
+    assert.ok(content.includes("多孔質") || content.includes("密度"),
+      "should discuss porous ice or density to explain the 110 MJ value");
+  });
 });
 
 // ============================================================
