@@ -323,6 +323,13 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes("6.3") && content.includes("km/s"),
       "should cite estimated total Jupiter ΔV ~6.3 km/s");
   });
+
+  it("relativistic effects: β ~1.4% peak velocity for 72h brachistochrone", () => {
+    assert.ok(content.includes("相対論") || content.includes("relativistic"),
+      "EP01 should mention relativistic effects assessment");
+    assert.ok(content.includes("1.4%") || content.includes("1.42%") || content.includes("4,248") || content.includes("4248"),
+      "should cite peak velocity ~4,248 km/s or β ~1.4%");
+  });
 });
 
 describe("EP02 article content validation", () => {
@@ -449,6 +456,13 @@ describe("EP02 article content validation", () => {
     assert.ok(content.includes("恒星掩蔽") || content.includes("stellar occultation"),
       "should discuss stellar occultation detection method");
   });
+
+  it("relativistic effects: trim-thrust cruise β ≈ 0.02% negligible", () => {
+    assert.ok(content.includes("相対論") || content.includes("relativistic"),
+      "EP02 should mention relativistic effects assessment");
+    assert.ok(content.includes("0.02%") || content.includes("65 km/s") || content.includes("無視可能") || content.includes("negligible"),
+      "should note that EP02 trim-thrust relativistic effects are negligible");
+  });
 });
 
 describe("EP03 article content validation", () => {
@@ -534,6 +548,13 @@ describe("EP03 article content validation", () => {
     assert.ok(content.includes("47%") || content.includes("54%"),
       "should cite ΔV reduction percentage (47% savings or 54% of theoretical)");
   });
+
+  it("relativistic effects: β ~1.9% for 143h brachistochrone", () => {
+    assert.ok(content.includes("相対論") || content.includes("relativistic"),
+      "EP03 should mention relativistic effects assessment");
+    assert.ok(content.includes("1.9%") || content.includes("1.86%") || content.includes("5,590") || content.includes("5590"),
+      "should cite peak velocity ~5,590 km/s or β ~1.9%");
+  });
 });
 
 describe("EP04 article content validation", () => {
@@ -618,6 +639,13 @@ describe("EP04 article content validation", () => {
       "should cite periapsis altitude 6.50 RU");
     assert.ok(content.includes("ミランダ") || content.includes("アリエル"),
       "should place periapsis between Miranda and Ariel orbits");
+  });
+
+  it("relativistic effects: β ~0.7% for 65% thrust brachistochrone", () => {
+    assert.ok(content.includes("相対論") || content.includes("relativistic"),
+      "EP04 should mention relativistic effects assessment");
+    assert.ok(content.includes("0.7%") || content.includes("0.70%") || content.includes("2,101") || content.includes("2101"),
+      "should cite peak velocity ~2,101 km/s or β ~0.7%");
   });
 });
 
@@ -730,6 +758,13 @@ describe("EP05 article content validation", () => {
       "should have acceleration evolution chart ID");
     assert.ok(content.includes("等推力理論値"),
       "chart should have constant-thrust reference line");
+  });
+
+  it("relativistic effects: β ~2.5% peak — strongest in series", () => {
+    assert.ok(content.includes("相対論") || content.includes("relativistic"),
+      "EP05 should mention relativistic effects assessment");
+    assert.ok(content.includes("2.5%") || content.includes("2.54%") || content.includes("7,603") || content.includes("7604"),
+      "should cite peak velocity ~7,604 km/s or β ~2.5%");
   });
 
   it("Saturn ring ice particle: 110 MJ impact energy verified", () => {
