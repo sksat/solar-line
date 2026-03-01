@@ -979,6 +979,17 @@ ${connectors}
 </div>`;
 }
 
+/** Render a custom 404 page */
+export function render404Page(summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const content = `
+<section>
+<h1>404 — ページが見つかりません</h1>
+<p>お探しのページは存在しないか、移動された可能性があります。</p>
+<p><a href="./index.html">トップページに戻る</a></p>
+</section>`;
+  return layoutHtml("404 Not Found", content, ".", summaryPages, undefined, navEpisodes, metaPages);
+}
+
 /** Render the site index page */
 export function renderIndex(manifest: SiteManifest, navEpisodes?: NavEpisode[]): string {
   const totalTransfers = manifest.episodes.reduce((sum, ep) => sum + ep.transferCount, 0);

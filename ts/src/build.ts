@@ -28,6 +28,7 @@ import {
   renderIdeasIndex,
   renderIdeaPage,
   renderExplorerPage,
+  render404Page,
   type NavEpisode,
 } from "./templates.ts";
 import { generateExplorerData } from "./generate-explorer-data.ts";
@@ -665,6 +666,9 @@ export function build(config: BuildConfig): void {
 
   // Generate index page
   fs.writeFileSync(path.join(outDir, "index.html"), renderIndex(manifest, navEpisodes));
+
+  // Generate custom 404 page (GitHub Pages serves this for unknown URLs)
+  fs.writeFileSync(path.join(outDir, "404.html"), render404Page(manifest.summaryPages, navEpisodes, manifest.metaPages));
 
   // Generate episode pages (and detail sub-pages for nested reports)
   for (const ep of episodes) {
