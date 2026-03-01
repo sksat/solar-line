@@ -799,6 +799,23 @@ export function build(config: BuildConfig): void {
     fs.copyFileSync(explorerSrc, path.join(outDir, "duckdb-explorer.js"));
   }
 
+  // Copy DuckDB-WASM files for same-origin serving (avoids CDN cross-origin issues)
+  const duckdbPkgDir = path.resolve(path.dirname(import.meta.filename ?? ""), "..", "node_modules", "@duckdb", "duckdb-wasm", "dist");
+  if (fs.existsSync(duckdbPkgDir)) {
+    const duckdbOutDir = path.join(outDir, "duckdb");
+    ensureDir(duckdbOutDir);
+    const duckdbFiles = [
+      "duckdb-browser.mjs", "duckdb-eh.wasm", "duckdb-mvp.wasm",
+      "duckdb-browser-eh.worker.js", "duckdb-browser-mvp.worker.js",
+    ];
+    for (const df of duckdbFiles) {
+      const src = path.join(duckdbPkgDir, df);
+      if (fs.existsSync(src)) {
+        fs.copyFileSync(src, path.join(duckdbOutDir, df));
+      }
+    }
+  }
+
   // Write manifest JSON (useful for WASM-interactive pages later)
   fs.writeFileSync(path.join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2));
 

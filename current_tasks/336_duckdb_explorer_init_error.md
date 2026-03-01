@@ -1,6 +1,6 @@
 # Task 336: Fix DuckDB Explorer Initialization Error
 
-## Status: NOT_STARTED
+## Status: DONE
 
 ## Description
 The data explorer page shows a DuckDB initialization error. Fix with TDD approach.

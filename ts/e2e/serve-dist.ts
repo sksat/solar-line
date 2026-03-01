@@ -13,6 +13,7 @@ const TS_ROOT = path.resolve(import.meta.dirname, "..");
 const MIME: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
   ".js": "application/javascript",
+  ".mjs": "application/javascript",
   ".json": "application/json",
   ".css": "text/css",
   ".wasm": "application/wasm",

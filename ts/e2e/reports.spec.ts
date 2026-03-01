@@ -1386,6 +1386,27 @@ test.describe("Data explorer page", () => {
     await expect(page.locator("nav")).toBeVisible();
     await expect(page.locator(".site-banner")).toBeVisible();
   });
+
+  // Task 336: DuckDB initialization and query execution
+  test("DuckDB initializes and executes a query successfully", async ({ page }) => {
+    // DuckDB-WASM requires downloading ~32MB from CDN, so use a generous timeout
+    test.setTimeout(120_000);
+    await page.goto("/explorer/index.html");
+
+    // Wait for DuckDB to initialize — status should show "準備完了"
+    const statusEl = page.locator("#explorer-status");
+    await expect(statusEl).toContainText("準備完了", { timeout: 90_000 });
+
+    // Should NOT show an error
+    await expect(statusEl).not.toHaveClass(/explorer-error/);
+
+    // Click the first preset query button and verify results appear
+    const firstPreset = page.locator(".preset-btn").first();
+    await firstPreset.click();
+
+    // Wait for result table to appear
+    await expect(page.locator(".explorer-table")).toBeVisible({ timeout: 10_000 });
+  });
 });
 
 // --- Task 260: Meta task dashboard ---

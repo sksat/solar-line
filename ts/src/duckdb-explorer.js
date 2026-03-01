@@ -9,8 +9,12 @@
 (function () {
   "use strict";
 
-  // DuckDB-WASM CDN URLs
-  var DUCKDB_CDN = "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/dist";
+  // DuckDB-WASM — served from same origin to avoid cross-origin Worker issues
+  var DUCKDB_BASE = (function () {
+    var basePath = document.querySelector("meta[name='base-path']");
+    var base = basePath ? basePath.content : ".";
+    return base + "/duckdb";
+  })();
 
   var db = null;
   var conn = null;
@@ -75,17 +79,17 @@
   async function loadDuckDB() {
     setStatus("DuckDB-WASM を読み込み中…");
 
-    // Dynamic import of DuckDB-WASM
-    var duckdb = await import(DUCKDB_CDN + "/duckdb-eh.mjs");
+    // Dynamic import of DuckDB-WASM (same-origin)
+    var duckdb = await import(DUCKDB_BASE + "/duckdb-browser.mjs");
 
     var DUCKDB_BUNDLES = {
       mvp: {
-        mainModule: DUCKDB_CDN + "/duckdb-mvp.wasm",
-        mainWorker: DUCKDB_CDN + "/duckdb-browser-mvp.worker.js",
+        mainModule: DUCKDB_BASE + "/duckdb-mvp.wasm",
+        mainWorker: DUCKDB_BASE + "/duckdb-browser-mvp.worker.js",
       },
       eh: {
-        mainModule: DUCKDB_CDN + "/duckdb-eh.wasm",
-        mainWorker: DUCKDB_CDN + "/duckdb-browser-eh.worker.js",
+        mainModule: DUCKDB_BASE + "/duckdb-eh.wasm",
+        mainWorker: DUCKDB_BASE + "/duckdb-browser-eh.worker.js",
       },
     };
 

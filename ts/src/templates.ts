@@ -3748,7 +3748,8 @@ export function renderExplorerPage(summaryPages?: SiteManifest["summaryPages"], 
 <div id="explorer-result" class="explorer-result"></div>
 
 <meta name="base-path" content="..">
-<script defer src="../duckdb-explorer.js"></script>`;
+<script type="importmap">{"imports":{"apache-arrow":"https://cdn.jsdelivr.net/npm/apache-arrow@17.0.0/+esm"}}</script>
+<script type="module" src="../duckdb-explorer.js"></script>`;
 
   return layoutHtml("データエクスプローラー", content, "..", summaryPages, "DuckDB-WASM によるデータ探索ツール", navEpisodes, metaPages);
 }
