@@ -1,5 +1,9 @@
 # Idea: Full-Route Diagram Enhancements
 
+## Status: RESOLVED
+
+All enhancement ideas implemented (Tasks 025, 049, 162, 163, 300).
+
 ## Current State
 - Full-route orbital diagram added to cross-episode summary (Task 025)
 - Heliocentric, sqrt scale, animated with 4 transfer legs

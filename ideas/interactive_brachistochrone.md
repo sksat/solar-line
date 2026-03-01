@@ -13,8 +13,8 @@ Implementation:
 - Load WASM on the episode page
 - Simple sliders + output table
 
-## Status
+## Status: RESOLVED
 
-**DONE** — Implemented as Task 007. Calculator rendered on all episode pages with
+Implemented as Task 007. Calculator rendered on all episode pages with
 per-episode presets, WASM/JS fallback, thrust slider, preset buttons, and verdict display.
 See `ts/src/calculator.js` and `renderCalculator()` in `ts/src/templates.ts`.
