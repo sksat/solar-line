@@ -602,6 +602,25 @@ test.describe("Transcription pages", () => {
     // VTT timing lines like "00:01:23.456 --> 00:01:25.789" should not appear
     expect(panelText).not.toMatch(/\d{2}:\d{2}:\d{2}\.\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{3}/);
   });
+
+  test("EP01 transcription has accuracy comparison bar chart", async ({ page }) => {
+    await page.goto("/transcriptions/ep-001.html");
+    const chart = page.locator(".accuracy-chart");
+    await expect(chart).toBeVisible();
+    // Should have SVG with bars
+    const svg = chart.locator("svg");
+    await expect(svg).toBeVisible();
+    // Should show source labels and percentages
+    const chartText = await chart.innerText();
+    expect(chartText).toContain("文字起こし精度比較");
+    expect(chartText).toMatch(/\d+\.\d+%/);
+  });
+
+  test("EP02 transcription does not have accuracy chart (no official script)", async ({ page }) => {
+    await page.goto("/transcriptions/ep-002.html");
+    const chart = page.locator(".accuracy-chart");
+    await expect(chart).toHaveCount(0);
+  });
 });
 
 // --- Side-view SVG diagram tests (Task 217) ---

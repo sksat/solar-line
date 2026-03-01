@@ -4202,6 +4202,56 @@ describe("renderTranscriptionPage", () => {
     const html = renderTranscriptionPage(data);
     assert.ok(html.includes("映像OCRタブ"), "should have OCR layer explanation in legend");
   });
+
+  it("renders accuracy bar chart when accuracyMetrics provided", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      accuracyMetrics: [
+        { sourceType: "youtube-auto", corpusCharacterAccuracy: 0.683, meanLineCharacterAccuracy: 0.65, medianLineCharacterAccuracy: 0.70 },
+        { sourceType: "whisper-medium", corpusCharacterAccuracy: 0.826, meanLineCharacterAccuracy: 0.80, medianLineCharacterAccuracy: 0.85 },
+        { sourceType: "whisper-turbo", corpusCharacterAccuracy: 0.914, meanLineCharacterAccuracy: 0.90, medianLineCharacterAccuracy: 0.92 },
+      ],
+    };
+    const html = renderTranscriptionPage(data);
+    // Should render an SVG bar chart, not just text
+    assert.ok(html.includes("accuracy-chart"), "should have accuracy chart container");
+    assert.ok(html.includes("<svg"), "should contain SVG chart");
+    assert.ok(html.includes("68.3%"), "should show VTT accuracy percentage");
+    assert.ok(html.includes("82.6%"), "should show Whisper-medium accuracy percentage");
+    assert.ok(html.includes("91.4%"), "should show Whisper-turbo accuracy percentage");
+    assert.ok(html.includes("文字起こし精度比較"), "should have chart title");
+  });
+
+  it("renders accuracy chart with OCR source", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      accuracyMetrics: [
+        { sourceType: "youtube-auto", corpusCharacterAccuracy: 0.683, meanLineCharacterAccuracy: 0.65, medianLineCharacterAccuracy: 0.70 },
+        { sourceType: "ocr", corpusCharacterAccuracy: 0.101, meanLineCharacterAccuracy: 0.10, medianLineCharacterAccuracy: 0.09 },
+      ],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("accuracy-chart"), "should have accuracy chart");
+    assert.ok(html.includes("10.1%"), "should show OCR accuracy");
+    assert.ok(html.includes("68.3%"), "should show VTT accuracy");
+  });
+
+  it("does not render accuracy chart when no accuracyMetrics", () => {
+    const html = renderTranscriptionPage(phase1Only);
+    assert.ok(!html.includes("accuracy-chart"), "should not have accuracy chart without data");
+  });
+
+  it("renders accuracy chart with single source", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      accuracyMetrics: [
+        { sourceType: "whisper-turbo", corpusCharacterAccuracy: 0.914, meanLineCharacterAccuracy: 0.90, medianLineCharacterAccuracy: 0.92 },
+      ],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("accuracy-chart"), "should render chart even with single source");
+    assert.ok(html.includes("91.4%"), "should show accuracy");
+  });
 });
 
 // --- renderTranscriptionIndex ---

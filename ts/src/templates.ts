@@ -1315,6 +1315,43 @@ ${barsSvg}
 </div>`;
 }
 
+/** Color mapping for transcription source types */
+function accuracySourceColor(sourceType: string): string {
+  if (sourceType.startsWith("whisper")) return "#2ea043";
+  if (sourceType === "youtube-auto") return "#58a6ff";
+  if (sourceType === "ocr") return "#d29922";
+  return "var(--accent)";
+}
+
+/** Render a horizontal bar chart comparing transcription accuracy across sources */
+function renderAccuracyChart(metrics: NonNullable<TranscriptionPageData["accuracyMetrics"]>): string {
+  if (metrics.length === 0) return "";
+  const barHeight = 28;
+  const labelWidth = 140;
+  const chartWidth = 500;
+  const barAreaWidth = chartWidth - labelWidth - 70;
+  const svgHeight = metrics.length * (barHeight + 8) + 10;
+
+  const barsSvg = metrics.map((m, i) => {
+    const y = i * (barHeight + 8) + 4;
+    const pct = m.corpusCharacterAccuracy * 100;
+    const width = Math.max(1, (pct / 100) * barAreaWidth);
+    const color = accuracySourceColor(m.sourceType);
+    const label = escapeHtml(m.sourceType);
+    return `<text x="${labelWidth - 8}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" text-anchor="end" font-size="12">${label}</text>
+<rect x="${labelWidth}" y="${y}" width="${width}" height="${barHeight}" rx="3" fill="${color}" opacity="0.85"/>
+<text x="${labelWidth + width + 6}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" font-size="12" font-weight="600">${pct.toFixed(1)}%</text>`;
+  }).join("\n");
+
+  return `<div class="accuracy-chart" style="margin: 0.8rem 0;">
+<h4 style="font-size: 0.9em; margin: 0 0 0.3rem 0; color: var(--text-primary);">文字起こし精度比較</h4>
+<svg viewBox="0 0 ${chartWidth} ${svgHeight}" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="文字起こし精度比較チャート">
+${barsSvg}
+</svg>
+<p class="meta-note" style="margin: 0.2rem 0 0 0;">公式脚本に対するコーパスレベル文字一致率</p>
+</div>`;
+}
+
 /**
  * Scale a radius value to pixel space using the given scale mode.
  * Returns a value in [minPx, maxPx].
@@ -3058,8 +3095,8 @@ ${data.speakers ? `<tr><th>話者数</th><td>${data.speakers.length}人</td></tr
 ${data.scenes ? `<tr><th>シーン数</th><td>${data.scenes.length}</td></tr>` : ""}
 ${data.scriptSource ? `<tr><th>公式脚本</th><td><a href="${escapeHtml(data.scriptSource.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(data.scriptSource.author)}</a></td></tr>` : ""}
 <tr><th>帰属状態</th><td>${data.dialogue ? "Phase 2 完了（話者帰属済み）" : "Phase 1 のみ（話者未帰属）"}</td></tr>
-${data.accuracyMetrics && data.accuracyMetrics.length > 0 ? `<tr><th>文字精度</th><td>${data.accuracyMetrics.map(m => `${escapeHtml(m.sourceType)}: ${(m.corpusCharacterAccuracy * 100).toFixed(1)}%`).join("、")}<br><span class="meta-note">公式脚本に対するコーパスレベル文字一致率</span></td></tr>` : ""}
 </table>
+${data.accuracyMetrics && data.accuracyMetrics.length > 0 ? renderAccuracyChart(data.accuracyMetrics) : ""}
 <p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考証レポートに戻る</a></p>
 </div>
 
