@@ -52,11 +52,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: jetli/wasm-pack-action@v0.4.0
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
           cache: "npm"
           cache-dependency-path: ts/package-lock.json
+      - run: wasm-pack build --target web --out-dir ../../ts/pkg crates/solar-line-wasm
       - run: npm ci
         working-directory: ts
       - run: npx playwright install --with-deps chromium
