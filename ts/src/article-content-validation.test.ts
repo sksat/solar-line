@@ -339,6 +339,20 @@ describe("EP02 article content validation", () => {
     assert.ok(content.includes('"actual": 18.99'), "should cite 18.99 km/s heliocentric velocity in margin gauge");
   });
 
+  it("cold sleep is correctly attributed to the guest, not きりたん", () => {
+    assert.ok(content.includes("ゲスト") && content.includes("覚醒"),
+      "EP02 should mention guest awakening");
+    assert.ok(!content.includes("87日間（約3ヶ月）のコールドスリープ"),
+      "EP02 should NOT imply 87-day cold sleep for きりたん (old wording)");
+  });
+
+  it("two-phase transit model (3d+3d → ~107d) is mentioned", () => {
+    assert.ok(content.includes("107"),
+      "EP02 should cite two-phase transit time ~107 days");
+    assert.ok(content.includes("2相") || content.includes("2相モデル"),
+      "EP02 should mention two-phase model");
+  });
+
   it("Jupiter escape velocity at 50 RJ: 8.42 km/s", () => {
     assert.ok(content.includes("8.42"),
       "should cite escape velocity 8.42 km/s at 50 RJ");

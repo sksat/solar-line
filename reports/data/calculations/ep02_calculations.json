@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generatedAt": "2026-03-01T09:41:12.079Z",
+    "generatedAt": "2026-03-01T14:46:42.051Z",
     "reproductionCommand": "npm run recalculate -- --episode 2",
-    "durationMs": 6312
+    "durationMs": 6007
   },
   "hohmann": {
     "departureDv": 1.8076602726468902,
@@ -385,6 +385,84 @@
         "captureMinDeltaVKms": 2.9576791747737445,
         "totalWithCaptureDeltaVKms": 172.30167917477374,
         "totalWithCapturePropFraction": 0.017416431224264728
+      },
+      {
+        "accelDays": 5,
+        "decelDays": 3,
+        "transferDays": 57.03472222222222,
+        "totalDeltaVKms": 225.792,
+        "accelDeltaVKms": 141.12,
+        "decelDeltaVKms": 84.672,
+        "propellantFraction": 0.022761337995567232,
+        "vInfAtSaturnKms": 62.43828233269998,
+        "captureMinDeltaVKms": 47.08764186796544,
+        "totalWithCaptureDeltaVKms": 272.87964186796546,
+        "totalWithCapturePropFraction": 0.027442402965055734
+      },
+      {
+        "accelDays": 5,
+        "decelDays": 5,
+        "transferDays": 113.15972222222223,
+        "totalDeltaVKms": 282.24,
+        "accelDeltaVKms": 141.12,
+        "decelDeltaVKms": 141.12,
+        "propellantFraction": 0.028370257451176828,
+        "vInfAtSaturnKms": 10.664813218157603,
+        "captureMinDeltaVKms": 2.942888799930877,
+        "totalWithCaptureDeltaVKms": 285.1828887999309,
+        "totalWithCapturePropFraction": 0.028661791184907637
+      },
+      {
+        "accelDays": 7,
+        "decelDays": 3,
+        "transferDays": 42.395833333333336,
+        "totalDeltaVKms": 282.24,
+        "accelDeltaVKms": 197.568,
+        "decelDeltaVKms": 84.672,
+        "propellantFraction": 0.028370257451176828,
+        "vInfAtSaturnKms": 118.61369363099907,
+        "captureMinDeltaVKms": 102.09689583256758,
+        "totalWithCaptureDeltaVKms": 384.3368958325676,
+        "totalWithCapturePropFraction": 0.038433406549368554
+      },
+      {
+        "accelDays": 7,
+        "decelDays": 5,
+        "transferDays": 47.34722222222222,
+        "totalDeltaVKms": 338.688,
+        "accelDeltaVKms": 197.568,
+        "decelDeltaVKms": 141.12,
+        "propellantFraction": 0.03394698417978659,
+        "vInfAtSaturnKms": 62.48354412803238,
+        "captureMinDeltaVKms": 47.13116091047208,
+        "totalWithCaptureDeltaVKms": 385.8191609104721,
+        "totalWithCapturePropFraction": 0.038578735369191985
+      },
+      {
+        "accelDays": 7,
+        "decelDays": 7,
+        "transferDays": 160.59722222222223,
+        "totalDeltaVKms": 395.136,
+        "accelDeltaVKms": 197.568,
+        "decelDeltaVKms": 197.568,
+        "propellantFraction": 0.03949170295346893,
+        "vInfAtSaturnKms": 10.509926066495838,
+        "captureMinDeltaVKms": 2.8638835806120824,
+        "totalWithCaptureDeltaVKms": 397.9998835806121,
+        "totalWithCapturePropFraction": 0.03977216389758953
+      },
+      {
+        "accelDays": 10,
+        "decelDays": 10,
+        "transferDays": 296.1458333333333,
+        "totalDeltaVKms": 564.48,
+        "accelDeltaVKms": 282.24,
+        "decelDeltaVKms": 282.24,
+        "propellantFraction": 0.05593564339450752,
+        "vInfAtSaturnKms": 10.073922581035852,
+        "captureMinDeltaVKms": 2.646135374790205,
+        "totalWithCaptureDeltaVKms": 567.1261353747902,
+        "totalWithCapturePropFraction": 0.05619034658931621
       }
     ],
     "summary": "トリムのみ制約下で加速のみに3日間使用すると87日で到着するが、v∞≈90 km/sで土星捕獲は不可能。加速＋減速の2相モデル、または弾道軌道＋方向制御のみの解釈が物理的に整合する。Isp=10⁶sにより推進剤は制約にならず（84.7 km/sでも消費0.87%）、損傷状態での推力持続時間が実質的な制約。"

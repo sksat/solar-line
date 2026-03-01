@@ -190,7 +190,7 @@ function findEP02Arrival(ep01ArrivalJD: number): TimelineEvent {
     episode: 2,
     transferId: "ep02-transfer-03",
     description:
-      "木星圏脱出 → 土星/エンケラドス (トリム推力3日 + 弾道巡航, ~87日)",
+      "木星圏脱出 → 土星/エンケラドス (トリム推力2相: 加速3日+減速3日, ~107日; 加速のみモデル: ~87日)",
     departureJD,
     departureDate: jdToDateString(departureJD),
     arrivalJD,

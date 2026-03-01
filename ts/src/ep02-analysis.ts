@@ -867,6 +867,14 @@ export function twoPhaseAnalysis(): TwoPhaseResult[] {
     { accelDays: 3, decelDays: 1 },
     { accelDays: 3, decelDays: 2 },
     { accelDays: 3, decelDays: 3 },
+    // Extended scenarios — exploring shorter transits with capturable v∞
+    // (damage allows duty-cycled thrust: short burns + cooling intervals)
+    { accelDays: 5, decelDays: 3 },
+    { accelDays: 5, decelDays: 5 },
+    { accelDays: 7, decelDays: 3 },
+    { accelDays: 7, decelDays: 5 },
+    { accelDays: 7, decelDays: 7 },
+    { accelDays: 10, decelDays: 10 },
     // Pure ballistic + deceleration only
     { accelDays: 0, decelDays: 3 },
   ];

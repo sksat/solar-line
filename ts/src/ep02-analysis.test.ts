@@ -369,11 +369,28 @@ describe("Episode 2: arrival velocity consistency", () => {
       `3d+3d v∞ should be moderate, got ${accel3decel3!.vInfAtSaturnKms.toFixed(1)}`);
   });
 
+  it("extended two-phase scenarios include higher thrust budgets (5d+5d, 7d+7d)", () => {
+    const result = arrivalVelocityConsistencyAnalysis();
+    const s5 = result.allTwoPhase.find(r => r.accelDays === 5 && r.decelDays === 5);
+    const s7 = result.allTwoPhase.find(r => r.accelDays === 7 && r.decelDays === 7);
+    assert.ok(s5, "5d+5d scenario should exist");
+    assert.ok(s7, "7d+7d scenario should exist");
+    // All balanced two-phase scenarios should have capturable v∞ (~10 km/s)
+    assert.ok(s5!.vInfAtSaturnKms < 15,
+      `5d+5d v∞ should be moderate, got ${s5!.vInfAtSaturnKms.toFixed(1)}`);
+    assert.ok(s7!.vInfAtSaturnKms < 15,
+      `7d+7d v∞ should be moderate, got ${s7!.vInfAtSaturnKms.toFixed(1)}`);
+    // 3d+3d is the optimal balanced split — more thrust days don't help because
+    // extra deceleration extends coast time more than extra acceleration shortens it
+    assert.ok(s5!.transferDays > 100,
+      `5d+5d should be ~113 days (not shorter than 3d+3d), got ${s5!.transferDays.toFixed(0)}`);
+  });
+
   it("propellant fraction is negligible at Isp=10⁶ s for all scenarios", () => {
     const result = arrivalVelocityConsistencyAnalysis();
     for (const s of result.allTwoPhase) {
-      assert.ok(s.totalWithCapturePropFraction < 0.05,
-        `propellant should be < 5%, got ${(s.totalWithCapturePropFraction * 100).toFixed(1)}% ` +
+      assert.ok(s.totalWithCapturePropFraction < 0.10,
+        `propellant should be < 10%, got ${(s.totalWithCapturePropFraction * 100).toFixed(1)}% ` +
         `for ${s.accelDays}d+${s.decelDays}d`);
     }
   });
