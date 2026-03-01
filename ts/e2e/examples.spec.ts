@@ -367,3 +367,46 @@ test.describe("DAG Viewer Example", () => {
     expect(dagUrl).toBe("dag-test-data.json");
   });
 });
+
+// --- 3D Orbital Viewer Example ---
+
+test.describe("3D Orbital Viewer Example", () => {
+  test("loads page structure", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    await expect(page.locator("h1")).toContainText("3D軌道ビューア");
+  });
+
+  test("has 3 preset buttons", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const buttons = page.locator(".preset-btn");
+    expect(await buttons.count()).toBe(3);
+    await expect(buttons.nth(0)).toContainText("全航路");
+    await expect(buttons.nth(1)).toContainText("土星リング");
+    await expect(buttons.nth(2)).toContainText("天王星接近");
+  });
+
+  test("has viewer container and info panel", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    await expect(page.locator("#viewer-container")).toBeVisible();
+    await expect(page.locator("#info-panel")).toBeVisible();
+  });
+
+  test("has controls hint text", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    await expect(page.locator("#controls-hint")).toContainText("ドラッグ");
+  });
+
+  test("preset buttons have aria-pressed attributes", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const firstBtn = page.locator(".preset-btn").first();
+    await expect(firstBtn).toHaveAttribute("aria-pressed", "true");
+    const secondBtn = page.locator(".preset-btn").nth(1);
+    await expect(secondBtn).toHaveAttribute("aria-pressed", "false");
+  });
+
+  test("back link navigates to site root", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const link = page.locator("#back-link");
+    await expect(link).toHaveAttribute("href", "../");
+  });
+});

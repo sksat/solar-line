@@ -864,6 +864,12 @@ export function build(config: BuildConfig): void {
     fs.copyFileSync(propDemoSrc, path.join(outDir, "propagation-demo.js"));
   }
 
+  // Copy 3D orbital viewer JS for interactive 3D visualization
+  const viewer3dSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "orbital-3d-viewer.js");
+  if (fs.existsSync(viewer3dSrc)) {
+    fs.copyFileSync(viewer3dSrc, path.join(outDir, "orbital-3d-viewer.js"));
+  }
+
   // Copy DAG viewer JS and state data for interactive visualization
   const dagViewerSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "dag-viewer.js");
   if (fs.existsSync(dagViewerSrc)) {

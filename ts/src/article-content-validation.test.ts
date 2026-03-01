@@ -1292,6 +1292,17 @@ describe("cross-episode.md content validation", () => {
     );
   });
 
+  it("3D: interactive 3D viewer link exists", () => {
+    assert.ok(
+      content.includes("orbital-3d.html"),
+      "should link to interactive 3D orbital viewer",
+    );
+    assert.ok(
+      content.includes("3Dビューア") || content.includes("3Dシーン"),
+      "should describe the 3D viewer",
+    );
+  });
+
   it("EP02 v∞ resolution: two-phase model referenced", () => {
     assert.ok(
       content.includes("2相モデル") || content.includes("二相モデル"),

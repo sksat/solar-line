@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>3D軌道ビューア — SOLAR LINE 考証</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card-bg: #161b22;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --red: #f85149;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow: hidden; }
+#app { display: flex; flex-direction: column; height: 100vh; }
+header {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
+#preset-buttons { display: flex; gap: 8px; }
+.preset-btn {
+  background: #21262d; color: var(--text); border: 1px solid var(--border);
+  padding: 6px 14px; cursor: pointer; border-radius: 4px; font-size: 0.85em;
+  transition: background 0.15s;
+}
+.preset-btn:hover { background: var(--border); }
+.preset-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: bold; }
+#main { display: flex; flex: 1; overflow: hidden; }
+#viewer-container { flex: 1; position: relative; }
+#info-panel {
+  width: 300px; background: var(--card-bg); border-left: 1px solid var(--border);
+  padding: 16px; overflow-y: auto; font-size: 0.9em;
+}
+#info-panel h3 { color: var(--accent); margin-bottom: 8px; font-size: 1em; }
+#info-panel p { margin: 6px 0; line-height: 1.5; }
+#info-panel strong { color: var(--green); }
+#info-panel table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+#info-panel th, #info-panel td { padding: 4px 8px; border: 1px solid var(--border); text-align: right; font-size: 0.85em; }
+#info-panel th { background: #21262d; text-align: left; }
+#controls-hint {
+  position: absolute; bottom: 12px; left: 12px;
+  background: rgba(13,17,23,0.8); padding: 8px 12px; border-radius: 4px;
+  font-size: 0.8em; color: var(--text-muted);
+}
+#loading {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2em; color: var(--accent);
+}
+#back-link {
+  color: var(--accent); text-decoration: none; font-size: 0.85em;
+}
+#back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <a id="back-link" href="../">← 考証トップ</a>
+    <h1>3D軌道ビューア</h1>
+    <div id="preset-buttons">
+      <button class="preset-btn active" data-scene="full-route" aria-pressed="true">全航路</button>
+      <button class="preset-btn" data-scene="saturn-ring" aria-pressed="false">土星リング</button>
+      <button class="preset-btn" data-scene="uranus-approach" aria-pressed="false">天王星接近</button>
+    </div>
+  </header>
+  <div id="main">
+    <div id="viewer-container">
+      <div id="loading">読み込み中...</div>
+      <div id="controls-hint">ドラッグ: 回転 ｜ スクロール: ズーム ｜ 右ドラッグ: 移動</div>
+    </div>
+    <div id="info-panel">
+      <h3>3D軌道ビューア</h3>
+      <p>左のプリセットボタンで表示シーンを切り替えます。</p>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import { initViewer, loadScene, updateInfoPanel } from "../src/orbital-3d-viewer.js";
+
+// ── Load analysis data ──
+const analysisDataUrl = "../reports/data/calculations/3d_orbital_analysis.json";
+let analysisData;
+
+// ── Data preparation (matches orbital-3d-viewer-data.ts) ──
+const AU_TO_SCENE = 5;
+
+const PLANET_COLORS = {
+  mars: "#e05050", jupiter: "#e0a040", saturn: "#d4b896",
+  uranus: "#7ec8e3", earth: "#4488ff", enceladus: "#ccddee", titania: "#aabbcc",
+};
+const EPISODE_COLORS = { 1: "#ff6644", 2: "#ffaa22", 3: "#44cc88", 4: "#4488ff", 5: "#ff4444" };
+const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, enceladus: 0.08, titania: 0.08 };
+const ORBIT_RADII_AU = { mars: 1.524, jupiter: 5.203, saturn: 9.537, uranus: 19.19, earth: 1.0 };
+
+function zFromAU(zAU) { return zAU * AU_TO_SCENE * 10; }
+
+function planetXY(planet, index) {
+  const r = (ORBIT_RADII_AU[planet] ?? 5) * AU_TO_SCENE;
+  const angles = [Math.PI*0.1, Math.PI*0.35, Math.PI*0.55, Math.PI*0.75, Math.PI*1.85];
+  const a = angles[index] ?? index * Math.PI * 0.4;
+  return { x: r * Math.cos(a), y: r * Math.sin(a) };
+}
+
+function prepareFullRouteScene(data) {
+  const planetOrder = ["mars", "jupiter", "saturn", "uranus", "earth"];
+  const planets = planetOrder.map((name, i) => {
+    const p = data.planetaryZHeightsAtEpoch[name];
+    const pos = planetXY(name, i);
+    return { name, x: pos.x, y: pos.y, z: zFromAU(p?.zHeightAU ?? 0),
+      color: PLANET_COLORS[name], radius: PLANET_RADII[name] ?? 0.15,
+      label: { mars:"火星", jupiter:"木星", saturn:"土星", uranus:"天王星", earth:"地球" }[name] };
+  });
+  const transferArcs = data.transfers.map(t => {
+    const fp = planets.find(p => p.name === t.departure.planet);
+    const tp = planets.find(p => p.name === t.arrival.planet);
+    return { from: t.departure.planet, to: t.arrival.planet,
+      fromPos: [fp.x, fp.y, fp.z], toPos: [tp.x, tp.y, tp.z],
+      episode: t.episode, color: EPISODE_COLORS[t.episode], label: t.leg };
+  });
+  return { type: "full-route", title: "ケストレル号全航路 — 3D黄道面ビュー",
+    description: "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を10倍誇張して表示。土星が最も黄道面から離れ（+0.32 AU）、木星はわずかに下方（-0.04 AU）。",
+    planets, transferArcs,
+    eclipticPlane: { type: "ecliptic", normal: [0,0,1], z: 0, color: "#334455", opacity: 0.15, label: "黄道面" }
+  };
+}
+
+function prepareSaturnScene(data) {
+  const r = data.saturnRingAnalysis;
+  return { type: "saturn-ring", title: "土星リング面交差 — 3Dビュー",
+    description: "木星からの接近軌道と土星リング面の関係。接近角9.3°（リング面にほぼ平行）でエンケラドスに到達。",
+    planets: [
+      { name: "saturn", x: 0, y: 0, z: 0, color: PLANET_COLORS.saturn, radius: 0.5, isCentral: true, label: "土星" },
+      { name: "enceladus", x: 0, y: 0, z: 0, color: PLANET_COLORS.enceladus, radius: 0.08, orbitRadius: r.enceladusOrbitKm, label: "エンケラドス" },
+    ],
+    transferArcs: [{ from: "jupiter", to: "saturn", fromPos: [10, 2, 0], toPos: [0, 0, 0],
+      episode: 2, color: EPISODE_COLORS[2], label: "木星→土星 接近軌道", approachAngleDeg: r.approachFromJupiter.approachAngleToDeg }],
+    rings: [{ innerRadius: r.ringInnerKm, outerRadius: r.ringOuterKm, normal: r.ringPlaneNormal, color: "#c8a86e", opacity: 0.3 }]
+  };
+}
+
+function prepareUranusScene(data) {
+  const u = data.uranusApproachAnalysis;
+  return { type: "uranus-approach", title: "天王星接近 — 3Dビュー",
+    description: "天王星の97.77°軸傾斜と赤道面の関係。土星からの接近角25.3°、地球への離脱角14.3°。",
+    planets: [
+      { name: "uranus", x: 0, y: 0, z: 0, color: PLANET_COLORS.uranus, radius: 0.4, isCentral: true, label: "天王星" },
+      { name: "titania", x: 0, y: 0, z: 0, color: PLANET_COLORS.titania, radius: 0.08, orbitRadius: u.titaniaOrbitKm, label: "タイタニア" },
+    ],
+    transferArcs: [
+      { from: "saturn", to: "uranus", fromPos: [10, 3, 0], toPos: [0, 0, 0],
+        episode: 3, color: EPISODE_COLORS[3], label: "土星→天王星 接近", approachAngleDeg: u.approachFromSaturn.angleToDeg },
+      { from: "uranus", to: "earth", fromPos: [0, 0, 0], toPos: [-8, -4, 0],
+        episode: 5, color: EPISODE_COLORS[5], label: "天王星→地球 離脱", approachAngleDeg: u.approachFromUranus.angleToDeg },
+    ],
+    rings: [{ innerRadius: 37850, outerRadius: u.ringOuterKm, normal: u.spinAxis, color: "#556677", opacity: 0.2 }],
+    axes: [{ type: "spin", direction: u.spinAxis, label: "天王星自転軸 (97.77°)", color: "#7ec8e3" }],
+    planes: [{ type: "equatorial", normal: u.spinAxis, tiltDeg: u.obliquityDeg, color: "#7ec8e3", opacity: 0.12, label: "天王星赤道面" }]
+  };
+}
+
+// ── Initialize ──
+async function init() {
+  try {
+    const resp = await fetch(analysisDataUrl);
+    if (!resp.ok) throw new Error(`Failed to load data: ${resp.status}`);
+    analysisData = await resp.json();
+  } catch (e) {
+    document.getElementById("loading").textContent = `データ読み込みエラー: ${e.message}`;
+    return;
+  }
+
+  const container = document.getElementById("viewer-container");
+  document.getElementById("loading").style.display = "none";
+
+  initViewer(container);
+
+  // Prepare all scenes
+  const scenes = {
+    "full-route": prepareFullRouteScene(analysisData),
+    "saturn-ring": prepareSaturnScene(analysisData),
+    "uranus-approach": prepareUranusScene(analysisData),
+  };
+
+  // Load default scene
+  const infoPanel = document.getElementById("info-panel");
+  loadScene(scenes["full-route"]);
+  updateInfoPanel(infoPanel, scenes["full-route"]);
+
+  // Preset buttons
+  document.querySelectorAll(".preset-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".preset-btn").forEach(b => {
+        b.classList.remove("active");
+        b.setAttribute("aria-pressed", "false");
+      });
+      btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
+
+      const sceneKey = btn.dataset.scene;
+      const sceneData = scenes[sceneKey];
+      if (sceneData) {
+        loadScene(sceneData);
+        updateInfoPanel(infoPanel, sceneData);
+      }
+    });
+  });
+}
+
+init().catch(err => console.error("3D viewer init error:", err));
+</script>
+</body>
+</html>
