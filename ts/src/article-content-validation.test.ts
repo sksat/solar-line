@@ -411,6 +411,32 @@ describe("EP02 article content validation", () => {
       "EP02 radiation analysis should reference Galileo calibration data"
     );
   });
+
+  it("navigation overview HUD: MPA, COIAS, and vessel registry", () => {
+    assert.ok(content.includes("MARS PORT AUTHORITY") || content.includes("MPA"),
+      "should cite Mars Port Authority from navigation HUD");
+    assert.ok(content.includes("MTS-9907") || content.includes("EXT-P17"),
+      "should cite Kestrel's vessel registry MTS-9907/EXT-P17");
+    assert.ok(content.includes("COIAS"),
+      "should cite COIAS orbital cross alert system");
+  });
+
+  it("unknown ship vessel ID confirms MPA jurisdiction", () => {
+    assert.ok(content.includes("MPA-MC-SCV-02814") || content.includes("SCV-02814"),
+      "should cite unknown ship's MPA registry ID");
+  });
+
+  it("jurisdiction progression: Jupiter→Saturn governance labels", () => {
+    assert.ok(content.includes("木星港湾公社"),
+      "should cite Jupiter Port Authority (木星港湾公社)");
+    assert.ok(content.includes("保護領"),
+      "should cite protectorate status (保護領) for Saturn region");
+  });
+
+  it("stellar occultation as passive detection method", () => {
+    assert.ok(content.includes("恒星掩蔽") || content.includes("stellar occultation"),
+      "should discuss stellar occultation detection method");
+  });
 });
 
 describe("EP03 article content validation", () => {
