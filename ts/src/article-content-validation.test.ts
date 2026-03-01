@@ -1583,6 +1583,32 @@ describe("communications.md content validation", () => {
       "should have EP05 region band",
     );
   });
+
+  it("comm delay chart data is physically consistent", () => {
+    // Extract the y-values from the timeseries chart JSON
+    const chartMatch = content.match(/"y":\s*\[([\d.,\s]+)\]/);
+    assert.ok(chartMatch, "should have y-data array in timeseries chart");
+    const yValues = chartMatch![1].split(",").map((v) => parseFloat(v.trim()));
+    const xMatch = content.match(/"x":\s*\[([\d.,\s]+)\]/);
+    assert.ok(xMatch, "should have x-data array");
+    const xValues = xMatch![1].split(",").map((v) => parseFloat(v.trim()));
+
+    // Basic consistency checks
+    assert.strictEqual(xValues.length, yValues.length, "x and y arrays should have same length");
+    assert.ok(yValues[0] > 0, "initial delay should be positive (Mars is >0 AU from Earth)");
+    assert.ok(yValues[yValues.length - 1] === 0, "final delay should be 0 (Earth arrival)");
+
+    // Maximum delay should be around 168 min (max Earth-Kestrel distance ~20.2 AU)
+    const maxDelay = Math.max(...yValues);
+    assert.ok(maxDelay >= 160 && maxDelay <= 180, `max delay ${maxDelay} should be ~168 min`);
+
+    // All values should be non-negative
+    assert.ok(yValues.every((v) => v >= 0), "all delay values should be non-negative");
+
+    // Light-time sanity: 1 AU ≈ 8.317 min, so max ~168 min ≈ 20.2 AU
+    const maxDistAU = maxDelay / 8.317;
+    assert.ok(maxDistAU >= 18 && maxDistAU <= 22, `implied max distance ${maxDistAU.toFixed(1)} AU should be ~20 AU`);
+  });
 });
 
 // ============================================================
