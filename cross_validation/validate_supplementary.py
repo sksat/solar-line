@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Cross-validation of supplementary Rust modules (relativistic, attitude, plasmoid,
-comms, mass_timeline) against independent Python implementations.
+comms, mass_timeline, ephemeris) against independent Python implementations.
 
 These modules handle physics calculations used in the SOLAR LINE analysis
 beyond core orbital mechanics (which is validated in validate.py).
@@ -309,6 +309,169 @@ def ra_dec_to_ecliptic(ra_deg: float, dec_deg: float, eps_deg: float = 23.4393):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Ephemeris — independent implementations
+# ═══════════════════════════════════════════════════════════════════════
+
+AU_KM = 149_597_870.7  # 1 AU in km
+
+# Standish & Williams mean Keplerian elements at J2000 (Table 1)
+# Format: (a0_au, a_dot, e0, e_dot, i0_deg, i_dot, l0_deg, l_dot, wbar0_deg, wbar_dot, omega0_deg, omega_dot)
+MEAN_ELEMENTS = {
+    "earth": (1.000002610, 0.000005620, 0.016708570, -0.000042040,
+              -0.00015, -0.01337, 100.46457, 35999.37244,
+              102.93735, 0.32329, 0.0, 0.0),
+    "mars": (1.523662310, -0.000073280, 0.093412330, 0.000090480,
+             1.85026, -0.00675, -4.55343, 19140.29934,
+             -23.94362, 0.44541, 49.55809, -0.29108),
+    "jupiter": (5.202603910, 0.000016630, 0.048497640, 0.000163410,
+                1.30330, -0.00198, 34.39644, 3034.90567,
+                14.72847, 0.21536, 100.46444, 0.17656),
+    "saturn": (9.554909160, -0.000213890, 0.055508620, -0.000346610,
+               2.48868, 0.00774, 49.95424, 1222.11371,
+               92.59887, -0.41897, 113.66524, -0.25060),
+}
+
+
+def calendar_to_jd(year: int, month: int, day: float) -> float:
+    """Convert calendar date to Julian Date (Meeus algorithm)."""
+    if month <= 2:
+        y = year - 1
+        m = month + 12
+    else:
+        y = year
+        m = month
+    a = math.floor(y / 100.0)
+    b = 2.0 - a + math.floor(a / 4.0)
+    return math.floor(365.25 * (y + 4716.0)) + math.floor(30.6001 * (m + 1.0)) + day + b - 1524.5
+
+
+def jd_to_calendar(jd: float):
+    """Convert Julian Date to (year, month, day)."""
+    z = math.floor(jd + 0.5)
+    f = jd + 0.5 - z
+    if z < 2_299_161:
+        a = z
+    else:
+        alpha = math.floor((z - 1_867_216.25) / 36_524.25)
+        a = z + 1.0 + alpha - math.floor(alpha / 4.0)
+    b = a + 1524.0
+    c = math.floor((b - 122.1) / 365.25)
+    d = math.floor(365.25 * c)
+    e = math.floor((b - d) / 30.6001)
+    day = b - d - math.floor(30.6001 * e) + f
+    month = e - 1.0 if e < 14.0 else e - 13.0
+    year = c - 4716.0 if month > 2.0 else c - 4715.0
+    return int(year), int(month), day
+
+
+def solve_kepler(M: float, e: float, tol: float = 1e-14, max_iter: int = 100) -> float:
+    """Solve Kepler's equation M = E - e*sin(E) for E."""
+    E = M  # initial guess
+    for _ in range(max_iter):
+        dE = (M - E + e * math.sin(E)) / (1.0 - e * math.cos(E))
+        E += dE
+        if abs(dE) < tol:
+            break
+    return E
+
+
+def eccentric_to_true_anomaly(E: float, e: float) -> float:
+    """Convert eccentric anomaly to true anomaly."""
+    return 2.0 * math.atan2(
+        math.sqrt(1.0 + e) * math.sin(E / 2.0),
+        math.sqrt(1.0 - e) * math.cos(E / 2.0)
+    )
+
+
+def normalize_angle(a: float) -> float:
+    """Normalize angle to [0, 2π)."""
+    a = a % (2.0 * math.pi)
+    if a < 0:
+        a += 2.0 * math.pi
+    return a
+
+
+def planet_position_py(planet_name: str, jd: float):
+    """Compute heliocentric ecliptic position using mean Keplerian elements.
+
+    Returns (longitude_rad, distance_au, x_km, y_km, z_km).
+    """
+    elem = MEAN_ELEMENTS[planet_name]
+    a0, a_dot, e0, e_dot, i0, i_dot, l0, l_dot, wbar0, wbar_dot, omega0, omega_dot = elem
+
+    t = (jd - 2_451_545.0) / 36525.0  # centuries from J2000
+
+    a_au = a0 + a_dot * t
+    e = e0 + e_dot * t
+    i_deg = i0 + i_dot * t
+    l_deg = l0 + l_dot * t
+    wbar_deg = wbar0 + wbar_dot * t
+    omega_deg = omega0 + omega_dot * t
+
+    i_rad = math.radians(i_deg)
+    omega_rad = math.radians(omega_deg)
+
+    m_deg = l_deg - wbar_deg
+    m_rad = normalize_angle(math.radians(m_deg))
+
+    w_deg = wbar_deg - omega_deg
+    w_rad = math.radians(w_deg)
+
+    # Solve Kepler's equation
+    E = solve_kepler(m_rad, e)
+    nu = eccentric_to_true_anomaly(E, e)
+
+    # Heliocentric distance
+    a_km = a_au * AU_KM
+    r_km = a_km * (1.0 - e * e) / (1.0 + e * math.cos(nu))
+
+    # Argument of latitude
+    u = w_rad + nu
+
+    # Position in orbital plane
+    x_orb = r_km * math.cos(u)
+    y_orb = r_km * math.sin(u)
+
+    # Rotate to ecliptic
+    cos_o = math.cos(omega_rad)
+    sin_o = math.sin(omega_rad)
+    cos_i = math.cos(i_rad)
+    sin_i = math.sin(i_rad)
+
+    x = cos_o * x_orb - sin_o * cos_i * y_orb
+    y = sin_o * x_orb + cos_o * cos_i * y_orb
+    z = sin_i * y_orb
+
+    lon = normalize_angle(math.atan2(y, x))
+    dist_au = r_km / AU_KM
+
+    return lon, dist_au, x, y, z
+
+
+def synodic_period_days_km(a1_km: float, a2_km: float, mu_km3_s2: float) -> float:
+    """Compute synodic period in days from semi-major axes in km."""
+    t1 = 2.0 * math.pi * math.sqrt(a1_km ** 3 / mu_km3_s2)
+    t2 = 2.0 * math.pi * math.sqrt(a2_km ** 3 / mu_km3_s2)
+    inv_diff = abs(1.0 / t1 - 1.0 / t2)
+    return 1.0 / inv_diff / 86400.0
+
+
+def hohmann_phase_angle_py(r1_km: float, r2_km: float, mu_km3_s2: float) -> float:
+    """Required phase angle for Hohmann transfer (radians)."""
+    a_t = (r1_km + r2_km) / 2.0
+    t_transfer = math.pi * math.sqrt(a_t ** 3 / mu_km3_s2)
+    n2 = math.sqrt(mu_km3_s2 / r2_km ** 3)
+    theta_travel = n2 * t_transfer
+    return normalize_angle(math.pi - theta_travel)
+
+
+def hohmann_transfer_time_days(r1_km: float, r2_km: float, mu_km3_s2: float) -> float:
+    """Hohmann transfer time in days."""
+    a_t = (r1_km + r2_km) / 2.0
+    return math.pi * math.sqrt(a_t ** 3 / mu_km3_s2) / 86400.0
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Validation harness
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -536,6 +699,69 @@ def main():
     uranus_mag = math.sqrt(
         o3d["uranus_axis_x"]**2 + o3d["uranus_axis_y"]**2 + o3d["uranus_axis_z"]**2)
     check("Uranus axis magnitude", uranus_mag, 1.0)
+
+    # ── Ephemeris ─────────────────────────────────────────────────
+    print("\n═══ Ephemeris module cross-validation ═══")
+    eph = rust["ephemeris"]
+
+    # Calendar → JD conversion
+    check("JD J2000 (2000-01-01.5)", eph["jd_j2000"], calendar_to_jd(2000, 1, 1.5))
+    check("JD Sputnik (1957-10-04)", eph["jd_sputnik"], calendar_to_jd(1957, 10, 4.0))
+    check("JD Moon landing (1969-07-20)", eph["jd_moon_landing"], calendar_to_jd(1969, 7, 20.0))
+
+    # JD → calendar round-trip (J2000)
+    rt_y, rt_m, rt_d = jd_to_calendar(2_451_545.0)
+    check("round-trip J2000 year", float(eph["rt_j2000_year"]), float(rt_y), abs_tol=0.5)
+    check("round-trip J2000 month", float(eph["rt_j2000_month"]), float(rt_m), abs_tol=0.5)
+    check("round-trip J2000 day", eph["rt_j2000_day"], rt_d)
+
+    # Planet positions at J2000
+    # Use same Standish & Williams elements for exact match
+    j2000_jd = 2_451_545.0
+
+    py_earth = planet_position_py("earth", j2000_jd)
+    check("Earth J2000 longitude (rad)", eph["earth_j2000_lon_rad"], py_earth[0])
+    check("Earth J2000 distance (AU)", eph["earth_j2000_dist_au"], py_earth[1])
+    check("Earth J2000 x (km)", eph["earth_j2000_x_km"], py_earth[2])
+    check("Earth J2000 y (km)", eph["earth_j2000_y_km"], py_earth[3])
+    check("Earth J2000 z (km)", eph["earth_j2000_z_km"], py_earth[4])
+
+    py_mars = planet_position_py("mars", j2000_jd)
+    check("Mars J2000 longitude (rad)", eph["mars_j2000_lon_rad"], py_mars[0])
+    check("Mars J2000 distance (AU)", eph["mars_j2000_dist_au"], py_mars[1])
+
+    py_jupiter = planet_position_py("jupiter", j2000_jd)
+    check("Jupiter J2000 longitude (rad)", eph["jupiter_j2000_lon_rad"], py_jupiter[0])
+    check("Jupiter J2000 distance (AU)", eph["jupiter_j2000_dist_au"], py_jupiter[1])
+
+    py_saturn = planet_position_py("saturn", j2000_jd)
+    check("Saturn J2000 longitude (rad)", eph["saturn_j2000_lon_rad"], py_saturn[0])
+    check("Saturn J2000 distance (AU)", eph["saturn_j2000_dist_au"], py_saturn[1])
+
+    # Synodic periods — Rust uses orbit_radius constants (km), not mean elements a0
+    mu_sun = rust["constants"]["mu_sun"]
+
+    check("synodic Earth-Mars (days)", eph["synodic_earth_mars_days"],
+          synodic_period_days_km(rust["constants"]["r_earth"], rust["constants"]["r_mars"], mu_sun))
+    check("synodic Earth-Jupiter (days)", eph["synodic_earth_jupiter_days"],
+          synodic_period_days_km(rust["constants"]["r_earth"], rust["constants"]["r_jupiter"], mu_sun))
+
+    # Hohmann phase angles
+    # Use orbit_radius from Rust constants (circular orbit approximation)
+    r_earth_orb = rust["constants"]["r_earth"]
+    r_mars_orb = rust["constants"]["r_mars"]
+    r_jupiter_orb = rust["constants"]["r_jupiter"]
+
+    check("Hohmann phase Earth→Mars (rad)", eph["hohmann_phase_earth_mars_rad"],
+          hohmann_phase_angle_py(r_earth_orb, r_mars_orb, mu_sun))
+    check("Hohmann phase Earth→Jupiter (rad)", eph["hohmann_phase_earth_jupiter_rad"],
+          hohmann_phase_angle_py(r_earth_orb, r_jupiter_orb, mu_sun))
+
+    # Hohmann transfer times
+    check("Hohmann time Earth→Mars (days)", eph["hohmann_time_earth_mars_days"],
+          hohmann_transfer_time_days(r_earth_orb, r_mars_orb, mu_sun))
+    check("Hohmann time Earth→Jupiter (days)", eph["hohmann_time_earth_jupiter_days"],
+          hohmann_transfer_time_days(r_earth_orb, r_jupiter_orb, mu_sun))
 
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")

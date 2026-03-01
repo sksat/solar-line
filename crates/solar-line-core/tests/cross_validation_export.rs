@@ -10,6 +10,7 @@ mod export {
     use solar_line_core::attitude;
     use solar_line_core::comms;
     use solar_line_core::constants::{mu, orbit_radius, reference_orbits, G0_M_S2};
+    use solar_line_core::ephemeris;
     use solar_line_core::flyby;
     use solar_line_core::kepler;
     use solar_line_core::mass_timeline;
@@ -716,6 +717,134 @@ mod export {
         results.push_str(&format!("    \"uranus_axis_x\": {:.15e},\n", uranus_axis.x));
         results.push_str(&format!("    \"uranus_axis_y\": {:.15e},\n", uranus_axis.y));
         results.push_str(&format!("    \"uranus_axis_z\": {:.15e}\n", uranus_axis.z));
+        results.push_str("  },\n");
+
+        // === Ephemeris ===
+        results.push_str("  \"ephemeris\": {\n");
+
+        // Calendar ↔ JD conversion
+        // J2000.0: 2000-01-01 12:00:00 TT = JD 2451545.0
+        let jd_j2000 = ephemeris::calendar_to_jd(2000, 1, 1.5);
+        results.push_str(&format!("    \"jd_j2000\": {:.15e},\n", jd_j2000));
+
+        // Sputnik: 1957-10-04 = JD 2436115.5
+        let jd_sputnik = ephemeris::calendar_to_jd(1957, 10, 4.0);
+        results.push_str(&format!("    \"jd_sputnik\": {:.15e},\n", jd_sputnik));
+
+        // Moon landing: 1969-07-20 = JD 2440423.5
+        let jd_moon = ephemeris::calendar_to_jd(1969, 7, 20.0);
+        results.push_str(&format!("    \"jd_moon_landing\": {:.15e},\n", jd_moon));
+
+        // JD→calendar round-trip: J2000
+        let (y_rt, m_rt, d_rt) = ephemeris::jd_to_calendar(2_451_545.0);
+        results.push_str(&format!("    \"rt_j2000_year\": {},\n", y_rt));
+        results.push_str(&format!("    \"rt_j2000_month\": {},\n", m_rt));
+        results.push_str(&format!("    \"rt_j2000_day\": {:.15e},\n", d_rt));
+
+        // Planet positions at J2000 (heliocentric ecliptic)
+        let au_km = 149_597_870.7_f64;
+
+        // Earth at J2000
+        let earth_j2000 = ephemeris::planet_position(ephemeris::Planet::Earth, j2000);
+        results.push_str(&format!(
+            "    \"earth_j2000_lon_rad\": {:.15e},\n",
+            earth_j2000.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"earth_j2000_dist_au\": {:.15e},\n",
+            earth_j2000.distance.value() / au_km
+        ));
+        results.push_str(&format!(
+            "    \"earth_j2000_x_km\": {:.15e},\n",
+            earth_j2000.x
+        ));
+        results.push_str(&format!(
+            "    \"earth_j2000_y_km\": {:.15e},\n",
+            earth_j2000.y
+        ));
+        results.push_str(&format!(
+            "    \"earth_j2000_z_km\": {:.15e},\n",
+            earth_j2000.z
+        ));
+
+        // Mars at J2000
+        let mars_j2000 = ephemeris::planet_position(ephemeris::Planet::Mars, j2000);
+        results.push_str(&format!(
+            "    \"mars_j2000_lon_rad\": {:.15e},\n",
+            mars_j2000.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"mars_j2000_dist_au\": {:.15e},\n",
+            mars_j2000.distance.value() / au_km
+        ));
+
+        // Jupiter at J2000
+        let jupiter_j2000 = ephemeris::planet_position(ephemeris::Planet::Jupiter, j2000);
+        results.push_str(&format!(
+            "    \"jupiter_j2000_lon_rad\": {:.15e},\n",
+            jupiter_j2000.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"jupiter_j2000_dist_au\": {:.15e},\n",
+            jupiter_j2000.distance.value() / au_km
+        ));
+
+        // Saturn at J2000
+        let saturn_j2000 = ephemeris::planet_position(ephemeris::Planet::Saturn, j2000);
+        results.push_str(&format!(
+            "    \"saturn_j2000_lon_rad\": {:.15e},\n",
+            saturn_j2000.longitude.value()
+        ));
+        results.push_str(&format!(
+            "    \"saturn_j2000_dist_au\": {:.15e},\n",
+            saturn_j2000.distance.value() / au_km
+        ));
+
+        // Synodic periods (seconds)
+        let syn_earth_mars =
+            ephemeris::synodic_period(ephemeris::Planet::Earth, ephemeris::Planet::Mars);
+        results.push_str(&format!(
+            "    \"synodic_earth_mars_days\": {:.15e},\n",
+            syn_earth_mars.value() / 86400.0
+        ));
+
+        let syn_earth_jupiter =
+            ephemeris::synodic_period(ephemeris::Planet::Earth, ephemeris::Planet::Jupiter);
+        results.push_str(&format!(
+            "    \"synodic_earth_jupiter_days\": {:.15e},\n",
+            syn_earth_jupiter.value() / 86400.0
+        ));
+
+        // Hohmann phase angles (radians)
+        let phase_em =
+            ephemeris::hohmann_phase_angle(ephemeris::Planet::Earth, ephemeris::Planet::Mars);
+        results.push_str(&format!(
+            "    \"hohmann_phase_earth_mars_rad\": {:.15e},\n",
+            phase_em.value()
+        ));
+
+        let phase_ej =
+            ephemeris::hohmann_phase_angle(ephemeris::Planet::Earth, ephemeris::Planet::Jupiter);
+        results.push_str(&format!(
+            "    \"hohmann_phase_earth_jupiter_rad\": {:.15e},\n",
+            phase_ej.value()
+        ));
+
+        // Hohmann transfer times (seconds → days)
+        let time_em =
+            ephemeris::hohmann_transfer_time(ephemeris::Planet::Earth, ephemeris::Planet::Mars);
+        results.push_str(&format!(
+            "    \"hohmann_time_earth_mars_days\": {:.15e},\n",
+            time_em.value() / 86400.0
+        ));
+
+        let time_ej =
+            ephemeris::hohmann_transfer_time(ephemeris::Planet::Earth, ephemeris::Planet::Jupiter);
+        results.push_str(&format!(
+            "    \"hohmann_time_earth_jupiter_days\": {:.15e}\n",
+            time_ej.value() / 86400.0
+        ));
+
         results.push_str("  }\n");
 
         results.push_str("}\n");
