@@ -132,8 +132,10 @@ function reviewDiagram(episode: string, diagram: OrbitalDiagram): string {
   }
 
   // Check: animated transfers should have time ranges
+  // Skip hohmann-style transfers — they are intentionally static reference lines
   if (diagram.animation) {
     for (const t of diagram.transfers) {
+      if (t.style === "hohmann") continue;
       if (t.startTime === undefined || t.endTime === undefined) {
         issues.push(`⚠ Animated transfer "${t.label}" missing startTime/endTime`);
       }

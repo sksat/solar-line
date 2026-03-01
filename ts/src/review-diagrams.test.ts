@@ -99,4 +99,29 @@ describe("review-diagrams: animation completeness", () => {
       );
     }
   });
+
+  it("non-hohmann transfers in animated diagrams have startTime/endTime", () => {
+    for (const { episode, diagram } of animated) {
+      const nonHohmann = diagram.transfers.filter(t => t.style !== "hohmann");
+      for (const t of nonHohmann) {
+        assert.ok(
+          t.startTime !== undefined && t.endTime !== undefined,
+          `${episode} ${diagram.id}: non-hohmann transfer "${t.label}" missing startTime/endTime`
+        );
+      }
+    }
+  });
+
+  it("hohmann reference transfers are intentionally untimed (static)", () => {
+    const hohmannInAnimated = animated.flatMap(({ episode, diagram }) =>
+      diagram.transfers.filter(t => t.style === "hohmann").map(t => ({ episode, diagram, transfer: t }))
+    );
+    assert.ok(hohmannInAnimated.length > 0, "should have at least one hohmann reference in animated diagrams");
+    for (const { episode, diagram, transfer } of hohmannInAnimated) {
+      assert.ok(
+        transfer.startTime === undefined && transfer.endTime === undefined,
+        `${episode} ${diagram.id}: hohmann reference "${transfer.label}" should be untimed`
+      );
+    }
+  });
 });
