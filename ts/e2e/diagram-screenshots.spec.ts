@@ -29,7 +29,7 @@ for (const ep of episodes) {
   test.describe(`${ep.name} diagram screenshots`, () => {
     test(`capture all orbital diagrams`, async ({ page }) => {
       await page.goto(`/episodes/${ep.slug}.html`);
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
 
       // Find all orbital diagram containers (class="card orbital-diagram")
       const diagrams = page.locator(".orbital-diagram");
@@ -59,7 +59,7 @@ for (const ep of episodes) {
 test.describe("Cross-episode diagram screenshots", () => {
   test("capture cross-episode orbital diagrams", async ({ page }) => {
     await page.goto("/summary/cross-episode.html");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     const diagrams = page.locator(".orbital-diagram");
     const count = await diagrams.count();
