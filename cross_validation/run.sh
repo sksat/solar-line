@@ -31,5 +31,9 @@ echo "=== Step 4: Run poliastro cross-validation ==="
 "${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_poliastro.py" --json "${JSON_OUT}"
 
 echo ""
-echo "=== Step 5: Run supplementary module cross-validation ==="
+echo "=== Step 5: Run EP02 trim-thrust cross-validation ==="
+"${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_trim_thrust.py"
+
+echo ""
+echo "=== Step 6: Run supplementary module cross-validation ==="
 "${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_supplementary.py" --json "${JSON_OUT}"
