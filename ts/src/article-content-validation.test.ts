@@ -1969,12 +1969,12 @@ describe("ai-costs.md content validation", () => {
     assert.ok(content.includes("341"), "should cite current task count 341");
   });
 
-  it("commit count is 476+ (not stale 467+)", () => {
+  it("commit count is 480+ (not stale 476+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("476+"), "should cite current commit count 476+");
+    assert.ok(content.includes("480+"), "should cite current commit count 480+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -1992,7 +1992,7 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,235"), "should cite TS test count");
+    assert.ok(content.includes("2,245"), "should cite TS test count");
     assert.ok(content.includes("377"), "should cite Rust test count");
     assert.ok(content.includes("228"), "should cite E2E test count");
   });
