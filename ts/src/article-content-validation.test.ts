@@ -470,6 +470,32 @@ describe("EP03 article content validation", () => {
     assert.ok(content.includes("9.62"),
       "should cite Saturn orbital velocity 9.62 km/s");
   });
+
+  // --- Task 359: Burn sequence integration ---
+
+  it("6-phase burn sequence: cites total ΔV 5,984 km/s", () => {
+    assert.ok(content.includes("5,984") || content.includes("5984"),
+      "should cite total onscreen ΔV 5,984 km/s");
+  });
+
+  it("brachistochrone symmetry: 30-second difference between accel/decel", () => {
+    assert.ok(
+      content.includes("30:25:00") || content.includes("30:25:30") ||
+      (content.includes("30秒") && content.includes("対称")),
+      "should cite brachistochrone symmetry (30s or 30:25:00/30:25:30)");
+  });
+
+  it("Saturn escape onscreen: 4.31 km/s implies 1,387t mass", () => {
+    assert.ok(content.includes("4.31"),
+      "should cite onscreen Saturn Escape ΔV 4.31 km/s");
+    assert.ok(content.includes("1,387") || content.includes("1387"),
+      "should cite implied mass 1,387t from Saturn Escape acceleration");
+  });
+
+  it("ΔV efficiency: multi-stage achieves 47% reduction vs pure brachistochrone", () => {
+    assert.ok(content.includes("47%") || content.includes("54%"),
+      "should cite ΔV reduction percentage (47% savings or 54% of theoretical)");
+  });
 });
 
 describe("EP04 article content validation", () => {
