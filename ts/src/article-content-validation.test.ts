@@ -1489,6 +1489,24 @@ describe("cross-episode.md content validation", () => {
       "sensitivity analysis should clarify single-phase vs two-phase model",
     );
   });
+
+  it("jurisdiction progression: governance consistency across episodes", () => {
+    assert.ok(content.includes("木星港湾公社") || content.includes("木星軌道連合"),
+      "should cite Jupiter governance authority");
+    assert.ok(content.includes("保護領"),
+      "should cite protectorate status for Saturn region");
+    assert.ok(content.includes("自由港"),
+      "should cite free port status");
+    assert.ok(content.includes("自由圏"),
+      "should cite 自由圏 (free zone) as distinct category");
+    assert.ok(content.includes("地球軌道港湾機構"),
+      "should cite Earth Orbital Harbor Authority");
+  });
+
+  it("jurisdiction: governance gradient from inner to outer solar system", () => {
+    assert.ok(content.includes("自治度") || content.includes("独立") || content.includes("統治"),
+      "should discuss governance gradient or autonomy trend");
+  });
 });
 
 // ============================================================
