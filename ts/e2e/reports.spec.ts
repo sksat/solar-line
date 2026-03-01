@@ -554,16 +554,16 @@ test.describe("Transcription pages", () => {
     expect(errors).toEqual([]);
   });
 
-  test("EP01 transcription has 4 tabs (Layer 0/2/2/3)", async ({ page }) => {
+  test("EP01 transcription has 5 tabs (Layer 0 + 3x Layer 2 + Layer 3)", async ({ page }) => {
     await page.goto("/transcriptions/ep-001.html");
     const tabs = page.locator(".tab-btn");
-    expect(await tabs.count()).toBe(4);
+    expect(await tabs.count()).toBe(5);
   });
 
-  test("EP02 transcription has 3 tabs (no Layer 0 script)", async ({ page }) => {
+  test("EP02 transcription has 4 tabs (no Layer 0 script)", async ({ page }) => {
     await page.goto("/transcriptions/ep-002.html");
     const tabs = page.locator(".tab-btn");
-    expect(await tabs.count()).toBe(3);
+    expect(await tabs.count()).toBe(4);
     // No script tab
     const scriptTab = page.locator('.tab-btn[data-tab="script"]');
     expect(await scriptTab.count()).toBe(0);
