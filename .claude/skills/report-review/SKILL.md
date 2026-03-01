@@ -39,7 +39,7 @@ Use a Task agent (Sonnet) for the draft review:
 Task(subagent_type="general-purpose", model="sonnet", prompt=`
 [Insert reviewer persona above as system context]
 
-Review the report at reports/data/episodes/ep0X.json (or summary/*.json).
+Review the report at reports/data/episodes/ep0X.md (or summary/*.md).
 Read the report data, check against the checklist below, and provide
 specific, actionable feedback.
 `)
@@ -56,7 +56,7 @@ Are the ΔV, transfer time, and mass calculations consistent?
 ### Automated Checks (run first)
 
 ```bash
-cd ts && node --test src/report-data-validation.test.ts
+cd ts && npm test
 ```
 
 ### Manual Review Checklist

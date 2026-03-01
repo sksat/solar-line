@@ -1,5 +1,15 @@
 # Cost Efficiency Analysis — SOLAR LINE Project
 
+## Status: RESOLVED
+
+Key recommendations incorporated into CLAUDE.md and project practices:
+- TodoWrite discipline (state transitions only)
+- Background long commands (run_in_background)
+- Sonnet default for subagents (replacing Haiku)
+- max_turns on bounded Task calls
+- Dedicated tools over Bash in subagents
+- Skills defined for repeated workflows (5 skills: episode-analysis, report-review, subtitle-extraction, cost-analysis, nice-friend)
+
 ## Overview
 
 Analysis of Claude Code token usage patterns across the SOLAR LINE project, based on

@@ -25,10 +25,10 @@ Complete workflow for analyzing a SOLAR LINE episode's orbital mechanics claims.
 
 2. **Run Whisper STT** (if video is available in raw_data/):
    ```bash
-   npm run whisper -- raw_data/<video-file> --model medium --language ja
+   npm run whisper -- raw_data/<video-file> --model large-v3-turbo --language ja
    npm run process-whisper -- raw_data/whisper/<output>.json --episode <N> --video-id <id>
    ```
-   Run these as background tasks — they take minutes.
+   Run these as background tasks — they take 10-26 minutes (CPU-only).
 
 3. **Extract dialogue lines** (Phase 1):
    ```bash
@@ -39,55 +39,62 @@ Complete workflow for analyzing a SOLAR LINE episode's orbital mechanics claims.
    npm run extract-dialogue-whisper -- raw_data/whisper/<processed>.json --episode <N>
    ```
 
+4. **Run video OCR** (optional, for on-screen text extraction):
+   ```bash
+   python ts/src/extract-frames.py raw_data/<video-file> raw_data/frames/ep<N>
+   python ts/src/video-ocr.py raw_data/frames/ep<N> --episode <N>
+   ```
+
 ### Phase 2: Analysis
 
-4. **Create analysis test file** (`ts/src/epNN-analysis.test.ts`):
+5. **Create analysis test file** (`ts/src/epNN-analysis.test.ts`):
    - TDD: Write expected orbital parameters as test assertions FIRST
    - Include: transfer distances, ΔV values, travel times, acceleration
    - Use existing episode tests as templates
 
-5. **Create analysis module** (`ts/src/epNN-analysis.ts`):
+6. **Create analysis module** (`ts/src/epNN-analysis.ts`):
    - Import from `../pkg/solar_line_wasm` for calculations
    - Define transfers, parameter explorations, and scenarios
    - Run brachistochrone, Hohmann, vis-viva calculations
 
-6. **Validate with orbit propagation** (if time-dependent):
+7. **Validate with orbit propagation** (if time-dependent):
    - Use RK4/RK45 propagator for travel time validation
    - Check energy conservation as test assertion
 
 ### Phase 3: Report Generation
 
-7. **Create episode report JSON** (`reports/data/episodes/epNN.json`):
-   - Follow EpisodeReport type from `ts/src/report-types.ts`
-   - Include: videoCards, transfers, explorations, orbitalDiagrams, dialogueQuotes
+8. **Create episode report MDX** (`reports/data/episodes/epNN.md`):
+   - Follow MDX format (YAML frontmatter + markdown with code fences for structured data)
+   - See existing ep01.md–ep05.md for template structure
+   - Include: video-cards, transfers, explorations, orbital diagrams, dialogue-quotes
    - All text in Japanese (日本語)
    - Cite dialogue with timestamps: きりたん「…」(MM:SS)
 
-8. **Add orbital diagrams**:
+9. **Add orbital diagrams**:
    - At least 1 heliocentric transfer diagram
    - Planet-centric diagrams for capture/escape maneuvers
-   - Use computed planetary positions from ephemeris (2240 epoch)
+   - Use computed planetary positions from ephemeris (2215 epoch)
    - Add animation config with burn markers
 
-9. **Update cross-episode reports**:
-   - `reports/data/summary/cross-episode.json`: Add new episode data
-   - `reports/data/summary/science-accuracy.json`: Add verification items
-   - `reports/data/summary/ship-kestrel.json`: Update ship timeline
+10. **Update cross-episode reports**:
+    - `reports/data/summary/cross-episode.md`: Add new episode data
+    - `reports/data/summary/science-accuracy.md`: Add verification items
+    - `reports/data/summary/ship-kestrel.md`: Update ship timeline
 
 ### Phase 4: Validation
 
-10. **Run all tests**:
+11. **Run all tests**:
     ```bash
-    cd ts && node --test src/**/*.test.ts
-    cd .. && cargo test
+    cd ts && npm test
+    cd .. && cargo test --workspace
     ```
 
-11. **Build and verify**:
+12. **Build and verify**:
     ```bash
     cd ts && npm run build
     ```
 
-12. **Consult Codex for review** (use `/nice-friend` skill):
+13. **Consult Codex for review** (use `/nice-friend` skill):
     - Review report readability
     - Verify orbital mechanics accuracy
     - Check cross-episode consistency
@@ -95,6 +102,6 @@ Complete workflow for analyzing a SOLAR LINE episode's orbital mechanics claims.
 ## Efficiency Notes
 
 - Use `run_in_background` for Whisper and yt-dlp commands
-- Prefer Haiku subagents for file exploration
+- Prefer Sonnet subagents for file exploration (NOT Haiku — insufficient quality)
 - Keep TodoWrite updates to state transitions only
 - Dialogue attribution (Phase 2) requires manual/context-assisted work — don't fully automate

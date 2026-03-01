@@ -26,6 +26,6 @@ Create a cross-episode analysis page that compares parameters across episodes:
 Medium — this builds on completed episode analyses (ep01-03 done).
 Should be created as a task when episode 4 analysis begins or after.
 
-## Status
+## Status: RESOLVED
 
-**DONE** — Implemented as Task 021. Cross-episode consistency analysis page published at summary/cross-episode.html.
+Implemented as Task 021. Cross-episode consistency analysis page published at summary/cross-episode.html. Extensively expanded through Tasks 263, 264, 265, 273, 282.
