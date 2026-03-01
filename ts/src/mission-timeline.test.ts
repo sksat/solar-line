@@ -138,11 +138,11 @@ describe("generateDeltaVTrack", () => {
     }
   });
 
-  it("total accumulated ΔV is ~34,954 km/s", () => {
+  it("total accumulated ΔV is ~36,156 km/s", () => {
     const finalDV = track.y[track.y.length - 1];
     assert.ok(
-      Math.abs(finalDV - 34954) < 100,
-      `Final ΔV should be ~34,954 km/s, got ${finalDV}`,
+      Math.abs(finalDV - 36156) < 100,
+      `Final ΔV should be ~36,156 km/s, got ${finalDV}`,
     );
   });
 

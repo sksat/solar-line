@@ -32,9 +32,9 @@ SOLAR LINE 考証プロジェクトは [Claude Code](https://claude.ai/code) に
 
 | 指標 | 値 |
 |------|------|
-| 完了タスク数 | 349 |
-| コミット数 | 489+ |
-| TypeScript ユニットテスト | 2,290 |
+| 完了タスク数 | 350 |
+| コミット数 | 490+ |
+| TypeScript ユニットテスト | 2,300 |
 | Rust テスト | 378 |
 | Playwright E2E テスト | 242 |
 

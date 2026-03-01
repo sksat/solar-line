@@ -97,11 +97,11 @@ export function getMissionPhases(): MissionPhase[] {
       episode: 4,
       label: "EP04",
       startDay: 103,
-      endDay: 111, // plasmoid encounter ~EP04, departure planned
+      endDay: 111, // plasmoid encounter ~EP04, Uranus escape burn
       departureBody: "uranus",
-      arrivalBody: "uranus", // stays at Uranus during EP04 planning
-      deltaV: 0,
-      nozzleBurnHours: 0,
+      arrivalBody: "uranus", // departs Uranus at end of EP04
+      deltaV: 1202, // Uranus escape ΔV @48,000t
+      nozzleBurnHours: 0, // low-thrust escape, minimal nozzle usage
       radiationMSv: 480, // plasmoid 480 mSv
       color: "rgba(248,81,73,0.12)",
     },
@@ -255,11 +255,14 @@ export function generateDeltaVTrack(): { x: number[]; y: number[] } {
   y.push(cumDV + 11165);
   cumDV += 11165;
 
-  // Uranus stay + EP04 planning
+  // EP04: Uranus escape burn (1202 km/s @48,000t)
   x.push(103);
   y.push(cumDV);
-  x.push(111);
+  x.push(103.01);
   y.push(cumDV);
+  x.push(111);
+  y.push(cumDV + 1202);
+  cumDV += 1202;
 
   // EP05: 15207 km/s composite route (507h total, ~55h burn time)
   // Burns: escape, Jupiter flyby boost, deceleration, Earth insertion
@@ -424,7 +427,7 @@ export function buildDeltaVChart(): TimeSeriesChart {
     id: "mission-deltav-timeline",
     title: "累積ΔV（全ミッション）",
     description:
-      "全ミッションにわたるΔVの累積推移。EP01（8,497 km/s）、EP03（11,165 km/s）、EP05（15,207 km/s）の3回のbrachistochrone遷移で階段状に増加する。EP02はトリム推力のみ（85 km/s）で、全体の寄与はごくわずか。最終的な累積ΔVは約34,954 km/s（光速の約11.7%）に達する。各話の時間帯を背景色で区分している。",
+      "全ミッションにわたるΔVの累積推移。EP01（8,497 km/s）、EP03（11,165 km/s）、EP04（1,202 km/s）、EP05（15,207 km/s）で階段状に増加する。EP02はトリム推力のみ（85 km/s）で、全体の寄与はごくわずか。最終的な累積ΔVは約36,156 km/s（光速の約12.1%）に達する。各話の時間帯を背景色で区分している。",
     xLabel: "ミッション経過 (日)",
     yLabel: "累積 ΔV (km/s)",
     width: 700,

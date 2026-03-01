@@ -1999,20 +1999,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 349+ (not stale 261 or 348)", () => {
+  it("task count is 350+ (not stale 261 or 349)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("349"), "should cite current task count 349");
+    assert.ok(content.includes("350"), "should cite current task count 350");
   });
 
-  it("commit count is 489+ (not stale 488+)", () => {
+  it("commit count is 490+ (not stale 489+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("489+"), "should cite current commit count 489+");
+    assert.ok(content.includes("490+"), "should cite current commit count 490+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -2030,7 +2030,7 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,290"), "should cite TS test count");
+    assert.ok(content.includes("2,300"), "should cite TS test count");
     assert.ok(content.includes("378"), "should cite Rust test count");
     assert.ok(content.includes("242"), "should cite E2E test count");
   });
@@ -2054,6 +2054,107 @@ describe("ai-costs.md content validation", () => {
       content.includes("value: 7") || content.includes("value: 100") || content.includes("value: 196"),
       "bar chart should include cost values",
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Mission timeline data consistency (report vs computed)
+// ---------------------------------------------------------------------------
+describe("Mission timeline data consistency", () => {
+  const content = readReport("cross-episode.md");
+
+  // Parse timeseries JSON blocks from the report
+  function parseTimeseriesBlock(id: string): { x: number[]; y: number[] } | null {
+    const regex = new RegExp(`"id":\\s*"${id}"[\\s\\S]*?"x":\\s*\\[([\\d.,\\s]+)\\][\\s\\S]*?"y":\\s*\\[([\\d.,\\s-]+)\\]`);
+    const match = content.match(regex);
+    if (!match) return null;
+    return {
+      x: match[1].split(",").map(Number),
+      y: match[2].split(",").map(Number),
+    };
+  }
+
+  it("distance chart starts at Mars (~1.5 AU) and ends at Earth (~1.0 AU)", () => {
+    const data = parseTimeseriesBlock("mission-distance-timeline");
+    assert.ok(data, "distance timeseries should exist in report");
+    assert.ok(Math.abs(data.y[0] - 1.52) < 0.1, `start should be ~1.52 AU, got ${data.y[0]}`);
+    assert.ok(Math.abs(data.y[data.y.length - 1] - 1.0) < 0.1, `end should be ~1.0 AU, got ${data.y[data.y.length - 1]}`);
+  });
+
+  it("distance chart peaks near Uranus (~19.2 AU)", () => {
+    const data = parseTimeseriesBlock("mission-distance-timeline");
+    assert.ok(data);
+    const maxY = Math.max(...data.y);
+    assert.ok(Math.abs(maxY - 19.19) < 0.5, `peak should be ~19.19 AU, got ${maxY}`);
+  });
+
+  it("ΔV chart final value matches total 36,156 km/s", () => {
+    const data = parseTimeseriesBlock("mission-deltav-timeline");
+    assert.ok(data, "ΔV timeseries should exist in report");
+    const finalDV = data.y[data.y.length - 1];
+    assert.ok(Math.abs(finalDV - 36156) < 10, `final ΔV should be 36,156, got ${finalDV}`);
+  });
+
+  it("ΔV chart EP01 step is ~8,497 km/s", () => {
+    const data = parseTimeseriesBlock("mission-deltav-timeline");
+    assert.ok(data);
+    // Find value at day 3
+    const idx = data.x.findIndex(x => x >= 3);
+    assert.ok(Math.abs(data.y[idx] - 8497) < 10, `EP01 ΔV should be ~8497, got ${data.y[idx]}`);
+  });
+
+  it("ΔV chart includes EP04 escape (1,202 km/s)", () => {
+    const data = parseTimeseriesBlock("mission-deltav-timeline");
+    assert.ok(data);
+    // After EP03 (day 101): should be 19747, after EP04 (day 111): should be 20949
+    const afterEP03 = data.y[data.x.findIndex(x => x >= 101)];
+    const afterEP04 = data.y[data.x.findIndex(x => x >= 111)];
+    const ep04DV = afterEP04 - afterEP03;
+    assert.ok(Math.abs(ep04DV - 1202) < 10, `EP04 ΔV should be ~1202, got ${ep04DV}`);
+  });
+
+  it("nozzle chart ends with ~0.43h remaining (26 min)", () => {
+    const data = parseTimeseriesBlock("mission-nozzle-timeline");
+    assert.ok(data, "nozzle timeseries should exist in report");
+    const finalLife = data.y[data.y.length - 1];
+    assert.ok(Math.abs(finalLife - 0.43) < 0.1, `final nozzle life should be ~0.43h, got ${finalLife}`);
+  });
+
+  it("radiation chart has plasmoid jump of ~480 mSv", () => {
+    const data = parseTimeseriesBlock("mission-radiation-timeline");
+    assert.ok(data, "radiation timeseries should exist in report");
+    // Find the step around day 105
+    const beforeIdx = data.x.findIndex(x => x >= 105);
+    const afterIdx = beforeIdx + 1;
+    const jump = data.y[afterIdx] - data.y[beforeIdx];
+    assert.ok(Math.abs(jump - 480) < 5, `plasmoid jump should be ~480 mSv, got ${jump}`);
+  });
+
+  it("radiation chart final dose exceeds ICRP 500 mSv but stays under NASA 600 mSv", () => {
+    const data = parseTimeseriesBlock("mission-radiation-timeline");
+    assert.ok(data);
+    const finalDose = data.y[data.y.length - 1];
+    assert.ok(finalDose > 500, `final dose ${finalDose} should exceed ICRP 500 mSv`);
+    assert.ok(finalDose < 600, `final dose ${finalDose} should be under NASA 600 mSv`);
+  });
+
+  it("all 4 timeseries charts are present in report", () => {
+    const ids = [
+      "mission-distance-timeline",
+      "mission-deltav-timeline",
+      "mission-nozzle-timeline",
+      "mission-radiation-timeline",
+    ];
+    for (const id of ids) {
+      assert.ok(content.includes(`"id": "${id}"`), `report should contain chart ${id}`);
+    }
+  });
+
+  it("all timeseries regions match EP01-EP05", () => {
+    // All 4 charts should have the same 5 regions
+    const regionPattern = /"from": 0, "to": 3, "label": "EP01"/;
+    assert.ok(regionPattern.test(content), "should have EP01 region");
+    assert.ok(content.includes('"label": "EP05"'), "should have EP05 region");
   });
 });
 
