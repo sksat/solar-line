@@ -2498,7 +2498,7 @@ describe("renderSummaryPage", () => {
   });
 
   it("includes summary page links in nav when provided", () => {
-    const summaryPages = [{ title: "総合分析", slug: "cross-ep", path: "summary/cross-ep.html" }];
+    const summaryPages = [{ title: "総合分析", slug: "cross-ep", summary: "クロスエピソード分析", path: "summary/cross-ep.html" }];
     const html = renderSummaryPage(sampleSummaryReport, summaryPages);
     assert.ok(html.includes("総合分析"));
     assert.ok(html.includes("summary/cross-ep.html"));
@@ -2591,7 +2591,7 @@ describe("renderSummaryPage", () => {
 describe("layoutHtml with summaryPages", () => {
   it("includes summary page links when provided", () => {
     const summaryPages = [
-      { title: "クロスエピソード", slug: "cross-episode", path: "summary/cross-episode.html" },
+      { title: "クロスエピソード", slug: "cross-episode", summary: "エピソード間の整合性分析", path: "summary/cross-episode.html" },
     ];
     const html = layoutHtml("テスト", "<p>content</p>", ".", summaryPages);
     assert.ok(html.includes("クロスエピソード"));
@@ -2644,7 +2644,7 @@ describe("renderIndex with summaryPages", () => {
       episodes: [],
       logs: [],
       summaryPages: [
-        { title: "クロスエピソード整合性分析", slug: "cross-episode", path: "summary/cross-episode.html" },
+        { title: "クロスエピソード整合性分析", slug: "cross-episode", summary: "エピソード間のパラメータ整合性を検証", path: "summary/cross-episode.html" },
       ],
     };
     const html = renderIndex(manifest);

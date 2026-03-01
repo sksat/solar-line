@@ -587,6 +587,7 @@ export function buildManifest(episodes: EpisodeReport[], logs: LogEntry[], summa
       ? summaries.filter(s => s.category !== "meta").map(s => ({
           title: s.title,
           slug: s.slug,
+          summary: s.summary,
           path: `summary/${s.slug}.html`,
         }))
       : undefined,

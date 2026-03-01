@@ -763,6 +763,8 @@ export interface SiteManifest {
     title: string;
     /** URL slug */
     slug: string;
+    /** Brief summary of the page content */
+    summary: string;
     /** Relative path to the page */
     path: string;
   }[];

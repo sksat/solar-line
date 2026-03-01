@@ -376,7 +376,7 @@ test("body has dark theme background", async ({ page }) => {
 
 test("no NaN in video timestamp links across all episode pages", async ({ page }) => {
   for (const ep of manifest.episodes) {
-    const url = `/episodes/${ep.slug}.html`;
+    const url = `/${ep.path}`;
     await page.goto(url);
     const links = page.locator('a[href*="NaN"]');
     const count = await links.count();

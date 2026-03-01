@@ -620,6 +620,9 @@ footer {
 .stats-grid .stat-count { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
 .episode-card h3 { margin-top: 0; }
 .episode-card .episode-meta { font-size: 0.9em; color: #8b949e; margin-top: 0.5rem; }
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.summary-card h3 { margin-top: 0; }
+.summary-card p { font-size: 0.9em; color: #8b949e; margin-bottom: 0; }
 .toc { font-size: 0.9em; }
 .toc h3 { margin: 0 0 0.5rem; font-size: 1em; }
 .toc ul { list-style: none; padding-left: 0; }
@@ -907,9 +910,12 @@ ${summaryLine}
     : "<p>エピソードレポートはまだありません。</p>";
 
   const summaryList = manifest.summaryPages && manifest.summaryPages.length > 0
-    ? `\n<h2>総合分析</h2>\n<ul>\n${manifest.summaryPages.map(p =>
-        `<li><a href="${p.path}">${escapeHtml(p.title)}</a></li>`
-      ).join("\n")}\n</ul>`
+    ? `\n<h2>総合分析</h2>\n<div class="summary-cards">\n${manifest.summaryPages.map(p =>
+        `<div class="card summary-card">
+<h3><a href="${p.path}">${escapeHtml(p.title)}</a></h3>
+<p>${escapeHtml(p.summary)}</p>
+</div>`
+      ).join("\n")}\n</div>`
     : "";
 
   const metaList = manifest.metaPages && manifest.metaPages.length > 0
