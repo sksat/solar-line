@@ -1526,6 +1526,43 @@ describe("communications.md content validation", () => {
       "should have introduction section for newcomers",
     );
   });
+
+  it("has communication delay timeline chart", () => {
+    assert.ok(
+      content.includes("```timeseries:"),
+      "should have a timeseries chart directive",
+    );
+    assert.ok(
+      content.includes("comm-delay-timeline"),
+      "should have comm-delay-timeline chart id",
+    );
+  });
+
+  it("comm delay chart shows delay in minutes on y-axis", () => {
+    assert.ok(
+      content.includes("片道遅延 (分)"),
+      "y-axis should show delay in minutes",
+    );
+  });
+
+  it("comm delay chart has communication zone thresholds", () => {
+    // 30 min boundary between delayed and deep-space
+    assert.ok(
+      content.includes('"value": 30'),
+      "should have 30-min threshold for deep-space boundary",
+    );
+  });
+
+  it("comm delay chart has episode region bands", () => {
+    assert.ok(
+      content.includes('"label": "EP01"'),
+      "should have EP01 region band",
+    );
+    assert.ok(
+      content.includes('"label": "EP05"'),
+      "should have EP05 region band",
+    );
+  });
 });
 
 // ============================================================

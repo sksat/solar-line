@@ -1171,6 +1171,14 @@ test.describe("Summary: communications page", () => {
     // Should have scientific accuracy evaluation
     expect(pageContent).toContain("光速遅延");
   });
+
+  test("has communication delay timeline chart", async ({ page }) => {
+    await page.goto("/summary/communications.html");
+    const chart = page.locator("#comm-delay-timeline");
+    await expect(chart).toBeVisible();
+    // Chart should have a title
+    await expect(chart.locator("h4")).toContainText("地球との片道通信遅延");
+  });
 });
 
 // --- AI Costs page tests (Task 244) ---
