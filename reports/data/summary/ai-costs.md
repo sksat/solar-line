@@ -114,6 +114,28 @@ Haiku は主にファイル探索・検索などの単純タスクに、Sonnet �
 | Batch API | ~$195 | ~$3.36 | 入出力50%引。キャッシュ読み取りは割引対象外のため節約効果は限定的 |
 | Pro Plan + API | $20 + ~$196 | — | レート制限あり、エージェントループには非実用的 |
 
+```chart:bar
+caption: プラン別コスト比較（58セッション、サブエージェント+月額換算）
+unit: "$"
+bars:
+  - label: Max Plan（追加コスト）
+    value: 7
+    color: "#22c55e"
+    annotation: "$7（サブエージェント分のみ）"
+  - label: Max Plan（月額含む）
+    value: 107
+    color: "#3b82f6"
+    annotation: "$100月額 + $7追加"
+  - label: API-only
+    value: 196
+    color: "#ef4444"
+    annotation: "全額API課金"
+  - label: Batch API
+    value: 195
+    color: "#f97316"
+    annotation: "I/O 50%引でも効果薄"
+```
+
 ### API-only の内訳
 
 | 用途 | トークン | コスト |

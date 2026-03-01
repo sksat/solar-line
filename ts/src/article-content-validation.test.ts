@@ -1925,6 +1925,20 @@ describe("ai-costs.md content validation", () => {
       "should explain VMブート as startup-shutdown cycle",
     );
   });
+
+  it("has bar chart for plan cost comparison", () => {
+    assert.ok(
+      content.includes("```chart:bar"),
+      "should have a bar chart directive",
+    );
+  });
+
+  it("plan cost chart includes Max Plan and API-only data", () => {
+    assert.ok(
+      content.includes("value: 7") || content.includes("value: 100") || content.includes("value: 196"),
+      "bar chart should include cost values",
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
