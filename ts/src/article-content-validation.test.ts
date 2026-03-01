@@ -1710,6 +1710,15 @@ describe("science-accuracy.md content validation", () => {
     // 93% for cruise velocity
     assert.ok(content.includes("value: 93"), "should include 93% cruise velocity accuracy");
   });
+
+  it("relativistic effects verification: confirms Newtonian analysis validity", () => {
+    assert.ok(content.includes("相対論") || content.includes("relativistic"),
+      "should have a relativistic effects verification section");
+    assert.ok(content.includes("2.5%") || content.includes("2.54%"),
+      "should cite maximum β ≈ 2.5%c");
+    assert.ok(content.includes("0.1%"),
+      "should note all corrections are below 0.1%");
+  });
 });
 
 // ============================================================
