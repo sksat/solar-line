@@ -1999,20 +1999,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 350+ (not stale 261 or 349)", () => {
+  it("task count is 351+ (not stale 261 or 350)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("350"), "should cite current task count 350");
+    assert.ok(content.includes("351"), "should cite current task count 351");
   });
 
-  it("commit count is 490+ (not stale 489+)", () => {
+  it("commit count is 491+ (not stale 490+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("490+"), "should cite current commit count 490+");
+    assert.ok(content.includes("491+"), "should cite current commit count 491+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -2030,7 +2030,7 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,300"), "should cite TS test count");
+    assert.ok(content.includes("2,314"), "should cite TS test count");
     assert.ok(content.includes("378"), "should cite Rust test count");
     assert.ok(content.includes("242"), "should cite E2E test count");
   });
@@ -2155,6 +2155,131 @@ describe("Mission timeline data consistency", () => {
     const regionPattern = /"from": 0, "to": 3, "label": "EP01"/;
     assert.ok(regionPattern.test(content), "should have EP01 region");
     assert.ok(content.includes('"label": "EP05"'), "should have EP05 region");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Extended timeseries validation (velocity, propellant, margin, mass)
+// ---------------------------------------------------------------------------
+describe("Extended timeseries data validation", () => {
+  const crossContent = readReport("cross-episode.md");
+  const shipContent = readReport("ship-kestrel.md");
+
+  /** Parse timeseries JSON block by id from report content */
+  function parseTimeseries(content: string, id: string): { x: number[]; y: number[] }[] | null {
+    // Find the block containing this id
+    const idIdx = content.indexOf(`"id": "${id}"`);
+    if (idIdx < 0) return null;
+    // Find surrounding timeseries: block
+    const blockStart = content.lastIndexOf("```timeseries:", idIdx);
+    const blockEnd = content.indexOf("```", idIdx + 10);
+    if (blockStart < 0 || blockEnd < 0) return null;
+    const blockText = content.slice(blockStart + 14, blockEnd);
+    const parsed = JSON.parse(blockText);
+    return parsed.series.map((s: { x: number[]; y: number[] }) => ({ x: s.x, y: s.y }));
+  }
+
+  // --- Velocity profile ---
+  it("velocity profile: cruise speed starts at Mars orbital velocity (~24 km/s)", () => {
+    const series = parseTimeseries(crossContent, "mission-velocity-profile");
+    assert.ok(series, "velocity profile should exist");
+    assert.ok(Math.abs(series[0].y[0] - 24.1) < 1, `Mars cruise speed ~24 km/s, got ${series[0].y[0]}`);
+  });
+
+  it("velocity profile: EP05 peak speed is ~2100 km/s", () => {
+    const series = parseTimeseries(crossContent, "mission-velocity-profile");
+    assert.ok(series && series.length >= 2, "should have EP05 series");
+    const maxV = Math.max(...series[1].y);
+    assert.ok(Math.abs(maxV - 2100) < 100, `EP05 peak should be ~2100 km/s, got ${maxV}`);
+  });
+
+  it("velocity profile: EP05 ends near Earth orbital velocity (~7.7 km/s)", () => {
+    const series = parseTimeseries(crossContent, "mission-velocity-profile");
+    assert.ok(series && series.length >= 2);
+    const finalV = series[1].y[series[1].y.length - 1];
+    assert.ok(Math.abs(finalV - 7.7) < 2, `EP05 final speed should be ~7.7 km/s, got ${finalV}`);
+  });
+
+  // --- Propellant mass timeline ---
+  it("propellant mass: starts at 299t (initial mass)", () => {
+    const series = parseTimeseries(crossContent, "propellant-mass-timeline");
+    assert.ok(series, "propellant mass timeline should exist");
+    assert.strictEqual(series[0].y[0], 299, "initial mass should be 299t");
+  });
+
+  it("propellant mass: Enceladus refuel restores to 299t", () => {
+    const series = parseTimeseries(crossContent, "propellant-mass-timeline");
+    assert.ok(series);
+    // After refuel (around day 95), mass should return to 299
+    const refuelIdx = series[0].x.findIndex((x: number) => x >= 95);
+    assert.ok(refuelIdx > 0);
+    assert.strictEqual(series[0].y[refuelIdx], 299, "refuel should restore to 299t");
+  });
+
+  // --- Margin timeline ---
+  it("margin timeline: EP01 mass boundary margin is 0%", () => {
+    const series = parseTimeseries(crossContent, "margin-timeline");
+    assert.ok(series, "margin timeline should exist");
+    assert.strictEqual(series[0].y[0], 0, "EP01 margin should be 0%");
+  });
+
+  it("margin timeline: EP05 nozzle margin is 0.78%", () => {
+    const series = parseTimeseries(crossContent, "margin-timeline");
+    assert.ok(series);
+    const finalMargin = series[0].y[series[0].y.length - 1];
+    assert.ok(Math.abs(finalMargin - 0.78) < 0.05, `EP05 nozzle margin should be 0.78%, got ${finalMargin}`);
+  });
+
+  it("margin timeline: EP04 shield margin is 43%", () => {
+    const series = parseTimeseries(crossContent, "margin-timeline");
+    assert.ok(series);
+    // EP04 runs from day 101 to 111
+    const ep04Margin = series[0].y[series[0].x.findIndex((x: number) => x >= 103)];
+    assert.ok(Math.abs(ep04Margin - 43) < 1, `EP04 margin should be 43%, got ${ep04Margin}`);
+  });
+
+  // --- Margin actual vs limit ---
+  it("margin-actual-vs-limit: EP05 nozzle utilization is 99.2%", () => {
+    const series = parseTimeseries(crossContent, "margin-actual-vs-limit");
+    assert.ok(series, "margin-actual-vs-limit should exist");
+    // Point 4 = EP05 nozzle
+    const ep05 = series[0].y[3]; // x=[1,2,3,4], y=[97.1, 99.8, 57, 99.2]
+    assert.ok(Math.abs(ep05 - 99.2) < 0.5, `EP05 utilization should be 99.2%, got ${ep05}`);
+  });
+
+  it("margin-actual-vs-limit: limit line is 100% for all points", () => {
+    const series = parseTimeseries(crossContent, "margin-actual-vs-limit");
+    assert.ok(series && series.length >= 2, "should have limit series");
+    for (const v of series[1].y) {
+      assert.strictEqual(v, 100, "limit should be 100%");
+    }
+  });
+
+  // --- Ship-kestrel mass timeline ---
+  it("ship-kestrel mass timeline: all scenarios start at 299t", () => {
+    const series = parseTimeseries(shipContent, "mass-timeline");
+    assert.ok(series, "ship-kestrel mass timeline should exist");
+    for (let i = 0; i < series.length; i++) {
+      assert.strictEqual(series[i].y[0], 299, `scenario ${i} should start at 299t`);
+    }
+  });
+
+  it("ship-kestrel mass timeline: has 3 scenarios", () => {
+    const series = parseTimeseries(shipContent, "mass-timeline");
+    assert.ok(series);
+    assert.strictEqual(series.length, 3, "should have 3 scenarios (A, B, C)");
+  });
+
+  it("ship-kestrel mass timeline: scenario A (no refuel) reaches structural mass 60t", () => {
+    const series = parseTimeseries(shipContent, "mass-timeline");
+    assert.ok(series);
+    const finalA = series[0].y[series[0].y.length - 1];
+    assert.strictEqual(finalA, 60, "scenario A should reach structural mass 60t");
+  });
+
+  it("ship-kestrel mass timeline: structural mass threshold is 60t", () => {
+    assert.ok(shipContent.includes('"value": 60'), "should have 60t threshold");
+    assert.ok(shipContent.includes("構造質量"), "should label as structural mass");
   });
 });
 
