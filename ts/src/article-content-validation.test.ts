@@ -311,6 +311,18 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes("8.2"),
       "should cite Oberth ratio 8.2x at perijove");
   });
+
+  it("Mars departure altitude: 52° apparent diameter → 560 km", () => {
+    assert.ok(content.includes("52°") || content.includes("52度"),
+      "should cite 52° Mars apparent diameter from rear camera");
+    assert.ok(content.includes("560") || content.includes("561"),
+      "should cite ~560 km altitude above Mars surface");
+  });
+
+  it("total Jupiter ΔV budget: ~6.3 km/s estimated", () => {
+    assert.ok(content.includes("6.3") && content.includes("km/s"),
+      "should cite estimated total Jupiter ΔV ~6.3 km/s");
+  });
 });
 
 describe("EP02 article content validation", () => {
@@ -725,6 +737,22 @@ describe("EP05 article content validation", () => {
       "should cite 110 MJ impact energy from onscreen data");
     assert.ok(content.includes("多孔質") || content.includes("密度"),
       "should discuss porous ice or density to explain the 110 MJ value");
+  });
+
+  it("jurisdictional progression: 5-zone governance on return route", () => {
+    assert.ok(content.includes("自由圏"),
+      "should cite 自由圏 (free zone) — EP05-first governance category");
+    assert.ok(content.includes("地球軌道港湾機構"),
+      "should cite 地球軌道港湾機構 as asteroid belt jurisdiction");
+    assert.ok(content.includes("木星軌道連合"),
+      "should cite 木星軌道連合 as Jupiter jurisdiction");
+  });
+
+  it("navigation autonomy: STELLAR-INS with all beacons unavailable", () => {
+    assert.ok(content.includes("STELLAR-INS") || content.includes("恒星慣性航法"),
+      "should cite STELLAR-INS autonomous navigation mode");
+    assert.ok(content.includes("BEACON") || content.includes("ビーコン"),
+      "should discuss beacon unavailability");
   });
 });
 
