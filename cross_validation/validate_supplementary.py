@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Cross-validation of supplementary Rust modules (relativistic, attitude, plasmoid)
-against independent Python implementations.
+Cross-validation of supplementary Rust modules (relativistic, attitude, plasmoid,
+comms, mass_timeline) against independent Python implementations.
 
 These modules handle physics calculations used in the SOLAR LINE analysis
 beyond core orbital mechanics (which is validated in validate.py).
@@ -209,6 +209,77 @@ def plasmoid_perturbation(b_tesla, n_per_m3, v_m_s, cross_section_m2,
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Mass Timeline (Tsiolkovsky) — independent implementations
+# ═══════════════════════════════════════════════════════════════════════
+
+G0_M_S2 = 9.80665  # Standard gravitational acceleration (m/s²)
+
+
+def exhaust_velocity_km_s(isp_s: float) -> float:
+    """Exhaust velocity: ve = Isp × g₀ (converted to km/s)."""
+    return isp_s * G0_M_S2 / 1000.0
+
+
+def tsiolkovsky_mass_ratio(dv_km_s: float, ve_km_s: float) -> float:
+    """Mass ratio: m₀/m_f = exp(ΔV / vₑ)."""
+    return math.exp(dv_km_s / ve_km_s)
+
+
+def propellant_consumed(mass_kg: float, dv_km_s: float, isp_s: float) -> float:
+    """Propellant consumed: m × (1 - 1/mass_ratio)."""
+    ve = exhaust_velocity_km_s(isp_s)
+    mr = tsiolkovsky_mass_ratio(dv_km_s, ve)
+    return mass_kg * (1.0 - 1.0 / mr)
+
+
+def post_burn_mass(mass_kg: float, dv_km_s: float, isp_s: float) -> float:
+    """Mass after burn."""
+    return mass_kg - propellant_consumed(mass_kg, dv_km_s, isp_s)
+
+
+def compute_test_timeline(
+    initial_total: float, initial_dry: float
+) -> dict:
+    """Reproduce the exact 2-burn + jettison scenario from Rust export.
+
+    Events:
+      1. FuelBurn at t=0h: ΔV=5 km/s, Isp=1e6 s, duration=1h
+      2. ContainerJettison at t=72h: 50,000 kg
+      3. FuelBurn at t=72h: ΔV=3 km/s, Isp=1e6 s, duration=0.5h
+    """
+    propellant = initial_total - initial_dry
+    dry = initial_dry
+
+    # Event 1: Fuel burn
+    total = dry + propellant
+    consumed1 = propellant_consumed(total, 5.0, 1_000_000.0)
+    consumed1 = min(consumed1, propellant)
+    propellant -= consumed1
+
+    # Event 2: Container jettison
+    dry -= 50_000.0
+
+    # Event 3: Fuel burn
+    total = dry + propellant
+    consumed2 = propellant_consumed(total, 3.0, 1_000_000.0)
+    consumed2 = min(consumed2, propellant)
+    propellant -= consumed2
+
+    total = dry + propellant
+    initial_prop = initial_total - initial_dry
+    total_consumed = consumed1 + consumed2
+    margin = propellant / initial_prop
+
+    return {
+        "final_total_kg": total,
+        "final_dry_kg": dry,
+        "final_propellant_kg": propellant,
+        "total_consumed_kg": total_consumed,
+        "margin": margin,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Validation harness
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -358,6 +429,45 @@ def main():
     fspl_diff = cm["fspl_xband_5au"] - cm["fspl_xband_1au"]
     py_fspl_diff = 20.0 * math.log10(5.0)
     check("FSPL 5x distance scaling", fspl_diff, py_fspl_diff)
+
+    # ── Mass Timeline (Tsiolkovsky) ─────────────────────────────
+    print("\n═══ Mass timeline (Tsiolkovsky) cross-validation ═══")
+    mt = rust["mass_timeline"]
+
+    # g0 constant
+    check("g0 (m/s²)", mt["g0_m_s2"], G0_M_S2)
+
+    # propellant_consumed: Kestrel-like (300t, 5 km/s, Isp 1e6 s)
+    check("propellant consumed 300t/5kms/1e6s",
+          mt["propellant_consumed_300t_5kms_1e6s"],
+          propellant_consumed(300_000.0, 5.0, 1_000_000.0))
+
+    # propellant_consumed: conventional (10t, 3 km/s, Isp 300 s)
+    check("propellant consumed 10t/3kms/300s",
+          mt["propellant_consumed_10t_3kms_300s"],
+          propellant_consumed(10_000.0, 3.0, 300.0))
+
+    # propellant_consumed: high dv (1t, 10 km/s, Isp 3000 s)
+    check("propellant consumed 1t/10kms/3000s",
+          mt["propellant_consumed_1t_10kms_3000s"],
+          propellant_consumed(1_000.0, 10.0, 3000.0))
+
+    # post_burn_mass
+    check("post-burn mass 300t/5kms/1e6s",
+          mt["post_burn_mass_300t_5kms_1e6s"],
+          post_burn_mass(300_000.0, 5.0, 1_000_000.0))
+
+    check("post-burn mass 10t/3kms/300s",
+          mt["post_burn_mass_10t_3kms_300s"],
+          post_burn_mass(10_000.0, 3.0, 300.0))
+
+    # compute_timeline: 2-burn + jettison scenario
+    tl = compute_test_timeline(300_000.0, 200_000.0)
+    check("timeline final total", mt["timeline_final_total_kg"], tl["final_total_kg"])
+    check("timeline final dry", mt["timeline_final_dry_kg"], tl["final_dry_kg"])
+    check("timeline final propellant", mt["timeline_final_propellant_kg"], tl["final_propellant_kg"])
+    check("timeline total consumed", mt["timeline_total_consumed_kg"], tl["total_consumed_kg"])
+    check("timeline propellant margin", mt["timeline_propellant_margin"], tl["margin"])
 
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")

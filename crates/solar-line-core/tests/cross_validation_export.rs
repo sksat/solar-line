@@ -12,6 +12,7 @@ mod export {
     use solar_line_core::constants::{mu, orbit_radius, reference_orbits, G0_M_S2};
     use solar_line_core::flyby;
     use solar_line_core::kepler;
+    use solar_line_core::mass_timeline;
     use solar_line_core::orbits;
     use solar_line_core::plasmoid;
     use solar_line_core::propagation::*;
@@ -569,6 +570,103 @@ mod export {
 
         // Speed of light constant
         results.push_str(&format!("    \"c_km_s\": {:.15e}\n", comms::C_KM_S));
+        results.push_str("  },\n");
+
+        // === Mass Timeline (Tsiolkovsky) ===
+        results.push_str("  \"mass_timeline\": {\n");
+
+        // propellant_consumed: m * (1 - exp(-dv/ve)), ve = isp * g0
+        // Test case 1: Kestrel-like parameters (300t, 5 km/s, Isp 1e6 s)
+        let pc1 = mass_timeline::propellant_consumed(300_000.0, 5.0, 1_000_000.0);
+        results.push_str(&format!(
+            "    \"propellant_consumed_300t_5kms_1e6s\": {:.15e},\n",
+            pc1
+        ));
+
+        // Test case 2: conventional rocket (10000 kg, 3 km/s, Isp 300 s)
+        let pc2 = mass_timeline::propellant_consumed(10_000.0, 3.0, 300.0);
+        results.push_str(&format!(
+            "    \"propellant_consumed_10t_3kms_300s\": {:.15e},\n",
+            pc2
+        ));
+
+        // Test case 3: high dv (1000 kg, 10 km/s, Isp 3000 s)
+        let pc3 = mass_timeline::propellant_consumed(1_000.0, 10.0, 3000.0);
+        results.push_str(&format!(
+            "    \"propellant_consumed_1t_10kms_3000s\": {:.15e},\n",
+            pc3
+        ));
+
+        // post_burn_mass
+        let pbm1 = mass_timeline::post_burn_mass(300_000.0, 5.0, 1_000_000.0);
+        results.push_str(&format!(
+            "    \"post_burn_mass_300t_5kms_1e6s\": {:.15e},\n",
+            pbm1
+        ));
+
+        let pbm2 = mass_timeline::post_burn_mass(10_000.0, 3.0, 300.0);
+        results.push_str(&format!(
+            "    \"post_burn_mass_10t_3kms_300s\": {:.15e},\n",
+            pbm2
+        ));
+
+        // G0 constant used in exhaust velocity calculation
+        results.push_str(&format!("    \"g0_m_s2\": {:.15e},\n", G0_M_S2));
+
+        // compute_timeline: simple 2-burn scenario
+        let events = vec![
+            mass_timeline::MassEvent {
+                time_h: 0.0,
+                kind: mass_timeline::MassEventKind::FuelBurn {
+                    delta_v_km_s: 5.0,
+                    isp_s: 1_000_000.0,
+                    burn_duration_h: 1.0,
+                },
+                episode: 1,
+                label: "burn1".to_string(),
+            },
+            mass_timeline::MassEvent {
+                time_h: 72.0,
+                kind: mass_timeline::MassEventKind::ContainerJettison { mass_kg: 50_000.0 },
+                episode: 1,
+                label: "jettison".to_string(),
+            },
+            mass_timeline::MassEvent {
+                time_h: 72.0,
+                kind: mass_timeline::MassEventKind::FuelBurn {
+                    delta_v_km_s: 3.0,
+                    isp_s: 1_000_000.0,
+                    burn_duration_h: 0.5,
+                },
+                episode: 1,
+                label: "burn2".to_string(),
+            },
+        ];
+        let timeline = mass_timeline::compute_timeline("test", 300_000.0, 200_000.0, &events);
+        let final_snap = mass_timeline::final_mass(&timeline).unwrap();
+        let total_consumed = mass_timeline::total_propellant_consumed(&timeline);
+        let margin = mass_timeline::propellant_margin(&timeline);
+
+        results.push_str(&format!(
+            "    \"timeline_final_total_kg\": {:.15e},\n",
+            final_snap.total_mass_kg
+        ));
+        results.push_str(&format!(
+            "    \"timeline_final_dry_kg\": {:.15e},\n",
+            final_snap.dry_mass_kg
+        ));
+        results.push_str(&format!(
+            "    \"timeline_final_propellant_kg\": {:.15e},\n",
+            final_snap.propellant_kg
+        ));
+        results.push_str(&format!(
+            "    \"timeline_total_consumed_kg\": {:.15e},\n",
+            total_consumed
+        ));
+        results.push_str(&format!(
+            "    \"timeline_propellant_margin\": {:.15e}\n",
+            margin
+        ));
         results.push_str("  }\n");
 
         results.push_str("}\n");
