@@ -1,0 +1,136 @@
+{
+  "episode": 2,
+  "sourceType": "video-ocr",
+  "ocrEngine": "tesseract-5.3.0",
+  "ocrLanguages": {
+    "subtitle": "jpn",
+    "hud": "eng"
+  },
+  "preprocessingMethod": "grayscale-threshold",
+  "framesDir": "raw_data/frames/ep02",
+  "extractedAt": "2026-03-01T04:09:25Z",
+  "frames": [
+    {
+      "index": 0,
+      "timestampSec": 53,
+      "timestampFormatted": "00:53",
+      "description": "EVA — 冷却系圧力0.04MPa低下",
+      "filename": "frame_53s.jpg",
+      "subtitleText": "冷却系圧力は規定内ですが\n外部二次傘却管路で 圧力が0.04メガパスカル低下",
+      "hudText": "GQ \\"
+    },
+    {
+      "index": 1,
+      "timestampSec": 106,
+      "timestampFormatted": "01:46",
+      "description": "木星・イオ近傍 — 相対速度増加、3時間後最近接",
+      "filename": "frame_106s.jpg",
+      "subtitleText": "視党的普走です-…                                              _\n実際の相対速度は増加個向 3時間後に最近接を外れます",
+      "hudText": "oa ae ED aoa _— 4\n‘ ete a ie 1k\n4 ¢ Rp ise g\n| ea\n— ee “< _\n_ » ee : 2\n5 or, a 3 wee ’ a :\nSS ——_ oe\nat eel i a —\n\"an an —\n—— : —_ .\nNoe a ~ ~\n~ 4 - , _\nf"
+    },
+    {
+      "index": 2,
+      "timestampSec": 118,
+      "timestampFormatted": "01:58",
+      "description": "ケストレル船体全景 — 損傷状態",
+      "filename": "frame_118s.jpg",
+      "subtitleText": "ー          ーー                  ー この船… まだ飛ぶか?",
+      "hudText": "j we ETT ce ~ :\n— = _ a\nar ran a -"
+    },
+    {
+      "index": 3,
+      "timestampSec": 418,
+      "timestampFormatted": "06:58",
+      "description": "木星離脱航路 — イオ・トーラス外縁スカート付近",
+      "filename": "frame_418s.jpg",
+      "subtitleText": "地球内・火呈困の腸は依然として周回軌道を降下中… 到計まで約13時間",
+      "hudText": "AEMBES (17+ b-SASMAD—K\nAEBS / 2B\npe\nrt ES ;\na"
+    },
+    {
+      "index": 4,
+      "timestampSec": 547,
+      "timestampFormatted": "09:07",
+      "description": "木星磁気圏縁ゲート — 高度50RJ",
+      "filename": "frame_547s.jpg",
+      "subtitleText": "木星困からの鞭遇需座に乗りました… 現在高度は50RJ",
+      "hudText": "ASME (ABMS —b)\nALBA / ABB"
+    },
+    {
+      "index": 5,
+      "timestampSec": 551,
+      "timestampFormatted": "09:11",
+      "description": "木星基準速度10.3km/s — 扇状面同調",
+      "filename": "frame_551s.jpg",
+      "subtitleText": "木器基準速苔103キロメートル毎秒\n訪状面の中心線に回調… スラストはトリムのみ",
+      "hudText": "ASMA (AMS —b)\nASSHOH/ ABB"
+    },
+    {
+      "index": 6,
+      "timestampSec": 807,
+      "timestampFormatted": "13:27",
+      "description": "エンケラドゥス・リレー到着",
+      "filename": "frame_807s.jpg",
+      "subtitleText": "電源も生命維持英置も… 人工重力英言もまだ生きています\n廃寺と言うには賑やかすぎますね",
+      "hudText": "LTYTSKGA-UL— -\nBREE: AS Saat e Em\n, a\nei"
+    },
+    {
+      "index": 7,
+      "timestampSec": 978,
+      "timestampFormatted": "16:18",
+      "description": "外縁航路投入シークエンス開始 — 点火ウィンドウ5時間",
+      "filename": "frame_978s.jpg",
+      "subtitleText": "H           1\n外縁防路投入のための推進沙王エンスを問始\nー点火ウィンド必ま残り引き問",
+      "hudText": "\\ \\ 4 / y\n\\\n-- Na p\n, 1 NOS “ .\ni\n' : . ‘\n| €"
+    },
+    {
+      "index": 8,
+      "timestampSec": 997,
+      "timestampFormatted": "16:37",
+      "description": "NAVIGATION OVERVIEW — COIAS軌道交差警報",
+      "filename": "frame_997s.jpg",
+      "subtitleText": "日                   \"WPA・MC-SCV-02818",
+      "hudText": "MARS MTS-9907/EXT -P17\n> PORT\n. \\ cOIAS\nORBITAL cross ALERT\n\nCOURSE INTERSECTION IMMINENT\n\nRELATIVE VELOCITY: -0.12 km/s\nELABUS ORBIT @\n\neaTiign a\ni"
+    },
+    {
+      "index": 9,
+      "timestampSec": 1000,
+      "timestampFormatted": "16:40",
+      "description": "NAVIGATION OVERVIEW（字幕付き）— 相対速度0.12km/s",
+      "filename": "frame_1000s.jpg",
+      "subtitleText": "ュ     SATURN    デメ    EMI)                           _-\nウン2             和人交送告 条突の佑際あり\nえき  42                   本乏宙012キロス北朝scy -0z81*",
+      "hudText": "MARS MTS-99O7/EXT- P17\n> PORT\n\\ COIAS\nORBITAL cross ALERT\nCOURSE INTERSECTION IMMINENT\nRELATIVE VELOCITY: -0.12 km/s\nELADUS ORBIT @\necaTiign a\ni"
+    },
+    {
+      "index": 10,
+      "timestampSec": 1038,
+      "timestampFormatted": "17:18",
+      "description": "大型船検知 — 恒星掩蔽",
+      "filename": "frame_1038s.jpg",
+      "subtitleText": "「容常な光の消失j』 を 天文モニターの薄亜但呈観測にて本知しました",
+      "hudText": "/ —\n, x\nahaa"
+    },
+    {
+      "index": 11,
+      "timestampSec": 1048,
+      "timestampFormatted": "17:28",
+      "description": "大型船待ち伏せ推定 — 相対速度ゼロ",
+      "filename": "frame_1048s.jpg",
+      "subtitleText": "おそらく… 訪法やトランスポンダを切った上で 相対速度を\n限りなくゼロに近づけ ただそこに漂って待ち模えていたものと推定されます",
+      "hudText": "/\n“ 4\n|\n) D.\n; , \\"
+    },
+    {
+      "index": 12,
+      "timestampSec": 1051,
+      "timestampFormatted": "17:31",
+      "description": "きりたん・ケイ — 緊張シーン",
+      "filename": "frame_1051s.jpg",
+      "subtitleText": null,
+      "hudText": "q vy\né er |, .\n“ yy\n|\n7 we"
+    }
+  ],
+  "summary": {
+    "totalFrames": 13,
+    "framesWithSubtitle": 12,
+    "framesWithHud": 13
+  }
+}

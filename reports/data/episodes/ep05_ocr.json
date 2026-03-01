@@ -1,0 +1,226 @@
+{
+  "episode": 5,
+  "sourceType": "video-ocr",
+  "ocrEngine": "tesseract-5.3.0",
+  "ocrLanguages": {
+    "subtitle": "jpn",
+    "hud": "eng"
+  },
+  "preprocessingMethod": "grayscale-threshold",
+  "framesDir": "raw_data/frames/ep05",
+  "extractedAt": "2026-03-01T04:08:48Z",
+  "frames": [
+    {
+      "index": 0,
+      "timestampSec": 2,
+      "timestampFormatted": "00:02",
+      "description": "骨格フレーム亀裂報告 — フレーム5番0.3μm、フレーム7番0.2μm",
+      "filename": "frame_000_2s.jpg",
+      "subtitleText": "応力モニタにて異常値\n骨格フレーム5番で地的が進行 03マイクロメートル",
+      "hudText": "RES\nRESO / REE .\n° .\nEE ace oc Re ae a al == — Ft"
+    },
+    {
+      "index": 1,
+      "timestampSec": 86,
+      "timestampFormatted": "01:26",
+      "description": "航路ブリーフィング — タイタニア→地球直接エントリー",
+      "filename": "frame_001_86s.jpg",
+      "subtitleText": "…「次の船」には もっと優しくしてあげてくださいね",
+      "hudText": null
+    },
+    {
+      "index": 2,
+      "timestampSec": 142,
+      "timestampFormatted": "02:22",
+      "description": "自律航法説明 — 目的地：地球高度400km低軌道",
+      "filename": "frame_002_142s.jpg",
+      "subtitleText": "ーー          人らされたのではなく レールの無い場所を行くのです\nにKS",
+      "hudText": "/. UAW\nre >"
+    },
+    {
+      "index": 3,
+      "timestampSec": 156,
+      "timestampFormatted": "02:36",
+      "description": "推定所要時間507時間",
+      "filename": "frame_003_156s.jpg",
+      "subtitleText": "目69地は地球… 高度400キロメートルの低軌道です",
+      "hudText": "NAVIGATION OVERVIEW\ncpesTINATIONI EARTH Low ORBIT\nCARRIVAL ETA] 7+507:00:00 (SHI\neet STELLAR INS\nERT REF wagy REF ustren-ret\nac, RESSSN-SUIGED POOES: U4 avs DLBSLE"
+    },
+    {
+      "index": 4,
+      "timestampSec": 183,
+      "timestampFormatted": "03:03",
+      "description": "土星リング近傍5km校正 + 木星フライバイ説明",
+      "filename": "frame_004_183s.jpg",
+      "subtitleText": "まず 1度目の点火で天王星固を脱出…\nそのまま巡似速度まで加速して 土星まで向かいます",
+      "hudText": "* forg Pras irity\nCalébratian\nrd Tedbtls CMt\nMoh ALT Bert\nl\nkon! S : |\nQReLr al {\nCURTALN\nee En eer orem eau..."
+    },
+    {
+      "index": 5,
+      "timestampSec": 202,
+      "timestampFormatted": "03:22",
+      "description": "予定速度1500km/s — オーベルト効果3%向上",
+      "filename": "frame_005_202s.jpg",
+      "subtitleText": "その後木呈フライバイにより 軌道修正と追加加速を実施します",
+      "hudText": ". T\n@) LUSTER 1,\n(@)°, EAT LRM\n‘me .\nad |\nKars Ceceleratjon SMp7 ter Flvitry\nSv=-6 0041952 hres feed [pas Ce bamis\nT4505 00 T+3PS 0\nBate son Meter zeag CURE\nCUR\nPOP papers,"
+    },
+    {
+      "index": 6,
+      "timestampSec": 215,
+      "timestampFormatted": "03:35",
+      "description": "点火計画4回 — 土星通過時誤差最大1000km",
+      "filename": "frame_006_215s.jpg",
+      "subtitleText": "オーベルト効果によるエネルギー効率向上は およそ3%⑭程度となりますが\nノズル寿命が限らちれている現状では 無祝できない数舘です",
+      "hudText": "te ~ MARS\n2° :\nos\ne I\n(ge suRlTER y.\nels, sary\n2 -\nwee ep capture neecg gge leat ion AUmifer Fh yey\nWE iecer Gye 6. 0081083 yey fu=6 B04? pas\nSaseipg OS bees THst OD in TesPéigg Oe kets\n2700 DER ae gp betes ideng\nts cates, cae . epee 4, bz 20450F\neg gk pe de"
+    },
+    {
+      "index": 7,
+      "timestampSec": 249,
+      "timestampFormatted": "04:09",
+      "description": "第1シークエンス完了 — 予定ΔV達成・天王星脱出軌道",
+      "filename": "frame_007_249s.jpg",
+      "subtitleText": null,
+      "hudText": null
+    },
+    {
+      "index": 8,
+      "timestampSec": 313,
+      "timestampFormatted": "05:13",
+      "description": "オービタルカーテン通過 — 土星港湾交差圏内侵入",
+      "filename": "frame_008_313s.jpg",
+      "subtitleText": "| 軸   -\n| 人   ー て",
+      "hudText": "A-BAT YER\nBRA KSA SER / tae\nA -\nLL\n1’\n: _“\n4"
+    },
+    {
+      "index": 9,
+      "timestampSec": 554,
+      "timestampFormatted": "09:14",
+      "description": "土星リング面スポーク帯域接近 — 現在距離88km",
+      "filename": "frame_009_554s.jpg",
+      "subtitleText": "土星リング面スポーク帯域に接近中… 現在距次88キロメートル",
+      "hudText": "tBU7H\nERSES KSB eee / +28"
+    },
+    {
+      "index": 10,
+      "timestampSec": 596,
+      "timestampFormatted": "09:56",
+      "description": "現在速度1500km/s — 1cm氷粒衝突110MJ",
+      "filename": "frame_010_596s.jpg",
+      "subtitleText": "現在速度は1500キロメートル毎秒… 1センチメートルの氷の粒かが衝突しただけでも\n李二エネルギーはおよそ110メガジュールほどになります",
+      "hudText": "tips\n\\ |\nie\n4\n~ | | ]\n! oan Bb\ni ran\nH Al BY\nyo i | J\n‘ 1\n, § a be\nfa 5’ oe\nPs=p eet: sae eae ee eee ee eb... °° 7 Jos ae eee Tea) eee"
+    },
+    {
+      "index": 11,
+      "timestampSec": 671,
+      "timestampFormatted": "11:11",
+      "description": "木星パワードフライバイ — エントリー速度1500km/s",
+      "filename": "frame_011_671s.jpg",
+      "subtitleText": "ン     -                                 ーー",
+      "hudText": "|\ne bee\na \\\n. | sy /\n\\"
+    },
+    {
+      "index": 12,
+      "timestampSec": 718,
+      "timestampFormatted": "11:58",
+      "description": "最終速度2100km/s — 核魚雷実効殺傷半径40km",
+      "filename": "frame_012_718s.jpg",
+      "subtitleText": "本来であれは洛回しをいところですが… イオのトーラス外縁を擦め\n高放射線淀域の中を 最大で6分回航行することになります",
+      "hudText": "v\nyou poet ntl rere\ncorner E\nExit vec ye\n51477 ENE\n. exit WEL:\nFarceT: Mt\nJ1-il\nsesh or ea SE) ote mr Ze\nen 2 oe a ti |"
+    },
+    {
+      "index": 13,
+      "timestampSec": 776,
+      "timestampFormatted": "12:56",
+      "description": "ノズル寿命残り55時間38分 vs 必要燃焼55時間12分 マージン26分",
+      "filename": "frame_013_776s.jpg",
+      "subtitleText": "…ただ代僅として 推進炉の磁気ノズル寿命の問題があります",
+      "hudText": "i |\nwt |\nI =— —-¥ i \\ .\n’ \\ NN : ] ih\n(oe ."
+    },
+    {
+      "index": 14,
+      "timestampSec": 871,
+      "timestampFormatted": "14:31",
+      "description": "保安艇2隻待ち伏せ確認 — 航法表示",
+      "filename": "frame_014_871s.jpg",
+      "subtitleText": "…本題だ 地球の保安肥が2和信\nお前の予測軌道上で待ってる-… 木呈団でお前を落とす気だろうな",
+      "hudText": ") | “4\na -l=e dane pyaar ae, P- rs"
+    },
+    {
+      "index": 15,
+      "timestampSec": 908,
+      "timestampFormatted": "15:08",
+      "description": "ΔV残り400km/s — イオ・トーラス外沿・外部線量220Sv/h",
+      "filename": "frame_015_908s.jpg",
+      "subtitleText": "ー…ガニメデの約束は まだ生きてるからな",
+      "hudText": "AAbK—SAAB\nABRBES / KE\nA —» 4S\nC ~™ Lg i\nOY .\n° oO .\nNe\n; RI es"
+    },
+    {
+      "index": 16,
+      "timestampSec": 959,
+      "timestampFormatted": "15:59",
+      "description": "小惑星帯通過 — 航法誤差20km以内",
+      "filename": "frame_016_959s.jpg",
+      "subtitleText": null,
+      "hudText": "NRE\nHOERELE / Ee"
+    },
+    {
+      "index": 17,
+      "timestampSec": 1026,
+      "timestampFormatted": "17:06",
+      "description": "減速開始 — 目標速度1500km/s",
+      "filename": "frame_017_1026s.jpg",
+      "subtitleText": null,
+      "hudText": null
+    },
+    {
+      "index": 18,
+      "timestampSec": 1236,
+      "timestampFormatted": "20:36",
+      "description": "主機アームド — カウントダウン 5,4,3,2,1",
+      "filename": "frame_018_1236s.jpg",
+      "subtitleText": "ング\n主擬アームド 条也に備えてくださり人                               々",
+      "hudText": "ok\ny 7"
+    },
+    {
+      "index": 19,
+      "timestampSec": 1348,
+      "timestampFormatted": "22:28",
+      "description": "残りΔV 20km/s — ノズル耐久限界まで20秒",
+      "filename": "frame_019_1348s.jpg",
+      "subtitleText": "彼女たちかが知っている秩序の中に 2人陸いりのてす",
+      "hudText": "‘"
+    },
+    {
+      "index": 20,
+      "timestampSec": 1356,
+      "timestampFormatted": "22:36",
+      "description": "残りΔV 10→7.67km/s — 第一宇宙速度到達カットオフ",
+      "filename": "frame_020_1356s.jpg",
+      "subtitleText": "残りAr 遇較\n「\nし 1",
+      "hudText": "y"
+    },
+    {
+      "index": 21,
+      "timestampSec": 1370,
+      "timestampFormatted": "22:50",
+      "description": "軌道速度達成 — 地球低軌道400km投入完了",
+      "filename": "frame_021_1370s.jpg",
+      "subtitleText": null,
+      "hudText": "° ; .\na\n3 <\n, ."
+    },
+    {
+      "index": 22,
+      "timestampSec": 1378,
+      "timestampFormatted": "22:58",
+      "description": "磁気ノズル消失 — 温度センサーロスト",
+      "filename": "frame_022_1378s.jpg",
+      "subtitleText": null,
+      "hudText": "4 “\nLo~ bd"
+    }
+  ],
+  "summary": {
+    "totalFrames": 23,
+    "framesWithSubtitle": 18,
+    "framesWithHud": 20
+  }
+}

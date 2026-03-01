@@ -1,0 +1,208 @@
+{
+  "episode": 1,
+  "sourceType": "video-ocr",
+  "ocrEngine": "tesseract-5.3.0",
+  "ocrLanguages": {
+    "subtitle": "jpn",
+    "hud": "eng"
+  },
+  "preprocessingMethod": "grayscale-threshold",
+  "framesDir": "raw_data/frames/ep01",
+  "extractedAt": "2026-03-01T04:08:31Z",
+  "frames": [
+    {
+      "index": 0,
+      "timestampSec": 47,
+      "timestampFormatted": "00:47",
+      "description": "反応質量タンク — instrument panel",
+      "filename": "frame_000_47s.jpg",
+      "subtitleText": "符が無いために後部|敵生が低く       .\n微小な姿変化で液面波が立ちやすい状態です",
+      "hudText": "iV\nan"
+    },
+    {
+      "index": 1,
+      "timestampSec": 72,
+      "timestampFormatted": "01:12",
+      "description": "依頼表示 — ガニメデ72時間",
+      "filename": "frame_001_72s.jpg",
+      "subtitleText": "叱急依頼が1本入っています… ガニメデ中央港へ72時間以内\n封EHコンテナ2基 色険物指定なし",
+      "hudText": "mo\n2 ML\nwe - 7 a ze .\na"
+    },
+    {
+      "index": 2,
+      "timestampSec": 197,
+      "timestampFormatted": "03:17",
+      "description": "航路計算 — 火星→木星コース表示",
+      "filename": "frame_002_197s.jpg",
+      "subtitleText": "こちら火呈港管制 火吐港湾法に基づいて港湾同辺5万キロまではRCS推進のみ\n核強合パルス主機の使用は僚止です",
+      "hudText": "AEB\nKEBAS-BEMTLSA"
+    },
+    {
+      "index": 3,
+      "timestampSec": 225,
+      "timestampFormatted": "03:45",
+      "description": "RCSプロファイル表示",
+      "filename": "frame_003_225s.jpg",
+      "subtitleText": "主機点火許可固までの前路設定完了\n現行RCSプロファイルで到較まで22分",
+      "hudText": "So\n~ i"
+    },
+    {
+      "index": 4,
+      "timestampSec": 285,
+      "timestampFormatted": "04:45",
+      "description": "火星管制通信 — 安全圏表示",
+      "filename": "frame_004_285s.jpg",
+      "subtitleText": "火呈の視吉径 後方カメラで52度… 極冠を確認\n外同マーカー レーダー固内に入りました",
+      "hudText": null
+    },
+    {
+      "index": 5,
+      "timestampSec": 302,
+      "timestampFormatted": "05:02",
+      "description": "メインアップチェック — ステータス表示",
+      "filename": "frame_005_302s.jpg",
+      "subtitleText": "と人\n悪-He3カーートリッジ]番付垢…\nーゃ ツルス炉 点火温度到芝まで8秒",
+      "hudText": ": _\nSige ON\nya wes y wes E\nab\n; .\n—"
+    },
+    {
+      "index": 6,
+      "timestampSec": 316,
+      "timestampFormatted": "05:16",
+      "description": "核融合パルス点火 — 推力6.3MN表示",
+      "filename": "frame_006_316s.jpg",
+      "subtitleText": "巡側加速で装ちらす いきなりフルバーンは依格に悪いから",
+      "hudText": "ae Lan =\nse a wn\noS _ ~\nee"
+    },
+    {
+      "index": 7,
+      "timestampSec": 352,
+      "timestampFormatted": "05:52",
+      "description": "巡航加速 — 速度表示",
+      "filename": "frame_007_352s.jpg",
+      "subtitleText": "これだけ後れても 火呈からは見えてるんだろうな",
+      "hudText": null
+    },
+    {
+      "index": 8,
+      "timestampSec": 410,
+      "timestampFormatted": "06:50",
+      "description": "航路図 — 嵐の回廊ルート",
+      "filename": "frame_008_410s.jpg",
+      "subtitleText": "木呈の嵐の回廊…… このルートを開拓したのは私の箱父なんだよね",
+      "hudText": "a ae"
+    },
+    {
+      "index": 9,
+      "timestampSec": 654,
+      "timestampFormatted": "10:54",
+      "description": "木星直接エントリー — 航路計算",
+      "filename": "frame_009_654s.jpg",
+      "subtitleText": "あなたの朋史を全てがなえるとすると\n木星への耳接エントリーしか方法はありません",
+      "hudText": "ANC 7 AU 289 44.\n- £0.99 Rt loys\noes 9g ai were Bee\n40-p\nBURN SESUENCE, I\nHAS. 1. CRUISE ACCEL i] 7 Jovy )\nSTatus; Completed aes ovian Sphere\nPHASE 2. Fut BURN ENTRY 7-14: 42.48\nDELTA_y, 42.4 kin/s\nPHASE 3. PERI Jove OVERSHOT CORRECT oy\nWINDOW, + 05:00 min (TARGET)\nDELTA.y; 72.3 km/s A\nvA\n/\nOY\nMACHO Tre oe.\nCWE itnrires"
+    },
+    {
+      "index": 10,
+      "timestampSec": 682,
+      "timestampFormatted": "11:22",
+      "description": "オーバー筋 1.5RJ — 軌道パラメータ",
+      "filename": "frame_010_682s.jpg",
+      "subtitleText": "ノ        小型腸なら耐えられる可能性がありますが… ^\n^      地球や火星の大型放では ます丁えられないでしょうね",
+      "hudText": "a\nSS\nne j Ty\neee vO _\n\\ peo\n7 Hae , _\n. \\ Jos om bd\na 7 ~ 'y ! \\<* -\nwoce t a ‘\n. imu"
+    },
+    {
+      "index": 11,
+      "timestampSec": 702,
+      "timestampFormatted": "11:42",
+      "description": "ΔV=-2.3km/s — ターゲットウィンドウ±5分",
+      "filename": "frame_011_702s.jpg",
+      "subtitleText": "束の回廊では数時間ありましたが ダイレクトエントリーの場合\nターゲットウィンドウは土5分です-… 必要Avはマイナス2.3kmjs",
+      "hudText": "eye gs Lt,\nvee Sat OI ye\n\neng . 40-O1RECT enter\n\nvg Mark dete tenerns\nBrats Conetgsag TE Mt — tecvan ton 7\n\nbet Re a .\nRes errors ,\n\nPANE SU eTRL Jove Svetame: conmnct ion ie\nwiMeoe: 2 BSich ate clones) : ot\nPeltares 3d care : 4\n\n; e ee\n.\n\\ Pasty\n1\nee cue\nTPE Cane a\naaa a eas"
+    },
+    {
+      "index": 12,
+      "timestampSec": 788,
+      "timestampFormatted": "13:08",
+      "description": "ペリジュピター到達予測 — 11時間42分",
+      "filename": "frame_012_788s.jpg",
+      "subtitleText": "る\n%\n3",
+      "hudText": null
+    },
+    {
+      "index": 13,
+      "timestampSec": 813,
+      "timestampFormatted": "13:33",
+      "description": "フルバーン — 推力9.8MN",
+      "filename": "frame_013_813s.jpg",
+      "subtitleText": "了解… 坊出力は1CC9oで設定\n想定推力は98メガニュートン",
+      "hudText": "a _-\n— {."
+    },
+    {
+      "index": 14,
+      "timestampSec": 892,
+      "timestampFormatted": "14:52",
+      "description": "木星接近 — 直径/質量データ",
+      "filename": "frame_014_892s.jpg",
+      "subtitleText": "下径は火呈の11倍 全量は318倍です",
+      "hudText": "}"
+    },
+    {
+      "index": 15,
+      "timestampSec": 923,
+      "timestampFormatted": "15:23",
+      "description": "オーバースウィンドウ — 速度48.9km/s",
+      "filename": "frame_015_923s.jpg",
+      "subtitleText": "近点天宮まで 残D 4分50秒…\nオーバースウィンドウ 土180秒",
+      "hudText": ". -_. a ae\n_ SRE ee we ST Sa moe q\ni te\na\naa\n~ > ~"
+    },
+    {
+      "index": 16,
+      "timestampSec": 961,
+      "timestampFormatted": "16:01",
+      "description": "ピーク出力 — 再計算",
+      "filename": "frame_016_961s.jpg",
+      "subtitleText": "て3べべ\nフルバースを超え    戸の熱余裕を圧縮         しンーデの",
+      "hudText": "“Ln “\nee —\n. g * oe\n¢ a °\na\nPy\nSo\n. « ats ete :\n; , 2%\noo cid\n7 ot\nones 88.\n5 Ot\neke 8h\nei\na ote a |\n2 ._*"
+    },
+    {
+      "index": 17,
+      "timestampSec": 1009,
+      "timestampFormatted": "16:49",
+      "description": "ΔV残り1.8km/s",
+      "filename": "frame_017_1009s.jpg",
+      "subtitleText": "ve om 利定推力107メガニュートン                    .",
+      "hudText": "rN 4 °\ni rf\n\\ >"
+    },
+    {
+      "index": 18,
+      "timestampSec": 1029,
+      "timestampFormatted": "17:09",
+      "description": "ΔV残り0.3km/s — 磁気シールド応力",
+      "filename": "frame_018_1029s.jpg",
+      "subtitleText": "ニーーー         ー\nーー ーー\nおい…",
+      "hudText": "a a .\n= ow — _ a —\n~~\n— 2 |\n° - ; i —_ cose"
+    },
+    {
+      "index": 19,
+      "timestampSec": 1070,
+      "timestampFormatted": "17:50",
+      "description": "ノズル塑性変形 — 船体ステータス",
+      "filename": "frame_019_1070s.jpg",
+      "subtitleText": "正机… やう二度とあんな近くでは見たくないな…",
+      "hudText": "4 \" — —"
+    },
+    {
+      "index": 20,
+      "timestampSec": 1115,
+      "timestampFormatted": "18:35",
+      "description": "ガニメデ接近 — 最終アプローチ",
+      "filename": "frame_020_1115s.jpg",
+      "subtitleText": "磁気フィールドと木足プラズマとのフラッシュで\n何$見えなかったよ",
+      "hudText": "_ oe |"
+    }
+  ],
+  "summary": {
+    "totalFrames": 21,
+    "framesWithSubtitle": 21,
+    "framesWithHud": 18
+  }
+}

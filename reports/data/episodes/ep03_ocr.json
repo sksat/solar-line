@@ -1,0 +1,145 @@
+{
+  "episode": 3,
+  "sourceType": "video-ocr",
+  "ocrEngine": "tesseract-5.3.0",
+  "ocrLanguages": {
+    "subtitle": "jpn",
+    "hud": "eng"
+  },
+  "preprocessingMethod": "grayscale-threshold",
+  "framesDir": "raw_data/frames/ep03",
+  "extractedAt": "2026-03-01T04:08:39Z",
+  "frames": [
+    {
+      "index": 0,
+      "timestampSec": 139,
+      "timestampFormatted": "02:19",
+      "description": "外縁航路の危険性説明 — 内縁輸送向け設計",
+      "filename": "frame_000_139s.jpg",
+      "subtitleText": "…わかったよ",
+      "hudText": "IVS KoAzRiahe\nEPRES URE /\n’ ao :\n+\nfae \\\nJ ~ ; Oo\nj Se"
+    },
+    {
+      "index": 1,
+      "timestampSec": 177,
+      "timestampFormatted": "02:57",
+      "description": "目的地報告 — ウラヌス3、タイタニア集合複合施設",
+      "filename": "frame_001_177s.jpg",
+      "subtitleText": "し 航路の目的地はUariusll・タイタニア終巡合施没\n天王星自由港機構の宇宙浴です\n還    「4",
+      "hudText": ". Le\nae amie Terminal, oT\n@ rpEsTINATION, 3.373700 cporT ST? TIME?\n\n[ARRIVAL _\nnus-REF\n\nsoLer LINE\na ere po | got - INERTIAL COUTER LINE?\n/ tS -9907/EXT -P17\n\noRB- CURTAIN BOUNDARY CROSSING DETEC\nProceeming with this route songtitutes act\nchig route conor i tyses Ake"
+    },
+    {
+      "index": 2,
+      "timestampSec": 191,
+      "timestampFormatted": "03:11",
+      "description": "所要時間143時間12分",
+      "filename": "frame_002_191s.jpg",
+      "subtitleText": "のすうーダマレイアビルー\n所本時間ば\"143時間12分",
+      "hudText": "tani terminal comp\nrpest NATION] u-3 yitania\n6 pageival ETAI 747143: 12:00 (PORT sTD TIM\nPeron mode rovne> sever, > INT\nEe LIME\n“ — SOL-INERTIALCOUTER LINE?\nMTS-\n9907 /EXT-P17"
+    },
+    {
+      "index": 3,
+      "timestampSec": 198,
+      "timestampFormatted": "03:18",
+      "description": "航路概要 — 土星重力アシスト、オービタルカーテン外側",
+      "filename": "frame_003_198s.jpg",
+      "subtitleText": "まずはエンケラドゥスから 幸足の串カアシズドを受けて巡質加計      。\n人ののTIS9504のエントリーまで條みます    ーー\n和      MM",
+      "hudText": "ee\nSOLER LINE\n. Courer 1\nwav nove sri | SOL-IWERTIAL\ncag.\nProceeding |\nSATURN TT. Set ing\nENCEL Abus\n'\naT ON\nSUN / BS one tay\n/ |\n} Pen) RCS fr.\nSaturn Escape Cras\nogc 3t tafe bua sein kove Exoplanay Ai\n3) 4) 7405; VED .\nO88 15: 19 2338.09 Teeetl kms.\n?"
+    },
+    {
+      "index": 4,
+      "timestampSec": 228,
+      "timestampFormatted": "03:48",
+      "description": "航路補正2回、最終誤差±18km",
+      "filename": "frame_004_228s.jpg",
+      "subtitleText": "天王足還までは2 回の和法補正を行いますが 」\n記終誤差は「ギ18キロ以内」でなけれはなりません ・",
+      "hudText": "——__\nL-LWERT IAL COUTER LINE) f\nNTS-9907/ExT py\nORB-cuR-aIN BOUNDARY CROSSING SETECTED\nProceecing With this route Sensi tutes 2lCeetance of\naUl eberational ang Segal risks.\nUf\nos Ti]\nTT\nRCS Trim RCS Trim RCS Trig\nExoplanar Alignment NCC.4\na aicc-2\n| rearcog */¢ AV=0.05 fms, MCC-2\n8-0: 18:99"
+    },
+    {
+      "index": 5,
+      "timestampSec": 383,
+      "timestampFormatted": "06:23",
+      "description": "火星生まれ1G — 外園居住者0.8G",
+      "filename": "frame_005_383s.jpg",
+      "subtitleText": "…大丈夫ですか? 心拍数が増えていますが",
+      "hudText": "a"
+    },
+    {
+      "index": 6,
+      "timestampSec": 823,
+      "timestampFormatted": "13:43",
+      "description": "航法危機 — 位置14.72AU、速度3000km/s、1.23°不一致",
+      "filename": "frame_006_823s.jpg",
+      "subtitleText": null,
+      "hudText": "—"
+    },
+    {
+      "index": 7,
+      "timestampSec": 827,
+      "timestampFormatted": "13:47",
+      "description": "航法危機（続き）",
+      "filename": "frame_007_827s.jpg",
+      "subtitleText": "…現在「背辻l呈観測系」と半生拓法系」の整合が取れません",
+      "hudText": "~ ¥"
+    },
+    {
+      "index": 8,
+      "timestampSec": 852,
+      "timestampFormatted": "14:12",
+      "description": "天王星交点面で1436万km誤差",
+      "filename": "frame_008_852s.jpg",
+      "subtitleText": "7\n背景恒呈観測と Pr ro コース」にナビゲートしています\nM 1.23度になります",
+      "hudText": ") i SEERENCE\ncee 30.35 | |\nOy 8\narn (Y0aNe RE re\n. tfare. 91 Fy\noe auiorer 2 Imy,\n>. _”\ne\n“ey an"
+    },
+    {
+      "index": 9,
+      "timestampSec": 856,
+      "timestampFormatted": "14:16",
+      "description": "天王星交点面（続き）",
+      "filename": "frame_009_856s.jpg",
+      "subtitleText": "和、\nこの遂差は天王性公告 およそ1436及キロメー トルー\n一方のコースは天王星に交差し  ものをえコースです",
+      "hudText": "ne\n,\n_ !\n= oy hee\n‘ . n\n. ‘ “i\n~N . .\n‘~ 1"
+    },
+    {
+      "index": 10,
+      "timestampSec": 937,
+      "timestampFormatted": "15:37",
+      "description": "修正可能な時間窓 — 約10分",
+      "filename": "frame_010_937s.jpg",
+      "subtitleText": "要は様械に決められないから… 人に決めてもらちうって事だな",
+      "hudText": null
+    },
+    {
+      "index": 11,
+      "timestampSec": 968,
+      "timestampFormatted": "16:08",
+      "description": "慣性航法系コースを選択",
+      "filename": "frame_011_968s.jpg",
+      "subtitleText": null,
+      "hudText": "ios I, i\n\n g @\n\no y - - ~\n\nme . .\n3:"
+    },
+    {
+      "index": 12,
+      "timestampSec": 993,
+      "timestampFormatted": "16:33",
+      "description": "天王星磁気圏突入 — 高度25RU",
+      "filename": "frame_012_993s.jpg",
+      "subtitleText": "ー      まもなく天王中磁気回に突入します\n現在高度は25RU ナビゲーション参照を天王星原点に切り換えました",
+      "hudText": null
+    },
+    {
+      "index": 13,
+      "timestampSec": 997,
+      "timestampFormatted": "16:37",
+      "description": "天王星磁気圏（続き）",
+      "filename": "frame_013_997s.jpg",
+      "subtitleText": "ー      まもなく天王中磁気回に突入します\n現在高度は25RU ナビゲーション参照を天王星原点に切り換えました",
+      "hudText": "RELTIAU—Mhill\nATR / ERE\nee et a"
+    }
+  ],
+  "summary": {
+    "totalFrames": 14,
+    "framesWithSubtitle": 12,
+    "framesWithHud": 12
+  }
+}

@@ -1174,3 +1174,72 @@ describe("report data: escape transfer direction", () => {
     }
   }
 });
+
+// ============================================================
+// Video OCR data validation (Task 289)
+// ============================================================
+describe("Video OCR data validation", () => {
+  const ocrFiles = fs.readdirSync(EPISODES_DIR)
+    .filter(f => f.match(/^ep\d+_ocr\.json$/))
+    .sort();
+
+  it("OCR data exists for at least 4 episodes", () => {
+    assert.ok(ocrFiles.length >= 4, `Expected >= 4 OCR files, got ${ocrFiles.length}`);
+  });
+
+  for (const file of ocrFiles) {
+    const epNum = parseInt(file.match(/ep(\d+)/)![1]);
+    describe(`EP${String(epNum).padStart(2, "0")} OCR data`, () => {
+      const data = JSON.parse(fs.readFileSync(path.join(EPISODES_DIR, file), "utf-8"));
+
+      it("has required top-level fields", () => {
+        assert.equal(data.episode, epNum);
+        assert.equal(data.sourceType, "video-ocr");
+        assert.ok(data.ocrEngine, "missing ocrEngine");
+        assert.ok(data.extractedAt, "missing extractedAt");
+        assert.ok(Array.isArray(data.frames), "frames should be an array");
+      });
+
+      it("has frames with valid structure", () => {
+        for (const frame of data.frames) {
+          assert.ok(typeof frame.timestampSec === "number", "timestampSec should be number");
+          assert.ok(frame.timestampSec >= 0, "timestampSec should be non-negative");
+          assert.ok(typeof frame.description === "string", "description should be string");
+          assert.ok(typeof frame.filename === "string", "filename should be string");
+          // subtitleText and hudText can be null or string
+          assert.ok(
+            frame.subtitleText === null || typeof frame.subtitleText === "string",
+            "subtitleText should be null or string"
+          );
+          assert.ok(
+            frame.hudText === null || typeof frame.hudText === "string",
+            "hudText should be null or string"
+          );
+        }
+      });
+
+      it("has at least some frames with subtitle text", () => {
+        const withSub = data.frames.filter((f: { subtitleText: string | null }) => f.subtitleText);
+        assert.ok(withSub.length > 0, "expected at least one frame with subtitle text");
+      });
+
+      it("frames are sorted by timestamp", () => {
+        for (let i = 1; i < data.frames.length; i++) {
+          assert.ok(
+            data.frames[i].timestampSec >= data.frames[i - 1].timestampSec,
+            `Frame ${i} timestamp ${data.frames[i].timestampSec} < frame ${i - 1} timestamp ${data.frames[i - 1].timestampSec}`
+          );
+        }
+      });
+
+      it("summary stats are consistent", () => {
+        assert.ok(data.summary, "missing summary");
+        assert.equal(data.summary.totalFrames, data.frames.length);
+        const actualSub = data.frames.filter((f: { subtitleText: string | null }) => f.subtitleText).length;
+        assert.equal(data.summary.framesWithSubtitle, actualSub);
+        const actualHud = data.frames.filter((f: { hudText: string | null }) => f.hudText).length;
+        assert.equal(data.summary.framesWithHud, actualHud);
+      });
+    });
+  }
+});
