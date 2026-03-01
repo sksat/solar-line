@@ -1927,6 +1927,33 @@ describe("infrastructure.md content validation", () => {
       "should cross-link to communications report",
     );
   });
+
+  // --- Task 346: infrastructure chart tests ---
+
+  it("has station distance bar chart", () => {
+    assert.ok(
+      content.includes("chart:bar"),
+      "should have a bar chart directive",
+    );
+    assert.ok(
+      content.includes("太陽からの距離"),
+      "bar chart should show distance from Sun",
+    );
+  });
+
+  it("station distance chart includes key locations", () => {
+    assert.ok(content.includes("1.52") || content.includes("火星（出発地）"), "should include Mars distance");
+    assert.ok(content.includes("5.20") || content.includes("ガニメデ"), "should include Ganymede distance");
+    assert.ok(content.includes("9.54") || content.includes("エンケラドス"), "should include Enceladus distance");
+    assert.ok(content.includes("19.2") || content.includes("タイタニア"), "should include Titania distance");
+  });
+
+  it("has beacon shutdown impact bar chart", () => {
+    assert.ok(
+      content.includes("ビーコン停波の連鎖的影響"),
+      "should have beacon shutdown impact chart",
+    );
+  });
 });
 
 // ============================================================
@@ -1972,20 +1999,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 345+ (not stale 261 or 328)", () => {
+  it("task count is 346+ (not stale 261 or 345)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("345"), "should cite current task count 345");
+    assert.ok(content.includes("346"), "should cite current task count 346");
   });
 
-  it("commit count is 485+ (not stale 482+)", () => {
+  it("commit count is 486+ (not stale 485+)", () => {
     assert.ok(
       !content.includes("390+"),
       "should not contain stale commit count 390+",
     );
-    assert.ok(content.includes("485+"), "should cite current commit count 485+");
+    assert.ok(content.includes("486+"), "should cite current commit count 486+");
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -2003,9 +2030,9 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,266"), "should cite TS test count");
-    assert.ok(content.includes("377"), "should cite Rust test count");
-    assert.ok(content.includes("234"), "should cite E2E test count");
+    assert.ok(content.includes("2,269"), "should cite TS test count");
+    assert.ok(content.includes("378"), "should cite Rust test count");
+    assert.ok(content.includes("236"), "should cite E2E test count");
   });
 
   it("explains VMブート terminology", () => {

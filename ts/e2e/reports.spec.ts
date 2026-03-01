@@ -778,6 +778,18 @@ test.describe("Summary: infrastructure page", () => {
     await expect(page.locator("h3:has-text('ビーコン停波')")).toBeVisible();
     await expect(page.locator("h3:has-text('オービタルカーテン')")).toBeVisible();
   });
+
+  test("has station distance bar chart SVG", async ({ page }) => {
+    await page.goto("/summary/infrastructure.html");
+    const chart = page.locator('svg[aria-label*="太陽からの距離"]');
+    await expect(chart).toBeVisible();
+  });
+
+  test("has beacon shutdown impact bar chart SVG", async ({ page }) => {
+    await page.goto("/summary/infrastructure.html");
+    const chart = page.locator('svg[aria-label*="ビーコン停波"]');
+    await expect(chart).toBeVisible();
+  });
 });
 
 // --- Other-ships page tests (Task 229) ---
