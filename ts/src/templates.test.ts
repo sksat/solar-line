@@ -4145,6 +4145,48 @@ describe("renderTranscriptionPage", () => {
     // Script panel should be the active panel
     assert.ok(html.includes('class="tab-panel active" id="tab-script"'));
   });
+
+  it("renders OCR tab when ocrData is present", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      ocrData: {
+        ocrEngine: "tesseract-5.3.0",
+        frames: [
+          { index: 0, timestampSec: 47, timestampFormatted: "00:47", description: "反応質量タンク", subtitleText: "テスト字幕", hudText: "HUD TEST" },
+          { index: 1, timestampSec: 72, timestampFormatted: "01:12", description: "依頼表示", subtitleText: "ガニメデ72時間", hudText: "" },
+        ],
+      },
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("映像OCR"), "should have OCR tab label");
+    assert.ok(html.includes("tesseract-5.3.0"), "should show OCR engine");
+    assert.ok(html.includes("テスト字幕"), "should render subtitle text");
+    assert.ok(html.includes("HUD TEST"), "should render HUD text in code tag");
+    assert.ok(html.includes("反応質量タンク"), "should show frame description");
+    assert.ok(html.includes("00:47"), "should show timestamp");
+    assert.ok(html.includes('data-tab="ocr"'), "should have OCR tab");
+    assert.ok(html.includes("2フレーム"), "should show frame count with フレーム unit");
+  });
+
+  it("does not render OCR tab when ocrData is absent", () => {
+    const html = renderTranscriptionPage(phase1Only);
+    assert.ok(!html.includes("映像OCR"), "should not have OCR tab");
+    assert.ok(!html.includes('data-tab="ocr"'), "should not have OCR tab button");
+  });
+
+  it("renders OCR layer note in legend when OCR data present", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      ocrData: {
+        ocrEngine: "tesseract-5.3.0",
+        frames: [
+          { index: 0, timestampSec: 47, timestampFormatted: "00:47", description: "テスト", subtitleText: "字幕", hudText: "" },
+        ],
+      },
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("映像OCRタブ"), "should have OCR layer explanation in legend");
+  });
 });
 
 // --- renderTranscriptionIndex ---

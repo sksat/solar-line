@@ -707,6 +707,18 @@ export interface TranscriptionPageData {
     meanLineCharacterAccuracy: number;
     medianLineCharacterAccuracy: number;
   }[];
+  /** Video OCR data (frame-by-frame subtitle + HUD text extracted via Tesseract) */
+  ocrData?: {
+    ocrEngine: string;
+    frames: {
+      index: number;
+      timestampSec: number;
+      timestampFormatted: string;
+      description: string;
+      subtitleText: string;
+      hudText: string;
+    }[];
+  };
   /** Official script source (Layer 0 — authoritative text from creator) */
   scriptSource?: {
     sourceUrl: string;

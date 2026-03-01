@@ -3021,7 +3021,7 @@ export function renderTranscriptionPage(data: TranscriptionPageData, summaryPage
   const heading = `文字起こし — ${escapeHtml(epTitle)}`;
 
   // Collect all available sources for the source info card
-  const allSources: { label: string; count: number; model?: string }[] = [];
+  const allSources: { label: string; count: number; unit?: string; model?: string }[] = [];
   if (data.scriptSource) {
     const scriptLineCount = data.scriptSource.scenes.reduce((sum, s) => sum + s.lines.length, 0);
     allSources.push({ label: sourceLabel("script"), count: scriptLineCount });
@@ -3034,10 +3034,13 @@ export function renderTranscriptionPage(data: TranscriptionPageData, summaryPage
       allSources.push({ label: sourceLabel(src.source), count: src.lines.length, model: src.whisperModel });
     }
   }
+  if (data.ocrData) {
+    allSources.push({ label: "映像OCR", count: data.ocrData.frames.length, unit: "フレーム", model: data.ocrData.ocrEngine });
+  }
 
   // Source info
   const sourceDetailCells = allSources.map(s => {
-    let detail = `${s.label}（${s.count}行）`;
+    let detail = `${s.label}（${s.count}${s.unit ?? "行"}）`;
     if (s.model) detail += `<br><span class="meta-note">モデル: ${escapeHtml(s.model)}</span>`;
     return detail;
   }).join("、");
@@ -3072,7 +3075,8 @@ ${data.accuracyMetrics && data.accuracyMetrics.length > 0 ? `<tr><th>文字精�
 <dd>生データからキュー結合・タイムスタンプ整列等の前処理を行ったデータ。話者情報なし。</dd>
 <dt><span class="layer-badge layer-1">Layer 1</span> 生データ（未加工）</dt>
 <dd>YouTube自動字幕やWhisperの出力をそのまま保存した未加工データ。git管理外のため、Layer 2が最も生に近い表示です。</dd>
-</dl>
+</dl>${data.ocrData ? `
+<p class="meta-note" style="margin-top:0.5em">映像OCRタブには、動画キーフレームからTesseractで抽出した字幕テキスト・HUD表示テキストを表示します。音声文字起こしとは異なるデータソースです。</p>` : ""}
 </div>`;
 
   // Speaker registry table
@@ -3173,6 +3177,15 @@ ${rows.join("\n")}
     }
   }
 
+  // Tab for OCR data (video frame text extraction)
+  if (data.ocrData && data.ocrData.frames.length > 0) {
+    tabs.push({
+      id: "ocr",
+      label: `映像OCR [${escapeHtml(data.ocrData.ocrEngine)}]`,
+      content: renderOcrTable(data.ocrData.frames),
+    });
+  }
+
   // Build tabbed UI (or simple view if only one tab)
   let dialogueSection: string;
   if (tabs.length === 1) {
@@ -3225,6 +3238,22 @@ function renderRawLinesTable(lines: { lineId: string; startMs: number; endMs: nu
   ).join("\n");
   return `<table class="data-table lines-table">
 <thead><tr><th>時刻</th><th>テキスト</th><th>結合理由</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+}
+
+/** Render an OCR frames table (video frame text extraction) */
+function renderOcrTable(frames: { index: number; timestampSec: number; timestampFormatted: string; description: string; subtitleText: string; hudText: string }[]): string {
+  const rows = frames.map(f => {
+    const subHtml = f.subtitleText ? escapeHtml(f.subtitleText).replace(/\n/g, "<br>") : '<span class="meta-note">—</span>';
+    const hudHtml = f.hudText ? `<code>${escapeHtml(f.hudText).replace(/\n/g, "<br>")}</code>` : '<span class="meta-note">—</span>';
+    return `<tr><td class="ts">${escapeHtml(f.timestampFormatted)}</td><td class="meta-note">${escapeHtml(f.description)}</td><td>${subHtml}</td><td>${hudHtml}</td></tr>`;
+  }).join("\n");
+  return `<p class="meta-note">動画キーフレームからTesseractで抽出したテキスト。字幕はJPN（日本語）、HUDはENG（英語）モデルで認識。精度は限定的です。</p>
+<table class="data-table ocr-table">
+<thead><tr><th>時刻</th><th>シーン</th><th>字幕テキスト</th><th>HUDテキスト</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>

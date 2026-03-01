@@ -341,6 +341,24 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       }
     }
 
+    // Load OCR data (from video-ocr.py Tesseract extraction)
+    const ocrFile = readJsonFile<{
+      episode: number;
+      ocrEngine: string;
+      frames: {
+        index: number;
+        timestampSec: number;
+        timestampFormatted: string;
+        description: string;
+        subtitleText: string;
+        hudText: string;
+      }[];
+    }>(path.join(episodesDir, `ep${epNum}_ocr.json`));
+    const ocrData = ocrFile ? {
+      ocrEngine: ocrFile.ocrEngine,
+      frames: ocrFile.frames,
+    } : undefined;
+
     transcriptions.push({
       episode: lines.episode,
       videoId: lines.videoId,
@@ -381,6 +399,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       additionalSources: additionalSources.length > 0 ? additionalSources : undefined,
       scriptSource,
       accuracyMetrics,
+      ocrData,
     });
   }
   return transcriptions;
