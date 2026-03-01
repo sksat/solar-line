@@ -707,6 +707,12 @@ export interface TranscriptionPageData {
     meanLineCharacterAccuracy: number;
     medianLineCharacterAccuracy: number;
   }[];
+  /** Pairwise inter-source agreement metrics (available for all episodes) */
+  agreementMetrics?: {
+    sourceA: string;
+    sourceB: string;
+    agreement: number;
+  }[];
   /** Video OCR data (frame-by-frame subtitle + HUD text extracted via Tesseract) */
   ocrData?: {
     ocrEngine: string;

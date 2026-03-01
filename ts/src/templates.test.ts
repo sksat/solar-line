@@ -4252,6 +4252,57 @@ describe("renderTranscriptionPage", () => {
     assert.ok(html.includes("accuracy-chart"), "should render chart even with single source");
     assert.ok(html.includes("91.4%"), "should show accuracy");
   });
+
+  it("renders agreement chart with pairwise metrics", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      agreementMetrics: [
+        { sourceA: "youtube-auto", sourceB: "whisper-turbo", agreement: 0.705 },
+        { sourceA: "youtube-auto", sourceB: "whisper-medium", agreement: 0.669 },
+        { sourceA: "whisper-medium", sourceB: "whisper-turbo", agreement: 0.858 },
+      ],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("agreement-chart"), "should have agreement chart container");
+    assert.ok(html.includes("ソース間一致率"), "should have agreement chart title");
+    assert.ok(html.includes("70.5%"), "should show VTT↔turbo agreement");
+    assert.ok(html.includes("85.8%"), "should show medium↔turbo agreement");
+  });
+
+  it("does not render agreement chart when no agreementMetrics", () => {
+    const html = renderTranscriptionPage(phase1Only);
+    assert.ok(!html.includes("agreement-chart"), "should not have agreement chart without data");
+  });
+
+  it("renders both accuracy and agreement charts when both available", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      accuracyMetrics: [
+        { sourceType: "whisper-turbo", corpusCharacterAccuracy: 0.914, meanLineCharacterAccuracy: 0.90, medianLineCharacterAccuracy: 0.92 },
+      ],
+      agreementMetrics: [
+        { sourceA: "youtube-auto", sourceB: "whisper-turbo", agreement: 0.705 },
+      ],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("accuracy-chart"), "should have accuracy chart");
+    assert.ok(html.includes("agreement-chart"), "should have agreement chart");
+  });
+
+  it("applies correct colors based on agreement level", () => {
+    const data: TranscriptionPageData = {
+      ...phase1Only,
+      agreementMetrics: [
+        { sourceA: "whisper-medium", sourceB: "whisper-turbo", agreement: 0.858 }, // green
+        { sourceA: "youtube-auto", sourceB: "whisper-turbo", agreement: 0.705 },   // yellow
+        { sourceA: "youtube-auto", sourceB: "video-ocr", agreement: 0.45 },         // red
+      ],
+    };
+    const html = renderTranscriptionPage(data);
+    assert.ok(html.includes("#2ea043"), "should use green for ≥80% agreement");
+    assert.ok(html.includes("#d29922"), "should use yellow for 60-80% agreement");
+    assert.ok(html.includes("#da3633"), "should use red for <60% agreement");
+  });
 });
 
 // --- renderTranscriptionIndex ---

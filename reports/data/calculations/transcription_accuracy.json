@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-01T04:57:29.523Z",
+  "generatedAt": "2026-03-01T05:51:37.677Z",
   "episodes": [
     {
       "episode": 1,
@@ -184,6 +184,108 @@
               "characterAccuracy": 0
             }
           ]
+        }
+      ]
+    }
+  ],
+  "agreements": [
+    {
+      "episode": 1,
+      "pairs": [
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-medium",
+          "agreement": 0.669
+        },
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.705
+        },
+        {
+          "sourceA": "whisper-medium",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.858
+        }
+      ]
+    },
+    {
+      "episode": 2,
+      "pairs": [
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-medium",
+          "agreement": 0.603
+        },
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.638
+        },
+        {
+          "sourceA": "whisper-medium",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.882
+        }
+      ]
+    },
+    {
+      "episode": 3,
+      "pairs": [
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-medium",
+          "agreement": 0.676
+        },
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.706
+        },
+        {
+          "sourceA": "whisper-medium",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.859
+        }
+      ]
+    },
+    {
+      "episode": 4,
+      "pairs": [
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-medium",
+          "agreement": 0.691
+        },
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.448
+        },
+        {
+          "sourceA": "whisper-medium",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.71
+        }
+      ]
+    },
+    {
+      "episode": 5,
+      "pairs": [
+        {
+          "sourceA": "whisper-medium",
+          "sourceB": "youtube-auto",
+          "agreement": 0.623
+        },
+        {
+          "sourceA": "whisper-medium",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.861
+        },
+        {
+          "sourceA": "youtube-auto",
+          "sourceB": "whisper-turbo",
+          "agreement": 0.671
         }
       ]
     }

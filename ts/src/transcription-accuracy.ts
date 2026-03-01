@@ -95,6 +95,60 @@ export function ocrToEpisodeLines(ocrData: OcrFileData): EpisodeLines {
 }
 
 // ---------------------------------------------------------------------------
+// Inter-source agreement (pairwise comparison without ground truth)
+// ---------------------------------------------------------------------------
+
+/** Result of pairwise agreement between two transcription sources */
+export interface SourceAgreement {
+  /** Label for source A (e.g. "youtube-auto", "whisper-turbo") */
+  sourceA: string;
+  /** Label for source B */
+  sourceB: string;
+  /** Corpus-level agreement (0-1), computed as 1 - normalizedEditDistance */
+  agreement: number;
+}
+
+/**
+ * Compute corpus-level agreement between two transcription sources.
+ * Does not require a ground-truth script — uses existing normalizeForComparison
+ * and normalizedEditDistance to compare the concatenated text of both sources.
+ */
+export function computeSourceAgreement(
+  a: EpisodeLines,
+  b: EpisodeLines,
+): SourceAgreement {
+  const labelA = sourceLabel(a);
+  const labelB = sourceLabel(b);
+
+  const textA = normalizeForComparison(a.lines.map(l => l.text).join(""));
+  const textB = normalizeForComparison(b.lines.map(l => l.text).join(""));
+
+  // Both empty → vacuously identical
+  if (textA.length === 0 && textB.length === 0) {
+    return { sourceA: labelA, sourceB: labelB, agreement: 1 };
+  }
+  // One empty → no agreement
+  if (textA.length === 0 || textB.length === 0) {
+    return { sourceA: labelA, sourceB: labelB, agreement: 0 };
+  }
+
+  const ned = normalizedEditDistance(textA, textB);
+  return {
+    sourceA: labelA,
+    sourceB: labelB,
+    agreement: Math.round((1 - ned) * 1000) / 1000,
+  };
+}
+
+/** Human-readable label for a transcription source */
+function sourceLabel(data: EpisodeLines): string {
+  if (data.sourceSubtitle.source === "whisper") {
+    return `whisper-${(data.sourceSubtitle as unknown as { whisperModel?: string }).whisperModel || "unknown"}`;
+  }
+  return data.sourceSubtitle.source;
+}
+
+// ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 

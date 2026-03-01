@@ -1352,6 +1352,36 @@ ${barsSvg}
 </div>`;
 }
 
+/** Render a horizontal bar chart showing pairwise inter-source agreement */
+function renderAgreementChart(metrics: NonNullable<TranscriptionPageData["agreementMetrics"]>): string {
+  if (metrics.length === 0) return "";
+  const barHeight = 28;
+  const labelWidth = 220;
+  const chartWidth = 560;
+  const barAreaWidth = chartWidth - labelWidth - 70;
+  const svgHeight = metrics.length * (barHeight + 8) + 10;
+
+  const barsSvg = metrics.map((m, i) => {
+    const y = i * (barHeight + 8) + 4;
+    const pct = m.agreement * 100;
+    const width = Math.max(1, (pct / 100) * barAreaWidth);
+    // Color based on agreement level: green ≥ 80%, yellow 60-80%, orange < 60%
+    const color = pct >= 80 ? "#2ea043" : pct >= 60 ? "#d29922" : "#da3633";
+    const label = escapeHtml(`${m.sourceA} ↔ ${m.sourceB}`);
+    return `<text x="${labelWidth - 8}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" text-anchor="end" font-size="11">${label}</text>
+<rect x="${labelWidth}" y="${y}" width="${width}" height="${barHeight}" rx="3" fill="${color}" opacity="0.85"/>
+<text x="${labelWidth + width + 6}" y="${y + barHeight / 2 + 4}" fill="var(--fg)" font-size="12" font-weight="600">${pct.toFixed(1)}%</text>`;
+  }).join("\n");
+
+  return `<div class="agreement-chart" style="margin: 0.8rem 0;">
+<h4 style="font-size: 0.9em; margin: 0 0 0.3rem 0; color: var(--text-primary);">ソース間一致率</h4>
+<svg viewBox="0 0 ${chartWidth} ${svgHeight}" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ソース間一致率チャート">
+${barsSvg}
+</svg>
+<p class="meta-note" style="margin: 0.2rem 0 0 0;">コーパスレベルの文字一致率（ペアワイズ比較）</p>
+</div>`;
+}
+
 /**
  * Scale a radius value to pixel space using the given scale mode.
  * Returns a value in [minPx, maxPx].
@@ -3097,6 +3127,7 @@ ${data.scriptSource ? `<tr><th>公式脚本</th><td><a href="${escapeHtml(data.s
 <tr><th>帰属状態</th><td>${data.dialogue ? "Phase 2 完了（話者帰属済み）" : "Phase 1 のみ（話者未帰属）"}</td></tr>
 </table>
 ${data.accuracyMetrics && data.accuracyMetrics.length > 0 ? renderAccuracyChart(data.accuracyMetrics) : ""}
+${data.agreementMetrics && data.agreementMetrics.length > 0 ? renderAgreementChart(data.agreementMetrics) : ""}
 <p><a href="../episodes/ep-${String(data.episode).padStart(3, "0")}.html">← 第${data.episode}話の考証レポートに戻る</a></p>
 </div>
 

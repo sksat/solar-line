@@ -9,9 +9,11 @@ import {
   findBestMatch,
   compareTranscriptions,
   ocrToEpisodeLines,
+  computeSourceAgreement,
   type ScriptFileData,
   type ScriptLine,
   type OcrFileData,
+  type SourceAgreement,
 } from "./transcription-accuracy.ts";
 import type { EpisodeLines, ExtractedLine } from "./dialogue-extraction-types.ts";
 
@@ -552,4 +554,125 @@ describe("EP01 OCR real data accuracy", () => {
     assert.ok(ocrReport.corpusCharacterAccuracy < turboReport.corpusCharacterAccuracy,
       "OCR should have lower accuracy than Whisper turbo");
   });
+});
+
+// ---------------------------------------------------------------------------
+// computeSourceAgreement — pairwise inter-source agreement
+// ---------------------------------------------------------------------------
+describe("computeSourceAgreement", () => {
+  const makeLine = (id: string, text: string): ExtractedLine => ({
+    lineId: id,
+    startMs: 0,
+    endMs: 1000,
+    text,
+    rawEntryIds: [],
+    mergeReasons: [],
+  });
+
+  const makeEpisodeLines = (
+    ep: number,
+    source: string,
+    lines: ExtractedLine[],
+    whisperModel?: string
+  ): EpisodeLines => ({
+    schemaVersion: 1,
+    videoId: "test",
+    episode: ep,
+    sourceSubtitle: {
+      language: "ja",
+      source: source as "youtube-auto" | "whisper",
+      rawContentHash: "test",
+      ...(whisperModel ? { whisperModel } : {}),
+    },
+    lines,
+    extractedAt: "2026-01-01T00:00:00Z",
+    mergeConfig: { maxGapMs: 300, minCueDurationMs: 100 },
+  });
+
+  it("returns 1.0 agreement for identical content", () => {
+    const a = makeEpisodeLines(2, "youtube-auto", [
+      makeLine("a1", "こんにちは"),
+      makeLine("a2", "世界"),
+    ]);
+    const b = makeEpisodeLines(2, "whisper", [
+      makeLine("b1", "こんにちは"),
+      makeLine("b2", "世界"),
+    ], "turbo");
+    const result = computeSourceAgreement(a, b);
+    assert.equal(result.agreement, 1);
+    assert.equal(result.sourceA, "youtube-auto");
+    assert.equal(result.sourceB, "whisper-turbo");
+  });
+
+  it("returns < 1.0 for partially different content", () => {
+    const a = makeEpisodeLines(2, "youtube-auto", [
+      makeLine("a1", "こんにちは世界"),
+    ]);
+    const b = makeEpisodeLines(2, "whisper", [
+      makeLine("b1", "こんばんは世界"),
+    ], "medium");
+    const result = computeSourceAgreement(a, b);
+    assert.ok(result.agreement < 1, `Expected < 1, got ${result.agreement}`);
+    assert.ok(result.agreement > 0, `Expected > 0, got ${result.agreement}`);
+  });
+
+  it("handles empty sources", () => {
+    const a = makeEpisodeLines(2, "youtube-auto", []);
+    const b = makeEpisodeLines(2, "whisper", [makeLine("b1", "テスト")], "turbo");
+    const result = computeSourceAgreement(a, b);
+    assert.equal(result.agreement, 0);
+  });
+
+  it("handles both sources empty", () => {
+    const a = makeEpisodeLines(2, "youtube-auto", []);
+    const b = makeEpisodeLines(2, "whisper", [], "turbo");
+    const result = computeSourceAgreement(a, b);
+    // Two empty corpora are vacuously identical
+    assert.equal(result.agreement, 1);
+  });
+
+  it("labels source correctly with whisper model", () => {
+    const a = makeEpisodeLines(2, "whisper", [makeLine("a1", "テスト")], "medium");
+    const b = makeEpisodeLines(2, "whisper", [makeLine("b1", "テスト")], "turbo");
+    const result = computeSourceAgreement(a, b);
+    assert.equal(result.sourceA, "whisper-medium");
+    assert.equal(result.sourceB, "whisper-turbo");
+  });
+
+  it("ignores punctuation differences in agreement", () => {
+    const a = makeEpisodeLines(2, "youtube-auto", [
+      makeLine("a1", "こんにちは。世界！"),
+    ]);
+    const b = makeEpisodeLines(2, "whisper", [
+      makeLine("b1", "こんにちは世界"),
+    ], "turbo");
+    const result = computeSourceAgreement(a, b);
+    assert.equal(result.agreement, 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// EP02-05 inter-source agreement real data
+// ---------------------------------------------------------------------------
+describe("EP02-05 inter-source agreement", () => {
+  const dataDir = join(__dirname_local, "..", "..", "reports", "data", "episodes");
+
+  for (const epNum of [2, 3, 4, 5]) {
+    const epStr = String(epNum).padStart(2, "0");
+    const vttPath = join(dataDir, `ep${epStr}_lines.json`);
+    const whisperTurboPath = join(dataDir, `ep${epStr}_lines_whisper_turbo.json`);
+    const vttExists = existsSync(vttPath);
+    const turboExists = existsSync(whisperTurboPath);
+
+    it(`EP${epStr} VTT↔Whisper-turbo agreement is between 0.3 and 1.0`, {
+      skip: !vttExists || !turboExists,
+    }, () => {
+      const vtt: EpisodeLines = JSON.parse(readFileSync(vttPath, "utf8"));
+      const turbo: EpisodeLines = JSON.parse(readFileSync(whisperTurboPath, "utf8"));
+      const result = computeSourceAgreement(vtt, turbo);
+      console.log(`  EP${epStr} VTT↔Whisper-turbo agreement: ${(result.agreement * 100).toFixed(1)}%`);
+      assert.ok(result.agreement >= 0.3, `Agreement too low: ${result.agreement}`);
+      assert.ok(result.agreement <= 1.0, `Agreement > 1: ${result.agreement}`);
+    });
+  }
 });

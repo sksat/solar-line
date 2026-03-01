@@ -621,6 +621,34 @@ test.describe("Transcription pages", () => {
     const chart = page.locator(".accuracy-chart");
     await expect(chart).toHaveCount(0);
   });
+
+  test("EP01 transcription has agreement chart alongside accuracy chart", async ({ page }) => {
+    await page.goto("/transcriptions/ep-001.html");
+    const accuracyChart = page.locator(".accuracy-chart");
+    const agreementChart = page.locator(".agreement-chart");
+    await expect(accuracyChart).toBeVisible();
+    await expect(agreementChart).toBeVisible();
+    const agreementText = await agreementChart.innerText();
+    expect(agreementText).toContain("ソース間一致率");
+    expect(agreementText).toMatch(/\d+\.\d+%/);
+  });
+
+  test("EP02 transcription has agreement chart (inter-source)", async ({ page }) => {
+    await page.goto("/transcriptions/ep-002.html");
+    const agreementChart = page.locator(".agreement-chart");
+    await expect(agreementChart).toBeVisible();
+    const chartText = await agreementChart.innerText();
+    expect(chartText).toContain("ソース間一致率");
+    expect(chartText).toMatch(/\d+\.\d+%/);
+  });
+
+  test("EP03-05 transcription pages have agreement charts", async ({ page }) => {
+    for (const ep of ["003", "004", "005"]) {
+      await page.goto(`/transcriptions/ep-${ep}.html`);
+      const agreementChart = page.locator(".agreement-chart");
+      await expect(agreementChart).toBeVisible();
+    }
+  });
 });
 
 // --- Side-view SVG diagram tests (Task 217) ---

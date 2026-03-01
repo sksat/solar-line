@@ -324,9 +324,11 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
     // Load accuracy metrics from pre-computed accuracy report (if available)
     const accuracyPath = path.join(dataDir, "data", "calculations", "transcription_accuracy.json");
     let accuracyMetrics: TranscriptionPageData["accuracyMetrics"];
+    let agreementMetrics: TranscriptionPageData["agreementMetrics"];
     if (fs.existsSync(accuracyPath)) {
       const accuracyData = readJsonFile<{
         episodes: { episode: number; comparisons: { sourceType: string; corpusCharacterAccuracy: number; meanLineCharacterAccuracy: number; medianLineCharacterAccuracy: number }[] }[];
+        agreements?: { episode: number; pairs: { sourceA: string; sourceB: string; agreement: number }[] }[];
       }>(accuracyPath);
       if (accuracyData) {
         const epAccuracy = accuracyData.episodes.find(e => e.episode === lines.episode);
@@ -336,6 +338,15 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
             corpusCharacterAccuracy: c.corpusCharacterAccuracy,
             meanLineCharacterAccuracy: c.meanLineCharacterAccuracy,
             medianLineCharacterAccuracy: c.medianLineCharacterAccuracy,
+          }));
+        }
+        // Load pairwise agreement metrics
+        const epAgreement = accuracyData.agreements?.find(a => a.episode === lines.episode);
+        if (epAgreement) {
+          agreementMetrics = epAgreement.pairs.map(p => ({
+            sourceA: p.sourceA,
+            sourceB: p.sourceB,
+            agreement: p.agreement,
           }));
         }
       }
@@ -399,6 +410,7 @@ export function discoverTranscriptions(dataDir: string): TranscriptionPageData[]
       additionalSources: additionalSources.length > 0 ? additionalSources : undefined,
       scriptSource,
       accuracyMetrics,
+      agreementMetrics,
       ocrData,
     });
   }

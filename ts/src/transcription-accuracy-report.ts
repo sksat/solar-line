@@ -13,6 +13,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   compareTranscriptions,
+  computeSourceAgreement,
   extractScriptDialogue,
   ocrToEpisodeLines,
   type ScriptFileData,
@@ -30,6 +31,18 @@ const outputDir = join(__dirname_local, "..", "..", "reports", "data", "calculat
 interface FullAccuracyReport {
   generatedAt: string;
   episodes: EpisodeAccuracyReport[];
+  /** Pairwise inter-source agreement for all episodes (regardless of script availability) */
+  agreements: EpisodeAgreementReport[];
+}
+
+interface EpisodeAgreementReport {
+  episode: number;
+  /** Pairwise agreement metrics between sources */
+  pairs: {
+    sourceA: string;
+    sourceB: string;
+    agreement: number;
+  }[];
 }
 
 interface EpisodeAccuracyReport {
@@ -146,9 +159,55 @@ function generateReport(): FullAccuracyReport {
     });
   }
 
+  // -----------------------------------------------------------------------
+  // Generate pairwise inter-source agreement for ALL episodes (1-5)
+  // -----------------------------------------------------------------------
+  const agreements: EpisodeAgreementReport[] = [];
+
+  for (let ep = 1; ep <= 5; ep++) {
+    const epStr = String(ep).padStart(2, "0");
+
+    // Collect all EpisodeLines sources for this episode
+    const allLineFiles = readdirSync(dataDir)
+      .filter(f => new RegExp(`^ep${epStr}_lines(_\\w+)?\\.json$`).test(f))
+      .sort();
+
+    const sources: { label: string; data: EpisodeLines }[] = [];
+    const seenLabels = new Set<string>();
+    for (const f of allLineFiles) {
+      const data: EpisodeLines = JSON.parse(readFileSync(join(dataDir, f), "utf8"));
+      const label = data.sourceSubtitle.source === "whisper"
+        ? `whisper-${(data.sourceSubtitle as unknown as { whisperModel?: string }).whisperModel || "unknown"}`
+        : data.sourceSubtitle.source;
+      // Skip duplicate sources (e.g. EP05 has both lines.json and lines_whisper.json as whisper-medium)
+      if (seenLabels.has(label)) continue;
+      seenLabels.add(label);
+      sources.push({ label, data });
+    }
+
+    // Compute pairwise agreements
+    const pairs: EpisodeAgreementReport["pairs"] = [];
+    for (let i = 0; i < sources.length; i++) {
+      for (let j = i + 1; j < sources.length; j++) {
+        const result = computeSourceAgreement(sources[i].data, sources[j].data);
+        pairs.push({
+          sourceA: result.sourceA,
+          sourceB: result.sourceB,
+          agreement: result.agreement,
+        });
+        console.log(`EP${epStr} ${result.sourceA}↔${result.sourceB}: ${(result.agreement * 100).toFixed(1)}%`);
+      }
+    }
+
+    if (pairs.length > 0) {
+      agreements.push({ episode: ep, pairs });
+    }
+  }
+
   return {
     generatedAt: new Date().toISOString(),
     episodes,
+    agreements,
   };
 }
 
