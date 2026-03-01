@@ -206,7 +206,7 @@ bars:
 {
   "id": "full-route-diagram",
   "title": "ケストレル号 全航路: 火星 → 木星 → 土星 → 天王星 → 地球",
-  "description": "全5話にわたるケストレル号の航路を1枚の太陽系図に集約。√スケールにより外惑星間の実際の距離差は圧縮されている点に注意。EP1の72時間brachistochrone（緑）、EP2の約87日トリム推力遷移（灰色）、EP3の143時間brachistochrone（オレンジ）、EP5の507時間複合航路（赤）の4区間を表示。EP5のみ中間点に木星フライバイ（midcourse）バーンが存在し、他の航路とは異なる複合的な軌道設計であることが読み取れる。タイムラインバッジ①〜⑤でミッション経過時間を確認可能。",
+  "description": "全5話にわたるケストレル号の航路を1枚の太陽系図に集約。√スケールにより外惑星間の実際の距離差は圧縮されている点に注意。EP1の72時間brachistochrone（緑）、EP2の約87日トリム推力遷移（灰色）、EP3の143時間brachistochrone（オレンジ）の3区間に加え、EP5の507時間複合航路を天王星→木星（赤）＋木星→地球（オレンジ）の2レグで表示。木星フライバイ経由でOberth効果を利用する航路設計が視覚的に読み取れる。タイムラインバッジ①〜⑤でミッション経過時間を確認可能。",
   "centerLabel": "太陽",
   "scaleMode": "sqrt",
   "radiusUnit": "AU",
@@ -330,13 +330,13 @@ bars:
       ]
     },
     {
-      "label": "EP5: 天王星→地球 (507h 複合航路)",
+      "label": "EP5: 天王星→木星 (375h コースト＋フライバイ接近)",
       "fromOrbitId": "uranus",
-      "toOrbitId": "earth",
+      "toOrbitId": "jupiter",
       "color": "#ff4444",
       "style": "brachistochrone",
       "startTime": 8899200,
-      "endTime": 10724400,
+      "endTime": 10249200,
       "burnMarkers": [
         {
           "angle": 2.6742,
@@ -344,26 +344,37 @@ bars:
           "startTime": 0,
           "endTime": 475200,
           "type": "acceleration"
-        },
+        }
+      ]
+    },
+    {
+      "label": "EP5: 木星→地球 (132h Oberth加速＋地球投入)",
+      "fromOrbitId": "jupiter",
+      "toOrbitId": "earth",
+      "color": "#ff8844",
+      "style": "brachistochrone",
+      "startTime": 10249200,
+      "endTime": 10724400,
+      "burnMarkers": [
         {
-          "angle": 2.993,
+          "angle": 1.3786,
           "label": "EP5 木星フライバイ",
-          "startTime": 1350000,
-          "endTime": 1368000,
-          "type": "midcourse"
+          "startTime": 0,
+          "endTime": 18000,
+          "type": "acceleration"
         },
         {
           "angle": 2.721,
           "label": "EP5 減速",
-          "startTime": 1468800,
-          "endTime": 1771200,
+          "startTime": 118800,
+          "endTime": 421200,
           "type": "deceleration"
         },
         {
           "angle": 2.721,
           "label": "EP5 地球投入",
-          "startTime": 1789200,
-          "endTime": 1825200,
+          "startTime": 439200,
+          "endTime": 475200,
           "type": "capture"
         }
       ]

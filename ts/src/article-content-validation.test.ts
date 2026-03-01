@@ -879,6 +879,22 @@ describe("cross-report value consistency", () => {
     assert.ok(crossEpisode.includes('"inset-uranus"'),
       "cross-episode full-route should have Uranus inset");
   });
+
+  it("full-route EP5 is split into two legs via Jupiter (not single arc)", () => {
+    // The Jupiter flyby should be visualized as two arcs: Uranus→Jupiter, Jupiter→Earth
+    // A single Uranus→Earth arc doesn't pass through Jupiter, making the flyby look wrong
+    assert.ok(crossEpisode.includes('"fromOrbitId": "uranus"') &&
+      crossEpisode.includes('"toOrbitId": "jupiter"'),
+      "EP5 should have a Uranus→Jupiter transfer leg");
+    assert.ok(crossEpisode.includes('"fromOrbitId": "jupiter"') &&
+      crossEpisode.includes('"toOrbitId": "earth"'),
+      "EP5 should have a Jupiter→Earth transfer leg");
+    // Should NOT have a single transfer block going directly from uranus to earth
+    // (check within the same JSON object — fromOrbitId and toOrbitId within ~100 chars)
+    const uranusToEarth = crossEpisode.match(/"fromOrbitId":\s*"uranus",\s*\n\s*"toOrbitId":\s*"earth"/);
+    assert.strictEqual(uranusToEarth, null,
+      "EP5 should NOT have a single Uranus→Earth transfer — must route through Jupiter");
+  });
 });
 
 // ============================================================
