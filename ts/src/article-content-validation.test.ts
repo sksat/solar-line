@@ -1817,12 +1817,12 @@ describe("ai-costs.md content validation", () => {
   });
 
   // Regression tests from Task 279 external review
-  it("task count is 293+ (not stale 261 or 292)", () => {
+  it("task count is 294+ (not stale 261 or 293)", () => {
     assert.ok(
       !content.includes("261タスク"),
       "should not contain stale task count 261",
     );
-    assert.ok(content.includes("293"), "should cite current task count 293");
+    assert.ok(content.includes("294"), "should cite current task count 294");
   });
 
   it("commit count is 431+ (not stale 427+)", () => {
