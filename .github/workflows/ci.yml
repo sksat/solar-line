@@ -67,7 +67,7 @@ jobs:
         working-directory: ts
 
   cross-validate:
-    name: Cross-validate orbital mechanics (Python)
+    name: Cross-validate Rust calculations (Python)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,6 +83,7 @@ jobs:
             > cross_validation/rust_values.json
       - run: .venv/bin/python3 cross_validation/validate.py
       - run: .venv/bin/python3 cross_validation/validate_trim_thrust.py
+      - run: .venv/bin/python3 cross_validation/validate_supplementary.py
 
   wasm-web:
     name: WASM browser build
