@@ -30,9 +30,12 @@ export const KESTREL = {
   ispS: 1_000_000,
 } as const;
 
+/** Standard gravity (m/s²) — IAU definition, used for Isp→v_e conversion and G-force display */
+export const G0_MS2 = 9.80665;
+
 /** Derived constants */
 /** Exhaust velocity (km/s) = Isp × g₀ / 1000 */
-export const EXHAUST_VELOCITY_KMS = KESTREL.ispS * 9.80665 / 1000; // ≈ 9806.65 km/s
+export const EXHAUST_VELOCITY_KMS = KESTREL.ispS * G0_MS2 / 1000; // ≈ 9806.65 km/s
 
 /** Normal thrust in MN for report/display use */
 export const THRUST_MN = KESTREL.thrustN / 1_000_000; // 9.8

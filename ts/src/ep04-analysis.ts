@@ -34,7 +34,7 @@ import {
   URANUS_RADIUS,
   TITANIA_ORBIT_RADIUS,
 } from "./orbital.ts";
-import { KESTREL, AU_KM } from "./kestrel.ts";
+import { KESTREL, AU_KM, G0_MS2 } from "./kestrel.ts";
 export { KESTREL };
 
 /** Episode 4 orbital parameters from dialogue */
@@ -132,7 +132,7 @@ export function uranusDeparture() {
     dvEscapeFromTitaniaKms: dvEscapeFromTitania,
     uranusOrbitalVKms: uranusOrbitalV,
     accelAtFullMassMs2: accelAtFullMass,
-    accelAtFullMassG: accelAtFullMass / 9.80665,
+    accelAtFullMassG: accelAtFullMass / G0_MS2,
   };
 }
 
@@ -172,7 +172,7 @@ export function brachistochroneAnalysis() {
       distanceKm: distKm,
       distanceAU: distanceInAU(distKm),
       accelMs2,
-      accelG: accelMs2 / 9.80665,
+      accelG: accelMs2 / G0_MS2,
       deltaVKms: dvKms,
       timeSec,
       timeHours: timeSec / 3600,
@@ -200,7 +200,7 @@ export function massFeasibilityAnalysis(distanceKm: number, thrustN: number = KE
       targetDays: days,
       timeSec,
       accelMs2,
-      accelG: accelMs2 / 9.80665,
+      accelG: accelMs2 / G0_MS2,
       maxMassKg,
       maxMassT: maxMassKg / 1000,
       deltaVKms: dvKms,

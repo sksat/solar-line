@@ -38,7 +38,7 @@ import {
   TITANIA_ORBIT_RADIUS,
   URANUS_MOON_ORBITS,
 } from "./orbital.ts";
-import { KESTREL, AU_KM } from "./kestrel.ts";
+import { KESTREL, AU_KM, G0_MS2 } from "./kestrel.ts";
 export { KESTREL };
 
 /** Episode 3 orbital parameters from dialogue */
@@ -165,7 +165,7 @@ export function brachistochroneAnalysis(timeSec: number = EP03_PARAMS.transferTi
       distanceKm: distKm,
       distanceAU: distanceInAU(distKm),
       accelMs2,
-      accelG: accelMs2 / 9.80665,
+      accelG: accelMs2 / G0_MS2,
       deltaVKms: dvKms,
       requiredThrustN,
       requiredThrustMN: requiredThrustN / 1e6,
@@ -187,7 +187,7 @@ export function maxFeasibleMass(
   const maxMassKg = thrustN / aReqMs2;
   return {
     aReqMs2,
-    aReqG: aReqMs2 / 9.80665,
+    aReqG: aReqMs2 / G0_MS2,
     maxMassKg,
     maxMassT: maxMassKg / 1000,
   };
@@ -206,7 +206,7 @@ export function minimumTransferTime(
   const tSec = Math.sqrt((4 * distanceM) / accelMs2);
   return {
     accelMs2,
-    accelG: accelMs2 / 9.80665,
+    accelG: accelMs2 / G0_MS2,
     timeSec: tSec,
     timeHours: tSec / 3600,
     timeDays: tSec / 86400,

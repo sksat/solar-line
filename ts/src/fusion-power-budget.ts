@@ -13,9 +13,7 @@
  * D-He³ reaction: ³He + D → ⁴He(3.6 MeV) + p(14.7 MeV) = 18.3 MeV total
  */
 
-import { KESTREL } from "./kestrel.ts";
-
-const G0 = 9.80665; // m/s²
+import { KESTREL, G0_MS2 } from "./kestrel.ts";
 
 // ── D-He³ fusion constants ──────────────────────────────────────────
 
@@ -33,7 +31,7 @@ export const DHE3_ENERGY_PER_KG_J = DHE3_ENERGY_PER_REACTION_J / REACTANT_MASS_K
 
 /** Exhaust velocity (m/s) from specific impulse (s). */
 export function exhaustVelocityMs(ispS: number): number {
-  return ispS * G0;
+  return ispS * G0_MS2;
 }
 
 /** Jet power (W) = ½ × thrust × exhaust velocity. */

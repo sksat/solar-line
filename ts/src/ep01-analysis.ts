@@ -18,7 +18,7 @@ import {
   ORBIT_RADIUS,
   GANYMEDE_ORBIT_RADIUS,
 } from "./orbital.ts";
-import { KESTREL as KESTREL_BASE, AU_KM } from "./kestrel.ts";
+import { KESTREL as KESTREL_BASE, AU_KM, G0_MS2 } from "./kestrel.ts";
 
 /** Ship parameters — shared base + EP01-specific fields */
 export const KESTREL = {
@@ -91,8 +91,8 @@ export function shipAcceleration(massKg: number = KESTREL.massKg) {
   return {
     accelNormalMs2: accelNormal,
     accelPeakMs2: accelPeak,
-    accelNormalG: accelNormal / 9.80665,
-    accelPeakG: accelPeak / 9.80665,
+    accelNormalG: accelNormal / G0_MS2,
+    accelPeakG: accelPeak / G0_MS2,
     dvNormal72hMs: dvNormal72h,
     dvPeak72hMs: dvPeak72h,
     dvNormal72hKms: dvNormal72h / 1000,
@@ -115,7 +115,7 @@ export function brachistochroneRequirements(timeSec: number) {
       distanceKm: distKm,
       distanceAU: distanceInAU(distKm),
       accelMs2,
-      accelG: accelMs2 / 9.80665,
+      accelG: accelMs2 / G0_MS2,
       deltaVKms: dvKms,
       deltaVMs: dvKms * 1000,
     };
@@ -183,7 +183,7 @@ export function maxFeasibleMass(
   const maxMassKg = thrustN / aReqMs2;
   return {
     aReqMs2,
-    aReqG: aReqMs2 / 9.80665,
+    aReqG: aReqMs2 / G0_MS2,
     maxMassKg,
     maxMassT: maxMassKg / 1000,
   };
@@ -204,7 +204,7 @@ export function requiredThrust(
   const thrustN = massKg * aReqMs2;
   return {
     aReqMs2,
-    aReqG: aReqMs2 / 9.80665,
+    aReqG: aReqMs2 / G0_MS2,
     thrustN,
     thrustMN: thrustN / 1e6,
     thrustRatioToKestrel: thrustN / KESTREL.thrustN,
@@ -226,7 +226,7 @@ export function minimumTransferTime(
   const tSec = Math.sqrt((4 * distanceM) / accelMs2);
   return {
     accelMs2,
-    accelG: accelMs2 / 9.80665,
+    accelG: accelMs2 / G0_MS2,
     timeSec: tSec,
     timeHours: tSec / 3600,
     timeDays: tSec / 86400,

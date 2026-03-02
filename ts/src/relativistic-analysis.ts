@@ -13,7 +13,7 @@
  * phase 15 (相対論効果検討).
  */
 
-import { KESTREL, EXHAUST_VELOCITY_KMS, AU_KM } from "./kestrel.ts";
+import { KESTREL, EXHAUST_VELOCITY_KMS, AU_KM, G0_MS2 } from "./kestrel.ts";
 
 /** Speed of light in km/s (exact, SI) */
 const C_KM_S = 299_792.458;
@@ -171,7 +171,7 @@ function analyzeTransfer(
     distanceKm,
     distanceAU: distanceKm / AU_KM,
     accelKms2,
-    accelG: (accelKms2 * 1000) / 9.80665,
+    accelG: (accelKms2 * 1000) / G0_MS2,
     classicalTimeSec: timeSec,
     classicalPeakVelocityKms: classicalPeakV,
     classicalDeltaVKms: classicalDvKms,

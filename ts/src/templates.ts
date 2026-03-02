@@ -4,7 +4,7 @@
  */
 
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, MarginGaugeItem, InsetDiagram } from "./report-types.ts";
-import { NOMINAL_MASS_T, THRUST_MN, DAMAGED_THRUST_MN } from "./kestrel.ts";
+import { NOMINAL_MASS_T, THRUST_MN, DAMAGED_THRUST_MN, G0_MS2 } from "./kestrel.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -4072,7 +4072,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Cross-episode comparison table
   var KM_PER_AU = 149597870.7;
-  var G_KMS2 = 9.80665e-3;
+  var G_KMS2 = ${G0_MS2}e-3;
   var comparisons = [
     { ep: 1, route: "火星→ガニメデ", distAU: 3.68, timeH: 72 },
     { ep: 2, route: "木星圏脱出", distAU: 4.32, timeH: 27 },

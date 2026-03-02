@@ -30,7 +30,7 @@ import {
   SATURN_RADIUS,
   ENCELADUS_ORBIT_RADIUS,
 } from "./orbital.ts";
-import { KESTREL, AU_KM } from "./kestrel.ts";
+import { KESTREL, AU_KM, G0_MS2 } from "./kestrel.ts";
 export { KESTREL };
 
 /** Episode 2 orbital parameters from dialogue */
@@ -156,7 +156,7 @@ export function brachistochroneRequirements(timeSec: number) {
       distanceKm: distKm,
       distanceAU: distanceInAU(distKm),
       accelMs2,
-      accelG: accelMs2 / 9.80665,
+      accelG: accelMs2 / G0_MS2,
       deltaVKms: dvKms,
     };
   });
@@ -387,7 +387,7 @@ export function maxFeasibleMass(
   const maxMassKg = thrustN / aReqMs2;
   return {
     aReqMs2,
-    aReqG: aReqMs2 / 9.80665,
+    aReqG: aReqMs2 / G0_MS2,
     maxMassKg,
     maxMassT: maxMassKg / 1000,
   };
@@ -406,7 +406,7 @@ export function minimumTransferTime(
   const tSec = Math.sqrt((4 * distanceM) / accelMs2);
   return {
     accelMs2,
-    accelG: accelMs2 / 9.80665,
+    accelG: accelMs2 / G0_MS2,
     timeSec: tSec,
     timeHours: tSec / 3600,
     timeDays: tSec / 86400,
@@ -629,7 +629,7 @@ export function trimThrustTransferAnalysis(): TrimThrustResult[] {
   const vInf = jupiterEscapeAnalysis().hyperbolicExcessKms;
   const accel = TRIM_THRUST.thrustN / TRIM_THRUST.massKg / 1000; // km/s²
   const saturnOrbV = circularVelocity(MU.SUN, ORBIT_RADIUS.SATURN);
-  const g0 = 9.80665 / 1000; // km/s²
+  const g0 = G0_MS2 / 1000; // km/s²
   const exhaustV = TRIM_THRUST.isp * g0; // km/s
 
   const thrustDaysToTest = [0, 1, 3, 5, 7, 14, 30];
@@ -853,7 +853,7 @@ function simulateTwoPhaseTransfer(
 export function twoPhaseAnalysis(): TwoPhaseResult[] {
   const accel = TRIM_THRUST.thrustN / TRIM_THRUST.massKg / 1000; // km/s²
   const saturnOrbV = circularVelocity(MU.SUN, ORBIT_RADIUS.SATURN);
-  const g0 = 9.80665 / 1000; // km/s²
+  const g0 = G0_MS2 / 1000; // km/s²
   const exhaustV = TRIM_THRUST.isp * g0; // km/s
 
   const scenarios: { accelDays: number; decelDays: number }[] = [
@@ -1020,7 +1020,7 @@ export function damagedThrustScenarios() {
       thrustN,
       thrustMN: thrustN / 1e6,
       accelMs2,
-      accelG: accelMs2 / 9.80665,
+      accelG: accelMs2 / G0_MS2,
       minTimeClosestHours: minTime.timeHours,
       minTimeClosestDays: minTime.timeDays,
     };
