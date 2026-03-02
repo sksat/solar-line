@@ -1918,6 +1918,16 @@ describe("cross-episode.md content validation", () => {
     assert.ok(content.includes("87日") || content.includes("約87日"), "should cite ~87 day EP02 transit");
   });
 
+  it("EP02 duration: 航路の連続性 section uses 87日 consistently with timeline", () => {
+    // The 航路の連続性 narrative and timeline should both use ~87 days for EP02
+    // (107日 is the 2-phase model in detailed analysis, but 87日 is the primary timeline value)
+    // Split on ## heading to get the route continuity section content
+    const routeSection = content.split("## 航路の連続性")[1]?.split("## ")[0] ?? "";
+    const timelineSection = content.split("推定タイムライン")[1]?.split("## ")[0] ?? "";
+    assert.ok(routeSection.includes("87日"), "航路の連続性 section should reference 87日");
+    assert.ok(timelineSection.includes("87日"), "推定タイムライン section should reference 87日");
+  });
+
   it("relativistic analysis: peak velocity 7,604 km/s at 2.54%c", () => {
     assert.ok(content.includes("7,604") || content.includes("7604"), "should cite peak velocity");
     assert.ok(content.includes("2.54%"), "should cite light speed percentage");
