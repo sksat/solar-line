@@ -1108,6 +1108,40 @@ describe("EP05 article content validation", () => {
       "chart should show nozzle limit at 55.63 hours",
     );
   });
+
+  it("has navigation precision comparison bar chart (log scale)", () => {
+    assert.ok(
+      content.includes("深宇宙航法の位置精度比較"),
+      "should have navigation precision bar chart caption",
+    );
+    assert.ok(
+      content.includes("value: 20") && content.includes("ケストレル自律航法"),
+      "chart should show Kestrel 20 km precision",
+    );
+    assert.ok(
+      content.includes("value: 184") && content.includes("New Horizons"),
+      "chart should show New Horizons DSN 184 km precision",
+    );
+    assert.ok(
+      content.includes("value: 14360000") && content.includes("EP03"),
+      "chart should show EP03 crisis at 14.36M km",
+    );
+  });
+
+  it("has nozzle damage model comparison bar chart", () => {
+    assert.ok(
+      content.includes("ノズル損傷モデル比較"),
+      "should have nozzle damage model bar chart caption",
+    );
+    assert.ok(
+      content.includes("value: 99.2") && content.includes("定常燃焼のみ"),
+      "chart should show 99.2% steady-state damage",
+    );
+    assert.ok(
+      content.includes("value: 101.2") && content.includes("熱サイクル疲労"),
+      "chart should show 101.2% with thermal cycle fatigue",
+    );
+  });
 });
 
 // ============================================================
