@@ -602,4 +602,181 @@ mod tests {
             final_snap.propellant_kg
         );
     }
+
+    // ── Edge case tests (Task 420) ──
+
+    #[test]
+    fn zero_initial_propellant() {
+        // total == dry → zero propellant
+        let tl = compute_timeline("zero-prop", 100_000.0, 100_000.0, &[]);
+        assert_eq!(tl.snapshots[0].propellant_kg, 0.0);
+        assert!((propellant_margin(&tl) - 0.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn zero_initial_propellant_with_burn() {
+        // A burn with zero propellant should clamp to zero consumption
+        let events = vec![MassEvent {
+            time_h: 0.0,
+            kind: MassEventKind::FuelBurn {
+                delta_v_km_s: 1000.0,
+                isp_s: ISP_HIGH,
+                burn_duration_h: 1.0,
+            },
+            episode: 1,
+            label: "dry burn".into(),
+        }];
+
+        let tl = compute_timeline("dry-burn", 100_000.0, 100_000.0, &events);
+        let final_snap = final_mass(&tl).unwrap();
+        assert_eq!(final_snap.propellant_kg, 0.0);
+        assert_eq!(final_snap.dry_mass_kg, 100_000.0);
+    }
+
+    #[test]
+    fn post_burn_mass_zero_dv() {
+        let post = post_burn_mass(300_000.0, 0.0, ISP_HIGH);
+        assert!((post - 300_000.0).abs() < 1e-6, "zero ΔV → unchanged mass");
+    }
+
+    #[test]
+    fn post_burn_mass_low_isp() {
+        // Chemical rocket: Isp = 300 s
+        let pre = 10_000.0;
+        let post = post_burn_mass(pre, 3.0, 300.0);
+        // vₑ = 300 * 9.80665 / 1000 = 2.942 km/s
+        // mass_ratio = exp(3.0 / 2.942) ≈ 2.775
+        // post = 10000 / 2.775 ≈ 3604 kg
+        assert!(post > 3_000.0 && post < 4_000.0, "low-Isp post mass = {post}");
+    }
+
+    #[test]
+    fn concurrent_timestamp_events() {
+        // Two events at the same time — should not duplicate pre-event snapshot
+        let events = vec![
+            MassEvent {
+                time_h: 10.0,
+                kind: MassEventKind::ContainerJettison { mass_kg: 5_000.0 },
+                episode: 1,
+                label: "jettison A".into(),
+            },
+            MassEvent {
+                time_h: 10.0,
+                kind: MassEventKind::ContainerJettison { mass_kg: 3_000.0 },
+                episode: 1,
+                label: "jettison B".into(),
+            },
+        ];
+
+        let tl = compute_timeline("concurrent", 200_000.0, 100_000.0, &events);
+        let final_snap = final_mass(&tl).unwrap();
+        // Both jettisons should apply: dry = 100000 - 5000 - 3000 = 92000
+        assert!(
+            (final_snap.dry_mass_kg - 92_000.0).abs() < 1e-6,
+            "concurrent jettisons: dry = {}",
+            final_snap.dry_mass_kg
+        );
+        // Propellant unchanged
+        assert!(
+            (final_snap.propellant_kg - 100_000.0).abs() < 1e-6,
+            "propellant unchanged"
+        );
+    }
+
+    #[test]
+    fn zero_duration_burn() {
+        // burn_duration_h = 0 → post-burn snapshot at same time as pre-event
+        let events = vec![MassEvent {
+            time_h: 50.0,
+            kind: MassEventKind::FuelBurn {
+                delta_v_km_s: 1000.0,
+                isp_s: ISP_HIGH,
+                burn_duration_h: 0.0,
+            },
+            episode: 1,
+            label: "instant burn".into(),
+        }];
+
+        let tl = compute_timeline("instant", 200_000.0, 100_000.0, &events);
+        let final_snap = final_mass(&tl).unwrap();
+        // Burn should still consume propellant
+        assert!(final_snap.propellant_kg < 100_000.0);
+        // Post-burn time = 50.0 + 0.0 = 50.0
+        assert!((final_snap.time_h - 50.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn mass_ratio_overflow_path() {
+        // ΔV >> vₑ should trigger the infinite mass ratio branch
+        // vₑ = ISP_HIGH * g₀ / 1000 ≈ 9806.65 km/s
+        // ΔV = 1,000,000 km/s → exp(1000000/9806.65) = overflow
+        let consumed = propellant_consumed(100_000.0, 1_000_000.0, ISP_HIGH);
+        assert!(
+            (consumed - 100_000.0).abs() < 1e-6,
+            "infinite mass ratio → all mass consumed: {consumed}"
+        );
+    }
+
+    #[test]
+    fn resupply_exceeds_initial_propellant() {
+        // Resupply more than initial → margin > 1.0
+        let events = vec![MassEvent {
+            time_h: 10.0,
+            kind: MassEventKind::Resupply { mass_kg: 200_000.0 },
+            episode: 2,
+            label: "large resupply".into(),
+        }];
+
+        let tl = compute_timeline("excess", 200_000.0, 150_000.0, &events);
+        let margin = propellant_margin(&tl);
+        // Initial propellant = 50,000; after resupply = 250,000
+        // margin = 250,000 / 50,000 = 5.0
+        assert!(margin > 1.0, "margin after excess resupply = {margin:.1}");
+    }
+
+    #[test]
+    fn episode_tracking_across_events() {
+        let events = vec![
+            MassEvent {
+                time_h: 0.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 1000.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 36.0,
+                },
+                episode: 1,
+                label: "EP01 burn".into(),
+            },
+            MassEvent {
+                time_h: 100.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 500.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 12.0,
+                },
+                episode: 3,
+                label: "EP03 burn".into(),
+            },
+        ];
+
+        let tl = compute_timeline("multi-ep", 300_000.0, 100_000.0, &events);
+        // Initial snapshot should use first event's episode
+        assert_eq!(tl.snapshots[0].episode, 1);
+        // Final snapshot should use last event's episode
+        let final_snap = final_mass(&tl).unwrap();
+        assert_eq!(final_snap.episode, 3);
+    }
+
+    #[test]
+    fn propellant_dv_at_exhaust_velocity() {
+        // ΔV = vₑ → mass_ratio = e ≈ 2.718
+        // propellant = m * (1 - 1/e) ≈ m * 0.6321
+        let ve_km_s = ISP_HIGH * crate::constants::G0_M_S2 / 1000.0;
+        let consumed = propellant_consumed(100_000.0, ve_km_s, ISP_HIGH);
+        let expected = 100_000.0 * (1.0 - 1.0 / core::f64::consts::E);
+        assert!(
+            (consumed - expected).abs() < 1.0,
+            "ΔV = vₑ: consumed = {consumed:.1}, expected = {expected:.1}"
+        );
+    }
 }
