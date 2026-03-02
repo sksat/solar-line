@@ -555,6 +555,22 @@ describe("EP03 article content validation", () => {
     assert.ok(content.includes("1.9%") || content.includes("1.86%") || content.includes("5,590") || content.includes("5590"),
       "should cite peak velocity ~5,590 km/s or β ~1.9%");
   });
+
+  it("stellar aberration analysis: connects relativistic effects to nav crisis", () => {
+    assert.ok(content.includes("光行差"),
+      "EP03 should include stellar aberration (光行差) analysis");
+    assert.ok(content.includes("0.573"),
+      "should cite max aberration ~0.573° at 3000 km/s");
+    assert.ok(content.includes("arcsin"),
+      "should reference arcsin formula for aberration");
+    assert.ok(content.includes("47%") || content.includes("46%"),
+      "should state aberration explains ~47% of the 1.23° discrepancy");
+  });
+
+  it("stellar aberration chart data exists", () => {
+    assert.ok(content.includes("ep03-stellar-aberration-sweep"),
+      "EP03 should have stellar aberration velocity sweep chart");
+  });
 });
 
 describe("EP04 article content validation", () => {
@@ -1555,6 +1571,15 @@ describe("cross-episode.md content validation", () => {
   it("jurisdiction: governance gradient from inner to outer solar system", () => {
     assert.ok(content.includes("自治度") || content.includes("独立") || content.includes("統治"),
       "should discuss governance gradient or autonomy trend");
+  });
+
+  it("stellar aberration: cross-reference to EP03 nav crisis", () => {
+    assert.ok(content.includes("光行差"),
+      "cross-episode should reference stellar aberration (光行差)");
+    assert.ok(content.includes("0.573"),
+      "should cite 0.573° max aberration");
+    assert.ok(content.includes("EP03") && content.includes("航法危機"),
+      "should connect aberration to EP03 nav crisis");
   });
 });
 

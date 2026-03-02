@@ -339,3 +339,168 @@ export function analyzeRelativisticEffects() {
     },
   };
 }
+
+// ── Stellar Aberration Analysis (EP03 Navigation Crisis) ──
+
+/** Velocity sweep point for charting aberration vs speed */
+interface AberrationSweepPoint {
+  velocityKms: number;
+  betaValue: number;
+  aberrationDeg: number;
+}
+
+/** Result of stellar aberration analysis */
+export interface StellarAberrationResult {
+  /** Ship cruise velocity at time of nav crisis (km/s) */
+  shipVelocityKms: number;
+  /** β = v/c at cruise */
+  betaCruise: number;
+  /** Lorentz γ at cruise */
+  gammaCruise: number;
+  /** Maximum stellar aberration angle (degrees) — for star perpendicular to motion */
+  maxAberrationDeg: number;
+  /** Aberration for a star observed perpendicular to motion (degrees) */
+  perpendicularAberrationDeg: number;
+  /** The nav discrepancy from EP03 (degrees) */
+  discrepancyDeg: number;
+  /** Fraction of the 1.23° discrepancy explained by single-star aberration */
+  explanationFraction: number;
+  /** Whether aberration alone can fully account for the 1.23° */
+  canExplainFullDiscrepancy: boolean;
+  /** Velocity sweep data for charting */
+  velocitySweep: AberrationSweepPoint[];
+  /** Japanese verdict */
+  verdict: string;
+  /** Detailed analysis text */
+  analysis: string;
+}
+
+/**
+ * Relativistic stellar aberration angle (degrees).
+ *
+ * For an observer moving at velocity v relative to the rest frame of the star,
+ * the apparent direction of the star shifts. The exact relativistic formula:
+ *
+ *   cos(θ') = (cos(θ) + β) / (1 + β cos(θ))
+ *
+ * where θ is the true angle from the velocity vector, θ' is the apparent angle.
+ * The aberration angle Δθ = θ' - θ.
+ *
+ * Maximum aberration occurs for a star perpendicular to the velocity (θ = π/2):
+ *   cos(θ') = β → θ' = arccos(β)
+ *   Δθ = π/2 - arccos(β) = arcsin(β)
+ *
+ * For small β: Δθ ≈ β radians (classical aberration formula).
+ */
+function stellarAberrationDeg(vKms: number, thetaRad: number): number {
+  const b = vKms / C_KM_S;
+  if (b === 0) return 0;
+  const cosTheta = Math.cos(thetaRad);
+  const cosThetaPrime = (cosTheta + b) / (1 + b * cosTheta);
+  const thetaPrime = Math.acos(Math.max(-1, Math.min(1, cosThetaPrime)));
+  return Math.abs(thetaPrime - thetaRad) * (180 / Math.PI);
+}
+
+/**
+ * Maximum stellar aberration (degrees) at given velocity.
+ * Occurs for stars observed perpendicular to motion (θ = π/2).
+ *   max Δθ = arcsin(β)
+ */
+function maxStellarAberrationDeg(vKms: number): number {
+  const b = vKms / C_KM_S;
+  return Math.asin(Math.min(1, b)) * (180 / Math.PI);
+}
+
+/**
+ * Analyze relativistic stellar aberration in the context of EP03's
+ * navigation crisis at 14.72 AU / 3,000 km/s.
+ *
+ * The key question: could uncorrected stellar aberration explain
+ * the 1.23° discrepancy between star-tracker and inertial navigation?
+ */
+export function analyzeStellarAberration(): StellarAberrationResult {
+  const shipV = 3000; // km/s — EP03 cruise velocity (ep03-quote-06)
+  const b = beta(shipV);
+  const g = lorentzFactor(shipV);
+  const discrepancy = 1.23; // degrees — EP03 nav crisis (ep03-quote-06)
+
+  // Maximum aberration (star perpendicular to velocity)
+  const maxAb = maxStellarAberrationDeg(shipV);
+
+  // Perpendicular aberration (θ = π/2)
+  const perpAb = stellarAberrationDeg(shipV, Math.PI / 2);
+
+  // Fraction of discrepancy explained
+  const fraction = maxAb / discrepancy;
+  const canExplain = fraction >= 1.0;
+
+  // Velocity sweep for charting (100 km/s to 10,000 km/s)
+  const sweepVelocities = [100, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7500, 10000];
+  const sweep: AberrationSweepPoint[] = sweepVelocities.map(v => ({
+    velocityKms: v,
+    betaValue: beta(v),
+    aberrationDeg: maxStellarAberrationDeg(v),
+  }));
+
+  // Analysis: single-star aberration ≈ 0.57° accounts for ~46% of the 1.23°.
+  // However, a star tracker using multiple reference stars could accumulate
+  // systematic error if aberration correction is miscalibrated.
+  // Also, the star tracker measures ANGULAR position, so aberration affects
+  // the entire reference frame, not just individual star positions.
+
+  const verdict =
+    `単一星の最大光行差は${maxAb.toFixed(3)}°（1.23°の${(fraction * 100).toFixed(0)}%）。` +
+    "光行差補正の不完全さが系統誤差として蓄積する場合、" +
+    "1.23°の不一致の主因となりうる。" +
+    "慣性航法系は加速度計ベースで光行差の影響を受けないため、" +
+    "2システム間の乖離パターンは光行差仮説と整合する。";
+
+  const analysis =
+    `## 相対論的光行差と航法系不一致\n\n` +
+    `EP03の航法危機では、背景恒星観測と慣性航法系が1.23°の不一致を示した。` +
+    `この時点での巡航速度は約3,000 km/s（β = ${(b * 100).toFixed(2)}%c）。\n\n` +
+    `### 光行差の物理\n\n` +
+    `速度 v で移動する観測者にとって、恒星の見かけの方向は前方にシフトする（相対論的光行差）。` +
+    `正確な式:\n\n` +
+    `$$\\cos\\theta' = \\frac{\\cos\\theta + \\beta}{1 + \\beta\\cos\\theta}$$\n\n` +
+    `進行方向に垂直な星（θ = 90°）の場合、最大光行差 Δθ = arcsin(β) ≈ ${maxAb.toFixed(3)}°。\n\n` +
+    `### EP03への適用\n\n` +
+    `| パラメータ | 値 |\n` +
+    `|-----------|----|\n` +
+    `| 巡航速度 | ${shipV} km/s |\n` +
+    `| β（= v/c）| ${(b * 100).toFixed(3)}% |\n` +
+    `| γ（ローレンツ因子）| ${g.toFixed(6)} |\n` +
+    `| 最大光行差 | ${maxAb.toFixed(3)}° |\n` +
+    `| 航法系不一致 | ${discrepancy}° |\n` +
+    `| 光行差による説明率 | ${(fraction * 100).toFixed(1)}% |\n\n` +
+    `単一星への最大光行差（${maxAb.toFixed(3)}°）は不一致の約${(fraction * 100).toFixed(0)}%を説明する。` +
+    `残りの差分は以下で説明可能:\n\n` +
+    `1. **光行差補正のキャリブレーション誤差**: 星座観測装置が速度の正確な値を持たない場合、` +
+    `補正が不完全になる。補正が全く適用されなければ${maxAb.toFixed(3)}°、` +
+    `部分的に誤補正すればそれ以上の誤差が蓄積しうる\n` +
+    `2. **参照星の組み合わせ効果**: 複数の参照星への光行差が、` +
+    `視野内の異なる方向でそれぞれ異なるシフトを起こし、` +
+    `天体座標系の再構築時に系統誤差が倍増する可能性\n` +
+    `3. **その他の要因**: 星間物質による屈折、宇宙線によるCCD劣化、` +
+    `長時間の振動による光学系のずれなど\n\n` +
+    `### 慣性航法系は影響を受けない\n\n` +
+    `慣性航法系（加速度計 + ジャイロスコープ）は光に依存しないため、` +
+    `光行差の影響を一切受けない。これは作中の描写と完全に整合する:` +
+    `光行差が恒星観測を狂わせ、慣性航法のみが正しいコースを示したと解釈でき、` +
+    `きりたんの「星は嘘をつかないか……私にはそうは見えないけどな」（16:12）` +
+    `という台詞の物理的裏付けとなる——文字通り、相対論的効果によって「星が嘘をついた」のである。`;
+
+  return {
+    shipVelocityKms: shipV,
+    betaCruise: b,
+    gammaCruise: g,
+    maxAberrationDeg: maxAb,
+    perpendicularAberrationDeg: perpAb,
+    discrepancyDeg: discrepancy,
+    explanationFraction: fraction,
+    canExplainFullDiscrepancy: canExplain,
+    velocitySweep: sweep,
+    verdict,
+    analysis,
+  };
+}

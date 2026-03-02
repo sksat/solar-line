@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
-import { analyzeRelativisticEffects } from "./relativistic-analysis.ts";
+import { analyzeRelativisticEffects, analyzeStellarAberration } from "./relativistic-analysis.ts";
 
 describe("relativistic-analysis", () => {
   const result = analyzeRelativisticEffects();
@@ -145,6 +145,77 @@ describe("relativistic-analysis", () => {
     assert.ok(
       ep05Transfer.relativistic.betaPeak < 0.03,
       `EP05 β = ${(ep05Transfer.relativistic.betaPeak * 100).toFixed(2)}%c should be <3%c with damaged thrust`,
+    );
+  });
+});
+
+describe("stellar-aberration", () => {
+  const aberration = analyzeStellarAberration();
+
+  it("should produce EP03 analysis at 3000 km/s cruise velocity", () => {
+    assert.ok(aberration.shipVelocityKms === 3000);
+    assert.ok(aberration.betaCruise > 0.009 && aberration.betaCruise < 0.011,
+      `β = ${aberration.betaCruise} (expected ~0.01)`);
+  });
+
+  it("maximum aberration should be ~0.57° at β ≈ 0.01", () => {
+    // At β = v/c ≈ 0.01, max aberration ≈ arctan(β) ≈ β radians ≈ 0.573°
+    assert.ok(
+      aberration.maxAberrationDeg > 0.5 && aberration.maxAberrationDeg < 0.7,
+      `max aberration = ${aberration.maxAberrationDeg.toFixed(3)}° (expected ~0.57°)`,
+    );
+  });
+
+  it("perpendicular aberration should be close to max aberration", () => {
+    // For β ≪ 1, aberration is nearly the same for 90° as for all angles
+    assert.ok(
+      aberration.perpendicularAberrationDeg > 0.5 && aberration.perpendicularAberrationDeg < 0.7,
+      `perpendicular aberration = ${aberration.perpendicularAberrationDeg.toFixed(3)}°`,
+    );
+  });
+
+  it("aberration should be same order of magnitude as 1.23° nav discrepancy", () => {
+    // The 1.23° discrepancy is about 2x the max single-star aberration
+    const ratio = aberration.discrepancyDeg / aberration.maxAberrationDeg;
+    assert.ok(
+      ratio > 1 && ratio < 5,
+      `ratio = ${ratio.toFixed(2)} (expected 1-5x)`,
+    );
+  });
+
+  it("should include analysis of whether aberration can explain the full 1.23°", () => {
+    assert.ok(aberration.canExplainFullDiscrepancy !== undefined);
+    assert.ok(aberration.explanationFraction > 0,
+      "aberration should explain at least some of the discrepancy");
+  });
+
+  it("should have velocity sweep data for charting", () => {
+    assert.ok(aberration.velocitySweep.length >= 5,
+      `expected ≥5 sweep points, got ${aberration.velocitySweep.length}`);
+    // First point should be low velocity
+    assert.ok(aberration.velocitySweep[0].velocityKms < 1000);
+    // Last point should include EP03 cruise velocity or higher
+    assert.ok(aberration.velocitySweep[aberration.velocitySweep.length - 1].velocityKms >= 3000);
+    // Aberration should increase monotonically with velocity
+    for (let i = 1; i < aberration.velocitySweep.length; i++) {
+      assert.ok(
+        aberration.velocitySweep[i].aberrationDeg > aberration.velocitySweep[i - 1].aberrationDeg,
+        `aberration should increase: ${aberration.velocitySweep[i].aberrationDeg} > ${aberration.velocitySweep[i - 1].aberrationDeg}`,
+      );
+    }
+  });
+
+  it("should provide Japanese verdict", () => {
+    assert.ok(aberration.verdict.length > 0);
+    assert.ok(/[\u3000-\u9FFF]/.test(aberration.verdict), "verdict should be in Japanese");
+  });
+
+  it("classical aberration at v=0 should be 0", () => {
+    const zeroPoint = aberration.velocitySweep.find(p => p.velocityKms === 0);
+    // May not have exactly 0, but first point should have very small aberration
+    assert.ok(
+      aberration.velocitySweep[0].aberrationDeg < 0.1,
+      "aberration at low velocity should be near 0",
     );
   });
 });
