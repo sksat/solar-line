@@ -837,6 +837,36 @@ describe("EP05 article content validation", () => {
     assert.ok(content.includes("BEACON") || content.includes("ビーコン"),
       "should discuss beacon unavailability");
   });
+
+  // --- Task 375: Velocity profile chart ---
+
+  it("has velocity profile chart (ep05-chart-velocity-profile)", () => {
+    assert.ok(content.includes("ep05-chart-velocity-profile"),
+      "EP05 should have a velocity profile chart");
+  });
+
+  it("velocity profile: peak ~2100 km/s at Jupiter flyby", () => {
+    const match = content.match(/"id":\s*"ep05-chart-velocity-profile"[\s\S]*?"y":\s*\[([\d.,\s]+)\]/);
+    assert.ok(match, "should find ep05-chart-velocity-profile series data");
+    const yValues = match![1].split(",").map(Number);
+    const peak = Math.max(...yValues);
+    assert.ok(Math.abs(peak - 2100) < 50, `peak velocity should be ~2100 km/s, got ${peak}`);
+  });
+
+  it("velocity profile: cruising velocity ~1500 km/s", () => {
+    const match = content.match(/"id":\s*"ep05-chart-velocity-profile"[\s\S]*?"y":\s*\[([\d.,\s]+)\]/);
+    assert.ok(match, "should find velocity data");
+    const yValues = match![1].split(",").map(Number);
+    const cruisePoints = yValues.filter(v => Math.abs(v - 1500) < 50);
+    assert.ok(cruisePoints.length >= 2, `should have multiple points near 1500 km/s cruise, found ${cruisePoints.length}`);
+  });
+
+  it("velocity profile: has 4-burn annotations", () => {
+    assert.ok(content.includes("Burn 1") || content.includes("天王星脱出"),
+      "should annotate Burn 1");
+    assert.ok(content.includes("Burn 4") || content.includes("地球投入"),
+      "should annotate Burn 4");
+  });
 });
 
 // ============================================================
