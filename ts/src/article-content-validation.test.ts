@@ -972,6 +972,25 @@ describe("EP05 article content validation", () => {
     assert.ok(content.includes("Burn 4") || content.includes("地球投入"),
       "should annotate Burn 4");
   });
+
+  it("Jupiter flyby IF analysis bar chart", () => {
+    assert.ok(
+      content.includes("木星フライバイの必要性"),
+      "should have Jupiter flyby necessity bar chart",
+    );
+    assert.ok(
+      content.includes("フライバイあり（作中）") && content.includes("value: 55.2"),
+      "chart should show flyby path at 55.2 hours",
+    );
+    assert.ok(
+      content.includes("フライバイなし（IF）") && content.includes("value: 56.85"),
+      "chart should show no-flyby path at 56.85 hours",
+    );
+    assert.ok(
+      content.includes("ノズル寿命限界") && content.includes("value: 55.63"),
+      "chart should show nozzle limit at 55.63 hours",
+    );
+  });
 });
 
 // ============================================================
