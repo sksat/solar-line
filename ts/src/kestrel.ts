@@ -37,6 +37,9 @@ export const EXHAUST_VELOCITY_KMS = KESTREL.ispS * 9.80665 / 1000; // ≈ 9806.6
 /** Normal thrust in MN for report/display use */
 export const THRUST_MN = KESTREL.thrustN / 1_000_000; // 9.8
 
+/** Damaged thrust in MN (65% output) for report/display use */
+export const DAMAGED_THRUST_MN = KESTREL.damagedThrustN / 1_000_000; // 6.37
+
 /** Nominal mass in tonnes for report/display use */
 export const NOMINAL_MASS_T = KESTREL.massKg / 1_000; // 48,000
 

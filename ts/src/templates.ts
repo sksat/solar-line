@@ -4,6 +4,7 @@
  */
 
 import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, MarginGaugeItem, InsetDiagram } from "./report-types.ts";
+import { NOMINAL_MASS_T, THRUST_MN, DAMAGED_THRUST_MN } from "./kestrel.ts";
 
 /** Escape HTML special characters */
 export function escapeHtml(text: string): string {
@@ -2411,7 +2412,7 @@ interface CalcEpConfig { defaults: { distanceAU: number; massT: number; timeH: n
 
 const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
   1: {
-    defaults: { distanceAU: 3.68, massT: 48000, timeH: 72, thrustMN: 9.8 },
+    defaults: { distanceAU: 3.68, massT: NOMINAL_MASS_T, timeH: 72, thrustMN: THRUST_MN },
     presets: [
       { key: "ep01_72h", label: "火星→ガニメデ 72h（作中描写）" },
       { key: "ep01_150h", label: "通常ルート 150h" },
@@ -2420,7 +2421,7 @@ const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
     ],
   },
   2: {
-    defaults: { distanceAU: 4.32, massT: 48000, timeH: 27, thrustMN: 9.8 },
+    defaults: { distanceAU: 4.32, massT: NOMINAL_MASS_T, timeH: 27, thrustMN: THRUST_MN },
     presets: [
       { key: "ep02_escape", label: "木星圏脱出 27h" },
       { key: "ep02_trim1pct", label: "木星→土星 トリム推力1%" },
@@ -2428,7 +2429,7 @@ const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
     ],
   },
   3: {
-    defaults: { distanceAU: 9.62, massT: 48000, timeH: 143, thrustMN: 9.8 },
+    defaults: { distanceAU: 9.62, massT: NOMINAL_MASS_T, timeH: 143, thrustMN: THRUST_MN },
     presets: [
       { key: "ep03_143h", label: "エンケラドス→タイタニア 143h（作中描写）" },
       { key: "ep03_mass452", label: "質量 ≤452t（成立条件）" },
@@ -2436,7 +2437,7 @@ const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
     ],
   },
   4: {
-    defaults: { distanceAU: 18.2, massT: 48000, timeH: 2520, thrustMN: 6.37 },
+    defaults: { distanceAU: 18.2, massT: NOMINAL_MASS_T, timeH: 2520, thrustMN: DAMAGED_THRUST_MN },
     presets: [
       { key: "ep04_damaged", label: "タイタニア→地球 65%推力（作中描写）" },
       { key: "ep04_mass300", label: "質量 300t・65%推力" },
@@ -2444,7 +2445,7 @@ const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
     ],
   },
   5: {
-    defaults: { distanceAU: 18.2, massT: 48000, timeH: 507, thrustMN: 6.37 },
+    defaults: { distanceAU: 18.2, massT: NOMINAL_MASS_T, timeH: 507, thrustMN: DAMAGED_THRUST_MN },
     presets: [
       { key: "ep05_composite", label: "天王星→地球 507h 複合航路（作中描写）" },
       { key: "ep05_mass300", label: "質量 300t・65%推力" },
@@ -3969,8 +3970,8 @@ export function renderCalculatorPage(summaryPages?: SiteManifest["summaryPages"]
   </div>
   <div class="calc-control">
     <label for="calc-mass">船質量 (t)</label>
-    <input type="range" id="calc-mass-range" min="10" max="100000" step="10" value="48000" aria-label="船質量 (t)">
-    <input type="number" id="calc-mass" min="1" max="1000000" step="1" value="48000">
+    <input type="range" id="calc-mass-range" min="10" max="100000" step="10" value="${NOMINAL_MASS_T}" aria-label="船質量 (t)">
+    <input type="number" id="calc-mass" min="1" max="1000000" step="1" value="${NOMINAL_MASS_T}">
   </div>
   <div class="calc-control">
     <label for="calc-time">遷移時間 (h)</label>
@@ -3979,9 +3980,9 @@ export function renderCalculatorPage(summaryPages?: SiteManifest["summaryPages"]
   </div>
   <div class="calc-control">
     <label for="calc-thrust">推力 (MN)</label>
-    <input type="range" id="calc-thrust-range" min="0.01" max="15" step="0.01" value="9.8" aria-label="推力 (MN)">
-    <input type="number" id="calc-thrust" min="0.01" max="100" step="0.01" value="9.8">
-    <span id="calc-thrust-val" class="calc-badge" style="font-size:0.85em">9.8 MN</span>
+    <input type="range" id="calc-thrust-range" min="0.01" max="15" step="0.01" value="${THRUST_MN}" aria-label="推力 (MN)">
+    <input type="number" id="calc-thrust" min="0.01" max="100" step="0.01" value="${THRUST_MN}">
+    <span id="calc-thrust-val" class="calc-badge" style="font-size:0.85em">${THRUST_MN} MN</span>
   </div>
 </div>
 
