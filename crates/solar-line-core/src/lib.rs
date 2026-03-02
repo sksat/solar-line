@@ -20,7 +20,7 @@ pub mod units;
 pub mod vec3;
 
 // Re-export commonly used items for convenience
-pub use constants::mu;
+pub use constants::{mu, AU_KM, C_KM_S, G0_M_S2};
 pub use kepler::{mean_to_true_anomaly, solve_kepler};
 pub use orbits::{
     brachistochrone_accel, brachistochrone_dv, brachistochrone_max_distance, exhaust_velocity,
