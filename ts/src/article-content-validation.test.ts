@@ -1695,6 +1695,21 @@ describe("cross-episode.md content validation", () => {
     assert.ok(content.includes("EP03") && content.includes("航法危機"),
       "should connect aberration to EP03 nav crisis");
   });
+
+  it("mass boundary convergence bar chart", () => {
+    assert.ok(
+      content.includes("各話の質量境界値 vs 公称質量48,000t"),
+      "should have mass boundary convergence bar chart",
+    );
+    assert.ok(
+      content.includes("≤299t") && content.includes("≤452.5t"),
+      "chart should include EP01 and EP03 mass boundaries",
+    );
+    assert.ok(
+      content.includes("48,000t（設定資料）"),
+      "chart should include nominal mass for comparison",
+    );
+  });
 });
 
 // ============================================================
