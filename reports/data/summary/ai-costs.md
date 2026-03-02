@@ -228,3 +228,8 @@ bunx ccusage@17 session --offline --json --timezone Asia/Tokyo | \
 bunx ccusage@17 daily --offline --json --timezone Asia/Tokyo | \
   npm run analyze-costs -- --mode daily
 ```
+
+## 関連ページ
+
+- [技術解説: SOLAR LINE 考証の仕組み](tech-overview.html) — プロジェクトアーキテクチャ、テスト戦略、Claude Codeエージェントループ
+- [クロスエピソード分析](cross-episode.html) — コストが投入された分析成果の全体像

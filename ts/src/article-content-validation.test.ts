@@ -1324,6 +1324,31 @@ describe("Summary reports have related pages with episode links", () => {
   }
 });
 
+describe("Remaining summary reports have related pages", () => {
+  const summaries = [
+    { file: "science-accuracy.md", label: "science-accuracy", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-004.html"] },
+    { file: "other-ships.md", label: "other-ships", requiredLinks: ["../episodes/ep-002.html", "../episodes/ep-004.html"] },
+    { file: "cross-episode.md", label: "cross-episode", requiredLinks: ["ship-kestrel.html"] },
+    { file: "ai-costs.md", label: "ai-costs", requiredLinks: ["tech-overview.html"] },
+  ];
+
+  for (const { file, label, requiredLinks } of summaries) {
+    it(`${label} has related pages section`, () => {
+      const content = readReport(file);
+      assert.ok(
+        content.includes("関連ページ"),
+        `${label} should have a 関連ページ section`,
+      );
+      for (const link of requiredLinks) {
+        assert.ok(
+          content.includes(link),
+          `${label} should link to ${link}`,
+        );
+      }
+    });
+  }
+});
+
 // ============================================================
 // Other-ships report content validation
 // ============================================================
