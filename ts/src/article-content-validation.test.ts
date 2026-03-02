@@ -571,6 +571,22 @@ describe("EP02 article content validation", () => {
       "EP02 dose rate at Ganymede orbit");
   });
 
+  it("has radiation escape dose bar chart", () => {
+    const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+    const radChart = chartBlocks.find(
+      block => block.includes("放射線") && block.includes("線量"),
+    );
+    assert.ok(radChart, "EP02 should have radiation escape dose bar chart");
+    assert.ok(
+      radChart!.includes("0.310") || radChart!.includes("0.31"),
+      "chart should include ballistic escape dose (0.310 krad)",
+    );
+    assert.ok(
+      radChart!.includes("0.043"),
+      "chart should include shield budget (0.043 krad)",
+    );
+  });
+
   it("navigation overview HUD: MPA, COIAS, and vessel registry", () => {
     assert.ok(content.includes("MARS PORT AUTHORITY") || content.includes("MPA"),
       "should cite Mars Port Authority from navigation HUD");
@@ -1025,6 +1041,22 @@ describe("EP04 article content validation", () => {
     );
     assert.ok(scenario30d, "EP04 should have 30-day mass feasibility scenario");
     assertContainsApproxValue(content, scenario30d!.maxMassT, "EP04 30-day mass feasibility");
+  });
+
+  it("has mass vs transit time bar chart", () => {
+    const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+    const massTransitChart = chartBlocks.find(
+      block => block.includes("質量") && block.includes("遷移時間"),
+    );
+    assert.ok(massTransitChart, "EP04 should have mass vs transit time bar chart");
+    assert.ok(
+      massTransitChart!.includes("300") && (massTransitChart!.includes("48,000") || massTransitChart!.includes("48000")),
+      "chart should include 300t and 48,000t scenarios",
+    );
+    assert.ok(
+      massTransitChart!.includes("3,929") || massTransitChart!.includes("3929"),
+      "chart should include 3,929t (30-day boundary) scenario",
+    );
   });
 
   it("relativistic effects: β ~0.7% for 65% thrust brachistochrone", () => {
