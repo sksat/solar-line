@@ -239,7 +239,7 @@ pub fn propagate_mean_anomaly(m0: f64, n: f64, dt: f64) -> f64 {
 /// Gravitational parameters for solar system bodies (km³/s²).
 /// Returns { sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune }.
 #[wasm_bindgen]
-pub fn get_mu_constants() -> JsValue {
+pub fn get_mu_constants() -> Result<JsValue, JsError> {
     #[derive(Serialize)]
     struct MuConstants {
         sun: f64,
@@ -263,13 +263,13 @@ pub fn get_mu_constants() -> JsValue {
         uranus: constants::mu::URANUS.value(),
         neptune: constants::mu::NEPTUNE.value(),
     };
-    serde_wasm_bindgen::to_value(&c).unwrap()
+    serde_wasm_bindgen::to_value(&c).map_err(|e| JsError::new(&e.to_string()))
 }
 
 /// Mean orbital radii for planets around the Sun (km).
 /// Returns { mercury, venus, earth, mars, jupiter, saturn }.
 #[wasm_bindgen]
-pub fn get_orbit_radius_constants() -> JsValue {
+pub fn get_orbit_radius_constants() -> Result<JsValue, JsError> {
     #[derive(Serialize)]
     struct OrbitRadii {
         mercury: f64,
@@ -287,13 +287,13 @@ pub fn get_orbit_radius_constants() -> JsValue {
         jupiter: constants::orbit_radius::JUPITER.value(),
         saturn: constants::orbit_radius::SATURN.value(),
     };
-    serde_wasm_bindgen::to_value(&c).unwrap()
+    serde_wasm_bindgen::to_value(&c).map_err(|e| JsError::new(&e.to_string()))
 }
 
 /// Reference orbits (km).
 /// Returns { earth_radius, leo_radius, geo_radius }.
 #[wasm_bindgen]
-pub fn get_reference_orbit_constants() -> JsValue {
+pub fn get_reference_orbit_constants() -> Result<JsValue, JsError> {
     #[derive(Serialize)]
     struct RefOrbits {
         earth_radius: f64,
@@ -305,7 +305,7 @@ pub fn get_reference_orbit_constants() -> JsValue {
         leo_radius: constants::reference_orbits::LEO_RADIUS.value(),
         geo_radius: constants::reference_orbits::GEO_RADIUS.value(),
     };
-    serde_wasm_bindgen::to_value(&c).unwrap()
+    serde_wasm_bindgen::to_value(&c).map_err(|e| JsError::new(&e.to_string()))
 }
 
 // ---------------------------------------------------------------------------
@@ -1740,9 +1740,17 @@ pub fn elements_to_state_vector(
 use solar_line_core::relativistic;
 
 /// Lorentz factor γ for a given velocity (km/s).
+/// Returns JsError if v >= c (speed of light).
 #[wasm_bindgen]
-pub fn lorentz_factor(v_km_s: f64) -> f64 {
-    relativistic::lorentz_factor(KmPerSec(v_km_s))
+pub fn lorentz_factor(v_km_s: f64) -> Result<f64, JsError> {
+    if v_km_s.abs() >= relativistic::C_KM_S {
+        return Err(JsError::new(&format!(
+            "velocity must be less than c ({} km/s), got {} km/s",
+            relativistic::C_KM_S,
+            v_km_s
+        )));
+    }
+    Ok(relativistic::lorentz_factor(KmPerSec(v_km_s)))
 }
 
 /// β = v/c for a given velocity (km/s).
@@ -2405,5 +2413,36 @@ mod tests {
         // Consistency: post = pre - consumed
         let consumed = mass_propellant_consumed(pre, 1000.0, 1_000_000.0);
         assert!((post - (pre - consumed)).abs() < 1e-6);
+    }
+
+    // ── Lorentz factor WASM tests ───────────────────────────────────
+    // Note: error-path tests (v >= c) cannot run on non-wasm targets because
+    // JsError::new() panics outside WASM. The input guard in lorentz_factor()
+    // prevents the core assert!() panic and returns JsError on WASM targets.
+
+    #[test]
+    fn test_wasm_lorentz_factor_valid() {
+        // At 1000 km/s (~0.33%c), γ should be very close to 1
+        let gamma = lorentz_factor(1000.0).expect("valid velocity should not error");
+        assert!(gamma > 1.0 && gamma < 1.001);
+    }
+
+    #[test]
+    fn test_wasm_lorentz_factor_zero() {
+        // γ(0) = 1.0 exactly
+        let gamma = lorentz_factor(0.0).expect("zero velocity should not error");
+        assert!((gamma - 1.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn test_wasm_lorentz_factor_ep05_peak() {
+        // EP05 peak velocity ~7600 km/s (~2.5%c) — should produce noticeable γ
+        let gamma = lorentz_factor(7600.0).expect("EP05 peak velocity should not error");
+        // γ ≈ 1 / √(1 - 0.025²) ≈ 1.000313
+        assert!(
+            gamma > 1.0003 && gamma < 1.0004,
+            "γ at 2.5%c = {:.6}",
+            gamma
+        );
     }
 }
