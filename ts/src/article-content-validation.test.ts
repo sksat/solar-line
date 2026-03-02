@@ -1270,6 +1270,32 @@ describe("EP05 article content validation", () => {
 });
 
 // ============================================================
+// Episode cross-references to summary reports (Task 480)
+// ============================================================
+
+describe("Episode reports cross-reference summary analyses", () => {
+  const episodes = [
+    { file: "ep01.md", label: "EP01", requiredLinks: ["ship-kestrel.html", "cross-episode.html"] },
+    { file: "ep02.md", label: "EP02", requiredLinks: ["ship-kestrel.html", "infrastructure.html"] },
+    { file: "ep03.md", label: "EP03", requiredLinks: ["communications.html", "attitude-control.html"] },
+    { file: "ep04.md", label: "EP04", requiredLinks: ["attitude-control.html", "ship-kestrel.html"] },
+    { file: "ep05.md", label: "EP05", requiredLinks: ["ship-kestrel.html", "cross-episode.html"] },
+  ];
+
+  for (const { file, label, requiredLinks } of episodes) {
+    it(`${label} links to relevant summary reports`, () => {
+      const content = readReport(file, "episodes");
+      for (const link of requiredLinks) {
+        assert.ok(
+          content.includes(link),
+          `${label} should link to ${link}`,
+        );
+      }
+    });
+  }
+});
+
+// ============================================================
 // Other-ships report content validation
 // ============================================================
 
