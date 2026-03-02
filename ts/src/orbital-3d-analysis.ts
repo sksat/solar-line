@@ -18,8 +18,7 @@ import * as path from "node:path";
 import { jdToDateString, planetPosition, type PlanetName } from "./ephemeris.ts";
 import { findOptimalEpoch } from "./timeline-analysis.ts";
 import { equatorialToEcliptic, saturnRingPlaneNormal, uranusSpinAxis } from "./coordinate-transforms.ts";
-
-const AU_KM = 149_597_870.7;
+import { AU_KM } from "./kestrel.ts";
 
 // ── Saturn ring system constants ─────────────────────────────────
 

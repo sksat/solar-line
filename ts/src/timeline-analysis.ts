@@ -28,6 +28,7 @@ import {
   elapsedHours,
 } from "./ephemeris.ts";
 import { ORBIT_RADIUS, MU, brachistochroneAccel } from "./orbital.ts";
+import { AU_KM } from "./kestrel.ts";
 
 /** Timeline event for a single transfer */
 export interface TimelineEvent {
@@ -156,7 +157,7 @@ function findEP01Departure(searchStartJD: number): TimelineEvent {
     departureLongitude: marsLon,
     arrivalLongitude: jupLon,
     phaseAngleAtDeparture: phase,
-    notes: `火星-木星最接近付近 (距離: ${(distKm / 149_597_870.7).toFixed(2)} AU)`,
+    notes: `火星-木星最接近付近 (距離: ${(distKm / AU_KM).toFixed(2)} AU)`,
   };
 }
 
@@ -244,7 +245,7 @@ function findEP03Transfer(ep02ArrivalJD: number): TimelineEvent {
     departureLongitude: satLon,
     arrivalLongitude: uraLon,
     phaseAngleAtDeparture: phase,
-    notes: `土星-天王星距離: ${(distKm / 149_597_870.7).toFixed(2)} AU`,
+    notes: `土星-天王星距離: ${(distKm / AU_KM).toFixed(2)} AU`,
   };
 }
 
@@ -295,7 +296,7 @@ function findEP04Transfer(ep03ArrivalJD: number): TimelineEvent {
     departureLongitude: uraLon,
     arrivalLongitude: earthLon,
     phaseAngleAtDeparture: phase,
-    notes: `天王星-地球距離: ${(distKm / 149_597_870.7).toFixed(2)} AU; 巡航375h + フライバイ + 地球投入の複合航路`,
+    notes: `天王星-地球距離: ${(distKm / AU_KM).toFixed(2)} AU; 巡航375h + フライバイ + 地球投入の複合航路`,
   };
 }
 
@@ -324,8 +325,8 @@ export function computeTimeline(searchStartJD: number): StoryTimeline {
   const satUraDist = Math.sqrt(
     (satPos.x - uraPos.x) ** 2 + (satPos.y - uraPos.y) ** 2,
   );
-  const satUraAU = satUraDist / 149_597_870.7;
-  const avgSatUraAU = (ORBIT_RADIUS.URANUS - ORBIT_RADIUS.SATURN) / 149_597_870.7;
+  const satUraAU = satUraDist / AU_KM;
+  const avgSatUraAU = (ORBIT_RADIUS.URANUS - ORBIT_RADIUS.SATURN) / AU_KM;
   if (satUraAU < avgSatUraAU * 0.8) {
     consistencyNotes.push(
       `EP03: 土星-天王星距離 ${satUraAU.toFixed(1)} AU は平均 ${avgSatUraAU.toFixed(1)} AU より近い — 惑星配置として好都合`,
@@ -378,7 +379,6 @@ export function searchMultipleEpochs(): StoryTimeline[] {
  * where the timeline chain naturally lands EP03 near a Saturn-Uranus conjunction.
  */
 export function findOptimalEpoch(): StoryTimeline {
-  const AU_KM = 149_597_870.7;
   const startJD = calendarToJD(2200, 1, 1);
   const endJD = calendarToJD(2270, 1, 1);
   const step = 400; // days

@@ -8,15 +8,13 @@
  */
 
 import { MU, ORBIT_RADIUS, orbitalPeriod } from "./orbital.ts";
+import { AU_KM } from "./kestrel.ts";
 
 /** J2000.0 epoch as Julian Date */
 export const J2000_JD = 2_451_545.0;
 
 /** Seconds per day */
 const SECONDS_PER_DAY = 86400;
-
-/** AU in km */
-const AU_KM = 149_597_870.7;
 
 /** Julian century in days */
 const JULIAN_CENTURY_DAYS = 36525;

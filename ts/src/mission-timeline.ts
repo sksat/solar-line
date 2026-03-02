@@ -14,8 +14,7 @@
  */
 
 import type { TimeSeriesChart, TimeSeriesRegion } from "./report-types.ts";
-
-const AU_KM = 149_597_870.7;
+import { AU_KM } from "./kestrel.ts";
 
 /** Semi-major axes in AU for interpolation */
 const BODY_AU: Record<string, number> = {
