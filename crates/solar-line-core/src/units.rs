@@ -280,4 +280,189 @@ mod tests {
         assert_eq!((-KmPerSec(3.0)).value(), -3.0);
         assert_eq!((-Km(100.0)).value(), -100.0);
     }
+
+    // --- Seconds type tests ---
+
+    #[test]
+    fn seconds_arithmetic() {
+        let a = Seconds(3600.0);
+        let b = Seconds(1800.0);
+        assert_eq!((a + b).value(), 5400.0);
+        assert_eq!((a - b).value(), 1800.0);
+        assert_eq!((a * 2.0).value(), 7200.0);
+        assert_eq!((2.0 * b).value(), 3600.0);
+        assert_eq!((a / 2.0).value(), 1800.0);
+        assert_eq!(a / b, 2.0);
+    }
+
+    #[test]
+    fn seconds_negation() {
+        assert_eq!((-Seconds(60.0)).value(), -60.0);
+        assert_eq!((-Seconds(-30.0)).value(), 30.0);
+    }
+
+    #[test]
+    fn seconds_display() {
+        assert_eq!(format!("{}", Seconds(86400.0)), "86400 s");
+        assert_eq!(format!("{}", Seconds(0.001)), "0.001 s");
+    }
+
+    // --- Mu type tests ---
+
+    #[test]
+    fn mu_arithmetic() {
+        let a = Mu(3.986e5);
+        let b = Mu(1.327e11);
+        assert_eq!((a + b).value(), 3.986e5 + 1.327e11);
+        assert_eq!((b - a).value(), 1.327e11 - 3.986e5);
+        assert_eq!((a * 2.0).value(), 2.0 * 3.986e5);
+        assert_eq!((0.5 * a).value(), 0.5 * 3.986e5);
+        assert_eq!((a / 2.0).value(), 3.986e5 / 2.0);
+        assert!((b / a - 1.327e11 / 3.986e5).abs() < 1e-6);
+    }
+
+    #[test]
+    fn mu_negation() {
+        assert_eq!((-Mu(100.0)).value(), -100.0);
+    }
+
+    #[test]
+    fn mu_display() {
+        assert_eq!(format!("{}", Mu(398600.4418)), "398600.4418 km³/s²");
+    }
+
+    // --- KmPerSec arithmetic tests ---
+
+    #[test]
+    fn km_per_sec_arithmetic() {
+        let a = KmPerSec(10.0);
+        let b = KmPerSec(3.0);
+        assert_eq!((a + b).value(), 13.0);
+        assert_eq!((a - b).value(), 7.0);
+        assert_eq!((a * 0.5).value(), 5.0);
+        assert_eq!((4.0 * b).value(), 12.0);
+        assert_eq!((a / 5.0).value(), 2.0);
+        assert!((a / b - 10.0 / 3.0).abs() < 1e-15);
+    }
+
+    // --- Radians arithmetic tests ---
+
+    #[test]
+    fn radians_arithmetic() {
+        let a = Radians(PI);
+        let b = Radians(FRAC_PI_2);
+        assert!((a + b).value() - (PI + FRAC_PI_2) < 1e-15);
+        assert!((a - b).value() - FRAC_PI_2 < 1e-15);
+        assert_eq!((-a).value(), -PI);
+        assert!((a * 2.0).value() - TAU < 1e-15);
+        assert!((2.0 * b).value() - PI < 1e-15);
+        assert!((a / 2.0).value() - FRAC_PI_2 < 1e-15);
+        assert!((a / b - 2.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn radians_display() {
+        assert_eq!(format!("{}", Radians(3.14159)), "3.14159 rad");
+    }
+
+    // --- Km::abs / KmPerSec::abs edge cases ---
+
+    #[test]
+    fn km_abs() {
+        assert_eq!(Km(-42.0).abs().value(), 42.0);
+        assert_eq!(Km(42.0).abs().value(), 42.0);
+        assert_eq!(Km(0.0).abs().value(), 0.0);
+    }
+
+    #[test]
+    fn km_per_sec_abs() {
+        assert_eq!(KmPerSec(-7.8).abs().value(), 7.8);
+        assert_eq!(KmPerSec(7.8).abs().value(), 7.8);
+        assert_eq!(KmPerSec(0.0).abs().value(), 0.0);
+    }
+
+    // --- Radians::tan() ---
+
+    #[test]
+    fn radians_tan() {
+        // tan(π/4) = 1
+        assert!((Radians(std::f64::consts::FRAC_PI_4).tan() - 1.0).abs() < 1e-15);
+        // tan(0) = 0
+        assert!(Radians(0.0).tan().abs() < 1e-15);
+    }
+
+    // --- normalize_signed boundary at exactly -π ---
+
+    #[test]
+    fn radians_normalize_signed_at_neg_pi() {
+        // At exactly -π, should wrap to positive π (since range is (-π, π])
+        let r = Radians(-PI).normalize_signed();
+        assert!((r.value() - PI).abs() < 1e-14);
+    }
+
+    #[test]
+    fn radians_normalize_signed_at_pi() {
+        // At exactly π, should stay at π
+        let r = Radians(PI).normalize_signed();
+        assert!((r.value() - PI).abs() < 1e-14);
+    }
+
+    #[test]
+    fn radians_normalize_large_negative() {
+        // -3π should normalize to -π + 2π = π ... but modulo: -3π % 2π = -π → +2π = π
+        let r = Radians(-3.0 * PI).normalize_signed();
+        assert!((r.value() - PI).abs() < 1e-13);
+    }
+
+    #[test]
+    fn radians_normalize_zero() {
+        assert_eq!(Radians(0.0).normalize().value(), 0.0);
+        assert_eq!(Radians(0.0).normalize_signed().value(), 0.0);
+    }
+
+    // --- Eccentricity edge cases ---
+
+    #[test]
+    fn eccentricity_value_and_display() {
+        let e = Eccentricity::new(0.0167).unwrap();
+        assert!((e.value() - 0.0167).abs() < 1e-15);
+        assert_eq!(format!("{}", e), "e=0.0167");
+    }
+
+    #[test]
+    fn eccentricity_elliptical_boundary() {
+        // Exactly 0 is valid elliptical (circular)
+        assert!(Eccentricity::elliptical(0.0).is_some());
+        // Just below 1 is valid elliptical
+        assert!(Eccentricity::elliptical(0.999999).is_some());
+        // Exactly 1 is NOT elliptical
+        assert!(Eccentricity::elliptical(1.0).is_none());
+    }
+
+    #[test]
+    fn eccentricity_partial_ord() {
+        let low = Eccentricity::new(0.1).unwrap();
+        let high = Eccentricity::new(0.9).unwrap();
+        assert!(low < high);
+    }
+
+    // --- Zero and special float tests ---
+
+    #[test]
+    fn unit_zero_operations() {
+        let z = Km(0.0);
+        assert_eq!((z + z).value(), 0.0);
+        assert_eq!((z - z).value(), 0.0);
+        assert_eq!((z * 100.0).value(), 0.0);
+        assert_eq!((-z).value(), 0.0);
+    }
+
+    #[test]
+    fn unit_division_by_itself() {
+        assert_eq!(Km(42.0) / Km(42.0), 1.0);
+        assert_eq!(KmPerSec(7.784) / KmPerSec(7.784), 1.0);
+        assert_eq!(Seconds(3600.0) / Seconds(3600.0), 1.0);
+        assert_eq!(Mu(3.986e5) / Mu(3.986e5), 1.0);
+        assert_eq!(Radians(PI) / Radians(PI), 1.0);
+    }
 }

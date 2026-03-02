@@ -218,4 +218,87 @@ mod tests {
         // ≈ 2.99e23 / 6.86e20 ≈ 436 N·m
         assert!((torque - 436.0).abs() < 10.0, "torque = {torque}");
     }
+
+    // --- Edge case tests ---
+
+    #[test]
+    fn required_pointing_clamp_to_frac_pi_2() {
+        // When miss tolerance exceeds what's achievable, sin_theta > 1 → clamp
+        let theta = required_pointing_rad(0.001, 1.0, 1_000_000.0);
+        assert_eq!(theta, std::f64::consts::FRAC_PI_2);
+    }
+
+    #[test]
+    fn flip_rcs_torque_triangular_profile() {
+        // When ramp_time >= flip_duration/2, coast_duration <= 0 → triangular
+        let torque_tri = flip_rcs_torque(300_000.0, 5.0, 60.0, 30.0);
+        // coast = 60 - 60 = 0, exactly boundary
+        // ω_peak = 2π / 60; α = ω_peak / 30
+        // I = 0.5 * 300000 * 25 = 3,750,000
+        // torque = I * 2π/60 / 30 = 3750000 * 2π / 1800
+        let expected = 3_750_000.0 * 2.0 * std::f64::consts::PI / 1800.0;
+        assert!((torque_tri - expected).abs() < 1.0, "torque = {torque_tri}");
+    }
+
+    #[test]
+    fn flip_rcs_torque_overlong_ramp() {
+        // Ramp longer than half the flip duration → still triangular
+        let torque = flip_rcs_torque(300_000.0, 5.0, 60.0, 40.0);
+        assert!(torque > 0.0, "torque should be positive: {torque}");
+    }
+
+    #[test]
+    fn gravity_gradient_max_at_45_degrees() {
+        let gm = 3.986e14;
+        let r = 7_000_000.0;
+        let m = 300_000.0;
+        let l = 100.0;
+        let torque_45 =
+            gravity_gradient_torque(gm, r, m, l, std::f64::consts::FRAC_PI_4);
+        let torque_30 =
+            gravity_gradient_torque(gm, r, m, l, std::f64::consts::FRAC_PI_6);
+        let torque_60 = gravity_gradient_torque(
+            gm,
+            r,
+            m,
+            l,
+            std::f64::consts::FRAC_PI_3,
+        );
+        // sin(2*45°) = sin(90°) = 1, which is the maximum
+        assert!(torque_45 > torque_30, "45° > 30°");
+        assert!(torque_45 > torque_60, "45° > 60°");
+    }
+
+    #[test]
+    fn velocity_error_zero_burn_time() {
+        assert_eq!(velocity_error_from_pointing(20.0, 0.0, 0.1), 0.0);
+    }
+
+    #[test]
+    fn velocity_error_zero_accel() {
+        assert_eq!(velocity_error_from_pointing(0.0, 3600.0, 0.1), 0.0);
+    }
+
+    #[test]
+    fn miss_distance_large_angle() {
+        // At exactly π/2 rad (90°), sin(π/2) = 1 → full lateral
+        let miss = miss_distance_km(20.0, 3600.0, std::f64::consts::FRAC_PI_2);
+        // 0.5 * 20 * 3600² * 1.0 / 1000 = 129600 km
+        assert!((miss - 129_600.0).abs() < 1.0, "miss = {miss}");
+    }
+
+    #[test]
+    fn accuracy_100_percent_is_zero_error() {
+        let theta = accuracy_to_pointing_error_rad(1.0);
+        assert!(theta.abs() < 1e-15, "theta = {theta}");
+    }
+
+    #[test]
+    fn accuracy_0_percent_is_pi_over_2() {
+        let theta = accuracy_to_pointing_error_rad(0.0);
+        assert!(
+            (theta - std::f64::consts::FRAC_PI_2).abs() < 1e-15,
+            "theta = {theta}"
+        );
+    }
 }
