@@ -527,4 +527,27 @@ mod tests {
         // Verify c = 299,792.458 km/s (exact by definition)
         assert!((C_KM_S - 299_792.458).abs() < 1e-10);
     }
+
+    #[test]
+    fn test_label_ja_all_variants() {
+        assert_eq!(CommFeasibility::RealTime.label_ja(), "リアルタイム通信可能");
+        assert_eq!(
+            CommFeasibility::NearRealTime.label_ja(),
+            "準リアルタイム（顕著な遅延あり）"
+        );
+        assert_eq!(CommFeasibility::Delayed.label_ja(), "遅延通信（蓄積転送）");
+        assert_eq!(
+            CommFeasibility::DeepSpace.label_ja(),
+            "深宇宙通信（大幅な遅延）"
+        );
+    }
+
+    #[test]
+    fn test_label_ja_via_classify() {
+        // Verify label_ja works when called on classify results
+        let rt = CommFeasibility::classify(1.0);
+        assert!(!rt.label_ja().is_empty());
+        let ds = CommFeasibility::classify(10_000.0);
+        assert!(!ds.label_ja().is_empty());
+    }
 }

@@ -883,4 +883,144 @@ mod tests {
             ba.value()
         );
     }
+
+    #[test]
+    fn test_mean_elements_earth() {
+        let e = mean_elements(Planet::Earth);
+        // Earth semi-major axis ≈ 1.0 AU
+        assert!(
+            (e.a0 - 1.0).abs() < 0.01,
+            "Earth a0 = {}, expected ~1.0 AU",
+            e.a0
+        );
+        // Earth eccentricity ≈ 0.0167
+        assert!(
+            (e.e0 - 0.0167).abs() < 0.01,
+            "Earth e0 = {}, expected ~0.0167",
+            e.e0
+        );
+        // Earth inclination to ecliptic ≈ 0° (by definition)
+        assert!(
+            e.i0.abs() < 0.01,
+            "Earth i0 = {}, expected ~0°",
+            e.i0
+        );
+    }
+
+    #[test]
+    fn test_mean_elements_all_planets_sane() {
+        for planet in Planet::ALL {
+            let e = mean_elements(planet);
+            // Semi-major axis must be positive
+            assert!(e.a0 > 0.0, "{:?}: a0 must be positive, got {}", planet, e.a0);
+            // Eccentricity in [0, 1)
+            assert!(
+                e.e0 >= 0.0 && e.e0 < 1.0,
+                "{:?}: eccentricity must be in [0,1), got {}",
+                planet,
+                e.e0
+            );
+            // Inclination in [0, 180)
+            assert!(
+                e.i0.abs() < 180.0,
+                "{:?}: inclination out of range: {}",
+                planet,
+                e.i0
+            );
+            // Mean longitude rate must be positive (prograde)
+            assert!(
+                e.l_dot > 0.0,
+                "{:?}: mean longitude rate should be positive, got {}",
+                planet,
+                e.l_dot
+            );
+        }
+    }
+
+    #[test]
+    fn test_mean_elements_ordering() {
+        // Planets further from Sun have larger semi-major axes
+        let mercury = mean_elements(Planet::Mercury);
+        let venus = mean_elements(Planet::Venus);
+        let earth = mean_elements(Planet::Earth);
+        let mars = mean_elements(Planet::Mars);
+        let jupiter = mean_elements(Planet::Jupiter);
+        let saturn = mean_elements(Planet::Saturn);
+        let uranus = mean_elements(Planet::Uranus);
+        let neptune = mean_elements(Planet::Neptune);
+
+        assert!(mercury.a0 < venus.a0);
+        assert!(venus.a0 < earth.a0);
+        assert!(earth.a0 < mars.a0);
+        assert!(mars.a0 < jupiter.a0);
+        assert!(jupiter.a0 < saturn.a0);
+        assert!(saturn.a0 < uranus.a0);
+        assert!(uranus.a0 < neptune.a0);
+    }
+
+    #[test]
+    fn test_mean_elements_known_values() {
+        // Mars semi-major axis ≈ 1.524 AU
+        let mars = mean_elements(Planet::Mars);
+        assert!(
+            (mars.a0 - 1.524).abs() < 0.01,
+            "Mars a0 = {}, expected ~1.524",
+            mars.a0
+        );
+        // Jupiter semi-major axis ≈ 5.203 AU
+        let jup = mean_elements(Planet::Jupiter);
+        assert!(
+            (jup.a0 - 5.203).abs() < 0.01,
+            "Jupiter a0 = {}, expected ~5.203",
+            jup.a0
+        );
+        // Neptune semi-major axis ≈ 30.07 AU
+        let nep = mean_elements(Planet::Neptune);
+        assert!(
+            (nep.a0 - 30.07).abs() < 0.1,
+            "Neptune a0 = {}, expected ~30.07",
+            nep.a0
+        );
+    }
+
+    #[test]
+    fn test_arrival_position_mars_after_hohmann() {
+        // Departure from Earth at J2000, ~259 day Hohmann to Mars
+        let jd_j2000 = 2_451_545.0;
+        let transfer_time = Seconds(259.0 * 86400.0);
+        let pos = arrival_position(Planet::Mars, jd_j2000, transfer_time);
+
+        // Mars should be at some valid heliocentric position (in km)
+        let dist_km = (pos.x * pos.x + pos.y * pos.y).sqrt();
+        let dist_au = dist_km / AU_KM;
+        assert!(
+            dist_au > 1.3 && dist_au < 1.7,
+            "Mars distance should be 1.3-1.7 AU, got {} AU",
+            dist_au
+        );
+    }
+
+    #[test]
+    fn test_arrival_position_equals_planet_position_at_arrival_jd() {
+        // arrival_position should equal planet_position at departure_jd + transfer_time/86400
+        let jd = 2_460_000.0;
+        let transfer = Seconds(100.0 * 86400.0);
+        let arrival_jd = jd + 100.0;
+
+        let pos_via_arrival = arrival_position(Planet::Jupiter, jd, transfer);
+        let pos_via_direct = planet_position(Planet::Jupiter, arrival_jd);
+
+        assert!(
+            (pos_via_arrival.x - pos_via_direct.x).abs() < 1e-10,
+            "x mismatch: {} vs {}",
+            pos_via_arrival.x,
+            pos_via_direct.x
+        );
+        assert!(
+            (pos_via_arrival.y - pos_via_direct.y).abs() < 1e-10,
+            "y mismatch: {} vs {}",
+            pos_via_arrival.y,
+            pos_via_direct.y
+        );
+    }
 }
