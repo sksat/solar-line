@@ -362,6 +362,21 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes('"yLabel"') && content.includes("推力 (MN)"),
       "thrust profile should have thrust axis label");
   });
+
+  it("mass vs transit time bar chart", () => {
+    assert.ok(
+      content.includes("質量別の最小遷移時間"),
+      "should have mass vs transit time bar chart",
+    );
+    assert.ok(
+      content.includes("299t（境界）") && content.includes("value: 72"),
+      "chart should show 299t boundary mass at exactly 72 hours",
+    );
+    assert.ok(
+      content.includes("48,000t（公称）") && content.includes("value: 912.4"),
+      "chart should show 48,000t nominal at 912.4 hours",
+    );
+  });
 });
 
 describe("EP02 article content validation", () => {
