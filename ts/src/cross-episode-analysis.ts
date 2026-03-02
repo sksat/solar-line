@@ -10,7 +10,7 @@
 import type { SummaryReport, ComparisonTable, ComparisonRow, OrbitalDiagram } from "./report-types.ts";
 import { computeTimeline, findOptimalEpoch, type TimelineEvent } from "./timeline-analysis.ts";
 import { calendarToJD, jdToDateString, planetPosition } from "./ephemeris.ts";
-import { KESTREL, THRUST_MN, NOMINAL_MASS_T, AU_KM } from "./kestrel.ts";
+import { KESTREL, THRUST_MN, DAMAGED_THRUST_MN, NOMINAL_MASS_T, AU_KM } from "./kestrel.ts";
 
 /** Ship specifications from worldbuilding + episode depictions (derived from shared KESTREL) */
 export const SHIP_SPECS = {
@@ -45,7 +45,7 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
     transferTime: "72時間",
     brachistochroneDeltaV: 8497.39,
     massBoundaryT: 299,
-    thrustUsedMN: 9.8,
+    thrustUsedMN: THRUST_MN,
     verdict: "条件付き（質量 ≤299t で成立）",
     departureBody: "火星",
     arrivalBody: "ガニメデ（木星系）",
@@ -67,7 +67,7 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
     transferTime: "143時間12分",
     brachistochroneDeltaV: 11165,
     massBoundaryT: 452.5,
-    thrustUsedMN: 9.8,
+    thrustUsedMN: THRUST_MN,
     verdict: "条件付き（質量 ≤452.5t で成立）",
     departureBody: "エンケラドス（土星系）",
     arrivalBody: "タイタニア（天王星系）",
@@ -78,7 +78,7 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
     transferTime: "507h（EP05複合航路の出発計画）",
     brachistochroneDeltaV: 1202, // at 48,000t, 65% thrust
     massBoundaryT: null, // wide range feasible
-    thrustUsedMN: 6.37,
+    thrustUsedMN: DAMAGED_THRUST_MN,
     verdict: "条件付き（幅広い質量で成立）",
     departureBody: "タイタニア（天王星系）",
     arrivalBody: "地球",
@@ -89,7 +89,7 @@ export const EPISODE_SUMMARIES: EpisodeSummary[] = [
     transferTime: "507h（複合航路: 巡航375h + フライバイ + 地球投入）",
     brachistochroneDeltaV: 15207, // at 300t, 65% thrust
     massBoundaryT: null, // analysis pending subtitle data
-    thrustUsedMN: 6.37,
+    thrustUsedMN: DAMAGED_THRUST_MN,
     verdict: "暫定: 条件付き（捕捉ΔV 0.42〜3.18 km/s）",
     departureBody: "タイタニア（天王星系）",
     arrivalBody: "地球",

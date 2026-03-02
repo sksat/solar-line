@@ -129,7 +129,7 @@ export function brachistochroneByMass() {
     { label: "500t（ep03境界値相当）", massKg: 500_000 },
     { label: "1,000t", massKg: 1_000_000 },
     { label: "3,929t（ep04 30日境界）", massKg: 3_929_000 },
-    { label: "48,000t（公称質量）", massKg: 48_000_000 },
+    { label: "48,000t（公称質量）", massKg: KESTREL.massKg },
   ];
 
   return massScenarios.map(s => {

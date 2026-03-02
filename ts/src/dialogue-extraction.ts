@@ -286,3 +286,80 @@ export function deduplicateRollingText(
 
   return result;
 }
+
+// ---------------------------------------------------------------------------
+// Whisper-specific line extraction
+// ---------------------------------------------------------------------------
+
+/**
+ * Extract lines from Whisper segments with minimal merging.
+ *
+ * Whisper segments are already sentence-level, so we only merge:
+ * - Segments with zero or negative gap (overlapping timestamps)
+ * - Very short segments (< 3 chars) that are likely fragments
+ */
+export function extractWhisperLines(
+  entries: RawSubtitleEntry[],
+  episodeSlug: string,
+): ExtractedLine[] {
+  const nonEmpty = entries.filter((e) => e.text.trim().length > 0);
+  if (nonEmpty.length === 0) return [];
+
+  const lines: ExtractedLine[] = [];
+  let lineNum = 1;
+
+  let currentIds: string[] = [nonEmpty[0].id];
+  let currentText = nonEmpty[0].text.trim();
+  let currentStart = nonEmpty[0].startMs;
+  let currentEnd = nonEmpty[0].endMs;
+  let currentReasons: MergeReason[] = [];
+
+  for (let i = 1; i < nonEmpty.length; i++) {
+    const next = nonEmpty[i];
+    const gap = next.startMs - currentEnd;
+    const nextText = next.text.trim();
+
+    // Merge only when: zero/negative gap AND current segment is very short (fragment)
+    const isFragment = currentText.length < 3;
+    const isOverlap = gap <= 0;
+    const shouldMerge = isOverlap && isFragment;
+
+    if (shouldMerge) {
+      currentText = currentText + nextText;
+      currentEnd = Math.max(currentEnd, next.endMs);
+      currentIds.push(next.id);
+      if (!currentReasons.includes("small_gap")) {
+        currentReasons.push("small_gap");
+      }
+    } else {
+      // Emit the accumulated line
+      lines.push({
+        lineId: `${episodeSlug}-line-${String(lineNum).padStart(3, "0")}`,
+        startMs: currentStart,
+        endMs: currentEnd,
+        text: currentText,
+        rawEntryIds: currentIds,
+        mergeReasons: currentReasons,
+      });
+      lineNum++;
+
+      currentIds = [next.id];
+      currentText = nextText;
+      currentStart = next.startMs;
+      currentEnd = next.endMs;
+      currentReasons = [];
+    }
+  }
+
+  // Emit the last accumulated line
+  lines.push({
+    lineId: `${episodeSlug}-line-${String(lineNum).padStart(3, "0")}`,
+    startMs: currentStart,
+    endMs: currentEnd,
+    text: currentText,
+    rawEntryIds: currentIds,
+    mergeReasons: currentReasons,
+  });
+
+  return lines;
+}

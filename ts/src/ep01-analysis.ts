@@ -142,7 +142,7 @@ export function reachableDistance(timeSec: number = EP01_CONTRACT.deadlineSec) {
  */
 export function massSensitivity() {
   const interpretations = [
-    { label: "48,000 t (48M kg) — as stated", massKg: 48_000_000 },
+    { label: "48,000 t (48M kg) — as stated", massKg: KESTREL_BASE.massKg },
     { label: "4,800 t (4.8M kg) — possible typo", massKg: 4_800_000 },
     { label: "480 t (480K kg) — small freighter", massKg: 480_000 },
     { label: "48 t (48K kg) — very light", massKg: 48_000 },

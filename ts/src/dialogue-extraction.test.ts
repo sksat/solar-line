@@ -15,6 +15,7 @@ import {
   extractLines,
   validateEpisodeLines,
   deduplicateRollingText,
+  extractWhisperLines,
 } from "./dialogue-extraction.ts";
 
 // ---------------------------------------------------------------------------
@@ -477,5 +478,102 @@ describe("deduplicateRollingText", () => {
     const result = deduplicateRollingText([e("1", "Only one")]);
     assert.equal(result.length, 1);
     assert.equal(result[0].text, "Only one");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractWhisperLines
+// ---------------------------------------------------------------------------
+
+describe("extractWhisperLines", () => {
+  it("returns empty array for empty input", () => {
+    assert.deepEqual(extractWhisperLines([], "ep01"), []);
+  });
+
+  it("returns one line per segment when no merging needed", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 0, 2000, "First sentence."),
+      cue("s2", 2500, 5000, "Second sentence."),
+    ];
+    const lines = extractWhisperLines(entries, "ep01");
+    assert.equal(lines.length, 2);
+    assert.equal(lines[0].text, "First sentence.");
+    assert.equal(lines[0].lineId, "ep01-line-001");
+    assert.equal(lines[1].text, "Second sentence.");
+    assert.equal(lines[1].lineId, "ep01-line-002");
+  });
+
+  it("merges fragment segments with zero gap", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 0, 1000, "あ"),       // < 3 chars (fragment)
+      cue("s2", 1000, 3000, "のですね"), // zero gap, merges
+    ];
+    const lines = extractWhisperLines(entries, "ep02");
+    assert.equal(lines.length, 1);
+    assert.equal(lines[0].text, "あのですね");
+    assert.deepEqual(lines[0].rawEntryIds, ["s1", "s2"]);
+    assert.ok(lines[0].mergeReasons.includes("small_gap"));
+  });
+
+  it("does not merge non-fragment segments even with zero gap", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 0, 1000, "Hello world"),  // > 3 chars
+      cue("s2", 1000, 3000, "Goodbye"),    // zero gap but not fragment
+    ];
+    const lines = extractWhisperLines(entries, "ep01");
+    assert.equal(lines.length, 2);
+  });
+
+  it("does not merge fragments with positive gap", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 0, 1000, "Hi"),   // < 3 chars
+      cue("s2", 1500, 3000, "There"), // positive gap
+    ];
+    const lines = extractWhisperLines(entries, "ep01");
+    assert.equal(lines.length, 2);
+  });
+
+  it("skips empty text entries", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 0, 1000, "Valid"),
+      cue("s2", 1000, 2000, "   "),
+      cue("s3", 2000, 3000, "Also valid"),
+    ];
+    const lines = extractWhisperLines(entries, "ep01");
+    assert.equal(lines.length, 2);
+    assert.equal(lines[0].text, "Valid");
+    assert.equal(lines[1].text, "Also valid");
+  });
+
+  it("preserves timestamps from segments", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 100, 500, "Test"),
+    ];
+    const lines = extractWhisperLines(entries, "ep03");
+    assert.equal(lines[0].startMs, 100);
+    assert.equal(lines[0].endMs, 500);
+  });
+
+  it("assigns sequential line IDs with episode prefix", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 0, 1000, "One"),
+      cue("s2", 1500, 2500, "Two"),
+      cue("s3", 3000, 4000, "Three"),
+    ];
+    const lines = extractWhisperLines(entries, "ep05");
+    assert.deepEqual(
+      lines.map(l => l.lineId),
+      ["ep05-line-001", "ep05-line-002", "ep05-line-003"],
+    );
+  });
+
+  it("handles overlapping timestamps by extending end time", () => {
+    const entries: RawSubtitleEntry[] = [
+      cue("s1", 0, 1500, "あ"),        // fragment
+      cue("s2", 1000, 3000, "のですね"), // overlaps (gap = -500)
+    ];
+    const lines = extractWhisperLines(entries, "ep01");
+    assert.equal(lines.length, 1);
+    assert.equal(lines[0].endMs, 3000); // max(1500, 3000)
   });
 });
