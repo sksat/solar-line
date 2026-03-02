@@ -101,7 +101,8 @@ export function markdownToHtml(md: string, options?: MarkdownOptions): string {
     if (headingMatch) {
       closeList();
       const level = headingMatch[1].length;
-      output.push(`<h${level}>${inlineFormat(headingMatch[2], inlineOpts)}</h${level}>`);
+      const headingId = slugify(headingMatch[2]);
+      output.push(`<h${level} id="${escapeHtml(headingId)}">${inlineFormat(headingMatch[2], inlineOpts)}</h${level}>`);
       continue;
     }
 

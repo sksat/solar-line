@@ -79,8 +79,8 @@ describe("escapeHtml", () => {
 describe("markdownToHtml", () => {
   it("converts headings", () => {
     const html = markdownToHtml("# Title\n## Subtitle");
-    assert.ok(html.includes("<h1>Title</h1>"));
-    assert.ok(html.includes("<h2>Subtitle</h2>"));
+    assert.ok(html.includes('<h1 id="title">Title</h1>'));
+    assert.ok(html.includes('<h2 id="subtitle">Subtitle</h2>'));
   });
 
   it("converts paragraphs", () => {
@@ -194,7 +194,7 @@ describe("markdownToHtml", () => {
   it("closes ordered list before heading", () => {
     const html = markdownToHtml("1. item\n## Heading");
     assert.ok(html.includes("</ol>"));
-    assert.ok(html.includes("<h2>Heading</h2>"));
+    assert.ok(html.includes('<h2 id="heading">Heading</h2>'));
   });
 
   it("handles inline formatting in ordered list items", () => {
@@ -240,7 +240,7 @@ describe("markdownToHtml", () => {
   it("preserves math in headings", () => {
     const html = markdownToHtml("## The $\\Delta V$ Budget");
     assert.ok(html.includes("$\\Delta V$"));
-    assert.ok(html.includes("<h2>"));
+    assert.ok(html.includes('<h2 id="the-delta-v-budget">'));
   });
 
   it("does not treat single $ as math delimiter", () => {
@@ -1057,7 +1057,7 @@ describe("renderLogsIndex", () => {
 describe("renderLogPage", () => {
   it("renders markdown content as HTML", () => {
     const html = renderLogPage("2026-02-23-session", "2026-02-23", "# Session Log\n\nDid some analysis.");
-    assert.ok(html.includes("<h1>Session Log</h1>"));
+    assert.ok(html.includes('id="session-log">Session Log</h1>'));
     assert.ok(html.includes("Did some analysis."));
   });
 
