@@ -50,6 +50,27 @@ SOLAR LINE 考証プロジェクトは [Claude Code](https://claude.ai/code) に
 
 実質的な「仕事」（新規入力トークンとモデル出力）はトークン全体のごくわずかです。残りはコンテキスト維持のためのキャッシュ操作が占めています。キャッシュ読み取りは、過去のコンテキストを再送する際にキャッシュ済みトークンを再利用する仕組みで、API課金が大幅に割引されます。
 
+```chart:bar
+caption: トークン分布（対数スケール）— 全体の97.3%がキャッシュ読み取り
+unit: "%"
+logScale: true
+bars:
+  - label: キャッシュ読み取り
+    value: 97.3
+    color: "#22c55e"
+    annotation: "350M tokens"
+  - label: キャッシュ作成
+    value: 2.7
+    color: "#3b82f6"
+    annotation: "9.7M tokens"
+  - label: 入力+出力（実I/O）
+    value: 0.08
+    color: "#ef4444"
+    annotation: "<0.3M tokens"
+```
+
+対数スケールで表示すると、キャッシュ読み取りが全トークンの圧倒的多数を占めていることが明確になる。実質的な新規処理（赤）は0.1%未満であり、残りの99.9%以上はコンテキスト維持のためのキャッシュ操作である。
+
 ## コスト内訳
 
 測定可能なコスト（$6.57）の100%がHaikuサブエージェントから発生しています。Opusメインセッションは Max サブスクリプションに含まれるため追加コストなし。
@@ -63,6 +84,26 @@ SOLAR LINE 考証プロジェクトは [Claude Code](https://claude.ai/code) に
 | Opus | 12回 (10%) | 7% | $0* |
 
 *Maxサブスクリプション対象のため追加コストなし
+
+```chart:bar
+caption: サブエージェント モデル別起動回数と消費トークン比率
+unit: "回"
+bars:
+  - label: Haiku（95回/72%）
+    value: 95
+    color: "#a371f7"
+    annotation: "72% of tokens, $6.57"
+  - label: Sonnet（13回/21%）
+    value: 13
+    color: "#58a6ff"
+    annotation: "21% of tokens, $0*"
+  - label: Opus（12回/7%）
+    value: 12
+    color: "#f97316"
+    annotation: "7% of tokens, $0*"
+```
+
+Haiku が起動回数（79%）・トークン量（72%）ともに最多で、単純タスクを大量に処理していた。Sonnet は少ない起動回数ながらトークン量は21%を占め、1回あたりの処理が重い。この分析後、品質上の理由から Haiku→Sonnet へデフォルトモデルを変更した。
 
 ### サブエージェントの特性
 

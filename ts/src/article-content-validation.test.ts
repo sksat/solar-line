@@ -2530,6 +2530,36 @@ describe("ai-costs.md content validation", () => {
       "bar chart should include cost values",
     );
   });
+
+  it("token distribution bar chart with log scale", () => {
+    assert.ok(
+      content.includes("トークン分布（対数スケール）"),
+      "should have token distribution bar chart with log scale",
+    );
+    assert.ok(
+      content.includes("キャッシュ読み取り") && content.includes("350M tokens"),
+      "should show cache read tokens annotation",
+    );
+    assert.ok(
+      content.includes("入力+出力（実I/O）"),
+      "should show real I/O category in token distribution chart",
+    );
+  });
+
+  it("model usage breakdown bar chart", () => {
+    assert.ok(
+      content.includes("モデル別起動回数と消費トークン比率"),
+      "should have model usage breakdown bar chart",
+    );
+    assert.ok(
+      content.includes("Haiku（95回/72%）"),
+      "should show Haiku launch count and token share",
+    );
+    assert.ok(
+      content.includes("Sonnet（13回/21%）"),
+      "should show Sonnet launch count and token share",
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
