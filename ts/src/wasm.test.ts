@@ -779,3 +779,391 @@ describe("WASM bridge: orbit propagation", () => {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Communications functions
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: communications", () => {
+  const j2000 = 2_451_545.0;
+
+  it("comm_feasibility_label returns Japanese label", () => {
+    // 0s delay → real-time
+    const label0 = wasm.comm_feasibility_label(0);
+    assert.ok(typeof label0 === "string" && label0.length > 0, `label="${label0}"`);
+    // 600s delay → should be different classification
+    const label600 = wasm.comm_feasibility_label(600);
+    assert.ok(typeof label600 === "string" && label600.length > 0, `label="${label600}"`);
+  });
+
+  it("free_space_path_loss_db returns positive dB for deep space", () => {
+    const loss = wasm.free_space_path_loss_db(778_570_000, 32e9); // Jupiter distance, Ka-band
+    assert.ok(loss > 200, `FSPL=${loss} dB for Jupiter distance Ka-band`);
+  });
+
+  it("planet_distance_range returns [min, max] for Earth-Mars", () => {
+    const range = wasm.planet_distance_range("earth", "mars");
+    assert.equal(range.length, 2, "should return 2 values");
+    const [min, max] = [range[0], range[1]];
+    assert.ok(min > 50_000_000 && min < 80_000_000, `min=${min} km`);
+    assert.ok(max > 350_000_000 && max < 410_000_000, `max=${max} km`);
+    assert.ok(min < max, "min < max");
+  });
+
+  it("planet_light_delay returns seconds for Earth-Mars at J2000", () => {
+    const delay = wasm.planet_light_delay("earth", "mars", j2000);
+    // Light delay depends on actual distance, should be 3-22 min → 180-1320s
+    assert.ok(delay > 100 && delay < 1400, `delay=${delay}s`);
+  });
+
+  it("planet_light_delay_range returns [min, max] seconds", () => {
+    const range = wasm.planet_light_delay_range("earth", "mars");
+    assert.equal(range.length, 2, "should return 2 values");
+    assert.ok(range[0] > 100 && range[0] < 500, `min delay=${range[0]}s`);
+    assert.ok(range[1] > 1000 && range[1] < 1400, `max delay=${range[1]}s`);
+  });
+
+  it("ship_planet_light_delay for ship near Earth ≈ 0", () => {
+    // Ship at ~1 AU from Sun on x-axis (near Earth)
+    const pos = wasm.planet_position("earth", j2000);
+    const delay = wasm.ship_planet_light_delay(pos.x, pos.y, "earth", j2000);
+    assert.ok(delay < 10, `delay=${delay}s, ship near Earth should be ~0`);
+  });
+
+  it("comm_timeline_linear returns flat array with expected stride", () => {
+    const travelTime = 86400 * 30; // 30 days
+    const nSteps = 5;
+    const result = wasm.comm_timeline_linear("earth", "mars", j2000, travelTime, nSteps);
+    // Returns flat array with stride 6: [jd, elapsed_s, ship_x, ship_y, delay_s, feasibility_code, ...]
+    assert.ok(result.length >= 6, `result has ${result.length} elements`);
+    assert.equal(result.length % 6, 0, `length should be multiple of 6, got ${result.length}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Attitude and pointing functions
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: attitude and pointing", () => {
+  it("miss_distance_km increases with pointing error", () => {
+    const accel = 0.2; // m/s²
+    const burnTime = 3600; // 1 hour
+    const miss1 = wasm.miss_distance_km(accel, burnTime, 0.001); // ~0.057°
+    const miss2 = wasm.miss_distance_km(accel, burnTime, 0.01); // ~0.57°
+    assert.ok(miss2 > miss1, `miss2=${miss2} > miss1=${miss1}`);
+    assert.ok(miss1 > 0, `miss1=${miss1} should be positive`);
+  });
+
+  it("required_pointing_rad returns correct inverse", () => {
+    const accel = 0.2;
+    const burnTime = 3600;
+    const maxMiss = 100; // 100 km
+    const pointing = wasm.required_pointing_rad(accel, burnTime, maxMiss);
+    assert.ok(pointing > 0, `pointing=${pointing} rad`);
+    // Verify: miss at this pointing should be ~maxMiss
+    const actualMiss = wasm.miss_distance_km(accel, burnTime, pointing);
+    assert.ok(
+      Math.abs(actualMiss - maxMiss) < 1,
+      `miss at computed pointing=${actualMiss} km ≈ ${maxMiss} km`,
+    );
+  });
+
+  it("velocity_error_from_pointing is positive", () => {
+    const err = wasm.velocity_error_from_pointing(0.2, 3600, 0.001);
+    assert.ok(err > 0, `velocity error=${err}`);
+  });
+
+  it("accuracy_to_pointing_error_rad converts fraction to radians", () => {
+    const err = wasm.accuracy_to_pointing_error_rad(0.998); // 99.8% accuracy
+    assert.ok(err > 0 && err < 0.1, `pointing error=${err} rad`);
+  });
+
+  it("delta_v_correction_fraction is small for low exhaust velocity", () => {
+    // Low exhaust velocity → negligible relativistic correction
+    const frac = wasm.delta_v_correction_fraction(10.0, 3.0); // 10 km/s, mass ratio 3
+    assert.ok(Math.abs(frac) < 0.01, `correction fraction=${frac}`);
+  });
+
+  it("flip_angular_rate for 60s flip", () => {
+    const rate = wasm.flip_angular_rate(60); // 60 second flip
+    // π radians / 60 seconds ≈ 0.0524 rad/s
+    assert.ok(
+      Math.abs(rate - Math.PI / 60) < 0.001,
+      `angular rate=${rate} rad/s`,
+    );
+  });
+
+  it("flip_angular_momentum is positive", () => {
+    const L = wasm.flip_angular_momentum(48_000_000, 21.4, 0.05);
+    assert.ok(L > 0, `angular momentum=${L} kg·m²/s`);
+  });
+
+  it("flip_rcs_torque is positive", () => {
+    const torque = wasm.flip_rcs_torque(48_000_000, 21.4, 60, 5);
+    assert.ok(torque > 0, `RCS torque=${torque} N·m`);
+  });
+
+  it("gravity_gradient_torque is non-negative", () => {
+    const tau = wasm.gravity_gradient_torque(
+      3.986004418e14, // Earth GM in m³/s²
+      6_771_000, // 400km altitude in meters
+      48_000_000, // 48kt mass
+      42.8, // ship length in meters
+      0.1, // 0.1 rad angle
+    );
+    assert.ok(tau >= 0, `gravity gradient torque=${tau} N·m`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Jupiter radiation
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: Jupiter radiation", () => {
+  it("jupiter_radius_km ≈ 71,492 km", () => {
+    const r = wasm.jupiter_radius_km();
+    assert.ok(
+      Math.abs(r - 71_492) < 100,
+      `Jupiter radius=${r} km`,
+    );
+  });
+
+  it("jupiter_dose_rate_krad_h is higher closer to Jupiter", () => {
+    // Model covers 6-63 Rj (inner belt starts at 6 Rj)
+    const rate10 = wasm.jupiter_dose_rate_krad_h(10); // 10 Rj (inner belt)
+    const rate20 = wasm.jupiter_dose_rate_krad_h(20); // 20 Rj (middle magnetosphere)
+    assert.ok(rate10 > rate20, `dose at 10Rj=${rate10} > dose at 20Rj=${rate20}`);
+    assert.ok(rate10 > 0, `dose rate at 10Rj=${rate10} krad/h`);
+  });
+
+  it("jupiter_transit_analysis returns comprehensive result", () => {
+    // Transit from 15 Rj outward to 50 Rj at 7 km/s radial, 100 krad shield
+    const result = wasm.jupiter_transit_analysis(15, 50, 7, 100);
+    assert.ok(result.total_dose_krad > 0, `total dose=${result.total_dose_krad}`);
+    assert.ok(typeof result.shield_survives === "boolean", "has shield_survives");
+    assert.ok(result.peak_dose_rate_krad_h > 0, "has peak dose rate");
+  });
+
+  it("jupiter_minimum_survival_velocity is positive", () => {
+    const v = wasm.jupiter_minimum_survival_velocity(20, 5, 500);
+    assert.ok(v > 0, `min survival velocity=${v} km/s`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Plasmoid and plasma functions
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: plasmoid analysis", () => {
+  it("magnetic_pressure_pa for typical plasmoid field", () => {
+    const p = wasm.magnetic_pressure_pa(1e-7); // 100 nT
+    assert.ok(p > 0, `magnetic pressure=${p} Pa`);
+    // P = B²/(2μ₀) ≈ (1e-7)²/(2*4π*1e-7) ≈ 4e-9 Pa
+    assert.ok(p < 1e-6, `pressure should be small: ${p} Pa`);
+  });
+
+  it("ram_pressure_pa for solar wind", () => {
+    const density = 1e-20; // kg/m³ (typical solar wind)
+    const velocity = 400_000; // 400 km/s in m/s
+    const p = wasm.ram_pressure_pa(density, velocity);
+    assert.ok(p > 0, `ram pressure=${p} Pa`);
+  });
+
+  it("plasma_number_density_to_mass converts correctly", () => {
+    const n = 1e6; // 10⁶ particles/m³
+    const rho = wasm.plasma_number_density_to_mass(n);
+    // Pure hydrogen: rho = n * m_p ≈ 1e6 * 1.67e-27 ≈ 1.67e-21 kg/m³
+    assert.ok(rho > 1e-22 && rho < 1e-20, `density=${rho} kg/m³`);
+  });
+
+  it("plasmoid_perturbation returns full analysis", () => {
+    const result = wasm.plasmoid_perturbation(
+      1e-7, // B in Tesla
+      1e6, // number density
+      400_000, // plasma velocity m/s
+      100, // cross section m²
+      60, // transit duration s
+      48_000_000, // ship mass kg
+      86400 * 30, // remaining travel s
+    );
+    assert.ok(result.velocity_perturbation_m_s >= 0, "has velocity perturbation");
+    assert.ok(result.miss_distance_km >= 0, "has miss distance");
+    assert.ok(result.total_pressure_pa > 0, "has total pressure");
+  });
+
+  it("uranus_plasmoid_scenarios returns array of scenarios", () => {
+    const scenarios = wasm.uranus_plasmoid_scenarios();
+    assert.ok(Array.isArray(scenarios), "should be array");
+    assert.ok(scenarios.length >= 2, `should have multiple scenarios, got ${scenarios.length}`);
+    assert.ok(scenarios[0].label.length > 0, "scenario has label");
+    assert.ok(scenarios[0].b_tesla > 0, "scenario has B field");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 3D orbital analysis
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: 3D orbital analysis", () => {
+  const j2000 = 2_451_545.0;
+
+  it("ecliptic_z_height for Earth is near zero (small inclination)", () => {
+    const z = wasm.ecliptic_z_height("earth", j2000);
+    // Earth orbit is in the ecliptic plane by definition, z should be ~0
+    assert.ok(Math.abs(z) < 1_000_000, `z=${z} km (should be small)`);
+  });
+
+  it("max_ecliptic_z_height for Mars > Earth", () => {
+    const zMars = wasm.max_ecliptic_z_height("mars");
+    const zEarth = wasm.max_ecliptic_z_height("earth");
+    // Mars has higher inclination (1.85°) than Earth (0°)
+    assert.ok(zMars > zEarth, `Mars max z=${zMars} > Earth max z=${zEarth}`);
+  });
+
+  it("out_of_plane_distance returns positive value", () => {
+    const d = wasm.out_of_plane_distance("earth", "mars", j2000);
+    assert.ok(d >= 0, `out-of-plane distance=${d} km`);
+  });
+
+  it("plane_change_dv is zero for zero inclination change", () => {
+    const dv = wasm.plane_change_dv(30.0, 0.0);
+    assert.ok(Math.abs(dv) < 1e-10, `dv=${dv} should be ~0`);
+  });
+
+  it("plane_change_dv increases with inclination", () => {
+    const dv1 = wasm.plane_change_dv(30.0, 0.01); // ~0.57°
+    const dv2 = wasm.plane_change_dv(30.0, 0.1); // ~5.7°
+    assert.ok(dv2 > dv1, `dv at 0.1 rad=${dv2} > dv at 0.01 rad=${dv1}`);
+  });
+
+  it("transfer_inclination_penalty returns delta_i and dv", () => {
+    const result = wasm.transfer_inclination_penalty("earth", "mars", j2000, 30.0);
+    assert.ok(result.delta_i_rad >= 0, `delta_i=${result.delta_i_rad} rad`);
+    assert.ok(result.dv_penalty_km_s >= 0, `dv penalty=${result.dv_penalty_km_s} km/s`);
+  });
+
+  it("saturn_ring_plane_normal returns unit vector", () => {
+    const n = wasm.saturn_ring_plane_normal(j2000);
+    assert.equal(n.length, 3, "should return 3 components");
+    const mag = Math.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2);
+    assert.ok(
+      Math.abs(mag - 1.0) < 0.01,
+      `normal magnitude=${mag}, expected ~1.0`,
+    );
+  });
+
+  it("uranus_spin_axis_ecliptic returns unit vector", () => {
+    const a = wasm.uranus_spin_axis_ecliptic();
+    assert.equal(a.length, 3, "should return 3 components");
+    const mag = Math.sqrt(a[0] ** 2 + a[1] ** 2 + a[2] ** 2);
+    assert.ok(
+      Math.abs(mag - 1.0) < 0.01,
+      `axis magnitude=${mag}, expected ~1.0`,
+    );
+  });
+
+  it("uranus_approach_analysis returns approach classification", () => {
+    const result = wasm.uranus_approach_analysis(1.0, 0.0, 0.0, 50_000);
+    assert.ok(typeof result.is_polar_approach === "boolean", "has is_polar_approach");
+    assert.ok(typeof result.is_equatorial_approach === "boolean", "has is_equatorial_approach");
+    assert.ok(result.equatorial_ecliptic_angle_deg >= 0, "has angle");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Relativistic analysis
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: relativistic analysis", () => {
+  it("relativistic_effects_summary returns all fields", () => {
+    const result = wasm.relativistic_effects_summary(7600); // ~2.5% c
+    assert.ok(result.gamma > 1.0, `gamma=${result.gamma}`);
+    assert.ok(result.beta > 0 && result.beta < 1, `beta=${result.beta}`);
+    assert.ok(result.timeDilationPpm > 0, `time dilation=${result.timeDilationPpm} ppm`);
+    assert.ok(result.keCorrectionPpm > 0, `KE correction=${result.keCorrectionPpm} ppm`);
+  });
+
+  it("relativistic_brachistochrone_times returns coord and proper times", () => {
+    const dist = 778_570_000; // Jupiter distance km
+    const accel = 0.0002; // km/s² (~0.02g)
+    const result = wasm.relativistic_brachistochrone_times(dist, accel);
+    assert.ok(result.coordinateTimeSec > 0, `coord time=${result.coordinateTimeSec}s`);
+    assert.ok(result.properTimeSec > 0, `proper time=${result.properTimeSec}s`);
+    // Proper time should be ≤ coordinate time (time dilation)
+    assert.ok(
+      result.properTimeSec <= result.coordinateTimeSec + 1,
+      `proper ≤ coord: ${result.properTimeSec} ≤ ${result.coordinateTimeSec}`,
+    );
+  });
+
+  it("relativistic_brachistochrone_peak_velocity < c", () => {
+    const vPeak = wasm.relativistic_brachistochrone_peak_velocity(778_570_000, 0.0002);
+    assert.ok(vPeak > 0, `peak velocity=${vPeak} km/s`);
+    assert.ok(vPeak < 299_792.458, `peak velocity=${vPeak} should be < c`);
+  });
+
+  it("classical_delta_v matches Tsiolkovsky equation", () => {
+    const ve = 9806.65; // km/s (Isp=10^6 s)
+    const mr = 1.1; // mass ratio
+    const dv = wasm.classical_delta_v(ve, mr);
+    const expected = ve * Math.log(mr);
+    assert.ok(
+      Math.abs(dv - expected) < 0.01,
+      `dv=${dv}, expected=${expected}`,
+    );
+  });
+
+  it("relativistic_delta_v ≈ classical for low exhaust velocity", () => {
+    const ve = 10.0; // 10 km/s (non-relativistic)
+    const mr = 3.0;
+    const classical = wasm.classical_delta_v(ve, mr);
+    const relativistic = wasm.relativistic_delta_v(ve, mr);
+    assert.ok(
+      Math.abs(classical - relativistic) / classical < 0.001,
+      `classical=${classical} ≈ relativistic=${relativistic}`,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Mass timeline
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: mass timeline", () => {
+  it("mass_propellant_consumed is positive for positive dv", () => {
+    const consumed = wasm.mass_propellant_consumed(48_000_000, 1.0, 1_000_000);
+    assert.ok(consumed > 0, `consumed=${consumed} kg`);
+    assert.ok(consumed < 48_000_000, `consumed=${consumed} < total mass`);
+  });
+
+  it("mass_post_burn < pre-burn mass", () => {
+    const preBurn = 48_000_000;
+    const postBurn = wasm.mass_post_burn(preBurn, 1.0, 1_000_000);
+    assert.ok(postBurn < preBurn, `post=${postBurn} < pre=${preBurn}`);
+    assert.ok(postBurn > 0, `post=${postBurn} > 0`);
+  });
+
+  it("mass_post_burn + propellant_consumed = pre_burn", () => {
+    const pre = 48_000_000;
+    const dv = 2.0;
+    const isp = 1_000_000;
+    const consumed = wasm.mass_propellant_consumed(pre, dv, isp);
+    const post = wasm.mass_post_burn(pre, dv, isp);
+    assert.ok(
+      Math.abs((post + consumed) - pre) < 1,
+      `post(${post}) + consumed(${consumed}) = ${post + consumed} ≈ pre(${pre})`,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Hohmann window
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: Hohmann window", () => {
+  it("next_hohmann_window returns a JD for Earth→Mars", () => {
+    const jd = wasm.next_hohmann_window("earth", "mars", 2_451_545.0);
+    assert.ok(jd !== null, "should find a window");
+    assert.ok(jd > 2_451_545.0, `window JD=${jd} > search start`);
+  });
+});
