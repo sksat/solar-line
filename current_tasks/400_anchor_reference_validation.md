@@ -1,6 +1,6 @@
 # Task 400: Add Anchor Reference Validation Test
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

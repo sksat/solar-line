@@ -36,11 +36,11 @@
       "notes": "名前不詳。きりたんの知人の船乗り。EP01で情報提供、EP05でガニメデから通信。"
     },
     {
-      "id": "seilanders",
-      "nameJa": "弁務官セイランダース",
-      "nameEn": "Commissioner Seilanders",
-      "aliases": [],
-      "notes": "国際連合軌道交番機構の弁務官。地球圏接近時にケストレルに停船命令を出す。"
+      "id": "seira-anders",
+      "nameJa": "弁務官セイラ・アンダース",
+      "nameEn": "Commissioner Seira Anders",
+      "aliases": ["セイランダース"],
+      "notes": "国際連合軌道交番機構の弁務官。地球圏接近時にケストレルに停船命令を出す。EP03でリア・オルフェウスを尋問した人物と同一（映像テロップ確認）。"
     }
   ],
   "attributionNotes": "話者判定はWhisper STTによる自動文字起こし（raw_data/whisper/ep05_lines.json）と物語コンテキスト（ニコニコ動画 sm45987761, 全4話の内容蓄積）に基づく。Whisper STTの精度はYouTube自動字幕より高いが、専門用語（航法用語、固有名詞）に誤認識が残る。台詞テキストは文脈から修正済み。きりたんとケイの二人称会話が大半を占めるため、話者判定は比較的明確。",

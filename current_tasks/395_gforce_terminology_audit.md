@@ -1,6 +1,6 @@
 # Task 395: Fix G-force Terminology Conflation in Reports
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

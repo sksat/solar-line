@@ -1,6 +1,6 @@
 # Task 398: Add ID Attributes to Headings in markdownToHtml
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

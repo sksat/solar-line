@@ -35,10 +35,10 @@
       "aliases": []
     },
     {
-      "id": "seilanders",
-      "nameJa": "弁務官セイランダース",
-      "nameEn": "Commissioner Seilanders",
-      "aliases": []
+      "id": "seira-anders",
+      "nameJa": "弁務官セイラ・アンダース",
+      "nameEn": "Commissioner Seira Anders",
+      "aliases": ["セイラ・アンダース"]
     }
   ],
   "scenes": [
@@ -2367,9 +2367,9 @@
       "lineId": "ep05-dl-136"
     },
     {
-      "speakerId": "seilanders",
-      "speakerName": "弁務官セイランダース",
-      "text": "こちらは国際連合軌道交番機構、弁務官セイランダース。現在地球圏に接近中の小型貨物船へ次ぐ",
+      "speakerId": "seira-anders",
+      "speakerName": "弁務官セイラ・アンダース",
+      "text": "こちらは国際連合軌道交番機構、弁務官セイラ・アンダース。現在地球圏に接近中の小型貨物船へ次ぐ",
       "startMs": 1293780,
       "endMs": 1303160,
       "sceneId": "ep05-scene-12",
@@ -2383,8 +2383,8 @@
       "lineId": "ep05-dl-137"
     },
     {
-      "speakerId": "seilanders",
-      "speakerName": "弁務官セイランダース",
+      "speakerId": "seira-anders",
+      "speakerName": "弁務官セイラ・アンダース",
       "text": "貴船は当機構の認証を受けずに、地球圏管制機動に侵入しています。この行為は航法法第112条および第149条に対する重大な違反行為です。直ちに主推進を停止し、停船してください",
       "startMs": 1303400,
       "endMs": 1320100,
@@ -2418,8 +2418,8 @@
       "lineId": "ep05-dl-139"
     },
     {
-      "speakerId": "seilanders",
-      "speakerName": "弁務官セイランダース",
+      "speakerId": "seira-anders",
+      "speakerName": "弁務官セイラ・アンダース",
       "text": "指示に従わない場合、実力行使を含む措置を検討します",
       "startMs": 1324720,
       "endMs": 1329040,
@@ -2430,7 +2430,7 @@
       ],
       "transferRefs": [],
       "mentions": [],
-      "note": "セイランダースの威嚇。",
+      "note": "セイラ・アンダースの威嚇。",
       "lineId": "ep05-dl-140"
     },
     {

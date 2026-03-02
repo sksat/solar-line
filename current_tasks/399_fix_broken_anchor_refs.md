@@ -1,6 +1,6 @@
 # Task 399: Fix Broken Anchor References to Cross-Episode Sections
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

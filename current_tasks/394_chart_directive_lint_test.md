@@ -1,6 +1,6 @@
 # Task 394: Add Chart Directive Support to Episode Parser + Validation Tests
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

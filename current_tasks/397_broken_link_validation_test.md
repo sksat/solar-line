@@ -1,6 +1,6 @@
 # Task 397: Add Broken Link Validation Test
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

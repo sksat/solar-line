@@ -1,6 +1,6 @@
 # Task 396: Fix Broken Links and Anchors in Reports
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 
