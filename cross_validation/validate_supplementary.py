@@ -667,7 +667,7 @@ def check(name: str, rust_val: float, python_val: float, rel_tol: float = 1e-10,
         diff = abs(python_val)
     else:
         diff = abs(rust_val - python_val) / max(abs(rust_val), abs_tol)
-    if diff < rel_tol:
+    if diff <= rel_tol:
         print(f"  ✓ {name}: {rust_val:.6e} (rel diff: {diff:.2e})")
         passed += 1
     else:
@@ -1269,6 +1269,124 @@ def main():
     py_jup_z = py_jup_pos[4]     # z_km at J2000
     py_oop = abs(py_jup_z - py_mars_z)
     check("out-of-plane Mars-Jupiter J2000", o3d["oop_mars_jupiter_j2000_km"], py_oop)
+
+    # ── Jupiter radiation belt model ────────────────────────────
+    print("\n═══ Jupiter radiation belt cross-validation ═══")
+    jr = rust["jupiter_radiation"]
+
+    # Verify Jupiter radius constant
+    check("jupiter_radius_km", jr["jupiter_radius_km"], 71_492.0, rel_tol=0)
+
+    # Independent piecewise power-law dose model
+    def dose_rate_krad_h(r_rj: float) -> float:
+        """Independent Python implementation of piecewise dose model."""
+        if r_rj < 0 or r_rj >= 63.0:  # magnetopause
+            return 0.0
+        # Region 1: Inner belt (6-15 RJ)
+        if 6.0 <= r_rj < 15.0:
+            d0, r0, alpha = 0.616, 9.4, 4.92
+            return d0 * (r_rj / r0) ** (-alpha)
+        # Region 2: Middle magnetosphere (15-30 RJ)
+        if 15.0 <= r_rj < 30.0:
+            d0, r0, alpha = 0.0616, 15.0, 9.5
+            return d0 * (r_rj / r0) ** (-alpha)
+        # Region 3: Outer magnetosphere (30-100 RJ)
+        if 30.0 <= r_rj < 63.0:
+            # d0 = middle endpoint at 30 RJ
+            d0_middle = 0.0616 * (30.0 / 15.0) ** (-9.5)
+            r0, alpha = 30.0, 2.0
+            return d0_middle * (r_rj / r0) ** (-alpha)
+        return 0.0  # below inner belt (< 6 RJ)
+
+    # Dose rates at key distances
+    py_rate_9_4 = dose_rate_krad_h(9.4)
+    check("dose_rate 9.4 RJ (Europa)", jr["dose_rate_9_4_rj"], py_rate_9_4)
+    py_rate_15 = dose_rate_krad_h(15.0)
+    check("dose_rate 15 RJ (Ganymede)", jr["dose_rate_15_rj"], py_rate_15)
+    py_rate_20 = dose_rate_krad_h(20.0)
+    check("dose_rate 20 RJ", jr["dose_rate_20_rj"], py_rate_20)
+    py_rate_26 = dose_rate_krad_h(26.0)
+    check("dose_rate 26 RJ (Callisto)", jr["dose_rate_26_rj"], py_rate_26)
+    py_rate_30 = dose_rate_krad_h(30.0)
+    check("dose_rate 30 RJ", jr["dose_rate_30_rj"], py_rate_30)
+    py_rate_50 = dose_rate_krad_h(50.0)
+    check("dose_rate 50 RJ", jr["dose_rate_50_rj"], py_rate_50)
+    py_rate_63 = dose_rate_krad_h(63.0)
+    check("dose_rate 63 RJ (magnetopause)", jr["dose_rate_63_rj"], py_rate_63, rel_tol=0)
+    py_rate_100 = dose_rate_krad_h(100.0)
+    check("dose_rate 100 RJ (beyond)", jr["dose_rate_100_rj"], py_rate_100, rel_tol=0)
+
+    # Independent transit dose integration (numerical quadrature)
+    from scipy import integrate
+    jupiter_radius_km = 71_492.0
+
+    def transit_dose(r_start_rj: float, r_end_rj: float, v_radial_kms: float) -> float:
+        """Numerically integrate dose along a radial transit."""
+        if v_radial_kms <= 0:
+            return 0.0
+        dist_km = abs(r_end_rj - r_start_rj) * jupiter_radius_km
+        transit_time_h = dist_km / v_radial_kms / 3600.0
+
+        def dose_integrand(frac):
+            r = r_start_rj + frac * (r_end_rj - r_start_rj)
+            return dose_rate_krad_h(r) * transit_time_h
+
+        result, _ = integrate.quad(dose_integrand, 0, 1, limit=200)
+        return result
+
+    # Transit 15→50 RJ at 7 km/s
+    py_dose_7 = transit_dose(15.0, 50.0, 7.0)
+    check("transit 15→50 RJ @7km/s dose", jr["transit_15_50_7kms_dose"], py_dose_7, rel_tol=0.01)
+
+    # Transit 15→50 RJ at 60 km/s
+    py_dose_60 = transit_dose(15.0, 50.0, 60.0)
+    check("transit 15→50 RJ @60km/s dose", jr["transit_15_50_60kms_dose"], py_dose_60, rel_tol=0.01)
+
+    # Shield budget: 42 minutes at departure rate
+    py_shield_budget = py_rate_15 * (42.0 / 60.0)
+    check("shield budget 42min", jr["shield_budget_42min_krad"], py_shield_budget)
+
+    # EP02 scenario: 42min budget, 7 km/s → shield FAILS
+    py_ep02_dose = transit_dose(15.0, 50.0, 7.0)
+    check("ep02 42min @7km/s dose", jr["ep02_42min_7kms_dose"], py_ep02_dose, rel_tol=0.01)
+    py_ep02_survives = py_ep02_dose < py_shield_budget
+    if jr["ep02_42min_7kms_survives"] == py_ep02_survives:
+        print(f"  ✓ ep02 42min @7km/s survives: {py_ep02_survives}")
+        passed += 1
+    else:
+        print(f"  ✗ ep02 42min @7km/s survives: Rust={jr['ep02_42min_7kms_survives']}, Python={py_ep02_survives}")
+        failed += 1
+
+    # Minimum survival velocity (verify by checking dose < budget at v+1)
+    min_v = jr["min_survival_velocity_kms"]
+    py_dose_at_min_v = transit_dose(15.0, 50.0, min_v + 1.0)
+    if py_dose_at_min_v < py_shield_budget:
+        print(f"  ✓ min survival velocity {min_v:.1f} km/s (dose@v+1 < budget)")
+        passed += 1
+    else:
+        print(f"  ✗ min survival velocity {min_v:.1f} km/s: dose@{min_v+1:.0f}km/s = {py_dose_at_min_v:.6f} >= budget {py_shield_budget:.6f}")
+        failed += 1
+
+    # Dose monotonically decreases with distance (within modeled region)
+    for r1, r2, label in [(9.4, 15.0, "Europa→Ganymede"), (15.0, 26.0, "Ganymede→Callisto"),
+                           (26.0, 50.0, "Callisto→50RJ")]:
+        d1 = dose_rate_krad_h(r1)
+        d2 = dose_rate_krad_h(r2)
+        if d1 > d2:
+            print(f"  ✓ monotone decrease {label}: d({r1})={d1:.6e} > d({r2})={d2:.6e}")
+            passed += 1
+        else:
+            print(f"  ✗ monotone decrease {label}: d({r1})={d1:.6e} ≤ d({r2})={d2:.6e}")
+            failed += 1
+
+    # Dose rate ratio: Ganymede/Callisto should be ~100-2000x
+    ratio = py_rate_15 / py_rate_26 if py_rate_26 > 0 else float('inf')
+    if 50 < ratio < 5000:
+        print(f"  ✓ Ganymede/Callisto ratio ≈ {ratio:.0f}x (in 50-5000x range)")
+        passed += 1
+    else:
+        print(f"  ✗ Ganymede/Callisto ratio: got {ratio:.0f}x, expected 50-5000x")
+        failed += 1
 
     # ── Summary ───────────────────────────────────────────────────
     print(f"\n{'═' * 50}")
