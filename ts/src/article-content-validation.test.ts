@@ -3284,3 +3284,34 @@ describe("Chart directive format validation (Task 394)", () => {
     }
   });
 });
+
+// =============================================================================
+// G-force Terminology Validation (Task 395)
+// =============================================================================
+// CLAUDE.md requires strict separation of 居住G (habitation) from 推進G (propulsion).
+// Propulsion G must NOT be evaluated as a crew endurance constraint.
+// =============================================================================
+
+describe("G-force terminology validation (Task 395)", () => {
+  const episodeFiles = ["ep01.md", "ep02.md", "ep03.md", "ep04.md", "ep05.md"];
+
+  // Patterns that conflate propulsion G with crew endurance
+  const conflationPatterns = [
+    /搭乗者.*[にはが].*[gG].*耐え/,    // crew must "endure" G
+    /搭乗者にとって過酷/,                // "grueling for crew" re: propulsion G
+    /乗員への負担.*現実的/,              // "realistic crew burden" re: propulsion G
+    /[gG].*に耐える必要/,               // "need to endure" G
+  ];
+
+  for (const file of episodeFiles) {
+    it(`${file}: propulsion G not conflated with crew endurance`, () => {
+      const content = readReport(file, "episodes");
+      for (const pattern of conflationPatterns) {
+        assert.ok(
+          !pattern.test(content),
+          `${file} conflates propulsion G with crew endurance (matched: ${pattern})`,
+        );
+      }
+    });
+  }
+});
