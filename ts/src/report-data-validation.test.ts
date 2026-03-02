@@ -1979,6 +1979,103 @@ describe("Video OCR data validation", () => {
   }
 });
 
+// ============================================================
+// Phase 1 extraction data validation (Task 417)
+// ============================================================
+describe("Phase 1 lines data validation", () => {
+  const linesFiles = fs.readdirSync(EPISODES_DIR)
+    .filter(f => f.match(/^ep\d+_lines\.json$/))
+    .sort();
+
+  it("lines data exists for all 5 episodes", () => {
+    assert.equal(linesFiles.length, 5, `Expected 5 lines files, got ${linesFiles.length}`);
+  });
+
+  for (const file of linesFiles) {
+    const epNum = parseInt(file.match(/ep(\d+)/)![1]);
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    describe(`${prefix} lines data`, () => {
+      const data = JSON.parse(fs.readFileSync(path.join(EPISODES_DIR, file), "utf-8"));
+
+      it("has required top-level fields", () => {
+        assert.equal(data.schemaVersion, 1, "schemaVersion should be 1");
+        assert.equal(data.episode, epNum, `episode should be ${epNum}`);
+        assert.ok(typeof data.videoId === "string" && data.videoId.length > 0, "videoId should be non-empty string");
+        assert.ok(data.sourceSubtitle, "missing sourceSubtitle");
+        assert.ok(Array.isArray(data.lines), "lines should be an array");
+        assert.ok(data.lines.length > 0, "lines should not be empty");
+        assert.ok(data.extractedAt, "missing extractedAt");
+      });
+
+      it("lineIds follow expected format and are unique", () => {
+        const ids = new Set<string>();
+        for (const line of data.lines) {
+          const expected = new RegExp(`^${prefix}-line-\\d{3}$`);
+          assert.ok(
+            expected.test(line.lineId),
+            `lineId "${line.lineId}" does not match pattern ${prefix}-line-NNN`,
+          );
+          assert.ok(!ids.has(line.lineId), `duplicate lineId: ${line.lineId}`);
+          ids.add(line.lineId);
+        }
+      });
+
+      it("lineIds are sequentially numbered", () => {
+        for (let i = 0; i < data.lines.length; i++) {
+          const expected = `${prefix}-line-${String(i + 1).padStart(3, "0")}`;
+          assert.equal(data.lines[i].lineId, expected, `line ${i} should be ${expected}`);
+        }
+      });
+
+      it("timestamps are valid and non-decreasing", () => {
+        for (let i = 0; i < data.lines.length; i++) {
+          const line = data.lines[i];
+          assert.ok(typeof line.startMs === "number", `${line.lineId}: startMs should be number`);
+          assert.ok(typeof line.endMs === "number", `${line.lineId}: endMs should be number`);
+          assert.ok(line.startMs >= 0, `${line.lineId}: startMs should be non-negative`);
+          assert.ok(line.endMs > line.startMs, `${line.lineId}: endMs should be > startMs`);
+          if (i > 0) {
+            assert.ok(
+              line.startMs >= data.lines[i - 1].startMs,
+              `${line.lineId}: startMs ${line.startMs} < previous ${data.lines[i - 1].startMs}`,
+            );
+          }
+        }
+      });
+
+      it("all lines have non-empty text", () => {
+        for (const line of data.lines) {
+          assert.ok(
+            typeof line.text === "string" && line.text.trim().length > 0,
+            `${line.lineId}: text should be non-empty string`,
+          );
+        }
+      });
+
+      it("all lines have rawEntryIds array", () => {
+        for (const line of data.lines) {
+          assert.ok(Array.isArray(line.rawEntryIds), `${line.lineId}: rawEntryIds should be array`);
+          assert.ok(line.rawEntryIds.length > 0, `${line.lineId}: rawEntryIds should not be empty`);
+        }
+      });
+
+      it("all lines have mergeReasons array", () => {
+        for (const line of data.lines) {
+          assert.ok(Array.isArray(line.mergeReasons), `${line.lineId}: mergeReasons should be array`);
+        }
+      });
+
+      it("sourceSubtitle has valid structure", () => {
+        const src = data.sourceSubtitle;
+        assert.ok(typeof src.source === "string", "sourceSubtitle.source should be string");
+        assert.ok(typeof src.language === "string", "sourceSubtitle.language should be string");
+        assert.ok(typeof src.rawContentHash === "string", "sourceSubtitle.rawContentHash should be string");
+      });
+    });
+  }
+});
+
 // ---------------------------------------------------------------------------
 // External link validation
 // ---------------------------------------------------------------------------
