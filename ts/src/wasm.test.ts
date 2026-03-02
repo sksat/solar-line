@@ -1167,3 +1167,227 @@ describe("WASM bridge: Hohmann window", () => {
     assert.ok(jd > 2_451_545.0, `window JD=${jd} > search start`);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Adaptive and symplectic propagation
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: adaptive and symplectic propagation", () => {
+  const muSun = 1.32712440041e11;
+  const x0 = 147_100_000;
+  const vy0 = 30.29;
+
+  it("propagate_adaptive_ballistic conserves energy", () => {
+    // Returns [x, y, z, vx, vy, vz, time, energy_drift, n_eval]
+    const result = wasm.propagate_adaptive_ballistic(
+      x0, 0, 0, 0, vy0, 0, muSun, 86400, 1e-10, 1e-12,
+    );
+    assert.equal(result.length, 9, "should return 9 values");
+    const drift = result[7];
+    const nEval = result[8];
+    assert.ok(drift < 1e-8, `energy drift=${drift}`);
+    assert.ok(nEval > 0, `n_eval=${nEval}`);
+  });
+
+  it("propagate_adaptive_brachistochrone returns 8 values", () => {
+    const accel = 0.0002; // km/s²
+    const duration = 3600;
+    const flipTime = 1800;
+    // Returns [x, y, z, vx, vy, vz, time, n_eval]
+    const result = wasm.propagate_adaptive_brachistochrone(
+      x0, 0, 0, 0, vy0, 0, muSun, duration, accel, flipTime, 1e-8, 1e-10,
+    );
+    assert.equal(result.length, 8, "should return 8 values");
+    assert.ok(result[7] > 0, `n_eval=${result[7]}`);
+  });
+
+  it("propagate_symplectic_ballistic has excellent energy conservation", () => {
+    // Returns [x, y, z, vx, vy, vz, time, energy_drift, n_steps]
+    const result = wasm.propagate_symplectic_ballistic(
+      x0, 0, 0, 0, vy0, 0, muSun, 60, 86400,
+    );
+    assert.equal(result.length, 9, "should return 9 values");
+    const drift = result[7];
+    assert.ok(drift < 1e-6, `energy drift=${drift}`);
+    // Symplectic integrators should conserve energy well
+    const rFinal = Math.sqrt(result[0] ** 2 + result[1] ** 2 + result[2] ** 2);
+    assert.ok(
+      rFinal > 140_000_000 && rFinal < 160_000_000,
+      `final radius=${rFinal} km`,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Saturn ring crossing
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: Saturn ring crossing", () => {
+  it("saturn_ring_crossing returns crossing analysis", () => {
+    const j2000 = 2_451_545.0;
+    // Ship approaching Saturn from above the ring plane
+    const result = wasm.saturn_ring_crossing(
+      0, 0, 100_000, // position: 100k km above ring plane
+      0, 0, -10, // velocity: 10 km/s downward
+      j2000,
+    );
+    assert.ok(typeof result.crosses_ring_plane === "boolean", "has crosses_ring_plane");
+    assert.ok(typeof result.within_rings === "boolean", "has within_rings");
+    assert.ok(typeof result.approach_angle_to_ring_plane_deg === "number", "has approach angle");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Mass compute timeline
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: mass compute timeline", () => {
+  it("mass_compute_timeline computes snapshots from events", () => {
+    const input = {
+      name: "test-ship",
+      initial_total_kg: 48_000_000,
+      initial_dry_kg: 47_000_000,
+      events: [
+        {
+          time_h: 0,
+          episode: 1,
+          label: "Departure burn",
+          kind: {
+            type: "fuel_burn",
+            delta_v_km_s: 1.0,
+            isp_s: 1_000_000,
+            burn_duration_h: 0.5,
+          },
+        },
+        {
+          time_h: 24,
+          episode: 1,
+          label: "Container jettison",
+          kind: {
+            type: "container_jettison",
+            mass_kg: 42_300,
+          },
+        },
+      ],
+    };
+    const result = wasm.mass_compute_timeline(input);
+    assert.equal(result.name, "test-ship", "name matches");
+    assert.ok(result.snapshots.length >= 2, `snapshots=${result.snapshots.length}, result=${JSON.stringify(result).slice(0, 200)}`);
+    // Find post-burn snapshot: total mass should have decreased from initial
+    const lastSnapshot = result.snapshots[result.snapshots.length - 1];
+    assert.ok(
+      lastSnapshot.total_mass_kg < 48_000_000,
+      `final mass=${lastSnapshot.total_mass_kg} < initial 48M`,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// DAG analysis
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: DAG analysis", () => {
+  // Minimal DAG state for testing
+  // Note: JsDagNode uses #[serde(rename_all = "camelCase")] so depends_on → dependsOn
+  const dagState = {
+    nodes: {
+      "param.ship_mass": {
+        id: "param.ship_mass",
+        type: "parameter",
+        dependsOn: ["source.worldbuilding_doc"],
+        status: "valid",
+        tags: ["ship"],
+      },
+      "source.worldbuilding_doc": {
+        id: "source.worldbuilding_doc",
+        type: "data_source",
+        dependsOn: [],
+        status: "valid",
+        tags: ["source"],
+      },
+      "analysis.ep01_transfer": {
+        id: "analysis.ep01_transfer",
+        type: "analysis",
+        dependsOn: ["param.ship_mass"],
+        status: "valid",
+        tags: ["ep01"],
+      },
+      "report.ep01": {
+        id: "report.ep01",
+        type: "report",
+        dependsOn: ["analysis.ep01_transfer"],
+        status: "valid",
+        tags: ["ep01", "report"],
+      },
+    },
+  };
+
+  it("dag_analyze returns topological order and critical path", () => {
+    const result = wasm.dag_analyze(dagState);
+    assert.ok(Array.isArray(result.topo_order), "has topo_order");
+    assert.equal(result.topo_order.length, 4, "all 4 nodes in topo order");
+    assert.ok(Array.isArray(result.critical_path), "has critical_path");
+    assert.ok(result.critical_path.length > 0, "critical path is non-empty");
+    assert.ok(Array.isArray(result.orphans), "has orphans");
+  });
+
+  it("dag_downstream finds downstream nodes", () => {
+    const downstream: string[] = wasm.dag_downstream(dagState, "param.ship_mass");
+    assert.ok(downstream.length >= 1, `downstream has ${downstream.length} nodes: ${JSON.stringify(downstream)}`);
+    const dsSet = new Set(downstream);
+    assert.ok(
+      dsSet.has("analysis.ep01_transfer"),
+      `analysis depends on param, got: ${JSON.stringify(downstream)}`,
+    );
+  });
+
+  it("dag_upstream finds upstream nodes", () => {
+    const upstream: string[] = wasm.dag_upstream(dagState, "report.ep01");
+    assert.ok(upstream.length >= 1, `upstream has ${upstream.length} nodes: ${JSON.stringify(upstream)}`);
+    const usSet = new Set(upstream);
+    assert.ok(
+      usSet.has("analysis.ep01_transfer"),
+      `report depends on analysis, got: ${JSON.stringify(upstream)}`,
+    );
+  });
+
+  it("dag_impact returns cascade analysis", () => {
+    const impact = wasm.dag_impact(dagState, "param.ship_mass");
+    assert.ok(impact.affected.length >= 1, `affected: ${JSON.stringify(impact.affected)}`);
+    assert.ok(impact.cascade_count >= 1, `cascade_count=${impact.cascade_count}`);
+  });
+
+  it("dag_layout returns positions for all nodes", () => {
+    const layout = wasm.dag_layout(dagState, 800, 600);
+    assert.equal(layout.ids.length, 4, "4 node IDs");
+    assert.equal(layout.x.length, 4, "4 x positions");
+    assert.equal(layout.y.length, 4, "4 y positions");
+    assert.equal(layout.layers.length, 4, "4 layer assignments");
+    assert.ok(typeof layout.crossings === "number", "has crossings count");
+  });
+
+  it("dag_find_paths finds path from source to report", () => {
+    const result = wasm.dag_find_paths(
+      dagState, "source.worldbuilding_doc", "report.ep01", 5,
+    );
+    // Result might be { paths: [...] } or a direct array
+    const paths = result.paths ?? result;
+    assert.ok(
+      Array.isArray(paths) && paths.length > 0,
+      `found at least one path, got: ${JSON.stringify(result)}`,
+    );
+  });
+
+  it("dag_subgraph filters by tag", () => {
+    const subgraph = wasm.dag_subgraph(dagState, "ep01", 0);
+    assert.ok(Array.isArray(subgraph), "returns array");
+    assert.ok(
+      subgraph.includes("analysis.ep01_transfer"),
+      "includes ep01 analysis",
+    );
+    assert.ok(
+      subgraph.includes("report.ep01"),
+      "includes ep01 report",
+    );
+  });
+});
