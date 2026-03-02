@@ -596,6 +596,163 @@ describe("report data: summary comparison table integrity", () => {
   }
 });
 
+// Validate summary verification table data integrity
+describe("report data: summary verification table integrity", () => {
+  const summaryDir = path.join(REPORTS_DIR, "data", "summary");
+  const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
+
+  const allTables: { slug: string; table: import("./report-types.ts").VerificationTable }[] = [];
+  for (const file of summaryFiles) {
+    const slug = file.replace(/\.md$/, "");
+    const report = loadSummaryBySlug(summaryDir, slug);
+    for (const section of report.sections ?? []) {
+      if (section.verificationTable) {
+        allTables.push({ slug, table: section.verificationTable });
+      }
+    }
+  }
+
+  it("has verification tables in summary reports (sanity check)", () => {
+    assert.ok(allTables.length >= 2, `Expected at least 2 verification tables, found ${allTables.length}`);
+  });
+
+  for (const { slug, table } of allTables) {
+    it(`summary/${slug} "${table.caption}": has non-empty rows`, () => {
+      assert.ok(table.rows.length > 0, "Verification table should have at least one row");
+    });
+
+    it(`summary/${slug} "${table.caption}": rows have valid verification status`, () => {
+      const validStatuses = ["verified", "approximate", "unverified", "discrepancy"];
+      for (const row of table.rows) {
+        assert.ok(
+          validStatuses.includes(row.status),
+          `Row "${row.claim}" has invalid status "${row.status}"`,
+        );
+      }
+    });
+
+    it(`summary/${slug} "${table.caption}": rows have non-empty claims and references`, () => {
+      for (const row of table.rows) {
+        assert.ok(row.claim && row.claim.length > 0, `Row should have a non-empty claim`);
+        assert.ok(row.depicted && row.depicted.length > 0, `Row "${row.claim}" should have depicted value`);
+        assert.ok(row.reference && row.reference.length > 0, `Row "${row.claim}" should have reference value`);
+        assert.ok(row.source && row.source.length > 0, `Row "${row.claim}" should have source`);
+      }
+    });
+
+    it(`summary/${slug} "${table.caption}": accuracy percentages are valid when present`, () => {
+      for (const row of table.rows) {
+        if (row.accuracyPercent !== null) {
+          assert.ok(
+            Number.isFinite(row.accuracyPercent) && row.accuracyPercent >= 0,
+            `Row "${row.claim}" accuracy ${row.accuracyPercent} should be a non-negative finite number`,
+          );
+        }
+      }
+    });
+  }
+});
+
+// Validate summary event timeline data integrity
+describe("report data: summary event timeline integrity", () => {
+  const summaryDir = path.join(REPORTS_DIR, "data", "summary");
+  const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
+
+  const allTimelines: { slug: string; timeline: import("./report-types.ts").EventTimeline }[] = [];
+  for (const file of summaryFiles) {
+    const slug = file.replace(/\.md$/, "");
+    const report = loadSummaryBySlug(summaryDir, slug);
+    for (const section of report.sections ?? []) {
+      if (section.eventTimeline) {
+        allTimelines.push({ slug, timeline: section.eventTimeline });
+      }
+    }
+  }
+
+  it("has event timelines in summary reports (sanity check)", () => {
+    assert.ok(allTimelines.length >= 1, `Expected at least 1 event timeline, found ${allTimelines.length}`);
+  });
+
+  for (const { slug, timeline } of allTimelines) {
+    it(`summary/${slug} "${timeline.caption}": has non-empty events`, () => {
+      assert.ok(timeline.events.length > 0, "Event timeline should have at least one event");
+    });
+
+    it(`summary/${slug} "${timeline.caption}": events have valid episode numbers`, () => {
+      for (const event of timeline.events) {
+        assert.ok(
+          Number.isInteger(event.episode) && event.episode >= 1 && event.episode <= 5,
+          `Event "${event.label}" has invalid episode number ${event.episode}`,
+        );
+      }
+    });
+
+    it(`summary/${slug} "${timeline.caption}": events have non-empty labels and descriptions`, () => {
+      for (const event of timeline.events) {
+        assert.ok(event.label && event.label.length > 0, "Event should have a non-empty label");
+        assert.ok(event.description && event.description.length > 0, `Event "${event.label}" should have a description`);
+      }
+    });
+  }
+});
+
+// Validate side-view diagram data integrity (episodes + summaries)
+describe("report data: side-view diagram integrity", () => {
+  const allDiagrams: { source: string; diagram: import("./report-types.ts").SideViewDiagram }[] = [];
+
+  // Episodes
+  for (const epNum of getAvailableEpisodes()) {
+    const report = loadEpisodeReport(epNum);
+    for (const d of report.sideViewDiagrams ?? []) {
+      allDiagrams.push({ source: `EP${String(epNum).padStart(2, "0")}`, diagram: d });
+    }
+  }
+
+  // Summaries
+  const summaryDir = path.join(REPORTS_DIR, "data", "summary");
+  const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
+  for (const file of summaryFiles) {
+    const slug = file.replace(/\.md$/, "");
+    const report = loadSummaryBySlug(summaryDir, slug);
+    for (const section of report.sections ?? []) {
+      for (const d of section.sideViewDiagrams ?? []) {
+        allDiagrams.push({ source: `summary/${slug}`, diagram: d });
+      }
+    }
+  }
+
+  it("has side-view diagrams (sanity check)", () => {
+    assert.ok(allDiagrams.length >= 2, `Expected at least 2 side-view diagrams, found ${allDiagrams.length}`);
+  });
+
+  for (const { source, diagram } of allDiagrams) {
+    it(`${source} ${diagram.id}: has non-empty title and center label`, () => {
+      assert.ok(diagram.title && diagram.title.length > 0, "Should have a non-empty title");
+      assert.ok(diagram.centerLabel && diagram.centerLabel.length > 0, "Should have a non-empty center label");
+    });
+
+    it(`${source} ${diagram.id}: has non-empty elements`, () => {
+      assert.ok(diagram.elements.length > 0, "Should have at least one element");
+    });
+
+    it(`${source} ${diagram.id}: elements have valid types`, () => {
+      const validTypes = ["plane", "axis", "ring", "body", "approach-vector", "label"];
+      for (const el of diagram.elements) {
+        assert.ok(
+          validTypes.includes(el.type),
+          `Element "${el.id}" has invalid type "${el.type}"`,
+        );
+      }
+    });
+
+    it(`${source} ${diagram.id}: elements have unique IDs`, () => {
+      const ids = diagram.elements.map(e => e.id);
+      const unique = new Set(ids);
+      assert.equal(ids.length, unique.size, `Duplicate element IDs found`);
+    });
+  }
+});
+
 describe("report data: uncertainty ellipse referential integrity", () => {
   const episodes = getAvailableEpisodes();
 
