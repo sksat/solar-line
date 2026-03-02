@@ -809,6 +809,28 @@ describe("EP03 article content validation", () => {
       "chart should track lateral drift over time",
     );
   });
+
+  it("has mass boundary thrust comparison bar chart", () => {
+    assert.ok(
+      content.includes("value: 1039") || content.includes("value: 1040"),
+      "EP03 should have bar chart showing 1,039.56 MN required thrust at 48,000t",
+    );
+    assert.ok(
+      content.includes("106") && content.includes("倍"),
+      "chart should indicate 106x thrust ratio",
+    );
+  });
+
+  it("has Uranus moon capture ΔV comparison bar chart", () => {
+    assert.ok(
+      content.includes("ミランダ") && content.includes("value: 0.21"),
+      "EP03 should have bar chart with Miranda capture ΔV of 0.21 km/s",
+    );
+    assert.ok(
+      content.includes("タイタニア") && content.includes("value: 0.37"),
+      "chart should include Titania capture ΔV of 0.37 km/s",
+    );
+  });
 });
 
 describe("EP04 article content validation", () => {
@@ -971,6 +993,17 @@ describe("EP04 article content validation", () => {
     assert.ok(
       content.includes("value: 23.3") && content.includes("修理・補給可能時間"),
       "chart should show 23.3h repair window",
+    );
+  });
+
+  it("has radiation exposure benchmarks bar chart", () => {
+    assert.ok(
+      content.includes("caption: 放射線被曝量") || content.includes("caption: プラズモイド被曝"),
+      "EP04 should have radiation exposure benchmarks bar chart",
+    );
+    assert.ok(
+      content.includes("value: 480") && content.includes("value: 500"),
+      "chart should compare 480 mSv actual vs 500 mSv ICRP emergency limit",
     );
   });
 });
