@@ -650,9 +650,11 @@ describe("EP03 article content validation", () => {
       "should state aberration explains ~47% of the 1.23° discrepancy");
   });
 
-  it("stellar aberration chart data exists", () => {
+  it("stellar aberration chart in timeseries-charts (not orphaned chart-data:)", () => {
     assert.ok(content.includes("ep03-stellar-aberration-sweep"),
       "EP03 should have stellar aberration velocity sweep chart");
+    assert.ok(!content.includes("```chart-data:"),
+      "should NOT have orphaned chart-data: directive (unsupported by parser)");
   });
 
   it("6-phase burn sequence bar chart", () => {
