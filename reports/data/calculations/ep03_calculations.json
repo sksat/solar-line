@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generatedAt": "2026-03-02T11:30:09.923Z",
+    "generatedAt": "2026-03-02T15:28:43.248Z",
     "reproductionCommand": "npm run recalculate -- --episode 3",
     "durationMs": 1
   },
@@ -13,9 +13,9 @@
     "transferTimeYears": 27.299495445193088
   },
   "saturnDeparture": {
-    "vEscSaturnKms": 17.85280614270892,
-    "vCircEnceladusKms": 12.62384028671833,
-    "dvEscapeFromEnceladusKms": 5.228965855990591,
+    "vEscSaturnKms": 17.852810964650672,
+    "vCircEnceladusKms": 12.62384369634604,
+    "dvEscapeFromEnceladusKms": 5.228967268304633,
     "saturnOrbitalVKms": 9.62171356727013
   },
   "brachistochrone": [
