@@ -3632,3 +3632,149 @@ describe("calculation-report consistency", () => {
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Calculation JSON structural validation
+// ---------------------------------------------------------------------------
+
+describe("calculation JSON structural validation", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+
+  function loadJson(name: string): Record<string, unknown> {
+    return JSON.parse(fs.readFileSync(path.join(calcDir, name), "utf-8"));
+  }
+
+  /** Assert all leaf numeric values in an object are finite */
+  function assertFiniteNumbers(obj: unknown, path = ""): void {
+    if (typeof obj === "number") {
+      assert.ok(Number.isFinite(obj), `${path} is not finite: ${obj}`);
+      return;
+    }
+    if (Array.isArray(obj)) {
+      obj.forEach((item, i) => assertFiniteNumbers(item, `${path}[${i}]`));
+      return;
+    }
+    if (obj && typeof obj === "object") {
+      for (const [key, value] of Object.entries(obj)) {
+        if (key === "_meta" || key === "generatedAt") continue; // Skip metadata
+        assertFiniteNumbers(value, path ? `${path}.${key}` : key);
+      }
+    }
+  }
+
+  // Per-episode calculation files
+  const episodeCalcKeys: Record<string, string[]> = {
+    ep01: ["_meta", "hohmann", "shipAcceleration", "brachistochrone72h", "boundaries"],
+    ep02: ["_meta", "hohmann", "jupiterEscape", "saturnCapture", "trimThrust"],
+    ep03: ["_meta", "hohmann", "brachistochrone", "navCrisis", "massFeasibility"],
+    ep04: ["_meta", "hohmann", "brachistochrone", "massFeasibility", "plasmoid"],
+    ep05: ["_meta", "hohmann", "brachistochroneByMass", "burnBudget", "nozzleLifespan"],
+  };
+
+  for (const [ep, requiredKeys] of Object.entries(episodeCalcKeys)) {
+    const fileName = `${ep}_calculations.json`;
+
+    it(`${fileName}: has required top-level keys`, () => {
+      const data = loadJson(fileName);
+      for (const key of requiredKeys) {
+        assert.ok(key in data, `Missing required key "${key}" in ${fileName}`);
+      }
+    });
+
+    it(`${fileName}: _meta has reproductionCommand`, () => {
+      const data = loadJson(fileName);
+      const meta = data._meta as Record<string, unknown>;
+      assert.ok(meta, "_meta missing");
+      assert.ok(typeof meta.reproductionCommand === "string", "reproductionCommand should be string");
+      assert.ok(
+        (meta.reproductionCommand as string).includes("recalculate"),
+        "reproductionCommand should reference recalculate",
+      );
+    });
+
+    it(`${fileName}: hohmann has positive ΔV and transfer time`, () => {
+      const data = loadJson(fileName);
+      const hohmann = data.hohmann as Record<string, number>;
+      // Some episodes use totalDv, others totalDvKms
+      const totalDv = hohmann.totalDv ?? hohmann.totalDvKms;
+      assert.ok(totalDv > 0, `totalDv should be positive: ${totalDv}`);
+      assert.ok(totalDv < 100, `totalDv should be < 100 km/s: ${totalDv}`);
+      if ("transferTimeDays" in hohmann) {
+        assert.ok(hohmann.transferTimeDays > 0, `transferTimeDays should be positive`);
+      }
+    });
+
+    it(`${fileName}: all numeric values are finite`, () => {
+      const data = loadJson(fileName);
+      assertFiniteNumbers(data);
+    });
+  }
+
+  // Onscreen cross-reference files
+  for (let epNum = 1; epNum <= 5; epNum++) {
+    const prefix = String(epNum).padStart(2, "0");
+    const fileName = `ep${prefix}_onscreen_crossref.json`;
+
+    it(`${fileName}: exists and has _meta`, () => {
+      const data = loadJson(fileName);
+      assert.ok("_meta" in data, `Missing _meta in ${fileName}`);
+    });
+
+    it(`${fileName}: all numeric values are finite`, () => {
+      const data = loadJson(fileName);
+      assertFiniteNumbers(data);
+    });
+  }
+
+  // Standalone files
+  it("relativistic_effects.json: has transfers and summary", () => {
+    const data = loadJson("relativistic_effects.json");
+    assert.ok("transfers" in data, "Missing transfers");
+    assert.ok("summary" in data, "Missing summary");
+    assert.ok("parameters" in data, "Missing parameters");
+    assertFiniteNumbers(data);
+  });
+
+  it("3d_orbital_analysis.json: has transfers and analyses", () => {
+    const data = loadJson("3d_orbital_analysis.json");
+    assert.ok("transfers" in data, "Missing transfers");
+    assert.ok("saturnRingAnalysis" in data, "Missing saturnRingAnalysis");
+    assert.ok("uranusApproachAnalysis" in data, "Missing uranusApproachAnalysis");
+    assertFiniteNumbers(data);
+  });
+
+  it("integrator_comparison.json: has comparisons", () => {
+    const data = loadJson("integrator_comparison.json");
+    assert.ok("comparisons" in data, "Missing comparisons");
+    assert.ok("summary" in data, "Missing summary");
+    assertFiniteNumbers(data);
+  });
+
+  it("transcription_accuracy.json: has episodes", () => {
+    const data = loadJson("transcription_accuracy.json");
+    assert.ok("episodes" in data, "Missing episodes");
+    const episodes = data.episodes as unknown[];
+    assert.ok(episodes.length >= 1, `Should have at least 1 episode, got ${episodes.length}`);
+  });
+
+  // Cross-episode consistency: Hohmann ΔV values match known approximate values
+  it("Hohmann ΔV values are within expected ranges per episode", () => {
+    const expected: Record<string, { min: number; max: number }> = {
+      ep01: { min: 8, max: 12 }, // Mars→Jupiter ~10.15 km/s
+      ep02: { min: 2, max: 5 }, // Jupiter→Saturn ~3.36 km/s
+      ep03: { min: 2, max: 4 }, // Saturn→Uranus ~2.74 km/s
+      ep04: { min: 14, max: 18 }, // Uranus→Earth ~15.94 km/s
+      ep05: { min: 14, max: 18 }, // Uranus→Earth ~15.94 km/s
+    };
+    for (const [ep, range] of Object.entries(expected)) {
+      const data = loadJson(`${ep}_calculations.json`);
+      const hohmann = data.hohmann as Record<string, number>;
+      // Some episodes use totalDv, others totalDvKms
+      const dv = hohmann.totalDv ?? hohmann.totalDvKms;
+      assert.ok(
+        dv >= range.min && dv <= range.max,
+        `${ep} Hohmann ΔV (${dv}) should be in [${range.min}, ${range.max}]`,
+      );
+    }
+  });
+});
