@@ -2156,6 +2156,44 @@ describe("attitude-control.md content validation", () => {
       "bar chart should reference flip maneuver RCS",
     );
   });
+
+  it("has pointing error sensitivity bar chart (EP01)", () => {
+    assert.ok(
+      content.includes("指向誤差と航路逸脱距離"),
+      "should have pointing error vs miss distance chart",
+    );
+    // Check key data points from the table
+    assert.ok(
+      content.includes("value: 1330"),
+      "should include 1,330 km miss at 1 arcsec",
+    );
+    assert.ok(
+      content.includes("value: 478800"),
+      "should include 478,800 km miss at 0.1 degree",
+    );
+  });
+
+  it("has EP04 thrust asymmetry RCS chart", () => {
+    assert.ok(
+      content.includes("推力非対称角度とRCS補正推力"),
+      "should have EP04 thrust asymmetry chart",
+    );
+    assert.ok(
+      content.includes("value: 1853"),
+      "should include 1,853 N at 1 arcmin asymmetry",
+    );
+  });
+
+  it("has EP05 nozzle asymmetry torque chart", () => {
+    assert.ok(
+      content.includes("ノズル非対称によるトルク"),
+      "should have EP05 nozzle asymmetry torque chart",
+    );
+    assert.ok(
+      content.includes("value: 136318"),
+      "should include 136,318 N·m at 0.1% asymmetry",
+    );
+  });
 });
 
 // ============================================================

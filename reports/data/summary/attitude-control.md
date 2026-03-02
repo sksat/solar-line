@@ -50,6 +50,41 @@ $$\text{miss} = \frac{1}{2} a \sin(\theta) \cdot t^2$$
 | 1′ | 79,800 | 1.23 |
 | 0.1° | 478,800 | 7.39 |
 
+```chart:bar
+caption: 指向誤差と航路逸脱距離（対数スケール、EP01 Mars→Ganymede 72h）
+unit: "km"
+logScale: true
+bars:
+  - label: 0.001″
+    value: 1.3
+    color: "#22c55e"
+    annotation: "サブarcsec級"
+  - label: 0.01″
+    value: 13
+    color: "#22c55e"
+    annotation: "スタートラッカー精度"
+  - label: 0.1″
+    value: 133
+    color: "#3b82f6"
+    annotation: "中間修正で対処可"
+  - label: 1″
+    value: 1330
+    color: "#f97316"
+    annotation: "ガニメデ本体の半径級"
+  - label: 10″
+    value: 13300
+    color: "#ef4444"
+    annotation: "Hill球の約半分"
+  - label: 1′
+    value: 79800
+    color: "#ef4444"
+    annotation: "Hill球超過"
+  - label: 0.1°
+    value: 478800
+    color: "#dc2626"
+    annotation: "Hill球の15倍"
+```
+
 ### 要求精度
 
 | 目標 | 要求指向精度 |
@@ -166,6 +201,29 @@ $$\tau = F \sin(\theta) \times r_{\text{arm}}$$
 
 1分角（60秒角）の推力非対称でも約40 kN·mのトルクが発生する。これを打ち消すには21.4 mのRCS腕で1,853 Nの推力が必要。
 
+```chart:bar
+caption: 推力非対称角度とRCS補正推力（EP04 65%出力、対数スケール）
+unit: "N"
+logScale: true
+bars:
+  - label: 1″ 非対称
+    value: 31
+    color: "#22c55e"
+    annotation: "コールドガスで対処可"
+  - label: 10″ 非対称
+    value: 309
+    color: "#3b82f6"
+    annotation: "小型ヒドラジン級"
+  - label: 1′ 非対称
+    value: 1853
+    color: "#f97316"
+    annotation: "中型スラスタ級"
+  - label: 6′ 非対称
+    value: 11118
+    color: "#ef4444"
+    annotation: "大型ガスジェット級"
+```
+
 ### プラズモイド遭遇との複合
 
 第4話ではさらに天王星磁気圏のプラズモイドを通過する。プラズマ環境がエンジンプルームや磁気姿勢制御に影響する可能性があるが、8分間の短時間通過であれば、慣性的な姿勢安定性でカバーできる範囲と考えられる。
@@ -211,6 +269,29 @@ $$\theta = \frac{20 \text{ km}}{2.72 \times 10^9 \text{ km}} \approx 7.35 \times
 | 1.0% | 63,700 N | 1,363,180 N·m | 1.1秒 |
 
 わずか0.1%の非対称でも、無制御なら**3.4秒で1°の姿勢ずれ**が生じる。ケストレル号のRCSが常時作動して推力ベクトルを補正しているはずであり、**ノズル劣化がRCS推進剤の消費を加速させる副次的リスク**が存在する。
+
+```chart:bar
+caption: ノズル非対称によるトルクと姿勢崩壊速度（EP05、対数スケール）
+unit: "N·m"
+logScale: true
+bars:
+  - label: 0.01%
+    value: 13632
+    color: "#3b82f6"
+    annotation: "1°到達: 10.8秒"
+  - label: 0.1%
+    value: 136318
+    color: "#f97316"
+    annotation: "1°到達: 3.4秒"
+  - label: 0.5%
+    value: 681590
+    color: "#ef4444"
+    annotation: "1°到達: 1.5秒"
+  - label: 1.0%
+    value: 1363180
+    color: "#dc2626"
+    annotation: "1°到達: 1.1秒"
+```
 
 第5話で「ノズル残寿命26分（0.78%）」の超タイトなマージンが設定されていることを考えると、このマージンの実質的な余裕はRCS推進剤消費も考慮するとさらに小さい可能性がある。
 
