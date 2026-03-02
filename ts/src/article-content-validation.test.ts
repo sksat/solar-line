@@ -1906,6 +1906,17 @@ describe("cross-episode.md content validation", () => {
     assert.ok(content.includes("2.54%"), "should cite light speed percentage");
   });
 
+  it("relativistic table covers all 5 episodes", () => {
+    // The relativistic effects table should include EP02 and EP04 rows
+    // Extract the relativistic table section (between ローレンツ因子 header and next ### header)
+    const relSection = content.split("ローレンツ因子の計算")[1]?.split("### ")[0] ?? "";
+    assert.ok(relSection.includes("EP01"), "relativistic table should include EP01");
+    assert.ok(relSection.includes("EP02"), "relativistic table should include EP02 trim-thrust");
+    assert.ok(relSection.includes("EP03"), "relativistic table should include EP03");
+    assert.ok(relSection.includes("EP04"), "relativistic table should include EP04 65% thrust");
+    assert.ok(relSection.includes("EP05"), "relativistic table should include EP05");
+  });
+
   it("Lorentz factor γ ≈ 1.0003", () => {
     assert.ok(
       content.includes("1.0003"),
