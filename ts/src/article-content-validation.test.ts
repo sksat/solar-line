@@ -620,6 +620,21 @@ describe("EP03 article content validation", () => {
     assert.ok(content.includes("ep03-stellar-aberration-sweep"),
       "EP03 should have stellar aberration velocity sweep chart");
   });
+
+  it("6-phase burn sequence bar chart", () => {
+    assert.ok(
+      content.includes("6フェーズ噴射シーケンス ΔV内訳"),
+      "should have 6-phase burn sequence bar chart",
+    );
+    assert.ok(
+      content.includes("Phase 1 土星脱出") && content.includes("value: 4.31"),
+      "chart should include Saturn Escape phase with 4.31 km/s",
+    );
+    assert.ok(
+      content.includes("Phase 2 加速") && content.includes("value: 2990"),
+      "chart should include Cruise Burn phase with 2990 km/s",
+    );
+  });
 });
 
 describe("EP04 article content validation", () => {
