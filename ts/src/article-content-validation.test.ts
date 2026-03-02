@@ -1865,17 +1865,32 @@ describe("ship-kestrel.md content validation", () => {
     assert.ok(content.includes("≤300"), "should cite EP05 mass boundary ≤300t");
   });
 
-  it("nozzle lifespan margin cited (26 min / 0.8%)", () => {
+  it("nozzle lifespan margin cited (26 min / 0.78%)", () => {
     assert.ok(content.includes("26分") || content.includes("26min"), "should cite 26 min margin");
-    assert.ok(
-      content.includes("0.8%") || content.includes("0.78%"),
-      "should cite margin percentage",
-    );
+    assert.ok(content.includes("0.78%"), "should cite precise 0.78% margin (not rounded 0.8%)");
+  });
+
+  it("nozzle margin matches EP05 analysis", () => {
+    const ep5 = analyzeEpisode5();
+    const marginMin = ep5.nozzleLifespan.marginMinutes;
+    assertContainsApproxValue(content, marginMin, "ship-kestrel nozzle margin minutes");
   });
 
   it("nozzle times cited (55h38m vs 55h12m)", () => {
     assert.ok(content.includes("55h38m") || content.includes("55時間38分"), "should cite nozzle remaining life");
     assert.ok(content.includes("55h12m") || content.includes("55時間12分"), "should cite required burn time");
+  });
+
+  it("EP01 mass boundary matches analysis", () => {
+    const ep1 = analyzeEpisode1();
+    const boundary = ep1.boundaries.massBoundary72h.maxMassT;
+    assertContainsApproxValue(content, boundary, "ship-kestrel EP01 mass boundary");
+  });
+
+  it("EP03 mass boundary matches analysis", () => {
+    const ep3 = analyzeEpisode3();
+    const maxMass = ep3.massFeasibility.maxMassT;
+    assertContainsApproxValue(content, maxMass, "ship-kestrel EP03 mass boundary");
   });
 
   it("D-He³ fuel type cited", () => {
