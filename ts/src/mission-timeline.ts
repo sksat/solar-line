@@ -15,14 +15,15 @@
 
 import type { TimeSeriesChart, TimeSeriesRegion } from "./report-types.ts";
 import { AU_KM } from "./kestrel.ts";
+import { ORBIT_RADIUS } from "./orbital.ts";
 
 /** Semi-major axes in AU for interpolation */
 const BODY_AU: Record<string, number> = {
-  mars: 227_939_200 / AU_KM, // 1.524
-  jupiter: 778_570_000 / AU_KM, // 5.203
-  saturn: 1_433_530_000 / AU_KM, // 9.583
-  uranus: 2_872_460_000 / AU_KM, // 19.19
-  earth: 149_598_023 / AU_KM, // 1.000
+  mars: ORBIT_RADIUS.MARS / AU_KM,
+  jupiter: ORBIT_RADIUS.JUPITER / AU_KM,
+  saturn: ORBIT_RADIUS.SATURN / AU_KM,
+  uranus: ORBIT_RADIUS.URANUS / AU_KM,
+  earth: ORBIT_RADIUS.EARTH / AU_KM,
 };
 
 /**

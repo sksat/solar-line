@@ -14,6 +14,7 @@
  */
 
 import { KESTREL, EXHAUST_VELOCITY_KMS, AU_KM, G0_MS2 } from "./kestrel.ts";
+import { ORBIT_RADIUS } from "./orbital.ts";
 
 /** Speed of light in km/s (exact, SI) */
 const C_KM_S = 299_792.458;
@@ -217,7 +218,7 @@ export function analyzeRelativisticEffects() {
       1,
       "ep01-brach-mid",
       "火星→ガニメデ（中間距離、72h）",
-      Math.sqrt(227_939_200 ** 2 + 778_570_000 ** 2),
+      Math.sqrt(ORBIT_RADIUS.MARS ** 2 + ORBIT_RADIUS.JUPITER ** 2),
       72 * 3600,
     ),
   );
