@@ -572,3 +572,210 @@ describe("WASM bridge: SOI and flyby", () => {
     assert.ok(eff > 0, `efficiency=${eff}`);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Kepler equation and anomaly conversions
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: Kepler equation", () => {
+  const muSun = 1.32712440041e11; // km³/s²
+  const aEarth = 149_598_023; // km (semi-major axis)
+  const eEarth = 0.0167086; // eccentricity
+
+  it("solve_kepler returns eccentric anomaly for circular-ish orbit", () => {
+    const M = Math.PI / 3; // 60° mean anomaly
+    const result = wasm.solve_kepler(M, eEarth);
+    assert.ok(result.eccentric_anomaly !== undefined, "has eccentric_anomaly");
+    assert.ok(result.iterations > 0, `iterations=${result.iterations}`);
+    assert.ok(result.residual < 1e-12, `residual=${result.residual}`);
+    // E should be close to M for near-circular orbit
+    assert.ok(
+      Math.abs(result.eccentric_anomaly - M) < 0.05,
+      `E=${result.eccentric_anomaly} ≈ M=${M}`,
+    );
+  });
+
+  it("mean_to_true_anomaly round-trips with true_to_mean_anomaly", () => {
+    const M = 1.0; // ~57° mean anomaly
+    const nu = wasm.mean_to_true_anomaly(M, eEarth);
+    const M2 = wasm.true_to_mean_anomaly(nu, eEarth);
+    assert.ok(
+      Math.abs(M2 - M) < 1e-10,
+      `round-trip: M=${M} → ν=${nu} → M2=${M2}`,
+    );
+  });
+
+  it("eccentric_to_true_anomaly round-trips with true_to_eccentric_anomaly", () => {
+    const E = 1.5; // eccentric anomaly in radians
+    const nu = wasm.eccentric_to_true_anomaly(E, eEarth);
+    const E2 = wasm.true_to_eccentric_anomaly(nu, eEarth);
+    assert.ok(
+      Math.abs(E2 - E) < 1e-10,
+      `round-trip: E=${E} → ν=${nu} → E2=${E2}`,
+    );
+  });
+
+  it("eccentric_to_mean_anomaly for E=0 returns M=0", () => {
+    const M = wasm.eccentric_to_mean_anomaly(0, eEarth);
+    assert.ok(Math.abs(M) < 1e-15, `M(E=0)=${M}`);
+  });
+
+  it("mean_motion for Earth orbit ≈ 1.991e-7 rad/s", () => {
+    const n = wasm.mean_motion(muSun, aEarth);
+    // Expected: n = sqrt(mu/a^3) ≈ 1.991e-7 rad/s
+    assert.ok(
+      Math.abs(n - 1.991e-7) < 1e-9,
+      `mean motion=${n} rad/s`,
+    );
+  });
+
+  it("propagate_mean_anomaly advances correctly", () => {
+    const M0 = 0;
+    const n = wasm.mean_motion(muSun, aEarth);
+    const halfPeriod = Math.PI / n; // half an orbit
+    const M1 = wasm.propagate_mean_anomaly(M0, n, halfPeriod);
+    assert.ok(
+      Math.abs(M1 - Math.PI) < 1e-6,
+      `M after half period=${M1}, expected π`,
+    );
+  });
+
+  it("orbital_period for Earth ≈ 365.25 days", () => {
+    const T = wasm.orbital_period(muSun, aEarth);
+    const days = T / 86400;
+    assert.ok(
+      Math.abs(days - 365.25) < 0.1,
+      `period=${days} days, expected ~365.25`,
+    );
+  });
+
+  it("specific_energy for Earth orbit is negative (bound)", () => {
+    const eps = wasm.specific_energy(muSun, aEarth);
+    assert.ok(eps < 0, `specific energy=${eps} should be negative for bound orbit`);
+  });
+
+  it("specific_angular_momentum for Earth orbit is positive", () => {
+    const h = wasm.specific_angular_momentum(muSun, aEarth, eEarth);
+    assert.ok(h > 0, `h=${h} km²/s`);
+    // For near-circular: h ≈ sqrt(mu * a)
+    const expected = Math.sqrt(muSun * aEarth);
+    assert.ok(
+      Math.abs(h - expected) / expected < 0.001,
+      `h=${h} ≈ sqrt(μa)=${expected}`,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Orbital elements to state vector
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: orbital elements", () => {
+  it("elements_to_state_vector for circular equatorial orbit", () => {
+    const muEarth = 3.986004418e5; // km³/s²
+    const a = 6_771; // LEO ~400km altitude
+    const result = wasm.elements_to_state_vector(
+      muEarth, a, 0.0, 0.0, 0.0, 0.0, 0.0,
+    );
+    // At true anomaly=0, position should be at periapsis along x-axis
+    const r = Math.sqrt(
+      result.position[0] ** 2 + result.position[1] ** 2 + result.position[2] ** 2,
+    );
+    assert.ok(
+      Math.abs(r - a) < 1,
+      `radius=${r} km, expected ~${a} km for circular orbit`,
+    );
+    // Speed should be ~sqrt(mu/a)
+    const v = Math.sqrt(
+      result.velocity[0] ** 2 + result.velocity[1] ** 2 + result.velocity[2] ** 2,
+    );
+    const expectedV = Math.sqrt(muEarth / a);
+    assert.ok(
+      Math.abs(v - expectedV) < 0.01,
+      `speed=${v} km/s, expected ~${expectedV} km/s`,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Orbit propagation
+// ---------------------------------------------------------------------------
+
+describe("WASM bridge: orbit propagation", () => {
+  const muSun = 1.32712440041e11;
+
+  it("propagate_ballistic conserves energy for Earth-like orbit", () => {
+    // Earth at perihelion, approximate position and velocity
+    const x = 147_100_000; // km
+    const y = 0;
+    const z = 0;
+    const vx = 0;
+    const vy = 30.29; // km/s (Earth orbital velocity)
+    const vz = 0;
+    const dt = 60; // 1 min time step
+    const duration = 86400; // 1 day
+    // Returns [x, y, z, vx, vy, vz, time, energy_drift]
+    const result = wasm.propagate_ballistic(x, y, z, vx, vy, vz, muSun, dt, duration);
+    assert.equal(result.length, 8, "should return 8 values");
+    // Energy drift should be small
+    const drift = result[7];
+    assert.ok(drift < 1e-6, `energy drift=${drift}, should be < 1e-6`);
+    // Position should have moved (not stuck at origin)
+    const rFinal = Math.sqrt(result[0] ** 2 + result[1] ** 2 + result[2] ** 2);
+    assert.ok(
+      rFinal > 140_000_000 && rFinal < 160_000_000,
+      `final radius=${rFinal} km`,
+    );
+  });
+
+  it("propagate_brachistochrone moves towards target", () => {
+    const x = 147_100_000; // km (near Earth)
+    const y = 0;
+    const z = 0;
+    const vx = 0;
+    const vy = 30.0; // km/s
+    const vz = 0;
+    const dt = 60;
+    const duration = 3600; // 1 hour
+    const accel = 0.0002; // km/s² (~0.02g)
+    const flipTime = 1800; // flip at midpoint
+    // Returns [x, y, z, vx, vy, vz, time]
+    const result = wasm.propagate_brachistochrone(
+      x, y, z, vx, vy, vz, muSun, dt, duration, accel, flipTime,
+    );
+    assert.equal(result.length, 7, "should return 7 values");
+    // Should have moved from initial position
+    const dx = result[0] - x;
+    const dy = result[1] - y;
+    assert.ok(
+      Math.sqrt(dx ** 2 + dy ** 2) > 0,
+      "ship should have moved from initial position",
+    );
+  });
+
+  it("propagate_trajectory returns sampled points", () => {
+    const x = 147_100_000;
+    const y = 0;
+    const z = 0;
+    const vx = 0;
+    const vy = 30.29;
+    const vz = 0;
+    const dt = 60;
+    const duration = 86400; // 1 day
+    const sampleInterval = 100; // every 100 steps = 6000s
+    const result = wasm.propagate_trajectory(
+      x, y, z, vx, vy, vz, muSun, dt, duration, sampleInterval,
+    );
+    // Returns flat array [t0, x0, y0, z0, t1, x1, y1, z1, ...]
+    assert.ok(result.length >= 4, `result has ${result.length} elements`);
+    assert.equal(result.length % 4, 0, "length should be multiple of 4");
+    // First point should be near initial position
+    const t0 = result[0];
+    const x0 = result[1];
+    assert.ok(Math.abs(t0) < 1, `first time=${t0} should be ~0`);
+    assert.ok(
+      Math.abs(x0 - x) < 1000,
+      `first x=${x0} should be near initial x=${x}`,
+    );
+  });
+});
