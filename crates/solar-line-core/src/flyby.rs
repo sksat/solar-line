@@ -369,4 +369,395 @@ mod tests {
         assert!((v_helio[0] - expected_x).abs() < 0.01);
         assert!((v_helio[1] - expected_y).abs() < 0.01);
     }
+
+    // ===== Oracle tests: cross-validation against published mission data =====
+
+    #[test]
+    fn oracle_soi_radius_saturn() {
+        // Saturn SOI ≈ 54.5 million km (well-known reference value)
+        let r_soi = soi_radius(orbit_radius::SATURN, mu::SATURN, mu::SUN);
+        let actual_mkm = r_soi.value() / 1e6;
+        // Our Hill-approximation formula gives ~54.81 Mkm
+        assert!(
+            (actual_mkm - 54.5).abs() < 1.5,
+            "Saturn SOI: {:.2} Mkm (expected ~54.5 Mkm)",
+            actual_mkm
+        );
+    }
+
+    #[test]
+    fn oracle_soi_radius_uranus() {
+        // Uranus SOI ≈ 51.8 million km (well-known reference value)
+        let r_soi = soi_radius(orbit_radius::URANUS, mu::URANUS, mu::SUN);
+        let actual_mkm = r_soi.value() / 1e6;
+        assert!(
+            (actual_mkm - 51.8).abs() < 1.5,
+            "Uranus SOI: {:.2} Mkm (expected ~51.8 Mkm)",
+            actual_mkm
+        );
+    }
+
+    #[test]
+    fn oracle_voyager1_jupiter_flyby() {
+        // Voyager 1 Jupiter flyby (March 5, 1979)
+        // Source: NASA PDS — closest approach 348,890 km from center
+        // v_inf ≈ 10.48 km/s (commonly cited in orbital mechanics textbooks)
+        //
+        // Expected (analytic): turn angle ≈ 100.3°, v_periapsis ≈ 28.91 km/s
+        let v_inf_in = [10.48, 0.0, 0.0];
+        let r_peri = Km(348_890.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let result = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, normal);
+
+        // Turn angle ≈ 100.3° (1.751 rad) — large deflection from deep gravity well
+        let turn_deg = result.turn_angle_rad.to_degrees();
+        assert!(
+            (turn_deg - 100.3).abs() < 1.0,
+            "Voyager 1 Jupiter turn angle: {:.2}° (expected ~100.3°)",
+            turn_deg
+        );
+
+        // v_inf conserved (unpowered)
+        assert!(
+            (result.v_inf_out - 10.48).abs() < 1e-10,
+            "v_inf should be conserved: {:.6}",
+            result.v_inf_out
+        );
+
+        // Periapsis speed ≈ 28.91 km/s
+        assert!(
+            (result.v_periapsis - 28.91).abs() < 0.5,
+            "Voyager 1 v_periapsis: {:.2} km/s (expected ~28.91)",
+            result.v_periapsis
+        );
+    }
+
+    #[test]
+    fn oracle_voyager1_saturn_flyby_textbook() {
+        // Well-known textbook problem (Brainly/Chegg):
+        // Voyager 1 Saturn flyby with r_p = 124,000 km, v_inf = 7.51 km/s
+        // μ_Saturn = 3.793e7 km³/s²
+        //
+        // Expected (analytic): e ≈ 1.184, turn angle ≈ 115.2°, v_peri ≈ 25.85 km/s
+        let v_inf_in = [7.51, 0.0, 0.0];
+        let r_peri = Km(124_000.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let result = unpowered_flyby(mu::SATURN, v_inf_in, r_peri, normal);
+
+        // Turn angle ≈ 115.2° — very strong deflection
+        let turn_deg = result.turn_angle_rad.to_degrees();
+        assert!(
+            (turn_deg - 115.2).abs() < 1.0,
+            "Voyager 1 Saturn turn angle: {:.2}° (expected ~115.2°)",
+            turn_deg
+        );
+
+        // Periapsis speed ≈ 25.85 km/s
+        assert!(
+            (result.v_periapsis - 25.85).abs() < 0.5,
+            "Voyager 1 Saturn v_periapsis: {:.2} km/s (expected ~25.85)",
+            result.v_periapsis
+        );
+
+        // v_inf conserved
+        assert!(
+            (result.v_inf_out - 7.51).abs() < 1e-10,
+            "v_inf conserved: {:.6}",
+            result.v_inf_out
+        );
+    }
+
+    #[test]
+    fn oracle_voyager2_uranus_flyby() {
+        // Voyager 2 Uranus flyby (January 24, 1986)
+        // Source: NASA PDS — closest approach 107,000 km from center
+        // v_inf ≈ 5.4 km/s (approximate from trajectory data)
+        //
+        // Expected (analytic): turn angle ≈ 81.1°, v_peri ≈ 11.72 km/s
+        let v_inf_in = [5.4, 0.0, 0.0];
+        let r_peri = Km(107_000.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let result = unpowered_flyby(mu::URANUS, v_inf_in, r_peri, normal);
+
+        // Turn angle ≈ 81.1°
+        let turn_deg = result.turn_angle_rad.to_degrees();
+        assert!(
+            (turn_deg - 81.1).abs() < 2.0,
+            "Voyager 2 Uranus turn angle: {:.2}° (expected ~81.1°)",
+            turn_deg
+        );
+
+        // Periapsis speed ≈ 11.72 km/s
+        assert!(
+            (result.v_periapsis - 11.72).abs() < 0.5,
+            "Voyager 2 Uranus v_periapsis: {:.2} km/s (expected ~11.72)",
+            result.v_periapsis
+        );
+    }
+
+    // ===== Edge case tests =====
+
+    #[test]
+    fn edge_powered_flyby_zero_dv_equals_unpowered() {
+        // A powered flyby with zero burn should produce identical results
+        // to an unpowered flyby.
+        let v_inf_in = [8.0, 3.0, 0.0];
+        let r_peri = Km(200_000.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let unpowered = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, normal);
+        let powered = powered_flyby(mu::JUPITER, v_inf_in, r_peri, KmPerSec(0.0), normal);
+
+        assert!(
+            (powered.v_inf_out - unpowered.v_inf_out).abs() < 1e-10,
+            "Zero-burn powered should match unpowered v_inf: {:.6} vs {:.6}",
+            powered.v_inf_out,
+            unpowered.v_inf_out
+        );
+        assert!(
+            (powered.turn_angle_rad - unpowered.turn_angle_rad).abs() < 1e-10,
+            "Zero-burn powered should match unpowered turn: {:.6} vs {:.6}",
+            powered.turn_angle_rad,
+            unpowered.turn_angle_rad
+        );
+        assert!(
+            (powered.v_periapsis - unpowered.v_periapsis).abs() < 1e-10,
+            "Zero-burn powered should match unpowered v_peri: {:.6} vs {:.6}",
+            powered.v_periapsis,
+            unpowered.v_periapsis
+        );
+    }
+
+    #[test]
+    fn edge_near_capture_powered_flyby() {
+        // A burn at periapsis that is too small to escape → v_inf_out = 0 (capture)
+        // Use a slow approach with a retrograde burn (negative effective dv scenario:
+        // approach slowly, burn doesn't add enough to escape)
+        //
+        // v_inf = 1 km/s approach to Jupiter at r_p = 200,000 km
+        // v_peri_in = sqrt(1 + 2*mu/r_p) = sqrt(1 + 1266.87) ≈ 35.6 km/s
+        // Escape speed at r_p = sqrt(2*mu/r_p) ≈ 35.58 km/s
+        // v_peri_in = 35.59 km/s (just barely hyperbolic)
+        //
+        // A "burn" of 0 km/s gives v_inf_out = v_inf_in = 1 (escapes)
+        // We can't easily create a capture scenario with prograde burns
+        // (they always add energy). Instead, test that near-escape condition
+        // produces a small but positive v_inf_out.
+        let v_inf_in = [0.1, 0.0, 0.0]; // Very slow approach (0.1 km/s)
+        let r_peri = Km(200_000.0);
+        let normal = [0.0, 0.0, 1.0];
+        let burn_dv = KmPerSec(0.0); // No burn
+
+        let result = powered_flyby(mu::JUPITER, v_inf_in, r_peri, burn_dv, normal);
+
+        // Should still escape with v_inf_out = 0.1 km/s (same as input)
+        assert!(
+            (result.v_inf_out - 0.1).abs() < 1e-8,
+            "Near-escape v_inf_out: {:.8} (expected 0.1)",
+            result.v_inf_out
+        );
+
+        // Turn angle should be close to π (nearly captured = strong deflection)
+        assert!(
+            result.turn_angle_rad > 2.5, // > 143°
+            "Near-capture should produce large turn angle: {:.4} rad ({:.1}°)",
+            result.turn_angle_rad,
+            result.turn_angle_rad.to_degrees()
+        );
+    }
+
+    #[test]
+    fn edge_retrograde_flyby_plane() {
+        // Flyby in the opposite plane (normal = [0,0,-1]) should produce
+        // the same turn angle magnitude but mirror the exit direction.
+        let v_inf_in = [10.0, 0.0, 0.0];
+        let r_peri = Km(200_000.0);
+
+        let prograde = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, [0.0, 0.0, 1.0]);
+        let retrograde = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, [0.0, 0.0, -1.0]);
+
+        // Same turn angle
+        assert!(
+            (prograde.turn_angle_rad - retrograde.turn_angle_rad).abs() < 1e-10,
+            "Turn angle should be the same: {:.6} vs {:.6}",
+            prograde.turn_angle_rad,
+            retrograde.turn_angle_rad
+        );
+
+        // Same v_inf_out magnitude
+        assert!(
+            (prograde.v_inf_out - retrograde.v_inf_out).abs() < 1e-10,
+            "v_inf magnitude should match: {:.6} vs {:.6}",
+            prograde.v_inf_out,
+            retrograde.v_inf_out
+        );
+
+        // Exit directions should be mirrored in Y (Z stays 0, X same)
+        assert!(
+            (prograde.v_inf_out_dir[0] - retrograde.v_inf_out_dir[0]).abs() < 1e-10,
+            "X component should match"
+        );
+        assert!(
+            (prograde.v_inf_out_dir[1] + retrograde.v_inf_out_dir[1]).abs() < 1e-10,
+            "Y component should be mirrored: {:.6} vs {:.6}",
+            prograde.v_inf_out_dir[1],
+            retrograde.v_inf_out_dir[1]
+        );
+    }
+
+    #[test]
+    fn edge_rodrigues_rotation_360_identity() {
+        // Rotating by 2π should return the original vector
+        let v = [3.0, 4.0, 5.0];
+        let k = [0.0, 0.0, 1.0];
+        let result = rodrigues_rotate(v, k, 2.0 * std::f64::consts::PI);
+
+        assert!(
+            (result[0] - v[0]).abs() < 1e-10,
+            "360° rotation X: {:.10} vs {:.10}",
+            result[0],
+            v[0]
+        );
+        assert!(
+            (result[1] - v[1]).abs() < 1e-10,
+            "360° rotation Y: {:.10} vs {:.10}",
+            result[1],
+            v[1]
+        );
+        assert!(
+            (result[2] - v[2]).abs() < 1e-10,
+            "360° rotation Z: {:.10} vs {:.10}",
+            result[2],
+            v[2]
+        );
+    }
+
+    #[test]
+    fn edge_rodrigues_rotation_180_degrees() {
+        // Rotate [1,0,0] by 180° around Z axis → [-1,0,0]
+        let v = [1.0, 0.0, 0.0];
+        let k = [0.0, 0.0, 1.0];
+        let result = rodrigues_rotate(v, k, std::f64::consts::PI);
+
+        assert!(
+            (result[0] - (-1.0)).abs() < 1e-10,
+            "180° rotation X: {:.10}",
+            result[0]
+        );
+        assert!(
+            result[1].abs() < 1e-10,
+            "180° rotation Y: {:.10}",
+            result[1]
+        );
+    }
+
+    #[test]
+    fn edge_powered_flyby_large_burn_amplification() {
+        // A large burn at deep periapsis should produce significant
+        // Oberth amplification: ΔE = v_peri × Δv is maximized when
+        // v_peri is large (deep in gravity well).
+        //
+        // Compare same burn at Jupiter (deep well) vs weaker planet
+        let v_inf_in = [5.0, 0.0, 0.0];
+        let r_peri = Km(100_000.0); // Close periapsis
+        let burn = KmPerSec(2.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let jupiter = powered_flyby(mu::JUPITER, v_inf_in, r_peri, burn, normal);
+        let saturn = powered_flyby(mu::SATURN, v_inf_in, r_peri, burn, normal);
+
+        // Jupiter has deeper gravity well → higher v_peri → more Oberth gain
+        let jupiter_gain = jupiter.v_inf_out - 5.0;
+        let saturn_gain = saturn.v_inf_out - 5.0;
+
+        assert!(
+            jupiter_gain > saturn_gain,
+            "Jupiter Oberth gain ({:.3} km/s) should exceed Saturn ({:.3} km/s)",
+            jupiter_gain,
+            saturn_gain
+        );
+
+        // Both should exceed the raw 2 km/s burn (Oberth amplification)
+        assert!(
+            jupiter_gain > 2.0,
+            "Jupiter gain should exceed raw burn: {:.3} > 2.0",
+            jupiter_gain
+        );
+    }
+
+    #[test]
+    fn edge_flyby_energy_conservation() {
+        // For an unpowered flyby, the specific orbital energy must be conserved:
+        // E = v_inf²/2 (which equals -μ/(2a), the vis-viva at infinity)
+        let v_inf_in = [8.0, 3.0, 0.0];
+        let v_inf_mag = (8.0_f64.powi(2) + 3.0_f64.powi(2)).sqrt();
+        let r_peri = Km(300_000.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let result = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, normal);
+
+        // Check energy conservation via v_inf conservation
+        assert!(
+            (result.v_inf_out - v_inf_mag).abs() < 1e-10,
+            "Energy conservation: v_inf_out {:.10} should equal v_inf_in {:.10}",
+            result.v_inf_out,
+            v_inf_mag
+        );
+
+        // Check that exit direction is a unit vector
+        let dir_mag = (result.v_inf_out_dir[0].powi(2)
+            + result.v_inf_out_dir[1].powi(2)
+            + result.v_inf_out_dir[2].powi(2))
+        .sqrt();
+        assert!(
+            (dir_mag - 1.0).abs() < 1e-10,
+            "Exit direction should be unit vector: |dir| = {:.10}",
+            dir_mag
+        );
+    }
+
+    #[test]
+    fn edge_3d_approach_vector() {
+        // Test with a non-planar approach vector to verify 3D geometry
+        let v_inf_in = [5.0, 3.0, 2.0]; // 3D approach
+        let v_inf_mag = (25.0 + 9.0 + 4.0_f64).sqrt(); // √38 ≈ 6.164
+        let r_peri = Km(200_000.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let result = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, normal);
+
+        // v_inf conserved
+        assert!(
+            (result.v_inf_out - v_inf_mag).abs() < 1e-8,
+            "3D v_inf conserved: {:.6} vs {:.6}",
+            result.v_inf_out,
+            v_inf_mag
+        );
+
+        // Exit direction unit vector
+        let dir_mag = (result.v_inf_out_dir[0].powi(2)
+            + result.v_inf_out_dir[1].powi(2)
+            + result.v_inf_out_dir[2].powi(2))
+        .sqrt();
+        assert!(
+            (dir_mag - 1.0).abs() < 1e-10,
+            "3D exit dir unit: {:.10}",
+            dir_mag
+        );
+
+        // The rotation is around Z axis, so the Z component of v_inf_out_dir
+        // should stay proportional to the original (Z component is along the
+        // rotation axis, so k_dot_v * k is the parallel component)
+        // For Z rotation: parallel component = v_z * [0,0,1] is preserved
+        let expected_z = v_inf_in[2] / v_inf_mag; // Original z direction
+        assert!(
+            (result.v_inf_out_dir[2] - expected_z).abs() < 1e-10,
+            "Z component preserved under Z-axis rotation: {:.6} vs {:.6}",
+            result.v_inf_out_dir[2],
+            expected_z
+        );
+    }
 }
