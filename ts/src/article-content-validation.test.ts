@@ -3474,3 +3474,161 @@ describe("Internal link validation (Task 397)", () => {
     });
   }
 });
+
+// ---------------------------------------------------------------------------
+// Calculation-report consistency (Task 412)
+// Ensures values in epXX_calculations.json appear in episode reports
+// ---------------------------------------------------------------------------
+
+describe("calculation-report consistency", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+
+  function loadCalc(ep: string): Record<string, unknown> {
+    return JSON.parse(fs.readFileSync(path.join(calcDir, `ep${ep}_calculations.json`), "utf-8"));
+  }
+
+  /** Check that a report includes a rounded/formatted version of a calculation value */
+  function assertValueCited(report: string, value: number, label: string, precision = 2): void {
+    // Try various roundings of the value
+    const rounded = [
+      value.toFixed(precision),
+      ...(precision > 0 ? [value.toFixed(precision - 1)] : []),
+      Math.round(value).toString(),
+      value.toPrecision(4),
+    ];
+    // Also check comma-formatted integers (e.g. 1,127 for 1127)
+    const intStr = Math.round(value).toString();
+    if (intStr.length >= 4) {
+      rounded.push(intStr.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    }
+    const found = rounded.some(r => report.includes(r));
+    assert.ok(found, `${label}: expected one of [${rounded.join(", ")}] in report`);
+  }
+
+  describe("EP01", () => {
+    const calc = loadCalc("01") as Record<string, Record<string, unknown>>;
+    const report = readReport("ep01.md", "episodes");
+    const hohmann = calc.hohmann as { totalDv: number; transferTimeDays: number };
+    const boundaries = calc.boundaries as { massBoundary72h: { maxMassT: number; aReqG: number } };
+
+    it("Hohmann total ΔV ~10.15 km/s cited", () => {
+      assertValueCited(report, hohmann.totalDv, "hohmann.totalDv");
+    });
+
+    it("Hohmann transfer time ~1127 days cited", () => {
+      assertValueCited(report, hohmann.transferTimeDays, "hohmann.transferTimeDays", 0);
+    });
+
+    it("mass boundary ~299t cited", () => {
+      assertValueCited(report, boundaries.massBoundary72h.maxMassT, "massBoundary72h.maxMassT", 0);
+    });
+
+    it("required acceleration ~3.34G cited", () => {
+      assertValueCited(report, boundaries.massBoundary72h.aReqG, "massBoundary72h.aReqG");
+    });
+  });
+
+  describe("EP02", () => {
+    const calc = loadCalc("02") as Record<string, Record<string, unknown>>;
+    const report = readReport("ep02.md", "episodes");
+    const jupEsc = calc.jupiterEscape as { escapeVelocityKms: number; hyperbolicExcessKms: number };
+    const helio = calc.heliocentricTransfer as { vHelioKms: number };
+    const satArr = calc.saturnArrivalVInf as { vInfSaturnKms: number };
+    const trimThrust = calc.trimThrust as { primary: { transferDays: number } };
+
+    it("Jupiter escape velocity ~8.42 km/s cited", () => {
+      assertValueCited(report, jupEsc.escapeVelocityKms, "jupiterEscape.escapeVelocityKms");
+    });
+
+    it("hyperbolic excess ~5.93 km/s cited", () => {
+      assertValueCited(report, jupEsc.hyperbolicExcessKms, "jupiterEscape.hyperbolicExcessKms");
+    });
+
+    it("heliocentric velocity ~18.99 km/s cited", () => {
+      assertValueCited(report, helio.vHelioKms, "heliocentricTransfer.vHelioKms");
+    });
+
+    it("Saturn v∞ ~4.69 km/s cited", () => {
+      assertValueCited(report, satArr.vInfSaturnKms, "saturnArrivalVInf.vInfSaturnKms");
+    });
+
+    it("trim-thrust transit ~87 days cited", () => {
+      assertValueCited(report, trimThrust.primary.transferDays, "trimThrust.primary.transferDays", 0);
+    });
+  });
+
+  describe("EP03", () => {
+    const calc = loadCalc("03") as Record<string, Record<string, unknown>>;
+    const report = readReport("ep03.md", "episodes");
+    const hohmann = calc.hohmann as { totalDv: number; transferTimeDays: number };
+    const massFeas = calc.massFeasibility as { maxMassT: number };
+    const navCrisis = calc.navCrisis as { statedErrorKm: number };
+
+    it("Hohmann total ΔV ~2.74 km/s cited", () => {
+      assertValueCited(report, hohmann.totalDv, "hohmann.totalDv");
+    });
+
+    it("Hohmann transfer time ~9971 days cited", () => {
+      assertValueCited(report, hohmann.transferTimeDays, "hohmann.transferTimeDays", 0);
+    });
+
+    it("mass boundary ~452.5t cited", () => {
+      assertValueCited(report, massFeas.maxMassT, "massFeasibility.maxMassT", 1);
+    });
+
+    it("navigation error ~14,360,000 km cited", () => {
+      assertValueCited(report, navCrisis.statedErrorKm, "navCrisis.statedErrorKm", 0);
+    });
+  });
+
+  describe("EP04", () => {
+    const calc = loadCalc("04") as Record<string, Record<string, unknown>>;
+    const report = readReport("ep04.md", "episodes");
+    const hohmann = calc.hohmann as { totalDv: number; transferTimeDays: number };
+    const plasmoid = calc.plasmoid as { totalExposureMSv: number; shieldLifeMin: number; transitMin: number };
+    const damage = calc.damageAssessment as { effectiveThrustMN: number };
+
+    it("Hohmann total ΔV ~15.94 km/s cited", () => {
+      assertValueCited(report, hohmann.totalDv, "hohmann.totalDv");
+    });
+
+    it("plasmoid exposure ~480 mSv cited", () => {
+      assert.ok(report.includes("480"), "should cite 480 mSv plasmoid exposure");
+    });
+
+    it("shield life ~14 min cited", () => {
+      assert.ok(report.includes("14分"), "should cite 14 min shield life");
+    });
+
+    it("effective thrust ~6.37 MN cited", () => {
+      assertValueCited(report, damage.effectiveThrustMN, "damageAssessment.effectiveThrustMN");
+    });
+  });
+
+  describe("EP05", () => {
+    const calc = loadCalc("05") as Record<string, Record<string, unknown>>;
+    const report = readReport("ep05.md", "episodes");
+    const nozzle = calc.nozzleLifespan as { nozzleLifetimeHours: number; requiredBurnTimeHours: number; marginMinutes: number; marginPercent: number };
+    const fullRoute = calc.fullRoute as { totalDistAU: number };
+
+    it("nozzle lifetime ~55.63h cited", () => {
+      assertValueCited(report, nozzle.nozzleLifetimeHours, "nozzleLifespan.nozzleLifetimeHours");
+    });
+
+    it("required burn time ~55.2h cited", () => {
+      assertValueCited(report, nozzle.requiredBurnTimeHours, "nozzleLifespan.requiredBurnTimeHours", 1);
+    });
+
+    it("nozzle margin ~26 min cited", () => {
+      assert.ok(report.includes("26"), "should cite 26 min nozzle margin");
+    });
+
+    it("nozzle margin ~0.78% cited", () => {
+      assert.ok(report.includes("0.78"), "should cite 0.78% nozzle margin");
+    });
+
+    it("total route distance ~35.88 AU cited", () => {
+      assertValueCited(report, fullRoute.totalDistAU, "fullRoute.totalDistAU");
+    });
+  });
+});
