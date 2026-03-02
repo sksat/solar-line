@@ -2391,6 +2391,24 @@ describe("infrastructure.md content validation", () => {
       "should have beacon shutdown impact chart",
     );
   });
+
+  it("has station map orbital diagram", () => {
+    assert.ok(
+      content.includes("infrastructure-station-map"),
+      "should have orbital diagram showing station spatial layout",
+    );
+    assert.ok(
+      content.includes("component:orbital-diagram"),
+      "should use orbital-diagram component",
+    );
+  });
+
+  it("station map includes all 4 stations and governance boundary", () => {
+    assert.ok(content.includes("ガニメデ中央港"), "should show Ganymede Central Port");
+    assert.ok(content.includes("エンケラドスST"), "should show Enceladus Station");
+    assert.ok(content.includes("タイタニア/ウラヌス3"), "should show Titania/Uranus-3");
+    assert.ok(content.includes("内苑/外苑境界"), "should show inner/outer sphere boundary");
+  });
 });
 
 // ============================================================

@@ -86,6 +86,112 @@ bars:
 
 内苑（地球・火星）のインフラが太陽から2 AU以内に集中する一方、外苑の施設は5〜19 AUに点在し、人員・設備とも縮小している。この距離の非対称性が通信遅延（最大168分）や補給困難と相まって、外苑の内苑依存を構造的に強化している。
 
+```component:orbital-diagram
+{
+  "id": "infrastructure-station-map",
+  "title": "太陽系インフラ配置図: 宇宙港・ステーションとケストレル航路",
+  "description": "ケストレル号が寄港した4つのステーション（火星、ガニメデ中央港、エンケラドスST、タイタニア/ウラヌス3）の太陽系における空間配置を示す。内苑（地球・火星、~2 AU以内）にはインフラが集中し、港湾航舎体系のビーコン密度も高い。外苑に進むほど施設は縮小し、エンケラドスでは管理人1名、タイタニアでは名目上の自治にとどまる。√スケールにより実際の距離比は圧縮されている。青は内苑施設、橙は外苑施設、赤は辺境施設。",
+  "centerLabel": "太陽",
+  "scaleMode": "sqrt",
+  "radiusUnit": "AU",
+  "viewRadius": 21,
+  "orbits": [
+    {
+      "id": "earth",
+      "label": "地球 (1.0 AU) — 港湾航舎管理本部",
+      "radius": 1,
+      "color": "#4488ff",
+      "angle": 2.721
+    },
+    {
+      "id": "mars",
+      "label": "火星 (1.52 AU) — EP1出発地",
+      "radius": 1.524,
+      "color": "#58a6ff",
+      "angle": 1.431
+    },
+    {
+      "id": "inner-boundary",
+      "label": "内苑/外苑境界 (~2 AU)",
+      "radius": 2.0,
+      "color": "#58a6ff44"
+    },
+    {
+      "id": "jupiter",
+      "label": "木星 (5.20 AU)",
+      "radius": 5.203,
+      "color": "#dd884488",
+      "angle": 1.379
+    },
+    {
+      "id": "ganymede-port",
+      "label": "ガニメデ中央港 (5.20 AU) — 入港拒否",
+      "radius": 5.21,
+      "color": "#d29922",
+      "angle": 1.38
+    },
+    {
+      "id": "saturn",
+      "label": "土星 (9.58 AU)",
+      "radius": 9.58,
+      "color": "#daa52088",
+      "angle": 2.866
+    },
+    {
+      "id": "enceladus-st",
+      "label": "エンケラドスST (9.54 AU) — 管理人1名",
+      "radius": 9.56,
+      "color": "#d29922",
+      "angle": 2.87
+    },
+    {
+      "id": "uranus",
+      "label": "天王星 (19.2 AU)",
+      "radius": 19.19,
+      "color": "#66dddd88",
+      "angle": 2.674
+    },
+    {
+      "id": "titania-u3",
+      "label": "タイタニア/ウラヌス3 (19.2 AU) — 名目自治",
+      "radius": 19.22,
+      "color": "#f85149",
+      "angle": 2.68
+    }
+  ],
+  "transfers": [
+    {
+      "label": "ケストレル航路: 火星→ガニメデ",
+      "fromOrbitId": "mars",
+      "toOrbitId": "ganymede-port",
+      "color": "#3fb95066",
+      "style": "brachistochrone"
+    },
+    {
+      "label": "ケストレル航路: ガニメデ→エンケラドス",
+      "fromOrbitId": "ganymede-port",
+      "toOrbitId": "enceladus-st",
+      "color": "#8b949e66",
+      "style": "hyperbolic"
+    },
+    {
+      "label": "ケストレル航路: エンケラドス→タイタニア",
+      "fromOrbitId": "enceladus-st",
+      "toOrbitId": "titania-u3",
+      "color": "#f9731666",
+      "style": "brachistochrone"
+    },
+    {
+      "label": "ケストレル航路: タイタニア→地球",
+      "fromOrbitId": "titania-u3",
+      "toOrbitId": "earth",
+      "color": "#a371f766",
+      "style": "brachistochrone"
+    }
+  ]
+}
+```
+
 ## 航法インフラストラクチャ
 
 SOLAR LINE の世界観で最も重要なインフラは**港湾航舎体系**（Port Navigation Authority System）である。太陽系全域をカバーする航法ビーコンネットワークは100年以上維持されており、通常の船舶はこのシステムなしに航行できない。この航法ネットワークの独占的支配こそが物語の政治的対立の核心であり、ケストレルの旅を可能にしつつも最大の障害となる。
