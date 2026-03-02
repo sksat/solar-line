@@ -647,7 +647,10 @@ mod tests {
         // vₑ = 300 * 9.80665 / 1000 = 2.942 km/s
         // mass_ratio = exp(3.0 / 2.942) ≈ 2.775
         // post = 10000 / 2.775 ≈ 3604 kg
-        assert!(post > 3_000.0 && post < 4_000.0, "low-Isp post mass = {post}");
+        assert!(
+            post > 3_000.0 && post < 4_000.0,
+            "low-Isp post mass = {post}"
+        );
     }
 
     #[test]

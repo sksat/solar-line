@@ -597,11 +597,7 @@ mod tests {
         let arb = Vec3::new(1.0, 0.0, 0.0);
         let in_plane = ring_normal.cross_raw(arb).normalize();
         let target = in_plane.scale(100_000.0); // ~100,000 km from Saturn in ring plane
-        let vel_dir = Vec3::new(
-            target.x - pos.x,
-            target.y - pos.y,
-            target.z - pos.z,
-        ).normalize();
+        let vel_dir = Vec3::new(target.x - pos.x, target.y - pos.y, target.z - pos.z).normalize();
 
         let result = saturn_ring_crossing(pos, vel_dir, jd);
         assert!(result.crosses_ring_plane);

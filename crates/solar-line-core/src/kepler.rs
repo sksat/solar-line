@@ -438,11 +438,7 @@ mod tests {
         // At apoapsis: ν = π, E = π, M = π
         let e = Eccentricity::elliptical(0.5).unwrap();
         let big_e = true_to_eccentric_anomaly(Radians(PI), e);
-        assert!(
-            (big_e.value() - PI).abs() < 1e-12,
-            "E = {}",
-            big_e.value()
-        );
+        assert!((big_e.value() - PI).abs() < 1e-12, "E = {}", big_e.value());
         let m = eccentric_to_mean_anomaly(big_e, e);
         assert!((m.value() - PI).abs() < 1e-12, "M = {}", m.value());
     }

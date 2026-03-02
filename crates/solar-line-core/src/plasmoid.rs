@@ -428,8 +428,8 @@ mod tests {
     #[test]
     fn plasmoid_perturbation_zero_field_and_density() {
         let result = plasmoid_perturbation(
-            0.0,          // no field
-            0.0,          // no density
+            0.0, // no field
+            0.0, // no density
             150_000.0,
             7854.0,
             480.0,
@@ -446,12 +446,16 @@ mod tests {
     fn light_ship_larger_perturbation() {
         // A 300 t ship (EP05 effective mass) gets perturbed more
         let heavy = plasmoid_perturbation(
-            15.0e-9, 0.5e6, 250_000.0, 7854.0, 480.0,
-            48_000_000.0, 34_920.0,
+            15.0e-9,
+            0.5e6,
+            250_000.0,
+            7854.0,
+            480.0,
+            48_000_000.0,
+            34_920.0,
         );
         let light = plasmoid_perturbation(
-            15.0e-9, 0.5e6, 250_000.0, 7854.0, 480.0,
-            300_000.0, 34_920.0,
+            15.0e-9, 0.5e6, 250_000.0, 7854.0, 480.0, 300_000.0, 34_920.0,
         );
         assert!(
             light.velocity_perturbation_m_s > heavy.velocity_perturbation_m_s * 100.0,

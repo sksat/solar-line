@@ -253,17 +253,9 @@ mod tests {
         let r = 7_000_000.0;
         let m = 300_000.0;
         let l = 100.0;
-        let torque_45 =
-            gravity_gradient_torque(gm, r, m, l, std::f64::consts::FRAC_PI_4);
-        let torque_30 =
-            gravity_gradient_torque(gm, r, m, l, std::f64::consts::FRAC_PI_6);
-        let torque_60 = gravity_gradient_torque(
-            gm,
-            r,
-            m,
-            l,
-            std::f64::consts::FRAC_PI_3,
-        );
+        let torque_45 = gravity_gradient_torque(gm, r, m, l, std::f64::consts::FRAC_PI_4);
+        let torque_30 = gravity_gradient_torque(gm, r, m, l, std::f64::consts::FRAC_PI_6);
+        let torque_60 = gravity_gradient_torque(gm, r, m, l, std::f64::consts::FRAC_PI_3);
         // sin(2*45°) = sin(90°) = 1, which is the maximum
         assert!(torque_45 > torque_30, "45° > 30°");
         assert!(torque_45 > torque_60, "45° > 60°");
