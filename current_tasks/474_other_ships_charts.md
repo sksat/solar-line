@@ -1,6 +1,6 @@
 # Task 474: Add Charts to Other-Ships Summary Report
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Summary
 

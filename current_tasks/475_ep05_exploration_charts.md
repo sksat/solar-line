@@ -1,6 +1,6 @@
 # Task 475: Add Bar Charts to EP05 Explorations
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Summary
 
