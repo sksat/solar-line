@@ -3058,21 +3058,19 @@ describe("ai-costs.md content validation", () => {
     assert.ok(content.includes("ccusage"), "should document ccusage update command");
   });
 
-  // Regression tests from Task 279 external review
-  it("task count is 353+ (not stale 261 or 351)", () => {
-    assert.ok(
-      !content.includes("261タスク"),
-      "should not contain stale task count 261",
-    );
-    assert.ok(content.includes("353"), "should cite current task count 353");
+  // Regression tests from Task 279 external review (updated Task 490: dynamic assertions)
+  it("task count is reasonably current", () => {
+    const match = content.match(/完了タスク数 \| (\d+)/);
+    assert.ok(match, "should have task count in stats table");
+    const reportedCount = parseInt(match![1]);
+    assert.ok(reportedCount >= 400, `task count ${reportedCount} should be >= 400`);
   });
 
-  it("commit count is 494+ (not stale 491+)", () => {
-    assert.ok(
-      !content.includes("390+"),
-      "should not contain stale commit count 390+",
-    );
-    assert.ok(content.includes("494+"), "should cite current commit count 494+");
+  it("commit count is reasonably current", () => {
+    const match = content.match(/コミット数 \| (\d[\d,]*)\+/);
+    assert.ok(match, "should have commit count in stats table");
+    const reportedCount = parseInt(match![1].replace(/,/g, ""));
+    assert.ok(reportedCount >= 500, `commit count ${reportedCount} should be >= 500`);
   });
 
   it("notes Haiku was replaced by Sonnet as default subagent model", () => {
@@ -3090,9 +3088,20 @@ describe("ai-costs.md content validation", () => {
   });
 
   it("includes project scale metrics (test counts)", () => {
-    assert.ok(content.includes("2,314"), "should cite TS test count");
-    assert.ok(content.includes("378"), "should cite Rust test count");
-    assert.ok(content.includes("242"), "should cite E2E test count");
+    const tsMatch = content.match(/TypeScript ユニットテスト \| ([\d,]+)/);
+    assert.ok(tsMatch, "should have TS test count in stats table");
+    const tsCount = parseInt(tsMatch![1].replace(/,/g, ""));
+    assert.ok(tsCount >= 2000, `TS test count ${tsCount} should be >= 2000`);
+
+    const rustMatch = content.match(/Rust テスト \| (\d+)/);
+    assert.ok(rustMatch, "should have Rust test count in stats table");
+    const rustCount = parseInt(rustMatch![1]);
+    assert.ok(rustCount >= 300, `Rust test count ${rustCount} should be >= 300`);
+
+    const e2eMatch = content.match(/E2E テスト \| (\d+)/);
+    assert.ok(e2eMatch, "should have E2E test count in stats table");
+    const e2eCount = parseInt(e2eMatch![1]);
+    assert.ok(e2eCount >= 200, `E2E test count ${e2eCount} should be >= 200`);
   });
 
   it("explains VMブート terminology", () => {
