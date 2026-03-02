@@ -14,6 +14,7 @@ import {
   mergeCueTexts,
   extractLines,
   validateEpisodeLines,
+  deduplicateRollingText,
 } from "./dialogue-extraction.ts";
 
 // ---------------------------------------------------------------------------
@@ -351,5 +352,130 @@ describe("validateEpisodeLines", () => {
     const errors = validateEpisodeLines(data);
     assert.ok(errors.length > 0);
     assert.ok(errors[0].includes("videoId"));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// deduplicateRollingText
+// ---------------------------------------------------------------------------
+
+describe("deduplicateRollingText", () => {
+  /** Helper to make a minimal entry */
+  function e(id: string, text: string, startMs = 0, endMs = 1000): RawSubtitleEntry {
+    return { id, startMs, endMs, text };
+  }
+
+  it("returns empty array for empty input", () => {
+    assert.deepEqual(deduplicateRollingText([]), []);
+  });
+
+  it("passes through single-line cues unchanged", () => {
+    const entries = [
+      e("1", "こんにちは", 0, 1000),
+      e("2", "さようなら", 1000, 2000),
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result.length, 2);
+    assert.equal(result[0].text, "こんにちは");
+    assert.equal(result[1].text, "さようなら");
+  });
+
+  it("deduplicates rolling two-line cues", () => {
+    // Simulates auto-gen: cue 2 carries "Line A" from cue 1 on top
+    const entries = [
+      e("1", "Line A", 0, 1000),
+      e("2", "Line A\nLine B", 1000, 2000),
+      e("3", "Line B\nLine C", 2000, 3000),
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result.length, 3);
+    assert.equal(result[0].text, "Line A");
+    assert.equal(result[1].text, "Line B");
+    assert.equal(result[2].text, "Line C");
+  });
+
+  it("keeps both lines when first line does not match previous cue", () => {
+    const entries = [
+      e("1", "Alpha"),
+      e("2", "Beta\nGamma"),
+    ];
+    const result = deduplicateRollingText(entries);
+    // No dedup match → keeps last line
+    assert.equal(result[1].text, "Gamma");
+  });
+
+  it("skips entries with empty text after tag stripping", () => {
+    const entries = [
+      e("1", "   "),
+      e("2", "\n\n"),
+      e("3", "valid text"),
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].text, "valid text");
+  });
+
+  it("handles VTT tags in text", () => {
+    // stripVttTags should remove <c> tags etc.
+    const entries = [
+      e("1", "<c>Tagged text</c>"),
+      e("2", "<c>Tagged text</c>\nNew line"),
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result.length, 2);
+    assert.equal(result[0].text, "Tagged text");
+    assert.equal(result[1].text, "New line");
+  });
+
+  it("preserves entry metadata (id, timestamps)", () => {
+    const entries = [
+      e("cue-1", "First", 100, 200),
+      e("cue-2", "First\nSecond", 200, 300),
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result[1].id, "cue-2");
+    assert.equal(result[1].startMs, 200);
+    assert.equal(result[1].endMs, 300);
+  });
+
+  it("drops cue when dedup match leaves empty new text", () => {
+    // Two-line cue where second line is non-empty but matches are stripped,
+    // and the dedup new text is empty after trim
+    const entries = [
+      e("1", "Hello"),
+      e("2", "Hello\nWorld"),
+      e("3", "World\n   "),  // after filter, becomes ["World"] — single line, no dedup
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result.length, 3);
+    assert.equal(result[0].text, "Hello");
+    assert.equal(result[1].text, "World");
+    assert.equal(result[2].text, "World");  // single-line fallback keeps last line
+  });
+
+  it("handles three-line cues (keeps lines after first)", () => {
+    const entries = [
+      e("1", "A"),
+      e("2", "A\nB\nC"),
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result[1].text, "B\nC");
+  });
+
+  it("matches when previous text contains first line (substring match)", () => {
+    // The function uses prevText.includes(lines[0]) as fallback
+    const entries = [
+      e("1", "Long sentence here"),
+      e("2", "Long sentence here\nNext part"),
+    ];
+    const result = deduplicateRollingText(entries);
+    assert.equal(result.length, 2);
+    assert.equal(result[1].text, "Next part");
+  });
+
+  it("handles single entry", () => {
+    const result = deduplicateRollingText([e("1", "Only one")]);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].text, "Only one");
   });
 });

@@ -14,6 +14,7 @@ import type {
   MergeConfig,
   MergeReason,
 } from "./dialogue-extraction-types.ts";
+import { stripVttTags } from "./subtitle.ts";
 
 // ---------------------------------------------------------------------------
 // Japanese punctuation patterns
@@ -224,4 +225,64 @@ export function validateEpisodeLines(data: EpisodeLines): string[] {
   }
 
   return errors;
+}
+
+// ---------------------------------------------------------------------------
+// Rolling text deduplication (auto-generated subtitle preprocessing)
+// ---------------------------------------------------------------------------
+
+/**
+ * Deduplicate rolling text in auto-generated subtitles.
+ *
+ * Pattern: auto-gen subs show two lines — the previous cue's text on top
+ * and the new text on bottom. We extract only the new text from each cue.
+ */
+export function deduplicateRollingText(
+  entries: RawSubtitleEntry[],
+): RawSubtitleEntry[] {
+  if (entries.length === 0) return [];
+
+  const result: RawSubtitleEntry[] = [];
+
+  for (let i = 0; i < entries.length; i++) {
+    const text = stripVttTags(entries[i].text).trim();
+    const lines = text.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+
+    if (lines.length === 0) continue;
+
+    // For auto-gen subs with rolling text:
+    // If the cue has 2 lines, the first line is likely carried from previous cue
+    // Check if first line matches previous cue's text
+    if (lines.length >= 2 && i > 0) {
+      const prevText = stripVttTags(entries[i - 1].text).trim();
+      const prevLines = prevText.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+      const prevLastLine = prevLines[prevLines.length - 1] ?? "";
+
+      // If the first line of current cue matches previous cue's last line,
+      // keep only the new (second) line
+      if (lines[0] === prevLastLine || prevText.includes(lines[0])) {
+        const newText = lines.slice(1).join("\n");
+        if (newText.trim().length > 0) {
+          result.push({
+            id: entries[i].id,
+            startMs: entries[i].startMs,
+            endMs: entries[i].endMs,
+            text: newText,
+          });
+        }
+        continue;
+      }
+    }
+
+    // Single-line cue or no dedup match — keep the last line
+    // (For single line cues, the text is the new utterance)
+    result.push({
+      id: entries[i].id,
+      startMs: entries[i].startMs,
+      endMs: entries[i].endMs,
+      text: lines[lines.length - 1],
+    });
+  }
+
+  return result;
 }
