@@ -700,15 +700,7 @@ describe("report data: summary event timeline integrity", () => {
 describe("report data: side-view diagram integrity", () => {
   const allDiagrams: { source: string; diagram: import("./report-types.ts").SideViewDiagram }[] = [];
 
-  // Episodes
-  for (const epNum of getAvailableEpisodes()) {
-    const report = loadEpisodeReport(epNum);
-    for (const d of report.sideViewDiagrams ?? []) {
-      allDiagrams.push({ source: `EP${String(epNum).padStart(2, "0")}`, diagram: d });
-    }
-  }
-
-  // Summaries
+  // Summaries (side-view diagrams only appear in summary reports)
   const summaryDir = path.join(REPORTS_DIR, "data", "summary");
   const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
   for (const file of summaryFiles) {
