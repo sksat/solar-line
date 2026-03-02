@@ -595,6 +595,48 @@ Test.
     assert.equal(report.timeSeriesCharts![0].id, "ep01-chart-01");
   });
 
+  it("merges multiple timeseries-charts blocks", () => {
+    const input = `---
+episode: 1
+title: "Test"
+summary: "Test"
+---
+
+\`\`\`timeseries-charts:
+[{ "id": "chart-a", "title": "Chart A", "xLabel": "X", "yLabel": "Y", "series": [] }]
+\`\`\`
+
+## ep01-transfer-01
+
+\`\`\`transfer:
+{
+  "id": "ep01-transfer-01",
+  "episode": 1,
+  "description": "Test",
+  "timestamp": "n/a",
+  "claimedDeltaV": null,
+  "computedDeltaV": 1,
+  "assumptions": [],
+  "verdict": "reference",
+  "parameters": {},
+  "sources": []
+}
+\`\`\`
+
+\`\`\`timeseries-charts:
+[{ "id": "chart-b", "title": "Chart B", "xLabel": "X", "yLabel": "Y", "series": [] },
+ { "id": "chart-c", "title": "Chart C", "xLabel": "X", "yLabel": "Y", "series": [] }]
+\`\`\`
+
+Test.
+`;
+    const report = parseEpisodeMarkdown(input);
+    assert.equal(report.timeSeriesCharts?.length, 3, "should merge 1 + 2 charts from two blocks");
+    assert.equal(report.timeSeriesCharts![0].id, "chart-a");
+    assert.equal(report.timeSeriesCharts![1].id, "chart-b");
+    assert.equal(report.timeSeriesCharts![2].id, "chart-c");
+  });
+
   it("throws if no transfers found", () => {
     const input = `---
 episode: 1

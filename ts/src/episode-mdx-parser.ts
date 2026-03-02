@@ -261,18 +261,24 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
       case "dialogue-quotes":
         dialogueQuotes = JSON.parse(d.rawContent) as DialogueQuote[];
         break;
-      case "diagrams":
-        diagrams = JSON.parse(d.rawContent) as OrbitalDiagram[];
+      case "diagrams": {
+        const newDiagrams = JSON.parse(d.rawContent) as OrbitalDiagram[];
+        diagrams = diagrams ? [...diagrams, ...newDiagrams] : newDiagrams;
         break;
-      case "timeseries-charts":
-        timeSeriesCharts = JSON.parse(d.rawContent) as TimeSeriesChart[];
+      }
+      case "timeseries-charts": {
+        const newCharts = JSON.parse(d.rawContent) as TimeSeriesChart[];
+        timeSeriesCharts = timeSeriesCharts ? [...timeSeriesCharts, ...newCharts] : newCharts;
         break;
+      }
       case "detail-pages":
         detailPages = JSON.parse(d.rawContent) as TransferDetailPage[];
         break;
-      case "glossary":
-        glossary = JSON.parse(d.rawContent) as GlossaryTerm[];
+      case "glossary": {
+        const newGlossary = JSON.parse(d.rawContent) as GlossaryTerm[];
+        glossary = glossary ? [...glossary, ...newGlossary] : newGlossary;
         break;
+      }
       case "margin-gauge": {
         const gauge = JSON.parse(d.rawContent) as MarginGauge;
         if (!marginGauges) marginGauges = [];
