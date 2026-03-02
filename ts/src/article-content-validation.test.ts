@@ -3315,3 +3315,85 @@ describe("G-force terminology validation (Task 395)", () => {
     });
   }
 });
+
+// =============================================================================
+// Internal Link Validation (Task 397)
+// =============================================================================
+// Validates that markdown links in report files use correct relative paths
+// and file naming conventions. Prevents broken links from reaching production.
+// =============================================================================
+
+describe("Internal link validation (Task 397)", () => {
+  const episodeFiles = ["ep01.md", "ep02.md", "ep03.md", "ep04.md", "ep05.md"];
+  const summaryFiles = fs.readdirSync(summaryDir)
+    .filter((f: string) => f.endsWith(".md"));
+
+  // Extract markdown links: [text](url)
+  function extractLinks(content: string): { url: string; line: number }[] {
+    const results: { url: string; line: number }[] = [];
+    const lines = content.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      // Match markdown links but skip image refs and code blocks
+      const linkRegex = /\[([^\]]*)\]\(([^)]+)\)/g;
+      let match;
+      while ((match = linkRegex.exec(lines[i])) !== null) {
+        const url = match[2];
+        // Skip external links and anchors-only
+        if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("#")) continue;
+        results.push({ url, line: i + 1 });
+      }
+    }
+    return results;
+  }
+
+  // No internal links should use absolute paths (starting with /)
+  // Exception: "/" alone is a valid link to the site root
+  for (const file of [...episodeFiles.map(f => ({ file: f, dir: "episodes" as const })),
+                       ...summaryFiles.map(f => ({ file: f, dir: "summary" as const }))]) {
+    it(`${file.file}: no absolute-path internal links`, () => {
+      const content = readReport(file.file, file.dir);
+      const links = extractLinks(content);
+      for (const { url, line } of links) {
+        const isRootLink = url === "/" || url === "/index.html";
+        assert.ok(
+          !url.startsWith("/") || isRootLink,
+          `${file.file}:${line} — absolute path link "${url}" should use relative path`,
+        );
+      }
+    });
+  }
+
+  // Episode links should use ep-00X.html naming (not ep0X.html or epX.html)
+  for (const file of summaryFiles) {
+    it(`${file}: episode links use correct ep-00X naming`, () => {
+      const content = readReport(file, "summary");
+      const links = extractLinks(content);
+      for (const { url, line } of links) {
+        // Check links that reference episode files
+        const episodeMatch = url.match(/ep(\d+)\.html/);
+        if (episodeMatch) {
+          const epNum = episodeMatch[1];
+          // Should be ep-001.html format, not ep01.html
+          assert.ok(
+            url.includes(`ep-${epNum.padStart(3, "0")}.html`),
+            `${file}:${line} — episode link "${url}" should use ep-${epNum.padStart(3, "0")}.html format`,
+          );
+        }
+      }
+    });
+  }
+
+  // Summary-to-summary links should not go through ../summary/ when in same directory
+  for (const file of summaryFiles) {
+    it(`${file}: no redundant ../summary/ in same-directory links`, () => {
+      const content = readReport(file, "summary");
+      const links = extractLinks(content);
+      for (const { url, line } of links) {
+        assert.ok(
+          !url.startsWith("../summary/"),
+          `${file}:${line} — redundant path "${url}" (both files in summary dir, use just filename)`,
+        );
+      }
+    });
+  }
+});
