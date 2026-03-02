@@ -32,7 +32,8 @@
     "cross-validate": "bash ../cross_validation/run.sh",
     "diarize": "python3 src/diarize.py",
     "diarize:evaluate": "python3 src/diarize-evaluate.py",
-    "diarize:pitch": "python3 src/diarize-pitch.py"
+    "diarize:pitch": "python3 src/diarize-pitch.py",
+    "stats-refresh": "node --experimental-strip-types src/stats-refresh.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
