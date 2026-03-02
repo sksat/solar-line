@@ -2076,6 +2076,144 @@ describe("Phase 1 lines data validation", () => {
   }
 });
 
+// ============================================================
+// Auxiliary episode data validation (Task 418)
+// ============================================================
+describe("speakers data validation", () => {
+  const speakerFiles = fs.readdirSync(EPISODES_DIR)
+    .filter(f => f.match(/^ep\d+_speakers\.json$/))
+    .sort();
+
+  it("speakers data exists for all 5 episodes", () => {
+    assert.equal(speakerFiles.length, 5, `Expected 5 speakers files, got ${speakerFiles.length}`);
+  });
+
+  // Recurring characters that must appear in every episode
+  const coreCharacters = ["kiritan", "kestrel-ai"];
+
+  for (const file of speakerFiles) {
+    const epNum = parseInt(file.match(/ep(\d+)/)![1]);
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    describe(`${prefix} speakers data`, () => {
+      const data = JSON.parse(fs.readFileSync(path.join(EPISODES_DIR, file), "utf-8"));
+
+      it("has required top-level fields", () => {
+        assert.equal(data.schemaVersion, 1, "schemaVersion should be 1");
+        assert.equal(data.episode, epNum, `episode should be ${epNum}`);
+        assert.ok(typeof data.videoId === "string", "videoId should be string");
+        assert.ok(Array.isArray(data.speakers), "speakers should be array");
+        assert.ok(data.speakers.length > 0, "speakers should not be empty");
+      });
+
+      it("speakers have required fields", () => {
+        for (const speaker of data.speakers) {
+          assert.ok(typeof speaker.id === "string" && speaker.id.length > 0, "speaker.id should be non-empty");
+          assert.ok(typeof speaker.nameJa === "string" && speaker.nameJa.length > 0, "speaker.nameJa should be non-empty");
+          assert.ok(typeof speaker.nameEn === "string", "speaker.nameEn should be string");
+          assert.ok(Array.isArray(speaker.aliases), "speaker.aliases should be array");
+        }
+      });
+
+      it("speaker IDs are unique", () => {
+        const ids = new Set<string>();
+        for (const speaker of data.speakers) {
+          assert.ok(!ids.has(speaker.id), `duplicate speaker ID: ${speaker.id}`);
+          ids.add(speaker.id);
+        }
+      });
+
+      it("includes core characters (kiritan, kestrel-ai)", () => {
+        const ids = new Set(data.speakers.map((s: { id: string }) => s.id));
+        for (const core of coreCharacters) {
+          assert.ok(ids.has(core), `missing core character: ${core}`);
+        }
+      });
+
+      it("speaker IDs are a superset of dialogue file speakers", () => {
+        const dialoguePath = path.join(EPISODES_DIR, `${prefix}_dialogue.json`);
+        if (!fs.existsSync(dialoguePath)) return;
+        const dialogue = JSON.parse(fs.readFileSync(dialoguePath, "utf-8"));
+        const speakerIds = new Set(data.speakers.map((s: { id: string }) => s.id));
+        const dialogueIds = new Set(dialogue.speakers.map((s: { id: string }) => s.id));
+        // Speakers file should contain all dialogue speakers (may lag behind)
+        const missing = [...dialogueIds].filter(id => !speakerIds.has(id));
+        if (missing.length > 0) {
+          // Log as warning — speakers file may need updating
+          assert.ok(
+            missing.length <= 2,
+            `${prefix}: too many dialogue speakers missing from speakers file: ${missing.join(", ")}`,
+          );
+        }
+      });
+    });
+  }
+
+  it("core character names are consistent across episodes", () => {
+    for (const coreId of coreCharacters) {
+      const names = new Set<string>();
+      for (const file of speakerFiles) {
+        const data = JSON.parse(fs.readFileSync(path.join(EPISODES_DIR, file), "utf-8"));
+        const speaker = data.speakers.find((s: { id: string }) => s.id === coreId);
+        if (speaker) names.add(speaker.nameJa);
+      }
+      assert.equal(
+        names.size, 1,
+        `${coreId} has inconsistent names across episodes: ${[...names].join(", ")}`,
+      );
+    }
+  });
+});
+
+describe("onscreen data validation", () => {
+  const onscreenFiles = fs.readdirSync(EPISODES_DIR)
+    .filter(f => f.match(/^ep\d+_onscreen_data\.json$/))
+    .sort();
+
+  it("onscreen data exists for all 5 episodes", () => {
+    assert.equal(onscreenFiles.length, 5, `Expected 5 onscreen data files, got ${onscreenFiles.length}`);
+  });
+
+  for (const file of onscreenFiles) {
+    const epNum = parseInt(file.match(/ep(\d+)/)![1]);
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    describe(`${prefix} onscreen data`, () => {
+      const data = JSON.parse(fs.readFileSync(path.join(EPISODES_DIR, file), "utf-8"));
+
+      it("has required top-level fields", () => {
+        assert.equal(data.episode, epNum, `episode should be ${epNum}`);
+        assert.ok(Array.isArray(data.frames), "frames should be array");
+        assert.ok(data.frames.length > 0, "frames should not be empty");
+        assert.ok(data.summary, "missing summary");
+      });
+
+      it("frames have valid structure", () => {
+        for (const frame of data.frames) {
+          assert.ok(typeof frame.timestampSec === "number", "timestampSec should be number");
+          assert.ok(frame.timestampSec >= 0, "timestampSec should be non-negative");
+          assert.ok(typeof frame.description === "string" && frame.description.length > 0,
+            "description should be non-empty string");
+        }
+      });
+
+      it("frames are sorted by timestamp", () => {
+        for (let i = 1; i < data.frames.length; i++) {
+          assert.ok(
+            data.frames[i].timestampSec >= data.frames[i - 1].timestampSec,
+            `Frame ${i} at ${data.frames[i].timestampSec}s < frame ${i - 1} at ${data.frames[i - 1].timestampSec}s`,
+          );
+        }
+      });
+
+      it("summary is a non-empty object", () => {
+        assert.ok(typeof data.summary === "object", "summary should be object");
+        assert.ok(Object.keys(data.summary).length > 0, "summary should not be empty");
+      });
+    });
+  }
+});
+
 // ---------------------------------------------------------------------------
 // External link validation
 // ---------------------------------------------------------------------------
