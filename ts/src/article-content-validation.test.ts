@@ -534,9 +534,11 @@ describe("EP02 article content validation", () => {
     assertContainsApproxValue(content, hohmannYears, "EP02 Hohmann transfer time in years");
   });
 
-  it("ballistic transit ~997 days vs trim thrust ~87 days", () => {
-    assert.ok(content.includes("997"),
-      "should cite ballistic transit ~997 days");
+  it("ballistic transit matches analysis (~997 days)", () => {
+    const ballistic = analysis.trimThrust.ballistic;
+    assert.ok(ballistic, "EP02 should have ballistic transit scenario");
+    assertContainsApproxValue(content, ballistic!.transferDays,
+      "EP02 ballistic transit time (no thrust)");
   });
 
   it("v∞ consistency analysis with two-phase model", () => {
@@ -556,17 +558,17 @@ describe("EP02 article content validation", () => {
       "EP02 should have radiation belt exploration (ep02-exploration-07)"
     );
     assert.ok(
-      content.includes("50.4") || content.includes("50 km/s") || content.includes("最小生存"),
-      "EP02 should cite minimum survival velocity (~50 km/s) for shield"
-    );
-    assert.ok(
-      content.includes("0.062") || content.includes("0.0616"),
-      "EP02 should cite dose rate at Ganymede orbit (~0.062 krad/h)"
-    );
-    assert.ok(
       content.includes("Galileo") || content.includes("DDD"),
       "EP02 radiation analysis should reference Galileo calibration data"
     );
+  });
+
+  it("Jupiter radiation values match analysis", () => {
+    const rad = analysis.jupiterRadiation;
+    assertContainsApproxValue(content, rad.minSurvivalVelocityKms,
+      "EP02 minimum survival velocity for radiation shield");
+    assertContainsApproxValue(content, rad.departureRateKradH,
+      "EP02 dose rate at Ganymede orbit");
   });
 
   it("navigation overview HUD: MPA, COIAS, and vessel registry", () => {
