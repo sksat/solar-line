@@ -911,6 +911,23 @@ describe("EP03 article content validation", () => {
       "chart should include Titania capture ΔV of 0.37 km/s",
     );
   });
+
+  it("has mass vs transit time bar chart", () => {
+    const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+    const massTransitChart = chartBlocks.find(
+      block => block.includes("質量") && block.includes("遷移時間"),
+    );
+    assert.ok(massTransitChart, "EP03 should have mass vs transit time bar chart");
+    // Should include 452.5t boundary mass and 48,000t nominal
+    assert.ok(
+      massTransitChart!.includes("452.5") || massTransitChart!.includes("452"),
+      "chart should include EP03 mass boundary (452.5t)",
+    );
+    assert.ok(
+      massTransitChart!.includes("48,000") || massTransitChart!.includes("48000"),
+      "chart should include 48,000t nominal mass",
+    );
+  });
 });
 
 describe("EP04 article content validation", () => {
