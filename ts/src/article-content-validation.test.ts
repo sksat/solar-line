@@ -4283,3 +4283,42 @@ describe("other-ships.md torpedo evasion chart", () => {
     assert.ok(torpedoChart, "should have a chart:bar block for torpedo evasion speed comparison");
   });
 });
+
+// =============================================================================
+// EP05 exploration charts (Task 475)
+// =============================================================================
+
+describe("EP05 mass vs transit time chart", () => {
+  const content = readReport("ep05.md", "episodes");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a mass vs transit time comparison chart", () => {
+    const massChart = chartBlocks.find(
+      (block) => block.includes("質量") && block.includes("遷移時間"),
+    );
+    assert.ok(massChart, "should have a chart:bar block for mass vs transit time");
+  });
+
+  it("mass chart includes 300t and 48,000t scenarios", () => {
+    const massChart = chartBlocks.find(
+      (block) => block.includes("質量") && block.includes("遷移時間"),
+    );
+    assert.ok(massChart, "mass chart should exist");
+    assert.ok(
+      massChart!.includes("300") && (massChart!.includes("48,000") || massChart!.includes("48000")),
+      "should include 300t and 48,000t scenarios",
+    );
+  });
+});
+
+describe("EP05 nozzle conservation route IF chart", () => {
+  const content = readReport("ep05.md", "episodes");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a nozzle conservation route alternative comparison chart", () => {
+    const routeChart = chartBlocks.find(
+      (block) => block.includes("航路") && block.includes("507") && block.includes("800"),
+    );
+    assert.ok(routeChart, "should have a chart:bar block comparing 507h vs 800h route alternatives");
+  });
+});
