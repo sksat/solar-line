@@ -3396,4 +3396,81 @@ describe("Internal link validation (Task 397)", () => {
       }
     });
   }
+
+  // Validate that anchor references match actual heading slugs in target files (Task 400)
+  // This catches the common pattern of manually typed anchors that don't match slugify output
+
+  function slugify(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[\s　]+/g, "-")
+      .replace(/[^\w\u3000-\u9fff\u30a0-\u30ff\u3040-\u309f-]/g, "")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+  }
+
+  function extractHeadingSlugs(content: string): Set<string> {
+    const slugs = new Set<string>();
+    for (const line of content.split("\n")) {
+      const match = line.match(/^#{1,6}\s+(.+)$/);
+      if (match) slugs.add(slugify(match[1]));
+    }
+    return slugs;
+  }
+
+  // Map filename patterns to actual report files
+  function resolveTargetFile(url: string, sourceDir: "episodes" | "summary"): { content: string; resolved: string } | null {
+    const [filePart] = url.split("#");
+    let targetPath: string;
+
+    if (filePart.startsWith("../episodes/")) {
+      const name = filePart.replace("../episodes/", "").replace(".html", ".md")
+        .replace(/ep-0*(\d+)/, "ep0$1");
+      targetPath = path.join(episodesDir, name);
+    } else if (filePart.startsWith("../summary/") || (sourceDir === "summary" && !filePart.includes("/"))) {
+      const name = (filePart.startsWith("../summary/") ? filePart.replace("../summary/", "") : filePart)
+        .replace(".html", ".md");
+      targetPath = path.join(summaryDir, name);
+    } else {
+      return null;
+    }
+
+    try {
+      return { content: fs.readFileSync(targetPath, "utf-8"), resolved: targetPath };
+    } catch {
+      return null;
+    }
+  }
+
+  const allReportFiles = [
+    ...episodeFiles.map(f => ({ file: f, dir: "episodes" as const })),
+    ...summaryFiles.map(f => ({ file: f, dir: "summary" as const })),
+  ];
+
+  for (const { file, dir } of allReportFiles) {
+    it(`${file}: cross-file anchor references resolve to actual headings`, () => {
+      const content = readReport(file, dir);
+      const links = extractLinks(content);
+
+      for (const { url, line } of links) {
+        if (!url.includes("#") || !url.includes(".html#")) continue;
+        const anchor = url.split("#")[1];
+        if (!anchor) continue;
+
+        const target = resolveTargetFile(url, dir);
+        if (!target) continue;
+
+        const headingSlugs = extractHeadingSlugs(target.content);
+        const hasTransferId = target.content.includes(`"id": "${anchor}"`);
+
+        if (headingSlugs.size > 0) {
+          assert.ok(
+            headingSlugs.has(anchor) || hasTransferId,
+            `${file}:${line} — anchor "#${anchor}" not found in ${path.basename(target.resolved)} ` +
+            `(available: ${[...headingSlugs].slice(0, 5).join(", ")}${headingSlugs.size > 5 ? "..." : ""})`,
+          );
+        }
+      }
+    });
+  }
 });
