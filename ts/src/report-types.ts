@@ -116,6 +116,8 @@ export interface TransferAnalysis {
   reproductionCommand?: string;
   /** One-sentence plain-language verdict summary for non-expert readers */
   verdictSummary?: string;
+  /** Optional bar chart visualization for this transfer's analysis */
+  barChart?: BarChart;
 }
 
 /** A single orbit in an orbital diagram */

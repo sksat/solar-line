@@ -43,7 +43,9 @@ import type {
   TransferDetailPage,
   GlossaryTerm,
   MarginGauge,
+  BarChart,
 } from "./report-types.ts";
+import { parseBarChartDirective } from "./mdx-parser.ts";
 
 /** Frontmatter fields for an episode report */
 export interface EpisodeFrontmatter {
@@ -123,15 +125,18 @@ function parseSimpleYaml(yaml: string): Record<string, string> {
  * - timeseries-charts: TimeSeriesChart[]
  * - detail-pages: TransferDetailPage[]
  * - glossary: GlossaryTerm[]
+ * - chart:bar: BarChart (YAML format — parsed by parseBarChartDirective)
  */
 export function extractEpisodeDirectives(content: string): {
   markdown: string;
   directives: EpisodeDirective[];
 } {
   const directives: EpisodeDirective[] = [];
-  const fenceRegex = /^```(video-cards|dialogue-quotes|transfer|exploration|diagrams|timeseries-charts|detail-pages|glossary|margin-gauge):?\s*\n([\s\S]*?)^```\s*$/gm;
+  const fenceRegex = /^```(video-cards|dialogue-quotes|transfer|exploration|diagrams|timeseries-charts|detail-pages|glossary|margin-gauge|chart):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
 
-  const markdown = content.replace(fenceRegex, (_match, type: string, inner: string) => {
+  const markdown = content.replace(fenceRegex, (_match, prefix: string, suffix: string, inner: string) => {
+    // For chart:bar → type becomes "chart:bar"; for others suffix is empty
+    const type = suffix ? `${prefix}:${suffix}` : prefix;
     directives.push({ type, rawContent: inner.trim() });
     return "";
   });
@@ -182,6 +187,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
     // Extract transfer and exploration directives
     let transferData: Partial<TransferAnalysis> | undefined;
     const sectionExplorations: ParameterExploration[] = [];
+    let sectionBarChart: BarChart | undefined;
 
     for (const d of directives) {
       switch (d.type) {
@@ -190,6 +196,9 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
           break;
         case "exploration":
           sectionExplorations.push(JSON.parse(d.rawContent) as ParameterExploration);
+          break;
+        case "chart:bar":
+          sectionBarChart = parseBarChartDirective(d.rawContent);
           break;
         default:
           // Report-level directives can also appear in sections
@@ -216,6 +225,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
         ...(transferData.evidenceQuoteIds && { evidenceQuoteIds: transferData.evidenceQuoteIds }),
         ...(transferData.reproductionCommand && { reproductionCommand: transferData.reproductionCommand }),
         ...(transferData.verdictSummary && { verdictSummary: transferData.verdictSummary }),
+        ...(sectionBarChart && { barChart: sectionBarChart }),
       };
       transfers.push(transfer);
       explorations.push(...sectionExplorations);

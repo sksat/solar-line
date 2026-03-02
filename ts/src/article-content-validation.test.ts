@@ -28,6 +28,7 @@ import { analyzeEpisode4 } from "./ep04-analysis.ts";
 import { analyzeEpisode5 } from "./ep05-analysis.ts";
 import { SHIP_SPECS, EPISODE_SUMMARIES } from "./cross-episode-analysis.ts";
 import { KESTREL } from "./kestrel.ts";
+import { extractEpisodeDirectives } from "./episode-mdx-parser.ts";
 
 // --- Paths ---
 
@@ -3106,5 +3107,180 @@ describe("ship-kestrel.md fusion power budget validation", () => {
       content.includes('"actual": 55.2') && content.includes('"limit": 55.63'),
       "should include EP05 nozzle life margin (55.2/55.63 h)",
     );
+  });
+});
+
+// =============================================================================
+// Chart Directive Format Validation (Task 394)
+// =============================================================================
+// Prevents silent rendering failures where a fenced code block uses a directive
+// format not recognized by the parser. Such blocks are silently ignored — the
+// chart simply doesn't render with no error message.
+//
+// Episode parser supports:
+//   video-cards, dialogue-quotes, transfer, exploration, diagrams,
+//   timeseries-charts, detail-pages, glossary, margin-gauge, chart[:subtype]
+//
+// Summary parser supports:
+//   chart[:subtype], component[:subtype], timeline, table[:subtype],
+//   timeseries, dag-viewer, glossary, sideview, margin-gauge
+// =============================================================================
+
+describe("Chart directive format validation (Task 394)", () => {
+  // Supported directive prefixes per parser type
+  const episodeDirectives = new Set([
+    "video-cards", "dialogue-quotes", "transfer", "exploration",
+    "diagrams", "timeseries-charts", "detail-pages", "glossary", "margin-gauge",
+    "chart",
+  ]);
+  const summaryDirectives = new Set([
+    "chart", "component", "timeline", "table", "timeseries",
+    "dag-viewer", "glossary", "sideview", "margin-gauge",
+  ]);
+
+  // Common code/language fences that are NOT directives (should be ignored)
+  const knownCodeFences = new Set([
+    "yaml", "json", "typescript", "javascript", "ts", "js", "python", "py",
+    "bash", "sh", "shell", "sql", "html", "css", "rust", "rs", "toml",
+    "markdown", "md", "text", "txt", "csv", "xml", "diff", "plaintext",
+    "katex", "math", "latex", "mermaid", "graphviz", "dot",
+  ]);
+
+  /**
+   * Extract all fenced code block language tags from content.
+   * Returns array of { tag, line } where tag is the language/directive identifier.
+   */
+  function extractFenceTags(content: string): { tag: string; line: number }[] {
+    const results: { tag: string; line: number }[] = [];
+    const lines = content.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      const match = lines[i].match(/^```(\S+)\s*$/);
+      if (match && match[1]) {
+        results.push({ tag: match[1], line: i + 1 });
+      }
+    }
+    return results;
+  }
+
+  /**
+   * Check if a fence tag looks like it could be a directive (not a code language).
+   * Directive-like tags contain colons or match known directive patterns.
+   */
+  function isLikelyDirective(tag: string): boolean {
+    const base = tag.split(":")[0];
+    // If it's a known code language, it's not a directive
+    if (knownCodeFences.has(base.toLowerCase())) return false;
+    // If it contains a colon, it's almost certainly a directive (chart:bar, component:orbital-diagram)
+    if (tag.includes(":")) return true;
+    // If it matches a known directive prefix exactly, it's a directive
+    if (episodeDirectives.has(base) || summaryDirectives.has(base)) return true;
+    // Heuristic: tags with hyphens that look like component names
+    if (base.includes("-") && !knownCodeFences.has(base)) return true;
+    return false;
+  }
+
+  // Episode report files
+  const episodeFiles = ["ep01.md", "ep02.md", "ep03.md", "ep04.md", "ep05.md"];
+
+  for (const file of episodeFiles) {
+    it(`${file}: all directives use episode-parser-supported formats`, () => {
+      const content = readReport(file, "episodes");
+      const tags = extractFenceTags(content);
+
+      for (const { tag, line } of tags) {
+        if (!isLikelyDirective(tag)) continue;
+        const base = tag.split(":")[0];
+        assert.ok(
+          episodeDirectives.has(base),
+          `${file}:${line} — unsupported directive \`\`\`${tag}\`\`\` ` +
+          `(episode parser supports: ${[...episodeDirectives].join(", ")})`,
+        );
+      }
+    });
+  }
+
+  // Summary report files
+  const summaryFiles = fs.readdirSync(summaryDir)
+    .filter((f: string) => f.endsWith(".md"));
+
+  for (const file of summaryFiles) {
+    it(`${file}: all directives use summary-parser-supported formats`, () => {
+      const content = readReport(file, "summary");
+      const tags = extractFenceTags(content);
+
+      for (const { tag, line } of tags) {
+        if (!isLikelyDirective(tag)) continue;
+        const base = tag.split(":")[0];
+        assert.ok(
+          summaryDirectives.has(base),
+          `${file}:${line} — unsupported directive \`\`\`${tag}\`\`\` ` +
+          `(summary parser supports: ${[...summaryDirectives].join(", ")})`,
+        );
+      }
+    });
+  }
+
+  // Regression: specific formats known to have caused silent failures
+  it("no report uses orphaned chart-data: directive", () => {
+    const allFiles = [
+      ...episodeFiles.map(f => ({ file: f, dir: "episodes" as const })),
+      ...summaryFiles.map(f => ({ file: f, dir: "summary" as const })),
+    ];
+    for (const { file, dir } of allFiles) {
+      const content = readReport(file, dir);
+      assert.ok(
+        !content.includes("```chart-data:"),
+        `${file} contains orphaned \`\`\`chart-data: directive (not supported by any parser)`,
+      );
+    }
+  });
+
+  it("no report uses orphaned bar-chart: directive", () => {
+    const allFiles = [
+      ...episodeFiles.map(f => ({ file: f, dir: "episodes" as const })),
+      ...summaryFiles.map(f => ({ file: f, dir: "summary" as const })),
+    ];
+    for (const { file, dir } of allFiles) {
+      const content = readReport(file, dir);
+      assert.ok(
+        !content.includes("```bar-chart:"),
+        `${file} contains orphaned \`\`\`bar-chart: directive (not supported by any parser)`,
+      );
+    }
+  });
+
+  // Verify episode bar charts are extracted by the parser (not left as raw YAML)
+  it("episode chart:bar directives are extracted by episode parser", () => {
+    const testContent = '```chart:bar\ncaption: Test\nunit: "km/s"\nbars:\n  - label: A\n    value: 10\n```';
+    const { markdown, directives } = extractEpisodeDirectives(testContent);
+    // The chart:bar block should be extracted (not left in markdown)
+    assert.ok(
+      !markdown.includes("chart:bar"),
+      "chart:bar should be extracted from markdown, not left as raw text",
+    );
+    assert.ok(
+      directives.some(d => d.type === "chart:bar"),
+      "should have a chart:bar directive",
+    );
+  });
+
+  // Verify that the validation actually detects something — canary test
+  it("validation correctly flags unsupported directives", () => {
+    const fakeContent = '```chart-data:\nfoo\n```\n```bar-chart:\nbar\n```\n```unknown-widget:\nbaz\n```';
+    const tags = extractFenceTags(fakeContent);
+    // chart-data, bar-chart, unknown-widget — all should be flagged as likely directives
+    const directiveTags = tags.filter(t => isLikelyDirective(t.tag));
+    assert.ok(
+      directiveTags.length === 3,
+      `Expected 3 directive-like tags, got ${directiveTags.length}: ${directiveTags.map(t => t.tag).join(", ")}`,
+    );
+    // None should match episode or summary supported sets
+    for (const { tag } of directiveTags) {
+      const base = tag.split(":")[0];
+      assert.ok(
+        !episodeDirectives.has(base) && !summaryDirectives.has(base),
+        `${tag} should NOT be recognized as a supported directive`,
+      );
+    }
   });
 });
