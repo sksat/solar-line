@@ -451,4 +451,124 @@ describe("WASM bridge: ephemeris utilities", () => {
       `jd_to_date_string returned: ${s}`,
     );
   });
+
+  it("j2000_jd returns 2451545.0", () => {
+    const jd = wasm.j2000_jd();
+    assert.equal(jd, 2_451_545.0);
+  });
+});
+
+describe("WASM bridge: planet ephemeris", () => {
+  it("planet_position returns x,y,z for Earth at J2000", () => {
+    const pos = wasm.planet_position("earth", 2_451_545.0);
+    assert.ok(pos.x !== undefined && pos.y !== undefined);
+    // Earth should be ~1 AU from Sun
+    const r = Math.sqrt(pos.x ** 2 + pos.y ** 2);
+    assert.ok(r > 140_000_000 && r < 160_000_000, `r=${r} km`);
+  });
+
+  it("planet_longitude returns degrees for Mars", () => {
+    const lon = wasm.planet_longitude("mars", 2_451_545.0);
+    assert.ok(lon >= 0 && lon < 360, `lon=${lon}`);
+  });
+
+  it("phase_angle returns value between -180 and 180", () => {
+    const angle = wasm.phase_angle("earth", "mars", 2_451_545.0);
+    assert.ok(angle >= -180 && angle <= 180, `angle=${angle}`);
+  });
+
+  it("synodic_period for Earth-Mars ≈ 780 days", () => {
+    const period = wasm.synodic_period("earth", "mars");
+    const days = period / 86400;
+    assert.ok(
+      Math.abs(days - 780) < 20,
+      `synodic period=${days} days, expected ~780`,
+    );
+  });
+
+  it("hohmann_phase_angle for Earth→Mars ≈ 44°", () => {
+    const angleRad = wasm.hohmann_phase_angle("earth", "mars");
+    const angleDeg = angleRad * 180 / Math.PI;
+    // Earth→Mars Hohmann phase angle is ~44°
+    assert.ok(
+      Math.abs(angleDeg - 44.3) < 5,
+      `hohmann phase angle=${angleDeg}° (${angleRad} rad), expected ~44°`,
+    );
+  });
+
+  it("hohmann_transfer_time for Earth→Mars ≈ 259 days", () => {
+    const time = wasm.hohmann_transfer_time("earth", "mars");
+    const days = time / 86400;
+    assert.ok(
+      Math.abs(days - 259) < 5,
+      `transfer time=${days} days, expected ~259`,
+    );
+  });
+});
+
+describe("WASM bridge: SOI and flyby", () => {
+  it("soi_radius for Jupiter ≈ 48 million km", () => {
+    const muJupiter = 1.266865349e8;
+    const muSun = 1.32712440041e11;
+    const rJupiter = 778_570_000;
+    const soi = wasm.soi_radius(rJupiter, muJupiter, muSun);
+    // Jupiter SOI ≈ 48.2 million km
+    assert.ok(
+      soi > 45_000_000 && soi < 52_000_000,
+      `soi=${soi} km`,
+    );
+  });
+
+  it("unpowered_flyby returns deflected velocity", () => {
+    const muJupiter = 1.266865349e8;
+    const vInfX = 10.0; // km/s
+    const vInfY = 0.0;
+    const vInfZ = 0.0;
+    const rPeri = 500_000; // km
+    // Normal vector for flyby plane (z-axis = ecliptic normal)
+    const normalX = 0.0;
+    const normalY = 0.0;
+    const normalZ = 1.0;
+    // Returns [turn_angle_rad, v_periapsis, v_inf_out, out_dir_x, out_dir_y, out_dir_z]
+    const result = wasm.unpowered_flyby(
+      muJupiter, vInfX, vInfY, vInfZ, rPeri, normalX, normalY, normalZ,
+    );
+    const turnAngleRad = result[0];
+    const vOutDir = [result[3], result[4], result[5]];
+    const vInfOut = result[2];
+    // Speed should be conserved (energy conservation)
+    assert.ok(
+      Math.abs(vInfOut - 10.0) < 0.1,
+      `v_inf_out=${vInfOut}, expected 10.0 (energy conservation)`,
+    );
+    // Direction should change (deflection > 0)
+    const turnAngleDeg = turnAngleRad * 180 / Math.PI;
+    assert.ok(
+      turnAngleDeg > 0,
+      `turn angle=${turnAngleDeg}°`,
+    );
+    // Output direction should differ from input [1,0,0]
+    assert.ok(
+      Math.abs(vOutDir[0] - 1.0) > 0.001 || Math.abs(vOutDir[1]) > 0.001,
+      `out_dir should differ from [1,0,0]: got [${vOutDir}]`,
+    );
+  });
+
+  it("oberth_dv_gain is positive for Jupiter periapsis burn", () => {
+    const muJupiter = 1.266865349e8;
+    const rPeri = 200_000; // km (close to Jupiter)
+    const vInf = 10.0; // km/s
+    const burnDv = 2.0; // km/s
+    const gain = wasm.oberth_dv_gain(muJupiter, rPeri, vInf, burnDv);
+    assert.ok(gain > burnDv, `gain=${gain} should exceed burn_dv=${burnDv}`);
+  });
+
+  it("oberth_efficiency is positive for deep gravity well", () => {
+    const muJupiter = 1.266865349e8;
+    const rPeri = 200_000;
+    const vInf = 10.0;
+    const burnDv = 2.0;
+    const eff = wasm.oberth_efficiency(muJupiter, rPeri, vInf, burnDv);
+    assert.ok(eff > 0, `efficiency=${eff}`);
+  });
 });
