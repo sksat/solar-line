@@ -512,6 +512,25 @@ describe("EP02 article content validation", () => {
     assert.ok(content.includes("2相モデル") || content.includes("3日加速"),
       "EP02 thrust profile should reference the 2-phase model");
   });
+
+  it("Jupiter departure direction bar chart", () => {
+    assert.ok(
+      content.includes("木星離脱方向と太陽中心速度"),
+      "should have Jupiter departure direction bar chart",
+    );
+    assert.ok(
+      content.includes("順行離脱") && content.includes("value: 18.99"),
+      "chart should show prograde departure at 18.99 km/s",
+    );
+    assert.ok(
+      content.includes("逆行離脱") && content.includes("value: 7.12"),
+      "chart should show retrograde departure at 7.12 km/s",
+    );
+    assert.ok(
+      content.includes("太陽脱出速度") && content.includes("value: 18.46"),
+      "chart should show solar escape velocity threshold",
+    );
+  });
 });
 
 describe("EP03 article content validation", () => {
