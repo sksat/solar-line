@@ -4659,3 +4659,67 @@ describe("EP05 nozzle conservation route IF chart", () => {
     assert.ok(routeChart, "should have a chart:bar block comparing 507h vs 800h route alternatives");
   });
 });
+
+// =============================================================================
+// 3d_orbital_analysis.json → report cross-checks (Task 496)
+// =============================================================================
+
+describe("3d_orbital_analysis.json → report cross-checks", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const data3d = JSON.parse(
+    fs.readFileSync(path.join(calcDir, "3d_orbital_analysis.json"), "utf-8"),
+  );
+  const transfers = data3d.transfers as Array<{
+    leg: string;
+    episode: number;
+    planeChangeDvKmS: number;
+    planeChangeFractionPercent: number;
+  }>;
+  const saturnRing = data3d.saturnRingAnalysis as {
+    enceladusOutsideRings: boolean;
+    approachFromJupiter: { approachAngleToDeg: number };
+  };
+  const uranusApproach = data3d.uranusApproachAnalysis as {
+    approachFromSaturn: { angleToDeg: number };
+    approachFromUranus: { angleToDeg: number };
+  };
+  const crossEp = readReport("cross-episode.md");
+
+  it("max plane change fraction (1.51%) cited in cross-episode report", () => {
+    const maxFraction = data3d.maxPlaneChangeFractionPercent as number;
+    assertContainsApproxValue(crossEp, maxFraction,
+      "max plane change fraction percent");
+  });
+
+  for (const transfer of transfers) {
+    const dvRounded = Math.round(transfer.planeChangeDvKmS * 10) / 10;
+    const fracRounded = Math.round(transfer.planeChangeFractionPercent * 100) / 100;
+
+    it(`${transfer.leg}: plane change ΔV ~${dvRounded} km/s cited in cross-episode`, () => {
+      assertContainsApproxValue(crossEp, transfer.planeChangeDvKmS,
+        `${transfer.leg} plane change ΔV`);
+    });
+
+    it(`${transfer.leg}: plane change fraction ~${fracRounded}% cited in cross-episode`, () => {
+      assertContainsApproxValue(crossEp, transfer.planeChangeFractionPercent,
+        `${transfer.leg} plane change fraction`);
+    });
+  }
+
+  it("Saturn ring approach angle ~9.3° cited in cross-episode", () => {
+    const angle = saturnRing.approachFromJupiter.approachAngleToDeg;
+    assertContainsApproxValue(crossEp, angle,
+      "Saturn ring approach angle from Jupiter");
+  });
+
+  it("Uranus approach from Saturn ~25.3° cited in cross-episode", () => {
+    const angle = uranusApproach.approachFromSaturn.angleToDeg;
+    assertContainsApproxValue(crossEp, angle,
+      "Uranus approach angle from Saturn");
+  });
+
+  it("Enceladus confirmed outside rings in analysis JSON", () => {
+    assert.strictEqual(saturnRing.enceladusOutsideRings, true,
+      "Enceladus should be outside Saturn's rings");
+  });
+});
