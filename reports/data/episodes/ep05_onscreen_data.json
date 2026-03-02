@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 2,
   "episode": 5,
   "title": "EP05 On-Screen Data Extraction",
   "description": "天王星→地球帰還ルート（507時間複合航路）における映像内表示データの体系的抽出。航路計画ディスプレイ、木星パワードフライバイ表示、管轄区域ラベル、速度・エネルギー値を含む。",

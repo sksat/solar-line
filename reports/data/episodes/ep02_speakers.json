@@ -31,6 +31,16 @@
       "notes": "エンケラドスの廃棄寸前のステーションをたった1人で管理する女性。土星圏の孤独な存在。契約と借金のために残っている。"
     },
     {
+      "id": "guest-esper",
+      "nameJa": "ゲスト（エスパー）",
+      "nameEn": "Guest (Esper)",
+      "aliases": [
+        "エスパー",
+        "リンボ"
+      ],
+      "notes": "コールドスリープから覚醒したゲスト。エンケラドス到着後に目覚める。"
+    },
+    {
       "id": "unknown-vessel",
       "nameJa": "正体不明の大型船",
       "nameEn": "Unknown Vessel",

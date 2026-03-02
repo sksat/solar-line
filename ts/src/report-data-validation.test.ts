@@ -2127,14 +2127,10 @@ describe("speakers data validation", () => {
         if (!fs.existsSync(dialoguePath)) return;
         const dialogue = JSON.parse(fs.readFileSync(dialoguePath, "utf-8"));
         const speakerIds = new Set(data.speakers.map((s: { id: string }) => s.id));
-        const dialogueIds = new Set(dialogue.speakers.map((s: { id: string }) => s.id));
-        // Speakers file should contain all dialogue speakers (may lag behind)
-        const missing = [...dialogueIds].filter(id => !speakerIds.has(id));
-        if (missing.length > 0) {
-          // Log as warning — speakers file may need updating
+        for (const dlgSpeaker of dialogue.speakers) {
           assert.ok(
-            missing.length <= 2,
-            `${prefix}: too many dialogue speakers missing from speakers file: ${missing.join(", ")}`,
+            speakerIds.has(dlgSpeaker.id),
+            `${prefix}: dialogue speaker "${dlgSpeaker.id}" not in speakers file`,
           );
         }
       });
