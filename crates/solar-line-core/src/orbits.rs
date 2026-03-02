@@ -122,6 +122,17 @@ pub fn brachistochrone_max_distance(accel_km_s2: f64, time: Seconds) -> Km {
     Km(accel_km_s2 * time.value() * time.value() / 4.0)
 }
 
+/// Transfer time for a brachistochrone transfer given distance and constant acceleration.
+///
+/// t = 2 * sqrt(d / a)
+///
+/// Returns time in seconds.
+///
+/// Assumption: straight-line path, constant thrust, no gravity, rest-to-rest.
+pub fn brachistochrone_time(distance: Km, accel_km_s2: f64) -> Seconds {
+    Seconds(2.0 * (distance.value() / accel_km_s2).sqrt())
+}
+
 // ── Tsiolkovsky rocket equation ──────────────────────────────────────
 
 /// Convert specific impulse (seconds) to exhaust velocity (km/s).
@@ -496,6 +507,35 @@ mod tests {
             "round-trip distance: {} vs {}",
             d_max.value(),
             d.value()
+        );
+    }
+
+    #[test]
+    fn test_brachistochrone_time() {
+        // Round-trip: time at the computed accel should equal original time
+        let d = Km(550_630_800.0);
+        let t = crate::units::Seconds(72.0 * 3600.0);
+        let a = brachistochrone_accel(d, t);
+        let t_back = brachistochrone_time(d, a);
+        assert!(
+            (t_back.value() - t.value()).abs() < 1e-6,
+            "round-trip time: {} vs {}",
+            t_back.value(),
+            t.value()
+        );
+    }
+
+    #[test]
+    fn test_brachistochrone_time_1g_55m_km() {
+        // Mars closest approach ~55M km at 1G ≈ 41.6 hours
+        let d = Km(55_000_000.0);
+        let a = 9.81e-3; // 1G in km/s²
+        let t = brachistochrone_time(d, a);
+        let hours = t.value() / 3600.0;
+        assert!(
+            (hours - 41.6).abs() < 1.0,
+            "Mars at 1G should be ~41.6h, got {:.1}h",
+            hours
         );
     }
 

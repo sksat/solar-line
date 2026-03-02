@@ -79,6 +79,13 @@ pub fn brachistochrone_max_distance(accel: f64, time: f64) -> f64 {
     orbits::brachistochrone_max_distance(accel, Seconds(time)).value()
 }
 
+/// Transfer time (seconds) for a brachistochrone transfer given distance (km) and
+/// constant acceleration (km/s²). t = 2 * sqrt(d / a)
+#[wasm_bindgen]
+pub fn brachistochrone_time(distance: f64, accel: f64) -> f64 {
+    orbits::brachistochrone_time(Km(distance), accel).value()
+}
+
 // ---------------------------------------------------------------------------
 // Tsiolkovsky rocket equation / propellant analysis
 // ---------------------------------------------------------------------------
@@ -2443,6 +2450,23 @@ mod tests {
             gamma > 1.0003 && gamma < 1.0004,
             "γ at 2.5%c = {:.6}",
             gamma
+        );
+    }
+
+    // ── Brachistochrone time WASM tests ──────────────────────────────
+
+    #[test]
+    fn test_wasm_brachistochrone_time_round_trip() {
+        // Round-trip: accel → time → accel
+        let d = 550_630_800.0; // km
+        let t = 72.0 * 3600.0; // 72 hours in seconds
+        let a = brachistochrone_accel(d, t);
+        let t_back = brachistochrone_time(d, a);
+        assert!(
+            (t_back - t).abs() < 1e-6,
+            "round-trip time: {} vs {}",
+            t_back,
+            t
         );
     }
 }
