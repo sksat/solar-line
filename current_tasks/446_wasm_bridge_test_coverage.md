@@ -1,6 +1,6 @@
 # Task 446: Expand WASM Bridge Test Coverage
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 
