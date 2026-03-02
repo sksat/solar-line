@@ -884,6 +884,39 @@ describe("EP04 article content validation", () => {
       "chart should show avoidance path with 48 mSv",
     );
   });
+
+  it("has mass-transit boundary chart", () => {
+    assert.ok(
+      content.includes("ep04-chart-mass-transit"),
+      "EP04 should have mass vs transit time chart",
+    );
+    assert.ok(
+      content.includes("30日遷移境界"),
+      "chart should show 30-day transit boundary line",
+    );
+  });
+
+  it("mass-transit chart: 300t gives 8.3 days, 48000t gives 105 days", () => {
+    assert.ok(
+      content.includes("8.3") && content.includes("104.9"),
+      "chart should include 300t→8.3d and 48000t→104.9d data points",
+    );
+  });
+
+  it("has fleet timeline bar chart", () => {
+    assert.ok(
+      content.includes("33時間のタイムライン"),
+      "should have fleet timeline bar chart caption",
+    );
+    assert.ok(
+      content.includes("value: 9.7") && content.includes("タイタニア到着まで"),
+      "chart should show 9.7h transit to Titania",
+    );
+    assert.ok(
+      content.includes("value: 23.3") && content.includes("修理・補給可能時間"),
+      "chart should show 23.3h repair window",
+    );
+  });
 });
 
 describe("EP05 article content validation", () => {
