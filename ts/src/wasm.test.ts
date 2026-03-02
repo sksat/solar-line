@@ -285,3 +285,170 @@ describe("WASM bridge: constants", () => {
     );
   });
 });
+
+describe("WASM bridge: brachistochrone_time", () => {
+  it("inverts brachistochrone_accel", () => {
+    const d = 550_630_800;
+    const t = 72 * 3600;
+    const accel = wasm.brachistochrone_accel(d, t);
+    const tBack = wasm.brachistochrone_time(d, accel);
+    assert.ok(
+      Math.abs(tBack - t) < 0.1,
+      `t=${t}, tBack=${tBack}`,
+    );
+  });
+});
+
+describe("WASM bridge: exhaust_velocity", () => {
+  it("computes ve = Isp * g0 for Kestrel", () => {
+    const ve = wasm.exhaust_velocity(1_000_000);
+    // 1e6 s * 9.80665 m/s² = 9.80665e6 m/s = 9806.65 km/s
+    assert.ok(
+      Math.abs(ve - 9806.65) < 0.01,
+      `ve=${ve}, expected ~9806.65`,
+    );
+  });
+});
+
+describe("WASM bridge: rocket equation", () => {
+  it("mass_ratio returns e^(dv/ve) for known values", () => {
+    const dv = 9.8; // km/s
+    const ve = 9806.65; // km/s (Kestrel)
+    const mr = wasm.mass_ratio(dv, ve);
+    assert.ok(
+      Math.abs(mr - Math.exp(dv / ve)) < 1e-10,
+      `mr=${mr}, expected=${Math.exp(dv / ve)}`,
+    );
+  });
+
+  it("propellant_fraction is 1 - 1/mass_ratio", () => {
+    const dv = 100;
+    const ve = 9806.65;
+    const mr = wasm.mass_ratio(dv, ve);
+    const pf = wasm.propellant_fraction(dv, ve);
+    assert.ok(
+      Math.abs(pf - (1 - 1 / mr)) < 1e-10,
+      `pf=${pf}, expected=${1 - 1 / mr}`,
+    );
+  });
+
+  it("initial_mass = dry_mass * mass_ratio", () => {
+    const dryMass = 48_000_000; // kg
+    const dv = 50; // km/s
+    const ve = 9806.65;
+    const im = wasm.initial_mass(dryMass, dv, ve);
+    const mr = wasm.mass_ratio(dv, ve);
+    assert.ok(
+      Math.abs(im - dryMass * mr) / im < 1e-10,
+      `im=${im}, expected=${dryMass * mr}`,
+    );
+  });
+
+  it("required_propellant_mass = initial_mass - dry_mass", () => {
+    const dryMass = 48_000_000;
+    const dv = 50;
+    const ve = 9806.65;
+    const pm = wasm.required_propellant_mass(dryMass, dv, ve);
+    const im = wasm.initial_mass(dryMass, dv, ve);
+    assert.ok(
+      Math.abs(pm - (im - dryMass)) < 1.0,
+      `pm=${pm}, expected=${im - dryMass}`,
+    );
+  });
+
+  it("mass_flow_rate = thrust / (ve_kms * 1000)", () => {
+    const thrust = 9_800_000; // N = 9.8 MN
+    const veKms = 9806.65; // km/s
+    const mdot = wasm.mass_flow_rate(thrust, veKms);
+    // mass_flow_rate returns thrust_N / (ve_kms * 1000)
+    assert.ok(
+      Math.abs(mdot - thrust / (veKms * 1000)) < 1e-6,
+      `mdot=${mdot}, expected=${thrust / (veKms * 1000)}`,
+    );
+  });
+
+  it("jet_power = 0.5 * thrust * ve_kms * 1000", () => {
+    const thrust = 9_800_000; // N
+    const veKms = 9806.65; // km/s
+    const power = wasm.jet_power(thrust, veKms);
+    // jet_power returns 0.5 * F * ve_kms * 1000 (watts)
+    assert.ok(
+      Math.abs(power - 0.5 * thrust * veKms * 1000) / power < 1e-10,
+      `power=${power}, expected=${0.5 * thrust * veKms * 1000}`,
+    );
+  });
+});
+
+describe("WASM bridge: speed_of_light", () => {
+  it("returns 299792.458 km/s", () => {
+    const c = wasm.speed_of_light();
+    assert.ok(
+      Math.abs(c - 299_792.458) < 1e-10,
+      `c=${c}`,
+    );
+  });
+});
+
+describe("WASM bridge: light_time", () => {
+  it("light_time_seconds for 1 AU ≈ 499 s", () => {
+    const t = wasm.light_time_seconds(149_597_870.7);
+    assert.ok(Math.abs(t - 499.0) < 0.5, `t=${t}`);
+  });
+
+  it("light_time_minutes for 1 AU ≈ 8.3 min", () => {
+    const t = wasm.light_time_minutes(149_597_870.7);
+    assert.ok(Math.abs(t - 8.317) < 0.01, `t=${t}`);
+  });
+
+  it("round_trip is 2x one-way", () => {
+    const oneWay = wasm.light_time_seconds(149_597_870.7);
+    const rt = wasm.round_trip_light_time(149_597_870.7);
+    assert.ok(
+      Math.abs(rt - 2 * oneWay) < 1e-10,
+      `rt=${rt}, 2*oneWay=${2 * oneWay}`,
+    );
+  });
+});
+
+describe("WASM bridge: relativistic", () => {
+  it("lorentz_factor at 0 velocity returns 1.0", () => {
+    const gamma = wasm.lorentz_factor(0);
+    assert.equal(gamma, 1.0);
+  });
+
+  it("lorentz_factor at 0.5c returns ~1.155", () => {
+    const c = 299_792.458;
+    const gamma = wasm.lorentz_factor(0.5 * c);
+    assert.ok(
+      Math.abs(gamma - 1 / Math.sqrt(1 - 0.25)) < 1e-6,
+      `gamma=${gamma}`,
+    );
+  });
+
+  it("beta = v/c", () => {
+    const v = 1000; // km/s
+    const b = wasm.beta(v);
+    assert.ok(
+      Math.abs(b - v / 299_792.458) < 1e-10,
+      `beta=${b}`,
+    );
+  });
+});
+
+describe("WASM bridge: ephemeris utilities", () => {
+  it("calendar_to_jd for J2000 epoch returns 2451545.0", () => {
+    const jd = wasm.calendar_to_jd(2000, 1, 1.5);
+    assert.ok(
+      Math.abs(jd - 2_451_545.0) < 0.01,
+      `jd=${jd}, expected=2451545.0`,
+    );
+  });
+
+  it("jd_to_date_string returns formatted date", () => {
+    const s = wasm.jd_to_date_string(2_451_545.0);
+    assert.ok(
+      typeof s === "string" && s.length > 0,
+      `jd_to_date_string returned: ${s}`,
+    );
+  });
+});
