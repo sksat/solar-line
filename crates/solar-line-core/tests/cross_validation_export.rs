@@ -1654,7 +1654,9 @@ mod export {
         // === Jupiter radiation belt model ===
         results.push_str("  \"jupiter_radiation\": {\n");
         {
-            use solar_line_core::jupiter_radiation::{self, JupiterRadiationConfig, JUPITER_RADIUS_KM};
+            use solar_line_core::jupiter_radiation::{
+                self, JupiterRadiationConfig, JUPITER_RADIUS_KM,
+            };
             let config = JupiterRadiationConfig::default_model();
 
             // Jupiter radius constant
@@ -1665,12 +1667,12 @@ mod export {
 
             // Dose rates at key distances (krad/h)
             let rate_9_4 = config.dose_rate_krad_h(9.4); // Europa calibration point
-            let rate_15 = config.dose_rate_krad_h(15.0);  // Ganymede
+            let rate_15 = config.dose_rate_krad_h(15.0); // Ganymede
             let rate_20 = config.dose_rate_krad_h(20.0);
-            let rate_26 = config.dose_rate_krad_h(26.0);  // Callisto
+            let rate_26 = config.dose_rate_krad_h(26.0); // Callisto
             let rate_30 = config.dose_rate_krad_h(30.0);
             let rate_50 = config.dose_rate_krad_h(50.0);
-            let rate_63 = config.dose_rate_krad_h(63.0);  // magnetopause
+            let rate_63 = config.dose_rate_krad_h(63.0); // magnetopause
             let rate_100 = config.dose_rate_krad_h(100.0); // beyond magnetopause
 
             results.push_str(&format!("    \"dose_rate_9_4_rj\": {:.15e},\n", rate_9_4));
@@ -1684,27 +1686,62 @@ mod export {
 
             // Transit analysis: 15→50 RJ at various velocities
             let result_7 = config.transit_analysis(15.0, 50.0, 7.0, 100.0);
-            results.push_str(&format!("    \"transit_15_50_7kms_dose\": {:.15e},\n", result_7.total_dose_krad));
-            results.push_str(&format!("    \"transit_15_50_7kms_dep_rate\": {:.15e},\n", result_7.departure_dose_rate_krad_h));
-            results.push_str(&format!("    \"transit_15_50_7kms_arr_rate\": {:.15e},\n", result_7.arrival_dose_rate_krad_h));
-            results.push_str(&format!("    \"transit_15_50_7kms_survives\": {},\n", result_7.shield_survives));
+            results.push_str(&format!(
+                "    \"transit_15_50_7kms_dose\": {:.15e},\n",
+                result_7.total_dose_krad
+            ));
+            results.push_str(&format!(
+                "    \"transit_15_50_7kms_dep_rate\": {:.15e},\n",
+                result_7.departure_dose_rate_krad_h
+            ));
+            results.push_str(&format!(
+                "    \"transit_15_50_7kms_arr_rate\": {:.15e},\n",
+                result_7.arrival_dose_rate_krad_h
+            ));
+            results.push_str(&format!(
+                "    \"transit_15_50_7kms_survives\": {},\n",
+                result_7.shield_survives
+            ));
 
             let result_60 = config.transit_analysis(15.0, 50.0, 60.0, 100.0);
-            results.push_str(&format!("    \"transit_15_50_60kms_dose\": {:.15e},\n", result_60.total_dose_krad));
-            results.push_str(&format!("    \"transit_15_50_60kms_survives\": {},\n", result_60.shield_survives));
+            results.push_str(&format!(
+                "    \"transit_15_50_60kms_dose\": {:.15e},\n",
+                result_60.total_dose_krad
+            ));
+            results.push_str(&format!(
+                "    \"transit_15_50_60kms_survives\": {},\n",
+                result_60.shield_survives
+            ));
 
             // EP02 42-minute shield budget scenario
             let departure_rate = config.dose_rate_krad_h(15.0);
             let shield_budget_42min = departure_rate * (42.0 / 60.0);
-            results.push_str(&format!("    \"shield_budget_42min_krad\": {:.15e},\n", shield_budget_42min));
+            results.push_str(&format!(
+                "    \"shield_budget_42min_krad\": {:.15e},\n",
+                shield_budget_42min
+            ));
 
             let result_42min = config.transit_analysis(15.0, 50.0, 7.0, shield_budget_42min);
-            results.push_str(&format!("    \"ep02_42min_7kms_dose\": {:.15e},\n", result_42min.total_dose_krad));
-            results.push_str(&format!("    \"ep02_42min_7kms_survives\": {},\n", result_42min.shield_survives));
+            results.push_str(&format!(
+                "    \"ep02_42min_7kms_dose\": {:.15e},\n",
+                result_42min.total_dose_krad
+            ));
+            results.push_str(&format!(
+                "    \"ep02_42min_7kms_survives\": {},\n",
+                result_42min.shield_survives
+            ));
 
             // Minimum survival velocity
-            let min_v = jupiter_radiation::minimum_survival_velocity(&config, 15.0, 50.0, shield_budget_42min);
-            results.push_str(&format!("    \"min_survival_velocity_kms\": {:.15e},\n", min_v));
+            let min_v = jupiter_radiation::minimum_survival_velocity(
+                &config,
+                15.0,
+                50.0,
+                shield_budget_42min,
+            );
+            results.push_str(&format!(
+                "    \"min_survival_velocity_kms\": {:.15e},\n",
+                min_v
+            ));
 
             // Region parameters for independent reconstruction
             results.push_str("    \"inner_r_min\": 6.0,\n");

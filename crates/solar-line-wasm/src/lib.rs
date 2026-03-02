@@ -2584,8 +2584,7 @@ mod tests {
         assert!(
             result.shield_survives,
             "fast escape should survive: total_dose={:.4} krad, budget={:.4} krad",
-            result.total_dose_krad,
-            budget
+            result.total_dose_krad, budget
         );
     }
 

@@ -897,11 +897,7 @@ mod tests {
             e.e0
         );
         // Earth inclination to ecliptic ≈ 0° (by definition)
-        assert!(
-            e.i0.abs() < 0.01,
-            "Earth i0 = {}, expected ~0°",
-            e.i0
-        );
+        assert!(e.i0.abs() < 0.01, "Earth i0 = {}, expected ~0°", e.i0);
     }
 
     #[test]
@@ -909,7 +905,12 @@ mod tests {
         for planet in Planet::ALL {
             let e = mean_elements(planet);
             // Semi-major axis must be positive
-            assert!(e.a0 > 0.0, "{:?}: a0 must be positive, got {}", planet, e.a0);
+            assert!(
+                e.a0 > 0.0,
+                "{:?}: a0 must be positive, got {}",
+                planet,
+                e.a0
+            );
             // Eccentricity in [0, 1)
             assert!(
                 e.e0 >= 0.0 && e.e0 < 1.0,
