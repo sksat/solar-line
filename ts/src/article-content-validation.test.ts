@@ -2221,6 +2221,17 @@ describe("science-accuracy.md content validation", () => {
       "should include EP03's 1,674x reduction factor",
     );
   });
+
+  it("has relativistic β comparison bar chart across episodes", () => {
+    assert.ok(
+      content.includes("value: 2.54") && content.includes("value: 1.86"),
+      "should have bar chart with EP05 β=2.54% and EP03 β=1.86%",
+    );
+    assert.ok(
+      content.includes("value: 0.02"),
+      "chart should include EP02 β=0.02% (lowest)",
+    );
+  });
 });
 
 // ============================================================
