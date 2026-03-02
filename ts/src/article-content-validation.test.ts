@@ -751,6 +751,21 @@ describe("EP04 article content validation", () => {
     assert.ok(content.includes("公称推力") && content.includes("9.8"),
       "thrust profile should reference 9.8 MN nominal thrust");
   });
+
+  it("plasmoid decision IF analysis bar chart", () => {
+    assert.ok(
+      content.includes("プラズモイド対処の意思決定"),
+      "should have plasmoid decision bar chart",
+    );
+    assert.ok(
+      content.includes("シールド突破（作中選択）") && content.includes("value: 480"),
+      "chart should show shield path with 480 mSv",
+    );
+    assert.ok(
+      content.includes("主機で回避（IF）") && content.includes("value: 48"),
+      "chart should show avoidance path with 48 mSv",
+    );
+  });
 });
 
 describe("EP05 article content validation", () => {
