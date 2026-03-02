@@ -547,6 +547,48 @@ describe("EP02 article content validation", () => {
       "chart should show solar escape velocity threshold",
     );
   });
+
+  it("has radiation shield survival chart", () => {
+    assert.ok(
+      content.includes("ep02-chart-radiation-shield"),
+      "EP02 should have radiation shield survival chart",
+    );
+    assert.ok(
+      content.includes("シールド残量（0.043 krad）"),
+      "chart should show shield budget line at 0.043 krad",
+    );
+  });
+
+  it("radiation chart shows ballistic dose exceeds shield budget", () => {
+    // At 7 km/s, dose is 0.310 krad (7.2x budget)
+    assert.ok(
+      content.includes("0.310"),
+      "radiation chart should include 7 km/s ballistic dose of 0.310 krad",
+    );
+    assert.ok(
+      content.includes("0.036"),
+      "radiation chart should include 60 km/s accelerated dose of 0.036 krad",
+    );
+  });
+
+  it("has trim-thrust tradeoff chart", () => {
+    assert.ok(
+      content.includes("ep02-chart-trimthrust-tradeoff"),
+      "EP02 should have trim-thrust tradeoff chart",
+    );
+    assert.ok(
+      content.includes("捕獲可能上限"),
+      "chart should show capture feasibility limit line",
+    );
+  });
+
+  it("trim-thrust chart shows v∞=90 km/s for accel-only scenario", () => {
+    // The key insight: accel-only gives v∞=90.3, far above capture limit
+    assert.ok(
+      content.includes("90.3"),
+      "trim-thrust chart should show v∞=90.3 km/s for accel-only",
+    );
+  });
 });
 
 describe("EP03 article content validation", () => {
