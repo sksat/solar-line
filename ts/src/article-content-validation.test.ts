@@ -3033,12 +3033,18 @@ describe("Extended timeseries data validation", () => {
     assert.ok(Math.abs(earthZ) < 500, `Earth Z should be ≈0, got ${earthZ}`);
   });
 
-  // --- 3D viewer embed (Task 461) ---
-  it("cross-episode has inline 3D viewer for full-route scene", () => {
-    assert.ok(crossContent.includes("3d-viewer:"),
-      "cross-episode should contain a 3d-viewer directive");
-    assert.ok(crossContent.includes('"full-route"'),
-      "3d-viewer directive should specify full-route scene");
+  // --- 3D viewer embed with scene switching (Tasks 461, 462) ---
+  it("cross-episode has inline 3D viewer with all three scenes", () => {
+    const viewer3dBlocks = crossContent.match(/```3d-viewer:[\s\S]*?```/g) ?? [];
+    assert.ok(viewer3dBlocks.length >= 1,
+      "cross-episode should contain at least one 3d-viewer directive");
+    const block = viewer3dBlocks[0]!;
+    assert.ok(block.includes('"full-route"'),
+      "3d-viewer should include full-route scene");
+    assert.ok(block.includes('"saturn-ring"'),
+      "3d-viewer should include saturn-ring scene");
+    assert.ok(block.includes('"uranus-approach"'),
+      "3d-viewer should include uranus-approach scene");
   });
 
   // --- Propellant mass timeline ---

@@ -646,6 +646,8 @@ export interface SummarySection {
 export interface Viewer3DEmbed {
   /** Scene preset to display: "full-route", "saturn-ring", "uranus-approach" */
   scene: string;
+  /** Additional scene presets available via buttons */
+  scenes?: string[];
   /** Container height in pixels (default 500) */
   height?: number;
   /** Caption text displayed below the viewer */

@@ -3197,13 +3197,28 @@ export function renderMarginGauges(gauges: MarginGauge[]): string {
   return gauges.map(renderMarginGauge).join("\n");
 }
 
+/** Scene label mapping for 3D viewer buttons */
+const VIEWER3D_SCENE_LABELS: Record<string, string> = {
+  "full-route": "全航路",
+  "saturn-ring": "土星リング",
+  "uranus-approach": "天王星接近",
+};
+
 /** Render an inline 3D viewer embed container */
 export function renderViewer3D(embed: Viewer3DEmbed): string {
   const height = embed.height ?? 500;
   const caption = embed.caption ? `<figcaption class="chart-caption">${escapeHtml(embed.caption)}</figcaption>` : "";
   const id = `viewer3d-${embed.scene}`;
+  const scenes = embed.scenes && embed.scenes.length > 1 ? embed.scenes : [embed.scene];
+  const scenesAttr = escapeHtml(JSON.stringify(scenes));
+  const sceneButtons = scenes.length > 1
+    ? `<div class="viewer3d-scene-buttons" style="display:flex;gap:8px;margin-bottom:8px;">${scenes.map(s =>
+        `<button class="viewer3d-scene-btn${s === embed.scene ? " active" : ""}" data-scene="${escapeHtml(s)}" style="background:${s === embed.scene ? "#58a6ff" : "#21262d"};color:${s === embed.scene ? "#0d1117" : "#c9d1d9"};border:1px solid var(--border);padding:6px 14px;cursor:pointer;border-radius:4px;font-size:0.85em;font-weight:${s === embed.scene ? "bold" : "normal"};">${escapeHtml(VIEWER3D_SCENE_LABELS[s] ?? s)}</button>`
+      ).join("")}</div>`
+    : "";
   return `<figure class="viewer3d-figure">
-<div id="${escapeHtml(id)}" class="viewer3d-container" data-scene="${escapeHtml(embed.scene)}" style="width:100%;height:${height}px;position:relative;background:#0d1117;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+${sceneButtons}
+<div id="${escapeHtml(id)}" class="viewer3d-container" data-scene="${escapeHtml(embed.scene)}" data-scenes="${scenesAttr}" style="width:100%;height:${height}px;position:relative;background:#0d1117;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
 <div class="viewer3d-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#58a6ff;">3Dビューア読み込み中...</div>
 </div>
 <div class="viewer3d-controls" style="display:none;padding:8px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;align-items:center;gap:12px;">
@@ -3355,40 +3370,69 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
   var analysisData = await resp.json();
   container.querySelector(".viewer3d-loading").remove();
   initViewer(container);
-  var sceneData = window.__prepareScene(scene, analysisData);
-  if (!sceneData) return;
-  loadScene(sceneData);
-  if (sceneData.timeline) {
-    loadTimeline(sceneData.timeline);
-    var ctrl = container.closest(".viewer3d-figure").querySelector(".viewer3d-controls");
+  var figure = container.closest(".viewer3d-figure");
+  var ctrl = figure.querySelector(".viewer3d-controls");
+  var playing = false;
+  function switchScene(sceneName) {
+    var sd = window.__prepareScene(sceneName, analysisData);
+    if (!sd) return;
+    loadScene(sd);
+    // Reset timeline controls
+    playing = false;
+    setTimelinePlaying(false);
     if (ctrl) {
-      ctrl.style.display = "flex";
-      var playBtn = ctrl.querySelector(".viewer3d-play");
-      var slider = ctrl.querySelector(".viewer3d-slider");
-      var timeSpan = ctrl.querySelector(".viewer3d-time");
-      var labelSpan = ctrl.querySelector(".viewer3d-label");
-      var playing = false;
-      playBtn.addEventListener("click", function() {
-        playing = !playing;
-        setTimelinePlaying(playing);
-        playBtn.textContent = playing ? "\\u23f8" : "\\u25b6";
-      });
-      slider.addEventListener("input", function() {
-        var frac = Number(slider.value) / 1000;
-        updateTimelineFrame(frac);
+      if (sd.timeline) {
+        loadTimeline(sd.timeline);
+        ctrl.style.display = "flex";
+        ctrl.querySelector(".viewer3d-play").textContent = "\\u25b6";
+        ctrl.querySelector(".viewer3d-slider").value = "0";
+        ctrl.querySelector(".viewer3d-time").textContent = "0日";
+      } else {
+        ctrl.style.display = "none";
+      }
+    }
+    // Update button active states
+    figure.querySelectorAll(".viewer3d-scene-btn").forEach(function(btn) {
+      var isActive = btn.dataset.scene === sceneName;
+      btn.style.background = isActive ? "#58a6ff" : "#21262d";
+      btn.style.color = isActive ? "#0d1117" : "#c9d1d9";
+      btn.style.fontWeight = isActive ? "bold" : "normal";
+    });
+  }
+  // Scene switching buttons
+  figure.querySelectorAll(".viewer3d-scene-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() { switchScene(btn.dataset.scene); });
+  });
+  // Initial scene load
+  switchScene(scene);
+  // Timeline controls
+  if (ctrl) {
+    var playBtn = ctrl.querySelector(".viewer3d-play");
+    var slider = ctrl.querySelector(".viewer3d-slider");
+    var timeSpan = ctrl.querySelector(".viewer3d-time");
+    playBtn.addEventListener("click", function() {
+      playing = !playing;
+      setTimelinePlaying(playing);
+      playBtn.textContent = playing ? "\\u23f8" : "\\u25b6";
+    });
+    slider.addEventListener("input", function() {
+      var frac = Number(slider.value) / 1000;
+      updateTimelineFrame(frac);
+      var day = getTimelineCurrentDay();
+      timeSpan.textContent = Math.round(day) + "日";
+    });
+    (function tick() {
+      if (playing) {
         var day = getTimelineCurrentDay();
-        timeSpan.textContent = Math.round(day) + "日";
-      });
-      (function tick() {
-        if (playing) {
-          var day = getTimelineCurrentDay();
-          var total = sceneData.timeline.totalDays;
+        var sd = window.__prepareScene(container.dataset.scene, analysisData);
+        if (sd && sd.timeline) {
+          var total = sd.timeline.totalDays;
           slider.value = String(Math.round((day / total) * 1000));
           timeSpan.textContent = Math.round(day) + "日";
         }
-        requestAnimationFrame(tick);
-      })();
-    }
+      }
+      requestAnimationFrame(tick);
+    })();
   }
 });
 </script>

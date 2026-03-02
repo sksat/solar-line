@@ -390,6 +390,17 @@ describe("applyDirectives", () => {
     assert.equal(result.viewer3d!.caption, "全航路3Dビュー");
   });
 
+  it("applies 3d-viewer directive with multiple scenes", () => {
+    const viewerJson = JSON.stringify({
+      scene: "full-route",
+      scenes: ["full-route", "saturn-ring", "uranus-approach"],
+      height: 500,
+    });
+    const result = applyDirectives([{ type: "3d-viewer", rawContent: viewerJson }]);
+    assert.ok(result.viewer3d);
+    assert.deepStrictEqual(result.viewer3d!.scenes, ["full-route", "saturn-ring", "uranus-approach"]);
+  });
+
   it("throws on unknown directive type", () => {
     assert.throws(
       () => applyDirectives([{ type: "unknown", rawContent: "" }]),
