@@ -10,9 +10,8 @@
 /// - Relativistic kinetic energy vs classical approximation
 use crate::units::{KmPerSec, Seconds};
 
-/// Speed of light in km/s (exact value per SI definition).
-/// c = 299,792.458 km/s
-pub const C_KM_S: f64 = 299_792.458;
+/// Speed of light in km/s — re-exported from constants module for convenience.
+pub use crate::constants::C_KM_S;
 
 /// Compute the Lorentz factor γ = 1 / √(1 - β²), where β = v/c.
 ///

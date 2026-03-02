@@ -69,6 +69,12 @@ pub mod orbit_radius {
 /// Source: NIST/CODATA
 pub const G0_M_S2: f64 = 9.806_65;
 
+/// 1 Astronomical Unit in km (IAU 2012 exact definition)
+pub const AU_KM: f64 = 149_597_870.7;
+
+/// Speed of light in km/s (exact, SI definition)
+pub const C_KM_S: f64 = 299_792.458;
+
 /// Standard reference orbits.
 pub mod reference_orbits {
     use super::Km;

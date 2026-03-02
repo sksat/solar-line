@@ -8,7 +8,7 @@
 /// determining launch windows and phase angles in fiction analysis.
 ///
 /// Reference frame: J2000 ecliptic, heliocentric.
-use crate::constants::{mu, orbit_radius};
+use crate::constants::{mu, orbit_radius, AU_KM};
 use crate::kepler;
 use crate::units::{Eccentricity, Km, Mu, Radians, Seconds};
 use std::f64::consts::PI;
@@ -108,9 +108,6 @@ pub struct MeanElements {
     /// Longitude of ascending node rate (degrees/century)
     pub omega_dot: f64,
 }
-
-/// AU to km conversion factor
-const AU_KM: f64 = 149_597_870.7;
 
 /// Get mean Keplerian elements for a planet.
 ///

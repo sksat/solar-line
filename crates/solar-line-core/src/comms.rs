@@ -10,8 +10,8 @@
 use crate::ephemeris::{self, Planet, PlanetPosition};
 use crate::units::Km;
 
-/// Speed of light in km/s (exact, per SI definition).
-pub const C_KM_S: f64 = 299_792.458;
+/// Speed of light in km/s — re-exported from constants module for convenience.
+pub use crate::constants::C_KM_S;
 
 /// One-way light time (seconds) for a given distance in km.
 ///
