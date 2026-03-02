@@ -1490,3 +1490,66 @@ test.describe("Task dashboard", () => {
     await expect(page.locator("nav")).toBeVisible();
   });
 });
+
+// --- Task 378: Standalone calculator page ---
+
+test.describe("Standalone calculator page", () => {
+  test("loads with calculator interface", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toContain("Brachistochrone 計算機");
+  });
+
+  test("has input controls for all parameters", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    await expect(page.locator("#calc-distance")).toBeVisible();
+    await expect(page.locator("#calc-mass")).toBeVisible();
+    await expect(page.locator("#calc-time")).toBeVisible();
+    await expect(page.locator("#calc-thrust")).toBeVisible();
+  });
+
+  test("has episode tabs for all 5 episodes", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    for (let ep = 1; ep <= 5; ep++) {
+      await expect(page.locator(`.calc-ep-tab[data-ep="${ep}"]`)).toBeVisible();
+    }
+  });
+
+  test("tab switching shows correct presets", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    // EP1 panel should be active by default
+    await expect(page.locator('.calc-ep-panel[data-ep="1"]')).toBeVisible();
+    // Click EP3 tab
+    await page.click('.calc-ep-tab[data-ep="3"]');
+    await expect(page.locator('.calc-ep-panel[data-ep="3"]')).toBeVisible();
+    // EP1 panel should be hidden
+    await expect(page.locator('.calc-ep-panel[data-ep="1"]')).not.toBeVisible();
+  });
+
+  test("has comparison table", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    await expect(page.locator("#calc-comparison-body")).toBeVisible();
+    // Should have 5 rows (one per episode)
+    const rows = page.locator("#calc-comparison-body tr");
+    await expect(rows).toHaveCount(5);
+  });
+
+  test("calculator updates results on input", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    // Wait for calculator to initialize
+    await page.waitForFunction(() => {
+      const el = document.getElementById("res-req-accel");
+      return el && el.textContent !== "—";
+    });
+    const accel = await page.locator("#res-req-accel").textContent();
+    expect(accel).not.toBe("—");
+    const verdict = await page.locator("#res-verdict").textContent();
+    expect(verdict).not.toBe("—");
+  });
+
+  test("has navigation and disclaimers", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    await expect(page.locator("nav")).toBeVisible();
+    await expect(page.locator(".site-banner")).toBeVisible();
+  });
+});

@@ -36,6 +36,7 @@ import {
   renderTimeSeriesChart,
   renderTimeSeriesCharts,
   renderExplorerPage,
+  renderCalculatorPage,
   renderADRIndex,
   REPORT_CSS,
   renderGlossary,
@@ -6159,5 +6160,64 @@ describe("renderOrbitalDiagram with insets", () => {
     const html = renderOrbitalDiagram(sampleDiagram);
     assert.ok(!html.includes("orbital-inset"));
     assert.ok(!html.includes("data-inset-id"));
+  });
+});
+
+// --- renderCalculatorPage ---
+
+describe("renderCalculatorPage", () => {
+  it("renders page with title and all required elements", () => {
+    const html = renderCalculatorPage();
+    assert.ok(html.includes("Brachistochrone 計算機"), "should have page title");
+    assert.ok(html.includes("calc-distance"), "should have distance input");
+    assert.ok(html.includes("calc-mass"), "should have mass input");
+    assert.ok(html.includes("calc-time"), "should have time input");
+    assert.ok(html.includes("calc-thrust"), "should have thrust input");
+    assert.ok(html.includes("calc-engine-badge"), "should have engine badge");
+    assert.ok(html.includes("res-verdict"), "should have verdict element");
+    assert.ok(html.includes("calculator.js"), "should load calculator script");
+  });
+
+  it("includes episode tabs for all 5 episodes", () => {
+    const html = renderCalculatorPage();
+    for (let ep = 1; ep <= 5; ep++) {
+      assert.ok(html.includes(`data-ep="${ep}"`), `should have tab for EP${ep}`);
+      assert.ok(html.includes(`第${ep}話`), `should label EP${ep} tab`);
+    }
+  });
+
+  it("includes presets from all episodes", () => {
+    const html = renderCalculatorPage();
+    assert.ok(html.includes("ep01_72h"), "should have EP01 preset");
+    assert.ok(html.includes("ep02_escape"), "should have EP02 preset");
+    assert.ok(html.includes("ep03_143h"), "should have EP03 preset");
+    assert.ok(html.includes("ep04_damaged"), "should have EP04 preset");
+    assert.ok(html.includes("ep05_composite"), "should have EP05 preset");
+  });
+
+  it("includes cross-episode comparison table", () => {
+    const html = renderCalculatorPage();
+    assert.ok(html.includes("calc-comparison-body"), "should have comparison table body");
+    assert.ok(html.includes("エピソード間の比較"), "should have comparison section heading");
+  });
+
+  it("includes educational explanation of the model", () => {
+    const html = renderCalculatorPage();
+    assert.ok(html.includes("前提条件"), "should have assumptions section");
+    assert.ok(html.includes("直線経路"), "should explain straight-line path");
+    assert.ok(html.includes("中間点反転"), "should explain midpoint flip");
+    assert.ok(html.includes("一定推力"), "should explain constant thrust");
+  });
+
+  it("first episode tab is active by default", () => {
+    const html = renderCalculatorPage();
+    assert.ok(html.includes('class="calc-ep-tab active" data-ep="1"'), "EP1 tab should be active");
+    assert.ok(html.includes('class="calc-ep-panel active" data-ep="1"'), "EP1 panel should be active");
+  });
+
+  it("nav link to calculator appears in layout", () => {
+    const html = layoutHtml("Test", "<p>content</p>");
+    assert.ok(html.includes("計算機"), "nav should include calculator link");
+    assert.ok(html.includes("calculator/index.html"), "nav should link to calculator page");
   });
 });

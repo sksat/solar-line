@@ -28,6 +28,7 @@ import {
   renderIdeasIndex,
   renderIdeaPage,
   renderExplorerPage,
+  renderCalculatorPage,
   render404Page,
   type NavEpisode,
 } from "./templates.ts";
@@ -787,6 +788,13 @@ export function build(config: BuildConfig): void {
       );
     }
   }
+
+  // Generate standalone calculator page
+  ensureDir(path.join(outDir, "calculator"));
+  fs.writeFileSync(
+    path.join(outDir, "calculator", "index.html"),
+    renderCalculatorPage(manifest.summaryPages, navEpisodes, manifest.metaPages),
+  );
 
   // Generate data explorer page and data
   ensureDir(path.join(outDir, "explorer"));

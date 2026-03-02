@@ -491,6 +491,15 @@ footer {
 .calc-results .result-gap { color: var(--red); font-weight: 600; }
 .calc-badge { font-size: 0.75em; color: #8b949e; float: right; }
 .calc-assumptions { font-size: 0.8em; color: #8b949e; margin-top: 0.5rem; }
+.calc-ep-tabs { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.25rem; }
+.calc-ep-tab { background: transparent; border: 1px solid transparent; border-radius: 4px 4px 0 0; color: #8b949e; padding: 0.4rem 0.75rem; cursor: pointer; font-size: 0.9em; }
+.calc-ep-tab:hover { color: var(--fg); background: var(--surface); }
+.calc-ep-tab.active { color: var(--accent); border-color: var(--border); border-bottom-color: var(--bg); background: var(--bg); font-weight: 600; }
+.calc-ep-panel { display: none; }
+.calc-ep-panel.active { display: block; }
+.calc-ep-panel .calc-preset-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--accent); padding: 0.3rem 0.75rem; cursor: pointer; font-size: 0.85em; margin: 0.25rem 0.25rem 0.25rem 0; }
+.calc-ep-panel .calc-preset-btn:hover { background: var(--border); }
+.calc-ep-route { color: #8b949e; font-size: 0.85em; margin: 0.25rem 0; }
 .video-cards { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
 .video-card { flex: 1 1 400px; min-width: 300px; }
 .video-card iframe {
@@ -820,6 +829,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
     `<a href="${basePath}/meta/adr/index.html">ADR</a>`,
     `<a href="${basePath}/meta/ideas/index.html">アイデア</a>`,
     `<a href="${basePath}/explorer/index.html">データ探索</a>`,
+    `<a href="${basePath}/calculator/index.html">計算機</a>`,
   ];
   const metaNav = `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">この考証について</button><span class="nav-dropdown-menu" role="menu">${metaLinks.join("")}</span></span>`;
   const fullTitle = `${escapeHtml(title)} — SOLAR LINE 考証`;
@@ -3904,4 +3914,163 @@ export function renderExplorerPage(summaryPages?: SiteManifest["summaryPages"], 
 <script type="module" src="../duckdb-explorer.js"></script>`;
 
   return layoutHtml("データエクスプローラー", content, "..", summaryPages, "DuckDB-WASM によるデータ探索ツール", navEpisodes, metaPages);
+}
+
+/** Render the standalone brachistochrone calculator page */
+export function renderCalculatorPage(summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  // Build all-episode presets grouped by episode
+  const episodeTabs: string[] = [];
+  const episodePanels: string[] = [];
+  for (const [epStr, config] of Object.entries(CALC_EPISODE_PRESETS)) {
+    const ep = Number(epStr);
+    const epNames: Record<number, string> = {
+      1: "火星→ガニメデ", 2: "木星圏→土星", 3: "エンケラドス→タイタニア",
+      4: "タイタニア→地球", 5: "天王星→地球",
+    };
+    episodeTabs.push(`<button class="calc-ep-tab${ep === 1 ? " active" : ""}" data-ep="${ep}" aria-selected="${ep === 1}">第${ep}話</button>`);
+    const buttons = config.presets
+      .map(p => `<button data-preset="${escapeHtml(p.key)}" class="calc-preset-btn">${escapeHtml(p.label)}</button>`)
+      .join("\n    ");
+    episodePanels.push(`<div class="calc-ep-panel${ep === 1 ? " active" : ""}" data-ep="${ep}" role="tabpanel">
+    <p class="calc-ep-route">${escapeHtml(epNames[ep] || `第${ep}話`)}</p>
+    ${buttons}
+  </div>`);
+  }
+
+  const content = `
+<h1>Brachistochrone 計算機</h1>
+<p>ケストレル号の各エピソードの軌道遷移パラメータを自由に変更し、必要な加速度と&Delta;Vへの影響をリアルタイムで探索できます。</p>
+
+<div class="card">
+<h2>モデルの前提条件</h2>
+<p>Brachistochrone（最速降下線）遷移は、宇宙船が経路の前半で加速し、中間点で反転して後半で減速する航法パターンです。以下の前提を置いています：</p>
+<ul>
+<li><strong>直線経路</strong> — 出発地と目的地を結ぶ直線上を移動</li>
+<li><strong>中間点反転</strong> — 距離の半分で加速→減速を切り替え</li>
+<li><strong>一定推力</strong> — 燃料消費による質量変化を無視（D-He³核融合パルスエンジンの高比推力 $I_{sp} \\approx 10^6$ s により推進剤消費は微小）</li>
+<li><strong>重力無視</strong> — 太陽・惑星の重力は考慮しない（長距離遷移での近似）</li>
+<li><strong>静止→静止遷移</strong> — 出発・到着時の相対速度ゼロ</li>
+</ul>
+<p>基本式: 加速度 $a = \\frac{4d}{t^2}$、&Delta;V $= \\frac{4d}{t}$（$d$: 距離、$t$: 時間）</p>
+</div>
+
+<div class="calc-section card" id="calculator" data-episode="1">
+<h2>パラメータ入力 <span class="calc-badge" id="calc-engine-badge">エンジン: JS</span></h2>
+
+<div class="calc-controls">
+  <div class="calc-control">
+    <label for="calc-distance">距離 (AU)</label>
+    <input type="range" id="calc-distance-range" min="0.5" max="50" step="0.01" value="3.68" aria-label="距離 (AU)">
+    <input type="number" id="calc-distance" min="0.1" max="50" step="0.01" value="3.68">
+  </div>
+  <div class="calc-control">
+    <label for="calc-mass">船質量 (t)</label>
+    <input type="range" id="calc-mass-range" min="10" max="100000" step="10" value="48000" aria-label="船質量 (t)">
+    <input type="number" id="calc-mass" min="1" max="1000000" step="1" value="48000">
+  </div>
+  <div class="calc-control">
+    <label for="calc-time">遷移時間 (h)</label>
+    <input type="range" id="calc-time-range" min="1" max="5000" step="1" value="72" aria-label="遷移時間 (h)">
+    <input type="number" id="calc-time" min="1" max="10000" step="1" value="72">
+  </div>
+  <div class="calc-control">
+    <label for="calc-thrust">推力 (MN)</label>
+    <input type="range" id="calc-thrust-range" min="0.01" max="15" step="0.01" value="9.8" aria-label="推力 (MN)">
+    <input type="number" id="calc-thrust" min="0.01" max="100" step="0.01" value="9.8">
+    <span id="calc-thrust-val" class="calc-badge" style="font-size:0.85em">9.8 MN</span>
+  </div>
+</div>
+
+<h3>エピソード別プリセット</h3>
+<div class="calc-ep-tabs" role="tablist">
+  ${episodeTabs.join("\n  ")}
+</div>
+<div class="calc-ep-panels">
+  ${episodePanels.join("\n  ")}
+</div>
+
+<div class="calc-results" aria-live="polite">
+<table>
+  <tr><th colspan="2">遷移の要件</th><th colspan="2">船の性能 (ケストレル号)</th></tr>
+  <tr>
+    <td>必要加速度</td><td id="res-req-accel">—</td>
+    <td>船の加速度</td><td id="res-ship-accel">—</td>
+  </tr>
+  <tr>
+    <td>必要&Delta;V</td><td id="res-req-dv">—</td>
+    <td>船の&Delta;V余力</td><td id="res-ship-dv">—</td>
+  </tr>
+  <tr>
+    <td>距離</td><td><span id="calc-distance-val">—</span></td>
+    <td>到達可能距離</td><td id="res-ship-reach">—</td>
+  </tr>
+  <tr>
+    <td>加速度ギャップ</td><td class="result-gap" id="res-accel-ratio">—</td>
+    <td>&Delta;Vギャップ</td><td class="result-gap" id="res-dv-ratio">—</td>
+  </tr>
+</table>
+<p style="margin-top:0.75rem">判定: <span id="res-verdict" class="verdict verdict-indeterminate">—</span></p>
+</div>
+</div>
+
+<div class="card">
+<h2>エピソード間の比較</h2>
+<p>各エピソードの「作中描写」パラメータでの brachistochrone 要件を一覧で比較します。</p>
+<table>
+<thead>
+<tr><th>EP</th><th>区間</th><th>距離 (AU)</th><th>時間 (h)</th><th>必要加速度 (G)</th><th>必要&Delta;V (km/s)</th></tr>
+</thead>
+<tbody id="calc-comparison-body">
+</tbody>
+</table>
+</div>
+
+<script type="module" src="../calculator.js"></script>
+<script>
+// Episode tab switching
+document.addEventListener("DOMContentLoaded", function() {
+  var tabs = document.querySelectorAll(".calc-ep-tab");
+  var panels = document.querySelectorAll(".calc-ep-panel");
+  tabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+      tabs.forEach(function(t) { t.classList.remove("active"); t.setAttribute("aria-selected", "false"); });
+      panels.forEach(function(p) { p.classList.remove("active"); });
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      var ep = tab.getAttribute("data-ep");
+      var panel = document.querySelector('.calc-ep-panel[data-ep="' + ep + '"]');
+      if (panel) panel.classList.add("active");
+      // Update calculator data-episode attribute for WASM path resolution
+      var calcEl = document.getElementById("calculator");
+      if (calcEl) calcEl.setAttribute("data-episode", ep);
+    });
+  });
+
+  // Cross-episode comparison table
+  var KM_PER_AU = 149597870.7;
+  var G_KMS2 = 9.80665e-3;
+  var comparisons = [
+    { ep: 1, route: "火星→ガニメデ", distAU: 3.68, timeH: 72 },
+    { ep: 2, route: "木星圏脱出", distAU: 4.32, timeH: 27 },
+    { ep: 3, route: "エンケラドス→タイタニア", distAU: 9.62, timeH: 143 },
+    { ep: 4, route: "タイタニア→地球", distAU: 18.2, timeH: 2520 },
+    { ep: 5, route: "天王星→地球（複合）", distAU: 18.2, timeH: 507 },
+  ];
+  var tbody = document.getElementById("calc-comparison-body");
+  if (tbody) {
+    comparisons.forEach(function(c) {
+      var dKm = c.distAU * KM_PER_AU;
+      var tSec = c.timeH * 3600;
+      var accel = 4 * dKm / (tSec * tSec);
+      var dv = 4 * dKm / tSec;
+      var accelG = accel / G_KMS2;
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + c.ep + "</td><td>" + c.route + "</td><td>" + c.distAU.toFixed(2) + "</td><td>" + c.timeH + "</td><td>" + accelG.toFixed(2) + "</td><td>" + dv.toFixed(0) + "</td>";
+      tbody.appendChild(tr);
+    });
+  }
+});
+</script>`;
+
+  return layoutHtml("Brachistochrone 計算機", content, "..", summaryPages, "ケストレル号のbrachistochrone遷移パラメータを自由に探索できるインタラクティブ計算機", navEpisodes, metaPages);
 }
