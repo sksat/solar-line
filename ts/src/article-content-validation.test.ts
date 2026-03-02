@@ -2854,6 +2854,37 @@ describe("Extended timeseries data validation", () => {
     assert.ok(Math.abs(finalV - 7.7) < 2, `EP05 final speed should be ~7.7 km/s, got ${finalV}`);
   });
 
+  // --- Z-height (ecliptic elevation) profile ---
+  it("z-height profile: starts at Mars Z ≈ +4000 km", () => {
+    const series = parseTimeseries(crossContent, "mission-z-height-profile");
+    assert.ok(series, "Z-height profile should exist");
+    assert.ok(series.length >= 4, "should have 4 series (EP01-EP05)");
+    assert.ok(Math.abs(series[0].y[0] - 4047) < 500, `Mars Z should be ~+4047 kkm, got ${series[0].y[0]}`);
+  });
+
+  it("z-height profile: Jupiter Z is below ecliptic (negative)", () => {
+    const series = parseTimeseries(crossContent, "mission-z-height-profile");
+    assert.ok(series);
+    const jupiterZ = series[0].y[series[0].y.length - 1];
+    assert.ok(jupiterZ < 0, `Jupiter Z should be negative (below ecliptic), got ${jupiterZ}`);
+    assert.ok(Math.abs(jupiterZ - (-6416)) < 1000, `Jupiter Z should be ~-6416 kkm, got ${jupiterZ}`);
+  });
+
+  it("z-height profile: Saturn peak is maximum Z ≈ +48000 km", () => {
+    const series = parseTimeseries(crossContent, "mission-z-height-profile");
+    assert.ok(series);
+    const saturnZ = series[1].y[series[1].y.length - 1]; // EP02 series ends at Saturn
+    assert.ok(saturnZ > 40000, `Saturn Z should be >40000 kkm, got ${saturnZ}`);
+    assert.ok(saturnZ < 55000, `Saturn Z should be <55000 kkm, got ${saturnZ}`);
+  });
+
+  it("z-height profile: ends near ecliptic plane (Earth Z ≈ 0)", () => {
+    const series = parseTimeseries(crossContent, "mission-z-height-profile");
+    assert.ok(series);
+    const earthZ = series[series.length - 1].y[series[series.length - 1].y.length - 1];
+    assert.ok(Math.abs(earthZ) < 500, `Earth Z should be ≈0, got ${earthZ}`);
+  });
+
   // --- Propellant mass timeline ---
   it("propellant mass: starts at 299t (initial mass)", () => {
     const series = parseTimeseries(crossContent, "propellant-mass-timeline");
