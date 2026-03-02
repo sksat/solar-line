@@ -95,7 +95,7 @@ pub fn velocity_error_from_pointing(
 ///   accuracy = cos(theta)  →  theta = arccos(accuracy)
 /// For 99.8% accuracy: theta ≈ 0.063 rad ≈ 3.6°
 pub fn accuracy_to_pointing_error_rad(accuracy_fraction: f64) -> f64 {
-    accuracy_fraction.acos()
+    accuracy_fraction.clamp(-1.0, 1.0).acos()
 }
 
 /// Gravity gradient torque on an elongated spacecraft (N·m).

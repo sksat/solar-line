@@ -233,7 +233,8 @@ pub fn uranus_approach_analysis(
 
     // Angle between spin axis and ecliptic north (0,0,1)
     let ecliptic_north = Vec3::new(0.0, 0.0, 1.0);
-    let equatorial_ecliptic_angle = Radians(spin_axis.dot_raw(ecliptic_north).acos());
+    let equatorial_ecliptic_angle =
+        Radians(spin_axis.dot_raw(ecliptic_north).clamp(-1.0, 1.0).acos());
 
     // Angle between approach direction and spin axis
     let approach_normalized = approach_dir.normalize();

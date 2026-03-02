@@ -359,7 +359,7 @@ pub fn planet_position(planet: Planet, jd: f64) -> PlanetPosition {
 
     // Ecliptic longitude and latitude from 3D coordinates
     let longitude = Radians(y.atan2(x)).normalize();
-    let latitude = Radians((z / r_km).asin());
+    let latitude = Radians((z / r_km).clamp(-1.0, 1.0).asin());
 
     PlanetPosition {
         longitude,
