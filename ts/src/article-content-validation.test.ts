@@ -1883,8 +1883,10 @@ describe("ship-kestrel.md content validation", () => {
 describe("cross-episode.md content validation", () => {
   const content = readReport("cross-episode.md");
 
-  it("cites total mission distance ~35.9 AU", () => {
-    assert.ok(content.includes("35.9"), "should cite 35.9 AU total distance");
+  it("total mission distance matches EP05 fullRoute analysis", () => {
+    const ep5 = analyzeEpisode5();
+    const totalAU = ep5.fullRoute.totalDistAU;
+    assertContainsApproxValue(content, totalAU, "cross-episode total mission distance AU");
   });
 
   it("cites total mission duration ~124 days", () => {
@@ -1911,10 +1913,13 @@ describe("cross-episode.md content validation", () => {
     );
   });
 
-  it("nozzle margin 26 min (0.78%) cited in cross-episode context", () => {
+  it("nozzle margin matches EP05 analysis in cross-episode context", () => {
+    const ep5 = analyzeEpisode5();
+    const marginMin = ep5.nozzleLifespan.marginMinutes;
+    assertContainsApproxValue(content, marginMin, "cross-episode nozzle margin minutes");
     assert.ok(
-      content.includes("マージン") && content.includes("26"),
-      "should cite 26 min nozzle margin in cross-episode analysis",
+      content.includes("マージン"),
+      "should use the word マージン when citing nozzle margin",
     );
   });
 
