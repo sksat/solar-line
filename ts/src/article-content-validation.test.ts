@@ -4369,6 +4369,69 @@ describe("calculation JSON structural validation", () => {
 });
 
 // =============================================================================
+// Relativistic effects JSON → report cross-checks (Task 495)
+// =============================================================================
+
+describe("relativistic_effects.json → report cross-checks", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const relData = JSON.parse(
+    fs.readFileSync(path.join(calcDir, "relativistic_effects.json"), "utf-8"),
+  );
+  const transfers = relData.transfers as Array<{
+    episode: number;
+    transferId: string;
+    classicalPeakVelocityKms: number;
+    relativistic: { betaPeak: number; peakVelocityKms: number; gammaPeak: number };
+  }>;
+  const summary = relData.summary as {
+    maxBetaPercent: number;
+    maxGamma: number;
+    cumulativeTimeDilationSec: number;
+  };
+
+  // Use only the primary (first) transfer per episode to avoid duplicates
+  const primaryTransfers = new Map<number, (typeof transfers)[0]>();
+  for (const t of transfers) {
+    if (!primaryTransfers.has(t.episode)) primaryTransfers.set(t.episode, t);
+  }
+
+  for (const [ep, transfer] of primaryTransfers) {
+    const epFile = `ep0${ep}.md`;
+    const report = readReport(epFile, "episodes");
+    const betaPercent = transfer.relativistic.betaPeak * 100;
+    // Reports cite classical peak velocity, not relativistic-corrected
+    const peakVKms = transfer.classicalPeakVelocityKms;
+
+    it(`EP0${ep}: peak velocity ${Math.round(peakVKms)} km/s from relativistic JSON cited in report`, () => {
+      assertContainsApproxValue(report, peakVKms,
+        `EP0${ep} classical peak velocity from relativistic JSON`);
+    });
+
+    // Only check β% for episodes where it's significant (> 0.1%)
+    if (betaPercent > 0.1) {
+      it(`EP0${ep}: β = ${betaPercent.toFixed(2)}% from relativistic JSON cited in report`, () => {
+        assertContainsApproxValue(report, betaPercent,
+          `EP0${ep} relativistic β percentage`);
+      });
+    }
+  }
+
+  it("cross-episode: max β% from JSON cited in report", () => {
+    const crossEp = readReport("cross-episode.md");
+    assertContainsApproxValue(crossEp, summary.maxBetaPercent,
+      "cross-episode max β percentage");
+  });
+
+  it("cross-episode: max γ from JSON cited in report", () => {
+    const crossEp = readReport("cross-episode.md");
+    // γ is very close to 1, so check for the value itself
+    const gammaStr = summary.maxGamma.toFixed(4);
+    assert.ok(crossEp.includes(gammaStr) || crossEp.includes(summary.maxGamma.toString()),
+      `cross-episode should cite max Lorentz factor ${gammaStr}`);
+  });
+});
+
+// =============================================================================
 // ship-kestrel.md acceleration comparison + hypothesis charts (Task 470)
 // =============================================================================
 
