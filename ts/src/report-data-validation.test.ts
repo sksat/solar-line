@@ -324,6 +324,142 @@ describe("report data: all episodes have error bands on at least one chart", () 
   }
 });
 
+// ---------------------------------------------------------------------------
+// Time-series chart data shape integrity
+// ---------------------------------------------------------------------------
+
+describe("report data: time-series x/y length consistency", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const charts = report.timeSeriesCharts ?? [];
+
+    for (const chart of charts) {
+      for (const series of chart.series) {
+        it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": x length matches y length`, () => {
+          assert.equal(
+            series.x.length,
+            series.y.length,
+            `x length (${series.x.length}) !== y length (${series.y.length})`
+          );
+        });
+      }
+    }
+  }
+});
+
+describe("report data: time-series numeric validity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const charts = report.timeSeriesCharts ?? [];
+
+    for (const chart of charts) {
+      for (const series of chart.series) {
+        it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": x values are finite numbers`, () => {
+          for (let i = 0; i < series.x.length; i++) {
+            assert.ok(
+              Number.isFinite(series.x[i]),
+              `x[${i}] = ${series.x[i]} is not a finite number`
+            );
+          }
+        });
+
+        it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": y values are finite numbers`, () => {
+          for (let i = 0; i < series.y.length; i++) {
+            assert.ok(
+              Number.isFinite(series.y[i]),
+              `y[${i}] = ${series.y[i]} is not a finite number`
+            );
+          }
+        });
+      }
+    }
+  }
+});
+
+describe("report data: time-series x-axis monotonicity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const charts = report.timeSeriesCharts ?? [];
+
+    for (const chart of charts) {
+      for (const series of chart.series) {
+        it(`ep${String(epNum).padStart(2, "0")} ${chart.id} "${series.label}": x values are non-decreasing`, () => {
+          for (let i = 1; i < series.x.length; i++) {
+            assert.ok(
+              series.x[i] >= series.x[i - 1],
+              `x[${i}]=${series.x[i]} < x[${i - 1}]=${series.x[i - 1]}`
+            );
+          }
+        });
+      }
+    }
+  }
+});
+
+describe("report data: time-series non-empty", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const charts = report.timeSeriesCharts ?? [];
+
+    for (const chart of charts) {
+      it(`ep${String(epNum).padStart(2, "0")} ${chart.id}: has at least one data point`, () => {
+        assert.ok(chart.series.length > 0, "Chart has no series");
+        for (const series of chart.series) {
+          assert.ok(series.x.length > 0, `Series "${series.label}" has no data points`);
+        }
+      });
+    }
+  }
+});
+
+// Also validate summary report time-series charts
+describe("report data: summary time-series chart integrity", () => {
+  const summaryDir = path.join(REPORTS_DIR, "data", "summary");
+  const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
+
+  for (const file of summaryFiles) {
+    const slug = file.replace(/\.md$/, "");
+    const report = loadSummaryBySlug(summaryDir, slug);
+    const charts = report.timeSeriesCharts ?? [];
+
+    for (const chart of charts) {
+      for (const series of chart.series) {
+        it(`summary/${slug} ${chart.id} "${series.label}": x/y length match`, () => {
+          assert.equal(
+            series.x.length,
+            series.y.length,
+            `x length (${series.x.length}) !== y length (${series.y.length})`
+          );
+        });
+
+        it(`summary/${slug} ${chart.id} "${series.label}": values are finite`, () => {
+          for (let i = 0; i < series.x.length; i++) {
+            assert.ok(Number.isFinite(series.x[i]), `x[${i}] = ${series.x[i]} is not finite`);
+            assert.ok(Number.isFinite(series.y[i]), `y[${i}] = ${series.y[i]} is not finite`);
+          }
+        });
+
+        it(`summary/${slug} ${chart.id} "${series.label}": x non-decreasing`, () => {
+          for (let i = 1; i < series.x.length; i++) {
+            assert.ok(
+              series.x[i] >= series.x[i - 1],
+              `x[${i}]=${series.x[i]} < x[${i - 1}]=${series.x[i - 1]}`
+            );
+          }
+        });
+      }
+    }
+  }
+});
+
 describe("report data: uncertainty ellipse referential integrity", () => {
   const episodes = getAvailableEpisodes();
 
