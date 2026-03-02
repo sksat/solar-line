@@ -672,6 +672,45 @@ describe("EP03 article content validation", () => {
       "chart should include Cruise Burn phase with 2990 km/s",
     );
   });
+
+  // --- Task 454: Navigation error visualizations ---
+
+  it("nav error: has log-scale bar chart comparing error scales", () => {
+    assert.ok(
+      content.includes("航法誤差のスケール比較"),
+      "should have nav error scale comparison bar chart",
+    );
+    assert.ok(
+      content.includes("logScale: true"),
+      "error scale chart should use log scale",
+    );
+    assert.ok(
+      content.includes("value: 18") && content.includes("value: 14360000"),
+      "should compare 18 km precision vs 14.36M km error",
+    );
+  });
+
+  it("nav error: has angle-vs-error timeseries chart", () => {
+    assert.ok(
+      content.includes("ep03-nav-error-vs-angle"),
+      "should have nav error vs angle chart",
+    );
+    assert.ok(
+      content.includes("天王星ヒル球半径"),
+      "chart should include Uranus Hill sphere reference line",
+    );
+  });
+
+  it("nav error: has time evolution chart for wrong-choice scenario", () => {
+    assert.ok(
+      content.includes("ep03-nav-error-time-evolution"),
+      "should have nav error time evolution chart",
+    );
+    assert.ok(
+      content.includes("横ずれ距離"),
+      "chart should track lateral drift over time",
+    );
+  });
 });
 
 describe("EP04 article content validation", () => {
