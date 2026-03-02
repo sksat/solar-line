@@ -13,8 +13,11 @@ import {
   build,
   parseTaskFile,
   discoverTasks,
+  parseADRFile,
+  resolveDialogueReferences,
 } from "./build.ts";
-import type { EpisodeReport, TransferAnalysis } from "./report-types.ts";
+import type { EpisodeReport, TransferAnalysis, DialogueQuote } from "./report-types.ts";
+import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 
 /** Create a temp directory for test fixtures */
 function makeTempDir(): string {
@@ -961,5 +964,230 @@ Content
   it("returns empty array when no summary dir exists", () => {
     const result = discoverSummaries(tmpDir);
     assert.equal(result.length, 0);
+  });
+});
+
+// --- parseADRFile ---
+
+describe("parseADRFile", () => {
+  it("parses a standard ADR with title and status", () => {
+    const content = `# ADR-001: Use Rust for orbital mechanics
+
+## Status
+
+Accepted
+
+## Context
+
+Rust provides memory safety and WASM compilation.
+`;
+    const result = parseADRFile("001-use-rust.md", content);
+    assert.ok(result);
+    assert.equal(result.number, 1);
+    assert.equal(result.title, "ADR-001: Use Rust for orbital mechanics");
+    assert.equal(result.status, "Accepted");
+    assert.equal(result.slug, "001-use-rust");
+    assert.equal(result.content, content);
+  });
+
+  it("returns null for filename without leading digits", () => {
+    const result = parseADRFile("readme.md", "# Readme");
+    assert.equal(result, null);
+  });
+
+  it("returns null for template file (number 0)", () => {
+    const result = parseADRFile("000-template.md", "# Template");
+    assert.equal(result, null);
+  });
+
+  it("falls back to filename when no heading found", () => {
+    const content = "No heading here.\n\nJust body text.";
+    const result = parseADRFile("005-no-heading.md", content);
+    assert.ok(result);
+    assert.equal(result.title, "005-no-heading.md");
+  });
+
+  it("defaults status to Unknown when no Status section", () => {
+    const content = "# ADR-003: Something\n\nNo status section here.";
+    const result = parseADRFile("003-something.md", content);
+    assert.ok(result);
+    assert.equal(result.status, "Unknown");
+  });
+
+  it("extracts status from ## Status section (case-insensitive)", () => {
+    const content = `# ADR-010
+
+## status
+
+Proposed
+
+## Details
+Some details.
+`;
+    const result = parseADRFile("010-proposal.md", content);
+    assert.ok(result);
+    assert.equal(result.status, "Proposed");
+  });
+
+  it("stops reading status at next section heading", () => {
+    const content = `# ADR-002
+
+## Status
+
+Deprecated
+
+## Context
+
+This was deprecated.
+`;
+    const result = parseADRFile("002-old.md", content);
+    assert.ok(result);
+    assert.equal(result.status, "Deprecated");
+  });
+
+  it("skips blank lines before status value", () => {
+    const content = `# ADR-007
+
+## Status
+
+
+Superseded
+
+## Details
+`;
+    const result = parseADRFile("007-super.md", content);
+    assert.ok(result);
+    assert.equal(result.status, "Superseded");
+  });
+
+  it("parses multi-digit ADR number", () => {
+    const result = parseADRFile("123-big-number.md", "# Big One");
+    assert.ok(result);
+    assert.equal(result.number, 123);
+  });
+
+  it("strips .md from slug", () => {
+    const result = parseADRFile("015-test.md", "# Test");
+    assert.ok(result);
+    assert.equal(result.slug, "015-test");
+  });
+});
+
+// --- resolveDialogueReferences ---
+
+describe("resolveDialogueReferences", () => {
+  /** Helper: minimal EpisodeReport with quotes */
+  function makeReport(
+    episode: number,
+    quotes: DialogueQuote[],
+  ): EpisodeReport {
+    return {
+      episode,
+      title: `Episode ${episode}`,
+      summary: "test",
+      transfers: [],
+      dialogueQuotes: quotes,
+    };
+  }
+
+  /** Helper: minimal EpisodeDialogue with given lines */
+  function makeDialogue(
+    episode: number,
+    lines: Partial<DialogueLine>[],
+  ): EpisodeDialogue {
+    return {
+      schemaVersion: 1,
+      videoId: "test",
+      episode,
+      title: "test",
+      sourceUrl: "https://example.com",
+      language: "ja",
+      speakers: [],
+      scenes: [],
+      dialogue: lines.map((l, i) => ({
+        lineId: l.lineId ?? `ep0${episode}-dl-${String(i + 1).padStart(3, "0")}`,
+        speakerId: "test",
+        speakerName: "Test",
+        text: "hello",
+        startMs: 0,
+        endMs: 1000,
+        sceneId: "scene-01",
+        confidence: "verified" as const,
+        rawEntryIds: [],
+        transferRefs: [],
+        mentions: [],
+        ...l,
+      })),
+    };
+  }
+
+  it("returns empty array when no dialogueQuotes", () => {
+    const report = makeReport(1, []);
+    report.dialogueQuotes = undefined;
+    const warnings = resolveDialogueReferences(report, makeDialogue(1, []));
+    assert.deepEqual(warnings, []);
+  });
+
+  it("returns empty array when dialogueData is null", () => {
+    const report = makeReport(1, [
+      { id: "q1", dialogueLineId: "ep01-dl-001", speaker: "A", text: "hi", timestamp: "0:01" },
+    ]);
+    const warnings = resolveDialogueReferences(report, null);
+    assert.deepEqual(warnings, []);
+  });
+
+  it("returns no warnings when all references resolve", () => {
+    const report = makeReport(1, [
+      { id: "q1", dialogueLineId: "ep01-dl-001", speaker: "A", text: "hi", timestamp: "0:01" },
+      { id: "q2", dialogueLineId: "ep01-dl-002", speaker: "B", text: "bye", timestamp: "0:02" },
+    ]);
+    const dialogue = makeDialogue(1, [
+      { lineId: "ep01-dl-001" },
+      { lineId: "ep01-dl-002" },
+    ]);
+    const warnings = resolveDialogueReferences(report, dialogue);
+    assert.deepEqual(warnings, []);
+  });
+
+  it("reports missing lineId references", () => {
+    const report = makeReport(1, [
+      { id: "q1", dialogueLineId: "ep01-dl-999", speaker: "A", text: "hi", timestamp: "0:01" },
+    ]);
+    const dialogue = makeDialogue(1, [{ lineId: "ep01-dl-001" }]);
+    const warnings = resolveDialogueReferences(report, dialogue);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /q1/);
+    assert.match(warnings[0], /ep01-dl-999/);
+  });
+
+  it("skips quotes without dialogueLineId", () => {
+    const report = makeReport(1, [
+      { id: "q1", speaker: "A", text: "hi", timestamp: "0:01" },
+    ]);
+    const dialogue = makeDialogue(1, []);
+    const warnings = resolveDialogueReferences(report, dialogue);
+    assert.deepEqual(warnings, []);
+  });
+
+  it("reports multiple broken references", () => {
+    const report = makeReport(2, [
+      { id: "q1", dialogueLineId: "ep02-dl-100", speaker: "A", text: "a", timestamp: "1:00" },
+      { id: "q2", dialogueLineId: "ep02-dl-200", speaker: "B", text: "b", timestamp: "2:00" },
+      { id: "q3", dialogueLineId: "ep02-dl-001", speaker: "C", text: "c", timestamp: "3:00" },
+    ]);
+    const dialogue = makeDialogue(2, [{ lineId: "ep02-dl-001" }]);
+    const warnings = resolveDialogueReferences(report, dialogue);
+    assert.equal(warnings.length, 2);
+    assert.match(warnings[0], /ep02-dl-100/);
+    assert.match(warnings[1], /ep02-dl-200/);
+  });
+
+  it("includes episode number in warning message", () => {
+    const report = makeReport(5, [
+      { id: "q1", dialogueLineId: "ep05-dl-999", speaker: "A", text: "a", timestamp: "0:01" },
+    ]);
+    const dialogue = makeDialogue(5, []);
+    const warnings = resolveDialogueReferences(report, dialogue);
+    assert.match(warnings[0], /ep05/);
   });
 });
