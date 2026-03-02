@@ -1741,6 +1741,87 @@ pub fn elements_to_state_vector(
 }
 
 // ---------------------------------------------------------------------------
+// Jupiter radiation belt model
+// ---------------------------------------------------------------------------
+
+use solar_line_core::jupiter_radiation;
+
+/// Instantaneous dose rate at distance r (Jupiter radii) using default model.
+/// Returns dose rate in krad(Si)/hour behind 100 mil Al.
+/// Returns 0.0 beyond the magnetopause (~63 RJ).
+#[wasm_bindgen]
+pub fn jupiter_dose_rate_krad_h(r_rj: f64) -> f64 {
+    let config = jupiter_radiation::JupiterRadiationConfig::default_model();
+    config.dose_rate_krad_h(r_rj)
+}
+
+/// Jupiter radiation transit analysis using default model.
+/// Returns JSON with dose, shield status, and region breakdown.
+///
+/// Arguments:
+/// - r_start_rj: starting distance from Jupiter center (Jupiter radii)
+/// - r_end_rj: ending distance (Jupiter radii)
+/// - v_radial_km_s: radial velocity (km/s, positive = outward)
+/// - shield_budget_krad: total shield dose budget (krad)
+#[wasm_bindgen]
+pub fn jupiter_transit_analysis(
+    r_start_rj: f64,
+    r_end_rj: f64,
+    v_radial_km_s: f64,
+    shield_budget_krad: f64,
+) -> Result<JsValue, JsError> {
+    let config = jupiter_radiation::JupiterRadiationConfig::default_model();
+    let result = config.transit_analysis(r_start_rj, r_end_rj, v_radial_km_s, shield_budget_krad);
+
+    #[derive(Serialize)]
+    struct TransitResultJs {
+        total_dose_krad: f64,
+        departure_dose_rate_krad_h: f64,
+        arrival_dose_rate_krad_h: f64,
+        shield_life_at_departure_h: f64,
+        shield_life_at_arrival_h: f64,
+        shield_survives: bool,
+        peak_dose_rate_krad_h: f64,
+        region_dose_fractions: Vec<[f64; 3]>,
+    }
+
+    let js_result = TransitResultJs {
+        total_dose_krad: result.total_dose_krad,
+        departure_dose_rate_krad_h: result.departure_dose_rate_krad_h,
+        arrival_dose_rate_krad_h: result.arrival_dose_rate_krad_h,
+        shield_life_at_departure_h: result.shield_life_at_departure_h,
+        shield_life_at_arrival_h: result.shield_life_at_arrival_h,
+        shield_survives: result.shield_survives,
+        peak_dose_rate_krad_h: result.peak_dose_rate_krad_h,
+        region_dose_fractions: result
+            .region_dose_fractions
+            .iter()
+            .map(|(a, b, f)| [*a, *b, *f])
+            .collect(),
+    };
+
+    Ok(serde_wasm_bindgen::to_value(&js_result)?)
+}
+
+/// Minimum average radial velocity (km/s) for shield survival during
+/// Jupiter radiation belt transit. Uses default model with binary search.
+#[wasm_bindgen]
+pub fn jupiter_minimum_survival_velocity(
+    r_start_rj: f64,
+    r_end_rj: f64,
+    shield_budget_krad: f64,
+) -> f64 {
+    let config = jupiter_radiation::JupiterRadiationConfig::default_model();
+    jupiter_radiation::minimum_survival_velocity(&config, r_start_rj, r_end_rj, shield_budget_krad)
+}
+
+/// Jupiter equatorial radius in km (constant).
+#[wasm_bindgen]
+pub fn jupiter_radius_km() -> f64 {
+    jupiter_radiation::JUPITER_RADIUS_KM
+}
+
+// ---------------------------------------------------------------------------
 // Relativistic corrections
 // ---------------------------------------------------------------------------
 
@@ -2468,5 +2549,61 @@ mod tests {
             t_back,
             t
         );
+    }
+
+    // ── Jupiter radiation WASM tests ─────────────────────────────────
+
+    #[test]
+    fn test_wasm_jupiter_dose_rate_ganymede() {
+        // At Ganymede orbit (~15 RJ), dose rate ≈ 0.0616 krad/h
+        let rate = jupiter_dose_rate_krad_h(15.0);
+        assert!(
+            (rate - 0.0616).abs() < 0.01,
+            "dose rate at 15 RJ = {:.4} krad/h, expected ~0.0616",
+            rate
+        );
+    }
+
+    #[test]
+    fn test_wasm_jupiter_dose_rate_beyond_magnetopause() {
+        // Beyond magnetopause (63 RJ), dose should be 0
+        let rate = jupiter_dose_rate_krad_h(70.0);
+        assert!(
+            rate == 0.0,
+            "dose rate beyond magnetopause should be 0, got {}",
+            rate
+        );
+    }
+
+    #[test]
+    fn test_wasm_jupiter_transit_fast_escape_survives() {
+        // Verify the underlying logic: fast escape (60 km/s) should survive shield
+        let config = jupiter_radiation::JupiterRadiationConfig::default_model();
+        let budget = config.dose_rate_krad_h(15.0) * (42.0 / 60.0);
+        let result = config.transit_analysis(15.0, 50.0, 60.0, budget);
+        assert!(
+            result.shield_survives,
+            "fast escape should survive: total_dose={:.4} krad, budget={:.4} krad",
+            result.total_dose_krad,
+            budget
+        );
+    }
+
+    #[test]
+    fn test_wasm_jupiter_minimum_survival_velocity() {
+        // Budget based on 42 min at Ganymede dose rate
+        let rate = jupiter_dose_rate_krad_h(15.0);
+        let budget = rate * (42.0 / 60.0);
+        let v_min = jupiter_minimum_survival_velocity(15.0, 50.0, budget);
+        assert!(
+            v_min > 5.0 && v_min < 100.0,
+            "minimum velocity should be 5-100 km/s, got {}",
+            v_min
+        );
+    }
+
+    #[test]
+    fn test_wasm_jupiter_radius_km() {
+        assert!((jupiter_radius_km() - 71_492.0).abs() < 1.0);
     }
 }
