@@ -4181,3 +4181,46 @@ describe("EP04 plasmoid perturbation chart", () => {
     );
   });
 });
+
+// =============================================================================
+// attitude-control.md charts (Task 472)
+// =============================================================================
+
+describe("attitude-control.md pointing precision chart", () => {
+  const content = readReport("attitude-control.md");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a pointing precision requirements bar chart with logScale", () => {
+    const precisionChart = chartBlocks.find(
+      (block) => block.includes("要求精度") || block.includes("指向精度") && block.includes("要求"),
+    );
+    assert.ok(precisionChart, "should have a chart:bar block for pointing precision requirements");
+    assert.ok(
+      precisionChart!.includes("logScale: true"),
+      "should use log scale for 3,200x range of precisions",
+    );
+  });
+
+  it("precision chart includes Hill sphere and 10km targets", () => {
+    const precisionChart = chartBlocks.find(
+      (block) => block.includes("要求") && block.includes("Hill"),
+    );
+    assert.ok(precisionChart, "precision chart should reference Hill sphere target");
+    assert.ok(
+      precisionChart!.includes("10") && precisionChart!.includes("km"),
+      "should include 10 km precision target",
+    );
+  });
+});
+
+describe("attitude-control.md RCS thrust comparison chart", () => {
+  const content = readReport("attitude-control.md");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has an RCS thrust comparison bar chart across episodes", () => {
+    const rcsChart = chartBlocks.find(
+      (block) => block.includes("RCS") && (block.includes("EP01") || block.includes("第1話") || block.includes("フリップ")) && (block.includes("EP04") || block.includes("第4話") || block.includes("非対称")),
+    );
+    assert.ok(rcsChart, "should have a chart:bar block comparing RCS demands across episodes");
+  });
+});

@@ -94,6 +94,29 @@ bars:
 | 100 km精度 | ≤ 0.075″ |
 | 10 km精度 | ≤ 0.0075″ |
 
+```chart:bar
+caption: 到着目標別の要求指向精度（対数スケール） — Hill球から10km精度まで3,200倍の精度幅
+unit: "arcsec"
+logScale: true
+bars:
+  - label: Hill球 (~32,000 km)
+    value: 24.0
+    color: "#22c55e"
+    annotation: "24″ — スタートラッカーで十分"
+  - label: ガニメデ本体 (2,634 km)
+    value: 2.0
+    color: "#3b82f6"
+    annotation: "2″ — 精密誘導域"
+  - label: 100 km精度
+    value: 0.075
+    color: "#f97316"
+    annotation: "0.075″ — MCC必須"
+  - label: 10 km精度
+    value: 0.0075
+    color: "#ef4444"
+    annotation: "0.0075″ — 光学航法+MCC"
+```
+
 ガニメデHill球到達に必要な精度（24秒角 = 0.007°）は、現代の宇宙機用スタートラッカーの精度（数秒角）で十分達成可能。100 km以下の精度には中間修正噴射が不可欠だが、これはbrachistochrone航法の標準的な運用手順である。
 
 ### フリップ機動の力学
@@ -328,6 +351,27 @@ $$\tau_{gg} = \frac{3\mu}{2r^3}(I_{zz} - I_{xx})\sin(2\theta)$$
 | 4話 | 65%出力時の推力非対称補正 | 1′非対称で ~1,853 N RCS | ⚠️ 条件付き（損傷状態次第） |
 | 5話 | 到着精度20km@18.2AU | 1.5 milliarcsec | ✅ MCC＋恒星航法で原理的に可能 |
 | 5話 | ノズル0.1%非対称 | 3.4秒で1°ずれ | ⚠️ 常時RCS補正が必要 |
+
+```chart:bar
+caption: RCS推力要件の変遷 — EP01フリップからEP05ノズル非対称まで損傷が制御負荷を20倍以上に増大
+unit: "N"
+logScale: true
+bars:
+  - label: EP01 フリップ (300秒)
+    value: 299
+    color: "#22c55e"
+    annotation: "小型ヒドラジン級 — 正常運転"
+  - label: EP04 非対称補正 (1′)
+    value: 1853
+    color: "#f97316"
+    annotation: "中型スラスタ級 — 損傷時"
+  - label: EP05 ノズル劣化 (0.1%)
+    value: 6370
+    color: "#ef4444"
+    annotation: "大型スラスタ級 — ノズル崩壊直前"
+```
+
+損傷の蓄積に伴い、RCS推力要件がEP01の約299 NからEP05の約6,370 Nへと**21倍**に増大している。これは物語の緊張感と物理法則が一致している好例である。
 
 ### 総合所見
 
