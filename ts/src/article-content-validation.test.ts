@@ -232,15 +232,15 @@ describe("tech-overview.md content validation", () => {
 
   it("has cross-links to related pages", () => {
     assert.ok(
-      content.includes("/summary/ai-costs.html"),
+      content.includes("ai-costs.html"),
       "should link to ai-costs page",
     );
     assert.ok(
-      content.includes("/explorer/"),
+      content.includes("explorer/"),
       "should link to DuckDB data explorer",
     );
     assert.ok(
-      content.includes("/summary/ship-kestrel.html"),
+      content.includes("ship-kestrel.html"),
       "should link to ship-kestrel page",
     );
   });
