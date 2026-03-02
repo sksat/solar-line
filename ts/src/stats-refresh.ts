@@ -64,7 +64,13 @@ export function updateBodyText(content: string, stats: ProjectStats): string {
     `${formatNumber(total)}のテストで`,
   );
 
-  // Update Rust test count
+  // Update Rust unit test count in body sentence (e.g. "481のユニットテストで正確性を保証")
+  result = result.replace(
+    /\d+のユニットテストで/,
+    `${stats.rustTests}のユニットテストで`,
+  );
+
+  // Update Rust test count in bulleted list
   result = result.replace(
     /\*\*Rust ユニットテスト\*\* \([\d,]+件\)/,
     `**Rust ユニットテスト** (${stats.rustTests}件)`,

@@ -77,10 +77,19 @@ describe("stats-refresh", () => {
       );
     });
 
-    it("updates Rust test count in body", () => {
+    it("updates Rust test count in bulleted list", () => {
       const input = "- **Rust ユニットテスト** (398件): description here";
       const result = updateBodyText(input, sampleStats);
       assert.ok(result.includes(`**Rust ユニットテスト** (${sampleStats.rustTests}件)`));
+    });
+
+    it("updates Rust unit test count in body sentence", () => {
+      const input = "414のユニットテストで正確性を保証しています。";
+      const result = updateBodyText(input, sampleStats);
+      assert.ok(
+        result.includes(`${sampleStats.rustTests}のユニットテストで`),
+        `Expected ${sampleStats.rustTests}, got: ${result}`,
+      );
     });
 
     it("updates TS test count in body", () => {
