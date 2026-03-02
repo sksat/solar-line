@@ -552,34 +552,56 @@ Isp = $10^6$ s（排気速度 9,807 km/s）、推力効率 $\eta = 0.30$ の条�
 
 **比較基準**: 2023年時点の世界全体の発電出力は約18.4 TW。ケストレルのジェット出力（48.1 TW）はその**約2.6倍**、核融合炉の総出力（160 TW）は**約8.7倍**に相当する。
 
-```bar-chart:
-{
-  "id": "power-budget-comparison",
-  "title": "核融合出力収支: 推力状態別（η=0.30）",
-  "description": "各推力状態でのエネルギー配分を示す。青がジェット出力（排気の運動エネルギー）、赤が廃熱（冷却系負荷）。65%出力制限により廃熱は112→73 TWに35%減少する。灰色の破線は世界の発電出力（18.4 TW）を基準として示す。",
-  "orientation": "horizontal",
-  "series": [
-    {
-      "label": "ジェット出力",
-      "color": "#58a6ff",
-      "values": [48.1, 0.25, 48.1, 31.2, 31.2]
-    },
-    {
-      "label": "廃熱",
-      "color": "#ff6b6b",
-      "values": [112.2, 0.57, 112.2, 72.9, 72.9]
-    }
-  ],
-  "categories": ["EP01 (100%)", "EP02 (トリム)", "EP03 (100%)", "EP04 (65%)", "EP05 (65%)"],
-  "referenceLines": [
-    {
-      "value": 18.4,
-      "label": "世界の発電出力 (18.4 TW)",
-      "color": "#868e96",
-      "style": "dashed"
-    }
-  ]
-}
+```chart:bar
+caption: ジェット出力（推力状態別、η=0.30）
+unit: "TW"
+bars:
+  - label: EP01（100%）
+    value: 48.1
+    color: "#58a6ff"
+    annotation: "世界発電の2.6倍"
+  - label: EP02（トリム）
+    value: 0.25
+    color: "#58a6ff"
+    annotation: "低出力巡航"
+  - label: EP03（100%）
+    value: 48.1
+    color: "#58a6ff"
+    annotation: "世界発電の2.6倍"
+  - label: EP04（65%）
+    value: 31.2
+    color: "#3b82f6"
+    annotation: "損傷制限"
+  - label: EP05（65%）
+    value: 31.2
+    color: "#3b82f6"
+    annotation: "損傷制限"
+```
+
+```chart:bar
+caption: 廃熱負荷（推力状態別）— 65%出力で35%削減
+unit: "TW"
+bars:
+  - label: EP01（100%）
+    value: 112.2
+    color: "#ff6b6b"
+    annotation: "冷却系全力"
+  - label: EP02（トリム）
+    value: 0.57
+    color: "#ff6b6b"
+    annotation: "微小負荷"
+  - label: EP03（100%）
+    value: 112.2
+    color: "#ff6b6b"
+    annotation: "冷却系全力"
+  - label: EP04（65%）
+    value: 72.9
+    color: "#f97316"
+    annotation: "112→73 TW（-35%）"
+  - label: EP05（65%）
+    value: 72.9
+    color: "#f97316"
+    annotation: "112→73 TW（-35%）"
 ```
 
 ### 65%出力制限の熱力学的意味

@@ -3069,10 +3069,18 @@ describe("ship-kestrel.md fusion power budget validation", () => {
     );
   });
 
-  it("bar chart for power budget exists", () => {
+  it("power budget bar charts render correctly (not orphaned bar-chart:)", () => {
     assert.ok(
-      content.includes("power-budget-comparison"),
-      "should have power budget bar chart",
+      content.includes("ジェット出力（推力状態別"),
+      "should have jet output bar chart",
+    );
+    assert.ok(
+      content.includes("廃熱負荷（推力状態別"),
+      "should have waste heat bar chart",
+    );
+    assert.ok(
+      !content.includes("```bar-chart:"),
+      "should NOT have orphaned bar-chart: directive (unsupported by parser)",
     );
   });
 
