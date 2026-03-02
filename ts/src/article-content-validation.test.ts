@@ -4093,3 +4093,56 @@ describe("calculation JSON structural validation", () => {
     }
   });
 });
+
+// =============================================================================
+// ship-kestrel.md acceleration comparison + hypothesis charts (Task 470)
+// =============================================================================
+
+describe("ship-kestrel.md acceleration comparison chart", () => {
+  const content = readReport("ship-kestrel.md");
+
+  // Extract all chart:bar blocks and their content
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a dedicated acceleration comparison bar chart caption", () => {
+    const hasAccelChart = chartBlocks.some(
+      (block) => block.includes("加速度") && (block.includes("48,000") || block.includes("48000")) && block.includes("300"),
+    );
+    assert.ok(hasAccelChart, "should have a chart:bar block comparing 48,000t vs 300t acceleration");
+  });
+
+  it("acceleration chart includes 160x gap annotation", () => {
+    const accelChart = chartBlocks.find(
+      (block) => block.includes("加速度") && (block.includes("48,000") || block.includes("48000")),
+    );
+    assert.ok(accelChart, "acceleration chart should exist");
+    assert.ok(
+      accelChart!.includes("160") || accelChart!.includes("159"),
+      "chart should annotate the ~160x acceleration gap",
+    );
+  });
+});
+
+describe("ship-kestrel.md hypothesis evaluation chart", () => {
+  const content = readReport("ship-kestrel.md");
+
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a dedicated hypothesis evaluation bar chart", () => {
+    const hasHypothesisChart = chartBlocks.some(
+      (block) => block.includes("仮説"),
+    );
+    assert.ok(hasHypothesisChart, "should have a chart:bar block for hypothesis evaluation");
+  });
+
+  it("hypothesis chart references B+D as most natural combination", () => {
+    const hypothesisChart = chartBlocks.find(
+      (block) => block.includes("仮説"),
+    );
+    assert.ok(hypothesisChart, "hypothesis chart should exist");
+    assert.ok(
+      hypothesisChart!.includes("B") && hypothesisChart!.includes("D"),
+      "chart should highlight hypothesis B and D as the most natural combination",
+    );
+  });
+});
