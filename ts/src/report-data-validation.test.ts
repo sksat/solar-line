@@ -1365,3 +1365,206 @@ describe("Video OCR data validation", () => {
     });
   }
 });
+
+// ---------------------------------------------------------------------------
+// External link validation
+// ---------------------------------------------------------------------------
+
+describe("report data: external link validation", () => {
+  const SUMMARY_DIR = path.join(REPORTS_DIR, "data", "summary");
+
+  /** Extract all https:// URLs from a text string */
+  function extractUrls(text: string): string[] {
+    const urlPattern = /https?:\/\/[^\s"')\]\\,>]+/g;
+    const matches = text.match(urlPattern) || [];
+    return matches;
+  }
+
+  /** Known trusted domains for external citations */
+  const TRUSTED_DOMAINS = new Set([
+    "nssdc.gsfc.nasa.gov",
+    "ssd.jpl.nasa.gov",
+    "solarsystem.nasa.gov",
+    "descanso.jpl.nasa.gov",
+    "ntrs.nasa.gov",
+    "www.nasa.gov",
+    "doi.org",
+    "en.wikipedia.org",
+    "note.com",
+    "www.nicovideo.jp",
+    "www.youtube.com",
+    "www.nao.ac.jp",
+    "www.icrp.org",
+    "issfd.org",
+    "phys.org",
+    "books.google.com",
+    "github.com",
+    "www.anthropic.com",
+    "claude.ai",
+  ]);
+
+  // Collect all URLs from episodes
+  const episodeUrls: { source: string; url: string }[] = [];
+  for (const epNum of getAvailableEpisodes()) {
+    const slug = `ep${String(epNum).padStart(2, "0")}`;
+    const mdPath = path.join(EPISODES_DIR, `${slug}.md`);
+    const jsonPath = path.join(EPISODES_DIR, `${slug}.json`);
+    const filePath = fs.existsSync(mdPath) ? mdPath : jsonPath;
+    const content = fs.readFileSync(filePath, "utf-8");
+    for (const url of extractUrls(content)) {
+      episodeUrls.push({ source: `EP${String(epNum).padStart(2, "0")}`, url });
+    }
+  }
+
+  // Collect all URLs from summary reports
+  const summaryUrls: { source: string; url: string }[] = [];
+  const summaryFiles = fs.existsSync(SUMMARY_DIR)
+    ? fs.readdirSync(SUMMARY_DIR).filter(f => f.endsWith(".md"))
+    : [];
+  for (const file of summaryFiles) {
+    const content = fs.readFileSync(path.join(SUMMARY_DIR, file), "utf-8");
+    for (const url of extractUrls(content)) {
+      summaryUrls.push({ source: file, url });
+    }
+  }
+
+  const allUrls = [...episodeUrls, ...summaryUrls];
+
+  it("has external URLs in reports (sanity check)", () => {
+    assert.ok(allUrls.length > 0, "Expected at least some external URLs in reports");
+    assert.ok(allUrls.length >= 40, `Expected at least 40 external URLs, found ${allUrls.length}`);
+  });
+
+  it("all external URLs use HTTPS", () => {
+    const httpOnly = allUrls.filter(u => u.url.startsWith("http://"));
+    assert.deepStrictEqual(
+      httpOnly.map(u => `${u.source}: ${u.url}`),
+      [],
+      "Found non-HTTPS URLs that should be upgraded",
+    );
+  });
+
+  it("all external URLs have valid format", () => {
+    const malformed: string[] = [];
+    for (const { source, url } of allUrls) {
+      try {
+        new URL(url);
+      } catch {
+        malformed.push(`${source}: ${url}`);
+      }
+    }
+    assert.deepStrictEqual(malformed, [], "Found malformed URLs");
+  });
+
+  it("all external URLs reference known trusted domains", () => {
+    const unknownDomains: string[] = [];
+    for (const { source, url } of allUrls) {
+      try {
+        const hostname = new URL(url).hostname;
+        if (!TRUSTED_DOMAINS.has(hostname)) {
+          unknownDomains.push(`${source}: ${hostname} (${url})`);
+        }
+      } catch {
+        // Malformed URLs caught in separate test
+      }
+    }
+    assert.deepStrictEqual(
+      unknownDomains,
+      [],
+      "Found URLs from unknown domains — add to TRUSTED_DOMAINS if legitimate",
+    );
+  });
+
+  it("no duplicate sourceRef URLs within same episode", () => {
+    for (const epNum of getAvailableEpisodes()) {
+      const slug = `ep${String(epNum).padStart(2, "0")}`;
+      const mdPath = path.join(EPISODES_DIR, `${slug}.md`);
+      const jsonPath = path.join(EPISODES_DIR, `${slug}.json`);
+      const filePath = fs.existsSync(mdPath) ? mdPath : jsonPath;
+      const content = fs.readFileSync(filePath, "utf-8");
+
+      // Extract sourceRef values specifically
+      const sourceRefPattern = /"sourceRef"\s*:\s*"(https?:\/\/[^"]+)"/g;
+      let match: RegExpExecArray | null;
+      const refs: string[] = [];
+      while ((match = sourceRefPattern.exec(content)) !== null) {
+        refs.push(match[1]);
+      }
+
+      // Each episode should have at least one sourceRef URL
+      const uniqueRefs = [...new Set(refs)];
+      assert.ok(
+        uniqueRefs.length > 0 || epNum > 5,
+        `EP${String(epNum).padStart(2, "0")}: expected at least one sourceRef URL`,
+      );
+    }
+  });
+
+  it("episode sourceRef URLs all point to external references (not internal paths)", () => {
+    const internalRefs: string[] = [];
+    for (const epNum of getAvailableEpisodes()) {
+      const slug = `ep${String(epNum).padStart(2, "0")}`;
+      const mdPath = path.join(EPISODES_DIR, `${slug}.md`);
+      const jsonPath = path.join(EPISODES_DIR, `${slug}.json`);
+      const filePath = fs.existsSync(mdPath) ? mdPath : jsonPath;
+      const content = fs.readFileSync(filePath, "utf-8");
+
+      const sourceRefPattern = /"sourceRef"\s*:\s*"(https?:\/\/[^"]+)"/g;
+      let match: RegExpExecArray | null;
+      while ((match = sourceRefPattern.exec(content)) !== null) {
+        const url = match[1];
+        try {
+          const hostname = new URL(url).hostname;
+          if (hostname === "localhost" || hostname === "127.0.0.1") {
+            internalRefs.push(`EP${String(epNum).padStart(2, "0")}: ${url}`);
+          }
+        } catch {
+          // Skip malformed
+        }
+      }
+    }
+    assert.deepStrictEqual(internalRefs, [], "Found localhost/internal sourceRef URLs");
+  });
+
+  it("summary markdown external links use proper markdown link syntax", () => {
+    const bareUrls: string[] = [];
+    for (const file of summaryFiles) {
+      const content = fs.readFileSync(path.join(SUMMARY_DIR, file), "utf-8");
+      const lines = content.split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        // Skip lines inside JSON/code blocks
+        if (line.includes('"sourceRef"') || line.includes('"source"') ||
+            line.includes('"url"') || line.includes('"sourceUrl"') ||
+            line.includes('"sourceLabel"')) continue;
+
+        // Look for bare https:// URLs not inside markdown link [text](url) or JSON strings
+        const barePattern = /(?<!\]\()(?<!")(https?:\/\/\S+)(?!")/g;
+        let match: RegExpExecArray | null;
+        while ((match = barePattern.exec(line)) !== null) {
+          const url = match[1];
+          // Check if this URL is inside a markdown link on the same line
+          const escapedUrl = url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const linkPattern = new RegExp(`\\]\\(${escapedUrl}\\)`);
+          if (!linkPattern.test(line) && !line.includes(`"${url}"`) && !line.includes(`'${url}'`)) {
+            bareUrls.push(`${file}:${i + 1}: ${url}`);
+          }
+        }
+      }
+    }
+    assert.deepStrictEqual(bareUrls, [], "Found bare URLs in summary markdown — wrap in [text](url)");
+  });
+
+  it("all external URLs have no trailing punctuation artifacts", () => {
+    const trailingIssues: string[] = [];
+    for (const { source, url } of allUrls) {
+      if (/[.,;:!?]$/.test(url) && !url.includes("?id=") && !url.includes("?from=")) {
+        trailingIssues.push(`${source}: ${url} — trailing punctuation`);
+      }
+      if (/\)$/.test(url) && !url.includes("(")) {
+        trailingIssues.push(`${source}: ${url} — unmatched trailing parenthesis`);
+      }
+    }
+    assert.deepStrictEqual(trailingIssues, [], "Found URLs with trailing punctuation artifacts");
+  });
+});
