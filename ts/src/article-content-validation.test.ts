@@ -4755,3 +4755,139 @@ describe("3d_orbital_analysis.json → report cross-checks", () => {
       "Enceladus should be outside Saturn's rings");
   });
 });
+
+// =============================================================================
+// onscreen_crossref.json → report cross-checks (Task 498)
+// =============================================================================
+
+describe("onscreen_crossref.json → report cross-checks", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+
+  function loadCrossref(ep: string): Record<string, unknown> {
+    return JSON.parse(
+      fs.readFileSync(path.join(calcDir, `${ep}_onscreen_crossref.json`), "utf-8"),
+    );
+  }
+
+  // EP01: Jupiter SOI entry velocity and perijove burn
+  describe("EP01 onscreen crossref", () => {
+    const xref = loadCrossref("ep01");
+    const report = readReport("ep01.md", "episodes");
+    const soi = xref.jupiterSOI as {
+      onScreen: { entry_velocity_km_s: number; v_infinity_km_s: number };
+      computed: { v_at_20RJ_km_s: number };
+      comparison: { velocity_difference_percent: number };
+    };
+    const burn = xref.perijoveBurn as {
+      onScreen: { deltaV_km_s: number; perijupiter_RJ: number };
+    };
+
+    it("Jupiter SOI entry velocity 17.8 km/s cited in report", () => {
+      assertContainsApproxValue(report, soi.onScreen.entry_velocity_km_s,
+        "EP01 onscreen Jupiter SOI entry velocity");
+    });
+
+    it("computed velocity 17.92 km/s cited in report", () => {
+      assertContainsApproxValue(report, soi.computed.v_at_20RJ_km_s,
+        "EP01 computed vis-viva velocity at 20 RJ");
+    });
+
+    it("perijove burn ΔV 2.3 km/s cited in report", () => {
+      assertContainsApproxValue(report, Math.abs(burn.onScreen.deltaV_km_s),
+        "EP01 onscreen perijove burn ΔV");
+    });
+  });
+
+  // EP02: Jupiter departure velocity and orbital cross velocity (string values in JSON)
+  describe("EP02 onscreen crossref", () => {
+    const report = readReport("ep02.md", "episodes");
+
+    it("Jupiter departure velocity 10.3 km/s cited in report", () => {
+      assert.ok(report.includes("10.3"),
+        "EP02 should cite Jupiter departure velocity 10.3 km/s from onscreen data");
+    });
+
+    it("orbital cross relative velocity 0.12 km/s cited in report", () => {
+      assert.ok(report.includes("0.12"),
+        "EP02 should cite orbital cross relative velocity 0.12 km/s from onscreen data");
+    });
+  });
+
+  // EP03: navigation crisis distance and mission time
+  describe("EP03 onscreen crossref", () => {
+    const xref = loadCrossref("ep03");
+    const report = readReport("ep03.md", "episodes");
+
+    if (xref.navigationCrisisTripleMatch) {
+      const crisis = xref.navigationCrisisTripleMatch as {
+        onScreenDisplay?: { value: string };
+        dialogue?: { value: string };
+      };
+      it("navigation crisis distance ~1436万km cited in report", () => {
+        assert.ok(
+          report.includes("1436万") || report.includes("1,436万") ||
+          report.includes("1.43") || report.includes("14,393"),
+          "EP03 should cite navigation crisis distance (~1436万km or 1.43×10⁷km)",
+        );
+      });
+    }
+
+    if (xref.timelineReconstruction) {
+      it("total mission time 143h cited in report", () => {
+        assert.ok(report.includes("143"),
+          "EP03 should cite 143h total mission time");
+      });
+    }
+  });
+
+  // EP04: plasmoid B-field and periapsis altitude
+  describe("EP04 onscreen crossref", () => {
+    const xref = loadCrossref("ep04");
+    const report = readReport("ep04.md", "episodes");
+
+    if (xref.plasmoidParameterComparison) {
+      const plasma = xref.plasmoidParameterComparison as {
+        onScreenValues?: { magneticField_nT: string };
+      };
+      it("plasmoid B-field 180-340 nT cited in report", () => {
+        assert.ok(report.includes("180") && report.includes("340"),
+          "EP04 should cite onscreen B-field range 180-340 nT");
+      });
+    }
+
+    it("periapsis altitude 6.50 RU cited in report", () => {
+      assert.ok(report.includes("6.50") || report.includes("6.5"),
+        "EP04 should cite periapsis altitude 6.50 RU");
+    });
+
+    it("intercept velocity 18.3 km/s cited in report", () => {
+      assert.ok(report.includes("18.3"),
+        "EP04 should cite intercept velocity 18.3 km/s from onscreen data");
+    });
+  });
+
+  // EP05: nozzle margin and total mission time
+  describe("EP05 onscreen crossref", () => {
+    const xref = loadCrossref("ep05");
+    const report = readReport("ep05.md", "episodes");
+
+    if (xref.nozzleLifespanMargin) {
+      it("nozzle margin +0:26:00 (26 min) cited in report", () => {
+        assert.ok(report.includes("26分") || report.includes("26min") || report.includes("0:26"),
+          "EP05 should cite nozzle margin 26 minutes from onscreen display");
+      });
+    }
+
+    if (xref.missionTimelineVerification) {
+      const timeline = xref.missionTimelineVerification as {
+        onScreen?: { totalTime_hours: number };
+      };
+      if (timeline.onScreen) {
+        it("total mission time 507h cited in report", () => {
+          assertContainsApproxValue(report, timeline.onScreen!.totalTime_hours,
+            "EP05 onscreen total mission time");
+        });
+      }
+    }
+  });
+});
