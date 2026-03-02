@@ -993,6 +993,42 @@ describe("report data: dialogue transferRefs referential integrity", () => {
   }
 });
 
+describe("report data: detail page reference integrity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    if (!report.detailPages || report.detailPages.length === 0) continue;
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    // Build lookup sets
+    const transferIds = new Set(report.transfers.map(t => t.id));
+    const diagramIds = new Set((report.diagrams ?? []).map(d => d.id));
+    const chartIds = new Set((report.timeSeriesCharts ?? []).map(c => c.id));
+
+    for (const dp of report.detailPages) {
+      it(`${prefix} detail "${dp.slug}": all transferIds exist`, () => {
+        const broken = dp.transferIds.filter(id => !transferIds.has(id));
+        assert.deepStrictEqual(broken, [], `Missing transfers: ${broken.join(", ")}`);
+      });
+
+      if (dp.diagramIds && dp.diagramIds.length > 0) {
+        it(`${prefix} detail "${dp.slug}": all diagramIds exist`, () => {
+          const broken = dp.diagramIds!.filter(id => !diagramIds.has(id));
+          assert.deepStrictEqual(broken, [], `Missing diagrams: ${broken.join(", ")}`);
+        });
+      }
+
+      if (dp.chartIds && dp.chartIds.length > 0) {
+        it(`${prefix} detail "${dp.slug}": all chartIds exist`, () => {
+          const broken = dp.chartIds!.filter(id => !chartIds.has(id));
+          assert.deepStrictEqual(broken, [], `Missing charts: ${broken.join(", ")}`);
+        });
+      }
+    }
+  }
+});
+
 describe("report data: transcription-report sync", () => {
   const episodes = getAvailableEpisodes();
   /** Tolerance for timestamp matching: ±15 seconds */
