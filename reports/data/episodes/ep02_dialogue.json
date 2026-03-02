@@ -424,7 +424,7 @@
       "text": "ガニメデが追い越してく。私たち、置いてかれる",
       "startMs": 99799,
       "endMs": 106000,
-      "sceneId": "ep02-scene-02",
+      "sceneId": "ep02-scene-01",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-45"
@@ -736,7 +736,7 @@
       "text": "磁気圏の低プラズマ帯を縫って抜けるわけか",
       "startMs": 224239,
       "endMs": 230000,
-      "sceneId": "ep02-scene-03",
+      "sceneId": "ep02-scene-02",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-91"
@@ -1173,7 +1173,7 @@
       "text": "まるで遠足気分だな",
       "startMs": 423520,
       "endMs": 426000,
-      "sceneId": "ep02-scene-03",
+      "sceneId": "ep02-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-181"
@@ -1189,7 +1189,7 @@
       "text": "大型艇は旋回に時間がかかります",
       "startMs": 426000,
       "endMs": 428000,
-      "sceneId": "ep02-scene-03",
+      "sceneId": "ep02-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-181"
@@ -1205,7 +1205,7 @@
       "text": "どん臭い奴らだ",
       "startMs": 428000,
       "endMs": 428720,
-      "sceneId": "ep02-scene-03",
+      "sceneId": "ep02-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-181"
@@ -1372,7 +1372,7 @@
       "text": "苦労して回収しても開けたら残念がるだろうな",
       "startMs": 503360,
       "endMs": 508309,
-      "sceneId": "ep02-scene-05",
+      "sceneId": "ep02-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-205"
@@ -1458,7 +1458,7 @@
       "text": "大減速ショックで心拍が停止する可能性が28%ありましたが、問題なく蘇生プロセスは完了しました",
       "startMs": 580240,
       "endMs": 587630,
-      "sceneId": "ep02-scene-06",
+      "sceneId": "ep02-scene-05",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-223",
@@ -1476,7 +1476,7 @@
       "text": "28%で死ぬかもしれないのってどういう感覚なんだろうな",
       "startMs": 588360,
       "endMs": 592310,
-      "sceneId": "ep02-scene-06",
+      "sceneId": "ep02-scene-05",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-229"
@@ -1492,7 +1492,7 @@
       "text": "もう意識があるのか、すごいな",
       "startMs": 594060,
       "endMs": 599000,
-      "sceneId": "ep02-scene-06",
+      "sceneId": "ep02-scene-05",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-231"
@@ -1508,7 +1508,7 @@
       "text": "目覚めはよろしいようで",
       "startMs": 599000,
       "endMs": 602100,
-      "sceneId": "ep02-scene-06",
+      "sceneId": "ep02-scene-05",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-233"
@@ -1689,7 +1689,7 @@
       "text": "まだまだ目的の天王星圏は先です",
       "startMs": 755360,
       "endMs": 759000,
-      "sceneId": "ep02-scene-07",
+      "sceneId": "ep02-scene-06",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-267"
@@ -1705,7 +1705,7 @@
       "text": "そりゃ楽しみだ。あのお客さんにもう1つのコンテナの中身について聞いてみたか？",
       "startMs": 759000,
       "endMs": 764949,
-      "sceneId": "ep02-scene-07",
+      "sceneId": "ep02-scene-06",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-269",
@@ -2006,7 +2006,7 @@
       "text": "汎用整備ドローンでの応急修理が完了しました。冷媒パイプの仮設パッチ、外殻クラックのシーリング、磁気コイルの交換を実施済み",
       "startMs": 929199,
       "endMs": 942000,
-      "sceneId": "ep02-scene-08",
+      "sceneId": "ep02-scene-07",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-327",
@@ -2162,7 +2162,7 @@
       "text": "軌道交差警告。衝突の危険あり。相対速度0.12 km/s",
       "startMs": 997839,
       "endMs": 1004189,
-      "sceneId": "ep02-scene-09",
+      "sceneId": "ep02-scene-08",
       "confidence": "high",
       "rawEntryIds": [
         "cue-367",
@@ -2181,7 +2181,7 @@
       "text": "照合中。登録なし。発信号なし",
       "startMs": 1004199,
       "endMs": 1007710,
-      "sceneId": "ep02-scene-09",
+      "sceneId": "ep02-scene-08",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-371"

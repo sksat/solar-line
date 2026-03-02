@@ -38,7 +38,9 @@
       "id": "seira-anders",
       "nameJa": "弁務官セイラ・アンダース",
       "nameEn": "Commissioner Seira Anders",
-      "aliases": ["セイラ・アンダース"]
+      "aliases": [
+        "セイラ・アンダース"
+      ]
     }
   ],
   "scenes": [
@@ -305,7 +307,7 @@
       "text": "次の船にはもっと優しくしてあげてくださいね",
       "startMs": 81900,
       "endMs": 86000,
-      "sceneId": "ep05-scene-02",
+      "sceneId": "ep05-scene-01",
       "confidence": "high",
       "rawEntryIds": [
         "ep05-line-012"
@@ -967,7 +969,7 @@
       "text": "信号を受信。発信源はエンケラドスです",
       "startMs": 389840,
       "endMs": 398000,
-      "sceneId": "ep05-scene-05",
+      "sceneId": "ep05-scene-04",
       "confidence": "high",
       "rawEntryIds": [
         "ep05-line-044",
@@ -2031,7 +2033,7 @@
       "text": "ΔV進行。残り400km毎秒。イオ・トーラス外沿を通過中。外部線量毎時220シーベルト。磁気シールドコイルの出力は最大。応力歪みにより骨格フレーム4番、6番、8番の亀裂が拡大中",
       "startMs": 908240,
       "endMs": 930000,
-      "sceneId": "ep05-scene-09",
+      "sceneId": "ep05-scene-08",
       "confidence": "high",
       "rawEntryIds": [
         "ep05-line-101"
@@ -2266,7 +2268,7 @@
       "text": "なら私の出番だな。メインアップ",
       "startMs": 1231140,
       "endMs": 1234240,
-      "sceneId": "ep05-scene-11",
+      "sceneId": "ep05-scene-12",
       "confidence": "high",
       "rawEntryIds": [
         "ep05-line-130",

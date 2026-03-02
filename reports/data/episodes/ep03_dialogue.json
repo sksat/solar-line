@@ -432,7 +432,7 @@
       "text": "無誘導か。一昔前なら自殺行為だな",
       "startMs": 213000,
       "endMs": 217000,
-      "sceneId": "ep03-scene-03",
+      "sceneId": "ep03-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-63"
@@ -448,7 +448,7 @@
       "text": "この先は慣性航法と背景恒星観測のみで位置を把握することになります。内縁線で進むのは今でも自殺行為です",
       "startMs": 217000,
       "endMs": 225229,
-      "sceneId": "ep03-scene-03",
+      "sceneId": "ep03-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-65",
@@ -467,7 +467,7 @@
       "text": "天王星圏までは2回の航路補正を行いますが、最終誤差はプラスマイナス18km以内でなければなりません",
       "startMs": 225239,
       "endMs": 235000,
-      "sceneId": "ep03-scene-03",
+      "sceneId": "ep03-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-73",
@@ -486,7 +486,7 @@
       "text": "もしもそれたら生きてるうちに戻れないだろうな",
       "startMs": 235000,
       "endMs": 239000,
-      "sceneId": "ep03-scene-03",
+      "sceneId": "ep03-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-77"
@@ -502,7 +502,7 @@
       "text": "今でも外縁線の3割は遭難となっています。そのほとんどは航法誤りによるものです。また天王星の影ではプラズモイドの発生が予報されています",
       "startMs": 239000,
       "endMs": 247229,
-      "sceneId": "ep03-scene-03",
+      "sceneId": "ep03-scene-04",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-79",
@@ -778,7 +778,7 @@
       "text": "現在位置は太陽基準で14.72 AU。速度は巡航速度でおよそ3000 km/s。背景恒星観測と慣性航法系はそれぞれ違うコースにナビゲートしています。この2つの差は角度にして1.23度になります",
       "startMs": 823880,
       "endMs": 852000,
-      "sceneId": "ep03-scene-09",
+      "sceneId": "ep03-scene-08",
       "confidence": "high",
       "rawEntryIds": [
         "cue-289",

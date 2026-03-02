@@ -837,6 +837,103 @@ describe("report data: dialogue attribution consistency", () => {
         );
       }
     });
+
+    it(`ep${String(epNum).padStart(2, "0")}: dialogue timestamps are non-negative and startMs < endMs`, () => {
+      for (const entry of dialogue.dialogue) {
+        assert.ok(
+          entry.startMs >= 0,
+          `Dialogue "${entry.lineId}" has negative startMs: ${entry.startMs}`
+        );
+        assert.ok(
+          entry.endMs > entry.startMs,
+          `Dialogue "${entry.lineId}" has endMs (${entry.endMs}) <= startMs (${entry.startMs})`
+        );
+      }
+    });
+
+    it(`ep${String(epNum).padStart(2, "0")}: dialogue timestamps are monotonically non-decreasing within each scene`, () => {
+      const byScene = new Map<string, { lineId: string; startMs: number }[]>();
+      for (const entry of dialogue.dialogue) {
+        if (!byScene.has(entry.sceneId)) byScene.set(entry.sceneId, []);
+        byScene.get(entry.sceneId)!.push({ lineId: entry.lineId, startMs: entry.startMs });
+      }
+      for (const [sceneId, entries] of byScene) {
+        for (let i = 1; i < entries.length; i++) {
+          assert.ok(
+            entries[i].startMs >= entries[i - 1].startMs,
+            `Scene ${sceneId}: dialogue "${entries[i].lineId}" startMs (${entries[i].startMs}) < previous "${entries[i - 1].lineId}" startMs (${entries[i - 1].startMs})`
+          );
+        }
+      }
+    });
+
+    it(`ep${String(epNum).padStart(2, "0")}: dialogue entries fall within their scene time boundaries`, () => {
+      const sceneMap = new Map(dialogue.scenes.map((s: { id: string; startMs: number; endMs: number }) => [s.id, s]));
+      for (const entry of dialogue.dialogue) {
+        const scene = sceneMap.get(entry.sceneId);
+        if (!scene) continue; // Already validated by scene reference test
+        assert.ok(
+          entry.startMs >= scene.startMs,
+          `Dialogue "${entry.lineId}" startMs (${entry.startMs}) is before scene ${scene.id} start (${scene.startMs})`
+        );
+        assert.ok(
+          entry.startMs < scene.endMs,
+          `Dialogue "${entry.lineId}" startMs (${entry.startMs}) is at or after scene ${scene.id} end (${scene.endMs})`
+        );
+      }
+    });
+
+    it(`ep${String(epNum).padStart(2, "0")}: scenes are ordered by startMs and non-overlapping`, () => {
+      for (let i = 0; i < dialogue.scenes.length; i++) {
+        const scene = dialogue.scenes[i];
+        assert.ok(
+          scene.endMs > scene.startMs,
+          `Scene ${scene.id} has endMs (${scene.endMs}) <= startMs (${scene.startMs})`
+        );
+        if (i > 0) {
+          const prev = dialogue.scenes[i - 1];
+          assert.ok(
+            scene.startMs >= prev.endMs,
+            `Scene ${scene.id} startMs (${scene.startMs}) overlaps with previous scene ${prev.id} endMs (${prev.endMs})`
+          );
+        }
+      }
+    });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Cross-episode consistency: recurring speaker IDs
+// ---------------------------------------------------------------------------
+
+describe("report data: cross-episode speaker consistency", () => {
+  const episodes = getAvailableEpisodes();
+  // Core recurring characters that should have identical IDs across all episodes
+  const recurringCharacters = ["kiritan", "kestrel-ai"];
+
+  for (const characterId of recurringCharacters) {
+    it(`recurring character "${characterId}" has consistent speaker data across episodes`, () => {
+      const appearances: { ep: number; nameJa: string }[] = [];
+      for (const epNum of episodes) {
+        const dialogue = loadDialogue(epNum);
+        if (!dialogue) continue;
+        const speaker = dialogue.speakers.find((s: { id: string }) => s.id === characterId);
+        if (speaker) {
+          appearances.push({ ep: epNum, nameJa: speaker.nameJa });
+        }
+      }
+      // Character should appear in at least 3 episodes
+      assert.ok(
+        appearances.length >= 3,
+        `"${characterId}" only appears in ${appearances.length} episodes (expected ≥3)`
+      );
+      // Japanese name should be consistent across all appearances
+      const names = new Set(appearances.map(a => a.nameJa));
+      assert.equal(
+        names.size, 1,
+        `"${characterId}" has inconsistent nameJa across episodes: ${[...names].join(", ")} (eps: ${appearances.map(a => a.ep).join(", ")})`
+      );
+    });
   }
 });
 

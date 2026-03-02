@@ -435,7 +435,7 @@
       "text": "分かった。受けるよ",
       "startMs": 167000,
       "endMs": 170000,
-      "sceneId": "ep01-scene-02",
+      "sceneId": "ep01-scene-03",
       "confidence": "inferred",
       "rawEntryIds": [],
       "transferRefs": [],
@@ -449,7 +449,7 @@
       "text": "契約成立です。コンテナはこちらで運び込みます",
       "startMs": 170000,
       "endMs": 177000,
-      "sceneId": "ep01-scene-02",
+      "sceneId": "ep01-scene-03",
       "confidence": "uncertain",
       "rawEntryIds": [],
       "transferRefs": [],
@@ -1468,7 +1468,7 @@
       "text": "要望を全て叶えるとすると、木星への直接エントリーしか方法はありません。木星赤道面にフルバーンでエントリーし、高エネルギー直接遷移でガニメデに接近します。このコースであれば嵐の回廊よりもさらに10時間早くガニメデに到達できます",
       "startMs": 654360,
       "endMs": 682000,
-      "sceneId": "ep01-scene-06",
+      "sceneId": "ep01-scene-05",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-273",
@@ -1540,6 +1540,24 @@
       "lineId": "ep01-dl-077"
     },
     {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "船が空中分解するまではな",
+      "startMs": 696680,
+      "endMs": 700000,
+      "sceneId": "ep01-scene-06",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-297",
+        "cue-299",
+        "cue-301"
+      ],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "きりたんの皮肉。line-051前半。",
+      "lineId": "ep01-dl-081"
+    },
+    {
       "speakerId": "kestrel-ai",
       "speakerName": "ケイ",
       "text": "85%の確率で基礎骨格が破断します",
@@ -1574,41 +1592,6 @@
     {
       "speakerId": "kestrel-ai",
       "speakerName": "ケイ",
-      "text": "乗務員は重力保護で守られますから大丈夫ですよ",
-      "startMs": 702000,
-      "endMs": 705000,
-      "sceneId": "ep01-scene-06",
-      "confidence": "inferred",
-      "rawEntryIds": [
-        "cue-293",
-        "cue-295"
-      ],
-      "transferRefs": [],
-      "mentions": [],
-      "note": "AIの楽観的な返答。line-050。",
-      "lineId": "ep01-dl-080"
-    },
-    {
-      "speakerId": "kiritan",
-      "speakerName": "きりたん",
-      "text": "船が空中分解するまではな",
-      "startMs": 696680,
-      "endMs": 700000,
-      "sceneId": "ep01-scene-06",
-      "confidence": "inferred",
-      "rawEntryIds": [
-        "cue-297",
-        "cue-299",
-        "cue-301"
-      ],
-      "transferRefs": [],
-      "mentions": [],
-      "note": "きりたんの皮肉。line-051前半。",
-      "lineId": "ep01-dl-081"
-    },
-    {
-      "speakerId": "kestrel-ai",
-      "speakerName": "ケイ",
       "text": "オーバースのウィンドウは嵐の回廊では数時間ありましたが、ダイレクトエントリーの場合ターゲットウィンドウはプラスマイナス5分です。必要ΔVは-2.3km/s。中央を180秒以上外せばガニメデ交差は消失、重力井戸に落ちます",
       "startMs": 700000,
       "endMs": 723710,
@@ -1637,6 +1620,23 @@
       ],
       "note": "AIがダイレクトエントリーの精密な条件を説明。ASR「デルタV」→「ΔV」、「マ秒」→「km/s」。line-051後半。",
       "lineId": "ep01-dl-082"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケイ",
+      "text": "乗務員は重力保護で守られますから大丈夫ですよ",
+      "startMs": 702000,
+      "endMs": 705000,
+      "sceneId": "ep01-scene-06",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-293",
+        "cue-295"
+      ],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "AIの楽観的な返答。line-050。",
+      "lineId": "ep01-dl-080"
     },
     {
       "speakerId": "kiritan",

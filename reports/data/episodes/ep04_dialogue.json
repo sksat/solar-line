@@ -317,7 +317,7 @@
       "text": "天王星磁気圏内でプラズモイド発生を検知。進路上、数分後に交差。RCSのみでは回避不能。炉を使えば回避できますが、減速用の点火ができなくなる可能性があります",
       "startMs": 119799,
       "endMs": 155000,
-      "sceneId": "ep04-scene-03",
+      "sceneId": "ep04-scene-02",
       "confidence": "high",
       "rawEntryIds": [
         "cue-55",
@@ -340,7 +340,7 @@
       "text": "突っ切るしかないってことか",
       "startMs": 155000,
       "endMs": 158000,
-      "sceneId": "ep04-scene-03",
+      "sceneId": "ep04-scene-02",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-67"
@@ -356,7 +356,7 @@
       "text": "磁気シールドの残寿命は14分。プラズモイドの通過には最低でも8分かかります",
       "startMs": 158000,
       "endMs": 163000,
-      "sceneId": "ep04-scene-03",
+      "sceneId": "ep04-scene-02",
       "confidence": "high",
       "rawEntryIds": [
         "cue-69",
@@ -375,7 +375,7 @@
       "text": "6分の余裕がある",
       "startMs": 163000,
       "endMs": 165000,
-      "sceneId": "ep04-scene-03",
+      "sceneId": "ep04-scene-02",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-73"
@@ -391,7 +391,7 @@
       "text": "6分は余裕とは言いません。天王星は自転軸と磁軸が60度もずれています。その他の惑星と異なり、プラズモイドの挙動が極めて予測しづらいのです",
       "startMs": 165000,
       "endMs": 180000,
-      "sceneId": "ep04-scene-03",
+      "sceneId": "ep04-scene-02",
       "confidence": "high",
       "rawEntryIds": [
         "cue-75",
@@ -411,7 +411,7 @@
       "text": "もしもそうなったらお前が私の後を継いでくれよな。私が親父の後を継いだようにさ",
       "startMs": 194319,
       "endMs": 209110,
-      "sceneId": "ep04-scene-03",
+      "sceneId": "ep04-scene-02",
       "confidence": "high",
       "rawEntryIds": [
         "cue-95",
@@ -482,7 +482,7 @@
       "text": "480ミリシーベルト。随分と無茶をしてきたのね",
       "startMs": 616600,
       "endMs": 620470,
-      "sceneId": "ep04-scene-05",
+      "sceneId": "ep04-scene-06",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-239",
@@ -499,7 +499,7 @@
       "text": "火星から飛んできたんだ。色々あるさ",
       "startMs": 620480,
       "endMs": 623509,
-      "sceneId": "ep04-scene-05",
+      "sceneId": "ep04-scene-06",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-243"
@@ -555,7 +555,7 @@
       "text": "私の親父は嵐の回廊を開いた。それは地球のためでも火星のためでもない。奴らが手を伸ばせない場所に道を作りたかったんだ。お前は道具じゃない。私の相棒だ",
       "startMs": 955600,
       "endMs": 968870,
-      "sceneId": "ep04-scene-08",
+      "sceneId": "ep04-scene-09",
       "confidence": "high",
       "rawEntryIds": [
         "cue-361",
@@ -574,7 +574,7 @@
       "text": "ただ2人で証明したいんだ。地球の許可なく、火星の口出しなく、私たちの意志で太陽系を渡れる道があるってことを。目的地は地球だ。新しいソーラーラインを私が開いてやる",
       "startMs": 972079,
       "endMs": 985000,
-      "sceneId": "ep04-scene-08",
+      "sceneId": "ep04-scene-09",
       "confidence": "high",
       "rawEntryIds": [
         "cue-371",
@@ -652,7 +652,7 @@
       "text": "座らないんですか？",
       "startMs": 1065000,
       "endMs": 1068000,
-      "sceneId": "ep04-scene-09",
+      "sceneId": "ep04-scene-10",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-427"
@@ -668,7 +668,7 @@
       "text": "座ることに意味があるならな",
       "startMs": 1068000,
       "endMs": 1072000,
-      "sceneId": "ep04-scene-09",
+      "sceneId": "ep04-scene-10",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-429"
@@ -684,7 +684,7 @@
       "text": "誰に似たんだか",
       "startMs": 1072000,
       "endMs": 1075000,
-      "sceneId": "ep04-scene-09",
+      "sceneId": "ep04-scene-10",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-431"
@@ -700,7 +700,7 @@
       "text": "さあ、元からこうだったけどな",
       "startMs": 1075000,
       "endMs": 1083669,
-      "sceneId": "ep04-scene-09",
+      "sceneId": "ep04-scene-10",
       "confidence": "inferred",
       "rawEntryIds": [
         "cue-431"
