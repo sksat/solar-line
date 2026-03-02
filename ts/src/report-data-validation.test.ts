@@ -967,6 +967,32 @@ describe("report data: dialogueLineId completeness", () => {
   }
 });
 
+describe("report data: dialogue transferRefs referential integrity", () => {
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const dialogue = loadDialogue(epNum);
+    if (!dialogue) continue;
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    // Build set of valid transfer IDs from the episode report
+    const validTransferIds = new Set(report.transfers.map(t => t.id));
+
+    it(`${prefix}: all dialogue transferRefs point to existing transfers`, () => {
+      const broken: string[] = [];
+      for (const entry of dialogue.dialogue) {
+        for (const ref of entry.transferRefs) {
+          if (!validTransferIds.has(ref)) {
+            broken.push(`${entry.lineId} → "${ref}" (not found in episode transfers)`);
+          }
+        }
+      }
+      assert.equal(broken.length, 0, `Broken transferRefs:\n  ${broken.join("\n  ")}`);
+    });
+  }
+});
+
 describe("report data: transcription-report sync", () => {
   const episodes = getAvailableEpisodes();
   /** Tolerance for timestamp matching: ±15 seconds */
