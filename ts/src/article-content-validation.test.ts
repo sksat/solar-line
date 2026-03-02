@@ -263,6 +263,35 @@ describe("tech-overview.md content validation", () => {
       "chart should include E2E and Python cross-validation layers",
     );
   });
+
+  it("chart bar values match body text stats", () => {
+    // Extract test counts from stats table row
+    const tableMatch = content.match(/TS ([\d,]+) \+ Rust (\d+) \+ E2E (\d+)/);
+    assert.ok(tableMatch, "should have stats table with test counts");
+    const tableTs = parseInt(tableMatch![1].replace(/,/g, ""), 10);
+    const tableRust = parseInt(tableMatch![2], 10);
+    const tableE2e = parseInt(tableMatch![3], 10);
+
+    // Extract chart bar values
+    const chartBlock = content.split("```chart:bar").slice(1).map(b => b.split("```")[0])
+      .find(b => b.includes("テスト分布"));
+    assert.ok(chartBlock, "should have test distribution chart block");
+
+    const rustChartVal = chartBlock!.split("Rust ユニットテスト")[1]?.match(/value: (\d+)/);
+    const tsChartVal = chartBlock!.split("TypeScript ユニットテスト")[1]?.match(/value: (\d+)/);
+    const e2eChartVal = chartBlock!.split("Playwright E2E テスト")[1]?.match(/value: (\d+)/);
+
+    assert.ok(rustChartVal, "chart should have Rust value");
+    assert.ok(tsChartVal, "chart should have TS value");
+    assert.ok(e2eChartVal, "chart should have E2E value");
+
+    assert.equal(parseInt(rustChartVal![1], 10), tableRust,
+      `Rust chart value (${rustChartVal![1]}) should match table (${tableRust})`);
+    assert.equal(parseInt(tsChartVal![1], 10), tableTs,
+      `TS chart value (${tsChartVal![1]}) should match table (${tableTs})`);
+    assert.equal(parseInt(e2eChartVal![1], 10), tableE2e,
+      `E2E chart value (${e2eChartVal![1]}) should match table (${tableE2e})`);
+  });
 });
 
 // ============================================================

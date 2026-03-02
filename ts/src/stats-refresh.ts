@@ -103,6 +103,27 @@ export function updateBodyText(content: string, stats: ProjectStats): string {
   return result;
 }
 
+/** Update chart:bar block values for the test distribution chart */
+export function updateChartValues(content: string, stats: ProjectStats): string {
+  // Map chart bar labels to their stat values
+  const labelValueMap: Record<string, number> = {
+    "Rust ユニットテスト": stats.rustTests,
+    "TypeScript ユニットテスト": stats.tsTests,
+    "Playwright E2E テスト": stats.e2eTests,
+    "Python クロスバリデーション": stats.pythonChecks,
+  };
+
+  let result = content;
+  for (const [label, value] of Object.entries(labelValueMap)) {
+    // Match: "label: <label>\n    value: <number>" and update the value
+    const pattern = new RegExp(
+      `(label: ${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\n\\s+value: )\\d+`,
+    );
+    result = result.replace(pattern, `$1${value}`);
+  }
+  return result;
+}
+
 /** Collect live project statistics */
 export function collectStats(projectRoot: string): ProjectStats {
   const tsDir = path.join(projectRoot, "ts");
@@ -227,6 +248,7 @@ if (process.argv[1]?.endsWith("stats-refresh.ts")) {
   const original = fs.readFileSync(techOverviewPath, "utf-8");
   let updated = updateStatsTable(original, stats);
   updated = updateBodyText(updated, stats);
+  updated = updateChartValues(updated, stats);
 
   if (original === updated) {
     console.log("\nNo changes needed — stats are already up to date.");

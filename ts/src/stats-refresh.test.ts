@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   updateStatsTable,
   updateBodyText,
+  updateChartValues,
   formatNumber,
   type ProjectStats,
 } from "./stats-refresh.ts";
@@ -124,6 +125,79 @@ describe("stats-refresh", () => {
       assert.ok(result.includes("Some text before"));
       assert.ok(result.includes("Some text after"));
       assert.ok(result.includes("long description"));
+    });
+  });
+
+  describe("updateChartValues", () => {
+    const chartInput = [
+      "some text before",
+      "```chart:bar",
+      "caption: テスト分布 — 4層の品質保証",
+      'unit: "件"',
+      "bars:",
+      "  - label: Rust ユニットテスト",
+      "    value: 400",
+      '    color: "#f97316"',
+      "  - label: TypeScript ユニットテスト",
+      "    value: 2000",
+      '    color: "#3b82f6"',
+      "  - label: Playwright E2E テスト",
+      "    value: 200",
+      '    color: "#8b5cf6"',
+      "  - label: Python クロスバリデーション",
+      "    value: 350",
+      '    color: "#22c55e"',
+      "```",
+      "some text after",
+    ].join("\n");
+
+    it("updates Rust test value in chart bar block", () => {
+      const result = updateChartValues(chartInput, sampleStats);
+      const rustSection = result.split("Rust ユニットテスト")[1].split("label:")[0];
+      assert.ok(
+        rustSection.includes(`value: ${sampleStats.rustTests}`),
+        `Expected Rust value ${sampleStats.rustTests}, got section: ${rustSection}`,
+      );
+    });
+
+    it("updates TypeScript test value in chart bar block", () => {
+      const result = updateChartValues(chartInput, sampleStats);
+      const tsSection = result.split("TypeScript ユニットテスト")[1].split("label:")[0];
+      assert.ok(
+        tsSection.includes(`value: ${sampleStats.tsTests}`),
+        `Expected TS value ${sampleStats.tsTests}, got section: ${tsSection}`,
+      );
+    });
+
+    it("updates E2E test value in chart bar block", () => {
+      const result = updateChartValues(chartInput, sampleStats);
+      const e2eSection = result.split("Playwright E2E テスト")[1].split("label:")[0];
+      assert.ok(
+        e2eSection.includes(`value: ${sampleStats.e2eTests}`),
+        `Expected E2E value ${sampleStats.e2eTests}, got section: ${e2eSection}`,
+      );
+    });
+
+    it("updates Python check value in chart bar block", () => {
+      const result = updateChartValues(chartInput, sampleStats);
+      const pySection = result.split("Python クロスバリデーション")[1].split("```")[0];
+      assert.ok(
+        pySection.includes(`value: ${sampleStats.pythonChecks}`),
+        `Expected Python value ${sampleStats.pythonChecks}, got section: ${pySection}`,
+      );
+    });
+
+    it("preserves surrounding text", () => {
+      const result = updateChartValues(chartInput, sampleStats);
+      assert.ok(result.includes("some text before"));
+      assert.ok(result.includes("some text after"));
+      assert.ok(result.includes("caption: テスト分布"));
+    });
+
+    it("preserves content without chart block", () => {
+      const noChart = "no chart block here\njust text";
+      const result = updateChartValues(noChart, sampleStats);
+      assert.equal(result, noChart);
     });
   });
 });
