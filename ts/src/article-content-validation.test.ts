@@ -4224,3 +4224,34 @@ describe("attitude-control.md RCS thrust comparison chart", () => {
     assert.ok(rcsChart, "should have a chart:bar block comparing RCS demands across episodes");
   });
 });
+
+// =============================================================================
+// infrastructure.md staffing collapse chart (Task 473)
+// =============================================================================
+
+describe("infrastructure.md staffing collapse chart", () => {
+  const content = readReport("infrastructure.md");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has an Enceladus staffing collapse bar chart", () => {
+    const staffingChart = chartBlocks.find(
+      (block) => block.includes("エンケラドス") && block.includes("人員"),
+    );
+    assert.ok(staffingChart, "should have a chart:bar block showing staffing collapse");
+  });
+
+  it("staffing chart shows dramatic decline from 300 to 1", () => {
+    const staffingChart = chartBlocks.find(
+      (block) => block.includes("エンケラドス") && block.includes("人員"),
+    );
+    assert.ok(staffingChart, "staffing chart should exist");
+    assert.ok(
+      staffingChart!.includes("300"),
+      "should show peak staffing of ~300",
+    );
+    assert.ok(
+      staffingChart!.includes("value: 1"),
+      "should show current staffing of 1",
+    );
+  });
+});
