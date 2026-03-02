@@ -378,6 +378,29 @@ describe("EP01 article content validation", () => {
       "chart should show 48,000t nominal at 912.4 hours",
     );
   });
+
+  it("has Oberth efficiency bar chart (capture ΔV vs altitude)", () => {
+    assert.ok(
+      content.includes("捕獲ΔV") && content.includes("捕獲高度"),
+      "EP01 should have Oberth capture ΔV vs altitude bar chart",
+    );
+    assert.ok(
+      content.includes("value: 2.3") || content.includes("value: 1.46"),
+      "chart should have perijove capture ΔV value",
+    );
+  });
+
+  it("has 72h vs 150h route comparison bar chart", () => {
+    // The bar chart should have caption referencing both routes
+    assert.ok(
+      content.includes("caption: 72時間") || content.includes("caption: 72h"),
+      "EP01 should have 72h vs 150h route comparison bar chart",
+    );
+    assert.ok(
+      content.includes("value: 4249"),
+      "chart should have 72h peak velocity 4249 km/s as a bar value",
+    );
+  });
 });
 
 describe("EP02 article content validation", () => {
