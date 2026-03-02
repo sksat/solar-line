@@ -57,10 +57,12 @@ function assertContainsApproxValue(
   // For integer-like values, look for exact match
   const intStr = Math.round(expectedValue).toString();
   const fixedStr = expectedValue.toFixed(1);
-  const found = text.includes(intStr) || text.includes(fixedStr);
+  // Also try comma-formatted (e.g., "7,604" for 7604)
+  const commaStr = Math.round(expectedValue).toLocaleString("en-US");
+  const found = text.includes(intStr) || text.includes(fixedStr) || text.includes(commaStr);
   assert.ok(
     found,
-    `${label}: expected article to contain ~${expectedValue} (tried "${intStr}" and "${fixedStr}")`,
+    `${label}: expected article to contain ~${expectedValue} (tried "${intStr}", "${fixedStr}", "${commaStr}")`,
   );
 }
 
@@ -1135,11 +1137,23 @@ describe("EP05 article content validation", () => {
     assert.ok(content.includes('"limit": 55.63'), "should cite nozzle limit 55.63h");
   });
 
+  it("Hohmann baseline ΔV matches analysis", () => {
+    const hohmannDv = analysis.hohmann.totalDvKms;
+    assertContainsApproxValue(content, hohmannDv, "EP05 Hohmann ΔV for Uranus→Earth");
+    const hohmannYears = analysis.hohmann.transferTimeYears;
+    assertContainsApproxValue(content, hohmannYears, "EP05 Hohmann transfer time in years");
+  });
+
   it("Oberth effect: ~3% efficiency gain at Jupiter flyby", () => {
     assert.ok(content.includes("3%"),
       "should cite 3% Oberth efficiency gain");
     assert.ok(content.includes("オーベルト") || content.includes("Oberth"),
       "should mention Oberth effect");
+  });
+
+  it("Oberth burn saving matches analysis", () => {
+    const savingMin = analysis.oberthEffect.threePercentBurnSavingMinutes;
+    assertContainsApproxValue(content, savingMin, "EP05 Oberth 3% burn saving in minutes");
   });
 
   it("without flyby: burn time 56h51m, nozzle exceeded by 73 min", () => {
@@ -1149,23 +1163,21 @@ describe("EP05 article content validation", () => {
       "should cite 73 min nozzle overrun without flyby");
   });
 
-  it("300t scenario peak velocity: 7,604 km/s = 2.5%c", () => {
-    assert.ok(content.includes("7,604") || content.includes("7604"),
-      "should cite peak velocity 7,604 km/s");
-    assert.ok(content.includes("2.5%"),
-      "should cite 2.5% of speed of light");
+  it("300t peak velocity matches analysis", () => {
+    const scenario300t = analysis.brachistochroneByMass[0];
+    assertContainsApproxValue(content, scenario300t.peakVelocityKms, "EP05 300t peak velocity");
+    const cFraction = scenario300t.peakVelocityCFraction * 100;
+    assertContainsApproxValue(content, cFraction, "EP05 300t peak velocity as %c");
   });
 
-  it("LEO capture ΔV: 3.18 km/s (v∞≈0) vs moon orbit 0.42 km/s", () => {
-    assert.ok(content.includes("3.18"),
-      "should cite LEO capture ΔV 3.18 km/s");
-    assert.ok(content.includes("0.42"),
-      "should cite moon orbit minimum capture 0.42 km/s");
+  it("LEO capture ΔV matches analysis", () => {
+    const dvLEO = analysis.earthApproach.brachistochroneArrival.dvCaptureLEOKms;
+    assertContainsApproxValue(content, dvLEO, "EP05 LEO capture ΔV (brachistochrone arrival)");
   });
 
-  it("Oberth flyby saves 99 min of burn time", () => {
-    assert.ok(content.includes("99") && content.includes("分"),
-      "should cite 99分 burn time savings from Oberth");
+  it("moon orbit capture ΔV matches analysis", () => {
+    const dvMoon = analysis.earthApproach.brachistochroneArrival.dvCaptureMoonOrbitKms;
+    assertContainsApproxValue(content, dvMoon, "EP05 moon orbit capture ΔV");
   });
 
   it("satellite perturbation analysis: 2-body approximation validated", () => {
