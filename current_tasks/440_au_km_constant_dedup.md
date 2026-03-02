@@ -1,6 +1,6 @@
 # Task 440: Deduplicate AU_KM Constant
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

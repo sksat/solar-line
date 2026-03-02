@@ -1,6 +1,6 @@
 # Task 442: Centralize Speed of Light Constant
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

@@ -1,6 +1,6 @@
 # Task 444: Sync TS and Rust Physics Constants
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 

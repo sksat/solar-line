@@ -1,6 +1,6 @@
 # Task 439: Export G0_MS2 Standard Gravity Constant
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 
