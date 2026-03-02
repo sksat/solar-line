@@ -420,43 +420,99 @@ describe("report data: time-series non-empty", () => {
   }
 });
 
-// Also validate summary report time-series charts
+// Also validate summary report time-series charts (in sections, not top-level)
 describe("report data: summary time-series chart integrity", () => {
   const summaryDir = path.join(REPORTS_DIR, "data", "summary");
   const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
 
+  // Collect all time-series charts from sections across all summary reports
+  const allCharts: { slug: string; chart: import("./report-types.ts").TimeSeriesChart }[] = [];
   for (const file of summaryFiles) {
     const slug = file.replace(/\.md$/, "");
     const report = loadSummaryBySlug(summaryDir, slug);
-    const charts = report.timeSeriesCharts ?? [];
-
-    for (const chart of charts) {
-      for (const series of chart.series) {
-        it(`summary/${slug} ${chart.id} "${series.label}": x/y length match`, () => {
-          assert.equal(
-            series.x.length,
-            series.y.length,
-            `x length (${series.x.length}) !== y length (${series.y.length})`
-          );
-        });
-
-        it(`summary/${slug} ${chart.id} "${series.label}": values are finite`, () => {
-          for (let i = 0; i < series.x.length; i++) {
-            assert.ok(Number.isFinite(series.x[i]), `x[${i}] = ${series.x[i]} is not finite`);
-            assert.ok(Number.isFinite(series.y[i]), `y[${i}] = ${series.y[i]} is not finite`);
-          }
-        });
-
-        it(`summary/${slug} ${chart.id} "${series.label}": x non-decreasing`, () => {
-          for (let i = 1; i < series.x.length; i++) {
-            assert.ok(
-              series.x[i] >= series.x[i - 1],
-              `x[${i}]=${series.x[i]} < x[${i - 1}]=${series.x[i - 1]}`
-            );
-          }
-        });
+    for (const section of report.sections ?? []) {
+      for (const chart of section.timeSeriesCharts ?? []) {
+        allCharts.push({ slug, chart });
       }
     }
+  }
+
+  it("has time-series charts in summary reports (sanity check)", () => {
+    assert.ok(allCharts.length >= 10, `Expected at least 10 summary time-series charts, found ${allCharts.length}`);
+  });
+
+  for (const { slug, chart } of allCharts) {
+    for (const series of chart.series) {
+      it(`summary/${slug} ${chart.id} "${series.label}": x/y length match`, () => {
+        assert.equal(
+          series.x.length,
+          series.y.length,
+          `x length (${series.x.length}) !== y length (${series.y.length})`
+        );
+      });
+
+      it(`summary/${slug} ${chart.id} "${series.label}": values are finite`, () => {
+        for (let i = 0; i < series.x.length; i++) {
+          assert.ok(Number.isFinite(series.x[i]), `x[${i}] = ${series.x[i]} is not finite`);
+          assert.ok(Number.isFinite(series.y[i]), `y[${i}] = ${series.y[i]} is not finite`);
+        }
+      });
+
+      it(`summary/${slug} ${chart.id} "${series.label}": x non-decreasing`, () => {
+        for (let i = 1; i < series.x.length; i++) {
+          assert.ok(
+            series.x[i] >= series.x[i - 1],
+            `x[${i}]=${series.x[i]} < x[${i - 1}]=${series.x[i - 1]}`
+          );
+        }
+      });
+    }
+  }
+});
+
+// Validate summary report bar chart data integrity
+describe("report data: summary bar chart integrity", () => {
+  const summaryDir = path.join(REPORTS_DIR, "data", "summary");
+  const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
+
+  const allBarCharts: { slug: string; chart: import("./report-types.ts").BarChart }[] = [];
+  for (const file of summaryFiles) {
+    const slug = file.replace(/\.md$/, "");
+    const report = loadSummaryBySlug(summaryDir, slug);
+    for (const section of report.sections ?? []) {
+      if (section.barChart) {
+        allBarCharts.push({ slug, chart: section.barChart });
+      }
+    }
+  }
+
+  it("has bar charts in summary reports (sanity check)", () => {
+    assert.ok(allBarCharts.length >= 15, `Expected at least 15 summary bar charts, found ${allBarCharts.length}`);
+  });
+
+  for (const { slug, chart } of allBarCharts) {
+    it(`summary/${slug} "${chart.caption}": has non-empty bars`, () => {
+      assert.ok(chart.bars.length > 0, "Bar chart should have at least one bar");
+    });
+
+    it(`summary/${slug} "${chart.caption}": bar values are finite`, () => {
+      for (const bar of chart.bars) {
+        assert.ok(
+          Number.isFinite(bar.value),
+          `Bar "${bar.label}" value ${bar.value} is not finite`
+        );
+      }
+    });
+
+    it(`summary/${slug} "${chart.caption}": has unit label`, () => {
+      assert.ok(chart.unit && chart.unit.length > 0, "Bar chart should have a unit label");
+    });
+
+    it(`summary/${slug} "${chart.caption}": bar labels are non-empty`, () => {
+      for (const bar of chart.bars) {
+        assert.ok(bar.label && bar.label.length > 0, "Bar label should not be empty");
+      }
+    });
   }
 });
 
