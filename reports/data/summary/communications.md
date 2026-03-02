@@ -218,6 +218,28 @@ NAVIGATION OVERVIEW画面（16:37）には「COIAS — ORBITAL CROSS ALERT」と
 | EP04 | プラズモイド被曝で劣化 | 慣性航法（信頼度低下） |
 | EP05 | **全ビーコン UNAVAILABLE** | **STELLAR-INS AUTONOMOUS（完全自律）** |
 
+```chart:bar
+caption: ビーコン信頼度の段階的劣化 — EP01からEP05への航法危機の深化
+unit: "%"
+bars:
+  - label: EP01-02（正常）
+    value: 100
+    color: "#22c55e"
+    annotation: "ビーコン補助航法、偽ビーコン検出可能"
+  - label: EP03（ドリフト蓄積）
+    value: 99.8
+    color: "#eab308"
+    annotation: "慣性航法に移行、精度99.8%維持"
+  - label: EP04（劣化）
+    value: 50
+    color: "#f97316"
+    annotation: "プラズモイド被曝で信頼度低下"
+  - label: EP05（UNAVAILABLE）
+    value: 0
+    color: "#ef4444"
+    annotation: "全5基停波 — STELLAR-INS AUTONOMOUS"
+```
+
 ビーコン全喪失の原因は直接的には描かれないが、第5話で言及される「ビーコンが全部落ちてから内苑の物流が完全に止まってる」（13:47）という状況と一致する。ケストレル号の航法喪失は個別の故障ではなく、太陽系規模のインフラ崩壊の一部として描写されており、「追放された船」の物語的テーマを通信インフラの観点から裏付ける。
 
 ## 全話通貫の通信遅延プロファイル
@@ -339,6 +361,24 @@ NASAのLCRD（Laser Communications Relay Demonstration, 2021）やDSOC（Deep Sp
 3. リレー基地の送信設備を転用
 
 これらは実際のFSOCの特性と一致しており、技術的に妥当な描写。
+
+```chart:bar
+caption: DSOC実証データレート vs 距離 — 深宇宙光通信の実力（Mbps）
+unit: "Mbps"
+bars:
+  - label: 0.2 AU（実証最高値）
+    value: 267
+    color: "#22c55e"
+    annotation: "2023年12月、3,100万km"
+  - label: 1.5 AU（遠距離実証）
+    value: 25
+    color: "#3b82f6"
+    annotation: "2.26億km、電波の10倍以上"
+  - label: 従来電波（参考値）
+    value: 2.5
+    color: "#8b949e"
+    annotation: "DSN X帯、同距離での典型値"
+```
 
 ### 自由空間伝搬損失（FSPL）
 

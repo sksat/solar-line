@@ -2418,6 +2418,28 @@ describe("communications.md content validation", () => {
       "EP03 bar should show 71-168 min range annotation",
     );
   });
+
+  it("has beacon reliability degradation bar chart", () => {
+    assert.ok(
+      content.includes("caption: ビーコン") || content.includes("caption: 航法ビーコン"),
+      "should have beacon degradation bar chart",
+    );
+    assert.ok(
+      content.includes("UNAVAILABLE") && content.includes("value: 0"),
+      "chart should show EP05 beacon availability at 0%",
+    );
+  });
+
+  it("has FSOC data rate comparison bar chart", () => {
+    assert.ok(
+      content.includes("value: 267") && content.includes("Mbps"),
+      "should have FSOC chart with 267 Mbps data point",
+    );
+    assert.ok(
+      content.includes("value: 25"),
+      "chart should include 25 Mbps at 1.5 AU",
+    );
+  });
 });
 
 // ============================================================
