@@ -1074,6 +1074,17 @@ describe("other-ships.md content validation", () => {
     assert.ok(content.includes("MPA") && (content.includes("火星") || content.includes("Mars")),
       "should connect MPA prefix to Mars Port Authority");
   });
+
+  it("has ΔV capability comparison bar chart", () => {
+    assert.ok(
+      content.includes("推定ΔV能力の下限比較"),
+      "should have ΔV capability comparison bar chart",
+    );
+    assert.ok(
+      content.includes("value: 842"),
+      "should include fleet ΔV estimate of 842 km/s",
+    );
+  });
 });
 
 // ============================================================
@@ -1860,6 +1871,17 @@ describe("science-accuracy.md content validation", () => {
       "should cite maximum β ≈ 2.5%c");
     assert.ok(content.includes("0.1%"),
       "should note all corrections are below 0.1%");
+  });
+
+  it("has Hohmann vs Brachistochrone time reduction bar chart", () => {
+    assert.ok(
+      content.includes("短縮倍率") && content.includes("```chart:bar"),
+      "should have a bar chart showing time reduction factors",
+    );
+    assert.ok(
+      content.includes("value: 1674"),
+      "should include EP03's 1,674x reduction factor",
+    );
   });
 });
 

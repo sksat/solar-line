@@ -497,6 +497,31 @@ $$a = \frac{4d}{t^2} = \frac{4 \times 7.8 \times 10^{11}\ \mathrm{m}}{t^2}$$
 }
 ```
 
+```chart:bar
+caption: 船舶別 推定ΔV能力の下限比較（対数スケール）
+unit: "km/s"
+logScale: true
+bars:
+  - label: 保安艇（EP05）
+    value: 22
+    color: "#8b949e"
+    annotation: "LEO投入のみ"
+  - label: 大型船（EP02）
+    value: 50
+    color: "#3fb950"
+    annotation: "土星圏待ち伏せ"
+  - label: ケストレル号
+    value: 300
+    color: "#58a6ff"
+    annotation: "全行程実績"
+  - label: 公安艦隊（EP04）
+    value: 842
+    color: "#ef4444"
+    annotation: "33h到着から推定"
+```
+
+追跡側の船舶にも軌道力学上の制約が課される——しかしその制約のレベルは大きく異なる。EP05の保安艇は22 km/s（LEO投入程度）の能力が推定される一方、EP04の公安艦隊は33時間で残距離1億kmを踏破しており、ΔV能力は842 km/s以上と推定される。ケストレルの実績値（数百km/s）と比較すると、地球の公安艦隊はケストレルを上回るΔV能力を持っている可能性が高い。
+
 ## 用語集
 
 ```glossary:

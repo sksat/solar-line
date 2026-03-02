@@ -328,6 +328,35 @@ Brachistochrone遷移はホーマン遷移（最小エネルギー軌道）と�
 }
 ```
 
+```chart:bar
+caption: ホーマン遷移からの時間短縮倍率（対数スケール、各話別）
+unit: "倍"
+logScale: true
+bars:
+  - label: EP01（火星→ガニメデ）
+    value: 376
+    color: "#58a6ff"
+    annotation: "3.1年 → 72時間"
+  - label: EP02（木星→土星）
+    value: 42
+    color: "#3fb950"
+    annotation: "≈10年 → 87日（トリム推力）"
+  - label: EP03（土星→天王星）
+    value: 1674
+    color: "#f97316"
+    annotation: "27.3年 → 143時間"
+  - label: EP04（天王星→地球）
+    value: 708
+    color: "#f0883e"
+    annotation: "16.1年 → 8.3日（300t想定）"
+  - label: EP05（天王星→地球）
+    value: 278
+    color: "#a371f7"
+    annotation: "16.1年 → 507時間（複合航路）"
+```
+
+最も劇的な短縮はEP03の1,674倍——ホーマン遷移で27.3年かかるエンケラドス→タイタニアを、Brachistochrone航法ではわずか143時間（約6日）で飛行する。EP02のトリム推力航法でも42倍の短縮を達成しており、損傷状態でもホーマンの数十倍の時間効率を実現している。
+
 ## 実測データとの照合
 
 SOLAR LINE が参照する実測データは、主に以下の3つの領域にまたがる。
