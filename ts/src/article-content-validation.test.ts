@@ -483,6 +483,23 @@ describe("EP02 article content validation", () => {
     assert.ok(content.includes("0.02%") || content.includes("65 km/s") || content.includes("無視可能") || content.includes("negligible"),
       "should note that EP02 trim-thrust relativistic effects are negligible");
   });
+
+  it("has thrust profile chart for trim-thrust 2-phase model", () => {
+    assert.ok(content.includes("ep02-chart-thrust-profile"),
+      "EP02 should have thrust profile chart (ep02-chart-thrust-profile)");
+  });
+
+  it("thrust profile shows 0.098 MN trim thrust level", () => {
+    assert.ok(content.includes('"0.098"') || content.includes("0.098"),
+      "EP02 thrust profile should cite 0.098 MN trim thrust");
+  });
+
+  it("thrust profile compares 2-phase vs accel-only model", () => {
+    assert.ok(content.includes("加速のみモデル") || content.includes("accel-only"),
+      "EP02 thrust profile should include accel-only comparison series");
+    assert.ok(content.includes("2相モデル") || content.includes("3日加速"),
+      "EP02 thrust profile should reference the 2-phase model");
+  });
 });
 
 describe("EP03 article content validation", () => {
