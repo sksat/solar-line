@@ -350,6 +350,18 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes('"yLabel"') && content.includes("速度"),
       "velocity profile should have velocity axis label");
   });
+
+  it("has brachistochrone thrust profile timeseries chart", () => {
+    assert.ok(content.includes("ep01-chart-thrust-profile"),
+      "EP01 should have thrust profile chart with id ep01-chart-thrust-profile");
+  });
+
+  it("thrust profile: 9.8 MN with flip at 36h", () => {
+    assert.ok(content.includes("推力プロファイル"),
+      "thrust profile should have title referencing thrust profile");
+    assert.ok(content.includes('"yLabel"') && content.includes("推力 (MN)"),
+      "thrust profile should have thrust axis label");
+  });
 });
 
 describe("EP02 article content validation", () => {
@@ -711,6 +723,18 @@ describe("EP04 article content validation", () => {
       "chart should compare 100% and 65% thrust");
     assert.ok(content.includes("推力制限") || content.includes("出力制限"),
       "should discuss thrust limitation");
+  });
+
+  it("has thrust profile timeseries chart", () => {
+    assert.ok(content.includes("ep04-chart-thrust-profile"),
+      "EP04 should have thrust profile chart with id ep04-chart-thrust-profile");
+  });
+
+  it("thrust profile: 6.37 MN with reference to 9.8 MN nominal", () => {
+    assert.ok(content.includes("6.37"),
+      "thrust profile should show 6.37 MN (65% of 9.8 MN)");
+    assert.ok(content.includes("公称推力") && content.includes("9.8"),
+      "thrust profile should reference 9.8 MN nominal thrust");
   });
 });
 
