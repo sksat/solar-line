@@ -1,6 +1,6 @@
 # Task 483: Extend stats-refresh to Update Chart Bar Values
 
-## Status: IN_PROGRESS
+## Status: DONE
 
 ## Summary
 

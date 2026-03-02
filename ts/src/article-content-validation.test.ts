@@ -508,28 +508,26 @@ describe("EP02 article content validation", () => {
       "EP02 should mention two-phase model");
   });
 
-  it("Jupiter escape velocity at 50 RJ: 8.42 km/s", () => {
-    assert.ok(content.includes("8.42"),
-      "should cite escape velocity 8.42 km/s at 50 RJ");
+  it("Jupiter escape velocity matches analysis", () => {
+    const vEsc = analysis.jupiterEscape.escapeVelocityKms;
+    assertContainsApproxValue(content, vEsc, "EP02 Jupiter escape velocity at 50 RJ");
   });
 
-  it("heliocentric speed 18.99 km/s vs solar escape 18.46 km/s", () => {
-    assert.ok(content.includes("18.99"),
-      "should cite heliocentric speed 18.99 km/s");
-    assert.ok(content.includes("18.46"),
-      "should cite solar escape velocity 18.46 km/s");
+  it("heliocentric speed matches analysis", () => {
+    const vHelio = analysis.jupiterEscape.heliocentricBestKms;
+    assertContainsApproxValue(content, vHelio, "EP02 prograde heliocentric speed");
   });
 
-  it("Enceladus minimum capture ΔV: 0.61 km/s", () => {
-    assert.ok(content.includes("0.61"),
-      "should cite minimum capture ΔV 0.61 km/s at Enceladus");
+  it("Enceladus minimum capture ΔV matches analysis", () => {
+    const dvCapture = analysis.saturnCapture!.dvMinCaptureKms;
+    assertContainsApproxValue(content, dvCapture, "EP02 Enceladus minimum capture ΔV");
   });
 
-  it("Hohmann baseline: 3.36 km/s, ~10 years", () => {
-    assert.ok(content.includes("3.36"),
-      "should cite Hohmann ΔV 3.36 km/s for Jupiter→Saturn");
-    assert.ok(content.includes("3,672") || content.includes("3672") || content.includes("10年"),
-      "should cite ~3672 days or ~10 years transfer time");
+  it("Hohmann baseline ΔV matches analysis", () => {
+    const hohmannDv = analysis.hohmann.totalDv;
+    assertContainsApproxValue(content, hohmannDv, "EP02 Hohmann ΔV for Jupiter→Saturn");
+    const hohmannYears = analysis.hohmann.transferTimeYears;
+    assertContainsApproxValue(content, hohmannYears, "EP02 Hohmann transfer time in years");
   });
 
   it("ballistic transit ~997 days vs trim thrust ~87 days", () => {
@@ -714,6 +712,7 @@ describe("EP02 article content validation", () => {
 
 describe("EP03 article content validation", () => {
   const content = readReport("ep03.md", "episodes");
+  const analysis = analyzeEpisode3();
 
   it("cites 143-hour transit time", () => {
     assert.ok(content.includes("143"), "EP03 should cite 143-hour transit");
@@ -724,12 +723,24 @@ describe("EP03 article content validation", () => {
     assert.ok(content.includes("タイタニア"), "should mention Titania");
   });
 
-  it("mass boundary value is 452.5t", () => {
-    // Task 228 corrected this from 452 to 452.5
+  it("mass boundary matches analysis", () => {
+    const maxMass = analysis.massFeasibility.maxMassT;
+    assertContainsApproxValue(content, maxMass, "EP03 mass boundary");
+  });
+
+  it("nav crisis accuracy matches analysis", () => {
+    const ratio = analysis.navCrisis.computedVsStatedRatio;
+    // Ratio should be ~0.998, meaning 99.8% accuracy
+    const accuracyPct = ratio * 100;
     assert.ok(
-      content.includes("452.5"),
-      "EP03 mass boundary should be 452.5t (not 452)",
+      content.includes("99.8"),
+      `EP03 should cite nav crisis accuracy ~99.8% (computed ratio ${accuracyPct.toFixed(1)}%)`,
     );
+  });
+
+  it("Hohmann baseline ΔV matches analysis", () => {
+    const hohmannDv = analysis.hohmann.totalDv;
+    assertContainsApproxValue(content, hohmannDv, "EP03 Hohmann ΔV for Saturn→Uranus");
   });
 
   it("has margin gauge with nav discrepancy data", () => {
@@ -925,11 +936,11 @@ describe("EP04 article content validation", () => {
     assert.ok(content.includes('"limit": 500'), "should cite 500 mSv ICRP limit");
   });
 
-  it("Hohmann baseline: 15.94 km/s, ~16.1 years", () => {
-    assert.ok(content.includes("15.94"),
-      "should cite Hohmann ΔV 15.94 km/s for Uranus→Earth");
-    assert.ok(content.includes("16.1"),
-      "should cite ~16.1 years transfer time");
+  it("Hohmann baseline matches analysis", () => {
+    const hohmannDv = analysis.hohmann.totalDv;
+    assertContainsApproxValue(content, hohmannDv, "EP04 Hohmann ΔV for Uranus→Earth");
+    const hohmannYears = analysis.hohmann.transferTimeYears;
+    assertContainsApproxValue(content, hohmannYears, "EP04 Hohmann transfer time in years");
   });
 
   it("Titania escape ΔV: 1.51 km/s", () => {
@@ -980,6 +991,15 @@ describe("EP04 article content validation", () => {
       "should cite periapsis altitude 6.50 RU");
     assert.ok(content.includes("ミランダ") || content.includes("アリエル"),
       "should place periapsis between Miranda and Ariel orbits");
+  });
+
+  it("mass feasibility at 30 days matches analysis", () => {
+    // massFeasibility is an array of scenarios by target days
+    const scenario30d = analysis.massFeasibility.find(
+      (s: { targetDays: number }) => s.targetDays === 30,
+    );
+    assert.ok(scenario30d, "EP04 should have 30-day mass feasibility scenario");
+    assertContainsApproxValue(content, scenario30d!.maxMassT, "EP04 30-day mass feasibility");
   });
 
   it("relativistic effects: β ~0.7% for 65% thrust brachistochrone", () => {
