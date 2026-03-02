@@ -330,6 +330,26 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes("1.4%") || content.includes("1.42%") || content.includes("4,248") || content.includes("4248"),
       "should cite peak velocity ~4,248 km/s or β ~1.4%");
   });
+
+  it("has brachistochrone velocity profile timeseries chart", () => {
+    assert.ok(content.includes("ep01-chart-velocity-profile"),
+      "EP01 should have velocity profile chart with id ep01-chart-velocity-profile");
+  });
+
+  it("velocity profile: peak velocity ~4,248 km/s at midpoint", () => {
+    assert.ok(content.includes("4248") || content.includes("4,248") || content.includes("4247"),
+      "velocity profile should show peak ~4,248 km/s");
+    assert.ok(content.includes("フリップ") || content.includes("中間点") || content.includes("midpoint"),
+      "should reference midpoint flip");
+  });
+
+  it("velocity profile: symmetric acceleration/deceleration over 72h", () => {
+    // The chart x-axis should span 0 to ~72 hours
+    assert.ok(content.includes('"xLabel"') && content.includes("経過時間"),
+      "velocity profile should have time axis label");
+    assert.ok(content.includes('"yLabel"') && content.includes("速度"),
+      "velocity profile should have velocity axis label");
+  });
 });
 
 describe("EP02 article content validation", () => {
@@ -662,6 +682,18 @@ describe("EP04 article content validation", () => {
       "EP04 should mention relativistic effects assessment");
     assert.ok(content.includes("0.7%") || content.includes("0.70%") || content.includes("2,101") || content.includes("2101"),
       "should cite peak velocity ~2,101 km/s or β ~0.7%");
+  });
+
+  it("has thrust comparison velocity profile chart", () => {
+    assert.ok(content.includes("ep04-chart-thrust-comparison"),
+      "EP04 should have thrust comparison chart with id ep04-chart-thrust-comparison");
+  });
+
+  it("thrust comparison: shows 100% vs 65% thrust profiles", () => {
+    assert.ok(content.includes("100%") && content.includes("65%"),
+      "chart should compare 100% and 65% thrust");
+    assert.ok(content.includes("推力制限") || content.includes("出力制限"),
+      "should discuss thrust limitation");
   });
 });
 
