@@ -77,103 +77,26 @@ const KM_PER_AU = 149_597_870.7;
 const G = 9.80665e-3; // 1g in km/s²
 
 // --- Per-Episode Presets ---
-// Each episode's brachistochrone transfers with key parameter variations.
+// Loaded from server-injected JSON (templates.ts is the single source of truth).
+// Falls back to EP01 defaults if the data tag is missing.
 
-const EPISODE_PRESETS = {
-  1: {
-    defaults: { distanceAU: 3.68, massT: 48000, timeH: 72, thrustMN: 9.8 },
-    presets: {
-      ep01_72h: {
-        label: "火星→ガニメデ 72h（作中描写）",
-        distanceAU: 3.68, massT: 48000, timeH: 72, thrustMN: 9.8,
-      },
-      ep01_150h: {
-        label: "通常ルート 150h",
-        distanceAU: 3.68, massT: 48000, timeH: 150, thrustMN: 9.8,
-      },
-      ep01_mass299: {
-        label: "質量 ≤299t（成立条件）",
-        distanceAU: 3.68, massT: 299, timeH: 72, thrustMN: 9.8,
-      },
-      ep01_mass48: {
-        label: "質量 48t（48,000kg解釈）",
-        distanceAU: 3.68, massT: 48, timeH: 72, thrustMN: 9.8,
-      },
+function loadPresetsFromDOM() {
+  const el = document.getElementById("calc-presets-data");
+  if (el) {
+    try {
+      return JSON.parse(el.textContent || "{}");
+    } catch { /* fall through */ }
+  }
+  // Minimal fallback (EP01 defaults) for pages without injected data
+  return {
+    1: {
+      defaults: { distanceAU: 3.68, massT: 48000, timeH: 72, thrustMN: 9.8 },
+      presets: {},
     },
-  },
-  2: {
-    defaults: { distanceAU: 4.32, massT: 48000, timeH: 27, thrustMN: 9.8 },
-    presets: {
-      ep02_escape: {
-        label: "木星圏脱出 27h（brachistochrone区間）",
-        distanceAU: 4.32, massT: 48000, timeH: 27, thrustMN: 9.8,
-      },
-      ep02_trim1pct: {
-        label: "木星→土星 トリム推力1%",
-        distanceAU: 7.68, massT: 48000, timeH: 792, thrustMN: 0.098,
-      },
-      ep02_mass300: {
-        label: "木星圏脱出（300t仮定）",
-        distanceAU: 4.32, massT: 300, timeH: 27, thrustMN: 9.8,
-      },
-    },
-  },
-  3: {
-    defaults: { distanceAU: 9.62, massT: 48000, timeH: 143, thrustMN: 9.8 },
-    presets: {
-      ep03_143h: {
-        label: "エンケラドス→タイタニア 143h（作中描写）",
-        distanceAU: 9.62, massT: 48000, timeH: 143, thrustMN: 9.8,
-      },
-      ep03_mass452: {
-        label: "質量 ≤452t（成立条件）",
-        distanceAU: 9.62, massT: 452, timeH: 143, thrustMN: 9.8,
-      },
-      ep03_mass300: {
-        label: "質量 300t（EP01と一致する場合）",
-        distanceAU: 9.62, massT: 300, timeH: 143, thrustMN: 9.8,
-      },
-    },
-  },
-  4: {
-    defaults: { distanceAU: 18.2, massT: 48000, timeH: 2520, thrustMN: 6.37 },
-    presets: {
-      ep04_damaged: {
-        label: "タイタニア→地球 65%推力（作中描写）",
-        distanceAU: 18.2, massT: 48000, timeH: 2520, thrustMN: 6.37,
-      },
-      ep04_mass300: {
-        label: "質量 300t・65%推力",
-        distanceAU: 18.2, massT: 300, timeH: 200, thrustMN: 6.37,
-      },
-      ep04_full_thrust: {
-        label: "仮に100%推力が使えた場合",
-        distanceAU: 18.2, massT: 48000, timeH: 2520, thrustMN: 9.8,
-      },
-    },
-  },
-  5: {
-    defaults: { distanceAU: 18.2, massT: 48000, timeH: 507, thrustMN: 6.37 },
-    presets: {
-      ep05_composite: {
-        label: "天王星→地球 507h 複合航路（作中描写）",
-        distanceAU: 18.2, massT: 48000, timeH: 507, thrustMN: 6.37,
-      },
-      ep05_mass300: {
-        label: "質量 300t・65%推力",
-        distanceAU: 18.2, massT: 300, timeH: 200, thrustMN: 6.37,
-      },
-      ep05_direct: {
-        label: "仮に直行ルート（フライバイなし）",
-        distanceAU: 18.2, massT: 300, timeH: 507, thrustMN: 6.37,
-      },
-      ep05_nozzle_limit: {
-        label: "ノズル寿命 55h38m（最大燃焼時間）",
-        distanceAU: 18.2, massT: 300, timeH: 111, thrustMN: 6.37,
-      },
-    },
-  },
-};
+  };
+}
+
+const EPISODE_PRESETS = loadPresetsFromDOM();
 
 // Legacy flat PRESETS for backward compatibility (used if no data-episode)
 const PRESETS = EPISODE_PRESETS[1].presets;

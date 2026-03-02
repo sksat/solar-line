@@ -2406,54 +2406,71 @@ export function renderSideViewDiagrams(diagrams: SideViewDiagram[]): string {
   return diagrams.map(renderSideViewDiagram).join("\n");
 }
 
-/** Episode-specific calculator defaults (must match calculator.js EPISODE_PRESETS) */
-interface CalcPresetDef { key: string; label: string }
-interface CalcEpConfig { defaults: { distanceAU: number; massT: number; timeH: number; thrustMN: number }; presets: CalcPresetDef[] }
+/** Episode-specific calculator presets — single source of truth for both
+ *  server-side rendering (templates.ts) and client-side calculator (calculator.js).
+ *  The full preset data is injected as inline JSON so calculator.js reads it from the DOM. */
+interface CalcPresetParams { distanceAU: number; massT: number; timeH: number; thrustMN: number }
+interface CalcPresetDef extends CalcPresetParams { key: string; label: string }
+interface CalcEpConfig { defaults: CalcPresetParams; presets: CalcPresetDef[] }
 
 const CALC_EPISODE_PRESETS: Record<number, CalcEpConfig> = {
   1: {
     defaults: { distanceAU: 3.68, massT: NOMINAL_MASS_T, timeH: 72, thrustMN: THRUST_MN },
     presets: [
-      { key: "ep01_72h", label: "火星→ガニメデ 72h（作中描写）" },
-      { key: "ep01_150h", label: "通常ルート 150h" },
-      { key: "ep01_mass299", label: "質量 ≤299t（成立条件）" },
-      { key: "ep01_mass48", label: "質量 48t（48,000kg解釈）" },
+      { key: "ep01_72h", label: "火星→ガニメデ 72h（作中描写）", distanceAU: 3.68, massT: NOMINAL_MASS_T, timeH: 72, thrustMN: THRUST_MN },
+      { key: "ep01_150h", label: "通常ルート 150h", distanceAU: 3.68, massT: NOMINAL_MASS_T, timeH: 150, thrustMN: THRUST_MN },
+      { key: "ep01_mass299", label: "質量 ≤299t（成立条件）", distanceAU: 3.68, massT: 299, timeH: 72, thrustMN: THRUST_MN },
+      { key: "ep01_mass48", label: "質量 48t（48,000kg解釈）", distanceAU: 3.68, massT: 48, timeH: 72, thrustMN: THRUST_MN },
     ],
   },
   2: {
     defaults: { distanceAU: 4.32, massT: NOMINAL_MASS_T, timeH: 27, thrustMN: THRUST_MN },
     presets: [
-      { key: "ep02_escape", label: "木星圏脱出 27h" },
-      { key: "ep02_trim1pct", label: "木星→土星 トリム推力1%" },
-      { key: "ep02_mass300", label: "木星圏脱出（300t仮定）" },
+      { key: "ep02_escape", label: "木星圏脱出 27h", distanceAU: 4.32, massT: NOMINAL_MASS_T, timeH: 27, thrustMN: THRUST_MN },
+      { key: "ep02_trim1pct", label: "木星→土星 トリム推力1%", distanceAU: 7.68, massT: NOMINAL_MASS_T, timeH: 792, thrustMN: 0.098 },
+      { key: "ep02_mass300", label: "木星圏脱出（300t仮定）", distanceAU: 4.32, massT: 300, timeH: 27, thrustMN: THRUST_MN },
     ],
   },
   3: {
     defaults: { distanceAU: 9.62, massT: NOMINAL_MASS_T, timeH: 143, thrustMN: THRUST_MN },
     presets: [
-      { key: "ep03_143h", label: "エンケラドス→タイタニア 143h（作中描写）" },
-      { key: "ep03_mass452", label: "質量 ≤452t（成立条件）" },
-      { key: "ep03_mass300", label: "質量 300t（EP01と一致）" },
+      { key: "ep03_143h", label: "エンケラドス→タイタニア 143h（作中描写）", distanceAU: 9.62, massT: NOMINAL_MASS_T, timeH: 143, thrustMN: THRUST_MN },
+      { key: "ep03_mass452", label: "質量 ≤452t（成立条件）", distanceAU: 9.62, massT: 452, timeH: 143, thrustMN: THRUST_MN },
+      { key: "ep03_mass300", label: "質量 300t（EP01と一致）", distanceAU: 9.62, massT: 300, timeH: 143, thrustMN: THRUST_MN },
     ],
   },
   4: {
     defaults: { distanceAU: 18.2, massT: NOMINAL_MASS_T, timeH: 2520, thrustMN: DAMAGED_THRUST_MN },
     presets: [
-      { key: "ep04_damaged", label: "タイタニア→地球 65%推力（作中描写）" },
-      { key: "ep04_mass300", label: "質量 300t・65%推力" },
-      { key: "ep04_full_thrust", label: "仮に100%推力の場合" },
+      { key: "ep04_damaged", label: "タイタニア→地球 65%推力（作中描写）", distanceAU: 18.2, massT: NOMINAL_MASS_T, timeH: 2520, thrustMN: DAMAGED_THRUST_MN },
+      { key: "ep04_mass300", label: "質量 300t・65%推力", distanceAU: 18.2, massT: 300, timeH: 200, thrustMN: DAMAGED_THRUST_MN },
+      { key: "ep04_full_thrust", label: "仮に100%推力の場合", distanceAU: 18.2, massT: NOMINAL_MASS_T, timeH: 2520, thrustMN: THRUST_MN },
     ],
   },
   5: {
     defaults: { distanceAU: 18.2, massT: NOMINAL_MASS_T, timeH: 507, thrustMN: DAMAGED_THRUST_MN },
     presets: [
-      { key: "ep05_composite", label: "天王星→地球 507h 複合航路（作中描写）" },
-      { key: "ep05_mass300", label: "質量 300t・65%推力" },
-      { key: "ep05_direct", label: "直行ルート（フライバイなし）" },
-      { key: "ep05_nozzle_limit", label: "ノズル寿命上限 55h38m" },
+      { key: "ep05_composite", label: "天王星→地球 507h 複合航路（作中描写）", distanceAU: 18.2, massT: NOMINAL_MASS_T, timeH: 507, thrustMN: DAMAGED_THRUST_MN },
+      { key: "ep05_mass300", label: "質量 300t・65%推力", distanceAU: 18.2, massT: 300, timeH: 200, thrustMN: DAMAGED_THRUST_MN },
+      { key: "ep05_direct", label: "直行ルート（フライバイなし）", distanceAU: 18.2, massT: 300, timeH: 507, thrustMN: DAMAGED_THRUST_MN },
+      { key: "ep05_nozzle_limit", label: "ノズル寿命上限 55h38m", distanceAU: 18.2, massT: 300, timeH: 111, thrustMN: DAMAGED_THRUST_MN },
     ],
   },
 };
+
+/** Serialize preset data for injection into HTML as client-readable JSON */
+function serializePresetsForClient(): string {
+  const clientData: Record<number, { defaults: CalcPresetParams; presets: Record<string, CalcPresetDef> }> = {};
+  for (const [epStr, config] of Object.entries(CALC_EPISODE_PRESETS)) {
+    const ep = Number(epStr);
+    const presetMap: Record<string, CalcPresetDef> = {};
+    for (const p of config.presets) {
+      presetMap[p.key] = p;
+    }
+    clientData[ep] = { defaults: config.defaults, presets: presetMap };
+  }
+  return JSON.stringify(clientData);
+}
 
 /** Render a glossary of technical terms */
 export function renderGlossary(terms: GlossaryTerm[]): string {
@@ -2595,6 +2612,7 @@ ${presetButtons}
 <p style="margin-top:0.75rem">判定: <span id="res-verdict" class="verdict verdict-indeterminate">—</span></p>
 </div>
 </div>
+<script type="application/json" id="calc-presets-data">${serializePresetsForClient()}</script>
 <script type="module" src="../calculator.js"></script>`;
 }
 
@@ -4030,6 +4048,7 @@ export function renderCalculatorPage(summaryPages?: SiteManifest["summaryPages"]
 </table>
 </div>
 
+<script type="application/json" id="calc-presets-data">${serializePresetsForClient()}</script>
 <script type="module" src="../calculator.js"></script>
 <script>
 // Episode tab switching

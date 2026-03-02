@@ -707,6 +707,29 @@ describe("renderCalculator", () => {
     const html = renderCalculator();
     assert.ok(html.includes('id="calc-engine-badge"'));
   });
+
+  it("includes preset data JSON for calculator.js", () => {
+    const html = renderCalculator();
+    assert.ok(html.includes('id="calc-presets-data"'));
+    assert.ok(html.includes('type="application/json"'));
+    // The JSON should contain EP1 preset data
+    const match = html.match(/<script type="application\/json" id="calc-presets-data">(.*?)<\/script>/s);
+    assert.ok(match, "preset data script tag should exist");
+    const data = JSON.parse(match![1]);
+    assert.ok(data["1"], "should have EP1 data");
+    assert.equal(data["1"].defaults.massT, 48000);
+    assert.equal(data["1"].defaults.thrustMN, 9.8);
+  });
+
+  it("preset data JSON includes per-preset parameters", () => {
+    const html = renderCalculator(4);
+    const match = html.match(/<script type="application\/json" id="calc-presets-data">(.*?)<\/script>/s);
+    assert.ok(match);
+    const data = JSON.parse(match![1]);
+    assert.ok(data["4"].presets["ep04_damaged"]);
+    assert.equal(data["4"].presets["ep04_damaged"].thrustMN, 6.37);
+    assert.equal(data["4"].presets["ep04_damaged"].massT, 48000);
+  });
 });
 
 describe("renderEpisode includes calculator", () => {
@@ -6219,5 +6242,22 @@ describe("renderCalculatorPage", () => {
     const html = layoutHtml("Test", "<p>content</p>");
     assert.ok(html.includes("計算機"), "nav should include calculator link");
     assert.ok(html.includes("calculator/index.html"), "nav should link to calculator page");
+  });
+
+  it("includes preset data JSON for calculator.js", () => {
+    const html = renderCalculatorPage();
+    assert.ok(html.includes('id="calc-presets-data"'), "should inject preset data");
+    const match = html.match(/<script type="application\/json" id="calc-presets-data">(.*?)<\/script>/s);
+    assert.ok(match, "preset data script tag should exist");
+    const data = JSON.parse(match![1]);
+    // Should have all 5 episodes
+    for (let ep = 1; ep <= 5; ep++) {
+      assert.ok(data[String(ep)], `should have EP${ep} data`);
+      assert.ok(data[String(ep)].defaults, `EP${ep} should have defaults`);
+      assert.ok(data[String(ep)].presets, `EP${ep} should have presets`);
+    }
+    // EP04 should use damaged thrust
+    assert.equal(data["4"].defaults.thrustMN, 6.37);
+    assert.equal(data["5"].defaults.thrustMN, 6.37);
   });
 });
