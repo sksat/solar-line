@@ -4255,3 +4255,31 @@ describe("infrastructure.md staffing collapse chart", () => {
     );
   });
 });
+
+// =============================================================================
+// other-ships.md fleet + torpedo charts (Task 474)
+// =============================================================================
+
+describe("other-ships.md fleet acceleration chart", () => {
+  const content = readReport("other-ships.md");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a fleet approach acceleration comparison chart", () => {
+    const fleetChart = chartBlocks.find(
+      (block) => (block.includes("公安艦隊") || block.includes("艦隊")) && block.includes("加速度"),
+    );
+    assert.ok(fleetChart, "should have a chart:bar block for fleet approach acceleration comparison");
+  });
+});
+
+describe("other-ships.md torpedo evasion chart", () => {
+  const content = readReport("other-ships.md");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a nuclear torpedo speed comparison chart", () => {
+    const torpedoChart = chartBlocks.find(
+      (block) => (block.includes("核魚雷") || block.includes("速度")) && block.includes("2100") || block.includes("2,100"),
+    );
+    assert.ok(torpedoChart, "should have a chart:bar block for torpedo evasion speed comparison");
+  });
+});
