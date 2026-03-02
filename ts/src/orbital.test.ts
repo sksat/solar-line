@@ -9,6 +9,8 @@ import {
   orbitalPeriod,
   brachistochroneAccel,
   brachistochroneDeltaV,
+  brachistochroneMaxDistance,
+  brachistochroneTime,
   MU,
   ORBIT_RADIUS,
   EARTH_RADIUS,
@@ -250,6 +252,78 @@ describe("brachistochroneDeltaV", () => {
     assert.ok(
       Math.abs(dv1 / dv2 - 2) < 1e-10,
       `doubling time should halve ΔV, ratio = ${dv1 / dv2}`,
+    );
+  });
+});
+
+describe("brachistochroneMaxDistance", () => {
+  it("satisfies d = a * t² / 4", () => {
+    const a = 0.01;
+    const t = 100_000;
+    const d = brachistochroneMaxDistance(a, t);
+    assert.ok(Math.abs(d - (a * t * t) / 4) < 1e-10);
+  });
+
+  it("round-trips with brachistochroneAccel", () => {
+    const dOrig = 55_000_000;
+    const time = 72 * 3600;
+    const accel = brachistochroneAccel(dOrig, time);
+    const dBack = brachistochroneMaxDistance(accel, time);
+    assert.ok(
+      Math.abs(dBack - dOrig) < 1e-6,
+      `round-trip distance: ${dOrig} → ${dBack}`,
+    );
+  });
+
+  it("doubling acceleration doubles distance", () => {
+    const t = 50_000;
+    const d1 = brachistochroneMaxDistance(0.01, t);
+    const d2 = brachistochroneMaxDistance(0.02, t);
+    assert.ok(
+      Math.abs(d2 / d1 - 2) < 1e-10,
+      `doubling accel should double distance, ratio = ${d2 / d1}`,
+    );
+  });
+});
+
+describe("brachistochroneTime", () => {
+  it("satisfies t = 2 * sqrt(d / a)", () => {
+    const d = 55_000_000;
+    const a = 0.01;
+    const t = brachistochroneTime(d, a);
+    const expected = 2 * Math.sqrt(d / a);
+    assert.ok(Math.abs(t - expected) < 1e-10);
+  });
+
+  it("round-trips with brachistochroneAccel", () => {
+    const dOrig = 55_000_000;
+    const tOrig = 72 * 3600;
+    const accel = brachistochroneAccel(dOrig, tOrig);
+    const tBack = brachistochroneTime(dOrig, accel);
+    assert.ok(
+      Math.abs(tBack - tOrig) < 1e-6,
+      `round-trip time: ${tOrig} → ${tBack}`,
+    );
+  });
+
+  it("Mars distance at 1G gives ~5.4 hours", () => {
+    // 55M km at ~9.81e-3 km/s² (1G)
+    const t = brachistochroneTime(55_000_000, 9.81e-3);
+    const hours = t / 3600;
+    // t = 2*sqrt(55e6 / 9.81e-3) ≈ 149700s ≈ 41.6h
+    assert.ok(
+      Math.abs(hours - 41.6) < 1,
+      `Mars at 1G should take ~41.6h, got ${hours.toFixed(1)}h`,
+    );
+  });
+
+  it("quadrupling distance doubles time", () => {
+    const a = 0.01;
+    const t1 = brachistochroneTime(1_000_000, a);
+    const t4 = brachistochroneTime(4_000_000, a);
+    assert.ok(
+      Math.abs(t4 / t1 - 2) < 1e-10,
+      `quadrupling distance should double time, ratio = ${t4 / t1}`,
     );
   });
 });

@@ -165,3 +165,31 @@ export function brachistochroneAccel(distance: number, time: number): number {
 export function brachistochroneDeltaV(distance: number, time: number): number {
   return (4 * distance) / time;
 }
+
+/**
+ * Maximum distance reachable in a brachistochrone transfer given
+ * constant acceleration and time (inverse of brachistochroneAccel).
+ *
+ * d_max = a * t² / 4
+ *
+ * @param accel Constant acceleration in km/s²
+ * @param time Transfer time in seconds
+ * @returns Maximum distance in km
+ */
+export function brachistochroneMaxDistance(accel: number, time: number): number {
+  return (accel * time * time) / 4;
+}
+
+/**
+ * Transfer time for a brachistochrone transfer given distance and
+ * constant acceleration (inverse of brachistochroneAccel).
+ *
+ * t = sqrt(4d / a) = 2 * sqrt(d / a)
+ *
+ * @param distance Distance in km
+ * @param accel Constant acceleration in km/s²
+ * @returns Transfer time in seconds
+ */
+export function brachistochroneTime(distance: number, accel: number): number {
+  return 2 * Math.sqrt(distance / accel);
+}
