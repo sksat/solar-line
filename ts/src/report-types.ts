@@ -116,8 +116,8 @@ export interface TransferAnalysis {
   reproductionCommand?: string;
   /** One-sentence plain-language verdict summary for non-expert readers */
   verdictSummary?: string;
-  /** Optional bar chart visualization for this transfer's analysis */
-  barChart?: BarChart;
+  /** Optional bar chart visualizations for this transfer's analysis */
+  barCharts?: BarChart[];
 }
 
 /** A single orbit in an orbital diagram */
@@ -622,8 +622,8 @@ export interface SummarySection {
   verificationTable?: VerificationTable;
   /** If true, render an interactive DAG viewer in this section */
   dagViewer?: boolean;
-  /** Optional bar chart */
-  barChart?: BarChart;
+  /** Optional bar charts */
+  barCharts?: BarChart[];
   /** Optional side-view (cross-section) diagrams */
   sideViewDiagrams?: SideViewDiagram[];
   /** Optional time-series charts (rendered via uPlot) */

@@ -480,8 +480,8 @@ describe("report data: summary bar chart integrity", () => {
     const slug = file.replace(/\.md$/, "");
     const report = loadSummaryBySlug(summaryDir, slug);
     for (const section of report.sections ?? []) {
-      if (section.barChart) {
-        allBarCharts.push({ slug, chart: section.barChart });
+      for (const chart of section.barCharts ?? []) {
+        allBarCharts.push({ slug, chart });
       }
     }
   }

@@ -225,9 +225,11 @@ export function applyDirectives(directives: ComponentDirective[]): Partial<Summa
 
   for (const d of directives) {
     switch (d.type) {
-      case "bar":
-        result.barChart = parseBarChartDirective(d.rawContent);
+      case "bar": {
+        if (!result.barCharts) result.barCharts = [];
+        result.barCharts.push(parseBarChartDirective(d.rawContent));
         break;
+      }
       case "timeseries": {
         const chart = parseJsonDirective<TimeSeriesChart>(d.rawContent);
         if (!result.timeSeriesCharts) result.timeSeriesCharts = [];

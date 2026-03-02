@@ -187,7 +187,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
     // Extract transfer and exploration directives
     let transferData: Partial<TransferAnalysis> | undefined;
     const sectionExplorations: ParameterExploration[] = [];
-    let sectionBarChart: BarChart | undefined;
+    const sectionBarCharts: BarChart[] = [];
 
     for (const d of directives) {
       switch (d.type) {
@@ -198,7 +198,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
           sectionExplorations.push(JSON.parse(d.rawContent) as ParameterExploration);
           break;
         case "chart:bar":
-          sectionBarChart = parseBarChartDirective(d.rawContent);
+          sectionBarCharts.push(parseBarChartDirective(d.rawContent));
           break;
         default:
           // Report-level directives can also appear in sections
@@ -225,7 +225,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
         ...(transferData.evidenceQuoteIds && { evidenceQuoteIds: transferData.evidenceQuoteIds }),
         ...(transferData.reproductionCommand && { reproductionCommand: transferData.reproductionCommand }),
         ...(transferData.verdictSummary && { verdictSummary: transferData.verdictSummary }),
-        ...(sectionBarChart && { barChart: sectionBarChart }),
+        ...(sectionBarCharts.length > 0 && { barCharts: sectionBarCharts }),
       };
       transfers.push(transfer);
       explorations.push(...sectionExplorations);

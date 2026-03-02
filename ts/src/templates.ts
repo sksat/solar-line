@@ -1233,7 +1233,7 @@ export function renderTransferCard(t: TransferAnalysis, inlineQuotes?: DialogueQ
     ? `<div class="verdict-summary-box verdict-box-${t.verdict}">${escapeHtml(t.verdictSummary)}</div>`
     : "";
 
-  const barChartHtml = t.barChart ? renderBarChartFromData(t.barChart) : "";
+  const barChartsHtml = (t.barCharts ?? []).map(c => renderBarChartFromData(c)).join("\n");
 
   return `<div class="card" id="${escapeHtml(t.id)}">
 <h3>${escapeHtml(t.description)} <span class="verdict ${verdictClass}">${verdictLabel(t.verdict)}</span></h3>
@@ -1243,7 +1243,7 @@ ${dvComparison}
 ${citationsHtml}
 ${assumptionsList}
 ${markdownToHtml(t.explanation)}
-${barChartHtml}
+${barChartsHtml}
 ${sourcesHtml}
 ${reproHtml}
 </div>`;
@@ -3274,7 +3274,7 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const timelineHtml = section.eventTimeline ? renderEventTimeline(section.eventTimeline) : "";
     const verificationHtml = section.verificationTable ? renderVerificationTable(section.verificationTable) : "";
     const dagHtml = section.dagViewer ? '<div id="dag-viewer" class="dag-viewer-container"></div>' : "";
-    const barChartHtml = section.barChart ? renderBarChartFromData(section.barChart) : "";
+    const barChartHtml = (section.barCharts ?? []).map(c => renderBarChartFromData(c)).join("\n");
     const timeSeriesHtml = section.timeSeriesCharts ? renderTimeSeriesCharts(section.timeSeriesCharts) : "";
     const customTableHtml = section.comparisonTable ? renderCustomComparisonTable(section.comparisonTable) : "";
     const sideViewHtml = section.sideViewDiagrams ? renderSideViewDiagrams(section.sideViewDiagrams) : "";

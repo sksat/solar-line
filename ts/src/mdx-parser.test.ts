@@ -315,8 +315,8 @@ describe("applyDirectives", () => {
     const result = applyDirectives([
       { type: "bar", rawContent: "caption: Test\nunit: x\nbars:\n  - label: A\n    value: 1" },
     ]);
-    assert.ok(result.barChart);
-    assert.equal(result.barChart!.caption, "Test");
+    assert.ok(result.barCharts);
+    assert.equal(result.barCharts![0].caption, "Test");
   });
 
   it("applies dag-viewer directive", () => {
@@ -437,8 +437,8 @@ bars:
     assert.equal(report.sections[1].heading, "データ分析");
     assert.ok(report.sections[1].markdown.includes("分析テキスト"));
     assert.ok(report.sections[1].markdown.includes("分析の結論"));
-    assert.ok(report.sections[1].barChart);
-    assert.equal(report.sections[1].barChart!.bars.length, 2);
+    assert.ok(report.sections[1].barCharts);
+    assert.equal(report.sections[1].barCharts![0].bars.length, 2);
   });
 
   it("throws on empty sections", () => {
