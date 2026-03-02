@@ -421,7 +421,7 @@ export interface ComparisonRow {
   /** Values per episode, keyed by episode number */
   values: Record<number, string>;
   /** Consistency status */
-  status: "ok" | "warn" | "conflict";
+  status: "ok" | "warn" | "conflict" | "info" | "verified" | "approximate";
   /** Brief note explaining the consistency finding */
   note: string;
 }

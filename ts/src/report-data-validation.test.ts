@@ -516,6 +516,86 @@ describe("report data: summary bar chart integrity", () => {
   }
 });
 
+// Validate summary comparison table data integrity
+describe("report data: summary comparison table integrity", () => {
+  const summaryDir = path.join(REPORTS_DIR, "data", "summary");
+  const summaryFiles = fs.readdirSync(summaryDir).filter(f => f.endsWith(".md"));
+
+  const allTables: { slug: string; table: import("./report-types.ts").ComparisonTable }[] = [];
+  const allCustomTables: { slug: string; table: { caption: string; headers: string[]; rows: { label: string; values: string[]; highlight?: boolean }[] } }[] = [];
+
+  for (const file of summaryFiles) {
+    const slug = file.replace(/\.md$/, "");
+    const report = loadSummaryBySlug(summaryDir, slug);
+    for (const section of report.sections ?? []) {
+      if (section.table) {
+        allTables.push({ slug, table: section.table });
+      }
+      if (section.comparisonTable) {
+        allCustomTables.push({ slug, table: section.comparisonTable });
+      }
+    }
+  }
+
+  it("has comparison tables in summary reports (sanity check)", () => {
+    assert.ok(allTables.length >= 10, `Expected at least 10 comparison tables, found ${allTables.length}`);
+  });
+
+  for (const { slug, table } of allTables) {
+    it(`summary/${slug} "${table.caption}": has non-empty rows`, () => {
+      assert.ok(table.rows.length > 0, "Comparison table should have at least one row");
+    });
+
+    it(`summary/${slug} "${table.caption}": row values reference valid episodes`, () => {
+      const episodeSet = new Set(table.episodes);
+      for (const row of table.rows) {
+        for (const key of Object.keys(row.values).map(Number)) {
+          assert.ok(
+            episodeSet.has(key),
+            `Row "${row.metric}" references episode ${key} not in table.episodes [${table.episodes}]`
+          );
+        }
+      }
+    });
+
+    it(`summary/${slug} "${table.caption}": rows have valid status`, () => {
+      const validStatuses = ["ok", "warn", "conflict", "info", "verified", "approximate"];
+      for (const row of table.rows) {
+        assert.ok(
+          validStatuses.includes(row.status),
+          `Row "${row.metric}" has invalid status "${row.status}"`,
+        );
+      }
+    });
+
+    it(`summary/${slug} "${table.caption}": rows have non-empty metric labels`, () => {
+      for (const row of table.rows) {
+        assert.ok(row.metric && row.metric.length > 0, "Row metric should not be empty");
+      }
+    });
+  }
+
+  // Custom comparison tables (infrastructure, other-ships)
+  for (const { slug, table } of allCustomTables) {
+    it(`summary/${slug} custom "${table.caption}": header count matches row value count`, () => {
+      for (const row of table.rows) {
+        assert.equal(
+          row.values.length,
+          table.headers.length,
+          `Row "${row.label}" has ${row.values.length} values but table has ${table.headers.length} headers`
+        );
+      }
+    });
+
+    it(`summary/${slug} custom "${table.caption}": has non-empty rows and labels`, () => {
+      assert.ok(table.rows.length > 0, "Custom table should have at least one row");
+      for (const row of table.rows) {
+        assert.ok(row.label && row.label.length > 0, "Row label should not be empty");
+      }
+    });
+  }
+});
+
 describe("report data: uncertainty ellipse referential integrity", () => {
   const episodes = getAvailableEpisodes();
 
