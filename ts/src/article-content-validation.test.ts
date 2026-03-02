@@ -612,6 +612,39 @@ describe("EP02 article content validation", () => {
       "trim-thrust chart should show v∞=90.3 km/s for accel-only",
     );
   });
+
+  it("has Saturn moon capture ΔV comparison bar chart", () => {
+    assert.ok(
+      content.includes("エンケラドス") && content.includes("value: 0.61"),
+      "EP02 should have bar chart showing Enceladus minimum capture ΔV of 0.61 km/s",
+    );
+    assert.ok(
+      content.includes("value: 3.70") || content.includes("value: 3.7"),
+      "chart should include SOI boundary ΔV of 3.70 km/s",
+    );
+  });
+
+  it("has trim-thrust burn duration vs transit time bar chart", () => {
+    assert.ok(
+      content.includes("caption: トリム推力") || content.includes("caption: 噴射日数"),
+      "EP02 should have bar chart for trim-thrust burn duration tradeoff",
+    );
+    assert.ok(
+      content.includes("value: 997"),
+      "chart should show 997-day ballistic transit as reference",
+    );
+  });
+
+  it("has thrust damage level vs acceleration bar chart", () => {
+    assert.ok(
+      content.includes("value: 32.67") || content.includes("value: 32.7"),
+      "EP02 should have bar chart showing 32.67 m/s² at full thrust",
+    );
+    assert.ok(
+      content.includes("value: 0.327") || content.includes("value: 0.33"),
+      "chart should show 0.327 m/s² at trim-only thrust",
+    );
+  });
 });
 
 describe("EP03 article content validation", () => {
