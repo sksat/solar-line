@@ -1791,3 +1791,51 @@ describe("report data: external link validation", () => {
     assert.deepStrictEqual(trailingIssues, [], "Found URLs with trailing punctuation artifacts");
   });
 });
+
+// ---------------------------------------------------------------------------
+// Reproduction command validation
+// ---------------------------------------------------------------------------
+
+describe("report data: reproduction command test pattern matching", () => {
+  // Extract all test describe() names from the analysis reproduction test file
+  const reproTestPath = path.resolve(import.meta.dirname ?? ".", "analysis-reproduction.test.ts");
+  const reproTestContent = fs.readFileSync(reproTestPath, "utf-8");
+  const testNames = [...reproTestContent.matchAll(/^describe\("([^"]+)"/gm)].map(m => m[1]);
+
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    for (const transfer of report.transfers) {
+      if (!transfer.reproductionCommand) continue;
+
+      // Extract test-name-pattern values from reproduction commands
+      const patterns = [...transfer.reproductionCommand.matchAll(/--test-name-pattern "([^"]+)"/g)].map(m => m[1]);
+
+      for (const pattern of patterns) {
+        it(`${prefix} ${transfer.id}: reproduction pattern "${pattern}" matches a test`, () => {
+          const hasMatch = testNames.some(name => name.includes(pattern));
+          assert.ok(
+            hasMatch,
+            `Pattern "${pattern}" does not match any test describe() name.\nAvailable: ${testNames.filter(n => n.startsWith(`EP${String(epNum).padStart(2, "0")}`)).join(", ")}`
+          );
+        });
+      }
+    }
+  }
+
+  it("all transfers have reproductionCommand", () => {
+    const missing: string[] = [];
+    for (const epNum of episodes) {
+      const report = loadEpisodeReport(epNum);
+      for (const transfer of report.transfers) {
+        if (!transfer.reproductionCommand) {
+          missing.push(transfer.id);
+        }
+      }
+    }
+    assert.deepStrictEqual(missing, [], `Transfers missing reproductionCommand: ${missing.join(", ")}`);
+  });
+});
