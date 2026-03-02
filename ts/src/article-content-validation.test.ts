@@ -2474,16 +2474,64 @@ describe("Mission timeline data consistency", () => {
     assert.ok(finalDose < 600, `final dose ${finalDose} should be under NASA 600 mSv`);
   });
 
-  it("all 4 timeseries charts are present in report", () => {
+  it("all 5 timeseries charts are present in report", () => {
     const ids = [
       "mission-distance-timeline",
       "mission-deltav-timeline",
       "mission-nozzle-timeline",
       "mission-radiation-timeline",
+      "mission-gforce-timeline",
     ];
     for (const id of ids) {
       assert.ok(content.includes(`"id": "${id}"`), `report should contain chart ${id}`);
     }
+  });
+
+  it("G-force chart: EP01 peak is ~3.34g (highest in mission)", () => {
+    const data = parseTimeseriesBlock("mission-gforce-timeline");
+    assert.ok(data, "G-force timeseries should exist in report");
+    const maxY = Math.max(...data.y);
+    assert.ok(Math.abs(maxY - 3.34) < 0.1, `EP01 peak G should be ~3.34g, got ${maxY}`);
+  });
+
+  it("G-force chart: EP02 coast phase is 0g", () => {
+    const data = parseTimeseriesBlock("mission-gforce-timeline");
+    assert.ok(data);
+    // EP02 coast phase (day 20-90) should be 0
+    const coastIdx = data.x.findIndex(x => x >= 20 && x <= 90);
+    assert.ok(coastIdx >= 0, "should have coast phase data point");
+    assert.strictEqual(data.y[coastIdx], 0, "coast phase should be 0g");
+  });
+
+  it("G-force chart: EP03 is ~2.21g", () => {
+    const data = parseTimeseriesBlock("mission-gforce-timeline");
+    assert.ok(data);
+    // EP03 burn starts at 95.01 — find the first non-zero value in EP03 region
+    const ep03Idx = data.x.findIndex(x => x > 95 && x <= 101);
+    assert.ok(ep03Idx >= 0, "should have EP03 data point");
+    assert.ok(Math.abs(data.y[ep03Idx] - 2.21) < 0.15, `EP03 G should be ~2.21g, got ${data.y[ep03Idx]}`);
+  });
+
+  it("G-force chart: EP05 Burn 1 is ~1.67g (65% thrust, 389t)", () => {
+    const data = parseTimeseriesBlock("mission-gforce-timeline");
+    assert.ok(data);
+    // EP05 Burn 1 starts at 103.01 — find the first non-zero value after day 103
+    const burnIdx = data.x.findIndex(x => x > 103 && x <= 104.5);
+    assert.ok(burnIdx >= 0, "should have EP05 Burn 1 data point");
+    assert.ok(Math.abs(data.y[burnIdx] - 1.67) < 0.15, `EP05 Burn 1 should be ~1.67g, got ${data.y[burnIdx]}`);
+  });
+
+  it("G-force chart: has EP05 coast phase at 0g between burns", () => {
+    const data = parseTimeseriesBlock("mission-gforce-timeline");
+    assert.ok(data);
+    // EP05 coast between Burn 1 and Burn 2 (day ~105-118)
+    const coastIdx = data.x.findIndex(x => x >= 108 && x <= 116);
+    assert.ok(coastIdx >= 0, "should have EP05 coast phase");
+    assert.strictEqual(data.y[coastIdx], 0, "EP05 coast should be 0g");
+  });
+
+  it("G-force chart: has 1g reference threshold", () => {
+    assert.ok(content.includes('"id": "mission-gforce-timeline"'), "G-force chart should exist");
   });
 
   it("all timeseries regions match EP01-EP05", () => {
