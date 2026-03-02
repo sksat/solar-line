@@ -942,6 +942,31 @@ describe("report data: dialogueLineId referential integrity", () => {
   }
 });
 
+describe("report data: dialogueLineId completeness", () => {
+  // All quotes should have dialogueLineId when dialogue data exists for the episode.
+  // Known exception: ep01-quote-07 (manually transcribed from video, not in ASR/dialogue data)
+  const KNOWN_EXCEPTIONS = new Set(["ep01-quote-07"]);
+  const episodes = getAvailableEpisodes();
+
+  for (const epNum of episodes) {
+    const report = loadEpisodeReport(epNum);
+    const dialogue = loadDialogue(epNum);
+    if (!dialogue) continue;
+    if (!report.dialogueQuotes || report.dialogueQuotes.length === 0) continue;
+    const prefix = `ep${String(epNum).padStart(2, "0")}`;
+
+    it(`${prefix}: all quotes have dialogueLineId (or are known exceptions)`, () => {
+      const missing: string[] = [];
+      for (const quote of report.dialogueQuotes!) {
+        if (!quote.dialogueLineId && !KNOWN_EXCEPTIONS.has(quote.id)) {
+          missing.push(`${quote.id}: "${quote.text.slice(0, 40)}..." (${quote.timestamp})`);
+        }
+      }
+      assert.equal(missing.length, 0, `Quotes missing dialogueLineId:\n  ${missing.join("\n  ")}`);
+    });
+  }
+});
+
 describe("report data: transcription-report sync", () => {
   const episodes = getAvailableEpisodes();
   /** Tolerance for timestamp matching: ±15 seconds */

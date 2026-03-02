@@ -408,6 +408,117 @@
     {
       "speakerId": "kestrel-ai",
       "speakerName": "ケイ",
+      "text": "まずはエンケラドスから土星の重力アシストを受けて巡航加速。航法ビーコンのエントリーまで進みます。ここから先はオービタルカーテンの外側、つまり無誘導での航行となります",
+      "startMs": 198319,
+      "endMs": 213000,
+      "sceneId": "ep03-scene-03",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-55",
+        "cue-57",
+        "cue-59",
+        "cue-61"
+      ],
+      "transferRefs": [
+        "ep03-transfer-01"
+      ],
+      "mentions": [],
+      "note": "航路概要のブリーフィング。ASR「巡口加速」→「巡航加速」、「公安校舎」→「航法ビーコン」、「誘導集団」→「誘導圏端」、「高校」→「航行」修正。",
+      "lineId": "ep03-dl-018"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "無誘導か。一昔前なら自殺行為だな",
+      "startMs": 213000,
+      "endMs": 217000,
+      "sceneId": "ep03-scene-03",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-63"
+      ],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "きりたんの反応。無誘導航行への感想。",
+      "lineId": "ep03-dl-019"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケイ",
+      "text": "この先は慣性航法と背景恒星観測のみで位置を把握することになります。内縁線で進むのは今でも自殺行為です",
+      "startMs": 217000,
+      "endMs": 225229,
+      "sceneId": "ep03-scene-03",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-65",
+        "cue-67",
+        "cue-69",
+        "cue-71"
+      ],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "航法手段の説明。ASR「完成後方」→「慣性航法」、「背景構成観測」→「背景恒星観測」修正。",
+      "lineId": "ep03-dl-020"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケイ",
+      "text": "天王星圏までは2回の航路補正を行いますが、最終誤差はプラスマイナス18km以内でなければなりません",
+      "startMs": 225239,
+      "endMs": 235000,
+      "sceneId": "ep03-scene-03",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-73",
+        "cue-75"
+      ],
+      "transferRefs": [
+        "ep03-transfer-03"
+      ],
+      "mentions": [],
+      "note": "航路精度要件の説明。ASR「天皇政権」→「天王星圏」、「後方補正」→「航路補正」修正。",
+      "lineId": "ep03-dl-021"
+    },
+    {
+      "speakerId": "kiritan",
+      "speakerName": "きりたん",
+      "text": "もしもそれたら生きてるうちに戻れないだろうな",
+      "startMs": 235000,
+      "endMs": 239000,
+      "sceneId": "ep03-scene-03",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-77"
+      ],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "きりたんの反応。航法誤差の重大さへの感想。",
+      "lineId": "ep03-dl-022"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケイ",
+      "text": "今でも外縁線の3割は遭難となっています。そのほとんどは航法誤りによるものです。また天王星の影ではプラズモイドの発生が予報されています",
+      "startMs": 239000,
+      "endMs": 247229,
+      "sceneId": "ep03-scene-03",
+      "confidence": "inferred",
+      "rawEntryIds": [
+        "cue-79",
+        "cue-81",
+        "cue-83",
+        "cue-85",
+        "cue-87"
+      ],
+      "transferRefs": [],
+      "mentions": [],
+      "note": "外縁航路の危険性とプラズモイド予報。ASR「外園線」→「外縁線」、「2期間」→「遭難」、「後方誤り」→「航法誤り」、「天皇星」→「天王星」、「予防」→「予報」修正。",
+      "lineId": "ep03-dl-023"
+    },
+    {
+      "speakerId": "kestrel-ai",
+      "speakerName": "ケイ",
       "text": "外縁航路では人間は全く役に立ちません。それはつまり航法AIである私に全てを委ねることに他なりません",
       "startMs": 306000,
       "endMs": 315189,
@@ -421,7 +532,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの告白。外縁航路の厳しさ。ASR「広報AI」→「航法AI」修正。",
-      "lineId": "ep03-dl-018"
+      "lineId": "ep03-dl-024"
     },
     {
       "speakerId": "kestrel-ai",
@@ -437,7 +548,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの自己懐疑。重要なシーン。",
-      "lineId": "ep03-dl-019"
+      "lineId": "ep03-dl-025"
     },
     {
       "speakerId": "kiritan",
@@ -453,7 +564,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの驚き。",
-      "lineId": "ep03-dl-020"
+      "lineId": "ep03-dl-026"
     },
     {
       "speakerId": "kestrel-ai",
@@ -474,7 +585,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIが自身の行動の不自然さを指摘。EP01のダイレクトエントリー提案を振り返る。",
-      "lineId": "ep03-dl-021"
+      "lineId": "ep03-dl-027"
     },
     {
       "speakerId": "kiritan",
@@ -491,7 +602,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの反論。「だろうが」口調。",
-      "lineId": "ep03-dl-022"
+      "lineId": "ep03-dl-028"
     },
     {
       "speakerId": "kestrel-ai",
@@ -510,7 +621,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの最悪のシナリオ提示。",
-      "lineId": "ep03-dl-023"
+      "lineId": "ep03-dl-029"
     },
     {
       "speakerId": "kiritan",
@@ -526,7 +637,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの決断。",
-      "lineId": "ep03-dl-024"
+      "lineId": "ep03-dl-030"
     },
     {
       "speakerId": "kestrel-ai",
@@ -542,7 +653,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの困惑。",
-      "lineId": "ep03-dl-025"
+      "lineId": "ep03-dl-031"
     },
     {
       "speakerId": "kiritan",
@@ -559,7 +670,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの信頼表明。物語の核心的シーン。",
-      "lineId": "ep03-dl-026"
+      "lineId": "ep03-dl-032"
     },
     {
       "speakerId": "kiritan",
@@ -575,7 +686,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの決意。EP02と同じ台詞。",
-      "lineId": "ep03-dl-027"
+      "lineId": "ep03-dl-033"
     },
     {
       "speakerId": "muse",
@@ -591,7 +702,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "リアの船載AI「ミューズ」がリアの体調を心配。保安艇エシュロンの1G重力区画内。映像で保安艇エシュロン艦内（土星低軌道）のテロップ確認。",
-      "lineId": "ep03-dl-028"
+      "lineId": "ep03-dl-034"
     },
     {
       "speakerId": "lia-orpheus",
@@ -608,7 +719,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "リア・オルフェウスが火星生まれであることが明かされる。外園居住者は0.8G環境。映像でセイラが「あなたはリア・オルフェウス…火星自治連邦の公民権を持ち」と呼称。ASR「1位は」→「1Gは」修正。",
-      "lineId": "ep03-dl-029"
+      "lineId": "ep03-dl-035"
     },
     {
       "speakerId": "seira-anders",
@@ -624,7 +735,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "軌道港湾機構弁務官セイラ・アンダースの挑発。保安艇の1G重力区画を指して「これが地球です」。映像で「国際連合・軌道港湾機構…弁務官セイラ・アンダース」と名乗り確認。",
-      "lineId": "ep03-dl-030"
+      "lineId": "ep03-dl-036"
     },
     {
       "speakerId": "seira-anders",
@@ -643,7 +754,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "セイラが外園居住者の身体的劣勢を嘲笑。外園と内園の格差を象徴する台詞。ASR「外収居住者」→「外園居住者」修正。",
-      "lineId": "ep03-dl-031"
+      "lineId": "ep03-dl-037"
     },
     {
       "speakerId": "lia-orpheus",
@@ -659,7 +770,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "リアの返し。口調がきりたんに類似（火星生まれの運び屋同士の共通性）。",
-      "lineId": "ep03-dl-032"
+      "lineId": "ep03-dl-038"
     },
     {
       "speakerId": "kestrel-ai",
@@ -685,7 +796,7 @@
       ],
       "mentions": [],
       "note": "AIの航法危機報告。ep03.jsonのep03-quote-06に対応。ASR「完成後方系」→「慣性航法系」修正。",
-      "lineId": "ep03-dl-033"
+      "lineId": "ep03-dl-039"
     },
     {
       "speakerId": "kestrel-ai",
@@ -704,7 +815,7 @@
       ],
       "mentions": [],
       "note": "AIの航法危機の具体的数値。ep03.jsonのep03-quote-07に対応。",
-      "lineId": "ep03-dl-034"
+      "lineId": "ep03-dl-040"
     },
     {
       "speakerId": "kestrel-ai",
@@ -723,7 +834,7 @@
       ],
       "mentions": [],
       "note": "AIが判断を迫る。",
-      "lineId": "ep03-dl-035"
+      "lineId": "ep03-dl-041"
     },
     {
       "speakerId": "kiritan",
@@ -739,7 +850,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの軽口。緊迫した中でのユーモア。",
-      "lineId": "ep03-dl-036"
+      "lineId": "ep03-dl-042"
     },
     {
       "speakerId": "kestrel-ai",
@@ -755,7 +866,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの返し。珍しくカジュアルな表現。",
-      "lineId": "ep03-dl-037"
+      "lineId": "ep03-dl-043"
     },
     {
       "speakerId": "kiritan",
@@ -771,7 +882,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの覚悟。",
-      "lineId": "ep03-dl-038"
+      "lineId": "ep03-dl-044"
     },
     {
       "speakerId": "kiritan",
@@ -792,7 +903,7 @@
       ],
       "mentions": [],
       "note": "きりたんの決断。背景恒星観測ではなく慣性航法系を選択。ep03.jsonのep03-quote-08に対応。ASR「完成後方形」→「慣性航法系」修正。",
-      "lineId": "ep03-dl-039"
+      "lineId": "ep03-dl-045"
     },
     {
       "speakerId": "kestrel-ai",
@@ -812,7 +923,7 @@
       ],
       "mentions": [],
       "note": "AIの到着報告。ep03.jsonのep03-quote-09に対応。ASR「天皇性時期権」→「天王星磁気圏」修正。",
-      "lineId": "ep03-dl-040"
+      "lineId": "ep03-dl-046"
     },
     {
       "speakerId": "kiritan",
@@ -828,7 +939,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの感想。天王星の環が暗い。",
-      "lineId": "ep03-dl-041"
+      "lineId": "ep03-dl-047"
     },
     {
       "speakerId": "kestrel-ai",
@@ -844,7 +955,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの回答。",
-      "lineId": "ep03-dl-042"
+      "lineId": "ep03-dl-048"
     },
     {
       "speakerId": "kestrel-ai",
@@ -862,7 +973,7 @@
       ],
       "mentions": [],
       "note": "AIが航法選択の結果を振り返る。ep03.jsonのep03-quote-10に対応。",
-      "lineId": "ep03-dl-043"
+      "lineId": "ep03-dl-049"
     },
     {
       "speakerId": "kestrel-ai",
@@ -879,7 +990,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIがきりたんの判断の理由を問う。ASR「完成後方形」→「慣性航法系」修正。",
-      "lineId": "ep03-dl-044"
+      "lineId": "ep03-dl-050"
     },
     {
       "speakerId": "kiritan",
@@ -897,7 +1008,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがAIの言葉を引用して返す。",
-      "lineId": "ep03-dl-045"
+      "lineId": "ep03-dl-051"
     },
     {
       "speakerId": "kestrel-ai",
@@ -913,7 +1024,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの感慨。",
-      "lineId": "ep03-dl-046"
+      "lineId": "ep03-dl-052"
     },
     {
       "speakerId": "kiritan",
@@ -930,7 +1041,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの核心的な質問。",
-      "lineId": "ep03-dl-047"
+      "lineId": "ep03-dl-053"
     },
     {
       "speakerId": "kestrel-ai",
@@ -946,7 +1057,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの定型回答。",
-      "lineId": "ep03-dl-048"
+      "lineId": "ep03-dl-054"
     },
     {
       "speakerId": "kiritan",
@@ -962,7 +1073,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんが食い下がる。ASR「家庭」→「仮定」修正。",
-      "lineId": "ep03-dl-049"
+      "lineId": "ep03-dl-055"
     },
     {
       "speakerId": "kestrel-ai",
@@ -978,7 +1089,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "AIの核心的な回答。きりたんとの関係の深さを示す重要台詞。",
-      "lineId": "ep03-dl-050"
+      "lineId": "ep03-dl-056"
     },
     {
       "speakerId": "kiritan",
@@ -994,7 +1105,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんの受け止め。",
-      "lineId": "ep03-dl-051"
+      "lineId": "ep03-dl-057"
     },
     {
       "speakerId": "kiritan",
@@ -1011,7 +1122,7 @@
       "transferRefs": [],
       "mentions": [],
       "note": "きりたんがAIの自律性と天王星人との関係を問う。エピソード最後の問いかけ。ASR「天皇星人」→「天王星人」修正。",
-      "lineId": "ep03-dl-052"
+      "lineId": "ep03-dl-058"
     }
   ]
 }
