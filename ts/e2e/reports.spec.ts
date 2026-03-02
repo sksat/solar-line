@@ -1106,6 +1106,56 @@ test.describe("Margin gauge visualization", () => {
   });
 });
 
+// --- Episode transfer bar chart tests (Task 405) ---
+
+test.describe("Episode transfer bar charts", () => {
+  test("EP01 has mass vs transfer time bar chart", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    const chart = page.locator('svg[aria-label*="質量別の最小遷移時間"]');
+    await expect(chart).toBeVisible();
+  });
+
+  test("EP02 has Jupiter escape direction bar chart", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    const chart = page.locator('svg[aria-label*="木星離脱方向と太陽中心速度"]');
+    await expect(chart).toBeVisible();
+  });
+
+  test("EP03 has 6-phase burn sequence bar chart", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    const chart = page.locator('svg[aria-label*="6フェーズ噴射シーケンス"]');
+    await expect(chart).toBeVisible();
+  });
+
+  test("EP04 has plasmoid decision bar chart", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const chart = page.locator('svg[aria-label*="プラズモイド対処の意思決定"]');
+    await expect(chart).toBeVisible();
+  });
+
+  test("EP05 has Jupiter flyby necessity bar chart (on detail page)", async ({ page }) => {
+    await page.goto("/episodes/ep-005/brachistochrone.html");
+    const chart = page.locator('svg[aria-label*="木星フライバイの必要性"]');
+    await expect(chart).toBeVisible();
+  });
+
+  test("all 5 episodes have at least one bar chart SVG", async ({ page }) => {
+    // EP01-04 have bar charts on main page, EP05 has it on a detail page
+    const pages = [
+      "/episodes/ep-001.html",
+      "/episodes/ep-002.html",
+      "/episodes/ep-003.html",
+      "/episodes/ep-004.html",
+      "/episodes/ep-005/brachistochrone.html",
+    ];
+    for (const url of pages) {
+      await page.goto(url);
+      const barCharts = page.locator('.dv-chart svg[role="img"]');
+      expect(await barCharts.count()).toBeGreaterThanOrEqual(1);
+    }
+  });
+});
+
 // --- Science-accuracy page tests (Task 242) ---
 
 test.describe("Summary: science-accuracy page", () => {
