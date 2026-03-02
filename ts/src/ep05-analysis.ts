@@ -40,7 +40,7 @@ import {
   URANUS_MOON_ORBITS,
   URANUS_MOON_GM,
 } from "./orbital.ts";
-import { KESTREL, AU_KM, G0_MS2 } from "./kestrel.ts";
+import { KESTREL, AU_KM, G0_MS2, C_KMS } from "./kestrel.ts";
 export { KESTREL };
 
 /**
@@ -146,7 +146,7 @@ export function brachistochroneByMass() {
       accelG: accelMs2 / G0_MS2,
       deltaVKms: dvKms,
       peakVelocityKms,
-      peakVelocityCFraction: peakVelocityKms / 299_792.458,
+      peakVelocityCFraction: peakVelocityKms / C_KMS,
       timeSec,
       timeHours: timeSec / 3600,
       timeDays: timeSec / 86400,

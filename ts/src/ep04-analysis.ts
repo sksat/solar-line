@@ -34,7 +34,7 @@ import {
   URANUS_RADIUS,
   TITANIA_ORBIT_RADIUS,
 } from "./orbital.ts";
-import { KESTREL, AU_KM, G0_MS2 } from "./kestrel.ts";
+import { KESTREL, AU_KM, G0_MS2, C_KMS } from "./kestrel.ts";
 export { KESTREL };
 
 /** Episode 4 orbital parameters from dialogue */
@@ -277,7 +277,7 @@ export function fleetInterceptAnalysis() {
   const scenarios = remainingDistScenarios.map(s => ({
     ...s,
     avgSpeedKms: s.distKm / fleetETASec,
-    avgSpeedCFraction: (s.distKm / fleetETASec) / 299_792.458,
+    avgSpeedCFraction: (s.distKm / fleetETASec) / C_KMS,
   }));
 
   // Time pressure for Kestrel: must depart Titania before fleet arrives

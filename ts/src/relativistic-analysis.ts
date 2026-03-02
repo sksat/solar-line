@@ -13,11 +13,11 @@
  * phase 15 (相対論効果検討).
  */
 
-import { KESTREL, EXHAUST_VELOCITY_KMS, AU_KM, G0_MS2 } from "./kestrel.ts";
+import { KESTREL, EXHAUST_VELOCITY_KMS, AU_KM, G0_MS2, C_KMS } from "./kestrel.ts";
 import { ORBIT_RADIUS } from "./orbital.ts";
 
-/** Speed of light in km/s (exact, SI) */
-const C_KM_S = 299_792.458;
+// Local alias matching pre-existing usage throughout this file
+const C_KM_S = C_KMS;
 
 /** Exhaust velocity (km/s) from shared constants */
 const VE_KMS = EXHAUST_VELOCITY_KMS;

@@ -48,3 +48,6 @@ export const NOMINAL_MASS_T = KESTREL.massKg / 1_000; // 48,000
 
 /** 1 AU in km (IAU 2012 exact definition) */
 export const AU_KM = 149_597_870.7;
+
+/** Speed of light in km/s (exact, SI definition) */
+export const C_KMS = 299_792.458;
