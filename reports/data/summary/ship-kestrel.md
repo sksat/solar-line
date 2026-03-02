@@ -626,6 +626,44 @@ SOLAR LINE の物理的ドラマの特徴は、**パラメータが限界ギリ�
 
 これらは全て、**わずかに成立する**か**失敗と成功の境界線上**にある値であり、物理法則に基づいた劇的な緊張感を生み出している。作者が各パラメータの限界値を精密に計算した上でドラマを構築していることがうかがえる。
 
+```margin-gauge:
+{
+  "id": "kestrel-girigiri-summary",
+  "title": "ケストレル号「ギリギリ」パラメータ一覧（全話）",
+  "description": "全5話を通じたクリティカルマージンの集約。いずれも実際値が限界値にきわめて近く、1つでも超過すればミッション失敗に直結する。放射線被曝480 mSvは限界500 mSvの96%、ノズル寿命マージンはわずか0.78%（26分）。これらの「ギリギリ」設計がSOLAR LINEの科学的ドラマの本質。",
+  "items": [
+    {
+      "label": "EP04 シールド消費時間",
+      "actual": 8,
+      "limit": 14,
+      "unit": "min",
+      "higherIsBetter": false
+    },
+    {
+      "label": "EP04 放射線被曝量",
+      "actual": 480,
+      "limit": 500,
+      "unit": "mSv",
+      "higherIsBetter": false
+    },
+    {
+      "label": "EP04 最大点火回数",
+      "actual": 4,
+      "limit": 4,
+      "unit": "回",
+      "higherIsBetter": false
+    },
+    {
+      "label": "EP05 ノズル燃焼時間",
+      "actual": 55.2,
+      "limit": 55.63,
+      "unit": "h",
+      "higherIsBetter": false
+    }
+  ]
+}
+```
+
 ## 総合評価
 
 ケストレル号は、**物理的に一貫した損傷蓄積モデル**を持つSF宇宙船として非常に丁寧に設計されている。

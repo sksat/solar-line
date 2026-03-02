@@ -2925,4 +2925,28 @@ describe("ship-kestrel.md fusion power budget validation", () => {
       "should have power budget bar chart",
     );
   });
+
+  it("has ギリギリ summary margin gauge", () => {
+    assert.ok(
+      content.includes("kestrel-girigiri-summary"),
+      "should have margin gauge summarizing all critical margins",
+    );
+    assert.ok(
+      content.includes("margin-gauge"),
+      "should use margin-gauge component",
+    );
+  });
+
+  it("margin gauge includes key critical values", () => {
+    // EP04 radiation: 480 vs 500 mSv
+    assert.ok(
+      content.includes('"actual": 480') && content.includes('"limit": 500'),
+      "should include EP04 radiation margin (480/500 mSv)",
+    );
+    // EP05 nozzle: 55.2 vs 55.63 h
+    assert.ok(
+      content.includes('"actual": 55.2') && content.includes('"limit": 55.63'),
+      "should include EP05 nozzle life margin (55.2/55.63 h)",
+    );
+  });
 });
