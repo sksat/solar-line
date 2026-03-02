@@ -4146,3 +4146,38 @@ describe("ship-kestrel.md hypothesis evaluation chart", () => {
     );
   });
 });
+
+// =============================================================================
+// EP04 plasmoid perturbation log-scale chart (Task 471)
+// =============================================================================
+
+describe("EP04 plasmoid perturbation chart", () => {
+  const content = readReport("ep04.md", "episodes");
+  const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+
+  it("has a plasmoid perturbation bar chart with logScale", () => {
+    const plasmoidChart = chartBlocks.find(
+      (block) => block.includes("摂動") || block.includes("プラズモイド"),
+    );
+    assert.ok(plasmoidChart, "should have a chart:bar block for plasmoid perturbation");
+    assert.ok(
+      plasmoidChart!.includes("logScale: true"),
+      "should use log scale for spanning orders of magnitude",
+    );
+  });
+
+  it("chart includes all 3 scenarios", () => {
+    const plasmoidChart = chartBlocks.find(
+      (block) => block.includes("摂動") || block.includes("プラズモイド"),
+    );
+    assert.ok(plasmoidChart, "plasmoid chart should exist");
+    assert.ok(
+      plasmoidChart!.includes("nominal") || plasmoidChart!.includes("標準"),
+      "should include nominal scenario",
+    );
+    assert.ok(
+      plasmoidChart!.includes("extreme") || plasmoidChart!.includes("極端"),
+      "should include extreme scenario",
+    );
+  });
+});
