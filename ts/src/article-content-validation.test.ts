@@ -328,19 +328,21 @@ describe("EP01 article content validation", () => {
     assert.ok(content.includes('"actual": 299'), "should cite 299t mass boundary");
   });
 
-  it("Hohmann baseline ΔV: 10.15 km/s, ~3.1 years", () => {
-    assert.ok(content.includes("10.15"), "should cite Hohmann ΔV 10.15 km/s");
-    assert.ok(
-      content.includes("1,127") || content.includes("1127") || content.includes("3.1"),
-      "should cite Hohmann transfer time ~1127 days or ~3.1 years",
-    );
+  it("Hohmann baseline ΔV matches analysis", () => {
+    const hohmannDv = analysis.hohmann.totalDv;
+    assertContainsApproxValue(content, hohmannDv, "EP01 Hohmann ΔV for Mars→Jupiter");
+    const hohmannDays = analysis.hohmann.transferTimeDays;
+    assertContainsApproxValue(content, hohmannDays, "EP01 Hohmann transfer time in days");
   });
 
-  it("150h normal route: mass boundary 1297t, 0.77g", () => {
-    assert.ok(content.includes("1297") || content.includes("1,297"),
-      "should cite 150h mass boundary 1297t");
-    assert.ok(content.includes("0.77"),
-      "should cite 0.77g acceleration for 150h route");
+  it("150h route brachistochrone accel matches analysis", () => {
+    const scenario150h = analysis.brachistochrone150h[0]; // closest scenario
+    assertContainsApproxValue(content, scenario150h.accelG, "EP01 150h route acceleration in G");
+  });
+
+  it("thrust boundary at 48,000t matches analysis", () => {
+    const thrustMN = analysis.boundaries.thrustBoundary72h.thrustMN;
+    assertContainsApproxValue(content, thrustMN, "EP01 required thrust at 48,000t for 72h");
   });
 
   it("HUD cross-check: vis-viva 17.92 km/s vs onscreen 17.8 km/s", () => {
@@ -740,9 +742,11 @@ describe("EP03 article content validation", () => {
     );
   });
 
-  it("Hohmann baseline ΔV matches analysis", () => {
+  it("Hohmann baseline matches analysis", () => {
     const hohmannDv = analysis.hohmann.totalDv;
     assertContainsApproxValue(content, hohmannDv, "EP03 Hohmann ΔV for Saturn→Uranus");
+    const hohmannYears = analysis.hohmann.transferTimeYears;
+    assertContainsApproxValue(content, hohmannYears, "EP03 Hohmann transfer time in years");
   });
 
   it("has margin gauge with nav discrepancy data", () => {
@@ -750,16 +754,14 @@ describe("EP03 article content validation", () => {
     assert.ok(content.includes('"actual": 1.23'), "should cite 1.23° nav system discrepancy");
   });
 
-  it("Hohmann baseline: 2.74 km/s, ~27.3 years", () => {
-    assert.ok(content.includes("2.74"),
-      "should cite Hohmann ΔV 2.74 km/s for Saturn→Uranus");
-    assert.ok(content.includes("27.3"),
-      "should cite ~27.3 years transfer time");
+  it("Saturn escape ΔV matches analysis", () => {
+    const dvEscape = analysis.saturnDeparture.dvEscapeFromEnceladusKms;
+    assertContainsApproxValue(content, dvEscape, "EP03 Saturn escape ΔV from Enceladus orbit");
   });
 
-  it("Saturn escape ΔV: 5.23 km/s from Enceladus orbit", () => {
-    assert.ok(content.includes("5.23"),
-      "should cite Saturn escape ΔV 5.23 km/s");
+  it("Saturn orbital velocity matches analysis", () => {
+    const saturnOrbitalV = analysis.saturnDeparture.saturnOrbitalVKms;
+    assertContainsApproxValue(content, saturnOrbitalV, "EP03 Saturn orbital velocity");
   });
 
   it("peak velocity: 5,583 km/s (1.86% c)", () => {
@@ -945,7 +947,9 @@ describe("EP04 article content validation", () => {
     assertContainsApproxValue(content, hohmannYears, "EP04 Hohmann transfer time in years");
   });
 
-  it("Titania escape ΔV: 1.51 km/s", () => {
+  it("Titania escape ΔV matches analysis", () => {
+    const dvEscape = analysis.uranusDeparture.dvEscapeFromTitaniaKms;
+    assertContainsApproxValue(content, dvEscape, "EP04 Titania escape ΔV");
     assert.ok(content.includes("1.51"),
       "should cite Titania escape ΔV 1.51 km/s");
   });
