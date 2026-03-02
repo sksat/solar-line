@@ -2638,3 +2638,62 @@ describe("Transcription accuracy data", () => {
       "Turbo should have higher corpus accuracy than medium");
   });
 });
+
+// ============================================================
+// ship-kestrel.md fusion power budget section (Task 370)
+// ============================================================
+
+describe("ship-kestrel.md fusion power budget validation", () => {
+  const content = readReport("ship-kestrel.md");
+
+  it("contains fusion power budget section", () => {
+    assert.ok(
+      content.includes("核融合出力収支"),
+      "should have fusion power budget section heading",
+    );
+  });
+
+  it("jet power at 100% matches calculation", () => {
+    // P_jet = 0.5 × 9.8e6 × 9.80665e6 = ~48.05 TW
+    assert.ok(
+      content.includes("48.1"),
+      "should cite jet power ~48.1 TW",
+    );
+  });
+
+  it("jet power at 65% matches calculation", () => {
+    // P_jet_65 = 0.5 × 6.37e6 × 9.80665e6 = ~31.23 TW
+    assert.ok(
+      content.includes("31.2"),
+      "should cite jet power ~31.2 TW at 65%",
+    );
+  });
+
+  it("references world electricity for comparison", () => {
+    assert.ok(
+      content.includes("18.4 TW") || content.includes("18.4TW"),
+      "should reference world electricity output ~18.4 TW",
+    );
+  });
+
+  it("discusses 65% thermal limitation", () => {
+    assert.ok(
+      content.includes("廃熱") && content.includes("冷却"),
+      "should discuss waste heat and cooling connection",
+    );
+  });
+
+  it("cites D-He³ reaction energy 18.3 MeV", () => {
+    assert.ok(
+      content.includes("18.3") && content.includes("MeV"),
+      "should cite D-He³ reaction energy",
+    );
+  });
+
+  it("bar chart for power budget exists", () => {
+    assert.ok(
+      content.includes("power-budget-comparison"),
+      "should have power budget bar chart",
+    );
+  });
+});
