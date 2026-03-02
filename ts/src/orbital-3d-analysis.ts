@@ -17,6 +17,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { jdToDateString, planetPosition, type PlanetName } from "./ephemeris.ts";
 import { findOptimalEpoch } from "./timeline-analysis.ts";
+import { equatorialToEcliptic, saturnRingPlaneNormal, uranusSpinAxis } from "./coordinate-transforms.ts";
 
 const AU_KM = 149_597_870.7;
 
@@ -31,38 +32,6 @@ const ENCELADUS_ORBITAL_RADIUS_KM = 238_042;
 const URANUS_OBLIQUITY_DEG = 97.77;
 const TITANIA_ORBITAL_RADIUS_KM = 436_300;
 const URANUS_RING_OUTER_KM = 51_149;
-
-// ── IAU pole directions ──────────────────────────────────────────
-
-function equatorialToEcliptic(raDeg: number, decDeg: number): [number, number, number] {
-  const eps = 23.4393 * Math.PI / 180; // Earth's obliquity
-  const ra = raDeg * Math.PI / 180;
-  const dec = decDeg * Math.PI / 180;
-
-  const eqX = Math.cos(dec) * Math.cos(ra);
-  const eqY = Math.cos(dec) * Math.sin(ra);
-  const eqZ = Math.sin(dec);
-
-  return [
-    eqX,
-    eqY * Math.cos(eps) + eqZ * Math.sin(eps),
-    -eqY * Math.sin(eps) + eqZ * Math.cos(eps),
-  ];
-}
-
-function saturnRingPlaneNormal(): [number, number, number] {
-  // IAU J2000 pole: RA=40.589°, Dec=83.537°
-  const [x, y, z] = equatorialToEcliptic(40.589, 83.537);
-  const mag = Math.sqrt(x * x + y * y + z * z);
-  return [x / mag, y / mag, z / mag];
-}
-
-function uranusSpinAxis(): [number, number, number] {
-  // IAU J2000 pole: RA=257.311°, Dec=-15.175°
-  const [x, y, z] = equatorialToEcliptic(257.311, -15.175);
-  const mag = Math.sqrt(x * x + y * y + z * z);
-  return [x / mag, y / mag, z / mag];
-}
 
 // ── SOLAR LINE timeline (from memory/episode-details.md) ─────────
 

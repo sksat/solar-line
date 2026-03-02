@@ -1104,6 +1104,10 @@ describe("resolveDialogueReferences", () => {
       language: "ja",
       speakers: [],
       scenes: [],
+      attributionNotes: "test",
+      reviewedBy: "test",
+      reviewedAt: "2025-01-01T00:00:00Z",
+      rawContentHash: "abc123",
       dialogue: lines.map((l, i) => ({
         lineId: l.lineId ?? `ep0${episode}-dl-${String(i + 1).padStart(3, "0")}`,
         speakerId: "test",
