@@ -91,6 +91,7 @@ Use `nice-friend` skill (Codex consultation) when making design decisions or whe
 - **Margin visualization**: Visualize how "ギリギリ" (narrow margin) each situation was — compare actual values against limits with gauge/bar charts and show alternative scenarios for context.
 - **Time-series analysis**: Use time-axis charts (thrust profile, cumulative radiation dose, nozzle remaining life) to make temporal dynamics intuitive.
 - **3D orbital analysis**: After 2D analysis is mature, extend to 3D considering orbital inclination, Saturn ring plane geometry, and Uranus axial tilt effects.
+- **3D interactive visualization**: Data with inherently 3D characteristics (orbital planes, ecliptic height changes, ring plane geometry) should use Three.js with drag-rotatable 3D views, not flat 2D charts. For time-evolving 3D data, include animation controls (play/pause, time slider) matching the 2D timeseries convention. Develop with TDD.
 - **Plasmoid perturbation**: Estimate trajectory perturbations from plasmoid encounters, distinguishing radiation effects from momentum effects.
 - **Physics consultation model**: Use gpt-5.2 or similar reasoning models (not -codex) for physics-specific consultations. Reserve -codex for design/architecture review.
 - **Mass timeline analysis**: Track container jettison, propellant consumption, and damage-related mass changes as time series. Model multiple scenarios (nominal mass, 299t limit, optimized propellant allocation) and visualize with comparison charts.

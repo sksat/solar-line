@@ -6,5 +6,3 @@ Claim a task, work on it, commit your changes, push to origin, check CI status.
 以下追加指示（新しい記述を見逃さないようにするため、削除前に git diff を再確認すること。）
 
 ---
-
-- 3次元的な変化などの可視化は、Three.js などを使って3D drag 可能な可視化にすること。履歴の可視化の場合は2Dの場合と同様にアニメーション可能であるとよりよい。TDD で開発すること。
