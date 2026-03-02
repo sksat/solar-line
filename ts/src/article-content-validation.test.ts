@@ -251,6 +251,18 @@ describe("tech-overview.md content validation", () => {
       "should explain what reference verdict means",
     );
   });
+
+  it("has test distribution bar chart showing multi-layer QA strategy", () => {
+    const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+    const testChart = chartBlocks.find(
+      block => block.includes("テスト") && block.includes("Rust") && block.includes("TypeScript")
+    );
+    assert.ok(testChart, "tech-overview should have test distribution bar chart");
+    assert.ok(
+      testChart!.includes("E2E") && testChart!.includes("Python"),
+      "chart should include E2E and Python cross-validation layers",
+    );
+  });
 });
 
 // ============================================================
@@ -399,6 +411,30 @@ describe("EP01 article content validation", () => {
     assert.ok(
       content.includes("value: 4249"),
       "chart should have 72h peak velocity 4249 km/s as a bar value",
+    );
+  });
+
+  it("has required thrust bar chart for 48,000t at 72h (exploration-02)", () => {
+    const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+    const thrustChart = chartBlocks.find(
+      block => block.includes("推力") && block.includes("1574") || block.includes("1,574")
+    );
+    assert.ok(thrustChart, "EP01 should have required thrust chart showing 1,574 MN boundary");
+    assert.ok(
+      thrustChart!.includes("9.8") || thrustChart!.includes("value: 9.8"),
+      "chart should include actual thrust 9.8 MN",
+    );
+  });
+
+  it("has Jupiter ΔV budget bar chart (exploration-07)", () => {
+    const chartBlocks = content.split("```chart:bar").slice(1).map(b => b.split("```")[0]);
+    const dvBudgetChart = chartBlocks.find(
+      block => block.includes("ΔV") && block.includes("木星") && block.includes("2.4") && block.includes("2.3")
+    );
+    assert.ok(dvBudgetChart, "EP01 should have Jupiter ΔV budget chart with phase values 2.4 and 2.3");
+    assert.ok(
+      dvBudgetChart!.includes("1.6"),
+      "chart should include Ganymede final approach ΔV ~1.6 km/s",
     );
   });
 });
