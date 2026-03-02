@@ -2060,6 +2060,26 @@ describe("communications.md content validation", () => {
     assert.ok(content.includes("すばる") || content.includes("Subaru"),
       "should reference Subaru Telescope as COIAS real-world analogue");
   });
+
+  it("per-episode delay range bar chart", () => {
+    assert.ok(
+      content.includes("各話における地球との片道通信遅延の範囲"),
+      "should have per-episode delay range bar chart caption",
+    );
+    assert.ok(
+      content.includes("EP01（火星→ガニメデ）"),
+      "bar chart should include EP01",
+    );
+    assert.ok(
+      content.includes("EP03（土星→天王星）"),
+      "bar chart should include EP03",
+    );
+    // EP03 max delay should be 168 min (~20 AU)
+    assert.ok(
+      content.includes('annotation: "71〜168分"'),
+      "EP03 bar should show 71-168 min range annotation",
+    );
+  });
 });
 
 // ============================================================

@@ -237,6 +237,34 @@ NAVIGATION OVERVIEW画面（16:37）には「COIAS — ORBITAL CROSS ALERT」と
 | 4話 | タイタニア出発 | 18.2〜20.2 | 152〜168分 | 深宇宙通信 |
 | 5話 | 地球帰還 | 20.2→0 | 168→0分 | 深宇宙→リアルタイム |
 
+```chart:bar
+caption: 各話における地球との片道通信遅延の範囲（分）
+unit: "分"
+bars:
+  - label: EP01（火星→ガニメデ）
+    value: 52
+    color: "#58a6ff"
+    annotation: "4〜52分"
+  - label: EP02（木星→土星）
+    value: 88
+    color: "#3fb950"
+    annotation: "35〜88分"
+  - label: EP03（土星→天王星）
+    value: 168
+    color: "#ff6600"
+    annotation: "71〜168分"
+  - label: EP04（天王星→地球）
+    value: 168
+    color: "#f85149"
+    annotation: "0〜168分"
+  - label: EP05（地球帰還）
+    value: 168
+    color: "#a371f7"
+    annotation: "0〜168分"
+```
+
+各棒はその話数中の**最大片道遅延**を示す。EP01では最大52分だった遅延が、EP03以降は2.8時間に達する。EP04-05は天王星圏出発で最大168分だが、地球帰還に伴い0分まで減少する。EP02の約87日間のトリム推力航行が遅延の緩やかな増加期間、EP03の6日間で急激に最大値に到達する構造が見える。
+
 ```timeseries:
 {
   "id": "comm-delay-timeline",
