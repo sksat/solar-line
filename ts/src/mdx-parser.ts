@@ -43,6 +43,7 @@ import type {
   VerificationTable,
   GlossaryTerm,
   MarginGauge,
+  Viewer3DEmbed,
 } from "./report-types.ts";
 
 /** Frontmatter fields for a summary report */
@@ -156,7 +157,7 @@ export function extractDirectives(content: string): {
   const directives: ComponentDirective[] = [];
   // Match fenced code blocks with component-type language tags
   // Supported patterns: ```chart:bar, ```component:orbital-diagram, ```timeline, ```table:comparison, etc.
-  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer|glossary|sideview|margin-gauge):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
+  const fenceRegex = /^```(chart|component|timeline|table|timeseries|dag-viewer|glossary|sideview|margin-gauge|3d-viewer):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
 
   const markdown = content.replace(fenceRegex, (_match, prefix: string, suffix: string, inner: string) => {
     const type = suffix || prefix;
@@ -277,6 +278,10 @@ export function applyDirectives(directives: ComponentDirective[]): Partial<Summa
       case "glossary": {
         // Glossary is stored temporarily; parseSummaryMarkdown lifts it to report level
         (result as Record<string, unknown>)._glossary = parseJsonDirective<GlossaryTerm[]>(d.rawContent);
+        break;
+      }
+      case "3d-viewer": {
+        result.viewer3d = parseJsonDirective<Viewer3DEmbed>(d.rawContent);
         break;
       }
       default:

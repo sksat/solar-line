@@ -636,8 +636,20 @@ export interface SummarySection {
   };
   /** Optional margin gauges showing parameter proximity to limits */
   marginGauges?: MarginGauge[];
+  /** Optional inline 3D viewer embed (Three.js) */
+  viewer3d?: Viewer3DEmbed;
   /** Command to reproduce the numerical analysis for this section */
   reproductionCommand?: string;
+}
+
+/** Configuration for an inline Three.js 3D viewer embed */
+export interface Viewer3DEmbed {
+  /** Scene preset to display: "full-route", "saturn-ring", "uranus-approach" */
+  scene: string;
+  /** Container height in pixels (default 500) */
+  height?: number;
+  /** Caption text displayed below the viewer */
+  caption?: string;
 }
 
 /** A cross-episode or summary report page */

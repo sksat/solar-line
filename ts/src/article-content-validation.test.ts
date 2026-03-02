@@ -3033,6 +3033,14 @@ describe("Extended timeseries data validation", () => {
     assert.ok(Math.abs(earthZ) < 500, `Earth Z should be ≈0, got ${earthZ}`);
   });
 
+  // --- 3D viewer embed (Task 461) ---
+  it("cross-episode has inline 3D viewer for full-route scene", () => {
+    assert.ok(crossContent.includes("3d-viewer:"),
+      "cross-episode should contain a 3d-viewer directive");
+    assert.ok(crossContent.includes('"full-route"'),
+      "3d-viewer directive should specify full-route scene");
+  });
+
   // --- Propellant mass timeline ---
   it("propellant mass: starts at 299t (initial mass)", () => {
     const series = parseTimeseries(crossContent, "propellant-mass-timeline");
@@ -3314,7 +3322,7 @@ describe("Chart directive format validation (Task 394)", () => {
   ]);
   const summaryDirectives = new Set([
     "chart", "component", "timeline", "table", "timeseries",
-    "dag-viewer", "glossary", "sideview", "margin-gauge",
+    "dag-viewer", "glossary", "sideview", "margin-gauge", "3d-viewer",
   ]);
 
   // Common code/language fences that are NOT directives (should be ignored)

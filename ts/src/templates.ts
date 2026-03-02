@@ -3,7 +3,7 @@
  * No external dependencies — pure string interpolation.
  */
 
-import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, MarginGaugeItem, InsetDiagram } from "./report-types.ts";
+import type { EpisodeReport, SiteManifest, TranscriptionPageData, TransferAnalysis, TransferDetailPage, VideoCard, DialogueQuote, ParameterExploration, ExplorationScenario, SourceCitation, OrbitalDiagram, OrbitDefinition, TransferArc, AnimationConfig, ScaleLegend, TimelineAnnotation, DiagramScenario, SummaryReport, ComparisonTable, ComparisonRow, EventTimeline, VerificationTable, BarChart, TimeSeriesChart, GlossaryTerm, SideViewDiagram, MarginGauge, MarginGaugeItem, InsetDiagram, Viewer3DEmbed } from "./report-types.ts";
 import { NOMINAL_MASS_T, THRUST_MN, DAMAGED_THRUST_MN, G0_MS2, AU_KM } from "./kestrel.ts";
 
 /** Escape HTML special characters */
@@ -3197,6 +3197,26 @@ export function renderMarginGauges(gauges: MarginGauge[]): string {
   return gauges.map(renderMarginGauge).join("\n");
 }
 
+/** Render an inline 3D viewer embed container */
+export function renderViewer3D(embed: Viewer3DEmbed): string {
+  const height = embed.height ?? 500;
+  const caption = embed.caption ? `<figcaption class="chart-caption">${escapeHtml(embed.caption)}</figcaption>` : "";
+  const id = `viewer3d-${embed.scene}`;
+  return `<figure class="viewer3d-figure">
+<div id="${escapeHtml(id)}" class="viewer3d-container" data-scene="${escapeHtml(embed.scene)}" style="width:100%;height:${height}px;position:relative;background:#0d1117;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+<div class="viewer3d-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#58a6ff;">3Dビューア読み込み中...</div>
+</div>
+<div class="viewer3d-controls" style="display:none;padding:8px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;align-items:center;gap:12px;">
+<button class="viewer3d-play" aria-label="再生" style="background:#21262d;color:#c9d1d9;border:1px solid var(--border);width:36px;height:36px;cursor:pointer;border-radius:4px;font-size:1.1em;">&#x25b6;</button>
+<input type="range" class="viewer3d-slider" min="0" max="1000" value="0" style="flex:1;accent-color:#58a6ff;" aria-label="タイムライン">
+<span class="viewer3d-time" style="font-size:0.85em;color:#58a6ff;min-width:80px;text-align:right;font-variant-numeric:tabular-nums;">0日</span>
+<span class="viewer3d-label" style="font-size:0.8em;color:#8b949e;min-width:200px;"></span>
+</div>
+<div class="viewer3d-hint" style="font-size:0.8em;color:var(--text-secondary);margin-top:4px;">ドラッグ: 回転 ｜ スクロール: ズーム ｜ 右ドラッグ: 移動</div>
+${caption}
+</figure>`;
+}
+
 /** Render a time-series chart container with embedded JSON data for uPlot */
 export function renderTimeSeriesChart(chart: TimeSeriesChart): string {
   const descHtml = chart.description
@@ -3279,6 +3299,7 @@ export function renderSummaryPage(report: SummaryReport, summaryPages?: SiteMani
     const customTableHtml = section.comparisonTable ? renderCustomComparisonTable(section.comparisonTable) : "";
     const sideViewHtml = section.sideViewDiagrams ? renderSideViewDiagrams(section.sideViewDiagrams) : "";
     const marginGaugeHtml = section.marginGauges ? renderMarginGauges(section.marginGauges) : "";
+    const viewer3dHtml = section.viewer3d ? renderViewer3D(section.viewer3d) : "";
     const reproHtml = section.reproductionCommand
       ? `<details class="reproduction-command"><summary>再現コマンド</summary><pre><code>${escapeHtml(section.reproductionCommand)}</code></pre></details>`
       : "";
@@ -3291,6 +3312,7 @@ ${sideViewHtml}
 ${barChartHtml}
 ${timeSeriesHtml}
 ${marginGaugeHtml}
+${viewer3dHtml}
 ${timelineHtml}
 ${verificationHtml}
 ${tableHtml}
@@ -3321,6 +3343,98 @@ ${dagHtml}
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
   const hasDagViewer = report.sections.some(s => s.dagViewer);
   const dagScript = hasDagViewer ? '\n<script src="../dag-viewer.js"></script>' : "";
+  const hasViewer3d = report.sections.some(s => s.viewer3d);
+  const viewer3dScript = hasViewer3d ? `
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module" src="../orbital-3d-viewer.js"></script>
+<script type="module">
+import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay } from "../orbital-3d-viewer.js";
+document.querySelectorAll(".viewer3d-container").forEach(async function(container) {
+  var scene = container.dataset.scene;
+  var resp = await fetch("../data/calculations/3d_orbital_analysis.json");
+  var analysisData = await resp.json();
+  container.querySelector(".viewer3d-loading").remove();
+  initViewer(container);
+  var sceneData = window.__prepareScene(scene, analysisData);
+  if (!sceneData) return;
+  loadScene(sceneData);
+  if (sceneData.timeline) {
+    loadTimeline(sceneData.timeline);
+    var ctrl = container.closest(".viewer3d-figure").querySelector(".viewer3d-controls");
+    if (ctrl) {
+      ctrl.style.display = "flex";
+      var playBtn = ctrl.querySelector(".viewer3d-play");
+      var slider = ctrl.querySelector(".viewer3d-slider");
+      var timeSpan = ctrl.querySelector(".viewer3d-time");
+      var labelSpan = ctrl.querySelector(".viewer3d-label");
+      var playing = false;
+      playBtn.addEventListener("click", function() {
+        playing = !playing;
+        setTimelinePlaying(playing);
+        playBtn.textContent = playing ? "\\u23f8" : "\\u25b6";
+      });
+      slider.addEventListener("input", function() {
+        var frac = Number(slider.value) / 1000;
+        updateTimelineFrame(frac);
+        var day = getTimelineCurrentDay();
+        timeSpan.textContent = Math.round(day) + "日";
+      });
+      (function tick() {
+        if (playing) {
+          var day = getTimelineCurrentDay();
+          var total = sceneData.timeline.totalDays;
+          slider.value = String(Math.round((day / total) * 1000));
+          timeSpan.textContent = Math.round(day) + "日";
+        }
+        requestAnimationFrame(tick);
+      })();
+    }
+  }
+});
+</script>
+<script type="module">
+// Scene preparation (matches orbital-3d-viewer-data.ts logic)
+window.__prepareScene = function(sceneName, data) {
+  var AU = 5;
+  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",enceladus:"#ccddee",titania:"#aabbcc"};
+  var EC = {1:"#ff6644",2:"#ffaa22",3:"#44cc88",4:"#4488ff",5:"#ff4444"};
+  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,titania:0.08};
+  var OR = {mars:1.524,jupiter:5.203,saturn:9.537,uranus:19.19,earth:1.0};
+  var OP = {mars:686.97,jupiter:4332.59,saturn:10759.22,uranus:30688.5,earth:365.256};
+  var angles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
+  if (sceneName === "full-route") {
+    var order = ["mars","jupiter","saturn","uranus","earth"];
+    var planets = order.map(function(name,i){
+      var p = data.planetaryZHeightsAtEpoch[name];
+      var r = (OR[name]||5)*AU;
+      var a = angles[i];
+      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*10,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
+    });
+    var arcs = data.transfers.map(function(t){
+      var fp = planets.find(function(p){return p.name===t.departure.planet});
+      var tp = planets.find(function(p){return p.name===t.arrival.planet});
+      return {from:t.departure.planet,to:t.arrival.planet,fromPos:[fp.x,fp.y,fp.z],toPos:[tp.x,tp.y,tp.z],episode:t.episode,color:EC[t.episode],label:t.leg};
+    });
+    var firstJd = data.transfers[0].departure.jd;
+    var lastJd = data.transfers[data.transfers.length-1].arrival.jd;
+    var orbits = order.map(function(name,i){
+      var p = data.planetaryZHeightsAtEpoch[name];
+      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:angles[i],meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*10};
+    });
+    var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg}});
+    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl}};
+  }
+  if (sceneName === "saturn-ring") {
+    var ring = data.saturnRingAnalysis;
+    return {type:"saturn-ring",title:"",description:"",planets:[{name:"saturn",x:0,y:0,z:0,color:PC.saturn,radius:0.5,isCentral:true,label:"土星"},{name:"enceladus",x:0,y:0,z:0,color:PC.enceladus,radius:0.08,orbitRadius:ring.enceladusOrbitKm,label:"エンケラドス"}],transferArcs:[{from:"jupiter",to:"saturn",fromPos:[10,2,0],toPos:[0,0,0],episode:2,color:EC[2],label:"木星→土星",approachAngleDeg:ring.approachFromJupiter.approachAngleToDeg}],rings:[{innerRadius:ring.ringInnerKm,outerRadius:ring.ringOuterKm,normal:ring.ringPlaneNormal,color:"#c8a86e",opacity:0.3}]};
+  }
+  if (sceneName === "uranus-approach") {
+    var u = data.uranusApproachAnalysis;
+    return {type:"uranus-approach",title:"",description:"",planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},{name:"titania",x:0,y:0,z:0,color:PC.titania,radius:0.08,orbitRadius:u.titaniaOrbitKm,label:"タイタニア"}],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星",approachAngleDeg:u.approachFromSaturn.angleToDeg},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球",approachAngleDeg:u.approachFromUranus.angleToDeg}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}]};
+  }
+  return null;
+};
+</script>` : "";
 
   const glossarySection = report.glossary && report.glossary.length > 0
     ? `<h2 id="section-glossary">用語集</h2>\n${renderGlossary(report.glossary)}`
@@ -3340,7 +3454,7 @@ ${glossarySection}`;
     : content;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(report.title, enrichedContent + animScript + dagScript, "..", summaryPages, desc, navEpisodes, metaPages);
+  return layoutHtml(report.title, enrichedContent + animScript + dagScript + viewer3dScript, "..", summaryPages, desc, navEpisodes, metaPages);
 }
 
 // ---------------------------------------------------------------------------

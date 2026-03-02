@@ -377,6 +377,19 @@ describe("applyDirectives", () => {
     assert.equal(result.marginGauges![1].id, "g2");
   });
 
+  it("applies 3d-viewer directive", () => {
+    const viewerJson = JSON.stringify({
+      scene: "full-route",
+      height: 500,
+      caption: "全航路3Dビュー",
+    });
+    const result = applyDirectives([{ type: "3d-viewer", rawContent: viewerJson }]);
+    assert.ok(result.viewer3d);
+    assert.equal(result.viewer3d!.scene, "full-route");
+    assert.equal(result.viewer3d!.height, 500);
+    assert.equal(result.viewer3d!.caption, "全航路3Dビュー");
+  });
+
   it("throws on unknown directive type", () => {
     assert.throws(
       () => applyDirectives([{ type: "unknown", rawContent: "" }]),

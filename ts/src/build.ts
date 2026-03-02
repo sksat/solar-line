@@ -882,6 +882,14 @@ export function build(config: BuildConfig): void {
     fs.copyFileSync(viewer3dSrc, path.join(outDir, "orbital-3d-viewer.js"));
   }
 
+  // Copy 3D orbital analysis data for inline 3D viewer embeds
+  const analysis3dSrc = path.join(dataDir, "data", "calculations", "3d_orbital_analysis.json");
+  if (fs.existsSync(analysis3dSrc)) {
+    const calcOutDir = path.join(outDir, "data", "calculations");
+    fs.mkdirSync(calcOutDir, { recursive: true });
+    fs.copyFileSync(analysis3dSrc, path.join(calcOutDir, "3d_orbital_analysis.json"));
+  }
+
   // Copy DAG viewer JS and state data for interactive visualization
   const dagViewerSrc = path.resolve(path.dirname(import.meta.filename ?? ""), "dag-viewer.js");
   if (fs.existsSync(dagViewerSrc)) {
