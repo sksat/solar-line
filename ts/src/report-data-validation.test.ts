@@ -15,6 +15,7 @@ import { validateTransferOverlap } from "./templates.ts";
 import type { EpisodeDialogue, DialogueLine } from "./subtitle-types.ts";
 import { loadSummaryBySlug } from "./mdx-parser.ts";
 import { parseEpisodeMarkdown } from "./episode-mdx-parser.ts";
+import { buildManifest } from "./build.ts";
 
 const REPORTS_DIR = path.resolve(import.meta.dirname ?? ".", "..", "..", "reports");
 const EPISODES_DIR = path.join(REPORTS_DIR, "data", "episodes");
@@ -482,24 +483,145 @@ describe("report data: source citations", () => {
 
 describe("report data: summary reports", () => {
   const summaryDir = path.join(REPORTS_DIR, "data", "summary");
+  const summaryMdFiles = fs.existsSync(summaryDir)
+    ? fs.readdirSync(summaryDir).filter(f => f.endsWith(".md")).sort()
+    : [];
 
   it("summary directory exists", () => {
     assert.ok(fs.existsSync(summaryDir), "Summary directory not found");
   });
 
-  it("cross-episode report exists and is valid", () => {
-    const data = loadSummaryBySlug(summaryDir, "cross-episode");
-    assert.ok(data.slug, "Missing slug");
-    assert.ok(data.title, "Missing title");
-    assert.ok(data.summary, "Missing summary");
-    assert.ok(Array.isArray(data.sections), "sections must be an array");
-    assert.ok(data.sections.length > 0, "Must have at least one section");
-
-    for (const section of data.sections) {
-      assert.ok(section.heading, `Section missing heading`);
-      assert.ok(typeof section.markdown === "string", `Section "${section.heading}" missing markdown`);
-    }
+  it("has at least one summary report", () => {
+    assert.ok(summaryMdFiles.length > 0, "No summary .md files found");
   });
+
+  // All summary files parse without error
+  const parsedSummaries: { file: string; slug: string; category?: string }[] = [];
+  for (const file of summaryMdFiles) {
+    it(`${file}: parses without error`, () => {
+      const content = fs.readFileSync(path.join(summaryDir, file), "utf-8");
+      const report = loadSummaryBySlug(summaryDir, file.replace(/\.md$/, ""));
+      assert.ok(report.slug, `${file}: missing slug`);
+      assert.ok(report.title, `${file}: missing title`);
+      assert.ok(report.summary, `${file}: missing summary`);
+      parsedSummaries.push({ file, slug: report.slug, category: report.category });
+    });
+  }
+
+  // Slug matches filename stem
+  for (const file of summaryMdFiles) {
+    it(`${file}: slug matches filename`, () => {
+      const expectedSlug = file.replace(/\.md$/, "");
+      const report = loadSummaryBySlug(summaryDir, expectedSlug);
+      assert.equal(
+        report.slug,
+        expectedSlug,
+        `${file}: frontmatter slug "${report.slug}" does not match filename stem "${expectedSlug}"`,
+      );
+    });
+  }
+
+  // All slugs are unique across summary reports
+  it("all summary slugs are unique", () => {
+    const slugs: string[] = [];
+    for (const file of summaryMdFiles) {
+      const report = loadSummaryBySlug(summaryDir, file.replace(/\.md$/, ""));
+      slugs.push(report.slug);
+    }
+    const uniqueSlugs = new Set(slugs);
+    assert.equal(
+      uniqueSlugs.size,
+      slugs.length,
+      `Duplicate slugs found: ${slugs.filter((s, i) => slugs.indexOf(s) !== i).join(", ")}`,
+    );
+  });
+
+  // Category values are valid
+  for (const file of summaryMdFiles) {
+    it(`${file}: category is valid`, () => {
+      const report = loadSummaryBySlug(summaryDir, file.replace(/\.md$/, ""));
+      if (report.category !== undefined) {
+        assert.ok(
+          report.category === "analysis" || report.category === "meta",
+          `${file}: invalid category "${report.category}" (must be "analysis" or "meta")`,
+        );
+      }
+    });
+  }
+
+  // Every summary has at least one content section
+  for (const file of summaryMdFiles) {
+    it(`${file}: has at least one section with heading and markdown`, () => {
+      const report = loadSummaryBySlug(summaryDir, file.replace(/\.md$/, ""));
+      assert.ok(Array.isArray(report.sections), `${file}: sections must be an array`);
+      assert.ok(report.sections.length > 0, `${file}: must have at least one section`);
+
+      for (const section of report.sections) {
+        assert.ok(section.heading, `${file}: section missing heading`);
+        assert.ok(typeof section.markdown === "string", `${file}: section "${section.heading}" missing markdown`);
+      }
+    });
+  }
+
+  // Nav manifest consistency: all summaries appear in correct groups
+  it("nav manifest groups summaries correctly by category", () => {
+    const analysisSlugs: string[] = [];
+    const metaSlugs: string[] = [];
+
+    for (const file of summaryMdFiles) {
+      const report = loadSummaryBySlug(summaryDir, file.replace(/\.md$/, ""));
+      if (report.category === "meta") {
+        metaSlugs.push(report.slug);
+      } else {
+        analysisSlugs.push(report.slug);
+      }
+    }
+
+    // Verify we have both categories populated
+    assert.ok(analysisSlugs.length > 0, "Expected at least one analysis-category summary");
+    assert.ok(metaSlugs.length > 0, "Expected at least one meta-category summary");
+
+    // Verify no overlap between groups
+    const overlap = analysisSlugs.filter(s => metaSlugs.includes(s));
+    assert.deepStrictEqual(overlap, [], `Slugs appear in both analysis and meta groups: ${overlap.join(", ")}`);
+
+    // Verify all files are accounted for
+    assert.equal(
+      analysisSlugs.length + metaSlugs.length,
+      summaryMdFiles.length,
+      "Some summary files are not categorized into analysis or meta",
+    );
+  });
+
+  // buildManifest produces correct groupings
+  it("buildManifest places summaries in correct nav groups", () => {
+    const summaries: SummaryReport[] = [];
+    for (const file of summaryMdFiles) {
+      summaries.push(loadSummaryBySlug(summaryDir, file.replace(/\.md$/, "")));
+    }
+
+    const manifest = buildManifest([], [], summaries);
+
+    // All analysis summaries should be in summaryPages
+    const expectedAnalysis = summaries.filter(s => s.category !== "meta").map(s => s.slug).sort();
+    const actualAnalysis = (manifest.summaryPages ?? []).map(p => p.slug).sort();
+    assert.deepStrictEqual(actualAnalysis, expectedAnalysis, "summaryPages slugs mismatch");
+
+    // All meta summaries should be in metaPages
+    const expectedMeta = summaries.filter(s => s.category === "meta").map(s => s.slug).sort();
+    const actualMeta = (manifest.metaPages ?? []).map(p => p.slug).sort();
+    assert.deepStrictEqual(actualMeta, expectedMeta, "metaPages slugs mismatch");
+  });
+
+  // Section headings are unique within each summary
+  for (const file of summaryMdFiles) {
+    it(`${file}: section headings are unique`, () => {
+      const report = loadSummaryBySlug(summaryDir, file.replace(/\.md$/, ""));
+      const headings = report.sections.map(s => s.heading);
+      const dupes = headings.filter((h, i) => headings.indexOf(h) !== i);
+      assert.deepStrictEqual(dupes, [], `Duplicate section headings: ${dupes.join(", ")}`);
+    });
+  }
 });
 
 // ---------------------------------------------------------------------------
