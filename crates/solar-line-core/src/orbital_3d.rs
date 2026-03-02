@@ -237,7 +237,7 @@ pub fn uranus_approach_analysis(
 
     // Angle between approach direction and spin axis
     let approach_normalized = approach_dir.normalize();
-    let cos_approach_to_axis = approach_normalized.dot_raw(spin_axis).abs();
+    let cos_approach_to_axis = approach_normalized.dot_raw(spin_axis).abs().clamp(0.0, 1.0);
     let approach_to_axis_angle = cos_approach_to_axis.acos();
 
     // Approach angle relative to equatorial plane = 90° - angle_to_axis
@@ -562,6 +562,89 @@ mod tests {
             z_au.abs() < 0.001,
             "Earth z should be ~0, got {:.6} AU",
             z_au
+        );
+    }
+
+    #[test]
+    fn test_saturn_ring_crossing_already_passed() {
+        // Spacecraft is below ring plane and moving away — crossing is behind
+        let jd = ephemeris::J2000_JD;
+        let ring_normal = saturn_ring_plane_normal(jd);
+
+        // Below ring plane, moving further away
+        let pos = -ring_normal.scale(100_000.0);
+        let vel = -ring_normal; // moving further below
+        let result = saturn_ring_crossing(pos, vel, jd);
+        assert!(
+            !result.crosses_ring_plane,
+            "should not cross ring plane when moving away"
+        );
+    }
+
+    #[test]
+    fn test_saturn_ring_crossing_within_rings() {
+        // Crossing the ring plane at a distance within the ring system
+        let jd = ephemeris::J2000_JD;
+        let ring_normal = saturn_ring_plane_normal(jd);
+
+        // Construct a velocity that crosses the ring plane at ~100,000 km from Saturn
+        // We need to be above the plane, with a velocity toward Saturn that crosses
+        // the ring plane at ring-radius distance.
+        // Place ship on ring normal at 200,000 km above, velocity toward ring center area
+        let pos = ring_normal.scale(200_000.0);
+        // Velocity: toward a point ~100,000 km from Saturn in the ring plane
+        // The ring plane has two axes perpendicular to ring_normal
+        let arb = Vec3::new(1.0, 0.0, 0.0);
+        let in_plane = ring_normal.cross_raw(arb).normalize();
+        let target = in_plane.scale(100_000.0); // ~100,000 km from Saturn in ring plane
+        let vel_dir = Vec3::new(
+            target.x - pos.x,
+            target.y - pos.y,
+            target.z - pos.z,
+        ).normalize();
+
+        let result = saturn_ring_crossing(pos, vel_dir, jd);
+        assert!(result.crosses_ring_plane);
+        if let Some(dist) = result.crossing_distance_km {
+            // The crossing should be near 100,000 km ± some geometry
+            assert!(
+                dist > SATURN_RING_INNER_KM && dist < SATURN_RING_OUTER_KM * 2.0,
+                "crossing distance = {} km",
+                dist
+            );
+        }
+    }
+
+    #[test]
+    fn test_uranus_approach_polar() {
+        // Approach exactly along Uranus's spin axis — should be polar approach
+        // Tests the acos clamp fix for exact-alignment floating point edge case
+        let spin = uranus_spin_axis_ecliptic();
+        let result = uranus_approach_analysis(spin, 100_000.0);
+        assert!(
+            result.is_polar_approach,
+            "approach along spin axis should be polar, approach_to_equatorial = {:.1}°",
+            result.approach_to_equatorial.value().to_degrees()
+        );
+        // approach_to_equatorial should be ~90° (perpendicular to equatorial plane)
+        assert!(
+            result.approach_to_equatorial.value().to_degrees() > 60.0,
+            "should be high angle to equatorial: {:.1}°",
+            result.approach_to_equatorial.value().to_degrees()
+        );
+    }
+
+    #[test]
+    fn test_uranus_approach_close_ring_clearance() {
+        // Approach inside ring zone
+        let approach = Vec3::new(1.0, 0.0, 0.0);
+        let result = uranus_approach_analysis(approach, 40_000.0);
+        // Closest approach (40,000 km) is inside ring outer (51,149 km)
+        // Ring clearance depends on z-offset
+        // Since this is inside the ring zone, the clearance is the z_offset
+        assert!(
+            result.ring_clearance_km >= 0.0,
+            "ring clearance should be >= 0 (z-offset approach)"
         );
     }
 

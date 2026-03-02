@@ -383,4 +383,89 @@ mod tests {
             "perturbation/orbital ratio = {ratio} (negligible)"
         );
     }
+
+    // --- Edge case tests ---
+
+    #[test]
+    fn zero_magnetic_field() {
+        assert_eq!(magnetic_pressure_pa(0.0), 0.0);
+    }
+
+    #[test]
+    fn zero_density_ram_pressure() {
+        assert_eq!(ram_pressure_pa(0.0, 500_000.0), 0.0);
+    }
+
+    #[test]
+    fn zero_velocity_ram_pressure() {
+        assert_eq!(ram_pressure_pa(1e-20, 0.0), 0.0);
+    }
+
+    #[test]
+    fn zero_transit_duration() {
+        let dv = velocity_perturbation_m_s(100.0, 0.0, 48_000_000.0);
+        assert_eq!(dv, 0.0);
+    }
+
+    #[test]
+    fn zero_remaining_time_zero_miss() {
+        let miss = miss_distance_from_perturbation_km(0.01, 0.0);
+        assert_eq!(miss, 0.0);
+    }
+
+    #[test]
+    fn plasmoid_force_scales_linearly() {
+        let f1 = plasmoid_force_n(1e-9, 1000.0);
+        let f2 = plasmoid_force_n(1e-9, 2000.0);
+        assert!((f2 / f1 - 2.0).abs() < 1e-14);
+    }
+
+    #[test]
+    fn correction_dv_zero_input() {
+        assert_eq!(correction_dv_m_s(0.0), 0.0);
+    }
+
+    #[test]
+    fn plasmoid_perturbation_zero_field_and_density() {
+        let result = plasmoid_perturbation(
+            0.0,          // no field
+            0.0,          // no density
+            150_000.0,
+            7854.0,
+            480.0,
+            48_000_000.0,
+            34_920.0,
+        );
+        assert_eq!(result.magnetic_pressure_pa, 0.0);
+        assert_eq!(result.ram_pressure_pa, 0.0);
+        assert_eq!(result.velocity_perturbation_m_s, 0.0);
+        assert_eq!(result.miss_distance_km, 0.0);
+    }
+
+    #[test]
+    fn light_ship_larger_perturbation() {
+        // A 300 t ship (EP05 effective mass) gets perturbed more
+        let heavy = plasmoid_perturbation(
+            15.0e-9, 0.5e6, 250_000.0, 7854.0, 480.0,
+            48_000_000.0, 34_920.0,
+        );
+        let light = plasmoid_perturbation(
+            15.0e-9, 0.5e6, 250_000.0, 7854.0, 480.0,
+            300_000.0, 34_920.0,
+        );
+        assert!(
+            light.velocity_perturbation_m_s > heavy.velocity_perturbation_m_s * 100.0,
+            "light ship Δv should be >> heavy ship Δv"
+        );
+    }
+
+    #[test]
+    fn scenarios_field_increases_with_severity() {
+        let scenarios = uranus_plasmoid_scenarios();
+        let (_, b0, _, _) = scenarios[0];
+        let (_, b1, _, _) = scenarios[1];
+        let (_, b2, _, _) = scenarios[2];
+        assert!(b0 < b1, "nominal B < enhanced B");
+        assert!(b1 < b2, "enhanced B < extreme B");
+    }
 }

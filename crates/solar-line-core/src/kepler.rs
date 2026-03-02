@@ -333,4 +333,166 @@ mod tests {
             e_deg
         );
     }
+
+    // --- Edge case tests ---
+
+    #[test]
+    fn kepler_m_zero() {
+        // M = 0 → E = 0 for any eccentricity
+        let e = Eccentricity::elliptical(0.5).unwrap();
+        let sol = solve_kepler(Radians(0.0), e).unwrap();
+        assert!(
+            sol.eccentric_anomaly.value().abs() < 1e-14,
+            "E = {}, expected 0",
+            sol.eccentric_anomaly.value()
+        );
+    }
+
+    #[test]
+    fn kepler_m_pi() {
+        // M = π → E = π for any eccentricity (by symmetry)
+        let e = Eccentricity::elliptical(0.5).unwrap();
+        let sol = solve_kepler(Radians(PI), e).unwrap();
+        assert!(
+            (sol.eccentric_anomaly.value() - PI).abs() < 1e-13,
+            "E = {}, expected π",
+            sol.eccentric_anomaly.value()
+        );
+    }
+
+    #[test]
+    fn kepler_m_two_pi_normalizes() {
+        // M = 2π should normalize to M = 0 → E = 0
+        let e = Eccentricity::elliptical(0.3).unwrap();
+        let sol = solve_kepler(Radians(TAU), e).unwrap();
+        assert!(
+            sol.eccentric_anomaly.value().abs() < 1e-12
+                || (sol.eccentric_anomaly.value() - TAU).abs() < 1e-12,
+            "E = {}, expected ~0 or ~2π",
+            sol.eccentric_anomaly.value()
+        );
+    }
+
+    #[test]
+    fn kepler_near_parabolic() {
+        // Very high eccentricity, e = 0.999 — tests the high-e branch
+        let e = Eccentricity::elliptical(0.999).unwrap();
+        for m_val in [0.01, 0.5, PI / 2.0, PI] {
+            let m = Radians(m_val);
+            let sol = solve_kepler(m, e).unwrap();
+            let big_e = sol.eccentric_anomaly.value();
+            let m_norm = m.normalize().value();
+            let residual = (big_e - e.value() * big_e.sin() - m_norm).abs();
+            assert!(
+                residual < 1e-10,
+                "e=0.999, M={}: residual = {}",
+                m_val,
+                residual
+            );
+        }
+    }
+
+    #[test]
+    fn kepler_with_params_tight_tolerance() {
+        let e = Eccentricity::elliptical(0.5).unwrap();
+        let m = Radians(1.0);
+        let sol = solve_kepler_with_params(m, e, 1e-15, 100).unwrap();
+        assert!(sol.residual < 1e-14, "residual = {}", sol.residual);
+    }
+
+    #[test]
+    fn kepler_with_params_few_iterations() {
+        // With only 1 iteration and low eccentricity, should still converge
+        let e = Eccentricity::elliptical(0.0).unwrap();
+        let sol = solve_kepler_with_params(Radians(1.0), e, 1e-10, 1).unwrap();
+        assert_eq!(sol.iterations, 1);
+    }
+
+    #[test]
+    fn kepler_with_params_insufficient_iterations() {
+        // High eccentricity with only 2 iterations should fail
+        let e = Eccentricity::elliptical(0.99).unwrap();
+        let result = solve_kepler_with_params(Radians(0.1), e, 1e-15, 2);
+        assert!(result.is_err(), "should fail with too few iterations");
+    }
+
+    #[test]
+    fn kepler_rejects_parabolic() {
+        let e = Eccentricity::new(1.0).unwrap();
+        let result = solve_kepler(Radians(1.0), e);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn anomaly_conversions_at_periapsis() {
+        // At periapsis: ν = 0, E = 0, M = 0
+        let e = Eccentricity::elliptical(0.5).unwrap();
+        let big_e = true_to_eccentric_anomaly(Radians(0.0), e);
+        assert!(big_e.value().abs() < 1e-14, "E = {}", big_e.value());
+        let m = eccentric_to_mean_anomaly(big_e, e);
+        assert!(m.value().abs() < 1e-14, "M = {}", m.value());
+    }
+
+    #[test]
+    fn anomaly_conversions_at_apoapsis() {
+        // At apoapsis: ν = π, E = π, M = π
+        let e = Eccentricity::elliptical(0.5).unwrap();
+        let big_e = true_to_eccentric_anomaly(Radians(PI), e);
+        assert!(
+            (big_e.value() - PI).abs() < 1e-12,
+            "E = {}",
+            big_e.value()
+        );
+        let m = eccentric_to_mean_anomaly(big_e, e);
+        assert!((m.value() - PI).abs() < 1e-12, "M = {}", m.value());
+    }
+
+    #[test]
+    fn propagate_full_orbit() {
+        // Start at M=0, propagate full period → M should return to 0
+        let n = TAU / 3600.0;
+        let m0 = Radians(0.0);
+        let dt = Seconds(3600.0); // full period
+        let m1 = propagate_mean_anomaly(m0, n, dt);
+        // Should normalize to 0 (or very close)
+        assert!(
+            m1.value().abs() < 1e-12 || (m1.value() - TAU).abs() < 1e-12,
+            "M after full orbit = {}",
+            m1.value()
+        );
+    }
+
+    #[test]
+    fn mean_motion_mars() {
+        // Mars orbital period ≈ 687 days
+        let n = mean_motion(
+            crate::constants::mu::SUN,
+            crate::constants::orbit_radius::MARS,
+        );
+        let period = TAU / n;
+        let period_days = period / 86400.0;
+        assert!(
+            (period_days - 687.0).abs() < 2.0,
+            "Mars period = {} days, expected ~687",
+            period_days
+        );
+    }
+
+    #[test]
+    fn full_round_trip_high_eccentricity() {
+        // ν → E → M → solve → E → ν at e = 0.9
+        let e = Eccentricity::elliptical(0.9).unwrap();
+        for nu_val in [0.5, 1.0, 2.0, 3.0, 5.0] {
+            let nu_orig = Radians(nu_val);
+            let m = true_to_mean_anomaly(nu_orig, e);
+            let nu_rec = mean_to_true_anomaly(m, e).unwrap();
+            let diff = (nu_orig.normalize().value() - nu_rec.value()).abs();
+            assert!(
+                diff < 1e-10 || (diff - TAU).abs() < 1e-10,
+                "e=0.9, ν={}: diff = {}",
+                nu_val,
+                diff
+            );
+        }
+    }
 }
