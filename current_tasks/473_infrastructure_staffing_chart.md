@@ -1,6 +1,6 @@
 # Task 473: Add Enceladus Station Staffing Collapse Chart to Infrastructure Report
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Summary
 

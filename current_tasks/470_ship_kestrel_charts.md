@@ -1,6 +1,6 @@
 # Task 470: Add Visualization Charts to Ship Kestrel Summary Report
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Summary
 

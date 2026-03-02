@@ -1,6 +1,6 @@
 # Task 472: Add Pointing Precision and RCS Thrust Charts to Attitude-Control Report
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Summary
 

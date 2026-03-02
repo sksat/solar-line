@@ -1,6 +1,6 @@
 # Task 471: Add Plasmoid Perturbation Comparison Chart to EP04
 
-## Status: IN PROGRESS
+## Status: DONE
 
 ## Summary
 
