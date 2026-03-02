@@ -486,4 +486,166 @@ describe("syncTasksIntoDag", () => {
     // No status change since already valid
     assert.equal(events.length, 0);
   });
+
+  it("second pass wires cross-task dependencies for tasks added in same run", () => {
+    const dag = createEmptyDag();
+    // Task 2 depends on Task 1, both added in same syncTasksIntoDag call
+    const tasks = [
+      { num: 1, dagId: "task.001", title: "Task 1", fileStatus: "DONE" as const, nodeStatus: "valid" as const, taskDeps: [], tags: [] },
+      { num: 2, dagId: "task.002", title: "Task 2", fileStatus: "TODO" as const, nodeStatus: "pending" as const, taskDeps: [1], tags: [] },
+    ];
+    syncTasksIntoDag(dag, tasks);
+    assert.ok(dag.nodes["task.002"].dependsOn.includes("task.001"));
+  });
+
+  it("skips cycle-creating dependencies silently", () => {
+    const dag = createEmptyDag();
+    // Pre-add task.002, then task.001 depending on task.002
+    addNode(dag, "task.002", "task", "Task 2");
+    addNode(dag, "task.001", "task", "Task 1", ["task.002"]);
+    // Now sync task.002 with a dependency on task.001 — this would create a cycle
+    const tasks = [
+      { num: 2, dagId: "task.002", title: "Task 2", fileStatus: "DONE" as const, nodeStatus: "valid" as const, taskDeps: [1], tags: [] },
+    ];
+    // Should not throw — cycle-creating edge is skipped
+    const events = syncTasksIntoDag(dag, tasks);
+    // task.002 should NOT depend on task.001 (would create cycle)
+    assert.ok(!dag.nodes["task.002"].dependsOn.includes("task.001"));
+  });
+
+  it("updates title of existing node when changed", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Old Title");
+    setStatus(dag, "task.001", "valid");
+    const tasks = [
+      { num: 1, dagId: "task.001", title: "New Title", fileStatus: "DONE" as const, nodeStatus: "valid" as const, taskDeps: [], tags: [] },
+    ];
+    syncTasksIntoDag(dag, tasks);
+    assert.equal(dag.nodes["task.001"].title, "New Title");
+  });
+
+  it("does not add duplicate dependency edges", () => {
+    const dag = createEmptyDag();
+    addNode(dag, "task.001", "task", "Task 1");
+    addNode(dag, "task.002", "task", "Task 2", ["task.001"]);
+    setStatus(dag, "task.001", "valid");
+    // Sync with same dependency — should not duplicate the edge
+    const tasks = [
+      { num: 2, dagId: "task.002", title: "Task 2", fileStatus: "TODO" as const, nodeStatus: "pending" as const, taskDeps: [1], tags: [] },
+    ];
+    const events = syncTasksIntoDag(dag, tasks);
+    const deps = dag.nodes["task.002"].dependsOn.filter(d => d === "task.001");
+    assert.equal(deps.length, 1, "should not have duplicate dependency");
+  });
+
+  it("skips dependencies to non-existent tasks", () => {
+    const dag = createEmptyDag();
+    const tasks = [
+      { num: 1, dagId: "task.001", title: "Task 1", fileStatus: "TODO" as const, nodeStatus: "pending" as const, taskDeps: [999], tags: [] },
+    ];
+    syncTasksIntoDag(dag, tasks);
+    assert.equal(dag.nodes["task.001"].dependsOn.length, 0);
+  });
+
+  it("handles tags being passed through to addNode", () => {
+    const dag = createEmptyDag();
+    const tasks = [
+      { num: 6, dagId: "task.006", title: "EP01 Analysis", fileStatus: "DONE" as const, nodeStatus: "valid" as const, taskDeps: [], tags: ["episode:01"] },
+    ];
+    syncTasksIntoDag(dag, tasks);
+    assert.ok(dag.nodes["task.006"]);
+    assert.equal(dag.nodes["task.006"].status, "valid");
+  });
+});
+
+// ---- parseTaskFile edge cases ----
+
+describe("parseTaskFile edge cases", () => {
+  it("parses bold-wrapped DONE status (**DONE**)", () => {
+    const content = `# Task 100: Bold Status Test\n\n## Status: **DONE**\n\nSummary text.`;
+    const result = parseTaskFile(content, "100_bold_status.md");
+    assert.equal(result?.fileStatus, "DONE");
+    assert.equal(result?.nodeStatus, "valid");
+  });
+
+  it("parses DONE with date suffix", () => {
+    const content = `# Task 200: Date Status\n\n## Status: DONE (2026-02-23)`;
+    const result = parseTaskFile(content, "200_date_status.md");
+    assert.equal(result?.fileStatus, "DONE");
+    assert.equal(result?.nodeStatus, "valid");
+  });
+
+  it("parses DONE with note suffix", () => {
+    const content = `# Task 201: Note Status\n\n## Status: DONE (was already completed in Task 175)`;
+    const result = parseTaskFile(content, "201_note_status.md");
+    assert.equal(result?.fileStatus, "DONE");
+    assert.equal(result?.nodeStatus, "valid");
+  });
+
+  it("parses IN_PROGRESS variant spelling", () => {
+    const content = `# Task 300: In Progress Variant\n\n## Status: IN_PROGRESS`;
+    const result = parseTaskFile(content, "300_in_progress.md");
+    assert.equal(result?.fileStatus, "IN PROGRESS");
+    assert.equal(result?.nodeStatus, "active");
+  });
+
+  it("parses bold-wrapped IN PROGRESS", () => {
+    const content = `# Task 301: Bold In Progress\n\n## Status: **IN PROGRESS**`;
+    const result = parseTaskFile(content, "301_bold_ip.md");
+    assert.equal(result?.fileStatus, "IN PROGRESS");
+    assert.equal(result?.nodeStatus, "active");
+  });
+
+  it("falls back to filename for title when no Task N: heading", () => {
+    const content = `# Some Other Heading\n\n## Status: DONE`;
+    const result = parseTaskFile(content, "042_some_task.md");
+    assert.equal(result?.num, 42);
+    assert.equal(result?.title, "some_task");
+  });
+
+  it("extracts multiple episode tags without duplicates", () => {
+    const content = `# Task 500: Cross Episode\n\n## Status: DONE\n\nCompares EP01 and EP02 data. Also references EP01 again.`;
+    const result = parseTaskFile(content, "500_cross_ep.md");
+    assert.ok(result?.tags.includes("episode:01"));
+    assert.ok(result?.tags.includes("episode:02"));
+    assert.equal(result?.tags.length, 2, "should not have duplicate episode:01");
+  });
+
+  it("extracts episode tag from Episode N format", () => {
+    const content = `# Task 006: Episode 3 Analysis\n\n## Status: DONE`;
+    const result = parseTaskFile(content, "006_ep03.md");
+    assert.ok(result?.tags.includes("episode:03"));
+  });
+
+  it("pads dagId to 3 digits", () => {
+    const content = `# Task 5: Short ID\n\n## Status: TODO`;
+    const result = parseTaskFile(content, "005_short.md");
+    assert.equal(result?.dagId, "task.005");
+  });
+
+  it("defaults to TODO when no status section", () => {
+    const content = `# Task 100: No Status\n\nJust a description.`;
+    const result = parseTaskFile(content, "100_no_status.md");
+    assert.equal(result?.fileStatus, "TODO");
+    assert.equal(result?.nodeStatus, "pending");
+  });
+
+  it("extracts deps from Dependencies section only", () => {
+    const content = `# Task 120: With Deps\n\n## Status: TODO\n\n## Dependencies\n- Task 85 — DONE\n- Task 88 — DONE\n\n## Summary\nReferences Task 999 in text.`;
+    const result = parseTaskFile(content, "120_with_deps.md");
+    assert.deepEqual(result?.taskDeps, [85, 88]);
+    // Task 999 in Summary should not be extracted as dep (Summary != Dependencies)
+  });
+
+  it("handles content with no dependencies section", () => {
+    const content = `# Task 50: No Deps\n\n## Status: DONE\n\n## Summary\nStandalone task.`;
+    const result = parseTaskFile(content, "050_no_deps.md");
+    assert.deepEqual(result?.taskDeps, []);
+  });
+
+  it("returns empty tags when no episode references", () => {
+    const content = `# Task 100: Infrastructure\n\n## Status: DONE\n\nGeneral infra work.`;
+    const result = parseTaskFile(content, "100_infra.md");
+    assert.deepEqual(result?.tags, []);
+  });
 });

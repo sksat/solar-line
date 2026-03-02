@@ -47,11 +47,11 @@ export function parseTaskFile(content: string, filename: string): ParsedTask | n
   const titleMatch = content.match(/^#\s+Task\s+\d+:\s*(.+)$/m);
   const title = titleMatch ? titleMatch[1].trim() : filename.replace(/^\d+_/, "").replace(/\.md$/, "");
 
-  // Extract status
+  // Extract status (strip markdown bold markers before comparison)
   const statusMatch = content.match(/^##\s+Status:\s*(.+)$/m);
-  const rawStatus = statusMatch ? statusMatch[1].trim() : "TODO";
+  const rawStatus = statusMatch ? statusMatch[1].trim().replace(/\*\*/g, "") : "TODO";
   let fileStatus: TaskFileStatus = "TODO";
-  if (rawStatus === "DONE") fileStatus = "DONE";
+  if (rawStatus.startsWith("DONE")) fileStatus = "DONE";
   else if (rawStatus.startsWith("IN PROGRESS") || rawStatus === "IN_PROGRESS") fileStatus = "IN PROGRESS";
 
   // Extract task dependencies from Dependencies section
