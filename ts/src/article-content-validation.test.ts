@@ -1961,6 +1961,30 @@ describe("cross-episode.md content validation", () => {
     );
   });
 
+  it("EP01 mass boundary matches analysis", () => {
+    const ep1 = analyzeEpisode1();
+    const boundary = ep1.boundaries.massBoundary72h.maxMassT;
+    assertContainsApproxValue(content, boundary, "cross-episode EP01 mass boundary");
+  });
+
+  it("EP02 trim-thrust transit time matches analysis", () => {
+    const ep2 = analyzeEpisode2();
+    const transitDays = ep2.trimThrust.primary!.transferDays;
+    assertContainsApproxValue(content, transitDays, "cross-episode EP02 transit days");
+  });
+
+  it("EP03 mass boundary matches analysis", () => {
+    const ep3 = analyzeEpisode3();
+    const maxMass = ep3.massFeasibility.maxMassT;
+    assertContainsApproxValue(content, maxMass, "cross-episode EP03 mass boundary");
+  });
+
+  it("EP04 radiation dose matches analysis", () => {
+    const ep4 = analyzeEpisode4();
+    const dose = ep4.plasmoid.totalExposureMSv;
+    assertContainsApproxValue(content, dose, "cross-episode EP04 radiation dose");
+  });
+
   it("all 5 episode routes referenced", () => {
     for (const ep of EPISODE_SUMMARIES) {
       assert.ok(
