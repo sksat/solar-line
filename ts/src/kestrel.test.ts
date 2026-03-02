@@ -11,8 +11,11 @@ import {
   KESTREL,
   EXHAUST_VELOCITY_KMS,
   THRUST_MN,
+  DAMAGED_THRUST_MN,
   NOMINAL_MASS_T,
   AU_KM,
+  G0_MS2,
+  C_KMS,
 } from "./kestrel.ts";
 import { KESTREL as KESTREL_EP01 } from "./ep01-analysis.ts";
 import { KESTREL as KESTREL_EP02 } from "./ep02-analysis.ts";
@@ -42,11 +45,23 @@ describe("KESTREL shared constants", () => {
       `exhaust velocity: expected ${expectedVe}, got ${EXHAUST_VELOCITY_KMS}`,
     );
     assert.equal(THRUST_MN, 9.8);
+    assert.equal(DAMAGED_THRUST_MN, 6.37);
     assert.equal(NOMINAL_MASS_T, 48_000);
   });
 
-  it("AU_KM matches IAU 2012 definition", () => {
+  it("physics constants match standard values", () => {
     assert.equal(AU_KM, 149_597_870.7);
+    assert.equal(G0_MS2, 9.80665);
+    assert.equal(C_KMS, 299_792.458);
+  });
+
+  it("exhaust velocity uses G0_MS2", () => {
+    const expected = KESTREL.ispS * G0_MS2 / 1000;
+    assert.equal(EXHAUST_VELOCITY_KMS, expected);
+  });
+
+  it("DAMAGED_THRUST_MN is consistent with KESTREL.damagedThrustN", () => {
+    assert.equal(DAMAGED_THRUST_MN, KESTREL.damagedThrustN / 1_000_000);
   });
 });
 
