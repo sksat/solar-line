@@ -220,6 +220,102 @@ export function meanMotionPerDay(planet: string): number {
   return (2 * Math.PI) / period;
 }
 
+// ── Geometry helpers (pure math, no Three.js dependency) ──
+// These functions work with [x, y, z] tuples in Three.js Y-up convention:
+//   X, Z = ecliptic plane;  Y = ecliptic height
+
+type Vec3 = [number, number, number];
+
+/**
+ * Compute a Bezier control point for a heliocentric transfer arc.
+ * Places the control at the angular midpoint (around the Sun at origin)
+ * at the average orbital radius, with a small Y bump for depth.
+ */
+export function arcControlPoint(from: Vec3, to: Vec3): Vec3 {
+  const fromAngle = Math.atan2(from[2], from[0]);
+  const toAngle = Math.atan2(to[2], to[0]);
+
+  let dAngle = toAngle - fromAngle;
+  if (dAngle > Math.PI) dAngle -= 2 * Math.PI;
+  if (dAngle < -Math.PI) dAngle += 2 * Math.PI;
+  const midAngle = fromAngle + dAngle * 0.5;
+
+  const fromR = Math.sqrt(from[0] * from[0] + from[2] * from[2]);
+  const toR = Math.sqrt(to[0] * to[0] + to[2] * to[2]);
+  const midR = (fromR + toR) / 2;
+
+  const cx = midR * Math.cos(midAngle);
+  const cz = midR * Math.sin(midAngle);
+
+  const midY = (from[1] + to[1]) / 2;
+  const dist = Math.sqrt(
+    (to[0] - from[0]) ** 2 + (to[1] - from[1]) ** 2 + (to[2] - from[2]) ** 2,
+  );
+  const yBump = dist * 0.08;
+
+  return [cx, midY + yBump, cz];
+}
+
+/**
+ * Compute a Bezier control point for local (planet-centric) scenes.
+ * Offsets the midpoint laterally (perpendicular to approach direction)
+ * to suggest a flyby trajectory.
+ */
+export function arcControlPointLocal(from: Vec3, to: Vec3): Vec3 {
+  const mid: Vec3 = [
+    (from[0] + to[0]) / 2,
+    (from[1] + to[1]) / 2,
+    (from[2] + to[2]) / 2,
+  ];
+  const dist = Math.sqrt(
+    (to[0] - from[0]) ** 2 + (to[1] - from[1]) ** 2 + (to[2] - from[2]) ** 2,
+  );
+
+  // Approach direction
+  const ax = (to[0] - from[0]) / dist;
+  const ay = (to[1] - from[1]) / dist;
+  const az = (to[2] - from[2]) / dist;
+
+  // Lateral = cross(approach, Y-up)
+  // cross([ax,ay,az], [0,1,0]) = [az, 0, -ax] (unnormalized; normalize)
+  const lx = az;
+  const lz = -ax;
+  const lLen = Math.sqrt(lx * lx + lz * lz) || 1;
+
+  mid[0] += (lx / lLen) * dist * 0.2;
+  mid[2] += (lz / lLen) * dist * 0.2;
+  mid[1] += dist * 0.08;
+
+  return mid;
+}
+
+/**
+ * Offset a point away from a planet center along the transfer direction.
+ * Returns a new position displaced by 1.5× the display radius.
+ */
+export function offsetFromPlanet(
+  point: Vec3,
+  otherPoint: Vec3,
+  planetName: string,
+  sceneType: string,
+): Vec3 {
+  const isLocal = sceneType !== "full-route";
+  const baseRadius = PLANET_RADII[planetName] ?? 0.15;
+  const displayRadius = isLocal ? baseRadius : baseRadius * 3;
+  const offset = displayRadius * 1.5;
+
+  const dx = otherPoint[0] - point[0];
+  const dy = otherPoint[1] - point[1];
+  const dz = otherPoint[2] - point[2];
+  const dist = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+
+  return [
+    point[0] + (dx / dist) * offset,
+    point[1] + (dy / dist) * offset,
+    point[2] + (dz / dist) * offset,
+  ];
+}
+
 // ── Helper functions ──
 
 /** Convert AU z-height to scene z coordinate */

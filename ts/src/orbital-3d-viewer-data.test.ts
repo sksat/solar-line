@@ -12,6 +12,9 @@ import {
   prepareFullRouteScene,
   prepareSaturnScene,
   prepareUranusScene,
+  arcControlPoint,
+  arcControlPointLocal,
+  offsetFromPlanet,
   LOCAL_SCENE_SCALE,
   AU_TO_SCENE,
 } from "./orbital-3d-viewer-data.ts";
@@ -690,6 +693,115 @@ describe("orbit circle z-heights match planet z-heights", () => {
       assert.ok(fromR > 1, `${arc.from} fromPos radius ${fromR.toFixed(2)} should be > 1 scene unit`);
       assert.ok(toR > 1, `${arc.to} toPos radius ${toR.toFixed(2)} should be > 1 scene unit`);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Geometry helpers (arcControlPoint, arcControlPointLocal, offsetFromPlanet)
+// ---------------------------------------------------------------------------
+
+describe("arcControlPoint", () => {
+  it("places control point at angular midpoint between two positions", () => {
+    // Two points at 0° and 90° in the XZ ecliptic plane, both at radius 10
+    const from: [number, number, number] = [10, 0, 0];  // angle 0°
+    const to: [number, number, number] = [0, 0, 10];    // angle 90°
+    const ctrl = arcControlPoint(from, to);
+    // Angular midpoint = 45°, radius = 10
+    const expectedX = 10 * Math.cos(Math.PI / 4);
+    const expectedZ = 10 * Math.sin(Math.PI / 4);
+    assert.ok(Math.abs(ctrl[0] - expectedX) < 0.1, `x=${ctrl[0].toFixed(2)} should be ~${expectedX.toFixed(2)}`);
+    assert.ok(Math.abs(ctrl[2] - expectedZ) < 0.1, `z=${ctrl[2].toFixed(2)} should be ~${expectedZ.toFixed(2)}`);
+  });
+
+  it("averages radii when from and to have different orbital distances", () => {
+    // Mars orbit (~7.6 scene) to Jupiter orbit (~26 scene)
+    const from: [number, number, number] = [7.6, 0, 0];
+    const to: [number, number, number] = [26, 0, 0.01]; // tiny z offset for different angle
+    const ctrl = arcControlPoint(from, to);
+    const ctrlR = Math.sqrt(ctrl[0] * ctrl[0] + ctrl[2] * ctrl[2]);
+    const expectedR = (7.6 + 26) / 2;
+    assert.ok(Math.abs(ctrlR - expectedR) < 1, `radius=${ctrlR.toFixed(1)} should be ~${expectedR.toFixed(1)}`);
+  });
+
+  it("handles angle wrapping across ±π boundary", () => {
+    // from at ~170°, to at ~-170° (should go through 180°, not 0°)
+    const fromAngle = 170 * Math.PI / 180;
+    const toAngle = -170 * Math.PI / 180;
+    const from: [number, number, number] = [10 * Math.cos(fromAngle), 0, 10 * Math.sin(fromAngle)];
+    const to: [number, number, number] = [10 * Math.cos(toAngle), 0, 10 * Math.sin(toAngle)];
+    const ctrl = arcControlPoint(from, to);
+    const ctrlAngle = Math.atan2(ctrl[2], ctrl[0]);
+    // Midpoint should be near ±180° (either +π or -π)
+    assert.ok(Math.abs(Math.abs(ctrlAngle) - Math.PI) < 0.2,
+      `ctrl angle=${(ctrlAngle * 180 / Math.PI).toFixed(1)}° should be near ±180°`);
+  });
+
+  it("adds a small Y bump above the midpoint height", () => {
+    const from: [number, number, number] = [10, 1, 0];
+    const to: [number, number, number] = [0, 3, 10];
+    const ctrl = arcControlPoint(from, to);
+    const midY = (1 + 3) / 2;
+    assert.ok(ctrl[1] > midY, `y=${ctrl[1].toFixed(2)} should be > midY=${midY}`);
+  });
+});
+
+describe("arcControlPointLocal", () => {
+  it("places control point at lateral offset from chord midpoint", () => {
+    const from: [number, number, number] = [10, 0, 0];
+    const to: [number, number, number] = [0, 0, 0];
+    const ctrl = arcControlPointLocal(from, to);
+    // Midpoint = [5, 0, 0]; lateral should be perpendicular to approach dir
+    // Approach dir = [-1, 0, 0], cross with Y-up [0,1,0] = [0, 0, 1]
+    // So lateral offset should be in Z direction
+    assert.ok(Math.abs(ctrl[2]) > 0.1, `z=${ctrl[2].toFixed(2)} should have lateral offset`);
+  });
+
+  it("adds a small Y bump", () => {
+    const from: [number, number, number] = [10, 0, 0];
+    const to: [number, number, number] = [0, 0, 0];
+    const ctrl = arcControlPointLocal(from, to);
+    assert.ok(ctrl[1] > 0, `y=${ctrl[1].toFixed(2)} should be > 0 (Y bump)`);
+  });
+
+  it("lateral offset is ~20% of chord distance", () => {
+    const from: [number, number, number] = [10, 0, 0];
+    const to: [number, number, number] = [0, 0, 0];
+    const dist = 10;
+    const ctrl = arcControlPointLocal(from, to);
+    // Lateral offset should be dist * 0.2 = 2.0
+    assert.ok(Math.abs(ctrl[2] - dist * 0.2) < 0.5,
+      `lateral offset ${ctrl[2].toFixed(2)} should be ~${(dist * 0.2).toFixed(1)}`);
+  });
+});
+
+describe("offsetFromPlanet", () => {
+  it("displaces point away from planet center toward other point", () => {
+    const point: [number, number, number] = [5, 0, 0];
+    const other: [number, number, number] = [10, 0, 0];
+    const result = offsetFromPlanet(point, other, "mars", "full-route");
+    // Mars radius=0.15, full-route scale 3×, so displayRadius=0.45, offset=0.675
+    assert.ok(result[0] > point[0], `x=${result[0].toFixed(3)} should be > ${point[0]} (displaced toward other)`);
+    assert.ok(result[0] < other[0], `x=${result[0].toFixed(3)} should be < ${other[0]}`);
+  });
+
+  it("uses larger display radius in full-route mode (3× scale)", () => {
+    const point: [number, number, number] = [5, 0, 0];
+    const other: [number, number, number] = [10, 0, 0];
+    const fullRoute = offsetFromPlanet(point, other, "mars", "full-route");
+    const local = offsetFromPlanet(point, other, "mars", "saturn-ring");
+    // full-route offset should be 3× larger than local
+    const fullDist = fullRoute[0] - point[0];
+    const localDist = local[0] - point[0];
+    assert.ok(Math.abs(fullDist / localDist - 3) < 0.01,
+      `full-route offset ${fullDist.toFixed(3)} should be 3× local ${localDist.toFixed(3)}`);
+  });
+
+  it("returns default radius for unknown planet", () => {
+    const point: [number, number, number] = [5, 0, 0];
+    const other: [number, number, number] = [10, 0, 0];
+    // Should not throw, just use default 0.15
+    const result = offsetFromPlanet(point, other, "pluto", "full-route");
+    assert.ok(result[0] > point[0]);
   });
 });
 
