@@ -124,6 +124,9 @@ export interface SceneData {
 /** Conversion factor: 1 AU = this many scene units */
 export const AU_TO_SCENE = 5;
 
+/** Conversion factor for local scenes: 1 scene unit = this many km */
+export const LOCAL_SCENE_SCALE = 50_000;
+
 /** Planet display colors */
 const PLANET_COLORS: Record<string, string> = {
   mars: "#e05050",
@@ -376,16 +379,20 @@ export function prepareSaturnScene(data: {
         isCentral: true,
         label: "土星",
       },
-      {
-        name: "enceladus",
-        x: 0,
-        y: 0,
-        z: 0,
-        color: PLANET_COLORS.enceladus,
-        radius: 0.08,
-        orbitRadius: ring.enceladusOrbitKm,
-        label: "エンケラドス",
-      },
+      (() => {
+        const moonAngle = Math.PI / 4; // 45° for visual separation
+        const sceneR = ring.enceladusOrbitKm / LOCAL_SCENE_SCALE;
+        return {
+          name: "enceladus",
+          x: sceneR * Math.cos(moonAngle),
+          y: sceneR * Math.sin(moonAngle),
+          z: 0,
+          color: PLANET_COLORS.enceladus,
+          radius: 0.08,
+          orbitRadius: ring.enceladusOrbitKm,
+          label: "エンケラドス",
+        };
+      })(),
     ],
     transferArcs: [
       {
@@ -441,16 +448,20 @@ export function prepareUranusScene(data: {
         isCentral: true,
         label: "天王星",
       },
-      {
-        name: "titania",
-        x: 0,
-        y: 0,
-        z: 0,
-        color: PLANET_COLORS.titania,
-        radius: 0.08,
-        orbitRadius: u.titaniaOrbitKm,
-        label: "タイタニア",
-      },
+      (() => {
+        const moonAngle = Math.PI / 4; // 45° for visual separation
+        const sceneR = u.titaniaOrbitKm / LOCAL_SCENE_SCALE;
+        return {
+          name: "titania",
+          x: sceneR * Math.cos(moonAngle),
+          y: sceneR * Math.sin(moonAngle),
+          z: 0,
+          color: PLANET_COLORS.titania,
+          radius: 0.08,
+          orbitRadius: u.titaniaOrbitKm,
+          label: "タイタニア",
+        };
+      })(),
     ],
     transferArcs: [
       {

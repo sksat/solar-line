@@ -119,6 +119,15 @@ describe("orbital-3d-viewer-data", () => {
       assert.strictEqual(enceladus.orbitRadius, 238042);
     });
 
+    it("Enceladus is NOT at the same position as Saturn", () => {
+      const saturn = scene.planets.find((p: PlanetData) => p.name === "saturn")!;
+      const enceladus = scene.planets.find((p: PlanetData) => p.name === "enceladus")!;
+      const dx = enceladus.x - saturn.x;
+      const dy = enceladus.y - saturn.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      assert.ok(dist > 0.1, `Enceladus should be visually separated from Saturn (dist=${dist.toFixed(3)})`);
+    });
+
     it("has approach trajectory with angle", () => {
       assert.ok(scene.transferArcs.length >= 1, "should have approach trajectory");
       const approach = scene.transferArcs[0];
@@ -170,6 +179,15 @@ describe("orbital-3d-viewer-data", () => {
       const titania = scene.planets.find((p: PlanetData) => p.name === "titania");
       assert.ok(titania, "Titania should be shown");
       assert.strictEqual(titania.orbitRadius, 436300);
+    });
+
+    it("Titania is NOT at the same position as Uranus", () => {
+      const uranus = scene.planets.find((p: PlanetData) => p.name === "uranus")!;
+      const titania = scene.planets.find((p: PlanetData) => p.name === "titania")!;
+      const dx = titania.x - uranus.x;
+      const dy = titania.y - uranus.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      assert.ok(dist > 0.1, `Titania should be visually separated from Uranus (dist=${dist.toFixed(3)})`);
     });
 
     it("has approach and departure vectors", () => {

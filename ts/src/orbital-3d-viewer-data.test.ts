@@ -11,6 +11,7 @@ import {
   prepareFullRouteScene,
   prepareSaturnScene,
   prepareUranusScene,
+  LOCAL_SCENE_SCALE,
 } from "./orbital-3d-viewer-data.ts";
 import type { TimelineOrbit } from "./orbital-3d-viewer-data.ts";
 
@@ -208,6 +209,35 @@ describe("prepareSaturnScene", () => {
     const scene = prepareSaturnScene(saturnInput);
     assert.ok(scene.rings && scene.rings.length > 0);
   });
+
+  it("Enceladus is NOT at the same position as Saturn", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const saturn = scene.planets.find(p => p.name === "saturn")!;
+    const enceladus = scene.planets.find(p => p.name === "enceladus")!;
+    const dx = enceladus.x - saturn.x;
+    const dy = enceladus.y - saturn.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    assert.ok(
+      dist > 0.1,
+      `Enceladus should be visually separated from Saturn (dist=${dist.toFixed(3)})`,
+    );
+  });
+
+  it("Enceladus position is at orbitRadius distance from Saturn", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const saturn = scene.planets.find(p => p.name === "saturn")!;
+    const enceladus = scene.planets.find(p => p.name === "enceladus")!;
+    const dx = enceladus.x - saturn.x;
+    const dy = enceladus.y - saturn.y;
+    const dz = enceladus.z - saturn.z;
+    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    // 238,020 km / 50,000 = 4.76 scene units
+    const expectedDist = 238_020 / LOCAL_SCENE_SCALE;
+    assert.ok(
+      Math.abs(dist - expectedDist) < 0.1,
+      `Enceladus distance from Saturn should be ~${expectedDist.toFixed(2)}, got ${dist.toFixed(2)}`,
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -234,5 +264,34 @@ describe("prepareUranusScene", () => {
   it("includes Uranus as primary body", () => {
     const scene = prepareUranusScene(uranusInput);
     assert.ok(scene.planets.some(p => p.name === "uranus"));
+  });
+
+  it("Titania is NOT at the same position as Uranus", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const uranus = scene.planets.find(p => p.name === "uranus")!;
+    const titania = scene.planets.find(p => p.name === "titania")!;
+    const dx = titania.x - uranus.x;
+    const dy = titania.y - uranus.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    assert.ok(
+      dist > 0.1,
+      `Titania should be visually separated from Uranus (dist=${dist.toFixed(3)})`,
+    );
+  });
+
+  it("Titania position is at orbitRadius distance from Uranus", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const uranus = scene.planets.find(p => p.name === "uranus")!;
+    const titania = scene.planets.find(p => p.name === "titania")!;
+    const dx = titania.x - uranus.x;
+    const dy = titania.y - uranus.y;
+    const dz = titania.z - uranus.z;
+    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    // 436,300 km / 50,000 = 8.726 scene units
+    const expectedDist = 436_300 / LOCAL_SCENE_SCALE;
+    assert.ok(
+      Math.abs(dist - expectedDist) < 0.1,
+      `Titania distance from Uranus should be ~${expectedDist.toFixed(2)}, got ${dist.toFixed(2)}`,
+    );
   });
 });

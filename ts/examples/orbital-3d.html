@@ -207,7 +207,7 @@ function prepareSaturnScene(data) {
     description: "木星からの接近軌道と土星リング面の関係。接近角9.3°（リング面にほぼ平行）でエンケラドスに到達。",
     planets: [
       { name: "saturn", x: 0, y: 0, z: 0, color: PLANET_COLORS.saturn, radius: 0.5, isCentral: true, label: "土星" },
-      { name: "enceladus", x: 0, y: 0, z: 0, color: PLANET_COLORS.enceladus, radius: 0.08, orbitRadius: r.enceladusOrbitKm, label: "エンケラドス" },
+      (() => { const a=Math.PI/4, sr=r.enceladusOrbitKm/50000; return { name: "enceladus", x: sr*Math.cos(a), y: sr*Math.sin(a), z: 0, color: PLANET_COLORS.enceladus, radius: 0.08, orbitRadius: r.enceladusOrbitKm, label: "エンケラドス" }; })(),
     ],
     transferArcs: [{ from: "jupiter", to: "saturn", fromPos: [10, 2, 0], toPos: [0, 0, 0],
       episode: 2, color: EPISODE_COLORS[2], label: "木星→土星 接近軌道", approachAngleDeg: r.approachFromJupiter.approachAngleToDeg }],
@@ -221,7 +221,7 @@ function prepareUranusScene(data) {
     description: "天王星の97.77°軸傾斜と赤道面の関係。土星からの接近角25.3°、地球への離脱角14.3°。",
     planets: [
       { name: "uranus", x: 0, y: 0, z: 0, color: PLANET_COLORS.uranus, radius: 0.4, isCentral: true, label: "天王星" },
-      { name: "titania", x: 0, y: 0, z: 0, color: PLANET_COLORS.titania, radius: 0.08, orbitRadius: u.titaniaOrbitKm, label: "タイタニア" },
+      (() => { const a=Math.PI/4, sr=u.titaniaOrbitKm/50000; return { name: "titania", x: sr*Math.cos(a), y: sr*Math.sin(a), z: 0, color: PLANET_COLORS.titania, radius: 0.08, orbitRadius: u.titaniaOrbitKm, label: "タイタニア" }; })(),
     ],
     transferArcs: [
       { from: "saturn", to: "uranus", fromPos: [10, 3, 0], toPos: [0, 0, 0],
