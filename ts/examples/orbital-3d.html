@@ -223,7 +223,26 @@ function prepareFullRouteScene(data) {
     to: t.arrival.planet,
   }));
 
-  const timeline = { totalDays, orbits, transfers };
+  // Generate parking orbits between transfer gaps
+  const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15 };
+  const parkingOrbits = [];
+  for (let i = 0; i < transfers.length; i++) {
+    const nextStart = i + 1 < transfers.length ? transfers[i + 1].startDay : totalDays;
+    const gap = nextStart - transfers[i].endDay;
+    if (gap > 0.01) {
+      const pr = (PLANET_RADII[transfers[i].to] ?? 0.15) * 3;
+      const numOrbits = Math.min(3, Math.max(2, gap * 0.5));
+      parkingOrbits.push({
+        planet: transfers[i].to,
+        startDay: transfers[i].endDay,
+        endDay: nextStart,
+        radiusScene: pr * 2,
+        angularVelocityPerDay: (numOrbits * 2 * Math.PI) / gap,
+      });
+    }
+  }
+
+  const timeline = { totalDays, orbits, transfers, parkingOrbits: parkingOrbits.length > 0 ? parkingOrbits : undefined };
 
   const orbitCircles = planetOrder.map((name, i) => {
     const p = data.planetaryZHeightsAtEpoch[name];

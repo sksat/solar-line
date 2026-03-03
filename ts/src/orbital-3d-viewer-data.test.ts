@@ -671,6 +671,72 @@ describe("orbit circle z-heights match planet z-heights", () => {
     assert.ok(orbitDiff < 0.01, `Mars orbit initialAngle ${marsOrbit.initialAngle.toFixed(3)} should be ~0.5`);
   });
 
+  it("generates parking orbits between transfer gaps", () => {
+    // Create input with two transfers separated by a gap
+    const gapInput = {
+      transfers: [
+        {
+          leg: "Mars→Jupiter",
+          episode: 1,
+          departure: { planet: "mars", jd: 2460000, zHeightAU: 0.01, latitudeDeg: 1.0 },
+          arrival: { planet: "jupiter", jd: 2460003, zHeightAU: -0.04, latitudeDeg: -0.5 },
+        },
+        {
+          leg: "Jupiter→Saturn",
+          episode: 2,
+          departure: { planet: "jupiter", jd: 2460010, zHeightAU: -0.04, latitudeDeg: -0.5 },
+          arrival: { planet: "saturn", jd: 2460100, zHeightAU: 0.32, latitudeDeg: 2.0 },
+        },
+      ],
+      planetaryZHeightsAtEpoch: input.planetaryZHeightsAtEpoch,
+    };
+    const scene = prepareFullRouteScene(gapInput);
+    const parking = scene.timeline!.parkingOrbits;
+    assert.ok(parking, "should have parking orbits");
+    // totalDays = 100 = last arrival, so only 1 gap: at Jupiter (day 3 to day 10)
+    assert.strictEqual(parking!.length, 1, "1 parking orbit: at Jupiter between legs");
+    assert.strictEqual(parking![0].planet, "jupiter");
+    assert.strictEqual(parking![0].startDay, 3);
+    assert.strictEqual(parking![0].endDay, 10);
+    assert.ok(parking![0].radiusScene > 0, "radius should be positive");
+    assert.ok(parking![0].angularVelocityPerDay > 0, "angular velocity should be positive");
+  });
+
+  it("parking orbit radius is 2× planet display radius (full-route 3× scale)", () => {
+    const gapInput = {
+      transfers: [
+        {
+          leg: "Mars→Jupiter",
+          episode: 1,
+          departure: { planet: "mars", jd: 2460000, zHeightAU: 0.01, latitudeDeg: 1.0 },
+          arrival: { planet: "jupiter", jd: 2460003, zHeightAU: -0.04, latitudeDeg: -0.5 },
+        },
+        {
+          leg: "Jupiter→Saturn",
+          episode: 2,
+          departure: { planet: "jupiter", jd: 2460010, zHeightAU: -0.04, latitudeDeg: -0.5 },
+          arrival: { planet: "saturn", jd: 2460100, zHeightAU: 0.32, latitudeDeg: 2.0 },
+        },
+      ],
+      planetaryZHeightsAtEpoch: input.planetaryZHeightsAtEpoch,
+    };
+    const scene = prepareFullRouteScene(gapInput);
+    const jupParking = scene.timeline!.parkingOrbits![0];
+    // Jupiter display radius = 0.4, full-route scale 3× = 1.2, orbit = 2× = 2.4
+    assert.ok(Math.abs(jupParking.radiusScene - 2.4) < 0.01,
+      `Jupiter parking radius ${jupParking.radiusScene} should be 2.4`);
+  });
+
+  it("no parking orbits when transfers are back-to-back", () => {
+    // Single transfer, totalDays = endDay → no gap at end
+    const scene = prepareFullRouteScene(input);
+    // With 1 transfer and totalDays = endDay, there's no gap
+    assert.ok(
+      !scene.timeline!.parkingOrbits || scene.timeline!.parkingOrbits.length === 0,
+      "No parking orbits when no gaps between transfers",
+    );
+  });
+
   it("transfer arc endpoints are at different ecliptic-plane angles for curved arc rendering", () => {
     const scene = prepareFullRouteScene(input);
     for (const arc of scene.transferArcs) {

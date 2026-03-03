@@ -100,6 +100,20 @@ export interface TimelineOrbit {
   z: number;
 }
 
+/** Ship parking orbit at a destination between transfer legs */
+export interface ParkingOrbit {
+  /** Planet name the ship orbits */
+  planet: string;
+  /** Start day of parking orbit */
+  startDay: number;
+  /** End day of parking orbit */
+  endDay: number;
+  /** Orbital radius in scene units (visual only, not physical) */
+  radiusScene: number;
+  /** Angular velocity in radians per day (visual orbit speed) */
+  angularVelocityPerDay: number;
+}
+
 export interface TimelineData {
   /** Total mission duration in days */
   totalDays: number;
@@ -107,6 +121,8 @@ export interface TimelineData {
   orbits: TimelineOrbit[];
   /** Transfer legs with start/end times */
   transfers: TimelineTransfer[];
+  /** Ship parking orbits between transfer legs */
+  parkingOrbits?: ParkingOrbit[];
 }
 
 export interface OrbitCircleData {
@@ -484,10 +500,35 @@ export function prepareFullRouteScene(data: {
     to: t.arrival.planet,
   }));
 
+  // Generate parking orbits between transfer legs and after final arrival
+  const parkingOrbits: ParkingOrbit[] = [];
+  for (let i = 0; i < timelineTransfers.length; i++) {
+    const t = timelineTransfers[i];
+    const nextStart = i + 1 < timelineTransfers.length
+      ? timelineTransfers[i + 1].startDay
+      : totalDays;
+    const gap = nextStart - t.endDay;
+    if (gap > 0.01) {
+      // Planet display radius * 3 (full-route scale) * 2 for visible orbit
+      const planetRadius = (PLANET_RADII[t.to] ?? 0.15) * 3;
+      const orbitRadius = planetRadius * 2;
+      // Angular velocity: complete 2-3 orbits during the parking period
+      const numOrbits = Math.min(3, Math.max(2, gap * 0.5));
+      parkingOrbits.push({
+        planet: t.to,
+        startDay: t.endDay,
+        endDay: nextStart,
+        radiusScene: orbitRadius,
+        angularVelocityPerDay: (numOrbits * 2 * Math.PI) / gap,
+      });
+    }
+  }
+
   const timeline: TimelineData = {
     totalDays,
     orbits: timelineOrbits,
     transfers: timelineTransfers,
+    parkingOrbits: parkingOrbits.length > 0 ? parkingOrbits : undefined,
   };
 
   // Orbit circles for planetary paths

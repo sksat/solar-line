@@ -6463,4 +6463,15 @@ describe("inline 3D viewer __prepareScene constants sync", () => {
       "switchScene should update container data-scene attribute",
     );
   });
+
+  it("inline script generates parking orbits for full-route scene", () => {
+    assert.ok(
+      html.includes("parkingOrbits"),
+      "Full-route scene should include parkingOrbits in timeline",
+    );
+    assert.ok(
+      html.includes("angularVelocityPerDay"),
+      "Parking orbits should have angular velocity",
+    );
+  });
 });

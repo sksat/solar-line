@@ -696,6 +696,27 @@ export function updateTimelineFrame(day) {
         break;
       }
     }
+    // If not on a transfer, check parking orbits
+    if (!shipVisible && timelineData.parkingOrbits) {
+      for (const po of timelineData.parkingOrbits) {
+        if (timelineCurrentDay >= po.startDay && timelineCurrentDay <= po.endDay) {
+          // Find the planet mesh to orbit around
+          const planetMesh = planetMeshes[po.planet];
+          if (planetMesh) {
+            const elapsed = timelineCurrentDay - po.startDay;
+            const angle = elapsed * po.angularVelocityPerDay;
+            const px = planetMesh.position.x + po.radiusScene * Math.cos(angle);
+            const py = planetMesh.position.y + po.radiusScene * 0.3 * Math.sin(angle * 0.7); // slight y wobble
+            const pz = planetMesh.position.z + po.radiusScene * Math.sin(angle);
+            shipMarker3D.position.set(px, py, pz);
+            shipMarker3D.visible = true;
+            shipMarker3D.material.color.set(0x58a6ff); // Parking orbit: blue tint
+            shipVisible = true;
+          }
+          break;
+        }
+      }
+    }
     if (!shipVisible) {
       shipMarker3D.visible = false;
     }

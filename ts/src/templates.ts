@@ -3405,9 +3405,20 @@ window.__prepareScene = function(sceneName, data) {
       return {from:t.departure.planet,to:t.arrival.planet,fromPos:fp2,toPos:tp2,episode:t.episode,color:EC[t.episode],label:t.leg};
     });
     var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg,from:t.departure.planet,to:t.arrival.planet}});
+    var totalDays = lastJd - firstJd;
+    var pk = [];
+    for (var ti=0; ti<tl.length; ti++) {
+      var ns = ti+1<tl.length ? tl[ti+1].startDay : totalDays;
+      var gap = ns - tl[ti].endDay;
+      if (gap > 0.01) {
+        var pr2 = (PR[tl[ti].to]||0.15)*3;
+        var no = Math.min(3,Math.max(2,gap*0.5));
+        pk.push({planet:tl[ti].to,startDay:tl[ti].endDay,endDay:ns,radiusScene:pr2*2,angularVelocityPerDay:no*2*Math.PI/gap});
+      }
+    }
     var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*3}});
     var ts2=data.transfers.filter(function(t){return typeof t.outOfPlaneDistanceAU==="number"}).map(function(t){return{leg:t.leg,outOfPlaneDistanceAU:t.outOfPlaneDistanceAU,planeChangeFractionPercent:t.planeChangeFractionPercent||0}});
-    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl},transferSummary:ts2.length>0?ts2:undefined};
+    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:totalDays,orbits:orbits,transfers:tl,parkingOrbits:pk.length>0?pk:undefined},transferSummary:ts2.length>0?ts2:undefined};
   }
   if (sceneName === "saturn-ring") {
     var ring = data.saturnRingAnalysis;
