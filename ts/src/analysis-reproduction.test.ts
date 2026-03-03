@@ -423,6 +423,58 @@ describe("EP02 reproduction: Jupiter radiation analysis", () => {
   });
 });
 
+describe("EP02 reproduction: brachistochrone 30-day and 90-day", () => {
+  const r = analyzeEpisode2();
+
+  it("30d closest: accel = 0.390 m/s², ΔV = 1011 km/s", () => {
+    assertClose(r.brachistochrone30d[0].accelMs2, 0.38994627343392774, "30d accel");
+    assertClose(r.brachistochrone30d[0].deltaVKms, 1010.7407407407408, "30d deltaV");
+  });
+
+  it("90d closest: accel = 0.043 m/s², ΔV = 337 km/s", () => {
+    assertClose(r.brachistochrone90d[0].accelMs2, 0.04332736371488086, "90d accel");
+    assertClose(r.brachistochrone90d[0].deltaVKms, 336.91358024691357, "90d deltaV");
+  });
+
+  it("all timeframes use same closest distance (654,960,000 km)", () => {
+    assertClose(r.brachistochrone30d[0].distanceKm, 654960000, "30d distance");
+    assertClose(r.brachistochrone90d[0].distanceKm, 654960000, "90d distance");
+  });
+});
+
+describe("EP02 reproduction: damaged thrust scenarios", () => {
+  const r = analyzeEpisode2();
+  const dt = r.damagedThrust;
+
+  it("4 scenarios: 100%, 50%, 25%, trim (1%)", () => {
+    assert.equal(dt.length, 4);
+    assertClose(dt[0].fraction, 1.0, "full thrust fraction");
+    assertClose(dt[1].fraction, 0.5, "half thrust fraction");
+    assertClose(dt[2].fraction, 0.25, "quarter thrust fraction");
+    assertClose(dt[3].fraction, 0.01, "trim fraction");
+  });
+
+  it("full thrust: 3.28 days closest, 50% thrust: 4.64 days", () => {
+    assertClose(dt[0].minTimeClosestDays, 3.277715322822493, "fullThrust days");
+    assertClose(dt[1].minTimeClosestDays, 4.635389463133676, "halfThrust days");
+  });
+
+  it("trim-only (1%): 32.8 days (consistent with ~87d total for 3d trim + coast)", () => {
+    assertClose(dt[3].minTimeClosestDays, 32.777153228224925, "trimOnly days");
+    assertClose(dt[3].accelG, 0.033310729623945656, "trimOnly accelG");
+  });
+});
+
+describe("EP02 reproduction: additional ΔV needed", () => {
+  const r = analyzeEpisode2();
+
+  it("naturally reaches Saturn on hyperbolic orbit (no additional ΔV)", () => {
+    assert.equal(r.additionalDvNeeded.naturallyReaches, true);
+    assert.equal(r.additionalDvNeeded.isHyperbolic, true);
+    assert.equal(r.additionalDvNeeded.additionalDvKms, 0);
+  });
+});
+
 // ============================================================
 // EP03: Enceladus → Titania
 // ============================================================
