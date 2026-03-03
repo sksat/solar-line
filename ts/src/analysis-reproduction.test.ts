@@ -594,6 +594,74 @@ describe("EP03 reproduction: navigation confidence", () => {
   });
 });
 
+describe("EP03 reproduction: min transfer time at canonical mass", () => {
+  const r = analyzeEpisode3();
+  const mt = r.minTransferTime;
+
+  it("at 48,000t: 1474.9 h (61.5 days)", () => {
+    assertClose(mt.timeHours, 1474.8739649190604, "timeHours");
+    assertClose(mt.timeDays, 61.45308187162752, "timeDays");
+  });
+
+  it("same accel as EP01 canonical mass (0.204 m/s²)", () => {
+    assertClose(mt.accelMs2, 0.20416666666666666, "accelMs2");
+    assertClose(mt.accelG, 0.020819206014966035, "accelG");
+  });
+});
+
+describe("EP03 reproduction: extended Uranus capture fields", () => {
+  const r = analyzeEpisode3();
+  const u = r.uranusCapture;
+
+  it("approach at 25 RU (638,975 km)", () => {
+    assert.equal(u.approachRU, 25);
+    assertClose(u.approachKm, 638975, "approachKm");
+  });
+
+  it("vEsc at Titania orbit = 5.156 km/s, vCirc = 3.646 km/s", () => {
+    assertClose(u.vEscAtTitaniaKms, 5.1558887876319845, "vEscAtTitania");
+    assertClose(u.vCircAtTitaniaKms, 3.6457639247782634, "vCircAtTitania");
+  });
+
+  it("circular capture ΔV = 5572.0 km/s", () => {
+    assertClose(u.dvCircularCaptureKms, 5572.00046955412, "dvCircularCapture");
+  });
+});
+
+describe("EP03 reproduction: nav crisis position and error", () => {
+  const r = analyzeEpisode3();
+  const nc = r.navCrisis;
+
+  it("position at 14.72 AU, remaining 4.48 AU to Uranus", () => {
+    assertClose(nc.positionAU, 14.72, "positionAU");
+    assertClose(nc.remainingDistAU, 4.481209125231219, "remainingDistAU");
+  });
+
+  it("error vs Uranus SOI = 27.8%", () => {
+    assertClose(nc.errorVsSOI, 0.2779015199846784, "errorVsSOI");
+  });
+
+  it("error magnitude ratio = 797,778x (error >> target precision)", () => {
+    assertClose(nc.errorMagnitudeRatio, 797777.7777777778, "errorMagnitudeRatio");
+  });
+});
+
+describe("EP03 reproduction: cruise velocity candidates", () => {
+  const r = analyzeEpisode3();
+  const cv = r.cruiseVelocity;
+
+  it("3 candidate velocities: 30, 300, 3000 km/s", () => {
+    assert.equal(cv.candidates.length, 3);
+    assert.equal(cv.candidates[0].vKms, 30);
+    assert.equal(cv.candidates[1].vKms, 300);
+    assert.equal(cv.candidates[2].vKms, 3000);
+  });
+
+  it("heliocentric solar circular at 14 AU = 7.763 km/s", () => {
+    assertClose(cv.heliocentric.solarVCircAt14AUKms, 7.763171957118706, "solarVCircAt14AU");
+  });
+});
+
 // ============================================================
 // EP04: Titania → Earth departure
 // ============================================================
