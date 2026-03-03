@@ -130,6 +130,20 @@ describe("WASM bridge: orbital_period", () => {
       `Mercury period=${days} days, expected ~87.97`,
     );
   });
+
+  it("obeys Kepler's third law: period ratio = (a ratio)^1.5", () => {
+    const mu = MU.SUN;
+    const aEarth = 149_597_870.7;
+    const aMercury = 57_909_050;
+    const pEarth = wasm.orbital_period(mu, aEarth);
+    const pMercury = wasm.orbital_period(mu, aMercury);
+    const periodRatio = pEarth / pMercury;
+    const expectedRatio = Math.pow(aEarth / aMercury, 1.5);
+    assert.ok(
+      Math.abs(periodRatio - expectedRatio) < 1e-6,
+      `period ratio=${periodRatio}, expected (a ratio)^1.5=${expectedRatio}`,
+    );
+  });
 });
 
 describe("WASM bridge: solve_kepler", () => {
@@ -192,6 +206,22 @@ describe("WASM bridge: anomaly round-trip", () => {
     assert.ok(
       Math.abs(nu_norm - nu_back) < 1e-10,
       `nu=${nu_norm}, nu_back=${nu_back}`,
+    );
+  });
+
+  it("circular orbit (e=0): mean anomaly equals true anomaly", () => {
+    const e = 0;
+    const M = 1.5;
+    const nu = wasm.mean_to_true_anomaly(M, e);
+    // For e=0, true anomaly = mean anomaly (circular orbit)
+    assert.ok(
+      Math.abs(nu - M) < 1e-10,
+      `circular: ν=${nu}, M=${M} — should be identical`,
+    );
+    const M_back = wasm.true_to_mean_anomaly(nu, e);
+    assert.ok(
+      Math.abs(M_back - M) < 1e-10,
+      `circular round-trip: M_back=${M_back}, M=${M}`,
     );
   });
 });
@@ -301,6 +331,19 @@ describe("WASM bridge: mean_motion", () => {
     const nMars = wasm.mean_motion(MU.SUN, 227_939_200);
     assert.ok(nVenus > nEarth, `Venus n=${nVenus} should exceed Earth n=${nEarth}`);
     assert.ok(nEarth > nMars, `Earth n=${nEarth} should exceed Mars n=${nMars}`);
+  });
+
+  it("Kepler's third law: n ratio = (a ratio)^(-3/2)", () => {
+    const nEarth = wasm.mean_motion(MU.SUN, 149_597_870.7);
+    const nMars = wasm.mean_motion(MU.SUN, 227_939_200);
+    const nRatio = nEarth / nMars;
+    const aRatio = 149_597_870.7 / 227_939_200;
+    // n ∝ a^(-3/2), so n_E/n_M = (a_E/a_M)^(-3/2) = (a_M/a_E)^(3/2)
+    const expectedRatio = Math.pow(1 / aRatio, 1.5);
+    assert.ok(
+      Math.abs(nRatio - expectedRatio) < 1e-6,
+      `n ratio=${nRatio}, expected (a ratio)^(-3/2)=${expectedRatio}`,
+    );
   });
 });
 

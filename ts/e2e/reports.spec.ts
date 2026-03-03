@@ -215,6 +215,16 @@ test.describe("EP01-specific features", () => {
     const charts = page.locator(".uplot, .timeseries-chart");
     expect(await charts.count()).toBeGreaterThanOrEqual(1);
   });
+
+  test("has orbital diagram with SVG elements", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    const diagrams = page.locator(".orbital-diagram svg");
+    expect(await diagrams.count()).toBeGreaterThanOrEqual(1);
+    // Should contain orbital paths (circles or ellipses)
+    const first = diagrams.first();
+    const pathElements = first.locator("circle, ellipse, path");
+    expect(await pathElements.count()).toBeGreaterThanOrEqual(1);
+  });
 });
 
 test.describe("EP02-specific features", () => {

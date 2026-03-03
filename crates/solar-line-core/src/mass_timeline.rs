@@ -912,4 +912,91 @@ mod tests {
             "ΔV = vₑ: consumed = {consumed:.1}, expected = {expected:.1}"
         );
     }
+
+    #[test]
+    fn resupply_event_increases_total_mass() {
+        let events = vec![
+            MassEvent {
+                time_h: 10.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 1.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 1.0,
+                },
+                episode: 1,
+                label: "Burn".to_string(),
+            },
+            MassEvent {
+                time_h: 20.0,
+                kind: MassEventKind::Resupply { mass_kg: 5000.0 },
+                episode: 2,
+                label: "Resupply".to_string(),
+            },
+        ];
+        let tl = compute_timeline("resupply-test", 100_000.0, 80_000.0, &events);
+
+        // After burn, mass should decrease
+        let after_burn = tl.snapshots.iter().find(|s| s.time_h > 10.5).unwrap();
+        assert!(after_burn.total_mass_kg < 100_000.0, "burn reduces mass");
+
+        // After resupply, mass should increase relative to post-burn
+        let after_resupply = tl.snapshots.last().unwrap();
+        assert!(
+            after_resupply.total_mass_kg > after_burn.total_mass_kg,
+            "resupply increases mass: {:.1} > {:.1}",
+            after_resupply.total_mass_kg, after_burn.total_mass_kg
+        );
+        // Resupply adds exactly 5000 kg to propellant
+        assert!(
+            (after_resupply.propellant_kg - (after_burn.propellant_kg + 5000.0)).abs() < 1e-6,
+            "resupply adds exact mass to propellant"
+        );
+    }
+
+    #[test]
+    fn propellant_margin_after_mixed_events() {
+        let events = vec![
+            MassEvent {
+                time_h: 0.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 1.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 1.0,
+                },
+                episode: 1,
+                label: "Burn 1".to_string(),
+            },
+            MassEvent {
+                time_h: 10.0,
+                kind: MassEventKind::ContainerJettison { mass_kg: 1000.0 },
+                episode: 1,
+                label: "Jettison".to_string(),
+            },
+            MassEvent {
+                time_h: 20.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 2.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 2.0,
+                },
+                episode: 2,
+                label: "Burn 2".to_string(),
+            },
+        ];
+        let tl = compute_timeline("mixed", 100_000.0, 80_000.0, &events);
+
+        let margin = propellant_margin(&tl);
+        // Margin should be between 0 and 1 (some propellant consumed but not all)
+        assert!(margin > 0.0 && margin < 1.0, "margin={margin}");
+
+        let consumed = total_propellant_consumed(&tl);
+        // Total consumed should equal initial propellant minus remaining
+        let initial_prop = 100_000.0 - 80_000.0;
+        let remaining = tl.snapshots.last().unwrap().propellant_kg;
+        assert!(
+            (consumed - (initial_prop - remaining)).abs() < 1e-6,
+            "consumed={consumed:.1}, expected={:.1}",
+            initial_prop - remaining
+        );
+    }
 }
