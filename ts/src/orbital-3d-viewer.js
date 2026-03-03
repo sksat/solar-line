@@ -46,6 +46,31 @@ const EPISODE_COLORS = {
   5: 0xff4444,
 };
 
+/** Planet display radii in scene units (base values, before any scale multiplier) */
+const PLANET_RADII = {
+  mars: 0.15,
+  jupiter: 0.4,
+  saturn: 0.35,
+  uranus: 0.25,
+  earth: 0.15,
+  enceladus: 0.08,
+  titania: 0.08,
+};
+
+/**
+ * Offset a point away from a planet center along the transfer direction.
+ * Returns a new Vector3 that is `offset` scene units away from `planet` toward `other`.
+ */
+function offsetFromPlanet(point, otherPoint, planetName, sceneType) {
+  const isLocal = sceneType !== "full-route";
+  const baseRadius = PLANET_RADII[planetName] || 0.15;
+  const displayRadius = isLocal ? baseRadius : baseRadius * 3;
+  // Offset by 1.5× display radius to clear the sphere surface
+  const offset = displayRadius * 1.5;
+  const dir = new THREE.Vector3().subVectors(otherPoint, point).normalize();
+  return new THREE.Vector3().copy(point).addScaledVector(dir, offset);
+}
+
 // ── Initialization ──
 
 export function initViewer(container) {
@@ -187,7 +212,7 @@ export function loadScene(sceneData) {
 
   // Transfer arcs
   for (const arc of sceneData.transferArcs) {
-    addTransferArc(currentSceneGroup, arc);
+    addTransferArc(currentSceneGroup, arc, sceneData.type);
   }
 
   scene.add(currentSceneGroup);
@@ -293,9 +318,13 @@ function addOrbitCircle(group, radiusKm, color) {
 
 // ── Transfer arc rendering ──
 
-function addTransferArc(group, arc) {
-  const from = new THREE.Vector3(arc.fromPos[0], arc.fromPos[2], arc.fromPos[1]);
-  const to = new THREE.Vector3(arc.toPos[0], arc.toPos[2], arc.toPos[1]);
+function addTransferArc(group, arc, sceneType) {
+  const fromCenter = new THREE.Vector3(arc.fromPos[0], arc.fromPos[2], arc.fromPos[1]);
+  const toCenter = new THREE.Vector3(arc.toPos[0], arc.toPos[2], arc.toPos[1]);
+
+  // Offset endpoints away from planet centers so arcs don't pass through planets
+  const from = offsetFromPlanet(fromCenter, toCenter, arc.from, sceneType);
+  const to = offsetFromPlanet(toCenter, fromCenter, arc.to, sceneType);
 
   // Create curved arc (quadratic bezier with midpoint raised)
   const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
@@ -511,8 +540,11 @@ export function loadTimeline(timeline) {
       const fromPos = planetPosAtDay(fromOrbit, t.startDay);
       const toPos = planetPosAtDay(toOrbit, t.endDay);
 
-      const from = new THREE.Vector3(fromPos[0], fromPos[2], fromPos[1]);
-      const to = new THREE.Vector3(toPos[0], toPos[2], toPos[1]);
+      const fromCenter = new THREE.Vector3(fromPos[0], fromPos[2], fromPos[1]);
+      const toCenter = new THREE.Vector3(toPos[0], toPos[2], toPos[1]);
+      const sceneType = currentSceneGroup?.name || "full-route";
+      const from = offsetFromPlanet(fromCenter, toCenter, fromOrbit.name, sceneType);
+      const to = offsetFromPlanet(toCenter, fromCenter, toOrbit.name, sceneType);
       const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
       const dist = from.distanceTo(to);
       mid.y += dist * 0.15;
@@ -527,8 +559,11 @@ export function loadTimeline(timeline) {
     } else if (_sceneTransferArcs && _sceneTransferArcs[i]) {
       // For local scenes, use pre-defined transfer arc geometry
       const arc = _sceneTransferArcs[i];
-      const from = new THREE.Vector3(arc.fromPos[0], arc.fromPos[2], arc.fromPos[1]);
-      const to = new THREE.Vector3(arc.toPos[0], arc.toPos[2], arc.toPos[1]);
+      const fromCenter = new THREE.Vector3(arc.fromPos[0], arc.fromPos[2], arc.fromPos[1]);
+      const toCenter = new THREE.Vector3(arc.toPos[0], arc.toPos[2], arc.toPos[1]);
+      const sceneType = currentSceneGroup?.name || "local";
+      const from = offsetFromPlanet(fromCenter, toCenter, arc.from, sceneType);
+      const to = offsetFromPlanet(toCenter, fromCenter, arc.to, sceneType);
       const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
       const dist = from.distanceTo(to);
       mid.y += dist * 0.15;
