@@ -10,6 +10,7 @@ import {
   buildRouteContinuityTable,
   buildAccuracyTable,
   buildDeltaVScalingTable,
+  buildTimelineTable,
   generateCrossEpisodeReport,
 } from "./cross-episode-analysis.ts";
 
@@ -26,6 +27,16 @@ describe("SHIP_SPECS", () => {
 
   it("has correct nominal mass", () => {
     assert.equal(SHIP_SPECS.nominalMassT, 48_000);
+  });
+
+  it("emergency thrust exceeds nominal thrust", () => {
+    assert.ok(SHIP_SPECS.emergencyThrustMN > SHIP_SPECS.thrustMN,
+      `emergency ${SHIP_SPECS.emergencyThrustMN} should > nominal ${SHIP_SPECS.thrustMN}`);
+  });
+
+  it("damaged thrust is between 0 and nominal", () => {
+    assert.ok(SHIP_SPECS.damagedThrustMN > 0);
+    assert.ok(SHIP_SPECS.damagedThrustMN < SHIP_SPECS.thrustMN);
   });
 });
 
@@ -75,6 +86,28 @@ describe("EPISODE_SUMMARIES", () => {
     // EP03 has more ΔV than EP01
     assert.ok(ep03.brachistochroneDeltaV! > ep01.brachistochroneDeltaV!);
   });
+
+  it("EP04 and EP05 both arrive at Earth", () => {
+    assert.ok(EPISODE_SUMMARIES[3].arrivalBody.includes("地球"));
+    assert.ok(EPISODE_SUMMARIES[4].arrivalBody.includes("地球"));
+  });
+
+  it("all episodes have non-empty route strings", () => {
+    for (const ep of EPISODE_SUMMARIES) {
+      assert.ok(ep.route.length > 0, `EP${ep.episode} route is empty`);
+      assert.ok(ep.route.includes("→"), `EP${ep.episode} route should contain →`);
+    }
+  });
+
+  it("damaged thrust episodes (EP04, EP05) use lower thrust than EP01/EP03", () => {
+    const ep01 = EPISODE_SUMMARIES[0];
+    const ep04 = EPISODE_SUMMARIES[3];
+    const ep05 = EPISODE_SUMMARIES[4];
+    assert.ok(ep04.thrustUsedMN < ep01.thrustUsedMN,
+      `EP04 thrust ${ep04.thrustUsedMN} should be < EP01 ${ep01.thrustUsedMN}`);
+    assert.ok(ep05.thrustUsedMN < ep01.thrustUsedMN,
+      `EP05 thrust ${ep05.thrustUsedMN} should be < EP01 ${ep01.thrustUsedMN}`);
+  });
 });
 
 describe("buildShipSpecsTable", () => {
@@ -117,6 +150,43 @@ describe("buildRouteContinuityTable", () => {
   it("all rows have ok status (route is continuous)", () => {
     for (const row of table.rows) {
       assert.equal(row.status, "ok", `row "${row.metric}" should be ok`);
+    }
+  });
+});
+
+describe("buildAccuracyTable", () => {
+  const table = buildAccuracyTable();
+
+  it("has accuracy and limits rows", () => {
+    const metrics = table.rows.map(r => r.metric);
+    assert.ok(metrics.some(m => m.includes("実データ")),
+      "should have real-data comparison row");
+    assert.ok(metrics.some(m => m.includes("物理限界")),
+      "should have physics limits row");
+  });
+
+  it("all rows have ok status", () => {
+    for (const row of table.rows) {
+      assert.equal(row.status, "ok",
+        `accuracy row "${row.metric}" should be ok`);
+    }
+  });
+});
+
+describe("buildTimelineTable", () => {
+  const table = buildTimelineTable();
+
+  it("has rows for EP01 through EP04", () => {
+    const allMetrics = table.rows.map(r => r.metric).join(" ");
+    assert.ok(allMetrics.includes("EP1"), "should reference EP1");
+    assert.ok(allMetrics.includes("EP2"), "should reference EP2");
+    assert.ok(allMetrics.includes("EP3"), "should reference EP3");
+  });
+
+  it("all rows have valid status values", () => {
+    for (const row of table.rows) {
+      assert.ok(["ok", "warn", "conflict"].includes(row.status),
+        `timeline row "${row.metric}" has invalid status "${row.status}"`);
     }
   });
 });
