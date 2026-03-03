@@ -285,79 +285,18 @@ function analyzeUranusApproach(): UranusApproachAnalysis {
   };
 }
 
-// ── Main ─────────────────────────────────────────────────────────
+// ── Exported analysis function (used by recalculate pipeline) ────
 
-function main() {
-  console.log("=== 3D Orbital Analysis for SOLAR LINE ===\n");
-
-  // 1. Per-transfer 3D analysis
+export function analyze3DOrbital() {
   const transfers = LEGS.map(analyzeTransfer3D);
-
-  console.log("Transfer 3D Analysis:");
-  for (const t of transfers) {
-    console.log(`  EP${String(t.episode).padStart(2, "0")}: ${t.leg}`);
-    console.log(
-      `    Out-of-plane: ${t.outOfPlaneDistanceKm.toFixed(0)} km (${t.outOfPlaneDistanceAU.toFixed(4)} AU)`,
-    );
-    console.log(
-      `    Inclination change: ${t.inclinationChangeDeg.toFixed(3)}°`,
-    );
-    console.log(
-      `    Plane change ΔV: ${t.planeChangeDvKmS.toFixed(3)} km/s (${t.planeChangeFractionPercent.toFixed(3)}% of transfer ΔV)`,
-    );
-    console.log(
-      `    Departure z: ${t.departure.zHeightKm.toFixed(0)} km, Arrival z: ${t.arrival.zHeightKm.toFixed(0)} km`,
-    );
-  }
-
-  // 2. Saturn ring analysis
-  console.log("\nSaturn Ring Analysis:");
   const saturn = analyzeSaturnRings();
-  console.log(
-    `  Ring plane normal: [${saturn.ringPlaneNormal.map((n) => n.toFixed(4)).join(", ")}]`,
-  );
-  console.log(
-    `  Enceladus at ${saturn.enceladusOrbitKm} km — ${saturn.enceladusOutsideRings ? "outside" : "INSIDE"} rings`,
-  );
-  console.log(
-    `  Approach angle to ring plane: ${saturn.approachFromJupiter.approachAngleToDeg.toFixed(1)}°`,
-  );
-  console.log(`  ${saturn.approachFromJupiter.description}`);
-
-  // 3. Uranus approach analysis
-  console.log("\nUranus Approach Analysis:");
   const uranus = analyzeUranusApproach();
-  console.log(`  Obliquity: ${uranus.obliquityDeg}°`);
-  console.log(
-    `  Spin axis: [${uranus.spinAxis.map((n) => n.toFixed(4)).join(", ")}]`,
-  );
-  console.log(
-    `  From Saturn: ${uranus.approachFromSaturn.angleToDeg.toFixed(1)}° to equatorial — ${uranus.approachFromSaturn.description}`,
-  );
-  console.log(
-    `  Toward Earth: ${uranus.approachFromUranus.angleToDeg.toFixed(1)}° to equatorial — ${uranus.approachFromUranus.description}`,
-  );
 
-  // 4. Summary: are 2D approximations valid?
-  console.log("\n=== Coplanar Approximation Validity ===");
   const maxPlaneChangeFraction = Math.max(
     ...transfers.map((t) => t.planeChangeFractionPercent),
   );
-  console.log(
-    `  Max plane change ΔV fraction: ${maxPlaneChangeFraction.toFixed(4)}%`,
-  );
-  if (maxPlaneChangeFraction < 1.0) {
-    console.log(
-      "  ✓ Coplanar approximation is valid — plane change ΔV < 1% of transfer ΔV for all legs",
-    );
-  } else {
-    console.log(
-      "  ⚠ Coplanar approximation may introduce errors > 1% for some legs",
-    );
-  }
 
-  // Write output
-  const output = {
+  return {
     generatedAt: new Date().toISOString(),
     description: "3D orbital analysis for SOLAR LINE — ecliptic z-heights, ring crossings, approach geometry",
     coplanarApproximationValid: maxPlaneChangeFraction < 1.0,
@@ -373,6 +312,30 @@ function main() {
       earth: analyzeZHeight("earth", ARRIVAL_EARTH),
     },
   };
+}
+
+// ── Standalone CLI entry point ───────────────────────────────────
+
+function main() {
+  console.log("=== 3D Orbital Analysis for SOLAR LINE ===\n");
+
+  const output = analyze3DOrbital();
+
+  for (const t of output.transfers) {
+    console.log(`  EP${String(t.episode).padStart(2, "0")}: ${t.leg}`);
+    console.log(
+      `    Out-of-plane: ${t.outOfPlaneDistanceKm.toFixed(0)} km (${t.outOfPlaneDistanceAU.toFixed(4)} AU)`,
+    );
+    console.log(
+      `    Inclination change: ${t.inclinationChangeDeg.toFixed(3)}°`,
+    );
+    console.log(
+      `    Plane change ΔV: ${t.planeChangeDvKmS.toFixed(3)} km/s (${t.planeChangeFractionPercent.toFixed(3)}% of transfer ΔV)`,
+    );
+  }
+
+  console.log(`\n  Max plane change fraction: ${output.maxPlaneChangeFractionPercent.toFixed(4)}%`);
+  console.log(`  Coplanar valid: ${output.coplanarApproximationValid}`);
 
   const outDir = path.resolve(
     import.meta.dirname ?? ".",
@@ -392,4 +355,8 @@ function main() {
   console.log(`\nOutput written to: ${outFile}`);
 }
 
-main();
+// Run standalone when executed directly
+const isMainModule = process.argv[1]?.includes("orbital-3d-analysis");
+if (isMainModule) {
+  main();
+}

@@ -68,7 +68,7 @@ interface ComparisonSummary {
   }[];
 }
 
-function generateReport(): FullAccuracyReport {
+export function generateTranscriptionAccuracyReport(): FullAccuracyReport {
   const episodes: EpisodeAccuracyReport[] = [];
 
   // Find all episodes with script data
@@ -211,8 +211,11 @@ function generateReport(): FullAccuracyReport {
   };
 }
 
-// Main
-const report = generateReport();
-const outputPath = join(outputDir, "transcription_accuracy.json");
-writeFileSync(outputPath, JSON.stringify(report, null, 2) + "\n");
-console.log(`\nReport written to ${outputPath}`);
+// Run standalone when executed directly
+const _isMainModule = process.argv[1]?.includes("transcription-accuracy-report");
+if (_isMainModule) {
+  const report = generateTranscriptionAccuracyReport();
+  const outputPath = join(outputDir, "transcription_accuracy.json");
+  writeFileSync(outputPath, JSON.stringify(report, null, 2) + "\n");
+  console.log(`\nReport written to ${outputPath}`);
+}

@@ -7,6 +7,8 @@
 
 import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { analyzeEpisode1 } from "./ep01-analysis.ts";
 import { analyzeEpisode2 } from "./ep02-analysis.ts";
 import { analyzeEpisode3 } from "./ep03-analysis.ts";
@@ -14,6 +16,8 @@ import { analyzeEpisode4 } from "./ep04-analysis.ts";
 import { analyzeEpisode5 } from "./ep05-analysis.ts";
 import { generateCrossEpisodeReport } from "./cross-episode-analysis.ts";
 import { generateShipKestrelReport } from "./ship-kestrel-analysis.ts";
+import { analyze3DOrbital } from "./orbital-3d-analysis.ts";
+import { generateTranscriptionAccuracyReport } from "./transcription-accuracy-report.ts";
 
 describe("recalculate pipeline", () => {
   it("all episode analyses produce non-empty results", () => {
@@ -83,6 +87,61 @@ describe("recalculate pipeline", () => {
     const r1 = analyzeEpisode1();
     const r2 = analyzeEpisode1();
     assert.deepStrictEqual(r1, r2);
+  });
+
+  it("3D orbital analysis produces valid output with transfers and ring analysis", () => {
+    const result = analyze3DOrbital();
+    assert.ok(result, "analyze3DOrbital returned falsy");
+    assert.ok(typeof result === "object", "result not an object");
+    assert.ok(result.generatedAt, "missing generatedAt");
+    assert.ok(Array.isArray(result.transfers), "missing transfers array");
+    assert.ok(result.transfers.length === 4, `expected 4 transfer legs, got ${result.transfers.length}`);
+    assert.ok(result.saturnRingAnalysis, "missing saturnRingAnalysis");
+    assert.ok(result.uranusApproachAnalysis, "missing uranusApproachAnalysis");
+    assert.ok(typeof result.maxPlaneChangeFractionPercent === "number", "missing maxPlaneChangeFractionPercent");
+    assert.ok(result.maxPlaneChangeFractionPercent > 0 && result.maxPlaneChangeFractionPercent < 10,
+      `maxPlaneChangeFractionPercent ${result.maxPlaneChangeFractionPercent} out of range`);
+  });
+
+  it("transcription accuracy report produces valid output with episodes and agreements", () => {
+    const result = generateTranscriptionAccuracyReport();
+    assert.ok(result, "generateTranscriptionAccuracyReport returned falsy");
+    assert.ok(result.generatedAt, "missing generatedAt");
+    assert.ok(Array.isArray(result.episodes), "missing episodes array");
+    // At least EP01 has script data
+    assert.ok(result.episodes.length >= 1, "no episodes with script data");
+    for (const ep of result.episodes) {
+      assert.ok(ep.episode > 0 && ep.episode <= 5, `invalid episode number ${ep.episode}`);
+      assert.ok(ep.scriptDialogueLines > 0, `EP${ep.episode} has no script dialogue lines`);
+      assert.ok(ep.comparisons.length > 0, `EP${ep.episode} has no comparisons`);
+      for (const c of ep.comparisons) {
+        assert.ok(c.corpusCharacterAccuracy > 0 && c.corpusCharacterAccuracy <= 1,
+          `EP${ep.episode} ${c.sourceType} corpus accuracy out of range: ${c.corpusCharacterAccuracy}`);
+      }
+    }
+    assert.ok(Array.isArray(result.agreements), "missing agreements array");
+  });
+
+  it("recalculate.ts references 3D orbital and transcription accuracy", () => {
+    const recalcSrc = fs.readFileSync(
+      path.join(import.meta.dirname!, "recalculate.ts"), "utf-8",
+    );
+    assert.ok(
+      recalcSrc.includes("analyze3DOrbital"),
+      "recalculate.ts should import analyze3DOrbital",
+    );
+    assert.ok(
+      recalcSrc.includes("3d_orbital_analysis.json"),
+      "recalculate.ts should write 3d_orbital_analysis.json",
+    );
+    assert.ok(
+      recalcSrc.includes("generateTranscriptionAccuracyReport"),
+      "recalculate.ts should import generateTranscriptionAccuracyReport",
+    );
+    assert.ok(
+      recalcSrc.includes("transcription_accuracy.json"),
+      "recalculate.ts should write transcription_accuracy.json",
+    );
   });
 
   it("all hohmann ΔVs are physically reasonable (0-100 km/s)", () => {

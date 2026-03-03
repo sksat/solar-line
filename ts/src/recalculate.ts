@@ -11,6 +11,9 @@
  * 1. Per-episode orbital mechanics analyses (EP01-05) → calculations/*.json
  * 2. Reproduction command stamping on episode report transfers
  * 3. (Optional) Summary report regeneration (cross-episode, ship-kestrel)
+ * 4. Cross-episode relativistic effects analysis → relativistic_effects.json
+ * 5. 3D orbital analysis (z-heights, ring crossings, approach geometry) → 3d_orbital_analysis.json
+ * 6. Transcription accuracy comparison (script vs VTT/Whisper/OCR) → transcription_accuracy.json
  *
  * Note: Summary reports may contain manual edits beyond what the generator produces.
  * Use --regenerate-summaries only when you want to reset them to generator output.
@@ -26,6 +29,8 @@ import { analyzeEpisode5 } from "./ep05-analysis.ts";
 import { generateCrossEpisodeReport } from "./cross-episode-analysis.ts";
 import { generateShipKestrelReport } from "./ship-kestrel-analysis.ts";
 import { analyzeRelativisticEffects } from "./relativistic-analysis.ts";
+import { analyze3DOrbital } from "./orbital-3d-analysis.ts";
+import { generateTranscriptionAccuracyReport } from "./transcription-accuracy-report.ts";
 import type { EpisodeReport } from "./report-types.ts";
 
 // --- CLI argument parsing ---
@@ -247,6 +252,38 @@ if (!episodeFilter) {
       durationMs: relMs,
     },
     ...relData,
+  });
+  console.log();
+}
+
+// 5. 3D orbital analysis (ecliptic z-heights, ring crossings, approach geometry)
+if (!episodeFilter) {
+  console.log("--- 3D Orbital Analysis ---");
+  process.stdout.write("  Computing 3D orbital geometry...");
+  const { result: data3d, durationMs: ms3d } = timeExec("3d-orbital", analyze3DOrbital);
+  console.log(` done (${ms3d}ms)`);
+  writeJson(path.join(calcDir, "3d_orbital_analysis.json"), {
+    ...data3d,
+    _meta: {
+      reproductionCommand: "npm run recalculate",
+      durationMs: ms3d,
+    },
+  });
+  console.log();
+}
+
+// 6. Transcription accuracy analysis (script vs VTT/Whisper/OCR)
+if (!episodeFilter) {
+  console.log("--- Transcription Accuracy Analysis ---");
+  process.stdout.write("  Comparing transcription sources...");
+  const { result: taData, durationMs: taMs } = timeExec("transcription-accuracy", generateTranscriptionAccuracyReport);
+  console.log(` done (${taMs}ms)`);
+  writeJson(path.join(calcDir, "transcription_accuracy.json"), {
+    ...taData,
+    _meta: {
+      reproductionCommand: "npm run recalculate",
+      durationMs: taMs,
+    },
   });
   console.log();
 }
