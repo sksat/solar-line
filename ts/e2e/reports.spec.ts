@@ -235,6 +235,12 @@ test.describe("EP02-specific features", () => {
     const charts = page.locator(".uplot, .timeseries-chart");
     expect(await charts.count()).toBeGreaterThanOrEqual(1);
   });
+
+  test("has bar charts for radiation and departure scenarios", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    const charts = page.locator("svg[aria-label]");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
+  });
 });
 
 test.describe("EP03-specific features", () => {
@@ -256,6 +262,12 @@ test.describe("EP03-specific features", () => {
     const explorations = page.locator("h3, h4");
     expect(await explorations.count()).toBeGreaterThanOrEqual(3);
   });
+
+  test("has bar charts for burn phase analysis", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    const charts = page.locator("svg[aria-label]");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
+  });
 });
 
 test.describe("EP04-specific features", () => {
@@ -275,6 +287,12 @@ test.describe("EP04-specific features", () => {
     await page.goto("/episodes/ep-004.html");
     const verdicts = page.locator(".verdict");
     expect(await verdicts.count()).toBeGreaterThanOrEqual(5);
+  });
+
+  test("has bar charts for cooling and fleet analysis", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const charts = page.locator("svg[aria-label]");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
   });
 });
 
