@@ -470,6 +470,104 @@ describe("EP01 article content validation", () => {
       "chart should include Ganymede final approach ΔV ~1.6 km/s",
     );
   });
+
+  // --- Task 528: Additional calc JSON → report cross-checks ---
+
+  it("161x thrust gap cited in report", () => {
+    const ratio = analysis.boundaries.thrustBoundary72h.thrustRatioToKestrel;
+    assert.ok(Math.abs(ratio - 160.57) < 0.5, `thrustRatio ${ratio} should be ~160.57`);
+    assert.ok(
+      content.includes("161倍"),
+      "EP01 should cite ~161x thrust gap (160.57 rounded)",
+    );
+  });
+
+  it("required acceleration at 299t: 3.34G, 32.8 m/s²", () => {
+    const aReqG = analysis.boundaries.massBoundary72h.aReqG;
+    assert.ok(Math.abs(aReqG - 3.343) < 0.01);
+    assert.ok(
+      content.includes("3.34G") || content.includes("3.34 G"),
+      "EP01 should cite required G-load 3.34G at 299t",
+    );
+    assert.ok(
+      content.includes("32.8"),
+      "EP01 should cite required acceleration 32.8 m/s² at 299t",
+    );
+  });
+
+  it("reachable distance at 48,000t: 0.023 AU in 72h", () => {
+    const reachableAU = analysis.reachableWithShipThrust.distanceAU;
+    assert.ok(Math.abs(reachableAU - 0.023) < 0.001);
+    const reachableKm = analysis.reachableWithShipThrust.distanceKm;
+    assert.ok(
+      content.includes("3429216") || content.includes("3,429,216"),
+      "EP01 should cite 3,429,216 km reachable distance at 48,000t",
+    );
+  });
+
+  it("minimum transit 912h (38 days) at 48,000t cited in report", () => {
+    const timeH = analysis.boundaries.minTimeAtCanonicalMass.timeHours;
+    assert.ok(Math.abs(timeH - 912.36) < 0.1);
+    assert.ok(
+      content.includes("912") && (content.includes("時間") || content.includes("h")),
+      "EP01 should cite 912h minimum transit time",
+    );
+    assert.ok(
+      content.includes("38日") || content.includes("38 日"),
+      "EP01 should cite 38 days minimum transit",
+    );
+  });
+
+  it("Hohmann transfer time 1126.84 days in calc data", () => {
+    const hohmannDays = analysis.hohmann.transferTimeDays;
+    assert.ok(Math.abs(hohmannDays - 1126.84) < 0.1);
+    assert.ok(
+      content.includes("1126") || content.includes("1,126") || content.includes("1127"),
+      "EP01 should cite Hohmann transfer time ~1127 days",
+    );
+  });
+
+  it("mass sensitivity: 4,800t scenario 0.229 AU in 72h", () => {
+    const scenario = analysis.massSensitivity.find(
+      (s: { massKg: number }) => s.massKg === 4800000,
+    );
+    assert.ok(scenario, "4,800t scenario should exist");
+    assert.ok(Math.abs(scenario.reachable72h.distanceAU - 0.229) < 0.01);
+    assert.ok(
+      content.includes("4,800") || content.includes("4800"),
+      "EP01 should discuss 4,800t mass interpretation",
+    );
+  });
+
+  it("mass sensitivity: 480t scenario 2.29 AU, 48t scenario 22.9 AU", () => {
+    const s480 = analysis.massSensitivity.find(
+      (s: { massKg: number }) => s.massKg === 480000,
+    );
+    const s48 = analysis.massSensitivity.find(
+      (s: { massKg: number }) => s.massKg === 48000,
+    );
+    assert.ok(s480 && s48, "both scenarios should exist");
+    assert.ok(Math.abs(s480.reachable72h.distanceAU - 2.29) < 0.05);
+    assert.ok(Math.abs(s48.reachable72h.distanceAU - 22.9) < 0.5);
+    assert.ok(content.includes("480t"), "EP01 should discuss 480t scenario");
+    assert.ok(content.includes("48t"), "EP01 should discuss 48t scenario");
+  });
+
+  it("ship nominal acceleration 0.204 m/s² at 48,000t", () => {
+    const accel = analysis.shipAcceleration.accelNormalMs2;
+    assert.ok(Math.abs(accel - 0.204) < 0.001);
+    assert.ok(
+      content.includes("0.02G") || content.includes("0.02 G") || content.includes("0.021G"),
+      "EP01 should cite nominal acceleration ~0.02G at 48,000t",
+    );
+  });
+
+  it("reachable distance bar chart shows all mass scenarios", () => {
+    assert.ok(
+      content.includes("0.023") && content.includes("0.229") && content.includes("2.29") && content.includes("22.9"),
+      "EP01 should show reachable AU for 48,000t/4,800t/480t/48t scenarios",
+    );
+  });
 });
 
 describe("EP02 article content validation", () => {
