@@ -1,6 +1,6 @@
 # Task 587: Per-Episode 3D Viewers with 2D/3D TDD Alignment
 
-## Status: **IN_PROGRESS**
+## Status: **DONE**
 
 ## Description
 
