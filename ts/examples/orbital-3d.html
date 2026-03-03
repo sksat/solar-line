@@ -147,7 +147,7 @@ const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, ear
 const ORBIT_RADII_AU = { mars: 1.524, jupiter: 5.203, saturn: 9.537, uranus: 19.19, earth: 1.0 };
 const ORBITAL_PERIODS_DAYS = { mars: 686.97, jupiter: 4332.59, saturn: 10759.22, uranus: 30688.5, earth: 365.256 };
 
-function zFromAU(zAU) { return zAU * AU_TO_SCENE * 10; }
+function zFromAU(zAU) { return zAU * AU_TO_SCENE * 3; }
 
 function planetXY(planet, index) {
   const r = (ORBIT_RADII_AU[planet] ?? 5) * AU_TO_SCENE;

@@ -211,8 +211,8 @@ export function meanMotionPerDay(planet: string): number {
 
 /** Convert AU z-height to scene z coordinate */
 function zFromAU(zAU: number): number {
-  // Exaggerate z by 10× for visibility (real inclinations are small)
-  return zAU * AU_TO_SCENE * 10;
+  // Exaggerate z by 3× for visibility without distorting orbital planes
+  return zAU * AU_TO_SCENE * 3;
 }
 
 /**

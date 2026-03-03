@@ -213,6 +213,29 @@ describe("prepareFullRouteScene", () => {
     assert.ok(scene.supportedViewModes!.includes("ship"));
   });
 
+  it("z-heights produce reasonable visual elevation angles", () => {
+    // With real-ish z-heights, ensure the visual elevation angle is < 10°
+    const inputWithRealisticZ = {
+      ...minimalInput,
+      planetaryZHeightsAtEpoch: {
+        mars: { planet: "mars", zHeightAU: 0.027, latitudeDeg: 1.0 },
+        jupiter: { planet: "jupiter", zHeightAU: -0.043, latitudeDeg: -0.5 },
+        saturn: { planet: "saturn", zHeightAU: 0.319, latitudeDeg: 2.0 },
+        uranus: { planet: "uranus", zHeightAU: 0.244, latitudeDeg: 0.7 },
+        earth: { planet: "earth", zHeightAU: 0.0, latitudeDeg: 0.0 },
+      },
+    };
+    const scene = prepareFullRouteScene(inputWithRealisticZ);
+    const saturn = scene.planets.find(p => p.name === "saturn")!;
+    const saturnR = Math.sqrt(saturn.x ** 2 + saturn.y ** 2);
+    const elevAngleDeg = Math.abs(Math.atan2(saturn.z, saturnR)) * (180 / Math.PI);
+    // Saturn real inclination is ~2.5° — exaggerated should not exceed 10°
+    assert.ok(
+      elevAngleDeg < 10,
+      `Saturn visual elevation ${elevAngleDeg.toFixed(1)}° exceeds 10° limit`,
+    );
+  });
+
   it("orbit circle radii match AU_TO_SCENE scaling", () => {
     const scene = prepareFullRouteScene(minimalInput);
     const earth = scene.orbitCircles!.find(c => c.name === "earth")!;

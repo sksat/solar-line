@@ -3346,7 +3346,7 @@ window.__prepareScene = function(sceneName, data) {
       var p = data.planetaryZHeightsAtEpoch[name];
       var r = (OR[name]||5)*AU;
       var a = angles[i];
-      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*10,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
+      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*3,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
     });
     var arcs = data.transfers.map(function(t){
       var fp = planets.find(function(p){return p.name===t.departure.planet});
@@ -3357,10 +3357,10 @@ window.__prepareScene = function(sceneName, data) {
     var lastJd = data.transfers[data.transfers.length-1].arrival.jd;
     var orbits = order.map(function(name,i){
       var p = data.planetaryZHeightsAtEpoch[name];
-      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:angles[i],meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*10};
+      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:angles[i],meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*3};
     });
     var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg}});
-    var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*10}});
+    var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*3}});
     return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl}};
   }
   if (sceneName === "saturn-ring") {
