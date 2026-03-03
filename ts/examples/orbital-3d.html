@@ -167,15 +167,7 @@ function prepareFullRouteScene(data) {
       color: PLANET_COLORS[name], radius: PLANET_RADII[name] ?? 0.15,
       label: { mars:"火星", jupiter:"木星", saturn:"土星", uranus:"天王星", earth:"地球" }[name] };
   });
-  const transferArcs = data.transfers.map(t => {
-    const fp = planets.find(p => p.name === t.departure.planet);
-    const tp = planets.find(p => p.name === t.arrival.planet);
-    return { from: t.departure.planet, to: t.arrival.planet,
-      fromPos: [fp.x, fp.y, fp.z], toPos: [tp.x, tp.y, tp.z],
-      episode: t.episode, color: EPISODE_COLORS[t.episode], label: t.leg };
-  });
-
-  // Build timeline data
+  // Build timeline data (before transfer arcs, needed for position computation)
   const firstJd = data.transfers[0]?.departure.jd ?? 0;
   const lastJd = data.transfers[data.transfers.length - 1]?.arrival.jd ?? firstJd;
   const totalDays = lastJd - firstJd;
@@ -190,6 +182,27 @@ function prepareFullRouteScene(data) {
       meanMotionPerDay: (2 * Math.PI) / period,
       z: zFromAU(p?.zHeightAU ?? 0),
     };
+  });
+
+  // Planet position at a given day offset
+  const orbMap = {};
+  orbits.forEach(o => { orbMap[o.name] = o; });
+  function posAtDay(orb, day) {
+    const a = orb.initialAngle + orb.meanMotionPerDay * day;
+    return [orb.radiusScene * Math.cos(a), orb.radiusScene * Math.sin(a), orb.z];
+  }
+
+  // Transfer arcs: use planet positions at actual departure/arrival times
+  const transferArcs = data.transfers.map(t => {
+    const depDay = t.departure.jd - firstJd;
+    const arrDay = t.arrival.jd - firstJd;
+    const fo = orbMap[t.departure.planet];
+    const to2 = orbMap[t.arrival.planet];
+    const fromPos = fo ? posAtDay(fo, depDay) : (() => { const p = planets.find(p => p.name === t.departure.planet); return [p.x, p.y, p.z]; })();
+    const toPos = to2 ? posAtDay(to2, arrDay) : (() => { const p = planets.find(p => p.name === t.arrival.planet); return [p.x, p.y, p.z]; })();
+    return { from: t.departure.planet, to: t.arrival.planet,
+      fromPos, toPos,
+      episode: t.episode, color: EPISODE_COLORS[t.episode], label: t.leg };
   });
 
   const transfers = data.transfers.map(t => ({

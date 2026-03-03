@@ -302,21 +302,7 @@ export function prepareFullRouteScene(data: {
     };
   });
 
-  const transferArcs: TransferArcData[] = data.transfers.map((t) => {
-    const fromPlanet = planets.find((p) => p.name === t.departure.planet)!;
-    const toPlanet = planets.find((p) => p.name === t.arrival.planet)!;
-    return {
-      from: t.departure.planet,
-      to: t.arrival.planet,
-      fromPos: [fromPlanet.x, fromPlanet.y, fromPlanet.z],
-      toPos: [toPlanet.x, toPlanet.y, toPlanet.z],
-      episode: t.episode,
-      color: EPISODE_COLORS[t.episode] ?? "#ffffff",
-      label: t.leg,
-    };
-  });
-
-  // Build timeline data from transfer JD dates
+  // Build timeline data from transfer JD dates (needed for arc positioning)
   const firstJd = data.transfers[0]?.departure.jd ?? 0;
   const lastJd =
     data.transfers[data.transfers.length - 1]?.arrival.jd ?? firstJd;
@@ -338,6 +324,37 @@ export function prepareFullRouteScene(data: {
       initialAngle: initialAngles[i],
       meanMotionPerDay: meanMotionPerDay(name),
       z: zFromAU(pData?.zHeightAU ?? 0),
+    };
+  });
+
+  // Transfer arcs: use planet positions at actual departure/arrival times
+  const transferArcs: TransferArcData[] = data.transfers.map((t) => {
+    const depDay = t.departure.jd - firstJd;
+    const arrDay = t.arrival.jd - firstJd;
+    const fromOrbit = timelineOrbits.find((o) => o.name === t.departure.planet);
+    const toOrbit = timelineOrbits.find((o) => o.name === t.arrival.planet);
+    let fromPos: [number, number, number];
+    let toPos: [number, number, number];
+    if (fromOrbit) {
+      fromPos = planetPositionAtTime(fromOrbit, depDay);
+    } else {
+      const fp = planets.find((p) => p.name === t.departure.planet)!;
+      fromPos = [fp.x, fp.y, fp.z];
+    }
+    if (toOrbit) {
+      toPos = planetPositionAtTime(toOrbit, arrDay);
+    } else {
+      const tp = planets.find((p) => p.name === t.arrival.planet)!;
+      toPos = [tp.x, tp.y, tp.z];
+    }
+    return {
+      from: t.departure.planet,
+      to: t.arrival.planet,
+      fromPos,
+      toPos,
+      episode: t.episode,
+      color: EPISODE_COLORS[t.episode] ?? "#ffffff",
+      label: t.leg,
     };
   });
 

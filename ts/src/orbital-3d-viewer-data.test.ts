@@ -245,6 +245,47 @@ describe("prepareFullRouteScene", () => {
       `Earth orbit radius should be ${1.0 * AU_TO_SCENE}, got ${earth.radiusScene}`,
     );
   });
+
+  it("transfer arc endpoints match planet positions at departure/arrival times", () => {
+    // With a 3-day transfer, planets should have moved from initial positions
+    const longTransferInput = {
+      transfers: [
+        {
+          leg: "EP01 Mars→Jupiter",
+          episode: 1,
+          departure: { planet: "mars", jd: 2460000, zHeightAU: 0.01, latitudeDeg: 1.0 },
+          arrival: { planet: "jupiter", jd: 2460100, zHeightAU: 0.02, latitudeDeg: 1.5 },
+        },
+      ],
+      planetaryZHeightsAtEpoch: minimalInput.planetaryZHeightsAtEpoch,
+    };
+    const scene = prepareFullRouteScene(longTransferInput);
+    const arc = scene.transferArcs[0];
+
+    // The arc departure should match Mars at day 0 (start of mission)
+    const marsOrbit = scene.timeline!.orbits.find(o => o.name === "mars")!;
+    const [mx0, my0, mz0] = planetPositionAtTime(marsOrbit, 0);
+    assert.ok(
+      Math.abs(arc.fromPos[0] - mx0) < 0.01 &&
+      Math.abs(arc.fromPos[1] - my0) < 0.01,
+      `Arc departure should match Mars at day 0`,
+    );
+
+    // The arc arrival should match Jupiter at day 100 (not day 0!)
+    const jupOrbit = scene.timeline!.orbits.find(o => o.name === "jupiter")!;
+    const [jx100, jy100] = planetPositionAtTime(jupOrbit, 100);
+    const [jx0, jy0] = planetPositionAtTime(jupOrbit, 0);
+    // Jupiter moves ~0.92°/day → in 100 days ~92° → significant displacement
+    assert.ok(
+      Math.abs(jx100 - jx0) > 0.1,
+      `Jupiter should have moved significantly in 100 days (dx=${Math.abs(jx100 - jx0).toFixed(3)})`,
+    );
+    assert.ok(
+      Math.abs(arc.toPos[0] - jx100) < 0.01 &&
+      Math.abs(arc.toPos[1] - jy100) < 0.01,
+      `Arc arrival should match Jupiter at day 100, not day 0`,
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
