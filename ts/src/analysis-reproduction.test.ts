@@ -488,8 +488,10 @@ describe("EP02 reproduction: Saturn arrival V-infinity", () => {
   });
 
   it("estimated transit = 455.3 days (1.25 years)", () => {
-    assertClose(sv.estimatedTransitDays, 455.2612176238103, "transitDays");
-    assertClose(sv.estimatedTransitYears, 1.2464372830220678, "transitYears");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const svAny = sv as any;
+    assertClose(svAny.estimatedTransitDays, 455.2612176238103, "transitDays");
+    assertClose(svAny.estimatedTransitYears, 1.2464372830220678, "transitYears");
   });
 });
 
