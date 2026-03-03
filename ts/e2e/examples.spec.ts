@@ -433,4 +433,12 @@ test.describe("3D Orbital Viewer Example", () => {
     const playBtn = page.locator("#timeline-play");
     await expect(playBtn).toHaveAttribute("aria-label", "再生");
   });
+
+  test("has view mode toggle button", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const vmBtn = page.locator("#view-mode-btn");
+    await expect(vmBtn).toBeAttached();
+    await expect(vmBtn).toHaveAttribute("aria-label", "視点切替");
+    await expect(vmBtn).toContainText("慣性");
+  });
 });
