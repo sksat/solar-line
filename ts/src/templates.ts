@@ -3226,6 +3226,7 @@ ${sceneButtons}
 <input type="range" class="viewer3d-slider" min="0" max="1000" value="0" style="flex:1;accent-color:#58a6ff;" aria-label="タイムライン">
 <span class="viewer3d-time" style="font-size:0.85em;color:#58a6ff;min-width:80px;text-align:right;font-variant-numeric:tabular-nums;">0日</span>
 <span class="viewer3d-label" style="font-size:0.8em;color:#8b949e;min-width:200px;"></span>
+<button class="viewer3d-viewmode" aria-label="視点切替" title="慣性座標/宇宙船視点の切替" style="background:#21262d;color:#58a6ff;border:1px solid var(--border);padding:4px 12px;cursor:pointer;border-radius:4px;font-size:0.85em;white-space:nowrap;">慣性</button>
 </div>
 <div class="viewer3d-hint" style="font-size:0.8em;color:var(--text-secondary);margin-top:4px;">ドラッグ: 回転 ｜ スクロール: ズーム ｜ 右ドラッグ: 移動</div>
 ${caption}
@@ -3363,7 +3364,7 @@ ${dagHtml}
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script type="module" src="../orbital-3d-viewer.js"></script>
 <script type="module">
-import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay } from "../orbital-3d-viewer.js";
+import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode } from "../orbital-3d-viewer.js";
 document.querySelectorAll(".viewer3d-container").forEach(async function(container) {
   var scene = container.dataset.scene;
   var resp = await fetch("../data/calculations/3d_orbital_analysis.json");
@@ -3434,6 +3435,16 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
       requestAnimationFrame(tick);
     })();
   }
+  // View mode toggle
+  var vmBtn = figure.querySelector(".viewer3d-viewmode");
+  if (vmBtn) {
+    vmBtn.addEventListener("click", function() {
+      var cur = getViewMode();
+      var next = cur === "inertial" ? "ship" : "inertial";
+      setViewMode(next);
+      vmBtn.textContent = next === "inertial" ? "慣性" : "宇宙船";
+    });
+  }
 });
 </script>
 <script type="module">
@@ -3466,15 +3477,18 @@ window.__prepareScene = function(sceneName, data) {
       return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:angles[i],meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*10};
     });
     var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg}});
-    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl}};
+    var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*10}});
+    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl}};
   }
   if (sceneName === "saturn-ring") {
     var ring = data.saturnRingAnalysis;
-    return {type:"saturn-ring",title:"",description:"",planets:[{name:"saturn",x:0,y:0,z:0,color:PC.saturn,radius:0.5,isCentral:true,label:"土星"},{name:"enceladus",x:0,y:0,z:0,color:PC.enceladus,radius:0.08,orbitRadius:ring.enceladusOrbitKm,label:"エンケラドス"}],transferArcs:[{from:"jupiter",to:"saturn",fromPos:[10,2,0],toPos:[0,0,0],episode:2,color:EC[2],label:"木星→土星",approachAngleDeg:ring.approachFromJupiter.approachAngleToDeg}],rings:[{innerRadius:ring.ringInnerKm,outerRadius:ring.ringOuterKm,normal:ring.ringPlaneNormal,color:"#c8a86e",opacity:0.3}]};
+    var ea=Math.PI/4,esr=ring.enceladusOrbitKm/50000,ePeriod=1.370218;
+    return {type:"saturn-ring",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"saturn",x:0,y:0,z:0,color:PC.saturn,radius:0.5,isCentral:true,label:"土星"},{name:"enceladus",x:esr*Math.cos(ea),y:esr*Math.sin(ea),z:0,color:PC.enceladus,radius:0.08,orbitRadius:ring.enceladusOrbitKm,label:"エンケラドス"}],transferArcs:[{from:"jupiter",to:"saturn",fromPos:[10,2,0],toPos:[0,0,0],episode:2,color:EC[2],label:"木星→土星",approachAngleDeg:ring.approachFromJupiter.approachAngleToDeg}],rings:[{innerRadius:ring.ringInnerKm,outerRadius:ring.ringOuterKm,normal:ring.ringPlaneNormal,color:"#c8a86e",opacity:0.3}],timeline:{totalDays:ePeriod*3,orbits:[{name:"enceladus",radiusScene:esr,initialAngle:ea,meanMotionPerDay:2*Math.PI/ePeriod,z:0}],transfers:[{startDay:0,endDay:ePeriod,episode:2,label:"木星→土星 接近"}]}};
   }
   if (sceneName === "uranus-approach") {
     var u = data.uranusApproachAnalysis;
-    return {type:"uranus-approach",title:"",description:"",planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},{name:"titania",x:0,y:0,z:0,color:PC.titania,radius:0.08,orbitRadius:u.titaniaOrbitKm,label:"タイタニア"}],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星",approachAngleDeg:u.approachFromSaturn.angleToDeg},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球",approachAngleDeg:u.approachFromUranus.angleToDeg}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}]};
+    var ta=Math.PI/4,tsr=u.titaniaOrbitKm/50000,tPeriod=8.705872;
+    return {type:"uranus-approach",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},{name:"titania",x:tsr*Math.cos(ta),y:tsr*Math.sin(ta),z:0,color:PC.titania,radius:0.08,orbitRadius:u.titaniaOrbitKm,label:"タイタニア"}],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星",approachAngleDeg:u.approachFromSaturn.angleToDeg},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球",approachAngleDeg:u.approachFromUranus.angleToDeg}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:tPeriod*3,orbits:[{name:"titania",radiusScene:tsr,initialAngle:ta,meanMotionPerDay:2*Math.PI/tPeriod,z:0}],transfers:[{startDay:0,endDay:tPeriod,episode:3,label:"土星→天王星 接近"}]}};
   }
   return null;
 };
