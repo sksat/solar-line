@@ -3214,6 +3214,10 @@ const VIEWER3D_SCENE_LABELS: Record<string, string> = {
   "full-route": "全航路",
   "saturn-ring": "土星リング",
   "uranus-approach": "天王星接近",
+  "episode-1": "EP01: 火星→木星",
+  "episode-2": "EP02: 木星→土星",
+  "episode-3": "EP03: 土星→天王星",
+  "episode-4": "EP04: 天王星→地球",
 };
 
 /** Render an inline 3D viewer embed container */
@@ -3430,9 +3434,49 @@ window.__prepareScene = function(sceneName, data) {
     var ta=Math.PI/4,tsr=u.titaniaOrbitKm/50000,tPeriod=8.705872;
     return {type:"uranus-approach",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},{name:"titania",x:tsr*Math.cos(ta),y:tsr*Math.sin(ta),z:0,color:PC.titania,radius:0.08,orbitRadius:u.titaniaOrbitKm,label:"タイタニア"}],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星",approachAngleDeg:u.approachFromSaturn.angleToDeg},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球",approachAngleDeg:u.approachFromUranus.angleToDeg}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:tPeriod*3,orbits:[{name:"titania",radiusScene:tsr,initialAngle:ta,meanMotionPerDay:2*Math.PI/tPeriod,z:0}],transfers:[{startDay:0,endDay:tPeriod,episode:3,label:"土星→天王星 接近",from:"saturn",to:"uranus"}]}};
   }
+  // Per-episode scenes
+  var epMatch = sceneName.match(/^episode-(\d+)$/);
+  if (epMatch) {
+    var epNum = parseInt(epMatch[1],10);
+    var epTransfer = data.transfers.find(function(t){return t.episode===epNum});
+    if (!epTransfer) return null;
+    var allP = ["mars","jupiter","saturn","uranus","earth"];
+    var PL = {mars:"火星",jupiter:"木星",saturn:"土星",uranus:"天王星",earth:"地球"};
+    var depP = epTransfer.departure.planet, arrP = epTransfer.arrival.planet;
+    var depI = allP.indexOf(depP), arrI = allP.indexOf(arrP);
+    var minI = Math.max(0,Math.min(depI,arrI)-1), maxI = Math.min(allP.length-1,Math.max(depI,arrI)+1);
+    var vis = allP.slice(minI, maxI+1);
+    var msA = data.planetLongitudesAtMissionStart || {};
+    var fJd = data.transfers[0].departure.jd;
+    var epPlanets = vis.map(function(name){
+      var p = data.planetaryZHeightsAtEpoch[name];
+      var r = (OR[name]||5)*AU;
+      var idx = allP.indexOf(name);
+      var a = (typeof msA[name]==="number") ? msA[name] : (p && typeof p.eclipticLongitudeRad==="number") ? p.eclipticLongitudeRad : fallbackAngles[idx];
+      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*3,color:PC[name],radius:PR[name]||0.15,label:PL[name]||name};
+    });
+    var depDay = epTransfer.departure.jd - fJd;
+    var arrDay = epTransfer.arrival.jd - fJd;
+    var epOrbits = vis.map(function(name){
+      var p = data.planetaryZHeightsAtEpoch[name];
+      var idx = allP.indexOf(name);
+      var a = (typeof msA[name]==="number") ? msA[name] : (p && typeof p.eclipticLongitudeRad==="number") ? p.eclipticLongitudeRad : fallbackAngles[idx];
+      var mm = 2*Math.PI/(OP[name]||365);
+      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:a+mm*depDay,meanMotionPerDay:mm,z:(p?p.zHeightAU:0)*AU*3};
+    });
+    function epPosAtDay(orb,day){var a2=orb.initialAngle+orb.meanMotionPerDay*day;return [orb.radiusScene*Math.cos(a2),orb.radiusScene*Math.sin(a2),orb.z]}
+    var epOrbMap={};epOrbits.forEach(function(o){epOrbMap[o.name]=o});
+    var epFo = epOrbMap[depP], epTo = epOrbMap[arrP];
+    var epFp = epFo ? epPosAtDay(epFo,0) : [epPlanets[0].x,epPlanets[0].y,epPlanets[0].z];
+    var epTp = epTo ? epPosAtDay(epTo,arrDay-depDay) : [epPlanets[epPlanets.length-1].x,epPlanets[epPlanets.length-1].y,epPlanets[epPlanets.length-1].z];
+    var epTotalDays = arrDay - depDay;
+    var epOc = vis.map(function(name){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*3}});
+    return {type:"episode-"+epNum,title:"EP0"+epNum,description:"",planets:epPlanets,transferArcs:[{from:depP,to:arrP,fromPos:epFp,toPos:epTp,episode:epNum,color:EC[epNum],label:epTransfer.leg}],orbitCircles:epOc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:epTotalDays,orbits:epOrbits,transfers:[{startDay:0,endDay:epTotalDays,episode:epNum,label:epTransfer.leg,from:depP,to:arrP}]}};
+  }
   return null;
 };
 </script>`;
+
 }
 
 /** Render a time-series chart container with embedded JSON data for uPlot */

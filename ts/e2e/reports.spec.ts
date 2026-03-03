@@ -1756,11 +1756,11 @@ test.describe("Inline 3D viewer in cross-episode report", () => {
 // --- Episode inline 3D viewer tests (Task 561) ---
 
 test.describe("Inline 3D viewer in episode reports", () => {
-  test("EP03 has inline 3D viewer with saturn-ring scene", async ({ page }) => {
+  test("EP03 has inline 3D viewer with episode-3 scene", async ({ page }) => {
     await page.goto("/episodes/ep-003.html");
     const container = page.locator(".viewer3d-container");
     await expect(container).toBeAttached();
-    await expect(container).toHaveAttribute("data-scene", "saturn-ring");
+    await expect(container).toHaveAttribute("data-scene", "episode-3");
   });
 
   test("EP03 viewer has timeline controls and view mode button", async ({ page }) => {
@@ -1798,29 +1798,39 @@ test.describe("Inline 3D viewer in episode reports", () => {
     await expect(tocLink).toHaveText("3D軌道ビューア");
   });
 
-  test("EP02 has inline 3D viewer with saturn-ring scene", async ({ page }) => {
+  test("EP02 has inline 3D viewer with episode-2 scene and switcher", async ({ page }) => {
     await page.goto("/episodes/ep-002.html");
     const container = page.locator(".viewer3d-container");
     await expect(container).toBeAttached();
-    await expect(container).toHaveAttribute("data-scene", "saturn-ring");
+    await expect(container).toHaveAttribute("data-scene", "episode-2");
+    const buttons = page.locator(".viewer3d-scene-btn");
+    expect(await buttons.count()).toBe(3);
+    await expect(buttons.nth(0)).toHaveText("EP02: 木星→土星");
+    await expect(buttons.nth(1)).toHaveText("土星リング");
+    await expect(buttons.nth(2)).toHaveText("全航路");
   });
 
-  test("EP04 has inline 3D viewer with uranus-approach scene and switcher", async ({ page }) => {
+  test("EP04 has inline 3D viewer with episode-4 scene and switcher", async ({ page }) => {
     await page.goto("/episodes/ep-004.html");
     const container = page.locator(".viewer3d-container");
     await expect(container).toBeAttached();
-    await expect(container).toHaveAttribute("data-scene", "uranus-approach");
+    await expect(container).toHaveAttribute("data-scene", "episode-4");
     const buttons = page.locator(".viewer3d-scene-btn");
-    expect(await buttons.count()).toBe(2);
-    await expect(buttons.nth(0)).toHaveText("天王星接近");
-    await expect(buttons.nth(1)).toHaveText("全航路");
+    expect(await buttons.count()).toBe(3);
+    await expect(buttons.nth(0)).toHaveText("EP04: 天王星→地球");
+    await expect(buttons.nth(1)).toHaveText("天王星接近");
+    await expect(buttons.nth(2)).toHaveText("全航路");
   });
 
-  test("EP01 has inline 3D viewer with full-route scene", async ({ page }) => {
+  test("EP01 has inline 3D viewer with episode-1 scene and switcher", async ({ page }) => {
     await page.goto("/episodes/ep-001.html");
     const container = page.locator(".viewer3d-container");
     await expect(container).toBeAttached();
-    await expect(container).toHaveAttribute("data-scene", "full-route");
+    await expect(container).toHaveAttribute("data-scene", "episode-1");
+    const buttons = page.locator(".viewer3d-scene-btn");
+    expect(await buttons.count()).toBe(2);
+    await expect(buttons.nth(0)).toHaveText("EP01: 火星→木星");
+    await expect(buttons.nth(1)).toHaveText("全航路");
   });
 });
 

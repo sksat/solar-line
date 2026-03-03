@@ -1,6 +1,6 @@
 # Task 586: Screenshot-Based Animation Review Infrastructure
 
-## Status: **IN_PROGRESS**
+## Status: **DONE**
 
 ## Description
 

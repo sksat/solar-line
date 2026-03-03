@@ -146,7 +146,7 @@ export interface TransferSummaryItem {
 }
 
 export interface SceneData {
-  type: "full-route" | "saturn-ring" | "uranus-approach";
+  type: "full-route" | "saturn-ring" | "uranus-approach" | `episode-${number}`;
   title: string;
   description: string;
   planets: PlanetData[];
@@ -570,6 +570,172 @@ export function prepareFullRouteScene(data: {
     },
     timeline,
     transferSummary: transferSummary.length > 0 ? transferSummary : undefined,
+  };
+}
+
+const EPISODE_TITLES: Record<number, string> = {
+  1: "EP01: 火星→木星（ガニメデ）72h brachistochrone",
+  2: "EP02: 木星→土星 87日 trim-thrust遷移",
+  3: "EP03: 土星→天王星 143h brachistochrone",
+  4: "EP04: 天王星→地球 507h複合航路",
+};
+
+/** Episode labels */
+const PLANET_LABELS: Record<string, string> = {
+  mars: "火星",
+  jupiter: "木星",
+  saturn: "土星",
+  uranus: "天王星",
+  earth: "地球",
+};
+
+/**
+ * Prepare a per-episode scene showing only the transfer for that episode.
+ * Uses the same data as prepareFullRouteScene but filters to one transfer leg.
+ * Falls back to full-route scene if the episode has no matching transfer.
+ */
+export function prepareEpisodeScene(data: {
+  transfers: Array<{
+    leg: string;
+    episode: number;
+    departure: { planet: string; jd: number; zHeightAU: number; latitudeDeg: number; eclipticLongitudeRad?: number };
+    arrival: { planet: string; jd: number; zHeightAU: number; latitudeDeg: number; eclipticLongitudeRad?: number };
+    outOfPlaneDistanceAU?: number;
+    planeChangeFractionPercent?: number;
+  }>;
+  planetaryZHeightsAtEpoch: Record<
+    string,
+    { planet: string; zHeightAU: number; latitudeDeg: number; eclipticLongitudeRad?: number }
+  >;
+  planetLongitudesAtMissionStart?: Record<string, number>;
+}, episode: number): SceneData {
+  // Find the transfer for this episode
+  const transfer = data.transfers.find(t => t.episode === episode);
+  if (!transfer) {
+    // Fallback to full route
+    return prepareFullRouteScene(data);
+  }
+
+  // Determine which planets to show: departure, arrival, plus neighbors for context
+  const depPlanet = transfer.departure.planet;
+  const arrPlanet = transfer.arrival.planet;
+  const allPlanets = ["mars", "jupiter", "saturn", "uranus", "earth"];
+  const depIdx = allPlanets.indexOf(depPlanet);
+  const arrIdx = allPlanets.indexOf(arrPlanet);
+  // Show planets between departure and arrival, plus one on each side for context
+  const minIdx = Math.max(0, Math.min(depIdx, arrIdx) - 1);
+  const maxIdx = Math.min(allPlanets.length - 1, Math.max(depIdx, arrIdx) + 1);
+  const visiblePlanets = allPlanets.slice(minIdx, maxIdx + 1);
+
+  const missionStartAngles = data.planetLongitudesAtMissionStart;
+  const firstJd = data.transfers[0]?.departure.jd ?? 0;
+
+  const planets: PlanetData[] = visiblePlanets.map((name, i) => {
+    const pData = data.planetaryZHeightsAtEpoch[name];
+    const startLon = missionStartAngles?.[name] ?? pData?.eclipticLongitudeRad;
+    const { x, y } = planetXY(name, startLon, allPlanets.indexOf(name));
+    return {
+      name,
+      x,
+      y,
+      z: zFromAU(pData?.zHeightAU ?? 0),
+      color: PLANET_COLORS[name] ?? "#ffffff",
+      radius: PLANET_RADII[name] ?? 0.15,
+      label: PLANET_LABELS[name] ?? name,
+    };
+  });
+
+  // Timeline orbits for visible planets
+  const timelineOrbits: TimelineOrbit[] = visiblePlanets.map((name) => {
+    const pData = data.planetaryZHeightsAtEpoch[name];
+    const startLon = missionStartAngles?.[name] ?? pData?.eclipticLongitudeRad;
+    const { angle } = planetXY(name, startLon, allPlanets.indexOf(name));
+    return {
+      name,
+      radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+      initialAngle: angle,
+      meanMotionPerDay: meanMotionPerDay(name),
+      z: zFromAU(pData?.zHeightAU ?? 0),
+    };
+  });
+
+  // Transfer arc
+  const depDay = transfer.departure.jd - firstJd;
+  const arrDay = transfer.arrival.jd - firstJd;
+  const fromOrbit = timelineOrbits.find(o => o.name === depPlanet);
+  const toOrbit = timelineOrbits.find(o => o.name === arrPlanet);
+  const fromPos: [number, number, number] = fromOrbit
+    ? planetPositionAtTime(fromOrbit, depDay)
+    : [planets.find(p => p.name === depPlanet)!.x, planets.find(p => p.name === depPlanet)!.y, planets.find(p => p.name === depPlanet)!.z];
+  const toPos: [number, number, number] = toOrbit
+    ? planetPositionAtTime(toOrbit, arrDay)
+    : [planets.find(p => p.name === arrPlanet)!.x, planets.find(p => p.name === arrPlanet)!.y, planets.find(p => p.name === arrPlanet)!.z];
+
+  const transferArcs: TransferArcData[] = [{
+    from: depPlanet,
+    to: arrPlanet,
+    fromPos,
+    toPos,
+    episode,
+    color: EPISODE_COLORS[episode] ?? "#ffffff",
+    label: transfer.leg,
+  }];
+
+  const totalDays = arrDay - depDay;
+  const timelineTransfers: TimelineTransfer[] = [{
+    startDay: 0,
+    endDay: totalDays,
+    episode,
+    label: transfer.leg,
+    from: depPlanet,
+    to: arrPlanet,
+  }];
+
+  // Adjust timeline orbits so day=0 corresponds to the episode's departure
+  const adjustedOrbits: TimelineOrbit[] = timelineOrbits.map(o => ({
+    ...o,
+    // Advance initial angle by depDay to set day 0 at episode departure
+    initialAngle: o.initialAngle + o.meanMotionPerDay * depDay,
+  }));
+
+  const timeline: TimelineData = {
+    totalDays,
+    orbits: adjustedOrbits,
+    transfers: timelineTransfers,
+  };
+
+  const orbitCircles: OrbitCircleData[] = visiblePlanets.map((name) => {
+    const pData = data.planetaryZHeightsAtEpoch[name];
+    return {
+      name,
+      radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+      color: PLANET_COLORS[name] ?? "#ffffff",
+      z: zFromAU(pData?.zHeightAU ?? 0),
+    };
+  });
+
+  const summary: TransferSummaryItem[] = transfer.outOfPlaneDistanceAU !== undefined
+    ? [{ leg: transfer.leg, outOfPlaneDistanceAU: transfer.outOfPlaneDistanceAU!, planeChangeFractionPercent: transfer.planeChangeFractionPercent ?? 0 }]
+    : [];
+
+  return {
+    type: `episode-${episode}`,
+    title: EPISODE_TITLES[episode] ?? `EP0${episode}`,
+    description: `${PLANET_LABELS[depPlanet] ?? depPlanet}から${PLANET_LABELS[arrPlanet] ?? arrPlanet}への遷移を3Dで表示。`,
+    planets,
+    transferArcs,
+    orbitCircles,
+    supportedViewModes: ["inertial", "ship"],
+    eclipticPlane: {
+      type: "ecliptic",
+      normal: [0, 0, 1],
+      z: 0,
+      color: "#334455",
+      opacity: 0.15,
+      label: "黄道面",
+    },
+    timeline,
+    transferSummary: summary.length > 0 ? summary : undefined,
   };
 }
 

@@ -12,6 +12,7 @@ import {
   prepareFullRouteScene,
   prepareSaturnScene,
   prepareUranusScene,
+  prepareEpisodeScene,
   arcControlPoint,
   arcControlPointLocal,
   offsetFromPlanet,
@@ -872,16 +873,17 @@ describe("offsetFromPlanet", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Load the actual 3D analysis JSON (shared by multiple test suites)
+const analysisPath = new URL(
+  "../../reports/data/calculations/3d_orbital_analysis.json",
+  import.meta.url,
+);
+const analysis = JSON.parse(readFileSync(analysisPath, "utf-8"));
+
 // Real data arrival alignment (uses 3d_orbital_analysis.json)
 // ---------------------------------------------------------------------------
 
 describe("arrival alignment with real analysis data", () => {
-  // Load the actual 3D analysis JSON
-  const analysisPath = new URL(
-    "../../reports/data/calculations/3d_orbital_analysis.json",
-    import.meta.url,
-  );
-  const analysis = JSON.parse(readFileSync(analysisPath, "utf-8"));
 
   it("mission-start longitudes produce correct planet positions at each arrival JD", () => {
     const scene = prepareFullRouteScene(analysis);
@@ -945,5 +947,229 @@ describe("arrival alignment with real analysis data", () => {
       assert.strictEqual(transfers[i].to, analysis.transfers[i].arrival.planet,
         `Transfer ${i} to should be ${analysis.transfers[i].arrival.planet}`);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 2D / 3D alignment tests (Task 587)
+// ---------------------------------------------------------------------------
+
+describe("2D / 3D data alignment", () => {
+  // 2D diagram orbit angles from episode MDX (manually extracted)
+  // These are the angles in the primary heliocentric diagram for each episode
+  const ep01_2d = {
+    mars: { angle: 1.431, meanMotionRadS: 1.059e-7, radiusAU: 1.524 },
+    jupiter: { angle: 1.3786, meanMotionRadS: 1.678e-8, radiusAU: 5.203 },
+  };
+  const ep03_2d = {
+    saturn: { angle: 2.8674, meanMotionRadS: 6.761e-9, radiusAU: 9.58 },
+    uranus: { angle: 2.6742, meanMotionRadS: 2.37e-9, radiusAU: 19.19 },
+  };
+  const ep04_2d = {
+    earth: { angle: 2.721, meanMotionRadS: 1.991e-7, radiusAU: 1.0 },
+    mars: { angle: 2.2779, meanMotionRadS: 1.059e-7, radiusAU: 1.524 },
+    jupiter: { angle: 1.5294, meanMotionRadS: 1.678e-8, radiusAU: 5.203 },
+    saturn: { angle: 2.8722, meanMotionRadS: 6.761e-9, radiusAU: 9.58 },
+    uranus: { angle: 2.6747, meanMotionRadS: 2.37e-9, radiusAU: 19.19 },
+  };
+
+  it("EP01 planet departure angles match 3D analysis within 0.01 rad", () => {
+    // 3D data: eclipticLongitudeRad at departure
+    const mars3d = analysis.transfers[0].departure.eclipticLongitudeRad;
+    const jup3d = analysis.transfers[0].arrival.eclipticLongitudeRad;
+
+    assert.ok(
+      Math.abs(ep01_2d.mars.angle - mars3d) < 0.01,
+      `Mars: 2D=${ep01_2d.mars.angle} vs 3D=${mars3d}`,
+    );
+    assert.ok(
+      Math.abs(ep01_2d.jupiter.angle - jup3d) < 0.01,
+      `Jupiter: 2D=${ep01_2d.jupiter.angle} vs 3D=${jup3d}`,
+    );
+  });
+
+  it("EP03 planet angles match 3D analysis within 0.01 rad", () => {
+    const sat3d = analysis.transfers[2].departure.eclipticLongitudeRad;
+    const ura3d = analysis.transfers[2].arrival.eclipticLongitudeRad;
+
+    assert.ok(
+      Math.abs(ep03_2d.saturn.angle - sat3d) < 0.01,
+      `Saturn: 2D=${ep03_2d.saturn.angle} vs 3D=${sat3d}`,
+    );
+    assert.ok(
+      Math.abs(ep03_2d.uranus.angle - ura3d) < 0.01,
+      `Uranus: 2D=${ep03_2d.uranus.angle} vs 3D=${ura3d}`,
+    );
+  });
+
+  it("EP04 planet angles match 3D analysis at EP04 epoch", () => {
+    // EP04 diagram shows Uranus→Earth transfer, with all planets at EP04 epoch
+    // EP04 departure from Uranus at JD 2530108.72
+    const ura3d = analysis.transfers[3].departure.eclipticLongitudeRad;
+    const earth3d = analysis.transfers[3].arrival.eclipticLongitudeRad;
+
+    assert.ok(
+      Math.abs(ep04_2d.uranus.angle - ura3d) < 0.01,
+      `Uranus: 2D=${ep04_2d.uranus.angle} vs 3D=${ura3d}`,
+    );
+    assert.ok(
+      Math.abs(ep04_2d.earth.angle - earth3d) < 0.01,
+      `Earth: 2D=${ep04_2d.earth.angle} vs 3D=${earth3d}`,
+    );
+  });
+
+  it("mean motion consistency: 2D (rad/s) × 86400 ≈ 3D (rad/day)", () => {
+    const planets = ["mars", "jupiter", "saturn", "uranus", "earth"] as const;
+    const meanMotion2D: Record<string, number> = {
+      mars: 1.059e-7,
+      jupiter: 1.678e-8,
+      saturn: 6.761e-9,
+      uranus: 2.37e-9,
+      earth: 1.991e-7,
+    };
+
+    for (const name of planets) {
+      const mm3d = meanMotionPerDay(name);
+      const mm2dPerDay = meanMotion2D[name] * 86400;
+      const relDiff = Math.abs(mm3d - mm2dPerDay) / mm3d;
+      assert.ok(
+        relDiff < 0.01,
+        `${name}: 3D=${mm3d.toExponential(4)} vs 2D×86400=${mm2dPerDay.toExponential(4)}, relDiff=${(relDiff * 100).toFixed(2)}%`,
+      );
+    }
+  });
+
+  it("orbit radii in 2D (AU) match 3D constants", () => {
+    // Check that ORBIT_RADII_AU used in 3D scene matches 2D diagram radii
+    const expected: Record<string, number> = {
+      mars: 1.524,
+      jupiter: 5.203,
+      saturn: 9.537,  // 3D uses 9.537 (JPL), 2D uses 9.58 (rounded)
+      uranus: 19.19,
+      earth: 1.0,
+    };
+
+    const scene = prepareFullRouteScene(analysis);
+    for (const orbit of scene.timeline!.orbits) {
+      if (expected[orbit.name] !== undefined) {
+        const actualAU = orbit.radiusScene / AU_TO_SCENE;
+        const diff = Math.abs(actualAU - expected[orbit.name]);
+        assert.ok(
+          diff < 0.1, // Allow 0.1 AU tolerance (Saturn 9.537 vs 9.58)
+          `${orbit.name}: 3D=${actualAU.toFixed(3)} AU vs expected=${expected[orbit.name]} AU`,
+        );
+      }
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Per-episode scene preparation (Task 587)
+// ---------------------------------------------------------------------------
+
+describe("prepareEpisodeScene", () => {
+  it("EP01 scene has Mars and Jupiter with EP01 transfer", () => {
+    const scene = prepareEpisodeScene(analysis, 1);
+    assert.strictEqual(scene.type, "episode-1");
+    assert.ok(scene.title.includes("EP01"));
+
+    // Should have Mars, Jupiter, and optionally Earth (reference)
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("mars"), "Mars should be in EP01 scene");
+    assert.ok(names.includes("jupiter"), "Jupiter should be in EP01 scene");
+
+    // Transfer arc from Mars to Jupiter
+    assert.strictEqual(scene.transferArcs.length, 1);
+    assert.strictEqual(scene.transferArcs[0].from, "mars");
+    assert.strictEqual(scene.transferArcs[0].to, "jupiter");
+
+    // Timeline
+    assert.ok(scene.timeline, "EP01 should have timeline");
+    assert.strictEqual(scene.timeline!.transfers.length, 1);
+    assert.ok(scene.timeline!.totalDays > 0);
+  });
+
+  it("EP02 scene has Jupiter and Saturn", () => {
+    const scene = prepareEpisodeScene(analysis, 2);
+    assert.strictEqual(scene.type, "episode-2");
+
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("jupiter"), "Jupiter should be in EP02 scene");
+    assert.ok(names.includes("saturn"), "Saturn should be in EP02 scene");
+
+    assert.strictEqual(scene.transferArcs.length, 1);
+    assert.strictEqual(scene.transferArcs[0].from, "jupiter");
+    assert.strictEqual(scene.transferArcs[0].to, "saturn");
+  });
+
+  it("EP03 scene has Saturn and Uranus", () => {
+    const scene = prepareEpisodeScene(analysis, 3);
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("saturn"));
+    assert.ok(names.includes("uranus"));
+    assert.strictEqual(scene.transferArcs[0].from, "saturn");
+    assert.strictEqual(scene.transferArcs[0].to, "uranus");
+  });
+
+  it("EP04 scene has Uranus and Earth", () => {
+    const scene = prepareEpisodeScene(analysis, 4);
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("uranus"));
+    assert.ok(names.includes("earth"));
+    assert.strictEqual(scene.transferArcs[0].from, "uranus");
+    assert.strictEqual(scene.transferArcs[0].to, "earth");
+  });
+
+  it("EP01 timeline totalDays matches 72h (3 days)", () => {
+    const scene = prepareEpisodeScene(analysis, 1);
+    assert.ok(
+      Math.abs(scene.timeline!.totalDays - 3) < 0.1,
+      `EP01 totalDays should be ~3, got ${scene.timeline!.totalDays}`,
+    );
+  });
+
+  it("EP02 timeline totalDays matches ~87 days", () => {
+    const scene = prepareEpisodeScene(analysis, 2);
+    assert.ok(
+      scene.timeline!.totalDays > 80 && scene.timeline!.totalDays < 95,
+      `EP02 totalDays should be ~87, got ${scene.timeline!.totalDays}`,
+    );
+  });
+
+  it("episode scene day=0 planet positions match full-route at departure day", () => {
+    const fullScene = prepareFullRouteScene(analysis);
+    const firstJd = analysis.transfers[0].departure.jd;
+    for (let ep = 1; ep <= 4; ep++) {
+      const epScene = prepareEpisodeScene(analysis, ep);
+      const transfer = analysis.transfers.find((t: { episode: number }) => t.episode === ep);
+      if (!transfer) continue;
+      const depDay = transfer.departure.jd - firstJd;
+      // Episode's day=0 positions should match full-route's depDay positions
+      for (const epOrbit of epScene.timeline!.orbits) {
+        const fullOrbit = fullScene.timeline!.orbits.find(o => o.name === epOrbit.name);
+        if (!fullOrbit) continue;
+        const [epX, epY] = planetPositionAtTime(epOrbit, 0);
+        const [fullX, fullY] = planetPositionAtTime(fullOrbit, depDay);
+        const dist = Math.sqrt((epX - fullX) ** 2 + (epY - fullY) ** 2);
+        assert.ok(
+          dist < 0.01,
+          `EP${ep} ${epOrbit.name}: episode day=0 pos=(${epX.toFixed(3)},${epY.toFixed(3)}) should match full-route day=${depDay.toFixed(1)} pos=(${fullX.toFixed(3)},${fullY.toFixed(3)}), dist=${dist.toFixed(4)}`,
+        );
+      }
+    }
+  });
+
+  it("episode scene orbit circles present for relevant planets", () => {
+    const scene = prepareEpisodeScene(analysis, 1);
+    assert.ok(scene.orbitCircles, "EP01 should have orbit circles");
+    const circleNames = scene.orbitCircles!.map(c => c.name);
+    assert.ok(circleNames.includes("mars"));
+    assert.ok(circleNames.includes("jupiter"));
+  });
+
+  it("returns all 5 planets scene for unknown episode", () => {
+    // If no transfer found for episode, fall back to full scene
+    const scene = prepareEpisodeScene(analysis, 99);
+    assert.strictEqual(scene.planets.length, 5);
   });
 });
