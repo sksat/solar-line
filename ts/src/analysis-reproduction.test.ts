@@ -1649,3 +1649,94 @@ describe("Integrator comparison: cross-episode consistency", () => {
     }
   });
 });
+
+// ============================================================
+// Onscreen crossref reproduction (ep*_onscreen_crossref.json)
+// Pins on-screen display vs computed orbital mechanics values
+// ============================================================
+
+function loadCrossref(ep: string): Record<string, unknown> {
+  return JSON.parse(fs.readFileSync(path.join(calcDir, `${ep}_onscreen_crossref.json`), "utf-8"));
+}
+
+describe("Onscreen crossref: EP01 Jupiter SOI entry", () => {
+  const cr = loadCrossref("ep01") as Record<string, Record<string, Record<string, number>>>;
+
+  it("vis-viva velocity at 20 RJ = 17.92 km/s (on-screen 17.8, 0.67% diff)", () => {
+    assertClose(cr.jupiterSOI.computed.v_at_20RJ_km_s, 17.92, "v20RJ");
+    assertClose(cr.jupiterSOI.comparison.velocity_difference_km_s, 0.12, "vDiffKms");
+    assertClose(cr.jupiterSOI.comparison.velocity_difference_percent, 0.67, "vDiffPct");
+  });
+
+  it("Ganymede approach: computed v=12.48 km/s, relative v=1.60 km/s", () => {
+    assertClose(cr.ganymedeApproach.computed.v_at_ganymede_orbit_km_s, 12.48, "vGanOrbit");
+    assertClose(cr.ganymedeApproach.computed.ganymede_orbital_velocity_km_s, 10.88, "vGanOrbital");
+    assertClose(cr.ganymedeApproach.computed.relative_velocity_km_s, 1.60, "vRelGanymede");
+  });
+});
+
+describe("Onscreen crossref: EP03 brachistochrone symmetry", () => {
+  const cr = loadCrossref("ep03") as Record<string, Record<string, number>>;
+
+  it("cruise/capture burn duration ratio = 1.000274 (30s in ~109500s)", () => {
+    assertClose(cr.brachistochroneSymmetry.cruiseBurnDuration_s, 109500, "cruiseDur");
+    assertClose(cr.brachistochroneSymmetry.capturePrepDuration_s, 109530, "captureDur");
+    assertClose(cr.brachistochroneSymmetry.difference_s, 30, "durDiff");
+    assertClose(cr.brachistochroneSymmetry.ratio, 1.000274, "symmetryRatio");
+  });
+
+  it("total ΔV = 5984.54 km/s (5984.31 main + 0.23 RCS)", () => {
+    assertClose(cr.burnSequenceCrossReference.totalDeltaV_km_s, 5984.54, "totalDv");
+    assertClose(cr.burnSequenceCrossReference.mainBurnsDeltaV_km_s, 5984.31, "mainDv");
+    assertClose(cr.burnSequenceCrossReference.rcsTrimsDeltaV_km_s, 0.23, "rcsDv");
+  });
+});
+
+describe("Onscreen crossref: EP05 burn sequence accelerations", () => {
+  const cr = loadCrossref("ep05") as Record<string, unknown>;
+  const burns = (cr.routeBurnVerification as Record<string, unknown>).burns as Array<Record<string, Record<string, number>>>;
+
+  it("4 burns: 16.38, 13.66, 10.92, 15.02 m/s² (non-monotonic pattern)", () => {
+    assert.equal(burns.length, 4);
+    assertClose(burns[0].computed.acceleration_ms2, 16.38, "burn1Accel");
+    assertClose(burns[1].computed.acceleration_ms2, 13.66, "burn2Accel");
+    assertClose(burns[2].computed.acceleration_ms2, 10.92, "burn3Accel");
+    assertClose(burns[3].computed.acceleration_ms2, 15.02, "burn4Accel");
+  });
+
+  it("total burn time = 80.633 hours (290280 s)", () => {
+    const total = (cr.routeBurnVerification as Record<string, Record<string, number>>).totalBurnVerification;
+    assertClose(total.onScreen_hours, 80.633, "totalBurnHrs");
+    assertClose(total.computed_s, 290280, "totalBurnSec");
+  });
+
+  it("coast fraction 84.1% of 507h mission", () => {
+    const timeline = (cr.missionTimelineVerification as Record<string, Record<string, number>>).coastFraction;
+    assertClose(timeline.coastPercent, 84.1, "coastPct");
+    assertClose(timeline.totalCoast_hours, 426.367, "totalCoast");
+    assertClose(timeline.totalBurn_hours, 80.633, "totalBurn");
+  });
+});
+
+describe("Onscreen crossref: EP05 ice particle impact", () => {
+  const cr = loadCrossref("ep05") as Record<string, unknown>;
+  const ice = cr.saturnRingIceParticle as Record<string, Record<string, Record<string, number>>>;
+
+  it("solid ice sphere KE = 540.1 MJ (vs on-screen 110 MJ, 4.9× factor)", () => {
+    assertClose(ice.physicsVerification.assumption1_solidIceSphere.kineticEnergy_MJ, 540.1, "solidIceKE");
+    assertClose(ice.physicsVerification.particleSizeFor110MJ.requiredDiameter_cm, 0.585, "reqDiameter");
+  });
+});
+
+describe("Onscreen crossref: EP05 nozzle margin", () => {
+  const cr = loadCrossref("ep05") as Record<string, unknown>;
+  const nozzle = cr.nozzleLifespanMargin as Record<string, Record<string, number>>;
+
+  it("on-screen +0:26:00 matches analysis 26 min (0.78%)", () => {
+    assertClose(nozzle.onScreen.marginMinutes, 26, "onScreenMargin");
+    assertClose(nozzle.existingAnalysis.marginMinutes, 26, "analysisMargin");
+    assertClose(nozzle.existingAnalysis.marginPercent, 0.78, "marginPct");
+    assertClose(nozzle.existingAnalysis.nozzleLifetime_hours, 55.633, "nozzleLife");
+    assertClose(nozzle.existingAnalysis.requiredBurnTime_hours, 55.200, "reqBurnTime");
+  });
+});
