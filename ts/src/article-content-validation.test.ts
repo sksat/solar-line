@@ -1576,10 +1576,10 @@ describe("Episode reports cross-reference summary analyses", () => {
 
 describe("Summary reports have related pages with episode links", () => {
   const summaries = [
-    { file: "ship-kestrel.md", label: "ship-kestrel", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-005.html", "cross-episode.html"] },
+    { file: "ship-kestrel.md", label: "ship-kestrel", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-002.html", "../episodes/ep-003.html", "../episodes/ep-004.html", "../episodes/ep-005.html", "cross-episode.html"] },
     { file: "communications.md", label: "communications", requiredLinks: ["../episodes/ep-003.html", "../episodes/ep-005.html"] },
-    { file: "attitude-control.md", label: "attitude-control", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-004.html"] },
-    { file: "infrastructure.md", label: "infrastructure", requiredLinks: ["../episodes/ep-002.html", "../episodes/ep-003.html"] },
+    { file: "attitude-control.md", label: "attitude-control", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-004.html", "../episodes/ep-005.html"] },
+    { file: "infrastructure.md", label: "infrastructure", requiredLinks: ["../episodes/ep-002.html", "../episodes/ep-003.html", "../episodes/ep-005.html"] },
   ];
 
   for (const { file, label, requiredLinks } of summaries) {
@@ -1601,8 +1601,8 @@ describe("Summary reports have related pages with episode links", () => {
 
 describe("Remaining summary reports have related pages", () => {
   const summaries = [
-    { file: "science-accuracy.md", label: "science-accuracy", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-004.html"] },
-    { file: "other-ships.md", label: "other-ships", requiredLinks: ["../episodes/ep-002.html", "../episodes/ep-004.html"] },
+    { file: "science-accuracy.md", label: "science-accuracy", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-002.html", "../episodes/ep-003.html", "../episodes/ep-004.html", "../episodes/ep-005.html"] },
+    { file: "other-ships.md", label: "other-ships", requiredLinks: ["../episodes/ep-002.html", "../episodes/ep-004.html", "../episodes/ep-005.html"] },
     { file: "cross-episode.md", label: "cross-episode", requiredLinks: ["ship-kestrel.html", "../episodes/ep-001.html", "../episodes/ep-002.html", "../episodes/ep-003.html", "../episodes/ep-004.html", "../episodes/ep-005.html"] },
     { file: "ai-costs.md", label: "ai-costs", requiredLinks: ["tech-overview.html"] },
   ];
