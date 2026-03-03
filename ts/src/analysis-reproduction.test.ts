@@ -268,6 +268,79 @@ describe("EP02 reproduction: trim-thrust transfer (corrected)", () => {
   });
 });
 
+describe("EP02 reproduction: arrival consistency scenarios", () => {
+  const r = analyzeEpisode2();
+  const ac = r.arrivalConsistency;
+
+  it("prograde-only: ~87 days, v∞ ≈ 90 km/s (capture impractical)", () => {
+    assertClose(ac.progradeOnly.transferDays, 86.806, "progradeOnly transferDays", 0.001);
+    assertClose(ac.progradeOnly.vInfKms, 90.246, "progradeOnly v∞", 0.001);
+    assert.ok(ac.progradeOnly.captureDeltaVKms > 70, "capture ΔV >> Saturn orbital velocity");
+  });
+
+  it("ballistic: ~997 days, v∞ ≈ 9.2 km/s (capturable)", () => {
+    assertClose(ac.ballistic.transferDays, 996.819, "ballistic transferDays", 0.001);
+    assertClose(ac.ballistic.vInfKms, 9.211, "ballistic v∞", 0.001);
+    assertClose(ac.ballistic.captureDeltaVKms, 2.236, "ballistic capture ΔV", 0.001);
+  });
+
+  it("best efficiency: 1.5d+1.5d → ~166 days, v∞ ≈ 10.5 km/s", () => {
+    assertClose(ac.bestEfficiency.transferDays, 166.403, "bestEff transferDays", 0.001);
+    assertClose(ac.bestEfficiency.vInfKms, 10.512, "bestEff v∞", 0.001);
+    assert.ok(ac.bestEfficiency.propellantFraction < 0.01, "< 1% propellant");
+  });
+
+  it("two-phase scenarios: 12 computed, transfer time decreases with more thrust", () => {
+    assert.equal(ac.allTwoPhase.length, 12);
+    // First scenario (3d accel, 0d decel) should be fastest
+    assert.ok(ac.allTwoPhase[0].transferDays < 100, "fastest two-phase < 100d");
+    // Last scenario should have the most deceleration
+    const last = ac.allTwoPhase[ac.allTwoPhase.length - 1];
+    assert.ok(last.decelDays > 0, "last scenario has deceleration");
+  });
+
+  it("balanced accel/decel (equal days) achieves capturable v∞ ≈ 10 km/s", () => {
+    // The key v∞ resolution: balanced two-phase gives capturable v∞
+    const balanced = ac.allTwoPhase.filter(
+      (s: { accelDays: number; decelDays: number }) => s.accelDays === s.decelDays,
+    );
+    assert.ok(balanced.length >= 3, `at least 3 balanced scenarios, got ${balanced.length}`);
+    for (const s of balanced) {
+      assert.ok(
+        s.vInfAtSaturnKms < 15,
+        `balanced ${s.accelDays}d+${s.decelDays}d: v∞ ${s.vInfAtSaturnKms} should be < 15 km/s (capturable)`,
+      );
+    }
+  });
+});
+
+describe("EP02 reproduction: Jupiter radiation analysis", () => {
+  const r = analyzeEpisode2();
+  const rad = r.jupiterRadiation;
+
+  it("shield budget = 0.04312 krad (42 min at departure rate)", () => {
+    assertClose(rad.shieldBudget42minKrad, 0.04312, "shieldBudget", 0.001);
+  });
+
+  it("min survival velocity ≈ 50.4 km/s", () => {
+    assertClose(rad.minSurvivalVelocityKms, 50.4, "minSurvivalV", 0.01);
+  });
+
+  it("ballistic 7 km/s: dose 0.310 krad, shield fails", () => {
+    const s = rad.scenarios[0];
+    assertClose(s.accumulatedDoseKrad, 0.310441, "dose", 0.001);
+    assert.equal(s.shieldSurvives, false);
+    assertClose(s.doseFractionOfBudget, 7.199, "doseFraction", 0.01);
+  });
+
+  it("accelerated 60 km/s: dose 0.036 krad, shield survives", () => {
+    const s = rad.scenarios[1];
+    assertClose(s.accumulatedDoseKrad, 0.036218, "dose", 0.001);
+    assert.equal(s.shieldSurvives, true);
+    assertClose(s.doseFractionOfBudget, 0.84, "doseFraction", 0.01);
+  });
+});
+
 // ============================================================
 // EP03: Enceladus → Titania
 // ============================================================
