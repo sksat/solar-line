@@ -6,3 +6,5 @@ Claim a task, work on it, commit your changes, push to origin, check CI status.
 以下追加指示（新しい記述を見逃さないようにするため、削除前に git diff を再確認すること。）
 
 ---
+
+- 3D 可視化において、周回軌道などの正しい目的地に投入される計算になっていない？TDD で修正
