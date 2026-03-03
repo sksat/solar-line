@@ -24,6 +24,8 @@ let _sceneTransferArcs = null; // Store current scene's transfer arc data for lo
 let _viewMode = "inertial"; // "inertial" or "ship"
 let _cameraOffset = new THREE.Vector3(5, 8, 10); // offset from ship in ship-frame mode
 let _animationSpeed = 1.0; // Playback speed multiplier (0.5, 1, 2, 4)
+let _inertialCameraPos = new THREE.Vector3(30, 25, 40);
+let _inertialCameraTarget = new THREE.Vector3(0, 0, 0);
 
 // ── Constants matching orbital-3d-viewer-data.ts ──
 const AU_TO_SCENE = 5;
@@ -277,12 +279,63 @@ export function loadScene(sceneData) {
 
   // Adjust camera for scene type
   if (sceneData.type === "full-route") {
-    camera.position.set(30, 25, 40);
-    controls.target.set(0, 0, 0);
+    _inertialCameraPos.set(30, 25, 40);
+    _inertialCameraTarget.set(0, 0, 0);
+  } else if (sceneData.type.startsWith("episode-")) {
+    // Focus camera on transfer arc and its departure/arrival planets.
+    // Data coords: [x_ecliptic, y_ecliptic, z_height]
+    // Three.js Y-up: (data[0], data[2], data[1])
+    const threePositions = [];
+    for (const arc of sceneData.transferArcs) {
+      if (arc.fromPos) threePositions.push(new THREE.Vector3(arc.fromPos[0], arc.fromPos[2], arc.fromPos[1]));
+      if (arc.toPos) threePositions.push(new THREE.Vector3(arc.toPos[0], arc.toPos[2], arc.toPos[1]));
+    }
+    // Also include all visible planet positions for a complete bounding box
+    for (const p of sceneData.planets) {
+      threePositions.push(new THREE.Vector3(p.x, p.z, p.y));
+    }
+    if (threePositions.length > 0) {
+      const bbox = new THREE.Box3();
+      for (const p of threePositions) bbox.expandByPoint(p);
+      const center = new THREE.Vector3();
+      bbox.getCenter(center);
+      const size = new THREE.Vector3();
+      bbox.getSize(size);
+      const span = Math.max(size.x, size.y, size.z, 5);
+      const camDist = span * 1.5;
+
+      // Camera direction: outward from origin through arc center, elevated 35°
+      const radialDir = new THREE.Vector3(center.x, 0, center.z);
+      const radialLen = radialDir.length();
+      if (radialLen > 0.01) {
+        radialDir.normalize();
+      } else {
+        radialDir.set(1, 0, 0);
+      }
+      // Elevate: 35° above ecliptic plane
+      const elevAngle = 35 * Math.PI / 180;
+      const camDir = new THREE.Vector3(
+        radialDir.x * Math.cos(elevAngle),
+        Math.sin(elevAngle),
+        radialDir.z * Math.cos(elevAngle),
+      ).normalize();
+
+      _inertialCameraPos.set(
+        center.x + camDir.x * camDist,
+        center.y + camDir.y * camDist,
+        center.z + camDir.z * camDist,
+      );
+      _inertialCameraTarget.copy(center);
+    } else {
+      _inertialCameraPos.set(8, 6, 10);
+      _inertialCameraTarget.set(0, 0, 0);
+    }
   } else {
-    camera.position.set(8, 6, 10);
-    controls.target.set(0, 0, 0);
+    _inertialCameraPos.set(8, 6, 10);
+    _inertialCameraTarget.set(0, 0, 0);
   }
+  camera.position.copy(_inertialCameraPos);
+  controls.target.copy(_inertialCameraTarget);
   controls.update();
 }
 
@@ -769,13 +822,9 @@ export function updateTimelineFrame(day) {
 export function setViewMode(mode) {
   _viewMode = mode;
   if (mode === "inertial") {
-    // Reset camera to scene center
-    controls.target.set(0, 0, 0);
-    if (currentSceneGroup?.name === "full-route") {
-      camera.position.set(30, 25, 40);
-    } else {
-      camera.position.set(8, 6, 10);
-    }
+    // Reset camera to stored inertial position for this scene
+    camera.position.copy(_inertialCameraPos);
+    controls.target.copy(_inertialCameraTarget);
     controls.update();
   }
 }
