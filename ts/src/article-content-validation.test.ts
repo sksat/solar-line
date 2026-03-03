@@ -1350,6 +1350,42 @@ describe("EP04 article content validation", () => {
       "EP04 should cite 78% thermal margin",
     );
   });
+
+  // --- Task 535: Additional EP04 cross-checks for assertion parity ---
+
+  it("damage assessment: cooling pressures match analysis", () => {
+    assert.equal(analysis.damageAssessment.coolingPressure1MPa, 1.87);
+    assert.equal(analysis.damageAssessment.coolingPressure2MPa, 0.96);
+    assert.ok(
+      content.includes("1.87") && content.includes("0.96"),
+      "EP04 should cite cooling pressures 1.87 MPa and 0.96 MPa",
+    );
+  });
+
+  it("damage assessment: shield status 'coil system 2 only' cited", () => {
+    assert.ok(
+      content.includes("コイル") || content.includes("coil"),
+      "EP04 should reference coil system status in damage assessment",
+    );
+  });
+
+  it("fleet intercept: 5 ships, 33h ETA, 9.7h arrival", () => {
+    assert.equal(analysis.fleetIntercept.fleetShipCount, 5);
+    assert.equal(analysis.fleetIntercept.fleetETAHours, 33);
+    assert.ok(content.includes("33時間"), "should cite 33h fleet timeline");
+    assert.ok(
+      content.includes("9.7") && content.includes("タイタニア"),
+      "should cite 9.7h Titania arrival time",
+    );
+  });
+
+  it("brachistochrone closest scenario: ~105 days at 48,000t", () => {
+    const closest = analysis.brachistochrone.find(
+      (s: { scenario: string }) => s.scenario === "closest",
+    );
+    assert.ok(closest, "should have closest brachistochrone scenario");
+    assertContainsApproxValue(content, closest!.timeDays, "EP04 closest transit days");
+  });
 });
 
 describe("EP05 article content validation", () => {

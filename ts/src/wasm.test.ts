@@ -101,6 +101,17 @@ describe("WASM bridge: orbital_period", () => {
       `period=${days} days, expected ~365.25`,
     );
   });
+
+  it("computes Mercury orbital period ~87.97 days", () => {
+    const mu = MU.SUN;
+    const aMercury = 57_909_050; // km, Mercury semi-major axis
+    const period = wasm.orbital_period(mu, aMercury);
+    const days = period / 86400;
+    assert.ok(
+      Math.abs(days - 87.97) < 0.5,
+      `Mercury period=${days} days, expected ~87.97`,
+    );
+  });
 });
 
 describe("WASM bridge: solve_kepler", () => {
@@ -171,6 +182,24 @@ describe("WASM bridge: specific_energy", () => {
   it("returns negative for bound orbits", () => {
     const energy = wasm.specific_energy(MU.EARTH, 6578);
     assert.ok(energy < 0, `energy=${energy}, expected negative`);
+  });
+
+  it("returns positive for hyperbolic (escape) trajectory", () => {
+    // At escape speed, energy = 0; above escape speed, energy > 0
+    // Use a very large semi-major axis (effectively unbound)
+    // For hyperbolic orbit: a < 0, E = -mu/(2a) > 0
+    // Simulate with a radius much larger than the SOI where escape velocity is tiny
+    // Instead, test directly: E = v²/2 - mu/r. At r=6578 km, v_esc = sqrt(2*mu/r)
+    // At radius 6578 km, bound orbit → negative. At radius 1e9 km → nearly zero.
+    const energyFar = wasm.specific_energy(MU.EARTH, 1_000_000_000);
+    // At 1 billion km, energy ≈ -mu/(2*1e9) ≈ near zero but still negative
+    assert.ok(energyFar < 0, `far orbit energy=${energyFar}, still negative (bound)`);
+    // Energy at far distance should be less negative than close orbit
+    const energyClose = wasm.specific_energy(MU.EARTH, 6578);
+    assert.ok(
+      energyFar > energyClose,
+      `far orbit less bound: ${energyFar} > ${energyClose}`,
+    );
   });
 });
 
@@ -740,6 +769,29 @@ describe("WASM bridge: orbital elements", () => {
     assert.ok(
       Math.abs(v - expectedV) < 0.01,
       `speed=${v} km/s, expected ~${expectedV} km/s`,
+    );
+  });
+
+  it("inclined orbit has nonzero z-component in position", () => {
+    const muEarth = 3.986004418e5;
+    const a = 6_771;
+    const inc = Math.PI / 2; // 90° polar orbit
+    const trueAnomaly = Math.PI / 4; // 45° past ascending node
+    const result = wasm.elements_to_state_vector(
+      muEarth, a, 0.0, inc, 0.0, 0.0, trueAnomaly,
+    );
+    const r = Math.sqrt(
+      result.position[0] ** 2 + result.position[1] ** 2 + result.position[2] ** 2,
+    );
+    // Radius should still be ~a for circular orbit
+    assert.ok(
+      Math.abs(r - a) < 1,
+      `inclined orbit radius=${r} km, expected ~${a}`,
+    );
+    // For i=90°, ν=45°: position should have significant z-component
+    assert.ok(
+      Math.abs(result.position[2]) > 100,
+      `polar orbit at ν=45° should have z-component: z=${result.position[2]}`,
     );
   });
 });

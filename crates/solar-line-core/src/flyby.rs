@@ -720,6 +720,144 @@ mod tests {
     }
 
     #[test]
+    fn test_heliocentric_exit_retrograde_reduces_speed() {
+        // If the flyby deflects the spacecraft to exit in the opposite direction
+        // of the planet's motion, the heliocentric speed should be LESS than
+        // if the exit were prograde. This is the fundamental mechanism
+        // of gravity-assist braking (e.g., Cassini's Venus flybys).
+        let planet_vel = [0.0, 13.07, 0.0]; // Jupiter orbital velocity ~13.07 km/s
+
+        // Prograde exit: v_inf aligned with planet velocity → speeds up
+        let prograde_flyby = FlybyResult {
+            turn_angle_rad: 1.0,
+            v_periapsis: 30.0,
+            v_inf_out: 10.0,
+            v_inf_out_dir: [0.0, 1.0, 0.0], // Same direction as planet
+        };
+        let v_pro = heliocentric_exit_velocity(planet_vel, &prograde_flyby);
+        let speed_pro = (v_pro[0].powi(2) + v_pro[1].powi(2) + v_pro[2].powi(2)).sqrt();
+
+        // Retrograde exit: v_inf opposite to planet velocity → slows down
+        let retrograde_flyby = FlybyResult {
+            turn_angle_rad: 1.0,
+            v_periapsis: 30.0,
+            v_inf_out: 10.0,
+            v_inf_out_dir: [0.0, -1.0, 0.0], // Opposite to planet motion
+        };
+        let v_retro = heliocentric_exit_velocity(planet_vel, &retrograde_flyby);
+        let speed_retro = (v_retro[0].powi(2) + v_retro[1].powi(2) + v_retro[2].powi(2)).sqrt();
+
+        // Prograde exit = planet + v_inf = 13.07 + 10 = 23.07 km/s
+        assert!(
+            (speed_pro - 23.07).abs() < 0.01,
+            "Prograde heliocentric speed: {:.2} km/s (expected 23.07)",
+            speed_pro
+        );
+        // Retrograde exit = planet - v_inf = 13.07 - 10 = 3.07 km/s
+        assert!(
+            (speed_retro - 3.07).abs() < 0.01,
+            "Retrograde heliocentric speed: {:.2} km/s (expected 3.07)",
+            speed_retro
+        );
+        assert!(
+            speed_pro > speed_retro,
+            "Prograde exit should be faster than retrograde: {:.2} vs {:.2}",
+            speed_pro, speed_retro
+        );
+    }
+
+    #[test]
+    fn edge_powered_flyby_zero_burn_matches_unpowered_direction() {
+        // Extend existing zero-burn test: also verify exit DIRECTION vector matches
+        let v_inf_in = [8.0, 3.0, 0.0];
+        let r_peri = Km(200_000.0);
+        let normal = [0.0, 0.0, 1.0];
+
+        let unpowered = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, normal);
+        let powered = powered_flyby(mu::JUPITER, v_inf_in, r_peri, KmPerSec(0.0), normal);
+
+        for i in 0..3 {
+            assert!(
+                (powered.v_inf_out_dir[i] - unpowered.v_inf_out_dir[i]).abs() < 1e-10,
+                "Zero-burn exit direction[{}] should match: {:.10} vs {:.10}",
+                i, powered.v_inf_out_dir[i], unpowered.v_inf_out_dir[i]
+            );
+        }
+    }
+
+    #[test]
+    fn edge_rodrigues_rotation_around_x_axis() {
+        // All existing tests rotate around Z. Test rotation around X axis.
+        // Rotate [0,1,0] by 90° around X axis → [0,0,1]
+        let v = [0.0, 1.0, 0.0];
+        let k = [1.0, 0.0, 0.0]; // X axis
+        let result = rodrigues_rotate(v, k, std::f64::consts::FRAC_PI_2);
+
+        assert!(
+            result[0].abs() < 1e-10,
+            "X rotation: X component should be 0, got {:.10}",
+            result[0]
+        );
+        assert!(
+            result[1].abs() < 1e-10,
+            "X rotation: Y should → 0, got {:.10}",
+            result[1]
+        );
+        assert!(
+            (result[2] - 1.0).abs() < 1e-10,
+            "X rotation: Z should → 1, got {:.10}",
+            result[2]
+        );
+    }
+
+    #[test]
+    fn edge_flyby_with_inclined_normal() {
+        // Test a flyby with a non-standard normal (inclined flyby plane)
+        // Normal = [0, 1, 0] means rotation in the X-Z plane
+        let v_inf_in = [10.0, 0.0, 0.0];
+        let r_peri = Km(200_000.0);
+        let normal_z = [0.0, 0.0, 1.0]; // Standard ecliptic
+        let normal_y = [0.0, 1.0, 0.0]; // Inclined: rotation in X-Z plane
+
+        let result_z = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, normal_z);
+        let result_y = unpowered_flyby(mu::JUPITER, v_inf_in, r_peri, normal_y);
+
+        // Same turn angle (geometry doesn't change)
+        assert!(
+            (result_z.turn_angle_rad - result_y.turn_angle_rad).abs() < 1e-10,
+            "Turn angle independent of flyby plane: {:.6} vs {:.6}",
+            result_z.turn_angle_rad, result_y.turn_angle_rad
+        );
+
+        // Same v_inf (energy conserved regardless)
+        assert!(
+            (result_z.v_inf_out - result_y.v_inf_out).abs() < 1e-10,
+            "v_inf independent of flyby plane"
+        );
+
+        // Z-normal rotates in X-Y plane (Z component stays 0)
+        assert!(
+            result_z.v_inf_out_dir[2].abs() < 1e-10,
+            "Z-normal flyby should have no Z exit: {:.6}",
+            result_z.v_inf_out_dir[2]
+        );
+
+        // Y-normal rotates in X-Z plane (Y component stays 0)
+        assert!(
+            result_y.v_inf_out_dir[1].abs() < 1e-10,
+            "Y-normal flyby should have no Y exit: {:.6}",
+            result_y.v_inf_out_dir[1]
+        );
+
+        // Y-normal should deflect into Z instead of Y
+        assert!(
+            result_y.v_inf_out_dir[2].abs() > 0.01,
+            "Y-normal flyby should have Z component: {:.6}",
+            result_y.v_inf_out_dir[2]
+        );
+    }
+
+    #[test]
     fn edge_3d_approach_vector() {
         // Test with a non-planar approach vector to verify 3D geometry
         let v_inf_in = [5.0, 3.0, 2.0]; // 3D approach
