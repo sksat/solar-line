@@ -216,7 +216,8 @@ function prepareSaturnScene(data) {
     ],
     transferArcs: [{ from: "jupiter", to: "saturn", fromPos: [10, 2, 0], toPos: [0, 0, 0],
       episode: 2, color: EPISODE_COLORS[2], label: "木星→土星 接近軌道", approachAngleDeg: r.approachFromJupiter.approachAngleToDeg }],
-    rings: [{ innerRadius: r.ringInnerKm, outerRadius: r.ringOuterKm, normal: r.ringPlaneNormal, color: "#c8a86e", opacity: 0.3 }]
+    rings: [{ innerRadius: r.ringInnerKm, outerRadius: r.ringOuterKm, normal: r.ringPlaneNormal, color: "#c8a86e", opacity: 0.3 }],
+    timeline: { totalDays: 1.370218 * 3, orbits: [{ name: "enceladus", radiusScene: r.enceladusOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / 1.370218, z: 0 }], transfers: [{ startDay: 0, endDay: 1.370218, episode: 2, label: "木星→土星 接近" }] }
   };
 }
 
@@ -236,7 +237,8 @@ function prepareUranusScene(data) {
     ],
     rings: [{ innerRadius: 37850, outerRadius: u.ringOuterKm, normal: u.spinAxis, color: "#556677", opacity: 0.2 }],
     axes: [{ type: "spin", direction: u.spinAxis, label: "天王星自転軸 (97.77°)", color: "#7ec8e3" }],
-    planes: [{ type: "equatorial", normal: u.spinAxis, tiltDeg: u.obliquityDeg, color: "#7ec8e3", opacity: 0.12, label: "天王星赤道面" }]
+    planes: [{ type: "equatorial", normal: u.spinAxis, tiltDeg: u.obliquityDeg, color: "#7ec8e3", opacity: 0.12, label: "天王星赤道面" }],
+    timeline: { totalDays: 8.705872 * 3, orbits: [{ name: "titania", radiusScene: u.titaniaOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / 8.705872, z: 0 }], transfers: [{ startDay: 0, endDay: 8.705872, episode: 3, label: "土星→天王星 接近" }] }
   };
 }
 
@@ -275,6 +277,7 @@ async function init() {
   const tlTime = document.getElementById("timeline-time");
   const tlLabel = document.getElementById("timeline-label");
   let isPlaying = false;
+  let activeTimeline = null;
 
   function formatDays(days) {
     if (days < 1) {
@@ -318,6 +321,7 @@ async function init() {
 
   function activateTimeline(sceneData) {
     const timeline = sceneData.timeline;
+    activeTimeline = timeline || null;
     if (timeline) {
       loadTimeline(timeline);
       tlControls.classList.add("active");
@@ -332,6 +336,7 @@ async function init() {
         tlPlayBtn.setAttribute("aria-label", "再生");
       };
     } else {
+      activeTimeline = null;
       tlControls.classList.remove("active");
       setTimelinePlaying(false);
       isPlaying = false;
@@ -339,8 +344,7 @@ async function init() {
   }
 
   tlPlayBtn.addEventListener("click", () => {
-    const timeline = scenes["full-route"]?.timeline;
-    if (!timeline) return;
+    if (!activeTimeline) return;
     if (isPlaying) {
       isPlaying = false;
       setTimelinePlaying(false);
@@ -348,9 +352,9 @@ async function init() {
       tlPlayBtn.setAttribute("aria-label", "再生");
     } else {
       // Reset to start if at end
-      if (getTimelineCurrentDay() >= timeline.totalDays) {
+      if (getTimelineCurrentDay() >= activeTimeline.totalDays) {
         updateTimelineFrame(0);
-        updateTimelineUI(0, timeline);
+        updateTimelineUI(0, activeTimeline);
       }
       isPlaying = true;
       setTimelinePlaying(true);
@@ -360,12 +364,11 @@ async function init() {
   });
 
   tlSlider.addEventListener("input", () => {
-    const timeline = scenes["full-route"]?.timeline;
-    if (!timeline) return;
+    if (!activeTimeline) return;
     const val = parseFloat(tlSlider.value);
-    const day = (val / 1000) * timeline.totalDays;
+    const day = (val / 1000) * activeTimeline.totalDays;
     updateTimelineFrame(day);
-    updateTimelineUI(day, timeline);
+    updateTimelineUI(day, activeTimeline);
     // Pause on manual scrub
     if (isPlaying) {
       isPlaying = false;

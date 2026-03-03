@@ -140,6 +140,12 @@ export const AU_TO_SCENE = 5;
 /** Conversion factor for local scenes: 1 scene unit = this many km */
 export const LOCAL_SCENE_SCALE = 50_000;
 
+/** Moon orbital periods in days */
+const MOON_PERIODS_DAYS: Record<string, number> = {
+  enceladus: 1.370218,
+  titania: 8.705872,
+};
+
 /** Planet display colors */
 const PLANET_COLORS: Record<string, string> = {
   mars: "#e05050",
@@ -440,6 +446,26 @@ export function prepareSaturnScene(data: {
         opacity: 0.3,
       },
     ],
+    timeline: {
+      totalDays: MOON_PERIODS_DAYS.enceladus * 3,
+      orbits: [
+        {
+          name: "enceladus",
+          radiusScene: ring.enceladusOrbitKm / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI / 4,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.enceladus,
+          z: 0,
+        },
+      ],
+      transfers: [
+        {
+          startDay: 0,
+          endDay: MOON_PERIODS_DAYS.enceladus,
+          episode: 2,
+          label: "木星→土星 接近",
+        },
+      ],
+    },
   };
 }
 
@@ -537,5 +563,25 @@ export function prepareUranusScene(data: {
         label: "天王星赤道面",
       },
     ],
+    timeline: {
+      totalDays: MOON_PERIODS_DAYS.titania * 3,
+      orbits: [
+        {
+          name: "titania",
+          radiusScene: u.titaniaOrbitKm / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI / 4,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.titania,
+          z: 0,
+        },
+      ],
+      transfers: [
+        {
+          startDay: 0,
+          endDay: MOON_PERIODS_DAYS.titania,
+          episode: 3,
+          label: "土星→天王星 接近",
+        },
+      ],
+    },
   };
 }

@@ -260,6 +260,15 @@ describe("prepareSaturnScene", () => {
     );
   });
 
+  it("has timeline with Enceladus orbit for animation", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    assert.ok(scene.timeline, "Saturn scene should have timeline");
+    assert.equal(scene.timeline!.orbits.length, 1);
+    assert.equal(scene.timeline!.orbits[0].name, "enceladus");
+    assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 4,
+      "Enceladus should orbit fast (~4.59 rad/day)");
+  });
+
   it("Enceladus position is at orbitRadius distance from Saturn", () => {
     const scene = prepareSaturnScene(saturnInput);
     const saturn = scene.planets.find(p => p.name === "saturn")!;
@@ -314,6 +323,15 @@ describe("prepareUranusScene", () => {
       dist > 0.1,
       `Titania should be visually separated from Uranus (dist=${dist.toFixed(3)})`,
     );
+  });
+
+  it("has timeline with Titania orbit for animation", () => {
+    const scene = prepareUranusScene(uranusInput);
+    assert.ok(scene.timeline, "Uranus scene should have timeline");
+    assert.equal(scene.timeline!.orbits.length, 1);
+    assert.equal(scene.timeline!.orbits[0].name, "titania");
+    assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 0.7,
+      "Titania should orbit (~0.72 rad/day)");
   });
 
   it("Titania position is at orbitRadius distance from Uranus", () => {

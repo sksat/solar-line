@@ -20,6 +20,7 @@ let shipMarker3D = null;
 let planetMeshes = {}; // name → THREE.Mesh
 let planetLabels = {}; // name → CSS2DObject
 let transferCurves = []; // Array of { curve, startDay, endDay, episode }
+let _sceneTransferArcs = null; // Store current scene's transfer arc data for local scenes
 
 // ── Constants matching orbital-3d-viewer-data.ts ──
 const AU_TO_SCENE = 5;
@@ -130,6 +131,7 @@ export function loadScene(sceneData) {
 
   currentSceneGroup = new THREE.Group();
   currentSceneGroup.name = sceneData.type;
+  _sceneTransferArcs = sceneData.transferArcs || null;
 
   // Set origin label
   const origin = scene.getObjectByName("origin");
@@ -482,9 +484,6 @@ export function loadTimeline(timeline) {
   // Build bezier curves for each transfer arc (matching addTransferArc logic)
   for (let i = 0; i < timeline.transfers.length; i++) {
     const t = timeline.transfers[i];
-    const arcData = currentSceneGroup.parent
-      ? null
-      : null; // We'll reconstruct from orbit data
 
     // Get from/to positions from timeline orbits at transfer start/end times
     const fromOrbit = getOrbitForTransfer(timeline, t, true);
@@ -496,6 +495,22 @@ export function loadTimeline(timeline) {
 
       const from = new THREE.Vector3(fromPos[0], fromPos[2], fromPos[1]);
       const to = new THREE.Vector3(toPos[0], toPos[2], toPos[1]);
+      const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
+      const dist = from.distanceTo(to);
+      mid.y += dist * 0.15;
+
+      const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
+      transferCurves.push({
+        curve,
+        startDay: t.startDay,
+        endDay: t.endDay,
+        episode: t.episode,
+      });
+    } else if (_sceneTransferArcs && _sceneTransferArcs[i]) {
+      // For local scenes, use pre-defined transfer arc geometry
+      const arc = _sceneTransferArcs[i];
+      const from = new THREE.Vector3(arc.fromPos[0], arc.fromPos[2], arc.fromPos[1]);
+      const to = new THREE.Vector3(arc.toPos[0], arc.toPos[2], arc.toPos[1]);
       const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
       const dist = from.distanceTo(to);
       mid.y += dist * 0.15;

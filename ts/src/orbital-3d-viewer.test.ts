@@ -360,15 +360,30 @@ describe("orbital-3d-viewer-data", () => {
     });
   });
 
-  describe("Saturn and Uranus scenes have no timeline", () => {
-    it("Saturn scene has no timeline", () => {
+  describe("Saturn and Uranus local scene timelines", () => {
+    it("Saturn scene has timeline with Enceladus orbit", () => {
       const scene = prepareSaturnScene(analysisData);
-      assert.strictEqual(scene.timeline, undefined);
+      assert.ok(scene.timeline, "Saturn scene should have timeline for animation");
+      assert.strictEqual(scene.timeline!.orbits.length, 1);
+      assert.strictEqual(scene.timeline!.orbits[0].name, "enceladus");
+      assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 0);
     });
 
-    it("Uranus scene has no timeline", () => {
+    it("Uranus scene has timeline with Titania orbit", () => {
       const scene = prepareUranusScene(analysisData);
-      assert.strictEqual(scene.timeline, undefined);
+      assert.ok(scene.timeline, "Uranus scene should have timeline for animation");
+      assert.strictEqual(scene.timeline!.orbits.length, 1);
+      assert.strictEqual(scene.timeline!.orbits[0].name, "titania");
+      assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 0);
+    });
+
+    it("local timelines span 3 orbital periods", () => {
+      const satScene = prepareSaturnScene(analysisData);
+      const uraScene = prepareUranusScene(analysisData);
+      // Enceladus: 1.37 days × 3 ≈ 4.11 days
+      assert.ok(satScene.timeline!.totalDays > 4 && satScene.timeline!.totalDays < 5);
+      // Titania: 8.71 days × 3 ≈ 26.1 days
+      assert.ok(uraScene.timeline!.totalDays > 25 && uraScene.timeline!.totalDays < 28);
     });
   });
 });
