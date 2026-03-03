@@ -44,6 +44,7 @@ import type {
   GlossaryTerm,
   MarginGauge,
   BarChart,
+  Viewer3DEmbed,
 } from "./report-types.ts";
 import { parseBarChartDirective } from "./mdx-parser.ts";
 
@@ -132,7 +133,7 @@ export function extractEpisodeDirectives(content: string): {
   directives: EpisodeDirective[];
 } {
   const directives: EpisodeDirective[] = [];
-  const fenceRegex = /^```(video-cards|dialogue-quotes|transfer|exploration|diagrams|timeseries-charts|detail-pages|glossary|margin-gauge|chart):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
+  const fenceRegex = /^```(video-cards|dialogue-quotes|transfer|exploration|diagrams|timeseries-charts|detail-pages|glossary|margin-gauge|chart|3d-viewer):?(\S*)\s*\n([\s\S]*?)^```\s*$/gm;
 
   const markdown = content.replace(fenceRegex, (_match, prefix: string, suffix: string, inner: string) => {
     // For chart:bar → type becomes "chart:bar"; for others suffix is empty
@@ -171,6 +172,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
   let detailPages: TransferDetailPage[] | undefined;
   let glossary: GlossaryTerm[] | undefined;
   let marginGauges: MarginGauge[] | undefined;
+  let viewer3d: Viewer3DEmbed | undefined;
 
   const { directives: preambleDirectives } = extractEpisodeDirectives(preamble);
   for (const d of preambleDirectives) {
@@ -249,6 +251,7 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
     ...(detailPages && { detailPages }),
     ...(glossary && { glossary }),
     ...(marginGauges && { marginGauges }),
+    ...(viewer3d && { viewer3d }),
   };
 
   return report;
@@ -285,6 +288,9 @@ export function parseEpisodeMarkdown(input: string): EpisodeReport {
         marginGauges.push(gauge);
         break;
       }
+      case "3d-viewer":
+        viewer3d = JSON.parse(d.rawContent) as Viewer3DEmbed;
+        break;
     }
   }
 }

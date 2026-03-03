@@ -637,6 +637,40 @@ Test.
     assert.equal(report.timeSeriesCharts![2].id, "chart-c");
   });
 
+  it("extracts 3d-viewer directive", () => {
+    const content = '```3d-viewer:\n{ "scene": "saturn-ring", "height": 400, "caption": "土星リング横断" }\n```';
+    const { directives } = extractEpisodeDirectives(content);
+    assert.equal(directives.length, 1);
+    assert.equal(directives[0].type, "3d-viewer");
+  });
+
+  it("parses 3d-viewer directive into EpisodeReport.viewer3d", () => {
+    const input = `---
+episode: 3
+title: "Test 3D Viewer"
+summary: "Test"
+---
+
+\`\`\`3d-viewer:
+{ "scene": "saturn-ring", "scenes": ["saturn-ring", "uranus-approach"], "height": 400, "caption": "3Dビューア" }
+\`\`\`
+
+## Transfer 1
+
+\`\`\`transfer:
+{ "id": "t1", "description": "Test", "timestamp": "00:01", "verdict": "reference", "parameters": {} }
+\`\`\`
+
+Analysis.
+`;
+    const report = parseEpisodeMarkdown(input);
+    assert.ok(report.viewer3d, "viewer3d should be defined");
+    assert.equal(report.viewer3d!.scene, "saturn-ring");
+    assert.deepEqual(report.viewer3d!.scenes, ["saturn-ring", "uranus-approach"]);
+    assert.equal(report.viewer3d!.height, 400);
+    assert.equal(report.viewer3d!.caption, "3Dビューア");
+  });
+
   it("throws if no transfers found", () => {
     const input = `---
 episode: 1

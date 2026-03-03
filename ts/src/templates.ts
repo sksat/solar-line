@@ -2863,6 +2863,9 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
   if (report.marginGauges && report.marginGauges.length > 0) {
     tocItems.push('<li><a href="#section-margin-gauges">マージン分析</a></li>');
   }
+  if (report.viewer3d) {
+    tocItems.push('<li><a href="#section-3d-viewer">3D軌道ビューア</a></li>');
+  }
   if (report.transfers.length > 0) {
     tocItems.push('<li><a href="#section-transfers">軌道遷移分析</a>');
     tocItems.push('<ul>');
@@ -2903,6 +2906,10 @@ export function renderEpisode(report: EpisodeReport, summaryPages?: SiteManifest
     ? `<h2 id="section-margin-gauges">マージン分析</h2>\n${renderMarginGauges(report.marginGauges)}`
     : "";
 
+  const viewer3dSectionWithId = report.viewer3d
+    ? `<h2 id="section-3d-viewer">3D軌道ビューア</h2>\n${renderViewer3D(report.viewer3d)}`
+    : "";
+
   const content = `
 <h1>第${report.episode}話: ${escapeHtml(report.title)}${provisionalBadge}</h1>
 ${videoSection}
@@ -2921,6 +2928,8 @@ ${diagramSectionWithId}
 ${timeSeriesSectionWithId}
 
 ${marginGaugeSectionWithId}
+
+${viewer3dSectionWithId}
 
 <h2 id="section-transfers">軌道遷移分析</h2>
 ${report.transfers.length > 0 ? cards : "<p>分析された軌道遷移はまだありません。</p>"}
@@ -2948,13 +2957,16 @@ ${calculator}`;
   const hasAnimatedDiagrams = report.diagrams?.some(d => d.animation) ?? false;
   const animScript = hasAnimatedDiagrams ? '\n<script src="../orbital-animation.js"></script>' : "";
 
+  // Include 3D viewer scripts if episode has inline viewer
+  const episodeViewer3dScript = report.viewer3d ? generateViewer3dScript("..") : "";
+
   // Inject inline glossary tooltips into content text
   const enrichedContent = report.glossary && report.glossary.length > 0
     ? wrapGlossaryTerms(content, report.glossary)
     : content;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(`第${report.episode}話`, enrichedContent + episodeNav + animScript, "..", summaryPages, desc, navEpisodes, metaPages);
+  return layoutHtml(`第${report.episode}話`, enrichedContent + episodeNav + animScript + episodeViewer3dScript, "..", summaryPages, desc, navEpisodes, metaPages);
 }
 
 /** Render the session logs index page */
@@ -3233,6 +3245,139 @@ ${caption}
 </figure>`;
 }
 
+/** Generate the 3D viewer script block (importmap + module scripts) for a page.
+ *  @param basePath - relative path to site root (e.g. ".." for /episodes/ or /summary/)
+ */
+function generateViewer3dScript(basePath: string): string {
+  return `
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module" src="${basePath}/orbital-3d-viewer.js"></script>
+<script type="module">
+import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode } from "${basePath}/orbital-3d-viewer.js";
+document.querySelectorAll(".viewer3d-container").forEach(async function(container) {
+  var scene = container.dataset.scene;
+  var resp = await fetch("${basePath}/data/calculations/3d_orbital_analysis.json");
+  var analysisData = await resp.json();
+  container.querySelector(".viewer3d-loading").remove();
+  initViewer(container);
+  var figure = container.closest(".viewer3d-figure");
+  var ctrl = figure.querySelector(".viewer3d-controls");
+  var playing = false;
+  function switchScene(sceneName) {
+    var sd = window.__prepareScene(sceneName, analysisData);
+    if (!sd) return;
+    loadScene(sd);
+    playing = false;
+    setTimelinePlaying(false);
+    if (ctrl) {
+      if (sd.timeline) {
+        loadTimeline(sd.timeline);
+        ctrl.style.display = "flex";
+        ctrl.querySelector(".viewer3d-play").textContent = "\\u25b6";
+        ctrl.querySelector(".viewer3d-slider").value = "0";
+        ctrl.querySelector(".viewer3d-time").textContent = "0日";
+      } else {
+        ctrl.style.display = "none";
+      }
+    }
+    figure.querySelectorAll(".viewer3d-scene-btn").forEach(function(btn) {
+      var isActive = btn.dataset.scene === sceneName;
+      btn.style.background = isActive ? "#58a6ff" : "#21262d";
+      btn.style.color = isActive ? "#0d1117" : "#c9d1d9";
+      btn.style.fontWeight = isActive ? "bold" : "normal";
+    });
+  }
+  figure.querySelectorAll(".viewer3d-scene-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() { switchScene(btn.dataset.scene); });
+  });
+  switchScene(scene);
+  if (ctrl) {
+    var playBtn = ctrl.querySelector(".viewer3d-play");
+    var slider = ctrl.querySelector(".viewer3d-slider");
+    var timeSpan = ctrl.querySelector(".viewer3d-time");
+    playBtn.addEventListener("click", function() {
+      playing = !playing;
+      setTimelinePlaying(playing);
+      playBtn.textContent = playing ? "\\u23f8" : "\\u25b6";
+    });
+    slider.addEventListener("input", function() {
+      var frac = Number(slider.value) / 1000;
+      updateTimelineFrame(frac);
+      var day = getTimelineCurrentDay();
+      timeSpan.textContent = Math.round(day) + "日";
+    });
+    (function tick() {
+      if (playing) {
+        var day = getTimelineCurrentDay();
+        var sd = window.__prepareScene(container.dataset.scene, analysisData);
+        if (sd && sd.timeline) {
+          var total = sd.timeline.totalDays;
+          slider.value = String(Math.round((day / total) * 1000));
+          timeSpan.textContent = Math.round(day) + "日";
+        }
+      }
+      requestAnimationFrame(tick);
+    })();
+  }
+  var vmBtn = figure.querySelector(".viewer3d-viewmode");
+  if (vmBtn) {
+    vmBtn.addEventListener("click", function() {
+      var cur = getViewMode();
+      var next = cur === "inertial" ? "ship" : "inertial";
+      setViewMode(next);
+      vmBtn.textContent = next === "inertial" ? "慣性" : "宇宙船";
+    });
+  }
+});
+</script>
+<script type="module">
+// Scene preparation (matches orbital-3d-viewer-data.ts logic)
+window.__prepareScene = function(sceneName, data) {
+  var AU = 5;
+  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",enceladus:"#ccddee",titania:"#aabbcc"};
+  var EC = {1:"#ff6644",2:"#ffaa22",3:"#44cc88",4:"#4488ff",5:"#ff4444"};
+  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,titania:0.08};
+  var OR = {mars:1.524,jupiter:5.203,saturn:9.537,uranus:19.19,earth:1.0};
+  var OP = {mars:686.97,jupiter:4332.59,saturn:10759.22,uranus:30688.5,earth:365.256};
+  var angles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
+  if (sceneName === "full-route") {
+    var order = ["mars","jupiter","saturn","uranus","earth"];
+    var planets = order.map(function(name,i){
+      var p = data.planetaryZHeightsAtEpoch[name];
+      var r = (OR[name]||5)*AU;
+      var a = angles[i];
+      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*10,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
+    });
+    var arcs = data.transfers.map(function(t){
+      var fp = planets.find(function(p){return p.name===t.departure.planet});
+      var tp = planets.find(function(p){return p.name===t.arrival.planet});
+      return {from:t.departure.planet,to:t.arrival.planet,fromPos:[fp.x,fp.y,fp.z],toPos:[tp.x,tp.y,tp.z],episode:t.episode,color:EC[t.episode],label:t.leg};
+    });
+    var firstJd = data.transfers[0].departure.jd;
+    var lastJd = data.transfers[data.transfers.length-1].arrival.jd;
+    var orbits = order.map(function(name,i){
+      var p = data.planetaryZHeightsAtEpoch[name];
+      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:angles[i],meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*10};
+    });
+    var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg}});
+    var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*10}});
+    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl}};
+  }
+  if (sceneName === "saturn-ring") {
+    var ring = data.saturnRingAnalysis;
+    var ea=Math.PI/4,esr=ring.enceladusOrbitKm/50000,ePeriod=1.370218;
+    return {type:"saturn-ring",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"saturn",x:0,y:0,z:0,color:PC.saturn,radius:0.5,isCentral:true,label:"土星"},{name:"enceladus",x:esr*Math.cos(ea),y:esr*Math.sin(ea),z:0,color:PC.enceladus,radius:0.08,orbitRadius:ring.enceladusOrbitKm,label:"エンケラドス"}],transferArcs:[{from:"jupiter",to:"saturn",fromPos:[10,2,0],toPos:[0,0,0],episode:2,color:EC[2],label:"木星→土星",approachAngleDeg:ring.approachFromJupiter.approachAngleToDeg}],rings:[{innerRadius:ring.ringInnerKm,outerRadius:ring.ringOuterKm,normal:ring.ringPlaneNormal,color:"#c8a86e",opacity:0.3}],timeline:{totalDays:ePeriod*3,orbits:[{name:"enceladus",radiusScene:esr,initialAngle:ea,meanMotionPerDay:2*Math.PI/ePeriod,z:0}],transfers:[{startDay:0,endDay:ePeriod,episode:2,label:"木星→土星 接近"}]}};
+  }
+  if (sceneName === "uranus-approach") {
+    var u = data.uranusApproachAnalysis;
+    var ta=Math.PI/4,tsr=u.titaniaOrbitKm/50000,tPeriod=8.705872;
+    return {type:"uranus-approach",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},{name:"titania",x:tsr*Math.cos(ta),y:tsr*Math.sin(ta),z:0,color:PC.titania,radius:0.08,orbitRadius:u.titaniaOrbitKm,label:"タイタニア"}],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星",approachAngleDeg:u.approachFromSaturn.angleToDeg},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球",approachAngleDeg:u.approachFromUranus.angleToDeg}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:tPeriod*3,orbits:[{name:"titania",radiusScene:tsr,initialAngle:ta,meanMotionPerDay:2*Math.PI/tPeriod,z:0}],transfers:[{startDay:0,endDay:tPeriod,episode:3,label:"土星→天王星 接近"}]}};
+  }
+  return null;
+};
+</script>`;
+}
+
 /** Render a time-series chart container with embedded JSON data for uPlot */
 export function renderTimeSeriesChart(chart: TimeSeriesChart): string {
   const descHtml = chart.description
@@ -3360,139 +3505,7 @@ ${dagHtml}
   const hasDagViewer = report.sections.some(s => s.dagViewer);
   const dagScript = hasDagViewer ? '\n<script src="../dag-viewer.js"></script>' : "";
   const hasViewer3d = report.sections.some(s => s.viewer3d);
-  const viewer3dScript = hasViewer3d ? `
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
-<script type="module" src="../orbital-3d-viewer.js"></script>
-<script type="module">
-import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode } from "../orbital-3d-viewer.js";
-document.querySelectorAll(".viewer3d-container").forEach(async function(container) {
-  var scene = container.dataset.scene;
-  var resp = await fetch("../data/calculations/3d_orbital_analysis.json");
-  var analysisData = await resp.json();
-  container.querySelector(".viewer3d-loading").remove();
-  initViewer(container);
-  var figure = container.closest(".viewer3d-figure");
-  var ctrl = figure.querySelector(".viewer3d-controls");
-  var playing = false;
-  function switchScene(sceneName) {
-    var sd = window.__prepareScene(sceneName, analysisData);
-    if (!sd) return;
-    loadScene(sd);
-    // Reset timeline controls
-    playing = false;
-    setTimelinePlaying(false);
-    if (ctrl) {
-      if (sd.timeline) {
-        loadTimeline(sd.timeline);
-        ctrl.style.display = "flex";
-        ctrl.querySelector(".viewer3d-play").textContent = "\\u25b6";
-        ctrl.querySelector(".viewer3d-slider").value = "0";
-        ctrl.querySelector(".viewer3d-time").textContent = "0日";
-      } else {
-        ctrl.style.display = "none";
-      }
-    }
-    // Update button active states
-    figure.querySelectorAll(".viewer3d-scene-btn").forEach(function(btn) {
-      var isActive = btn.dataset.scene === sceneName;
-      btn.style.background = isActive ? "#58a6ff" : "#21262d";
-      btn.style.color = isActive ? "#0d1117" : "#c9d1d9";
-      btn.style.fontWeight = isActive ? "bold" : "normal";
-    });
-  }
-  // Scene switching buttons
-  figure.querySelectorAll(".viewer3d-scene-btn").forEach(function(btn) {
-    btn.addEventListener("click", function() { switchScene(btn.dataset.scene); });
-  });
-  // Initial scene load
-  switchScene(scene);
-  // Timeline controls
-  if (ctrl) {
-    var playBtn = ctrl.querySelector(".viewer3d-play");
-    var slider = ctrl.querySelector(".viewer3d-slider");
-    var timeSpan = ctrl.querySelector(".viewer3d-time");
-    playBtn.addEventListener("click", function() {
-      playing = !playing;
-      setTimelinePlaying(playing);
-      playBtn.textContent = playing ? "\\u23f8" : "\\u25b6";
-    });
-    slider.addEventListener("input", function() {
-      var frac = Number(slider.value) / 1000;
-      updateTimelineFrame(frac);
-      var day = getTimelineCurrentDay();
-      timeSpan.textContent = Math.round(day) + "日";
-    });
-    (function tick() {
-      if (playing) {
-        var day = getTimelineCurrentDay();
-        var sd = window.__prepareScene(container.dataset.scene, analysisData);
-        if (sd && sd.timeline) {
-          var total = sd.timeline.totalDays;
-          slider.value = String(Math.round((day / total) * 1000));
-          timeSpan.textContent = Math.round(day) + "日";
-        }
-      }
-      requestAnimationFrame(tick);
-    })();
-  }
-  // View mode toggle
-  var vmBtn = figure.querySelector(".viewer3d-viewmode");
-  if (vmBtn) {
-    vmBtn.addEventListener("click", function() {
-      var cur = getViewMode();
-      var next = cur === "inertial" ? "ship" : "inertial";
-      setViewMode(next);
-      vmBtn.textContent = next === "inertial" ? "慣性" : "宇宙船";
-    });
-  }
-});
-</script>
-<script type="module">
-// Scene preparation (matches orbital-3d-viewer-data.ts logic)
-window.__prepareScene = function(sceneName, data) {
-  var AU = 5;
-  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",enceladus:"#ccddee",titania:"#aabbcc"};
-  var EC = {1:"#ff6644",2:"#ffaa22",3:"#44cc88",4:"#4488ff",5:"#ff4444"};
-  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,titania:0.08};
-  var OR = {mars:1.524,jupiter:5.203,saturn:9.537,uranus:19.19,earth:1.0};
-  var OP = {mars:686.97,jupiter:4332.59,saturn:10759.22,uranus:30688.5,earth:365.256};
-  var angles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
-  if (sceneName === "full-route") {
-    var order = ["mars","jupiter","saturn","uranus","earth"];
-    var planets = order.map(function(name,i){
-      var p = data.planetaryZHeightsAtEpoch[name];
-      var r = (OR[name]||5)*AU;
-      var a = angles[i];
-      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*10,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
-    });
-    var arcs = data.transfers.map(function(t){
-      var fp = planets.find(function(p){return p.name===t.departure.planet});
-      var tp = planets.find(function(p){return p.name===t.arrival.planet});
-      return {from:t.departure.planet,to:t.arrival.planet,fromPos:[fp.x,fp.y,fp.z],toPos:[tp.x,tp.y,tp.z],episode:t.episode,color:EC[t.episode],label:t.leg};
-    });
-    var firstJd = data.transfers[0].departure.jd;
-    var lastJd = data.transfers[data.transfers.length-1].arrival.jd;
-    var orbits = order.map(function(name,i){
-      var p = data.planetaryZHeightsAtEpoch[name];
-      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:angles[i],meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*10};
-    });
-    var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg}});
-    var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*10}});
-    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl}};
-  }
-  if (sceneName === "saturn-ring") {
-    var ring = data.saturnRingAnalysis;
-    var ea=Math.PI/4,esr=ring.enceladusOrbitKm/50000,ePeriod=1.370218;
-    return {type:"saturn-ring",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"saturn",x:0,y:0,z:0,color:PC.saturn,radius:0.5,isCentral:true,label:"土星"},{name:"enceladus",x:esr*Math.cos(ea),y:esr*Math.sin(ea),z:0,color:PC.enceladus,radius:0.08,orbitRadius:ring.enceladusOrbitKm,label:"エンケラドス"}],transferArcs:[{from:"jupiter",to:"saturn",fromPos:[10,2,0],toPos:[0,0,0],episode:2,color:EC[2],label:"木星→土星",approachAngleDeg:ring.approachFromJupiter.approachAngleToDeg}],rings:[{innerRadius:ring.ringInnerKm,outerRadius:ring.ringOuterKm,normal:ring.ringPlaneNormal,color:"#c8a86e",opacity:0.3}],timeline:{totalDays:ePeriod*3,orbits:[{name:"enceladus",radiusScene:esr,initialAngle:ea,meanMotionPerDay:2*Math.PI/ePeriod,z:0}],transfers:[{startDay:0,endDay:ePeriod,episode:2,label:"木星→土星 接近"}]}};
-  }
-  if (sceneName === "uranus-approach") {
-    var u = data.uranusApproachAnalysis;
-    var ta=Math.PI/4,tsr=u.titaniaOrbitKm/50000,tPeriod=8.705872;
-    return {type:"uranus-approach",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},{name:"titania",x:tsr*Math.cos(ta),y:tsr*Math.sin(ta),z:0,color:PC.titania,radius:0.08,orbitRadius:u.titaniaOrbitKm,label:"タイタニア"}],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星",approachAngleDeg:u.approachFromSaturn.angleToDeg},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球",approachAngleDeg:u.approachFromUranus.angleToDeg}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:tPeriod*3,orbits:[{name:"titania",radiusScene:tsr,initialAngle:ta,meanMotionPerDay:2*Math.PI/tPeriod,z:0}],transfers:[{startDay:0,endDay:tPeriod,episode:3,label:"土星→天王星 接近"}]}};
-  }
-  return null;
-};
-</script>` : "";
+  const viewer3dScript = hasViewer3d ? generateViewer3dScript("..") : "";
 
   const glossarySection = report.glossary && report.glossary.length > 0
     ? `<h2 id="section-glossary">用語集</h2>\n${renderGlossary(report.glossary)}`

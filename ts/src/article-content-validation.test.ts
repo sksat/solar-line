@@ -4369,7 +4369,7 @@ describe("Chart directive format validation (Task 394)", () => {
   const episodeDirectives = new Set([
     "video-cards", "dialogue-quotes", "transfer", "exploration",
     "diagrams", "timeseries-charts", "detail-pages", "glossary", "margin-gauge",
-    "chart",
+    "chart", "3d-viewer",
   ]);
   const summaryDirectives = new Set([
     "chart", "component", "timeline", "table", "timeseries",

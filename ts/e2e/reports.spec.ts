@@ -1744,3 +1744,55 @@ test.describe("Inline 3D viewer in cross-episode report", () => {
     expect(capText).toContain("アニメーション再生");
   });
 });
+
+// --- Episode inline 3D viewer tests (Task 561) ---
+
+test.describe("Inline 3D viewer in episode reports", () => {
+  test("EP03 has inline 3D viewer with saturn-ring scene", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    const container = page.locator(".viewer3d-container");
+    await expect(container).toBeAttached();
+    await expect(container).toHaveAttribute("data-scene", "saturn-ring");
+  });
+
+  test("EP03 viewer has timeline controls and view mode button", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    await expect(page.locator(".viewer3d-play")).toBeAttached();
+    await expect(page.locator(".viewer3d-slider")).toBeAttached();
+    await expect(page.locator(".viewer3d-viewmode")).toBeAttached();
+  });
+
+  test("EP03 has 3D viewer TOC entry", async ({ page }) => {
+    await page.goto("/episodes/ep-003.html");
+    const tocLink = page.locator('a[href="#section-3d-viewer"]');
+    await expect(tocLink).toBeVisible();
+    await expect(tocLink).toHaveText("3D軌道ビューア");
+  });
+
+  test("EP05 has inline 3D viewer with uranus-approach scene", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    const container = page.locator(".viewer3d-container");
+    await expect(container).toBeAttached();
+    await expect(container).toHaveAttribute("data-scene", "uranus-approach");
+  });
+
+  test("EP05 viewer has timeline controls and view mode button", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    await expect(page.locator(".viewer3d-play")).toBeAttached();
+    await expect(page.locator(".viewer3d-slider")).toBeAttached();
+    await expect(page.locator(".viewer3d-viewmode")).toBeAttached();
+  });
+
+  test("EP05 has 3D viewer TOC entry", async ({ page }) => {
+    await page.goto("/episodes/ep-005.html");
+    const tocLink = page.locator('a[href="#section-3d-viewer"]');
+    await expect(tocLink).toBeVisible();
+    await expect(tocLink).toHaveText("3D軌道ビューア");
+  });
+
+  test("EP01 does not have inline 3D viewer", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    const container = page.locator(".viewer3d-container");
+    expect(await container.count()).toBe(0);
+  });
+});

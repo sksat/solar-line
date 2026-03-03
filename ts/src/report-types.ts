@@ -402,6 +402,8 @@ export interface EpisodeReport {
   glossary?: GlossaryTerm[];
   /** Margin gauges showing parameter proximity to limits */
   marginGauges?: MarginGauge[];
+  /** Inline Three.js 3D viewer embed */
+  viewer3d?: Viewer3DEmbed;
 }
 
 /** A technical term definition for the glossary */
