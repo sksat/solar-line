@@ -45,3 +45,11 @@ cargo test --test dag_export -- --nocapture 2>/dev/null \
   | grep -v '^running\|^test \|^$\|test result' \
   > "${DAG_JSON}"
 "${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_dag.py"
+
+echo ""
+echo "=== Step 8: Run Orekit cross-validation ==="
+if "${VENV_DIR}/bin/python3" -c "import orekit_jpype" 2>/dev/null; then
+  "${VENV_DIR}/bin/python3" "${SCRIPT_DIR}/validate_orekit.py" --json "${JSON_OUT}"
+else
+  echo "Skipping Orekit validation (orekit-jpype not installed)"
+fi

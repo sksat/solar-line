@@ -2452,3 +2452,31 @@ describe("report data: reproduction command test pattern matching", () => {
     assert.deepStrictEqual(missing, [], `Transfers missing reproductionCommand: ${missing.join(", ")}`);
   });
 });
+
+// --- ADR section quality validation (DESIGN.md line 248-251) ---
+
+describe("ADR section quality", () => {
+  const adrDir = path.resolve(import.meta.dirname ?? ".", "..", "..", "adr");
+  const adrFiles = fs.readdirSync(adrDir)
+    .filter(f => f.endsWith(".md") && /^\d+/.test(f) && !f.startsWith("000"));
+
+  it("has at least one ADR to validate", () => {
+    assert.ok(adrFiles.length > 0, "No ADR files found");
+  });
+
+  const requiredSections = ["Alternatives Considered", "Assumptions"];
+
+  for (const file of adrFiles) {
+    const content = fs.readFileSync(path.join(adrDir, file), "utf-8");
+    const headings = [...content.matchAll(/^## (.+)$/gm)].map(m => m[1].trim());
+
+    for (const section of requiredSections) {
+      it(`${file} has "${section}" section`, () => {
+        assert.ok(
+          headings.includes(section),
+          `${file} is missing required "## ${section}" section. Found headings: ${headings.join(", ")}`
+        );
+      });
+    }
+  }
+});

@@ -82,11 +82,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
       - name: Install Python dependencies
         run: |
           python3 -m venv .venv
           .venv/bin/pip install --upgrade pip
           .venv/bin/pip install --only-binary ':all:' numpy scipy poliastro networkx
+          .venv/bin/pip install orekit-jpype
       - name: Export Rust values for cross-validation
         run: |
           cargo test --test cross_validation_export -- --nocapture 2>/dev/null \
@@ -97,11 +102,20 @@ jobs:
           cargo test --test dag_export -- --nocapture 2>/dev/null \
             | grep -v '^running\|^test \|^$\|test result' \
             > cross_validation/dag_values.json
+      - name: Download Orekit ephemeris data
+        run: |
+          mkdir -p raw_data && cd raw_data
+          ../.venv/bin/python3 -c "
+          import orekit_jpype; orekit_jpype.initVM()
+          from orekit_jpype.pyhelpers import download_orekit_data_curdir
+          download_orekit_data_curdir()
+          "
       - run: .venv/bin/python3 cross_validation/validate.py
       - run: .venv/bin/python3 cross_validation/validate_trim_thrust.py
       - run: .venv/bin/python3 cross_validation/validate_supplementary.py
       - run: .venv/bin/python3 cross_validation/validate_poliastro.py
       - run: .venv/bin/python3 cross_validation/validate_dag.py
+      - run: .venv/bin/python3 cross_validation/validate_orekit.py
 
   wasm-web:
     name: WASM browser build
