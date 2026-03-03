@@ -133,6 +133,85 @@ describe("EP01 reproduction: minimum transfer time", () => {
   });
 });
 
+describe("EP01 reproduction: 150h brachistochrone (normal route)", () => {
+  const r = analyzeEpisode1();
+  const b150 = r.brachistochrone150h;
+
+  it("closest: accel = 7.553 m/s² (0.770g), ΔV = 4078.7 km/s", () => {
+    assertClose(b150[0].accelMs2, 7.553234567901234, "closestAccel");
+    assertClose(b150[0].accelG, 0.7702155749314226, "closestAccelG");
+    assertClose(b150[0].deltaVKms, 4078.7466666666664, "closestDeltaV");
+  });
+
+  it("farthest: accel = 13.807 m/s² (1.408g), ΔV = 7455.6 km/s", () => {
+    assertClose(b150[2].accelMs2, 13.806710562414265, "farthestAccel");
+    assertClose(b150[2].accelG, 1.4078926608387436, "farthestAccelG");
+    assertClose(b150[2].deltaVKms, 7455.6237037037035, "farthestDeltaV");
+  });
+
+  it("all 3 scenarios use same distances as 72h brachistochrone", () => {
+    const b72 = r.brachistochrone72h;
+    for (let i = 0; i < 3; i++) {
+      assertClose(b150[i].distanceKm, b72[i].distanceKm, `scenario ${i} distance`);
+    }
+  });
+});
+
+describe("EP01 reproduction: reachable distance at canonical mass", () => {
+  const r = analyzeEpisode1();
+  const reach = r.reachableWithShipThrust;
+
+  it("48,000t in 72h reaches only 3,429 km (0.023 AU)", () => {
+    assertClose(reach.distanceKm, 3429215.9999999995, "distanceKm");
+    assertClose(reach.distanceAU, 0.02292289311307691, "distanceAU");
+  });
+
+  it("reachable distance is ~161x less than Mars→Ganymede", () => {
+    const marsGanymedeKm = r.brachistochrone72h[0].distanceKm;
+    const ratio = marsGanymedeKm / reach.distanceKm;
+    assert.ok(ratio > 160, `ratio ${ratio.toFixed(1)} should be > 160`);
+    assert.ok(ratio < 162, `ratio ${ratio.toFixed(1)} should be < 162`);
+  });
+});
+
+describe("EP01 reproduction: mass sensitivity", () => {
+  const r = analyzeEpisode1();
+  const ms = r.massSensitivity;
+
+  it("4 mass scenarios computed", () => {
+    assert.equal(ms.length, 4);
+    assert.equal(ms[0].massKg, 48_000_000);
+    assert.equal(ms[1].massKg, 4_800_000);
+    assert.equal(ms[2].massKg, 480_000);
+    assert.equal(ms[3].massKg, 48_000);
+  });
+
+  it("480t: accel ~2.08g, reachable 2.29 AU (covers Mars→Ganymede)", () => {
+    assertClose(ms[2].accelNormalG, 2.081920601496604, "480t accelG");
+    assertClose(ms[2].reachable72h.distanceAU, 2.292289311307691, "480t reachable AU");
+  });
+
+  it("48t: accel ~20.8g, reachable 22.9 AU (far exceeds distance)", () => {
+    assertClose(ms[3].accelNormalG, 20.819206014966035, "48t accelG");
+    assertClose(ms[3].reachable72h.distanceAU, 22.92289311307691, "48t reachable AU");
+  });
+});
+
+describe("EP01 reproduction: thrust boundary at 48,000t", () => {
+  const r = analyzeEpisode1();
+  const tb = r.boundaries.thrustBoundary72h;
+
+  it("required thrust = 1574 MN (161x Kestrel's 9.8 MN)", () => {
+    assertClose(tb.thrustMN, 1573.5905349794239, "thrustMN");
+    assertClose(tb.thrustRatioToKestrel, 160.57046275300243, "thrustRatio");
+  });
+
+  it("required accel = 32.78 m/s² (same as brachistochrone 72h)", () => {
+    assertClose(tb.aReqMs2, r.brachistochrone72h[0].accelMs2, "accel consistency");
+    assertClose(tb.aReqG, 3.3429495439731878, "aReqG");
+  });
+});
+
 // ============================================================
 // EP02: Jupiter Escape → Saturn/Enceladus
 // ============================================================
