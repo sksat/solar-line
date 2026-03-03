@@ -748,6 +748,15 @@ test.describe("Side-view SVG diagrams", () => {
     // Should have angle annotations (path arcs)
     expect(await svg.locator("path").count()).toBeGreaterThanOrEqual(1);
   });
+
+  test("Saturn ring crossing diagram has text labels", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const svg = page.locator("#saturn-ring-crossing svg");
+    await expect(svg).toBeVisible();
+    // SVG should contain text elements for annotations (ring labels, angle values, etc.)
+    const textElements = svg.locator("text");
+    expect(await textElements.count()).toBeGreaterThanOrEqual(1);
+  });
 });
 
 // --- PiP inset sub-diagrams (Task 300) ---
@@ -1343,6 +1352,12 @@ test.describe("Summary: ai-costs page", () => {
     await page.goto("/summary/ai-costs.html");
     const chart = page.locator('svg[aria-label*="プラン別コスト"]');
     await expect(chart).toBeVisible();
+  });
+
+  test("has cross-reference link to tech-overview", async ({ page }) => {
+    await page.goto("/summary/ai-costs.html");
+    const link = page.locator('a[href*="tech-overview"]');
+    expect(await link.count()).toBeGreaterThanOrEqual(1);
   });
 });
 

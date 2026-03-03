@@ -1347,6 +1347,16 @@ describe("WASM bridge: Hohmann window", () => {
     assert.ok(daysDelta > 0 && daysDelta < 800,
       `window ${daysDelta} days from start should be within synodic period ~780d`);
   });
+
+  it("Earth→Jupiter window within synodic period (~399 days)", () => {
+    const start = 2_451_545.0; // J2000
+    const jd = wasm.next_hohmann_window("earth", "jupiter", start);
+    assert.ok(jd !== null, "should find Earth→Jupiter window");
+    const daysDelta = jd - start;
+    // Earth-Jupiter synodic period ~398.9 days
+    assert.ok(daysDelta > 0 && daysDelta < 420,
+      `window ${daysDelta} days from start should be within synodic period ~399d`);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -1433,6 +1443,30 @@ describe("WASM bridge: Saturn ring crossing", () => {
       `approach angle=${result.approach_angle_to_ring_plane_deg}° should reflect Saturn tilt`,
     );
   });
+
+  it("in-ecliptic approach has different angle than z-axis approach", () => {
+    const j2000 = 2_451_545.0;
+    // Approaching from in-ecliptic-plane (along x-axis)
+    const inEcliptic = wasm.saturn_ring_crossing(
+      100_000, 0, 0, // in ecliptic plane, 100k km from Saturn
+      -10, 0, 0, // approaching along -x
+      j2000,
+    );
+    // Approaching from above (along z-axis)
+    const fromAbove = wasm.saturn_ring_crossing(
+      0, 0, 100_000,
+      0, 0, -10,
+      j2000,
+    );
+    // Both should cross ring plane but at different angles
+    assert.equal(inEcliptic.crosses_ring_plane, true);
+    assert.equal(fromAbove.crosses_ring_plane, true);
+    const angleDiff = Math.abs(
+      inEcliptic.approach_angle_to_ring_plane_deg - fromAbove.approach_angle_to_ring_plane_deg,
+    );
+    assert.ok(angleDiff > 10,
+      `angle difference=${angleDiff}° should be significant between ecliptic and z-axis approaches`);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -1503,6 +1537,35 @@ describe("WASM bridge: mass compute timeline", () => {
       Math.abs(lastSnapshot.total_mass_kg - (1_000_000 - jettMass)) < 1,
       `after jettison: mass=${lastSnapshot.total_mass_kg}, expected ${1_000_000 - jettMass}`,
     );
+  });
+
+  it("multiple burns produce monotonically decreasing total mass", () => {
+    const input = {
+      name: "multi-burn",
+      initial_total_kg: 1_000_000,
+      initial_dry_kg: 800_000,
+      events: [
+        { time_h: 0, episode: 1, label: "Burn 1",
+          kind: { type: "fuel_burn" as const, delta_v_km_s: 50.0, isp_s: 100_000, burn_duration_h: 1 } },
+        { time_h: 10, episode: 1, label: "Burn 2",
+          kind: { type: "fuel_burn" as const, delta_v_km_s: 50.0, isp_s: 100_000, burn_duration_h: 1 } },
+        { time_h: 20, episode: 1, label: "Burn 3",
+          kind: { type: "fuel_burn" as const, delta_v_km_s: 50.0, isp_s: 100_000, burn_duration_h: 1 } },
+      ],
+    };
+    const result = wasm.mass_compute_timeline(input);
+    // Should have at least 3 snapshots (one per burn)
+    assert.ok(result.snapshots.length >= 3,
+      `expected ≥3 snapshots, got ${result.snapshots.length}`);
+    // Mass should decrease monotonically after each burn
+    for (let i = 1; i < result.snapshots.length; i++) {
+      assert.ok(result.snapshots[i].total_mass_kg <= result.snapshots[i - 1].total_mass_kg,
+        `mass should decrease: snapshot[${i}]=${result.snapshots[i].total_mass_kg} > snapshot[${i - 1}]=${result.snapshots[i - 1].total_mass_kg}`);
+    }
+    // Final mass should be less than initial but above dry mass
+    const finalMass = result.snapshots[result.snapshots.length - 1].total_mass_kg;
+    assert.ok(finalMass < 1_000_000, `final mass ${finalMass} < initial 1M`);
+    assert.ok(finalMass > 800_000, `final mass ${finalMass} > dry mass 800k`);
   });
 });
 

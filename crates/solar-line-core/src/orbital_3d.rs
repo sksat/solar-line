@@ -646,6 +646,76 @@ mod tests {
     }
 
     #[test]
+    fn test_enceladus_outside_ring_system() {
+        // Enceladus orbits at ~238,020 km, well outside the F-ring at ~140,180 km
+        assert!(
+            ENCELADUS_ORBITAL_RADIUS_KM > SATURN_RING_OUTER_KM,
+            "Enceladus ({} km) should be outside Saturn's ring outer edge ({} km)",
+            ENCELADUS_ORBITAL_RADIUS_KM,
+            SATURN_RING_OUTER_KM
+        );
+        // And outside the A-ring outer edge
+        assert!(
+            ENCELADUS_ORBITAL_RADIUS_KM > SATURN_RING_A_OUTER_KM,
+            "Enceladus should be outside A-ring"
+        );
+        // Margin: Enceladus is ~70% further out than the ring outer edge
+        let ratio = ENCELADUS_ORBITAL_RADIUS_KM / SATURN_RING_OUTER_KM;
+        assert!(
+            ratio > 1.5 && ratio < 2.0,
+            "Enceladus/ring ratio = {:.2}, expected ~1.7",
+            ratio
+        );
+    }
+
+    #[test]
+    fn test_saturn_ring_crossing_oblique_angle() {
+        let jd = ephemeris::J2000_JD;
+        let ring_normal = saturn_ring_plane_normal(jd);
+
+        // Spacecraft above ring plane approaching obliquely (45° mix of normal + in-plane)
+        let arb = Vec3::new(1.0, 0.0, 0.0);
+        let in_plane = ring_normal.cross_raw(arb).normalize();
+        // Velocity: equal parts toward ring plane and along it
+        let vel = Vec3::new(
+            -ring_normal.x + in_plane.x,
+            -ring_normal.y + in_plane.y,
+            -ring_normal.z + in_plane.z,
+        )
+        .normalize();
+        let pos = ring_normal.scale(300_000.0); // 300k km above ring plane
+
+        let result = saturn_ring_crossing(pos, vel, jd);
+        assert!(result.crosses_ring_plane, "oblique approach should cross ring plane");
+        // Approach angle should be ~45° (between parallel 0° and perpendicular 90°)
+        let angle_deg = result.approach_angle_to_ring_plane.value().to_degrees();
+        assert!(
+            angle_deg > 30.0 && angle_deg < 60.0,
+            "oblique approach angle = {:.1}°, expected ~45°",
+            angle_deg
+        );
+        // Crossing distance should be positive (ahead of spacecraft)
+        assert!(result.crossing_distance_km.is_some());
+    }
+
+    #[test]
+    fn test_transfer_inclination_penalty_same_planet_zero() {
+        // Same planet → zero inclination change, zero ΔV
+        let jd = calendar_to_jd(2241, 9, 5.0);
+        let (delta_i, dv) = transfer_inclination_penalty(Planet::Earth, Planet::Earth, jd, 30.0);
+        assert!(
+            delta_i.value().abs() < 1e-15,
+            "same planet should have zero inclination change: {}",
+            delta_i.value()
+        );
+        assert!(
+            dv < 1e-10,
+            "same planet should have zero ΔV penalty: {}",
+            dv
+        );
+    }
+
+    #[test]
     fn test_planet_position_3d_backwards_compatible() {
         // The 2D projection (x, y) should approximately match the old coplanar results.
         // Since we changed from simplified λ = ω+ν+Ω to proper rotation matrix,
