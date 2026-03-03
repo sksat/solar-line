@@ -5912,6 +5912,29 @@ describe("full-route parameter cross-checks: calc JSON vs cross-episode report",
     );
   });
 
+  it("series margins: EP04 shield margin 43%", () => {
+    const ep4Margin = ep5.nozzleLifespan.seriesMargins.find(
+      (m: { episode: number }) => m.episode === 4,
+    );
+    assert.ok(ep4Margin, "should have EP04 series margin");
+    assert.ok(
+      Math.abs(ep4Margin.margin - 43) < 1,
+      `EP04 margin should be ~43%, got ${ep4Margin.margin}`,
+    );
+    assert.strictEqual(ep4Margin.unit, "%", "EP04 margin unit should be %");
+  });
+
+  it("series margins: EP05 nozzle margin ~0.78%", () => {
+    const ep5Margin = ep5.nozzleLifespan.seriesMargins.find(
+      (m: { episode: number }) => m.episode === 5,
+    );
+    assert.ok(ep5Margin, "should have EP05 series margin");
+    assert.ok(
+      Math.abs(ep5Margin.margin - 0.78) < 0.01,
+      `EP05 margin should be ~0.78%, got ${ep5Margin.margin}`,
+    );
+  });
+
   it("earth capture LEO 400km scenario exists", () => {
     const scenarios = ep5.earthCapture.scenarios as Array<{ label: string; targetRadiusKm: number }>;
     const leoScenario = scenarios.find(s => s.label.includes("LEO") || s.label.includes("400"));

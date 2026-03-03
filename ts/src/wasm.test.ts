@@ -53,6 +53,24 @@ describe("WASM bridge: vis_viva", () => {
       `result=${result}, expected=${expected}`,
     );
   });
+
+  it("apoapsis velocity lower than periapsis for eccentric orbit", () => {
+    // GEO-like orbit with e=0.5: a=42164 km
+    const mu = MU.EARTH;
+    const a = 42_164;
+    const e = 0.5;
+    const rPeri = a * (1 - e); // 21082 km
+    const rApo = a * (1 + e); // 63246 km
+    const vPeri = wasm.vis_viva(mu, rPeri, a);
+    const vApo = wasm.vis_viva(mu, rApo, a);
+    // At periapsis, velocity > circular; at apoapsis, velocity < circular
+    const vCirc = Math.sqrt(mu / a);
+    assert.ok(vPeri > vCirc, `periapsis v=${vPeri} should exceed circular v=${vCirc}`);
+    assert.ok(vApo < vCirc, `apoapsis v=${vApo} should be below circular v=${vCirc}`);
+    // Verify vis-viva: v² = μ(2/r - 1/a)
+    const expectedPeri = Math.sqrt(mu * (2 / rPeri - 1 / a));
+    assert.ok(Math.abs(vPeri - expectedPeri) < 1e-10, `periapsis vis-viva mismatch`);
+  });
 });
 
 describe("WASM bridge: hohmann_transfer_dv", () => {
@@ -131,6 +149,18 @@ describe("WASM bridge: solve_kepler", () => {
 
   it("throws for hyperbolic eccentricity", () => {
     assert.throws(() => wasm.solve_kepler(1.0, 1.5));
+  });
+
+  it("converges for high eccentricity (e=0.9)", () => {
+    const e = 0.9;
+    const M = Math.PI / 3;
+    const result = wasm.solve_kepler(M, e);
+    // Verify residual: M = E - e*sin(E)
+    const E = result.eccentric_anomaly;
+    const residual = Math.abs(E - e * Math.sin(E) - M);
+    assert.ok(residual < 1e-12, `high-e residual=${residual}, should be < 1e-12`);
+    // Should converge in reasonable iterations
+    assert.ok(result.iterations > 0 && result.iterations < 100, `iterations=${result.iterations}`);
   });
 });
 
@@ -211,6 +241,17 @@ describe("WASM bridge: specific_energy", () => {
     assert.ok(
       energyFar > energyClose,
       `far orbit less bound: ${energyFar} > ${energyClose}`,
+    );
+  });
+
+  it("matches -μ/(2a) formula quantitatively", () => {
+    // For a circular orbit: a = r, E = -μ/(2a)
+    const a = 42_164; // GEO
+    const energy = wasm.specific_energy(MU.EARTH, a);
+    const expected = -MU.EARTH / (2 * a);
+    assert.ok(
+      Math.abs(energy - expected) < 1e-6,
+      `energy=${energy}, expected -μ/(2a)=${expected}`,
     );
   });
 });
@@ -410,6 +451,16 @@ describe("WASM bridge: exhaust_velocity", () => {
     assert.ok(
       Math.abs(ve - 4.413) < 0.01,
       `chemical ve=${ve}, expected ~4.413 km/s`,
+    );
+  });
+
+  it("scales linearly: double Isp gives double ve", () => {
+    const ve450 = wasm.exhaust_velocity(450);
+    const ve900 = wasm.exhaust_velocity(900);
+    // ve = Isp × g0, so doubling Isp should double ve
+    assert.ok(
+      Math.abs(ve900 - 2 * ve450) < 1e-10,
+      `ve(900)=${ve900} should be 2×ve(450)=${2 * ve450}`,
     );
   });
 });

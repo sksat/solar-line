@@ -533,6 +533,78 @@ mod tests {
     }
 
     #[test]
+    fn test_delta_v_divergence_at_10_percent_c() {
+        // At v=0.1c, the relativistic ΔV should diverge from classical by >0.5%
+        let ve = KmPerSec(9806.65); // Kestrel Isp 10^6 s
+        // Mass ratio to achieve ~0.1c classically: exp(0.1c/ve) = exp(29979/9807) ≈ exp(3.057) ≈ 21.3
+        let target_v = 0.1 * C_KM_S; // ~29979 km/s
+        let mr = (target_v / ve.value()).exp();
+
+        let classical = classical_delta_v(ve, mr);
+        let relativistic = relativistic_delta_v(ve, mr);
+        let correction = delta_v_correction_fraction(ve, mr);
+
+        // Classical should give exactly target_v
+        assert!(
+            (classical.value() - target_v).abs() < 1e-6,
+            "classical should give ~0.1c: {} km/s",
+            classical.value()
+        );
+        // Relativistic should give less (tanh < identity)
+        assert!(
+            relativistic.value() < classical.value(),
+            "relativistic ({}) should be less than classical ({})",
+            relativistic.value(),
+            classical.value()
+        );
+        // At 0.1c, the correction should be measurable (~0.33%)
+        // tanh(x)/x ≈ 1 - x²/3 for small x, so correction ≈ x²/3
+        // where x = ve/c × ln(mr) ≈ 0.1 → correction ≈ 0.01/3 ≈ 0.33%
+        assert!(
+            correction > 0.003,
+            "at 0.1c, relativistic correction should exceed 0.3%, got {:.4}%",
+            correction * 100.0
+        );
+        // But should still be modest (< 1%)
+        assert!(
+            correction < 0.01,
+            "at 0.1c, correction should be < 1%, got {:.4}%",
+            correction * 100.0
+        );
+    }
+
+    #[test]
+    fn test_brachistochrone_time_dilation_increases_with_accel() {
+        // Higher acceleration → higher peak velocity → more time dilation
+        let d = Km(149_597_870.7); // 1 AU
+
+        let (t_coord_low, t_proper_low) = brachistochrone_times(d, 0.01); // 0.01 km/s² ≈ 1g
+        let (t_coord_high, t_proper_high) = brachistochrone_times(d, 1.0); // 1.0 km/s² ≈ 102g
+
+        // Both should have proper time < coordinate time
+        assert!(t_proper_low.value() < t_coord_low.value());
+        assert!(t_proper_high.value() < t_coord_high.value());
+
+        // Time dilation fraction should be larger for higher acceleration
+        let dilation_low = 1.0 - t_proper_low.value() / t_coord_low.value();
+        let dilation_high = 1.0 - t_proper_high.value() / t_coord_high.value();
+        assert!(
+            dilation_high > dilation_low,
+            "higher accel should give more time dilation: low={:.2e} high={:.2e}",
+            dilation_low,
+            dilation_high
+        );
+
+        // At 1 km/s² over 1 AU, peak velocity is significant — dilation should be measurable
+        let v_peak = brachistochrone_peak_velocity(d, 1.0);
+        assert!(
+            v_peak.value() > 0.01 * C_KM_S,
+            "peak velocity at 1 km/s² should exceed 1%c: {} km/s",
+            v_peak.value()
+        );
+    }
+
+    #[test]
     fn test_effects_summary_solar_line_velocities() {
         // Test at key velocities from the series:
         // 1500 km/s (cruise), 4249 km/s (EP01 peak), 7600 km/s (max peak)
