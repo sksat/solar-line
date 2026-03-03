@@ -771,6 +771,136 @@ mod tests {
     }
 
     #[test]
+    fn consecutive_burns_compound_correctly() {
+        // Two consecutive identical burns should consume different amounts of propellant
+        // because the second burn starts from a lighter ship
+        let events = vec![
+            MassEvent {
+                time_h: 0.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 2000.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 10.0,
+                },
+                episode: 1,
+                label: "burn 1".into(),
+            },
+            MassEvent {
+                time_h: 10.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 2000.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 10.0,
+                },
+                episode: 1,
+                label: "burn 2".into(),
+            },
+        ];
+
+        let tl = compute_timeline("compound", 300_000.0, 100_000.0, &events);
+
+        // Manual calculation: first burn consumes propellant from 300k total
+        let consumed1 = propellant_consumed(300_000.0, 2000.0, ISP_HIGH);
+        let post1_total = 300_000.0 - consumed1;
+        // Second burn starts from lighter ship
+        let consumed2 = propellant_consumed(post1_total, 2000.0, ISP_HIGH);
+
+        // Second burn should consume LESS propellant (lighter ship)
+        assert!(
+            consumed2 < consumed1,
+            "second burn should consume less: {consumed2:.1} < {consumed1:.1}",
+        );
+
+        // Total consumed should match timeline
+        let total_consumed = total_propellant_consumed(&tl);
+        assert!(
+            (total_consumed - (consumed1 + consumed2)).abs() < 1.0,
+            "timeline consumed {total_consumed:.1} vs manual {:.1}",
+            consumed1 + consumed2
+        );
+    }
+
+    #[test]
+    fn resupply_then_burn_uses_increased_mass() {
+        // Resupply adds propellant, then a burn should consume from the increased total
+        let events = vec![
+            MassEvent {
+                time_h: 10.0,
+                kind: MassEventKind::Resupply { mass_kg: 100_000.0 },
+                episode: 2,
+                label: "Enceladus refuel".into(),
+            },
+            MassEvent {
+                time_h: 20.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 2000.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 10.0,
+                },
+                episode: 3,
+                label: "post-refuel burn".into(),
+            },
+        ];
+
+        let tl = compute_timeline("resupply-burn", 200_000.0, 150_000.0, &events);
+        // After resupply: total = 300,000, dry = 150,000, prop = 150,000
+        // Burn from 300,000 total mass
+        let expected_consumed = propellant_consumed(300_000.0, 2000.0, ISP_HIGH);
+        let final_snap = final_mass(&tl).unwrap();
+        let remaining_prop = final_snap.propellant_kg;
+        assert!(
+            (remaining_prop - (150_000.0 - expected_consumed)).abs() < 1.0,
+            "post-refuel burn: prop={remaining_prop:.1}, expected={:.1}",
+            150_000.0 - expected_consumed
+        );
+    }
+
+    #[test]
+    fn total_mass_invariant_at_every_snapshot() {
+        // At every snapshot, total_mass = dry + propellant
+        let events = vec![
+            MassEvent {
+                time_h: 0.0,
+                kind: MassEventKind::FuelBurn {
+                    delta_v_km_s: 3000.0,
+                    isp_s: ISP_HIGH,
+                    burn_duration_h: 20.0,
+                },
+                episode: 1,
+                label: "burn".into(),
+            },
+            MassEvent {
+                time_h: 30.0,
+                kind: MassEventKind::ContainerJettison { mass_kg: 10_000.0 },
+                episode: 1,
+                label: "jettison".into(),
+            },
+            MassEvent {
+                time_h: 50.0,
+                kind: MassEventKind::Resupply { mass_kg: 5_000.0 },
+                episode: 2,
+                label: "resupply".into(),
+            },
+            MassEvent {
+                time_h: 60.0,
+                kind: MassEventKind::DamageEvent { mass_kg: 2_000.0 },
+                episode: 4,
+                label: "damage".into(),
+            },
+        ];
+
+        let tl = compute_timeline("invariant", 300_000.0, 120_000.0, &events);
+        for (i, snap) in tl.snapshots.iter().enumerate() {
+            let diff = (snap.total_mass_kg - snap.dry_mass_kg - snap.propellant_kg).abs();
+            assert!(
+                diff < 1e-6,
+                "snapshot {i}: total={:.1} != dry={:.1} + prop={:.1} (diff={diff:.10})",
+                snap.total_mass_kg, snap.dry_mass_kg, snap.propellant_kg
+            );
+        }
+    }
+
+    #[test]
     fn propellant_dv_at_exhaust_velocity() {
         // ΔV = vₑ → mass_ratio = e ≈ 2.718
         // propellant = m * (1 - 1/e) ≈ m * 0.6321

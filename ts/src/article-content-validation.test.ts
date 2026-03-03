@@ -1120,6 +1120,39 @@ describe("EP03 article content validation", () => {
       "EP03 should cite stellar nav confidence ~92.3%",
     );
   });
+
+  // --- Task 536: Additional EP03 cross-checks for assertion parity ---
+
+  it("cruise velocity: brachistochrone peak ~5,583 km/s matches analysis", () => {
+    const peakV = analysis.cruiseVelocity.brachistochrone.peakVelocityKms;
+    assert.ok(Math.abs(peakV - 5582.44) < 1,
+      `peak velocity ${peakV} should be ~5,582 km/s`);
+    assert.ok(
+      content.includes("5,583") || content.includes("5583") || content.includes("5582"),
+      "EP03 should cite brachistochrone peak velocity ~5,583 km/s",
+    );
+  });
+
+  it("brachistochrone closest: 106x thrust ratio at 48,000t", () => {
+    const closest = analysis.brachistochrone.find(
+      (s: { scenario: string }) => s.scenario === "closest",
+    );
+    assert.ok(closest, "should have closest brachistochrone scenario");
+    assert.ok(Math.abs(closest!.thrustRatio - 106.08) < 1,
+      `thrust ratio ${closest!.thrustRatio} should be ~106x`);
+    assert.ok(content.includes("106"),
+      "should cite 106x thrust ratio in report");
+  });
+
+  it("nav crisis error magnitude: 14,360,000 km at 14.72 AU", () => {
+    const errorKm = analysis.navCrisis.computedErrorKm;
+    assert.ok(errorKm > 14_000_000 && errorKm < 15_000_000,
+      `computed error ${errorKm} km should be ~14.36M km`);
+    assert.ok(
+      content.includes("14,360,000") || content.includes("1,436") || content.includes("14360000"),
+      "report should cite the error distance in km or 万km",
+    );
+  });
 });
 
 describe("EP04 article content validation", () => {
