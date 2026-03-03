@@ -338,6 +338,17 @@ describe("WASM bridge: specific_angular_momentum", () => {
       `ratio=${ratio}, expected sqrt(0.75)=${Math.sqrt(0.75)}`,
     );
   });
+
+  it("h = sqrt(mu * a * (1 - e²)) quantitative check", () => {
+    const a = 42_164; // GEO
+    const e = 0.3;
+    const h = wasm.specific_angular_momentum(MU.EARTH, a, e);
+    const expected = Math.sqrt(MU.EARTH * a * (1 - e * e));
+    assert.ok(
+      Math.abs(h - expected) < 1e-6,
+      `h=${h}, expected sqrt(μa(1-e²))=${expected}`,
+    );
+  });
 });
 
 describe("WASM bridge: mean_motion", () => {
@@ -472,6 +483,17 @@ describe("WASM bridge: brachistochrone_max_distance", () => {
       `ratio=${d2 / d1}, expected ~2.0`,
     );
   });
+
+  it("matches d=a·t²/4 formula", () => {
+    const a = 0.032783; // km/s² (EP01 scenario)
+    const t = 72 * 3600; // seconds
+    const d = wasm.brachistochrone_max_distance(a, t);
+    const expected = a * t * t / 4;
+    assert.ok(
+      Math.abs(d - expected) < 1.0,
+      `d=${d}, formula a·t²/4=${expected}`,
+    );
+  });
 });
 
 describe("WASM bridge: constants", () => {
@@ -527,6 +549,20 @@ describe("WASM bridge: brachistochrone_time", () => {
   it("zero distance gives zero time", () => {
     const t = wasm.brachistochrone_time(0, 1.0);
     assert.ok(t === 0 || Math.abs(t) < 1e-10, `zero distance time=${t}, expected 0`);
+  });
+
+  it("longer distance at same accel takes more time", () => {
+    const accel = 0.032783; // km/s²
+    const t1 = wasm.brachistochrone_time(550_630_800, accel); // Mars-Jupiter
+    const t2 = wasm.brachistochrone_time(1_280_000_000, accel); // Jupiter-Saturn
+    assert.ok(t2 > t1, `longer distance time=${t2} should exceed shorter=${t1}`);
+    // t ∝ sqrt(d), so t2/t1 = sqrt(d2/d1)
+    const expectedRatio = Math.sqrt(1_280_000_000 / 550_630_800);
+    const actualRatio = t2 / t1;
+    assert.ok(
+      Math.abs(actualRatio - expectedRatio) < 1e-6,
+      `time ratio=${actualRatio}, expected sqrt(d ratio)=${expectedRatio}`,
+    );
   });
 });
 
@@ -646,6 +682,16 @@ describe("WASM bridge: speed_of_light", () => {
     assert.ok(
       Math.abs(actualTime - expectedTime) < 0.01,
       `light_time=${actualTime}, c-derived=${expectedTime}`,
+    );
+  });
+
+  it("light time at 10 AU ≈ 4990 seconds", () => {
+    const c = wasm.speed_of_light();
+    const tenAU = 10 * 149_597_870.7;
+    const expected = tenAU / c; // ~4990 seconds
+    assert.ok(
+      Math.abs(expected - 4990) < 10,
+      `10 AU light time: ${expected}s (expected ~4990s)`,
     );
   });
 });

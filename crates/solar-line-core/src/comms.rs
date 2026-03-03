@@ -550,4 +550,41 @@ mod tests {
         let ds = CommFeasibility::classify(10_000.0);
         assert!(!ds.label_ja().is_empty());
     }
+
+    #[test]
+    fn test_fspl_increases_with_distance() {
+        // Free-space path loss increases with distance (6 dB per doubling)
+        let freq = 1.55e14; // ~1550 nm FSOC wavelength in Hz
+        let loss_1au = free_space_path_loss_db(149_597_870.7, freq);
+        let loss_2au = free_space_path_loss_db(2.0 * 149_597_870.7, freq);
+        // Doubling distance adds 20·log₁₀(2) ≈ 6.02 dB
+        let diff = loss_2au - loss_1au;
+        assert!(
+            (diff - 6.02).abs() < 0.01,
+            "FSPL doubling should add ~6 dB: diff = {diff:.4} dB"
+        );
+        // Also verify absolute order: farther is more loss
+        assert!(
+            loss_2au > loss_1au,
+            "2 AU loss {loss_2au:.1} should exceed 1 AU loss {loss_1au:.1}"
+        );
+    }
+
+    #[test]
+    fn test_planet_distance_range_earth_mars_au_values() {
+        // Earth-Mars: min ≈ 0.52 AU, max ≈ 2.52 AU
+        let (min_dist, max_dist) = planet_distance_range(Planet::Earth, Planet::Mars);
+        let min_au = min_dist.value() / AU_KM;
+        let max_au = max_dist.value() / AU_KM;
+        assert!(
+            (min_au - 0.52).abs() < 0.1,
+            "Earth-Mars min distance: {min_au:.3} AU (expected ~0.52)"
+        );
+        assert!(
+            (max_au - 2.52).abs() < 0.1,
+            "Earth-Mars max distance: {max_au:.3} AU (expected ~2.52)"
+        );
+        // Max should be much larger than min
+        assert!(max_au > 4.0 * min_au, "max should be ~5× min");
+    }
 }
