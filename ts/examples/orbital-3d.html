@@ -96,6 +96,10 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
     <h1>3D軌道ビューア</h1>
     <div id="preset-buttons">
       <button class="preset-btn active" data-scene="full-route" aria-pressed="true">全航路</button>
+      <button class="preset-btn" data-scene="episode-1" aria-pressed="false">EP01</button>
+      <button class="preset-btn" data-scene="episode-2" aria-pressed="false">EP02</button>
+      <button class="preset-btn" data-scene="episode-3" aria-pressed="false">EP03</button>
+      <button class="preset-btn" data-scene="episode-4" aria-pressed="false">EP04</button>
       <button class="preset-btn" data-scene="saturn-ring" aria-pressed="false">土星リング</button>
       <button class="preset-btn" data-scene="uranus-approach" aria-pressed="false">天王星接近</button>
     </div>
@@ -298,6 +302,72 @@ function prepareUranusScene(data) {
   };
 }
 
+const PLANET_LABELS = { mars: "火星", jupiter: "木星", saturn: "土星", uranus: "天王星", earth: "地球" };
+const EPISODE_TITLES = { 1: "EP01: 火星→木星", 2: "EP02: 木星→土星", 3: "EP03: 土星→天王星", 4: "EP04: 天王星→地球" };
+
+function prepareEpisodeScene(data, episode) {
+  const transfer = data.transfers.find(t => t.episode === episode);
+  if (!transfer) return prepareFullRouteScene(data);
+
+  const allPlanets = ["mars", "jupiter", "saturn", "uranus", "earth"];
+  const depP = transfer.departure.planet;
+  const arrP = transfer.arrival.planet;
+  const depI = allPlanets.indexOf(depP);
+  const arrI = allPlanets.indexOf(arrP);
+  const minI = Math.max(0, Math.min(depI, arrI) - 1);
+  const maxI = Math.min(allPlanets.length - 1, Math.max(depI, arrI) + 1);
+  const visible = allPlanets.slice(minI, maxI + 1);
+
+  const firstJd = data.transfers[0].departure.jd;
+  const depDay = transfer.departure.jd - firstJd;
+  const arrDay = transfer.arrival.jd - firstJd;
+  const epTotalDays = arrDay - depDay;
+
+  const planets = visible.map((name, i) => {
+    const p = data.planetaryZHeightsAtEpoch[name];
+    const globalI = allPlanets.indexOf(name);
+    const a = planetAngle(name, globalI, data);
+    const mm = (2 * Math.PI) / (ORBITAL_PERIODS_DAYS[name] || 365);
+    const adjA = a + mm * depDay;
+    const r = (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE;
+    return { name, x: r * Math.cos(adjA), y: r * Math.sin(adjA), z: zFromAU(p?.zHeightAU ?? 0),
+      color: PLANET_COLORS[name], radius: PLANET_RADII[name] ?? 0.15, label: PLANET_LABELS[name] || name };
+  });
+
+  const orbits = visible.map(name => {
+    const p = data.planetaryZHeightsAtEpoch[name];
+    const globalI = allPlanets.indexOf(name);
+    const a = planetAngle(name, globalI, data);
+    const mm = (2 * Math.PI) / (ORBITAL_PERIODS_DAYS[name] || 365);
+    return { name, radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+      initialAngle: a + mm * depDay, meanMotionPerDay: mm, z: zFromAU(p?.zHeightAU ?? 0) };
+  });
+
+  const orbMap = {};
+  orbits.forEach(o => { orbMap[o.name] = o; });
+  function posAtDay(orb, day) {
+    const a2 = orb.initialAngle + orb.meanMotionPerDay * day;
+    return [orb.radiusScene * Math.cos(a2), orb.radiusScene * Math.sin(a2), orb.z];
+  }
+
+  const fo = orbMap[depP], to2 = orbMap[arrP];
+  const fromPos = fo ? posAtDay(fo, 0) : [planets[0].x, planets[0].y, planets[0].z];
+  const toPos = to2 ? posAtDay(to2, epTotalDays) : [planets[planets.length - 1].x, planets[planets.length - 1].y, planets[planets.length - 1].z];
+
+  const orbitCircles = visible.map(name => {
+    const p = data.planetaryZHeightsAtEpoch[name];
+    return { name, radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE, color: PLANET_COLORS[name] ?? "#ffffff", z: zFromAU(p?.zHeightAU ?? 0) };
+  });
+
+  return { type: `episode-${episode}`, title: EPISODE_TITLES[episode] || `EP0${episode}`,
+    description: `${PLANET_LABELS[depP] || depP}→${PLANET_LABELS[arrP] || arrP}（${transfer.leg}）`,
+    planets, transferArcs: [{ from: depP, to: arrP, fromPos, toPos, episode, color: EPISODE_COLORS[episode], label: transfer.leg }],
+    orbitCircles,
+    eclipticPlane: { type: "ecliptic", normal: [0,0,1], z: 0, color: "#334455", opacity: 0.15, label: "黄道面" },
+    timeline: { totalDays: epTotalDays, orbits, transfers: [{ startDay: 0, endDay: epTotalDays, episode, label: transfer.leg, from: depP, to: arrP }] },
+  };
+}
+
 // ── Initialize ──
 async function init() {
   try {
@@ -317,6 +387,10 @@ async function init() {
   // Prepare all scenes
   const scenes = {
     "full-route": prepareFullRouteScene(analysisData),
+    "episode-1": prepareEpisodeScene(analysisData, 1),
+    "episode-2": prepareEpisodeScene(analysisData, 2),
+    "episode-3": prepareEpisodeScene(analysisData, 3),
+    "episode-4": prepareEpisodeScene(analysisData, 4),
     "saturn-ring": prepareSaturnScene(analysisData),
     "uranus-approach": prepareUranusScene(analysisData),
   };

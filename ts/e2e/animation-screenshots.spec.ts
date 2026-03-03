@@ -39,15 +39,39 @@ const scenes = [
     timePoints: [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0],
   },
   {
+    name: "episode-1",
+    label: "EP01: 火星→木星",
+    btnIndex: 1,
+    timePoints: [0, 0.25, 0.5, 0.75, 1.0],
+  },
+  {
+    name: "episode-2",
+    label: "EP02: 木星→土星",
+    btnIndex: 2,
+    timePoints: [0, 0.25, 0.5, 0.75, 1.0],
+  },
+  {
+    name: "episode-3",
+    label: "EP03: 土星→天王星",
+    btnIndex: 3,
+    timePoints: [0, 0.25, 0.5, 0.75, 1.0],
+  },
+  {
+    name: "episode-4",
+    label: "EP04: 天王星→地球",
+    btnIndex: 4,
+    timePoints: [0, 0.25, 0.5, 0.75, 1.0],
+  },
+  {
     name: "saturn-ring",
     label: "土星リング",
-    btnIndex: 1,
+    btnIndex: 5,
     timePoints: [0, 0.25, 0.5, 0.75, 1.0],
   },
   {
     name: "uranus-approach",
     label: "天王星接近",
-    btnIndex: 2,
+    btnIndex: 6,
     timePoints: [0, 0.25, 0.5, 0.75, 1.0],
   },
 ];

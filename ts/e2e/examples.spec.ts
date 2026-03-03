@@ -384,13 +384,17 @@ test.describe("3D Orbital Viewer Example", () => {
     await expect(page.locator("h1")).toContainText("3D軌道ビューア");
   });
 
-  test("has 3 preset buttons", async ({ page }) => {
+  test("has 7 preset buttons", async ({ page }) => {
     await page.goto("/examples/orbital-3d.html");
     const buttons = page.locator(".preset-btn");
-    expect(await buttons.count()).toBe(3);
+    expect(await buttons.count()).toBe(7);
     await expect(buttons.nth(0)).toContainText("全航路");
-    await expect(buttons.nth(1)).toContainText("土星リング");
-    await expect(buttons.nth(2)).toContainText("天王星接近");
+    await expect(buttons.nth(1)).toContainText("EP01");
+    await expect(buttons.nth(2)).toContainText("EP02");
+    await expect(buttons.nth(3)).toContainText("EP03");
+    await expect(buttons.nth(4)).toContainText("EP04");
+    await expect(buttons.nth(5)).toContainText("土星リング");
+    await expect(buttons.nth(6)).toContainText("天王星接近");
   });
 
   test("has viewer container and info panel", async ({ page }) => {
