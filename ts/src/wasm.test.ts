@@ -554,6 +554,40 @@ describe("WASM bridge: SOI and flyby", () => {
     );
   });
 
+  it("powered_flyby increases v_inf via Oberth burn at periapsis", () => {
+    const muJupiter = 1.266865349e8;
+    const vInfX = 10.0; // km/s
+    const vInfY = 0.0;
+    const vInfZ = 0.0;
+    const rPeri = 200_000; // km (close to Jupiter for strong Oberth effect)
+    const burnDv = 2.0; // km/s burn at periapsis
+    const normalX = 0.0;
+    const normalY = 0.0;
+    const normalZ = 1.0;
+    // Returns [turn_angle_rad, v_periapsis, v_inf_out, out_dir_x, out_dir_y, out_dir_z]
+    const result = wasm.powered_flyby(
+      muJupiter, vInfX, vInfY, vInfZ, rPeri, burnDv, normalX, normalY, normalZ,
+    );
+    assert.equal(result.length, 6, "should return 6 floats");
+    // Powered flyby should increase v_inf (Oberth effect)
+    const vInfOut = result[2];
+    assert.ok(
+      vInfOut > 10.0,
+      `powered flyby should increase v_inf: got ${vInfOut}, expected > 10.0`,
+    );
+    // Output direction should be a unit vector
+    const dirMag = Math.sqrt(result[3] ** 2 + result[4] ** 2 + result[5] ** 2);
+    assert.ok(
+      Math.abs(dirMag - 1.0) < 0.01,
+      `out_dir should be unit vector: magnitude=${dirMag}`,
+    );
+    // Direction should differ from input [1,0,0]
+    assert.ok(
+      Math.abs(result[3] - 1.0) > 0.001 || Math.abs(result[4]) > 0.001,
+      `out_dir should differ from input: got [${result[3]}, ${result[4]}, ${result[5]}]`,
+    );
+  });
+
   it("oberth_dv_gain is positive for Jupiter periapsis burn", () => {
     const muJupiter = 1.266865349e8;
     const rPeri = 200_000; // km (close to Jupiter)
