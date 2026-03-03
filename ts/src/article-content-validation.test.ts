@@ -1605,6 +1605,7 @@ describe("Remaining summary reports have related pages", () => {
     { file: "other-ships.md", label: "other-ships", requiredLinks: ["../episodes/ep-002.html", "../episodes/ep-004.html", "../episodes/ep-005.html"] },
     { file: "cross-episode.md", label: "cross-episode", requiredLinks: ["ship-kestrel.html", "../episodes/ep-001.html", "../episodes/ep-002.html", "../episodes/ep-003.html", "../episodes/ep-004.html", "../episodes/ep-005.html"] },
     { file: "ai-costs.md", label: "ai-costs", requiredLinks: ["tech-overview.html"] },
+    { file: "tech-overview.md", label: "tech-overview", requiredLinks: ["ai-costs.html", "ship-kestrel.html", "cross-episode.html"] },
   ];
 
   for (const { file, label, requiredLinks } of summaries) {
