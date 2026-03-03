@@ -888,6 +888,56 @@ describe("EP04 reproduction: fleet intercept scenarios", () => {
   });
 });
 
+describe("EP04 reproduction: Hohmann departure/arrival ΔV", () => {
+  const r = analyzeEpisode4();
+  const h = r.hohmann;
+
+  it("departure ΔV = 4.658 km/s, arrival ΔV = 11.281 km/s", () => {
+    assertClose(h.departureDv, 4.658453824517666, "departureDv");
+    assertClose(h.arrivalDv, 11.281425508281583, "arrivalDv");
+  });
+
+  it("semi-major axis = 1,511,029,012 km", () => {
+    assertClose(h.semiMajorAxisKm, 1511029011.5, "semiMajorAxis");
+    assertClose(h.transferTimeDays, 5862.589925194124, "transferTimeDays");
+  });
+});
+
+describe("EP04 reproduction: mass feasibility 60d/90d/180d", () => {
+  const r = analyzeEpisode4();
+  const mf = r.massFeasibility;
+
+  it("60-day: max mass = 15,718 t, accel = 0.405 m/s²", () => {
+    assertClose(mf[1].maxMassT, 15717.511956721559, "60d maxMassT");
+    assertClose(mf[1].accelMs2, 0.4052804297232224, "60d accelMs2");
+  });
+
+  it("90-day: max mass = 35,364 t, accel = 0.180 m/s²", () => {
+    assertClose(mf[2].maxMassT, 35364.401902623504, "90d maxMassT");
+    assertClose(mf[2].accelMs2, 0.1801246354325433, "90d accelMs2");
+  });
+
+  it("180-day: max mass = 141,458 t, accel = 0.045 m/s²", () => {
+    assertClose(mf[3].maxMassT, 141457.60761049401, "180d maxMassT");
+    assertClose(mf[3].accelMs2, 0.04503115885813583, "180d accelMs2");
+  });
+});
+
+describe("EP04 reproduction: brachistochrone mid/farthest", () => {
+  const r = analyzeEpisode4();
+  const b = r.brachistochrone;
+
+  it("mid: 107.8 days, ΔV = 1236 km/s", () => {
+    assertClose(b[1].timeDays, 107.76760720596103, "mid timeDays");
+    assertClose(b[1].deltaVKms, 1235.6633842235494, "mid deltaVKms");
+  });
+
+  it("farthest: 110.5 days, ΔV = 1267 km/s", () => {
+    assertClose(b[2].timeDays, 110.463437773413, "farthest timeDays");
+    assertClose(b[2].deltaVKms, 1266.5737775099535, "farthest deltaVKms");
+  });
+});
+
 // ============================================================
 // EP05: Uranus → Earth arrival
 // ============================================================
