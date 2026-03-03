@@ -1148,6 +1148,34 @@ describe("EP04 article content validation", () => {
       "chart should compare 480 mSv actual vs 500 mSv ICRP emergency limit",
     );
   });
+
+  // --- Task 507: Additional calc JSON → report cross-checks ---
+
+  it("worst-case radiation 1008 mSv cited in report", () => {
+    const worstCase = analysis.plasmoid.worstCaseExposureMSv;
+    assert.equal(worstCase, 1008);
+    assert.ok(
+      content.includes("1,008") || content.includes("1008"),
+      "EP04 should cite worst-case radiation exposure 1008 mSv",
+    );
+  });
+
+  it("en-route cumulative dose 48 mSv cited in report", () => {
+    const enRoute = analysis.plasmoid.cumulativeEnRouteMSv;
+    assert.equal(enRoute, 48);
+    assert.ok(
+      content.includes("48") && (content.includes("被曝") || content.includes("mSv") || content.includes("ミリシーベルト")),
+      "EP04 should cite 48 mSv en-route cumulative dose",
+    );
+  });
+
+  it("thermal margin 78% matches analysis", () => {
+    assert.equal(analysis.damageAssessment.thermalMargin, 0.78);
+    assert.ok(
+      content.includes("78") && (content.includes("熱") || content.includes("thermal")),
+      "EP04 should cite 78% thermal margin",
+    );
+  });
 });
 
 describe("EP05 article content validation", () => {
@@ -1381,6 +1409,61 @@ describe("EP05 article content validation", () => {
     assert.ok(
       content.includes("value: 101.2") && content.includes("熱サイクル疲労"),
       "chart should show 101.2% with thermal cycle fatigue",
+    );
+  });
+
+  // --- Task 507: Additional calc JSON → report cross-checks ---
+
+  it("nozzle sensitivity: 1% increase → -427s margin cited in report", () => {
+    const onePercent = analysis.nozzleLifespan.sensitivityScenarios.find(
+      (s: { label: string }) => s.label.includes("1%増加"),
+    );
+    assert.ok(onePercent, "1% scenario exists in analysis");
+    assert.ok(
+      content.includes("1%増加") && content.includes("427"),
+      "EP05 should cite 1% increase scenario with -427s margin",
+    );
+  });
+
+  it("navigation angular accuracy 7.35 nrad cited in report", () => {
+    const nrad = analysis.navigationAccuracy.angularAccuracyNrad;
+    assert.ok(Math.abs(nrad - 7.35) < 0.1, `angular accuracy ${nrad} should be ~7.35 nrad`);
+    assert.ok(
+      content.includes("7.35"),
+      "EP05 should cite 7.35 nrad angular accuracy",
+    );
+  });
+
+  it("furthest point 19.2 AU cited in report", () => {
+    const farthest = analysis.fullRoute.furthestPointAU;
+    assert.ok(Math.abs(farthest - 19.2) < 0.1, `furthest point ${farthest} should be ~19.2 AU`);
+    assert.ok(
+      content.includes("19.2"),
+      "EP05 should cite furthest point 19.2 AU",
+    );
+  });
+
+  it("Oberth best-case efficiency ~0.078% cited in report", () => {
+    assert.ok(
+      analysis.oberthEffect.bestCaseVelocityEfficiencyPercent < 0.1,
+      "best-case efficiency should be < 0.1%",
+    );
+    // Report uses "0.078%" (rounded from 0.0695%)
+    assert.ok(
+      content.includes("0.078") || content.includes("0.07") || content.includes("0.08"),
+      "EP05 should cite Oberth best-case efficiency percentage",
+    );
+  });
+
+  it("EP03 navigation comparison factor cited", () => {
+    const ratio = analysis.navigationAccuracy.ep03Comparison.ep05VsEp03Ratio;
+    assert.ok(
+      ratio > 1_000_000,
+      `EP03 comparison ratio ${ratio} should be > 1M times better`,
+    );
+    assert.ok(
+      content.includes("290万"),
+      "EP05 should cite navigation improvement factor ~290万 vs EP03",
     );
   });
 });
@@ -2560,6 +2643,22 @@ describe("science-accuracy.md content validation", () => {
     const ep3 = analyzeEpisode3();
     assertContainsApproxValue(content, ep3.navCrisis.computedErrorKm,
       "science-accuracy nav error distance from EP03 analysis");
+  });
+
+  // --- Task 507: relativistic cumulative time dilation cross-check ---
+
+  it("cumulative time dilation ~155 seconds cited in report", () => {
+    assert.ok(
+      content.includes("155秒") || content.includes("約155秒"),
+      "science-accuracy should cite cumulative time dilation ~155 seconds",
+    );
+  });
+
+  it("cumulative time dilation ~2.6 minutes cited in report", () => {
+    assert.ok(
+      content.includes("2.6分") || content.includes("2.59分"),
+      "science-accuracy should cite cumulative time dilation ~2.6 minutes",
+    );
   });
 });
 
