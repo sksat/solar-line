@@ -551,6 +551,84 @@ describe("EP04 reproduction: mass feasibility scenarios", () => {
   });
 });
 
+describe("EP04 reproduction: Uranus departure parameters", () => {
+  const r = analyzeEpisode4();
+  const ud = r.uranusDeparture;
+
+  it("Titania escape ΔV = 1.510 km/s", () => {
+    assertClose(ud.dvEscapeFromTitaniaKms, 1.5101248628537212, "dvEscapeFromTitania");
+  });
+
+  it("escape velocity at Titania orbit = 5.156 km/s", () => {
+    assertClose(ud.vEscUranusKms, 5.1558887876319845, "vEscUranus");
+  });
+
+  it("Titania circular velocity = 3.646 km/s", () => {
+    assertClose(ud.vCircTitaniaKms, 3.6457639247782634, "vCircTitania");
+  });
+
+  it("accel at full mass = 0.1327 m/s² (consistent with brachistochrone)", () => {
+    assertClose(ud.accelAtFullMassMs2, 0.13270833333333334, "accelAtFullMass");
+    // Should match EP04 brachistochrone closest accel
+    assertClose(ud.accelAtFullMassMs2, r.brachistochrone[0].accelMs2, "accel consistency");
+  });
+});
+
+describe("EP04 reproduction: plasmoid momentum perturbation", () => {
+  const r = analyzeEpisode4();
+  const pm = r.plasmoidMomentum;
+
+  it("3 scenarios: nominal, enhanced, extreme", () => {
+    assert.equal(pm.length, 3);
+    assert.equal(pm[0].label, "nominal");
+    assert.equal(pm[1].label, "enhanced");
+    assert.equal(pm[2].label, "extreme");
+  });
+
+  it("nominal: velocity perturbation negligible (< 1e-12 m/s)", () => {
+    assert.ok(
+      pm[0].velocityPerturbationMs < 1e-12,
+      `nominal velocity perturbation ${pm[0].velocityPerturbationMs} should be < 1e-12 m/s`,
+    );
+  });
+
+  it("all scenarios: correction-to-orbital ratio << 1 (negligible)", () => {
+    for (const s of pm) {
+      assert.ok(
+        s.correctionToOrbitalRatio < 1e-8,
+        `${s.label}: correction ratio ${s.correctionToOrbitalRatio} should be << 1`,
+      );
+    }
+  });
+
+  it("extreme scenario force is highest", () => {
+    const forces = pm.map((s: { forceN: number }) => s.forceN);
+    assert.ok(forces[2] > forces[1], "extreme > enhanced");
+    assert.ok(forces[1] > forces[0], "enhanced > nominal");
+  });
+});
+
+describe("EP04 reproduction: fleet intercept scenarios", () => {
+  const r = analyzeEpisode4();
+  const f = r.fleetIntercept;
+
+  it("arrival time at Titania = 9.7 hours", () => {
+    assertClose(f.arrivalTimeHours, 9.7, "arrivalTimeHours");
+  });
+
+  it("5 fleet ships", () => {
+    assert.strictEqual(f.fleetShipCount, 5);
+  });
+
+  it("fleet scenarios include Saturn-Uranus distance", () => {
+    const suScenario = f.scenarios.find(
+      (s: { label: string }) => s.label.includes("Saturn-Uranus"),
+    );
+    assert.ok(suScenario, "Saturn-Uranus scenario exists");
+    assertClose(suScenario.distKm, 1438930000, "Saturn-Uranus distance");
+  });
+});
+
 // ============================================================
 // EP05: Uranus → Earth arrival
 // ============================================================
