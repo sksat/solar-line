@@ -1353,6 +1353,32 @@ describe("WASM bridge: mass compute timeline", () => {
       `final mass=${lastSnapshot.total_mass_kg} < initial 48M`,
     );
   });
+
+  it("jettison-only event reduces total mass by exact amount", () => {
+    const jettMass = 100_000; // 100t
+    const input = {
+      name: "jettison-test",
+      initial_total_kg: 1_000_000,
+      initial_dry_kg: 900_000,
+      events: [
+        {
+          time_h: 10,
+          episode: 1,
+          label: "Container drop",
+          kind: {
+            type: "container_jettison",
+            mass_kg: jettMass,
+          },
+        },
+      ],
+    };
+    const result = wasm.mass_compute_timeline(input);
+    const lastSnapshot = result.snapshots[result.snapshots.length - 1];
+    assert.ok(
+      Math.abs(lastSnapshot.total_mass_kg - (1_000_000 - jettMass)) < 1,
+      `after jettison: mass=${lastSnapshot.total_mass_kg}, expected ${1_000_000 - jettMass}`,
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
