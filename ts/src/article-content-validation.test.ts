@@ -730,6 +730,47 @@ describe("EP02 article content validation", () => {
       "chart should show 0.327 m/s² at trim-only thrust",
     );
   });
+
+  // --- Task 508: Jupiter radiation scenario cross-checks ---
+
+  it("radiation: ballistic 7 km/s shield fails, cited in report", () => {
+    const ballistic = analysis.jupiterRadiation.scenarios.find(
+      (s: { vRadialKms: number }) => s.vRadialKms === 7,
+    );
+    assert.ok(ballistic, "7 km/s scenario exists");
+    assert.equal(ballistic.shieldSurvives, false);
+    assert.ok(
+      content.includes("弾道脱出") || content.includes("7 km/s"),
+      "EP02 should cite ballistic 7 km/s scenario",
+    );
+  });
+
+  it("radiation: accelerated 60 km/s shield survives, cited in report", () => {
+    const accel = analysis.jupiterRadiation.scenarios.find(
+      (s: { vRadialKms: number }) => s.vRadialKms === 60,
+    );
+    assert.ok(accel, "60 km/s scenario exists");
+    assert.equal(accel.shieldSurvives, true);
+    assert.ok(
+      content.includes("加速脱出") || content.includes("60 km/s"),
+      "EP02 should cite accelerated 60 km/s scenario",
+    );
+  });
+
+  it("heliocentric transfer is hyperbolic and reaches Saturn", () => {
+    assert.equal(analysis.heliocentricTransfer.isHyperbolic, true);
+    assert.equal(analysis.heliocentricTransfer.reachesSaturn, true);
+    assert.equal(analysis.additionalDvNeeded.naturallyReaches, true);
+  });
+
+  it("radiation shield budget 0.043 krad cited in report", () => {
+    const budget = analysis.jupiterRadiation.shieldBudget42minKrad;
+    assert.ok(Math.abs(budget - 0.043) < 0.001, `shield budget ${budget} should be ~0.043`);
+    assert.ok(
+      content.includes("0.043") || content.includes("0.04312"),
+      "EP02 should cite shield budget ~0.043 krad",
+    );
+  });
 });
 
 describe("EP03 article content validation", () => {
@@ -944,6 +985,41 @@ describe("EP03 article content validation", () => {
     assert.ok(
       massTransitChart!.includes("48,000") || massTransitChart!.includes("48000"),
       "chart should include 48,000t nominal mass",
+    );
+  });
+
+  // --- Task 508: Moon comparison and nav data cross-checks ---
+
+  it("moon comparison: all 5 major Uranian moons cited", () => {
+    const moons = analysis.moonComparison.moons;
+    assert.equal(moons.length, 5);
+    assert.ok(content.includes("ミランダ"), "should cite Miranda");
+    assert.ok(content.includes("アリエル"), "should cite Ariel");
+    assert.ok(content.includes("オベロン"), "should cite Oberon");
+    assert.ok(content.includes("タイタニア"), "should cite Titania");
+  });
+
+  it("moon comparison: v_inf = 2 km/s matches analysis", () => {
+    assert.equal(analysis.moonComparison.vInfKms, 2);
+    assert.ok(
+      content.includes("2 km/s") || content.includes("2.0 km/s") || content.includes("v∞ = 2"),
+      "EP03 should cite v_inf = 2 km/s for moon comparison",
+    );
+  });
+
+  it("moon comparison: Titania capture ΔV ~0.37 km/s matches analysis", () => {
+    const titania = analysis.moonComparison.moons.find(
+      (m: { name: string }) => m.name === "TITANIA",
+    );
+    assert.ok(titania, "Titania exists in moon comparison");
+    assert.ok(Math.abs(titania.dvCaptureKms - 0.374) < 0.01, "Titania capture ΔV ~0.37");
+  });
+
+  it("nav crisis: stellar nav confidence 92.3% matches analysis", () => {
+    assert.ok(Math.abs(analysis.navCrisis.stellarNavConfidence - 0.923) < 0.001);
+    assert.ok(
+      content.includes("92.3") || content.includes("92%") || content.includes("0.923"),
+      "EP03 should cite stellar nav confidence ~92.3%",
     );
   });
 });
