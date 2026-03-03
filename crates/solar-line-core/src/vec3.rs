@@ -241,4 +241,33 @@ mod tests {
         let n = v.normalize();
         assert!((n.norm_raw()).abs() < 1e-15);
     }
+
+    #[test]
+    fn test_vec3_cross_raw_with_heterogeneous() {
+        // cross_raw_with: Km × KmPerSec (angular momentum direction)
+        let r = Vec3::new(Km(1.0), Km(0.0), Km(0.0));
+        let v = Vec3::new(KmPerSec(0.0), KmPerSec(1.0), KmPerSec(0.0));
+        let h = r.cross_raw_with(v);
+        // (1,0,0) × (0,1,0) = (0,0,1)
+        assert!((h.x - 0.0).abs() < 1e-15);
+        assert!((h.y - 0.0).abs() < 1e-15);
+        assert!((h.z - 1.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn test_vec3_dot_raw_orthogonal() {
+        // Orthogonal vectors should have zero dot product
+        let a = Vec3::new(Km(1.0), Km(0.0), Km(0.0));
+        let b = Vec3::new(Km(0.0), Km(1.0), Km(0.0));
+        assert!(a.dot_raw(b).abs() < 1e-15, "orthogonal dot product should be 0");
+    }
+
+    #[test]
+    fn test_vec3_scale_negative() {
+        let v = Vec3::new(Km(1.0), Km(2.0), Km(3.0));
+        let neg = v.scale(-1.0);
+        assert_eq!(neg, Vec3::new(Km(-1.0), Km(-2.0), Km(-3.0)));
+        let zero = v.scale(0.0);
+        assert_eq!(zero, Vec3::new(Km(0.0), Km(0.0), Km(0.0)));
+    }
 }

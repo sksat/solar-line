@@ -869,6 +869,32 @@ describe("EP02 article content validation", () => {
       "EP02 should cite shield budget ~0.043 krad",
     );
   });
+
+  it("prograde-only capture ΔV impossibility: ~74 km/s", () => {
+    const captureDV = analysis.arrivalConsistency.progradeOnly.captureDeltaVKms;
+    assert.ok(captureDV > 70 && captureDV < 80,
+      `prograde-only capture ΔV should be ~74 km/s, got ${captureDV}`);
+    assert.ok(
+      content.includes("74") || content.includes("74.1"),
+      "EP02 should cite the impossibly high ~74 km/s capture ΔV for accel-only",
+    );
+  });
+
+  it("Enceladus orbital period ~32.9 hours", () => {
+    const period = analysis.enceladusInfo.orbitalPeriodHours;
+    assert.ok(Math.abs(period - 32.9) < 0.1,
+      `Enceladus period should be ~32.9h, got ${period}`);
+  });
+
+  it("trim-thrust primary angle 80.5° in calculation", () => {
+    const angle = analysis.trimThrust.primary.thrustAngleDeg;
+    assert.ok(Math.abs(angle - 80.5) < 0.1,
+      `thrust angle should be 80.5°, got ${angle}`);
+    // The thrust angle is the off-radial direction for the primary trim-thrust scenario
+    // A large angle (>80°) means thrust is nearly tangential, which is fuel-efficient
+    assert.ok(angle > 75 && angle < 90,
+      `angle ${angle}° should be between 75° and 90° (nearly tangential)`);
+  });
 });
 
 describe("EP03 article content validation", () => {
