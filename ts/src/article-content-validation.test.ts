@@ -1550,11 +1550,11 @@ describe("EP05 article content validation", () => {
 
 describe("Episode reports cross-reference summary analyses", () => {
   const episodes = [
-    { file: "ep01.md", label: "EP01", requiredLinks: ["ship-kestrel.html", "cross-episode.html"] },
-    { file: "ep02.md", label: "EP02", requiredLinks: ["ship-kestrel.html", "infrastructure.html"] },
-    { file: "ep03.md", label: "EP03", requiredLinks: ["communications.html", "attitude-control.html"] },
-    { file: "ep04.md", label: "EP04", requiredLinks: ["attitude-control.html", "ship-kestrel.html"] },
-    { file: "ep05.md", label: "EP05", requiredLinks: ["ship-kestrel.html", "cross-episode.html"] },
+    { file: "ep01.md", label: "EP01", requiredLinks: ["ship-kestrel.html", "cross-episode.html", "attitude-control.html"] },
+    { file: "ep02.md", label: "EP02", requiredLinks: ["ship-kestrel.html", "infrastructure.html", "cross-episode.html"] },
+    { file: "ep03.md", label: "EP03", requiredLinks: ["communications.html", "attitude-control.html", "ship-kestrel.html"] },
+    { file: "ep04.md", label: "EP04", requiredLinks: ["attitude-control.html", "ship-kestrel.html", "cross-episode.html"] },
+    { file: "ep05.md", label: "EP05", requiredLinks: ["ship-kestrel.html", "cross-episode.html", "other-ships.html", "infrastructure.html"] },
   ];
 
   for (const { file, label, requiredLinks } of episodes) {
@@ -1603,7 +1603,7 @@ describe("Remaining summary reports have related pages", () => {
   const summaries = [
     { file: "science-accuracy.md", label: "science-accuracy", requiredLinks: ["../episodes/ep-001.html", "../episodes/ep-004.html"] },
     { file: "other-ships.md", label: "other-ships", requiredLinks: ["../episodes/ep-002.html", "../episodes/ep-004.html"] },
-    { file: "cross-episode.md", label: "cross-episode", requiredLinks: ["ship-kestrel.html"] },
+    { file: "cross-episode.md", label: "cross-episode", requiredLinks: ["ship-kestrel.html", "../episodes/ep-001.html", "../episodes/ep-002.html", "../episodes/ep-003.html", "../episodes/ep-004.html", "../episodes/ep-005.html"] },
     { file: "ai-costs.md", label: "ai-costs", requiredLinks: ["tech-overview.html"] },
   ];
 
