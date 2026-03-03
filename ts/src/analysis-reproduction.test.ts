@@ -20,6 +20,15 @@ import { analyzeEpisode2 } from "./ep02-analysis.ts";
 import { analyzeEpisode3 } from "./ep03-analysis.ts";
 import { analyzeEpisode4 } from "./ep04-analysis.ts";
 import { analyzeEpisode5 } from "./ep05-analysis.ts";
+import { analyzeRelativisticEffects } from "./relativistic-analysis.ts";
+import {
+  KESTREL,
+  C_KMS,
+  EXHAUST_VELOCITY_KMS,
+  THRUST_MN,
+  DAMAGED_THRUST_MN,
+  NOMINAL_MASS_T,
+} from "./kestrel.ts";
 
 // --- Helpers ---
 
@@ -682,5 +691,218 @@ describe("Cross-episode reproduction: consistent parameters", () => {
     const ep01Accel = r1.shipAcceleration.accelNormalMs2;
     const ep04Accel = r4.brachistochrone[0].accelMs2; // 65% thrust / 48kt
     assertClose(ep04Accel / ep01Accel, 0.65, "EP04 65% thrust ratio");
+  });
+});
+
+// ============================================================
+// Cross-episode: constants consistency (kestrel.ts ↔ relativistic analysis)
+// ============================================================
+
+describe("Cross-episode: constants consistency", () => {
+  const rel = analyzeRelativisticEffects();
+
+  it("relativistic analysis Isp matches KESTREL.ispS", () => {
+    assert.equal(rel.parameters.ispSeconds, KESTREL.ispS);
+  });
+
+  it("relativistic analysis speed of light matches C_KMS", () => {
+    assertClose(rel.parameters.speedOfLightKms, C_KMS, "speedOfLight");
+  });
+
+  it("relativistic analysis exhaust velocity matches EXHAUST_VELOCITY_KMS", () => {
+    assertClose(rel.parameters.exhaustVelocityKms, EXHAUST_VELOCITY_KMS, "exhaustVelocity");
+  });
+
+  it("EP04 damage assessment thrust matches DAMAGED_THRUST_MN", () => {
+    const r4 = analyzeEpisode4();
+    assertClose(r4.damageAssessment.effectiveThrustMN, DAMAGED_THRUST_MN, "damagedThrust");
+  });
+
+  it("EP04 damage assessment normal thrust matches THRUST_MN", () => {
+    const r4 = analyzeEpisode4();
+    assertClose(r4.damageAssessment.normalThrustMN, THRUST_MN, "normalThrust");
+  });
+});
+
+// ============================================================
+// Cross-episode: EP04→EP05 damage linkage
+// ============================================================
+
+describe("Cross-episode: EP04→EP05 damage linkage", () => {
+  const r4 = analyzeEpisode4();
+  const r5 = analyzeEpisode5();
+
+  it("EP04 thrust fraction 0.65 matches EP05 assumption", () => {
+    // EP05 uses 65% thrust from EP04 damage — verify consistency
+    assertClose(r4.damageAssessment.thrustFraction, 0.65, "thrustFraction");
+    // EP05 brachistochroneByMass at 48kt should use same acceleration as EP04
+    assertClose(
+      r5.brachistochroneByMass[4].accelMs2,
+      r4.brachistochrone[0].accelMs2,
+      "48kt accel EP04 vs EP05",
+    );
+  });
+
+  it("EP04 radiation exposure 480 mSv carries into EP05 burn budget", () => {
+    assert.equal(r4.damageAssessment.totalExposureMSv, 480);
+    assert.equal(r5.burnBudget.radiationBudget.currentMSv, 480);
+    assert.equal(r4.damageAssessment.totalExposureMSv, r5.burnBudget.radiationBudget.currentMSv);
+  });
+
+  it("EP05 remaining radiation to ICRP limit is consistent", () => {
+    const budget = r5.burnBudget.radiationBudget;
+    assertClose(
+      budget.remainingToICRPMSv,
+      budget.icrpLimitMSv - budget.currentMSv,
+      "ICRP remaining",
+    );
+  });
+
+  it("EP04 plasmoid shield margin 43% matches nozzle seriesMargins", () => {
+    // The plasmoid margin fraction should be ~0.4286 (6/14)
+    assertClose(r4.plasmoid.marginFraction, 6 / 14, "marginFraction");
+    // EP05 nozzle seriesMargins EP04 entry should show 43%
+    const ep4Margin = r5.nozzleLifespan.seriesMargins.find(
+      (m: { episode: number }) => m.episode === 4,
+    );
+    assert.ok(ep4Margin, "EP04 series margin entry exists in EP05 nozzle data");
+    assertClose(ep4Margin.margin, 43, "EP04 shield margin %", 0.01);
+  });
+});
+
+// ============================================================
+// Cross-episode: nozzle sensitivity scenarios
+// ============================================================
+
+describe("Cross-episode: nozzle sensitivity scenarios", () => {
+  const r5 = analyzeEpisode5();
+  const scenarios = r5.nozzleLifespan.sensitivityScenarios;
+
+  it("plan scenario (55h12m) has positive margin", () => {
+    const plan = scenarios[0]; // 計画通り
+    assert.ok(plan.marginSec > 0, `plan margin ${plan.marginSec}s should be > 0`);
+    assertClose(plan.marginSec, 1560, "plan margin seconds");
+  });
+
+  it("1% burn increase scenario has negative margin (nozzle fails)", () => {
+    const onePercent = scenarios.find(
+      (s: { label: string }) => s.label.includes("1%増加"),
+    );
+    assert.ok(onePercent, "1% increase scenario exists");
+    assert.ok(onePercent.marginSec < 0, `1% increase margin ${onePercent.marginSec}s should be < 0`);
+  });
+
+  it("5% decrease scenario has largest positive margin", () => {
+    const decrease = scenarios.find(
+      (s: { label: string }) => s.label.includes("5%減少"),
+    );
+    assert.ok(decrease, "5% decrease scenario exists");
+    assert.ok(decrease.marginSec > 10000, `5% decrease margin ${decrease.marginSec}s should be > 10000`);
+  });
+});
+
+// ============================================================
+// Cross-episode: relativistic cumulative consistency
+// ============================================================
+
+describe("Cross-episode: relativistic cumulative consistency", () => {
+  const rel = analyzeRelativisticEffects();
+
+  it("cumulative time dilation ≈ sum of per-transfer values", () => {
+    const sum = rel.transfers.reduce(
+      (acc: number, t: { relativistic: { timeDilationSec: number } }) =>
+        acc + t.relativistic.timeDilationSec,
+      0,
+    );
+    assertClose(rel.summary.cumulativeTimeDilationSec, sum, "cumulative vs sum");
+  });
+
+  it("cumulativeTimeDilationMin = cumulativeTimeDilationSec / 60", () => {
+    assertClose(
+      rel.summary.cumulativeTimeDilationMin,
+      rel.summary.cumulativeTimeDilationSec / 60,
+      "sec to min conversion",
+    );
+  });
+
+  it("EP05 contributes the most time dilation", () => {
+    const ep05 = rel.transfers.find(
+      (t: { transferId: string }) => t.transferId === "ep05-brach-300t",
+    );
+    assert.ok(ep05, "EP05 transfer exists");
+    const maxTd = Math.max(
+      ...rel.transfers.map(
+        (t: { relativistic: { timeDilationSec: number } }) => t.relativistic.timeDilationSec,
+      ),
+    );
+    assertClose(ep05.relativistic.timeDilationSec, maxTd, "EP05 is max");
+  });
+});
+
+// ============================================================
+// Cross-episode: Oberth effect consistency
+// ============================================================
+
+describe("Cross-episode: Oberth effect at Jupiter", () => {
+  const r5 = analyzeEpisode5();
+  const oberth = r5.oberthEffect;
+
+  it("best-case efficiency << claimed 3%", () => {
+    assert.ok(
+      oberth.bestCaseVelocityEfficiencyPercent < 0.1,
+      `best-case ${oberth.bestCaseVelocityEfficiencyPercent}% should be << 3%`,
+    );
+    assert.ok(
+      oberth.bestCaseVelocityEfficiencyPercent < oberth.claimedEfficiencyPercent,
+      "best-case should be less than claimed",
+    );
+  });
+
+  it("burn saving exceeds nozzle margin", () => {
+    assert.equal(oberth.burnSavingExceedsMargin, true);
+    // 3% burn saving should be > 26 min nozzle margin
+    assert.ok(oberth.threePercentBurnSavingMinutes > 26, "burn saving > 26 min nozzle margin");
+  });
+
+  it("v_inf = 1500 km/s consistent with EP05 brachistochrone peak", () => {
+    // EP05 300t brachistochrone peak velocity ~7604 km/s (much faster, so 1500 km/s is a
+    // conservative v_inf for flyby analysis — the ship's actual speed at Jupiter would depend
+    // on trajectory, but should be well above 1500)
+    const peak300t = r5.brachistochroneByMass[0].peakVelocityKms;
+    assert.ok(
+      oberth.vInfKms < peak300t,
+      `v_inf ${oberth.vInfKms} should be < peak velocity ${peak300t}`,
+    );
+  });
+});
+
+// ============================================================
+// Cross-episode: full route and furthest point
+// ============================================================
+
+describe("Cross-episode: full route consistency", () => {
+  const r5 = analyzeEpisode5();
+
+  it("furthest point ~19.2 AU is near Uranus semi-major axis", () => {
+    // Uranus semi-major axis ~19.19 AU — ship's furthest point should be close
+    assertClose(r5.fullRoute.furthestPointAU, 19.2, "furthestPoint vs Uranus", 0.01);
+  });
+
+  it("full route has exactly 4 legs", () => {
+    assert.equal(r5.fullRoute.legs.length, 4);
+  });
+
+  it("EP04 damage assessment carries forward consistently", () => {
+    // EP04 damage: 65% thrust, 480 mSv radiation
+    // EP05 uses these as constraints — verify the chain
+    const r4 = analyzeEpisode4();
+    const thrustN = r4.damageAssessment.effectiveThrustN;
+    const massKg = KESTREL.massKg;
+    const expectedAccel = thrustN / massKg;
+    assertClose(
+      r5.brachistochroneByMass[4].accelMs2,
+      expectedAccel,
+      "EP05 48kt accel from EP04 damaged thrust",
+    );
   });
 });
