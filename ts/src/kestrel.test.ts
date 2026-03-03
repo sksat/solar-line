@@ -63,6 +63,13 @@ describe("KESTREL shared constants", () => {
   it("DAMAGED_THRUST_MN is consistent with KESTREL.damagedThrustN", () => {
     assert.equal(DAMAGED_THRUST_MN, KESTREL.damagedThrustN / 1_000_000);
   });
+
+  it("thrust ordering: peak > nominal > damaged", () => {
+    assert.ok(KESTREL.peakThrustN > KESTREL.thrustN,
+      "peak thrust should exceed nominal");
+    assert.ok(KESTREL.thrustN > KESTREL.damagedThrustN,
+      "nominal thrust should exceed damaged");
+  });
 });
 
 describe("KESTREL consistency across episode modules", () => {

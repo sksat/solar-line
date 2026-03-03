@@ -125,4 +125,25 @@ mod tests {
         let ratio = orbit_radius::MARS / orbit_radius::EARTH;
         assert!((ratio - 1.524).abs() < 0.01);
     }
+
+    #[test]
+    fn test_reference_orbits_ordering() {
+        assert!(reference_orbits::LEO_RADIUS.value() > reference_orbits::EARTH_RADIUS.value());
+        assert!(reference_orbits::GEO_RADIUS.value() > reference_orbits::LEO_RADIUS.value());
+    }
+
+    #[test]
+    fn test_g0_standard_value() {
+        assert!((G0_M_S2 - 9.80665).abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_c_km_s_order_of_magnitude() {
+        assert!(C_KM_S > 299_000.0 && C_KM_S < 300_000.0);
+    }
+
+    #[test]
+    fn test_au_km_matches_orbit_radius_earth() {
+        assert!((AU_KM - orbit_radius::EARTH.value()).abs() < 1.0);
+    }
 }

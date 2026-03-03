@@ -144,6 +144,30 @@ describe("recalculate pipeline", () => {
     );
   });
 
+  it("EP03 analysis contains key domain-specific keys", () => {
+    const r = analyzeEpisode3();
+    const keys = Object.keys(r);
+    for (const k of ["brachistochrone", "navCrisis", "cruiseVelocity", "massFeasibility", "moonComparison"]) {
+      assert.ok(keys.includes(k), `EP03 missing key: ${k}`);
+    }
+  });
+
+  it("EP04 analysis contains key domain-specific keys", () => {
+    const r = analyzeEpisode4();
+    const keys = Object.keys(r);
+    for (const k of ["plasmoid", "fleetIntercept", "damageAssessment", "plasmoidMomentum"]) {
+      assert.ok(keys.includes(k), `EP04 missing key: ${k}`);
+    }
+  });
+
+  it("EP05 analysis contains key domain-specific keys", () => {
+    const r = analyzeEpisode5();
+    const keys = Object.keys(r);
+    for (const k of ["fullRoute", "nozzleLifespan", "oberthEffect", "burnBudget", "earthCapture"]) {
+      assert.ok(keys.includes(k), `EP05 missing key: ${k}`);
+    }
+  });
+
   it("all hohmann ΔVs are physically reasonable (0-100 km/s)", () => {
     const results = [
       { ep: 1, r: analyzeEpisode1() },
