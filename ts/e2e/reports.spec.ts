@@ -192,18 +192,30 @@ for (const ep of episodes) {
   });
 }
 
-// --- Episode 1 specific: interactive calculator ---
+// --- Episode-specific tests ---
 
-test("EP01 has interactive brachistochrone calculator", async ({ page }) => {
-  await page.goto("/episodes/ep-001.html");
-  const calcSection = page.locator(".calc-section");
-  await expect(calcSection).toBeVisible();
-  // Should have input controls
-  const controls = calcSection.locator(".calc-control");
-  expect(await controls.count()).toBeGreaterThanOrEqual(1);
+test.describe("EP01-specific features", () => {
+  test("has interactive brachistochrone calculator", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    const calcSection = page.locator(".calc-section");
+    await expect(calcSection).toBeVisible();
+    // Should have input controls
+    const controls = calcSection.locator(".calc-control");
+    expect(await controls.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has margin gauge for mass boundary", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    const gauges = page.locator(".margin-gauge");
+    expect(await gauges.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("has timeseries chart for velocity profile", async ({ page }) => {
+    await page.goto("/episodes/ep-001.html");
+    const charts = page.locator(".uplot, .timeseries-chart");
+    expect(await charts.count()).toBeGreaterThanOrEqual(1);
+  });
 });
-
-// --- Episode-specific tests (Task 250) ---
 
 test.describe("EP02-specific features", () => {
   test("has margin gauge section", async ({ page }) => {
