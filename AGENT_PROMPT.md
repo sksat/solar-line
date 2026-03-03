@@ -6,3 +6,5 @@ Claim a task, work on it, commit your changes, push to origin, check CI status.
 以下追加指示（新しい記述を見逃さないようにするため、削除前に git diff を再確認すること。）
 
 ---
+
+- 3D 可視化において、宇宙船が惑星に激突しているように見える。シミュレーションの結果を正しく可視化できていないのでは？2D可視化とも齟齬があるように見える。
