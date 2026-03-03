@@ -176,7 +176,7 @@ export function loadScene(sceneData) {
   // Orbit circles (planetary paths)
   if (sceneData.orbitCircles) {
     for (const oc of sceneData.orbitCircles) {
-      addFullRouteOrbitCircle(currentSceneGroup, oc.radiusScene, oc.color, oc.z);
+      addFullRouteOrbitCircle(currentSceneGroup, oc.radiusScene, oc.color, oc.z, oc.name);
     }
   }
 
@@ -234,7 +234,7 @@ function addPlanet(group, planet, sceneType) {
   }
 }
 
-function addFullRouteOrbitCircle(group, radiusScene, color, z) {
+function addFullRouteOrbitCircle(group, radiusScene, color, z, name) {
   const geo = new THREE.BufferGeometry();
   const points = [];
   for (let i = 0; i <= 128; i++) {
@@ -254,6 +254,17 @@ function addFullRouteOrbitCircle(group, radiusScene, color, z) {
     transparent: true,
   });
   group.add(new THREE.Line(geo, mat));
+
+  // Orbit label at the top of the circle
+  if (name) {
+    const orbitNames = {
+      mars: "火星軌道", jupiter: "木星軌道", saturn: "土星軌道",
+      uranus: "天王星軌道", earth: "地球軌道",
+    };
+    const label = createLabel(orbitNames[name] || name, color);
+    label.position.set(0, z + 0.3, -radiusScene); // Top of circle (negative Z = "north")
+    group.add(label);
+  }
 }
 
 function addOrbitCircle(group, radiusKm, color) {
