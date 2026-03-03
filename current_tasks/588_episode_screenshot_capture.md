@@ -1,6 +1,6 @@
 # Task 588: Extend Screenshot Capture to Per-Episode 3D Scenes
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Description
 
