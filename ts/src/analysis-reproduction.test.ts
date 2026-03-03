@@ -957,6 +957,98 @@ describe("EP05 reproduction: navigation accuracy", () => {
   });
 });
 
+describe("EP05 reproduction: Earth approach analysis", () => {
+  const r = analyzeEpisode5();
+  const ea = r.earthApproach;
+
+  it("Earth circular velocity = 29.785 km/s", () => {
+    assertClose(ea.vCircEarthKms, 29.784676672948645, "vCircEarth");
+  });
+
+  it("solar escape at Earth orbit = 42.122 km/s", () => {
+    assertClose(ea.vEscSunAtEarthKms, 42.12189370178153, "vEscSunAtEarth");
+  });
+
+  it("Hohmann arrival: v∞ = 11.281 km/s, LEO capture ΔV = 7.980 km/s", () => {
+    assertClose(ea.hohmannArrival.vInfKms, 11.281425508281583, "hohmannVInf");
+    assertClose(ea.hohmannArrival.dvCaptureLEOKms, 7.980135986090377, "hohmannCaptureLEO");
+  });
+
+  it("brachistochrone arrival: LEO capture ΔV = 7.673 km/s (v∞≈0)", () => {
+    assertClose(ea.brachistochroneArrival.dvCaptureLEOKms, 7.672598648385013, "brachCaptureLEO");
+  });
+});
+
+describe("EP05 reproduction: burn budget thermal analysis", () => {
+  const r = analyzeEpisode5();
+  const bb = r.burnBudget;
+
+  it("total min burns = 3, no correction margin", () => {
+    assert.equal(bb.totalMinBurnsNeeded, 3);
+    assert.equal(bb.hasCorrectionMargin, false);
+  });
+
+  it("thermal: initial margin 78%, loss 5%/burn, final 63%, risk moderate", () => {
+    assertClose(bb.thermalAnalysis.initialMargin, 0.78, "initialMargin");
+    assertClose(bb.thermalAnalysis.estimatedLossPerBurn, 0.05, "lossPerBurn");
+    assertClose(bb.thermalAnalysis.estimatedFinalMargin, 0.63, "finalMargin");
+    assert.equal(bb.thermalAnalysis.thermalRisk, "moderate");
+  });
+
+  it("earth capture: 1 burn needed, feasible", () => {
+    assert.equal(bb.earthCapture.burnsNeeded, 1);
+    assert.equal(bb.earthCapture.feasible, true);
+  });
+});
+
+describe("EP05 reproduction: missing brachistochrone mass scenarios", () => {
+  const r = analyzeEpisode5();
+  const bm = r.brachistochroneByMass;
+
+  it("1,000t: 15.1 days, peak 4165 km/s (1.39%c)", () => {
+    assertClose(bm[2].timeDays, 15.134195879858355, "1000t timeDays");
+    assertClose(bm[2].peakVelocityKms, 4164.6885590029415, "1000t peakV");
+    assertClose(bm[2].peakVelocityCFraction, 0.01389190570965912, "1000t cFrac");
+  });
+
+  it("3,929t (EP04 30-day boundary): 30.0 days, peak 2101 km/s", () => {
+    assertClose(bm[3].timeDays, 29.998557030125, "3929t timeDays");
+    assertClose(bm[3].peakVelocityKms, 2101.074807273586, "3929t peakV");
+    assertClose(bm[3].deltaVKms, 4202.149614547172, "3929t deltaV");
+  });
+});
+
+describe("EP05 reproduction: nozzle series margins", () => {
+  const r = analyzeEpisode5();
+  const nl = r.nozzleLifespan;
+
+  it("series margins: EP02 = 0.53 km/s, EP03 = 1.23°, EP04 = 43%, EP05 = 0.78%", () => {
+    const sm = nl.seriesMargins;
+    assert.equal(sm.length, 4);
+    assertClose(sm[0].margin, 0.53, "EP02 margin");
+    assertClose(sm[1].margin, 1.23, "EP03 margin");
+    assertClose(sm[2].margin, 43, "EP04 margin");
+    assertClose(sm[3].margin, 0.7789095266626722, "EP05 margin");
+  });
+
+  it("sensitivity: 5% increase → -8376s, 3% increase → -4402s", () => {
+    const sens = nl.sensitivityScenarios;
+    const s5 = sens.find((s: { label: string }) => s.label.includes("5%増加"));
+    const s3 = sens.find((s: { label: string }) => s.label.includes("3%増加"));
+    assert.ok(s5, "5% increase scenario exists");
+    assert.ok(s3, "3% increase scenario exists");
+    assertClose(s5!.marginSec, -8376, "5% increase margin");
+    assertClose(s3!.marginSec, -4401.6, "3% increase margin", 0.001);
+  });
+
+  it("sensitivity: 5% decrease → +11496s (healthy margin)", () => {
+    const sens = nl.sensitivityScenarios;
+    const sd = sens.find((s: { label: string }) => s.label.includes("5%減少"));
+    assert.ok(sd, "5% decrease scenario exists");
+    assertClose(sd!.marginSec, 11496, "5% decrease margin");
+  });
+});
+
 // ============================================================
 // Cross-episode consistency checks
 // ============================================================
