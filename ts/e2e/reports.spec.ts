@@ -1665,3 +1665,82 @@ test.describe("Standalone calculator page", () => {
     await expect(page.locator(".site-banner")).toBeVisible();
   });
 });
+
+// --- Inline 3D viewer tests (Task 560) ---
+
+test.describe("Inline 3D viewer in cross-episode report", () => {
+  test("has viewer3d figure element", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const figure = page.locator(".viewer3d-figure");
+    await expect(figure).toBeAttached();
+  });
+
+  test("has viewer3d container with correct data attributes", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const container = page.locator(".viewer3d-container");
+    await expect(container).toBeAttached();
+    await expect(container).toHaveAttribute("data-scene", "full-route");
+    const scenesAttr = await container.getAttribute("data-scenes");
+    const scenes = JSON.parse(scenesAttr!);
+    expect(scenes).toEqual(["full-route", "saturn-ring", "uranus-approach"]);
+  });
+
+  test("has 3 scene switcher buttons", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const buttons = page.locator(".viewer3d-scene-btn");
+    expect(await buttons.count()).toBe(3);
+    await expect(buttons.nth(0)).toHaveText("全航路");
+    await expect(buttons.nth(1)).toHaveText("土星リング");
+    await expect(buttons.nth(2)).toHaveText("天王星接近");
+  });
+
+  test("first scene button is active by default", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const firstBtn = page.locator(".viewer3d-scene-btn").first();
+    await expect(firstBtn).toHaveAttribute("data-scene", "full-route");
+    await expect(firstBtn).toHaveClass(/active/);
+  });
+
+  test("has timeline controls", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    await expect(page.locator(".viewer3d-play")).toBeAttached();
+    await expect(page.locator(".viewer3d-slider")).toBeAttached();
+    await expect(page.locator(".viewer3d-time")).toBeAttached();
+  });
+
+  test("timeline play button has aria-label", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    await expect(page.locator(".viewer3d-play")).toHaveAttribute("aria-label", "再生");
+  });
+
+  test("timeline slider has aria-label and range", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const slider = page.locator(".viewer3d-slider");
+    await expect(slider).toHaveAttribute("aria-label", "タイムライン");
+    await expect(slider).toHaveAttribute("min", "0");
+    await expect(slider).toHaveAttribute("max", "1000");
+  });
+
+  test("has view mode toggle button", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const btn = page.locator(".viewer3d-viewmode");
+    await expect(btn).toBeAttached();
+    await expect(btn).toHaveAttribute("aria-label", "視点切替");
+    await expect(btn).toHaveText("慣性");
+  });
+
+  test("has drag/zoom hint and caption text", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const hint = page.locator(".viewer3d-hint");
+    await expect(hint).toBeAttached();
+    const hintText = await hint.textContent();
+    expect(hintText).toContain("ドラッグ");
+    expect(hintText).toContain("ズーム");
+
+    const caption = page.locator(".viewer3d-figure figcaption");
+    await expect(caption).toBeAttached();
+    const capText = await caption.textContent();
+    expect(capText).toContain("3Dインタラクティブビューア");
+    expect(capText).toContain("アニメーション再生");
+  });
+});
