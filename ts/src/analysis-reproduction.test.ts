@@ -1833,3 +1833,88 @@ describe("3D orbital: Uranus approach geometry", () => {
     assert.equal(uranus.approachFromSaturn.isPolar, false);
   });
 });
+
+// ===========================================================================
+// Relativistic effects reproduction (relativistic_effects.json)
+// ===========================================================================
+
+const relEffects = JSON.parse(fs.readFileSync(path.join(calcDir, "relativistic_effects.json"), "utf-8"));
+
+describe("Relativistic effects: summary values", () => {
+  const summary = relEffects.summary;
+
+  it("max β peak = 2.536%c across all transfers", () => {
+    assertClose(summary.maxBetaPercent, 2.5356917986039824, "maxBetaPercent");
+    assertClose(summary.maxGamma, 1.0003216417584835, "maxGamma");
+  });
+
+  it("cumulative time dilation = 155.5 seconds (2.59 min)", () => {
+    assertClose(summary.cumulativeTimeDilationSec, 155.51930012558455, "cumulativeTimeDilation");
+    assertClose(summary.cumulativeTimeDilationMin, 2.591988335426409, "cumulativeTimeDilationMin");
+  });
+
+  it("max ΔV correction < 1000 ppm (classical mechanics adequate)", () => {
+    assertClose(summary.maxDvCorrectionPpm, 856.8294719186098, "maxDvCorrectionPpm");
+    assert.ok(summary.maxDvCorrectionPpm < 1000, "ΔV correction should be < 0.1%");
+  });
+});
+
+describe("Relativistic effects: EP01 brachistochrone transfer", () => {
+  const ep1 = relEffects.transfers.find(
+    (t: Record<string, unknown>) => t.episode === 1,
+  );
+
+  it("β = 1.417%c, time dilation = 100.4 ppm for 72h brachistochrone", () => {
+    assert.ok(ep1, "EP01 transfer should exist");
+    assertClose(ep1.relativistic.betaPeak, 0.0141710518632805, "ep01BetaPeak");
+    assertClose(ep1.relativistic.timeDilationPpm, 100.41439698149634, "ep01TimeDilationPpm");
+    assertClose(ep1.relativistic.timeDilationSec, 8.676544463232858, "ep01TimeDilationSec");
+  });
+});
+
+describe("Relativistic effects: 6 transfer legs cover full mission", () => {
+  it("has exactly 6 transfer legs", () => {
+    assert.equal(relEffects.transfers.length, 6, "should have 6 transfer scenarios");
+  });
+
+  it("all transfers have relativistic sub-object with required fields", () => {
+    for (const t of relEffects.transfers) {
+      assert.ok(t.relativistic, `transfer ${t.transferId} missing relativistic`);
+      assert.ok(typeof t.relativistic.betaPeak === "number", `${t.transferId}: betaPeak`);
+      assert.ok(typeof t.relativistic.gammaPeak === "number", `${t.transferId}: gammaPeak`);
+      assert.ok(typeof t.relativistic.timeDilationPpm === "number", `${t.transferId}: timeDilationPpm`);
+    }
+  });
+});
+
+// ===========================================================================
+// Transcription accuracy reproduction (transcription_accuracy.json)
+// ===========================================================================
+
+const transAccuracy = JSON.parse(fs.readFileSync(path.join(calcDir, "transcription_accuracy.json"), "utf-8"));
+
+describe("Transcription accuracy: EP01 script comparison", () => {
+  it("EP01 has 229 script dialogue lines", () => {
+    const ep1 = transAccuracy.episodes.find(
+      (e: Record<string, unknown>) => e.episode === 1,
+    );
+    assert.ok(ep1, "EP01 episode data should exist");
+    assert.equal(ep1.scriptDialogueLines, 229, "EP01 should have 229 script lines");
+  });
+
+  it("YouTube auto-captions achieve ~68% corpus accuracy", () => {
+    const ep1 = transAccuracy.episodes.find(
+      (e: Record<string, unknown>) => e.episode === 1,
+    );
+    const ytAuto = ep1.comparisons.find(
+      (c: Record<string, unknown>) => c.sourceType === "youtube-auto",
+    );
+    assert.ok(ytAuto, "YouTube auto comparison should exist");
+    assertClose(ytAuto.corpusCharacterAccuracy, 0.683, "ytAutoAccuracy", 0.01);
+  });
+
+  it("has agreement analysis across sources", () => {
+    assert.ok(Array.isArray(transAccuracy.agreements), "should have agreements array");
+    assert.ok(transAccuracy.agreements.length > 0, "should have agreement entries");
+  });
+});
