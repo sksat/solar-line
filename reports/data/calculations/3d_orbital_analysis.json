@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-03-03T16:20:23.714Z",
+  "generatedAt": "2026-03-03T19:58:38.489Z",
   "description": "3D orbital analysis for SOLAR LINE — ecliptic z-heights, ring crossings, approach geometry",
   "coplanarApproximationValid": false,
   "maxPlaneChangeFractionPercent": 1.510119325764719,
   "transfers": [
     {
-      "leg": "Mars→Jupiter (72h brachistochrone)",
+      "leg": "火星→木星（72h brachistochrone）",
       "episode": 1,
       "departure": {
         "planet": "mars",
@@ -34,7 +34,7 @@
       "planeChangeFractionPercent": 0.4683692093856195
     },
     {
-      "leg": "Jupiter→Saturn (87d trim-thrust transfer)",
+      "leg": "木星→土星（87日 trim-thrust遷移）",
       "episode": 2,
       "departure": {
         "planet": "jupiter",
@@ -63,7 +63,7 @@
       "planeChangeFractionPercent": 1.0526583913586856
     },
     {
-      "leg": "Saturn→Uranus (143h brachistochrone)",
+      "leg": "土星→天王星（143h brachistochrone）",
       "episode": 3,
       "departure": {
         "planet": "saturn",
@@ -92,7 +92,7 @@
       "planeChangeFractionPercent": 1.510119325764719
     },
     {
-      "leg": "Uranus→Earth (507h composite)",
+      "leg": "天王星→地球（507h複合航路）",
       "episode": 4,
       "departure": {
         "planet": "uranus",

@@ -1776,9 +1776,9 @@ const orbital3d = JSON.parse(fs.readFileSync(path.join(calcDir, "3d_orbital_anal
 const transfers3d: Array<Record<string, unknown>> = orbital3d.transfers;
 
 describe("3D orbital: transfer plane change fractions", () => {
-  it("max plane change = EP03 Saturn→Uranus at 1.51%", () => {
+  it("max plane change = EP03 土星→天王星 at 1.51%", () => {
     assertClose(orbital3d.maxPlaneChangeFractionPercent, 1.510119325764719, "maxPlaneChange");
-    const ep3 = transfers3d.find((t) => (t.leg as string).includes("Saturn→Uranus"))!;
+    const ep3 = transfers3d.find((t) => (t.leg as string).includes("土星→天王星"))!;
     assertClose(ep3.planeChangeFractionPercent as number, 1.510119325764719, "ep03PlaneChange");
   });
 

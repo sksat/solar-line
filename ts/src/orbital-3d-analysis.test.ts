@@ -111,15 +111,15 @@ describe("3D orbital analysis: transfer legs", () => {
     }
   });
 
-  it("EP01 Mars→Jupiter has transfer label", () => {
-    assert.ok(data.transfers[0].leg.includes("Mars→Jupiter"));
+  it("EP01 火星→木星 has transfer label", () => {
+    assert.ok(data.transfers[0].leg.includes("火星→木星"));
     assert.equal(data.transfers[0].departure.planet, "mars");
     assert.equal(data.transfers[0].arrival.planet, "jupiter");
   });
 
-  it("EP03 Saturn→Uranus has highest inclination change", () => {
+  it("EP03 土星→天王星 has highest inclination change", () => {
     const ep03 = data.transfers[2];
-    assert.ok(ep03.leg.includes("Saturn→Uranus"));
+    assert.ok(ep03.leg.includes("土星→天王星"));
     // Saturn (i≈2.49°) to Uranus (i≈0.77°) has largest Δi among our transfers
     const maxDeltaI = Math.max(...data.transfers.map((t: { inclinationChangeDeg: number }) => t.inclinationChangeDeg));
     assert.equal(ep03.inclinationChangeDeg, maxDeltaI, "EP03 has largest inclination change");

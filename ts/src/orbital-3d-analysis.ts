@@ -62,7 +62,7 @@ const ARRIVAL_EARTH = _timeline.events[3].arrivalJD;
 const LEGS: TransferLeg[] = [
   {
     episode: 1,
-    label: "Mars→Jupiter (72h brachistochrone)",
+    label: "火星→木星（72h brachistochrone）",
     departure: "mars",
     arrival: "jupiter",
     departureJD: DEPARTURE_MARS,
@@ -71,7 +71,7 @@ const LEGS: TransferLeg[] = [
   },
   {
     episode: 2,
-    label: "Jupiter→Saturn (87d trim-thrust transfer)",
+    label: "木星→土星（87日 trim-thrust遷移）",
     departure: "jupiter",
     arrival: "saturn",
     departureJD: DEPARTURE_JUPITER,
@@ -80,7 +80,7 @@ const LEGS: TransferLeg[] = [
   },
   {
     episode: 3,
-    label: "Saturn→Uranus (143h brachistochrone)",
+    label: "土星→天王星（143h brachistochrone）",
     departure: "saturn",
     arrival: "uranus",
     departureJD: DEPARTURE_SATURN,
@@ -89,7 +89,7 @@ const LEGS: TransferLeg[] = [
   },
   {
     episode: 4,
-    label: "Uranus→Earth (507h composite)",
+    label: "天王星→地球（507h複合航路）",
     departure: "uranus",
     arrival: "earth",
     departureJD: DEPARTURE_URANUS,

@@ -436,7 +436,7 @@ export function prepareFullRouteScene(data: {
       z: zFromAU(pData?.zHeightAU ?? 0),
       color: PLANET_COLORS[name] ?? "#ffffff",
       radius: PLANET_RADII[name] ?? 0.15,
-      label: name.charAt(0).toUpperCase() + name.slice(1),
+      label: PLANET_LABELS[name] ?? name,
     };
   });
 

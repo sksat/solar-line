@@ -918,7 +918,7 @@ export function updateInfoPanel(panelEl, sceneData) {
       html += "<table>";
       html += "<tr><th>レグ</th><th>Z差 (AU)</th><th>傾斜ΔV比</th></tr>";
       for (const ts of sceneData.transferSummary) {
-        const shortLeg = ts.leg.replace(/\s*\(.*\)/, "");
+        const shortLeg = ts.leg.replace(/\s*[（(].*[）)]/, "");
         html += `<tr><td>${shortLeg}</td><td>${ts.outOfPlaneDistanceAU.toFixed(4)}</td><td>${ts.planeChangeFractionPercent.toFixed(2)}%</td></tr>`;
       }
       html += "</table>";

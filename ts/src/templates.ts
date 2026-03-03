@@ -3380,6 +3380,7 @@ window.__prepareScene = function(sceneName, data) {
   var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",enceladus:"#ccddee",titania:"#aabbcc"};
   var EC = {1:"#ff6644",2:"#ffaa22",3:"#44cc88",4:"#4488ff",5:"#ff4444"};
   var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,titania:0.08};
+  var PL = {mars:"火星",jupiter:"木星",saturn:"土星",uranus:"天王星",earth:"地球"};
   var OR = {mars:1.524,jupiter:5.203,saturn:9.537,uranus:19.19,earth:1.0};
   var OP = {mars:686.97,jupiter:4332.59,saturn:10759.22,uranus:30688.5,earth:365.256};
   var fallbackAngles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
@@ -3390,7 +3391,7 @@ window.__prepareScene = function(sceneName, data) {
       var p = data.planetaryZHeightsAtEpoch[name];
       var r = (OR[name]||5)*AU;
       var a = (typeof msAngles[name] === "number") ? msAngles[name] : (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : fallbackAngles[i];
-      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*3,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
+      return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*3,color:PC[name],radius:PR[name]||0.15,label:PL[name]||name};
     });
     var firstJd = data.transfers[0].departure.jd;
     var lastJd = data.transfers[data.transfers.length-1].arrival.jd;
