@@ -411,9 +411,9 @@ describe("prepareSaturnScene", () => {
   it("has timeline with Enceladus orbit for animation", () => {
     const scene = prepareSaturnScene(saturnInput);
     assert.ok(scene.timeline, "Saturn scene should have timeline");
-    assert.equal(scene.timeline!.orbits.length, 1);
-    assert.equal(scene.timeline!.orbits[0].name, "enceladus");
-    assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 4,
+    const encOrbit = scene.timeline!.orbits.find(o => o.name === "enceladus");
+    assert.ok(encOrbit, "should have Enceladus orbit");
+    assert.ok(encOrbit!.meanMotionPerDay > 4,
       "Enceladus should orbit fast (~4.59 rad/day)");
   });
 
@@ -483,9 +483,9 @@ describe("prepareUranusScene", () => {
   it("has timeline with Titania orbit for animation", () => {
     const scene = prepareUranusScene(uranusInput);
     assert.ok(scene.timeline, "Uranus scene should have timeline");
-    assert.equal(scene.timeline!.orbits.length, 1);
-    assert.equal(scene.timeline!.orbits[0].name, "titania");
-    assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 0.7,
+    const titOrbit = scene.timeline!.orbits.find(o => o.name === "titania");
+    assert.ok(titOrbit, "should have Titania orbit");
+    assert.ok(titOrbit!.meanMotionPerDay > 0.7,
       "Titania should orbit (~0.72 rad/day)");
   });
 
@@ -1171,5 +1171,187 @@ describe("prepareEpisodeScene", () => {
     // If no transfer found for episode, fall back to full scene
     const scene = prepareEpisodeScene(analysis, 99);
     assert.strictEqual(scene.planets.length, 5);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// IF counterfactual routes in local scenes (Task 602)
+// ---------------------------------------------------------------------------
+
+describe("Saturn scene IF counterfactual routes", () => {
+  const saturnInput = {
+    saturnRingAnalysis: {
+      ringPlaneNormal: [0, 0.45, 0.89] as [number, number, number],
+      ringInnerKm: 66_900,
+      ringOuterKm: 140_180,
+      enceladusOrbitKm: 238_020,
+      approachFromJupiter: { approachAngleToDeg: 25 },
+    },
+  };
+
+  it("includes scenarios for canonical and IF routes", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    assert.ok(scene.scenarios, "Saturn scene should have scenarios");
+    assert.equal(scene.scenarios!.length, 3);
+    const ids = scene.scenarios!.map(s => s.id);
+    assert.ok(ids.includes("canonical"), "should have canonical scenario");
+    assert.ok(ids.includes("rhea"), "should have Rhea IF scenario");
+    assert.ok(ids.includes("titan"), "should have Titan IF scenario");
+  });
+
+  it("IF scenarios are marked as counterfactual", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const canonical = scene.scenarios!.find(s => s.id === "canonical")!;
+    const rhea = scene.scenarios!.find(s => s.id === "rhea")!;
+    const titan = scene.scenarios!.find(s => s.id === "titan")!;
+    assert.ok(!canonical.isCounterfactual, "canonical should not be counterfactual");
+    assert.ok(rhea.isCounterfactual, "Rhea should be counterfactual");
+    assert.ok(titan.isCounterfactual, "Titan should be counterfactual");
+  });
+
+  it("includes Rhea and Titan as IF destination moons", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("enceladus"), "canonical moon");
+    assert.ok(names.includes("rhea"), "IF moon Rhea");
+    assert.ok(names.includes("titan"), "IF moon Titan");
+    assert.equal(scene.planets.length, 4); // Saturn + 3 moons
+  });
+
+  it("IF moons are at correct orbital distances", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const rhea = scene.planets.find(p => p.name === "rhea")!;
+    const titan = scene.planets.find(p => p.name === "titan")!;
+    const rheaDist = Math.sqrt(rhea.x ** 2 + rhea.y ** 2);
+    const titanDist = Math.sqrt(titan.x ** 2 + titan.y ** 2);
+    // Rhea: 527,108 km / 50,000 = 10.54
+    assert.ok(Math.abs(rheaDist - 527_108 / LOCAL_SCENE_SCALE) < 0.1,
+      `Rhea distance ${rheaDist.toFixed(2)} should be ~${(527_108 / LOCAL_SCENE_SCALE).toFixed(2)}`);
+    // Titan: 1,221,870 km / 50,000 = 24.44
+    assert.ok(Math.abs(titanDist - 1_221_870 / LOCAL_SCENE_SCALE) < 0.1,
+      `Titan distance ${titanDist.toFixed(2)} should be ~${(1_221_870 / LOCAL_SCENE_SCALE).toFixed(2)}`);
+  });
+
+  it("has transfer arcs with scenarioId assignments", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    // Should have: approach (canonical), enceladus capture (canonical), rhea (IF), titan (IF)
+    assert.ok(scene.transferArcs.length >= 4, `should have ≥4 arcs, got ${scene.transferArcs.length}`);
+    const canonicalArcs = scene.transferArcs.filter(a => a.scenarioId === "canonical");
+    const rheaArcs = scene.transferArcs.filter(a => a.scenarioId === "rhea");
+    const titanArcs = scene.transferArcs.filter(a => a.scenarioId === "titan");
+    assert.ok(canonicalArcs.length >= 2, "canonical should have approach + capture");
+    assert.equal(rheaArcs.length, 1, "one Rhea IF capture arc");
+    assert.equal(titanArcs.length, 1, "one Titan IF capture arc");
+  });
+
+  it("IF arcs are marked as counterfactual", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const ifArcs = scene.transferArcs.filter(a => a.isCounterfactual);
+    assert.equal(ifArcs.length, 2, "should have 2 counterfactual arcs");
+    const ifNames = ifArcs.map(a => a.to);
+    assert.ok(ifNames.includes("rhea"));
+    assert.ok(ifNames.includes("titan"));
+  });
+
+  it("timeline includes orbits for all 3 moons", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const orbitNames = scene.timeline!.orbits.map(o => o.name);
+    assert.ok(orbitNames.includes("enceladus"));
+    assert.ok(orbitNames.includes("rhea"));
+    assert.ok(orbitNames.includes("titan"));
+    assert.equal(scene.timeline!.orbits.length, 3);
+  });
+
+  it("Rhea orbits between Enceladus and Titan", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const enc = scene.timeline!.orbits.find(o => o.name === "enceladus")!;
+    const rhea = scene.timeline!.orbits.find(o => o.name === "rhea")!;
+    const titan = scene.timeline!.orbits.find(o => o.name === "titan")!;
+    assert.ok(enc.radiusScene < rhea.radiusScene, "Enceladus < Rhea");
+    assert.ok(rhea.radiusScene < titan.radiusScene, "Rhea < Titan");
+  });
+});
+
+describe("Uranus scene IF counterfactual routes", () => {
+  const uranusInput = {
+    uranusApproachAnalysis: {
+      spinAxis: [0.97, 0, 0.24] as [number, number, number],
+      obliquityDeg: 97.77,
+      titaniaOrbitKm: 436_300,
+      ringOuterKm: 51_149,
+      approachFromSaturn: { angleToDeg: 25.3 },
+      approachFromUranus: { angleToDeg: 14.3 },
+    },
+  };
+
+  it("includes scenarios for canonical and IF routes", () => {
+    const scene = prepareUranusScene(uranusInput);
+    assert.ok(scene.scenarios, "Uranus scene should have scenarios");
+    assert.equal(scene.scenarios!.length, 3);
+    const ids = scene.scenarios!.map(s => s.id);
+    assert.ok(ids.includes("canonical"));
+    assert.ok(ids.includes("miranda"));
+    assert.ok(ids.includes("oberon"));
+  });
+
+  it("IF scenarios are marked as counterfactual", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const canonical = scene.scenarios!.find(s => s.id === "canonical")!;
+    const miranda = scene.scenarios!.find(s => s.id === "miranda")!;
+    const oberon = scene.scenarios!.find(s => s.id === "oberon")!;
+    assert.ok(!canonical.isCounterfactual);
+    assert.ok(miranda.isCounterfactual);
+    assert.ok(oberon.isCounterfactual);
+  });
+
+  it("includes Miranda and Oberon as IF destination moons", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("titania"), "canonical moon");
+    assert.ok(names.includes("miranda"), "IF moon Miranda");
+    assert.ok(names.includes("oberon"), "IF moon Oberon");
+    assert.equal(scene.planets.length, 4); // Uranus + 3 moons
+  });
+
+  it("Miranda orbit is innermost, Oberon is outermost", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const miranda = scene.planets.find(p => p.name === "miranda")!;
+    const titania = scene.planets.find(p => p.name === "titania")!;
+    const oberon = scene.planets.find(p => p.name === "oberon")!;
+    const mirandaDist = Math.sqrt(miranda.x ** 2 + miranda.y ** 2);
+    const titaniaDist = Math.sqrt(titania.x ** 2 + titania.y ** 2);
+    const oberonDist = Math.sqrt(oberon.x ** 2 + oberon.y ** 2);
+    assert.ok(mirandaDist < titaniaDist, `Miranda ${mirandaDist.toFixed(2)} < Titania ${titaniaDist.toFixed(2)}`);
+    assert.ok(titaniaDist < oberonDist, `Titania ${titaniaDist.toFixed(2)} < Oberon ${oberonDist.toFixed(2)}`);
+  });
+
+  it("has transfer arcs with scenarioId assignments", () => {
+    const scene = prepareUranusScene(uranusInput);
+    // approach (canonical), titania capture (canonical), miranda (IF), oberon (IF), earth departure (canonical)
+    assert.ok(scene.transferArcs.length >= 5, `should have ≥5 arcs, got ${scene.transferArcs.length}`);
+    const canonicalArcs = scene.transferArcs.filter(a => a.scenarioId === "canonical");
+    const mirandaArcs = scene.transferArcs.filter(a => a.scenarioId === "miranda");
+    const oberonArcs = scene.transferArcs.filter(a => a.scenarioId === "oberon");
+    assert.ok(canonicalArcs.length >= 3, "canonical: approach + capture + departure");
+    assert.equal(mirandaArcs.length, 1, "one Miranda IF capture arc");
+    assert.equal(oberonArcs.length, 1, "one Oberon IF capture arc");
+  });
+
+  it("IF arcs are marked as counterfactual", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const ifArcs = scene.transferArcs.filter(a => a.isCounterfactual);
+    assert.equal(ifArcs.length, 2);
+    const ifNames = ifArcs.map(a => a.to);
+    assert.ok(ifNames.includes("miranda"));
+    assert.ok(ifNames.includes("oberon"));
+  });
+
+  it("timeline includes orbits for all 3 moons", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const orbitNames = scene.timeline!.orbits.map(o => o.name);
+    assert.ok(orbitNames.includes("titania"));
+    assert.ok(orbitNames.includes("miranda"));
+    assert.ok(orbitNames.includes("oberon"));
+    assert.equal(scene.timeline!.orbits.length, 3);
   });
 });

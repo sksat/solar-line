@@ -364,17 +364,21 @@ describe("orbital-3d-viewer-data", () => {
     it("Saturn scene has timeline with Enceladus orbit", () => {
       const scene = prepareSaturnScene(analysisData);
       assert.ok(scene.timeline, "Saturn scene should have timeline for animation");
-      assert.strictEqual(scene.timeline!.orbits.length, 1);
-      assert.strictEqual(scene.timeline!.orbits[0].name, "enceladus");
-      assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 0);
+      const encOrbit = scene.timeline!.orbits.find(o => o.name === "enceladus");
+      assert.ok(encOrbit, "should have Enceladus orbit");
+      assert.ok(encOrbit!.meanMotionPerDay > 0);
+      // Also has IF moon orbits (Rhea, Titan)
+      assert.strictEqual(scene.timeline!.orbits.length, 3);
     });
 
     it("Uranus scene has timeline with Titania orbit", () => {
       const scene = prepareUranusScene(analysisData);
       assert.ok(scene.timeline, "Uranus scene should have timeline for animation");
-      assert.strictEqual(scene.timeline!.orbits.length, 1);
-      assert.strictEqual(scene.timeline!.orbits[0].name, "titania");
-      assert.ok(scene.timeline!.orbits[0].meanMotionPerDay > 0);
+      const titOrbit = scene.timeline!.orbits.find(o => o.name === "titania");
+      assert.ok(titOrbit, "should have Titania orbit");
+      assert.ok(titOrbit!.meanMotionPerDay > 0);
+      // Also has IF moon orbits (Miranda, Oberon)
+      assert.strictEqual(scene.timeline!.orbits.length, 3);
     });
 
     it("local timelines span 3 orbital periods", () => {

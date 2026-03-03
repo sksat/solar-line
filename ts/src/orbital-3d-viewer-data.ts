@@ -41,6 +41,10 @@ export interface TransferArcData {
   label?: string;
   /** Approach angle in degrees (for local scenes) */
   approachAngleDeg?: number;
+  /** Scenario ID for grouping arcs in multi-scenario views */
+  scenarioId?: string;
+  /** Whether this arc is a counterfactual (IF) scenario */
+  isCounterfactual?: boolean;
 }
 
 export interface RingData {
@@ -145,6 +149,15 @@ export interface TransferSummaryItem {
   planeChangeFractionPercent: number;
 }
 
+/** Scenario definition for multi-scenario views (canonical + IF counterfactual) */
+export interface SceneScenario {
+  id: string;
+  label: string;
+  color?: string;
+  /** Whether this is a counterfactual (IF) scenario */
+  isCounterfactual?: boolean;
+}
+
 export interface SceneData {
   type: "full-route" | "saturn-ring" | "uranus-approach" | `episode-${number}`;
   title: string;
@@ -163,6 +176,8 @@ export interface SceneData {
   timeline?: TimelineData;
   /** Per-transfer 3D analysis summary for info panel */
   transferSummary?: TransferSummaryItem[];
+  /** Scenarios for multi-scenario views (canonical + IF routes) */
+  scenarios?: SceneScenario[];
 }
 
 // ── Constants ──
@@ -176,7 +191,11 @@ export const LOCAL_SCENE_SCALE = 50_000;
 /** Moon orbital periods in days */
 const MOON_PERIODS_DAYS: Record<string, number> = {
   enceladus: 1.370218,
+  rhea: 4.518212,
+  titan: 15.945,
   titania: 8.705872,
+  miranda: 1.413479,
+  oberon: 13.463,
 };
 
 /** Planet display colors */
@@ -187,7 +206,11 @@ const PLANET_COLORS: Record<string, string> = {
   uranus: "#7ec8e3",
   earth: "#4488ff",
   enceladus: "#ccddee",
+  rhea: "#eab308",
+  titan: "#d2a8ff",
   titania: "#aabbcc",
+  miranda: "#3b82f6",
+  oberon: "#f97316",
 };
 
 /** Episode transfer colors */
@@ -207,7 +230,11 @@ const PLANET_RADII: Record<string, number> = {
   uranus: 0.25,
   earth: 0.15,
   enceladus: 0.08,
+  rhea: 0.08,
+  titan: 0.1,
   titania: 0.08,
+  miranda: 0.06,
+  oberon: 0.08,
 };
 
 // ── Heliocentric orbital radii (AU) for x/y positioning ──
@@ -739,6 +766,32 @@ export function prepareEpisodeScene(data: {
   };
 }
 
+/** Moon orbital radii in km (for IF counterfactual scenes) */
+const MOON_ORBIT_KM: Record<string, number> = {
+  enceladus: 238_020,
+  rhea: 527_108,
+  titan: 1_221_870,
+  miranda: 129_390,
+  titania: 435_910,
+  oberon: 583_520,
+};
+
+/** Create a moon planet entry at a given angular position */
+function makeMoon(name: string, label: string, angle: number): PlanetData {
+  const orbitKm = MOON_ORBIT_KM[name] ?? 200_000;
+  const sceneR = orbitKm / LOCAL_SCENE_SCALE;
+  return {
+    name,
+    x: sceneR * Math.cos(angle),
+    y: sceneR * Math.sin(angle),
+    z: 0,
+    color: PLANET_COLORS[name] ?? "#ffffff",
+    radius: PLANET_RADII[name] ?? 0.08,
+    orbitRadius: orbitKm,
+    label,
+  };
+}
+
 /** Prepare Saturn ring crossing scene (local Saturn-centric view) */
 export function prepareSaturnScene(data: {
   saturnRingAnalysis: {
@@ -752,12 +805,43 @@ export function prepareSaturnScene(data: {
   };
 }): SceneData {
   const ring = data.saturnRingAnalysis;
+
+  // Approach point (far from Saturn, upper-right)
+  const approachPos: [number, number, number] = [10, 2, 0];
+
+  // Canonical moon uses input data's orbit radius; IF moons use constants
+  const enceladusOrbitKm = ring.enceladusOrbitKm;
+  const enceladusSceneR = enceladusOrbitKm / LOCAL_SCENE_SCALE;
+  const enceladusAngle = Math.PI / 4;
+  const enceladusMoon: PlanetData = {
+    name: "enceladus",
+    x: enceladusSceneR * Math.cos(enceladusAngle),
+    y: enceladusSceneR * Math.sin(enceladusAngle),
+    z: 0,
+    color: PLANET_COLORS.enceladus,
+    radius: PLANET_RADII.enceladus,
+    orbitRadius: enceladusOrbitKm,
+    label: "エンケラドス",
+  };
+  const rheaMoon = makeMoon("rhea", "レア (IF)", Math.PI * 0.6);
+  const titanMoon = makeMoon("titan", "タイタン (IF)", Math.PI * 1.1);
+
+  // Capture arc destinations (scene coordinates)
+  const enceladusR = enceladusOrbitKm / LOCAL_SCENE_SCALE;
+  const rheaR = MOON_ORBIT_KM.rhea / LOCAL_SCENE_SCALE;
+  const titanR = MOON_ORBIT_KM.titan / LOCAL_SCENE_SCALE;
+
   return {
     type: "saturn-ring",
     title: "土星リング面交差 — 3Dビュー",
     description:
-      "木星からの接近軌道と土星リング面の関係。接近角9.3°（リング面にほぼ平行）。",
+      "木星からの接近軌道と土星リング面の関係。IF分析: エンケラドス（作中）・レア・タイタンの各衛星への捕獲軌道を比較。",
     supportedViewModes: ["inertial", "ship"],
+    scenarios: [
+      { id: "canonical", label: "作中航路 — エンケラドス捕獲（ΔV 0.61 km/s）" },
+      { id: "rhea", label: "IF: レア捕獲（ΔV 0.88 km/s）", isCounterfactual: true, color: PLANET_COLORS.rhea },
+      { id: "titan", label: "IF: タイタン捕獲（ΔV 1.29 km/s）", isCounterfactual: true, color: PLANET_COLORS.titan },
+    ],
     planets: [
       {
         name: "saturn",
@@ -769,31 +853,53 @@ export function prepareSaturnScene(data: {
         isCentral: true,
         label: "土星",
       },
-      (() => {
-        const moonAngle = Math.PI / 4; // 45° for visual separation
-        const sceneR = ring.enceladusOrbitKm / LOCAL_SCENE_SCALE;
-        return {
-          name: "enceladus",
-          x: sceneR * Math.cos(moonAngle),
-          y: sceneR * Math.sin(moonAngle),
-          z: 0,
-          color: PLANET_COLORS.enceladus,
-          radius: 0.08,
-          orbitRadius: ring.enceladusOrbitKm,
-          label: "エンケラドス",
-        };
-      })(),
+      enceladusMoon,
+      rheaMoon,
+      titanMoon,
     ],
     transferArcs: [
       {
         from: "jupiter",
         to: "saturn",
-        fromPos: [10, 2, 0],
+        fromPos: approachPos,
         toPos: [0, 0, 0],
         episode: 2,
         color: EPISODE_COLORS[2],
         label: "木星→土星 接近軌道",
         approachAngleDeg: ring.approachFromJupiter.approachAngleToDeg,
+        scenarioId: "canonical",
+      },
+      {
+        from: "saturn",
+        to: "enceladus",
+        fromPos: [enceladusR * 1.5, enceladusR * 0.3, 0],
+        toPos: [enceladusMoon.x, enceladusMoon.y, 0],
+        episode: 2,
+        color: "#3fb950",
+        label: "エンケラドス捕獲（ΔV=0.61 km/s）",
+        scenarioId: "canonical",
+      },
+      {
+        from: "saturn",
+        to: "rhea",
+        fromPos: [rheaR * 1.3, rheaR * 0.5, 0],
+        toPos: [rheaMoon.x, rheaMoon.y, 0],
+        episode: 2,
+        color: PLANET_COLORS.rhea,
+        label: "IF: レア捕獲（ΔV=0.88 km/s）",
+        scenarioId: "rhea",
+        isCounterfactual: true,
+      },
+      {
+        from: "saturn",
+        to: "titan",
+        fromPos: [titanR * 1.1, titanR * 0.6, 0],
+        toPos: [titanMoon.x, titanMoon.y, 0],
+        episode: 2,
+        color: PLANET_COLORS.titan,
+        label: "IF: タイタン捕獲（ΔV=1.29 km/s）",
+        scenarioId: "titan",
+        isCounterfactual: true,
       },
     ],
     rings: [
@@ -813,6 +919,20 @@ export function prepareSaturnScene(data: {
           radiusScene: ring.enceladusOrbitKm / LOCAL_SCENE_SCALE,
           initialAngle: Math.PI / 4,
           meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.enceladus,
+          z: 0,
+        },
+        {
+          name: "rhea",
+          radiusScene: MOON_ORBIT_KM.rhea / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI * 0.6,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.rhea,
+          z: 0,
+        },
+        {
+          name: "titan",
+          radiusScene: MOON_ORBIT_KM.titan / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI * 1.1,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.titan,
           z: 0,
         },
       ],
@@ -844,12 +964,39 @@ export function prepareUranusScene(data: {
   const u = data.uranusApproachAnalysis;
   // Equatorial plane normal = spin axis
   const spinAxis = u.spinAxis as [number, number, number];
+
+  // Canonical moon uses input data's orbit radius; IF moons use constants
+  const titaniaOrbitKm = u.titaniaOrbitKm;
+  const titaniaSceneR = titaniaOrbitKm / LOCAL_SCENE_SCALE;
+  const titaniaAngle = Math.PI / 4;
+  const titaniaMoon: PlanetData = {
+    name: "titania",
+    x: titaniaSceneR * Math.cos(titaniaAngle),
+    y: titaniaSceneR * Math.sin(titaniaAngle),
+    z: 0,
+    color: PLANET_COLORS.titania,
+    radius: PLANET_RADII.titania,
+    orbitRadius: titaniaOrbitKm,
+    label: "タイタニア",
+  };
+  const mirandaMoon = makeMoon("miranda", "ミランダ (IF)", Math.PI * 0.8);
+  const oberonMoon = makeMoon("oberon", "オベロン (IF)", Math.PI * 1.3);
+
+  const titaniaR = titaniaOrbitKm / LOCAL_SCENE_SCALE;
+  const mirandaR = MOON_ORBIT_KM.miranda / LOCAL_SCENE_SCALE;
+  const oberonR = MOON_ORBIT_KM.oberon / LOCAL_SCENE_SCALE;
+
   return {
     type: "uranus-approach",
     title: "天王星接近 — 3Dビュー",
     description:
-      "天王星の97.77°軸傾斜と赤道面の関係。土星からの接近角25.3°、地球への離脱角14.3°。",
+      "天王星の97.77°軸傾斜と赤道面の関係。IF分析: タイタニア（作中）・ミランダ・オベロンの各衛星への捕獲軌道を比較。",
     supportedViewModes: ["inertial", "ship"],
+    scenarios: [
+      { id: "canonical", label: "作中航路 — タイタニア捕獲（ΔV 0.37 km/s）" },
+      { id: "miranda", label: "IF: ミランダ捕獲（ΔV 0.21 km/s）", isCounterfactual: true, color: PLANET_COLORS.miranda },
+      { id: "oberon", label: "IF: オベロン捕獲（ΔV 0.43 km/s）", isCounterfactual: true, color: PLANET_COLORS.oberon },
+    ],
     planets: [
       {
         name: "uranus",
@@ -861,20 +1008,9 @@ export function prepareUranusScene(data: {
         isCentral: true,
         label: "天王星",
       },
-      (() => {
-        const moonAngle = Math.PI / 4; // 45° for visual separation
-        const sceneR = u.titaniaOrbitKm / LOCAL_SCENE_SCALE;
-        return {
-          name: "titania",
-          x: sceneR * Math.cos(moonAngle),
-          y: sceneR * Math.sin(moonAngle),
-          z: 0,
-          color: PLANET_COLORS.titania,
-          radius: 0.08,
-          orbitRadius: u.titaniaOrbitKm,
-          label: "タイタニア",
-        };
-      })(),
+      titaniaMoon,
+      mirandaMoon,
+      oberonMoon,
     ],
     transferArcs: [
       {
@@ -886,6 +1022,39 @@ export function prepareUranusScene(data: {
         color: EPISODE_COLORS[3],
         label: "土星→天王星 接近",
         approachAngleDeg: u.approachFromSaturn.angleToDeg,
+        scenarioId: "canonical",
+      },
+      {
+        from: "uranus",
+        to: "titania",
+        fromPos: [titaniaR * 1.5, titaniaR * 0.3, 0],
+        toPos: [titaniaMoon.x, titaniaMoon.y, 0],
+        episode: 3,
+        color: "#22c55e",
+        label: "タイタニア捕獲（ΔV=0.37 km/s）",
+        scenarioId: "canonical",
+      },
+      {
+        from: "uranus",
+        to: "miranda",
+        fromPos: [mirandaR * 1.5, mirandaR * 0.5, 0],
+        toPos: [mirandaMoon.x, mirandaMoon.y, 0],
+        episode: 3,
+        color: PLANET_COLORS.miranda,
+        label: "IF: ミランダ捕獲（ΔV=0.21 km/s）",
+        scenarioId: "miranda",
+        isCounterfactual: true,
+      },
+      {
+        from: "uranus",
+        to: "oberon",
+        fromPos: [oberonR * 1.3, oberonR * 0.5, 0],
+        toPos: [oberonMoon.x, oberonMoon.y, 0],
+        episode: 3,
+        color: PLANET_COLORS.oberon,
+        label: "IF: オベロン捕獲（ΔV=0.43 km/s）",
+        scenarioId: "oberon",
+        isCounterfactual: true,
       },
       {
         from: "uranus",
@@ -896,6 +1065,7 @@ export function prepareUranusScene(data: {
         color: EPISODE_COLORS[5],
         label: "天王星→地球 離脱",
         approachAngleDeg: u.approachFromUranus.angleToDeg,
+        scenarioId: "canonical",
       },
     ],
     rings: [
@@ -933,6 +1103,20 @@ export function prepareUranusScene(data: {
           radiusScene: u.titaniaOrbitKm / LOCAL_SCENE_SCALE,
           initialAngle: Math.PI / 4,
           meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.titania,
+          z: 0,
+        },
+        {
+          name: "miranda",
+          radiusScene: MOON_ORBIT_KM.miranda / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI * 0.8,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.miranda,
+          z: 0,
+        },
+        {
+          name: "oberon",
+          radiusScene: MOON_ORBIT_KM.oberon / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI * 1.3,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.oberon,
           z: 0,
         },
       ],

@@ -26,6 +26,9 @@ let _cameraOffset = new THREE.Vector3(5, 8, 10); // offset from ship in ship-fra
 let _animationSpeed = 1.0; // Playback speed multiplier (0.5, 1, 2, 4)
 let _inertialCameraPos = new THREE.Vector3(30, 25, 40);
 let _inertialCameraTarget = new THREE.Vector3(0, 0, 0);
+let _scenarioObjects = {}; // scenarioId → Array<THREE.Object3D> (for show/hide)
+let _activeScenarios = new Set(); // currently visible scenario IDs
+let _currentSceneData = null; // store for info panel updates
 
 // ── Constants matching orbital-3d-viewer-data.ts ──
 const AU_TO_SCENE = 5;
@@ -37,7 +40,11 @@ const PLANET_COLORS = {
   uranus: 0x7ec8e3,
   earth: 0x4488ff,
   enceladus: 0xccddee,
+  rhea: 0xeab308,
+  titan: 0xd2a8ff,
   titania: 0xaabbcc,
+  miranda: 0x3b82f6,
+  oberon: 0xf97316,
 };
 
 const EPISODE_COLORS = {
@@ -56,7 +63,11 @@ const PLANET_RADII = {
   uranus: 0.25,
   earth: 0.15,
   enceladus: 0.08,
+  rhea: 0.08,
+  titan: 0.1,
   titania: 0.08,
+  miranda: 0.06,
+  oberon: 0.08,
 };
 
 /**
@@ -220,6 +231,16 @@ export function loadScene(sceneData) {
   currentSceneGroup = new THREE.Group();
   currentSceneGroup.name = sceneData.type;
   _sceneTransferArcs = sceneData.transferArcs || null;
+  _currentSceneData = sceneData;
+  _scenarioObjects = {};
+  _activeScenarios = new Set();
+
+  // Initialize active scenarios (all visible by default)
+  if (sceneData.scenarios) {
+    for (const s of sceneData.scenarios) {
+      _activeScenarios.add(s.id);
+    }
+  }
 
   // Set origin label
   const origin = scene.getObjectByName("origin");
@@ -265,9 +286,19 @@ export function loadScene(sceneData) {
     }
   }
 
+  // Build a map of planet→scenarioId from transfer arcs (IF moons belong to their scenario)
+  const planetScenarioMap = {};
+  if (sceneData.scenarios && sceneData.transferArcs) {
+    for (const arc of sceneData.transferArcs) {
+      if (arc.scenarioId && arc.isCounterfactual && arc.to) {
+        planetScenarioMap[arc.to] = arc.scenarioId;
+      }
+    }
+  }
+
   // Planets
   for (const planet of sceneData.planets) {
-    addPlanet(currentSceneGroup, planet, sceneData.type);
+    addPlanet(currentSceneGroup, planet, sceneData.type, planetScenarioMap[planet.name]);
   }
 
   // Transfer arcs
@@ -353,12 +384,13 @@ const PLANET_TEXTURE_URLS = {
 
 const textureLoader = typeof THREE !== "undefined" ? new THREE.TextureLoader() : null;
 
-function addPlanet(group, planet, sceneType) {
+function addPlanet(group, planet, sceneType, scenarioId) {
   const isLocal = sceneType !== "full-route";
 
+  let orbitCircleLine = null;
   if (isLocal && planet.orbitRadius && !planet.isCentral) {
     // Draw orbit circle for moons
-    addOrbitCircle(group, planet.orbitRadius, planet.color);
+    orbitCircleLine = addOrbitCircle(group, planet.orbitRadius, planet.color);
   }
 
   // Emphasize planet sizes in full-route view (3× scale) for visibility
@@ -391,10 +423,21 @@ function addPlanet(group, planet, sceneType) {
   }
 
   // Label
+  let planetLabel = null;
   if (planet.label) {
-    const label = createLabel(planet.label, planet.color);
-    label.position.set(planet.x, planet.z + displayRadius + 0.3, planet.y);
-    group.add(label);
+    planetLabel = createLabel(planet.label, planet.color);
+    planetLabel.position.set(planet.x, planet.z + displayRadius + 0.3, planet.y);
+    group.add(planetLabel);
+  }
+
+  // Register IF moon objects with their scenario for show/hide toggling
+  if (scenarioId) {
+    if (!_scenarioObjects[scenarioId]) {
+      _scenarioObjects[scenarioId] = [];
+    }
+    _scenarioObjects[scenarioId].push(mesh);
+    if (planetLabel) _scenarioObjects[scenarioId].push(planetLabel);
+    if (orbitCircleLine) _scenarioObjects[scenarioId].push(orbitCircleLine);
   }
 }
 
@@ -452,7 +495,9 @@ function addOrbitCircle(group, radiusKm, color) {
     opacity: 0.4,
     transparent: true,
   });
-  group.add(new THREE.Line(geo, mat));
+  const line = new THREE.Line(geo, mat);
+  group.add(line);
+  return line;
 }
 
 // ── Transfer arc rendering ──
@@ -473,11 +518,22 @@ function addTransferArc(group, arc, sceneType) {
   const points = curve.getPoints(50);
   const geo = new THREE.BufferGeometry().setFromPoints(points);
 
-  const mat = new THREE.LineBasicMaterial({
-    color: new THREE.Color(arc.color),
-    linewidth: 2,
-  });
-  group.add(new THREE.Line(geo, mat));
+  // IF arcs use dashed lines for visual distinction
+  const isDashed = arc.isCounterfactual;
+  const mat = isDashed
+    ? new THREE.LineDashedMaterial({
+        color: new THREE.Color(arc.color),
+        linewidth: 2,
+        dashSize: 0.3,
+        gapSize: 0.15,
+      })
+    : new THREE.LineBasicMaterial({
+        color: new THREE.Color(arc.color),
+        linewidth: 2,
+      });
+  const line = new THREE.Line(geo, mat);
+  if (isDashed) line.computeLineDistances();
+  group.add(line);
 
   // Add arrow at endpoint
   const dist = from.distanceTo(to);
@@ -493,12 +549,22 @@ function addTransferArc(group, arc, sceneType) {
   group.add(arrowHelper);
 
   // Add label at midpoint
+  let arcLabel = null;
   if (arc.label) {
     const labelPos = curve.getPoint(0.5);
-    const label = createLabel(arc.label, arc.color);
-    label.position.copy(labelPos);
-    label.position.y += 0.5;
-    group.add(label);
+    arcLabel = createLabel(arc.label, arc.color);
+    arcLabel.position.copy(labelPos);
+    arcLabel.position.y += 0.5;
+    group.add(arcLabel);
+  }
+
+  // Register scenario objects for show/hide toggling
+  if (arc.scenarioId) {
+    if (!_scenarioObjects[arc.scenarioId]) {
+      _scenarioObjects[arc.scenarioId] = [];
+    }
+    _scenarioObjects[arc.scenarioId].push(line, arrowHelper);
+    if (arcLabel) _scenarioObjects[arc.scenarioId].push(arcLabel);
   }
 }
 
@@ -906,6 +972,30 @@ function disposeGroup(group) {
   });
 }
 
+// ── Scenario visibility ──
+
+/**
+ * Toggle visibility of a scenario's objects (arcs, moons, labels).
+ * @param {string} scenarioId
+ * @param {boolean} visible
+ */
+export function setScenarioVisible(scenarioId, visible) {
+  const objects = _scenarioObjects[scenarioId];
+  if (!objects) return;
+  for (const obj of objects) {
+    obj.visible = visible;
+  }
+  if (visible) {
+    _activeScenarios.add(scenarioId);
+  } else {
+    _activeScenarios.delete(scenarioId);
+  }
+}
+
+export function getActiveScenarios() {
+  return _activeScenarios;
+}
+
 // ── Info panel update ──
 
 export function updateInfoPanel(panelEl, sceneData) {
@@ -924,7 +1014,7 @@ export function updateInfoPanel(panelEl, sceneData) {
       html += "</table>";
     }
   } else if (sceneData.type === "saturn-ring") {
-    const arc = sceneData.transferArcs[0];
+    const arc = sceneData.transferArcs.find(a => a.approachAngleDeg !== undefined);
     if (arc?.approachAngleDeg) {
       html += `<p>接近角: <strong>${arc.approachAngleDeg.toFixed(1)}°</strong>（リング面に対して）</p>`;
     }
@@ -934,7 +1024,7 @@ export function updateInfoPanel(panelEl, sceneData) {
     }
   } else if (sceneData.type === "uranus-approach") {
     for (const arc of sceneData.transferArcs) {
-      if (arc.approachAngleDeg !== undefined) {
+      if (arc.approachAngleDeg !== undefined && !arc.isCounterfactual) {
         html += `<p>${arc.label}: <strong>${arc.approachAngleDeg.toFixed(1)}°</strong></p>`;
       }
     }
@@ -944,6 +1034,30 @@ export function updateInfoPanel(panelEl, sceneData) {
     }
   }
 
+  // Scenario toggle buttons
+  if (sceneData.scenarios && sceneData.scenarios.length > 0) {
+    html += '<div class="scenario-toggles" style="margin-top:0.8em;border-top:1px solid #30363d;padding-top:0.6em;">';
+    html += '<p style="font-size:0.8em;color:#8b949e;margin:0 0 0.4em;">シナリオ表示:</p>';
+    for (const s of sceneData.scenarios) {
+      const checked = _activeScenarios.has(s.id) ? "checked" : "";
+      const color = s.color || (s.isCounterfactual ? "#8b949e" : "#3fb950");
+      const labelStyle = s.isCounterfactual ? "font-style:italic;" : "font-weight:bold;";
+      html += `<label style="display:block;margin:0.2em 0;font-size:0.85em;cursor:pointer;${labelStyle}">`;
+      html += `<input type="checkbox" ${checked} data-scenario="${s.id}" style="margin-right:0.4em;">`;
+      html += `<span style="color:${color};">●</span> ${s.label}`;
+      html += `</label>`;
+    }
+    html += '</div>';
+  }
+
   html += '<p style="font-size:0.75em;color:#6e7681;margin-top:1em;">惑星テクスチャ: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener" style="color:#58a6ff;">Solar System Scope</a> (CC BY 4.0)</p>';
   panelEl.innerHTML = html;
+
+  // Wire up scenario toggle checkboxes
+  const checkboxes = panelEl.querySelectorAll('input[data-scenario]');
+  for (const cb of checkboxes) {
+    cb.addEventListener("change", (e) => {
+      setScenarioVisible(e.target.dataset.scenario, e.target.checked);
+    });
+  }
 }

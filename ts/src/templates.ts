@@ -3258,7 +3258,7 @@ function generateViewer3dScript(basePath: string): string {
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script type="module" src="${basePath}/orbital-3d-viewer.js"></script>
 <script type="module">
-import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode, setAnimationSpeed, getAnimationSpeed } from "${basePath}/orbital-3d-viewer.js";
+import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode, setAnimationSpeed, getAnimationSpeed, updateInfoPanel, setScenarioVisible } from "${basePath}/orbital-3d-viewer.js";
 document.querySelectorAll(".viewer3d-container").forEach(async function(container) {
   var scene = container.dataset.scene;
   var resp = await fetch("${basePath}/data/calculations/3d_orbital_analysis.json");
@@ -3377,10 +3377,14 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
 // Scene preparation (matches orbital-3d-viewer-data.ts logic)
 window.__prepareScene = function(sceneName, data) {
   var AU = 5;
-  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",enceladus:"#ccddee",titania:"#aabbcc"};
+  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",enceladus:"#ccddee",rhea:"#eab308",titan:"#d2a8ff",titania:"#aabbcc",miranda:"#3b82f6",oberon:"#f97316"};
   var EC = {1:"#ff6644",2:"#ffaa22",3:"#44cc88",4:"#4488ff",5:"#ff4444"};
-  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,titania:0.08};
+  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,rhea:0.08,titan:0.1,titania:0.08,miranda:0.06,oberon:0.08};
   var PL = {mars:"火星",jupiter:"木星",saturn:"土星",uranus:"天王星",earth:"地球"};
+  var MK = {enceladus:238020,rhea:527108,titan:1221870,miranda:129390,titania:435910,oberon:583520};
+  var MP = {enceladus:1.370218,rhea:4.518212,titan:15.945,titania:8.705872,miranda:1.413479,oberon:13.463};
+  function mkMoon(n,l,a){var r=MK[n]/50000;return{name:n,x:r*Math.cos(a),y:r*Math.sin(a),z:0,color:PC[n],radius:PR[n]||0.08,orbitRadius:MK[n],label:l};}
+  function mkOrbit(n,a){return{name:n,radiusScene:MK[n]/50000,initialAngle:a,meanMotionPerDay:2*Math.PI/MP[n],z:0};}
   var OR = {mars:1.524,jupiter:5.203,saturn:9.537,uranus:19.19,earth:1.0};
   var OP = {mars:686.97,jupiter:4332.59,saturn:10759.22,uranus:30688.5,earth:365.256};
   var fallbackAngles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
@@ -3427,13 +3431,15 @@ window.__prepareScene = function(sceneName, data) {
   }
   if (sceneName === "saturn-ring") {
     var ring = data.saturnRingAnalysis;
-    var ea=Math.PI/4,esr=ring.enceladusOrbitKm/50000,ePeriod=1.370218;
-    return {type:"saturn-ring",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"saturn",x:0,y:0,z:0,color:PC.saturn,radius:0.5,isCentral:true,label:"土星"},{name:"enceladus",x:esr*Math.cos(ea),y:esr*Math.sin(ea),z:0,color:PC.enceladus,radius:0.08,orbitRadius:ring.enceladusOrbitKm,label:"エンケラドス"}],transferArcs:[{from:"jupiter",to:"saturn",fromPos:[10,2,0],toPos:[0,0,0],episode:2,color:EC[2],label:"木星→土星",approachAngleDeg:ring.approachFromJupiter.approachAngleToDeg}],rings:[{innerRadius:ring.ringInnerKm,outerRadius:ring.ringOuterKm,normal:ring.ringPlaneNormal,color:"#c8a86e",opacity:0.3}],timeline:{totalDays:ePeriod*3,orbits:[{name:"enceladus",radiusScene:esr,initialAngle:ea,meanMotionPerDay:2*Math.PI/ePeriod,z:0}],transfers:[{startDay:0,endDay:ePeriod,episode:2,label:"木星→土星 接近",from:"jupiter",to:"saturn"}]}};
+    var eM=mkMoon("enceladus","エンケラドス",Math.PI/4),rM=mkMoon("rhea","レア (IF)",Math.PI*0.6),tM=mkMoon("titan","タイタン (IF)",Math.PI*1.1);
+    var eR=ring.enceladusOrbitKm/50000,rR=MK.rhea/50000,tR2=MK.titan/50000;
+    return {type:"saturn-ring",title:"",description:"IF分析: エンケラドス（作中）・レア・タイタンの各衛星への捕獲軌道を比較。",supportedViewModes:["inertial","ship"],scenarios:[{id:"canonical",label:"作中航路 — エンケラドス捕獲（ΔV 0.61 km/s）"},{id:"rhea",label:"IF: レア捕獲（ΔV 0.88 km/s）",isCounterfactual:true,color:PC.rhea},{id:"titan",label:"IF: タイタン捕獲（ΔV 1.29 km/s）",isCounterfactual:true,color:PC.titan}],planets:[{name:"saturn",x:0,y:0,z:0,color:PC.saturn,radius:0.5,isCentral:true,label:"土星"},eM,rM,tM],transferArcs:[{from:"jupiter",to:"saturn",fromPos:[10,2,0],toPos:[0,0,0],episode:2,color:EC[2],label:"木星→土星 接近軌道",approachAngleDeg:ring.approachFromJupiter.approachAngleToDeg,scenarioId:"canonical"},{from:"saturn",to:"enceladus",fromPos:[eR*1.5,eR*0.3,0],toPos:[eM.x,eM.y,0],episode:2,color:"#3fb950",label:"エンケラドス捕獲（ΔV=0.61 km/s）",scenarioId:"canonical"},{from:"saturn",to:"rhea",fromPos:[rR*1.3,rR*0.5,0],toPos:[rM.x,rM.y,0],episode:2,color:PC.rhea,label:"IF: レア捕獲（ΔV=0.88 km/s）",scenarioId:"rhea",isCounterfactual:true},{from:"saturn",to:"titan",fromPos:[tR2*1.1,tR2*0.6,0],toPos:[tM.x,tM.y,0],episode:2,color:PC.titan,label:"IF: タイタン捕獲（ΔV=1.29 km/s）",scenarioId:"titan",isCounterfactual:true}],rings:[{innerRadius:ring.ringInnerKm,outerRadius:ring.ringOuterKm,normal:ring.ringPlaneNormal,color:"#c8a86e",opacity:0.3}],timeline:{totalDays:MP.enceladus*3,orbits:[mkOrbit("enceladus",Math.PI/4),mkOrbit("rhea",Math.PI*0.6),mkOrbit("titan",Math.PI*1.1)],transfers:[{startDay:0,endDay:MP.enceladus,episode:2,label:"木星→土星 接近",from:"jupiter",to:"saturn"}]}};
   }
   if (sceneName === "uranus-approach") {
     var u = data.uranusApproachAnalysis;
-    var ta=Math.PI/4,tsr=u.titaniaOrbitKm/50000,tPeriod=8.705872;
-    return {type:"uranus-approach",title:"",description:"",supportedViewModes:["inertial","ship"],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},{name:"titania",x:tsr*Math.cos(ta),y:tsr*Math.sin(ta),z:0,color:PC.titania,radius:0.08,orbitRadius:u.titaniaOrbitKm,label:"タイタニア"}],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星",approachAngleDeg:u.approachFromSaturn.angleToDeg},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球",approachAngleDeg:u.approachFromUranus.angleToDeg}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:tPeriod*3,orbits:[{name:"titania",radiusScene:tsr,initialAngle:ta,meanMotionPerDay:2*Math.PI/tPeriod,z:0}],transfers:[{startDay:0,endDay:tPeriod,episode:3,label:"土星→天王星 接近",from:"saturn",to:"uranus"}]}};
+    var tiM=mkMoon("titania","タイタニア",Math.PI/4),miM=mkMoon("miranda","ミランダ (IF)",Math.PI*0.8),obM=mkMoon("oberon","オベロン (IF)",Math.PI*1.3);
+    var tiR=u.titaniaOrbitKm/50000,miR=MK.miranda/50000,obR=MK.oberon/50000;
+    return {type:"uranus-approach",title:"",description:"IF分析: タイタニア（作中）・ミランダ・オベロンの各衛星への捕獲軌道を比較。",supportedViewModes:["inertial","ship"],scenarios:[{id:"canonical",label:"作中航路 — タイタニア捕獲（ΔV 0.37 km/s）"},{id:"miranda",label:"IF: ミランダ捕獲（ΔV 0.21 km/s）",isCounterfactual:true,color:PC.miranda},{id:"oberon",label:"IF: オベロン捕獲（ΔV 0.43 km/s）",isCounterfactual:true,color:PC.oberon}],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},tiM,miM,obM],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星 接近",approachAngleDeg:u.approachFromSaturn.angleToDeg,scenarioId:"canonical"},{from:"uranus",to:"titania",fromPos:[tiR*1.5,tiR*0.3,0],toPos:[tiM.x,tiM.y,0],episode:3,color:"#22c55e",label:"タイタニア捕獲（ΔV=0.37 km/s）",scenarioId:"canonical"},{from:"uranus",to:"miranda",fromPos:[miR*1.5,miR*0.5,0],toPos:[miM.x,miM.y,0],episode:3,color:PC.miranda,label:"IF: ミランダ捕獲（ΔV=0.21 km/s）",scenarioId:"miranda",isCounterfactual:true},{from:"uranus",to:"oberon",fromPos:[obR*1.3,obR*0.5,0],toPos:[obM.x,obM.y,0],episode:3,color:PC.oberon,label:"IF: オベロン捕獲（ΔV=0.43 km/s）",scenarioId:"oberon",isCounterfactual:true},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球 離脱",approachAngleDeg:u.approachFromUranus.angleToDeg,scenarioId:"canonical"}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:MP.titania*3,orbits:[mkOrbit("titania",Math.PI/4),mkOrbit("miranda",Math.PI*0.8),mkOrbit("oberon",Math.PI*1.3)],transfers:[{startDay:0,endDay:MP.titania,episode:3,label:"土星→天王星 接近",from:"saturn",to:"uranus"}]}};
   }
   // Per-episode scenes
   var epMatch = sceneName.match(/^episode-(\d+)$/);
