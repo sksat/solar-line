@@ -997,6 +997,45 @@ describe("EP05 reproduction: Earth capture scenarios", () => {
   });
 });
 
+describe("EP05 reproduction: Earth escape velocities and extended capture", () => {
+  const r = analyzeEpisode5();
+  const ec = r.earthCapture;
+
+  it("Earth escape velocity at LEO = 10.851 km/s", () => {
+    assertClose(ec.earthEscapeVelocityAtLEOKms, 10.850693067191562, "escLEO");
+  });
+
+  it("Earth escape velocity at Moon orbit = 1.440 km/s", () => {
+    assertClose(ec.earthEscapeVelocityAtMoonOrbitKms, 1.4400984939289538, "escMoon");
+  });
+
+  it("GEO circular velocity = 3.075 km/s", () => {
+    assertClose(ec.scenarios[1].vCircKms, 3.0749215415063538, "geoVCirc");
+  });
+
+  it("capture table: v_inf=1, LEO ΔV = 3.224 km/s", () => {
+    assertClose(ec.captureTable[1].captures[0].dvCaptureKms, 3.224076993222341, "v1LeoDv");
+  });
+
+  it("capture table: v_inf=5, all 3 targets", () => {
+    const row = ec.captureTable[3];
+    assert.equal(row.vInfKms, 5);
+    assertClose(row.captures[0].dvCaptureKms, 4.274683052420365, "v5LeoDv");
+    assertClose(row.captures[1].dvCaptureKms, 3.551562063909087, "v5GeoDv");
+    assertClose(row.captures[2].dvCaptureKms, 4.184953614751119, "v5MoonDv");
+  });
+
+  it("capture ΔV increases monotonically with vInf (LEO target)", () => {
+    const leoDvs = ec.captureTable.map(
+      (row: { captures: Array<{ dvCaptureKms: number }> }) => row.captures[0].dvCaptureKms,
+    );
+    for (let i = 1; i < leoDvs.length; i++) {
+      assert.ok(leoDvs[i] > leoDvs[i - 1],
+        `LEO ΔV should increase: v[${i}]=${leoDvs[i].toFixed(3)} > v[${i - 1}]=${leoDvs[i - 1].toFixed(3)}`);
+    }
+  });
+});
+
 describe("EP05 reproduction: nozzle lifespan", () => {
   const r = analyzeEpisode5();
   const n = r.nozzleLifespan;
