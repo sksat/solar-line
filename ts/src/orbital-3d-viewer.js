@@ -340,13 +340,13 @@ function addRing(group, ringData, sceneType) {
   const mesh = new THREE.Mesh(geo, mat);
 
   // Orient ring to match normal vector
-  const normal = new THREE.Vector3(...ringData.normal).normalize();
+  // RingGeometry lies in XY plane (default normal = +Z = (0,0,1))
+  // Data normals are in scene coords (x,y,z); Three.js swaps y/z (Y-up)
+  const n = ringData.normal;
+  const threeNormal = new THREE.Vector3(n[0], n[2], n[1]).normalize();
   const defaultNormal = new THREE.Vector3(0, 0, 1);
-  const quat = new THREE.Quaternion().setFromUnitVectors(defaultNormal, normal);
+  const quat = new THREE.Quaternion().setFromUnitVectors(defaultNormal, threeNormal);
   mesh.quaternion.copy(quat);
-
-  // RingGeometry lies in XY plane — rotate to XZ (Three.js Y-up)
-  mesh.rotateX(-Math.PI / 2);
 
   group.add(mesh);
 }
@@ -383,9 +383,11 @@ function addTiltedPlane(group, planeData, size) {
   const mesh = new THREE.Mesh(geo, mat);
 
   // Orient plane perpendicular to its normal
-  const normal = new THREE.Vector3(...planeData.normal).normalize();
+  // Data normals are in scene coords (x,y,z); Three.js swaps y/z (Y-up)
+  const n = planeData.normal;
+  const threeNormal = new THREE.Vector3(n[0], n[2], n[1]).normalize();
   const defaultNormal = new THREE.Vector3(0, 0, 1);
-  const quat = new THREE.Quaternion().setFromUnitVectors(defaultNormal, normal);
+  const quat = new THREE.Quaternion().setFromUnitVectors(defaultNormal, threeNormal);
   mesh.quaternion.copy(quat);
 
   group.add(mesh);
