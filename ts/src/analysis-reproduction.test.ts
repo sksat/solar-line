@@ -273,21 +273,24 @@ describe("EP02 reproduction: arrival consistency scenarios", () => {
   const ac = r.arrivalConsistency;
 
   it("prograde-only: ~87 days, v∞ ≈ 90 km/s (capture impractical)", () => {
-    assertClose(ac.progradeOnly.transferDays, 86.806, "progradeOnly transferDays", 0.001);
-    assertClose(ac.progradeOnly.vInfKms, 90.246, "progradeOnly v∞", 0.001);
-    assert.ok(ac.progradeOnly.captureDeltaVKms > 70, "capture ΔV >> Saturn orbital velocity");
+    assert.ok(ac.progradeOnly, "progradeOnly scenario exists");
+    assertClose(ac.progradeOnly!.transferDays, 86.806, "progradeOnly transferDays", 0.001);
+    assertClose(ac.progradeOnly!.vInfKms, 90.246, "progradeOnly v∞", 0.001);
+    assert.ok(ac.progradeOnly!.captureDeltaVKms > 70, "capture ΔV >> Saturn orbital velocity");
   });
 
   it("ballistic: ~997 days, v∞ ≈ 9.2 km/s (capturable)", () => {
-    assertClose(ac.ballistic.transferDays, 996.819, "ballistic transferDays", 0.001);
-    assertClose(ac.ballistic.vInfKms, 9.211, "ballistic v∞", 0.001);
-    assertClose(ac.ballistic.captureDeltaVKms, 2.236, "ballistic capture ΔV", 0.001);
+    assert.ok(ac.ballistic, "ballistic scenario exists");
+    assertClose(ac.ballistic!.transferDays, 996.819, "ballistic transferDays", 0.001);
+    assertClose(ac.ballistic!.vInfKms, 9.211, "ballistic v∞", 0.001);
+    assertClose(ac.ballistic!.captureDeltaVKms, 2.236, "ballistic capture ΔV", 0.001);
   });
 
   it("best efficiency: 1.5d+1.5d → ~166 days, v∞ ≈ 10.5 km/s", () => {
-    assertClose(ac.bestEfficiency.transferDays, 166.403, "bestEff transferDays", 0.001);
-    assertClose(ac.bestEfficiency.vInfKms, 10.512, "bestEff v∞", 0.001);
-    assert.ok(ac.bestEfficiency.propellantFraction < 0.01, "< 1% propellant");
+    assert.ok(ac.bestEfficiency, "bestEfficiency scenario exists");
+    assertClose(ac.bestEfficiency!.transferDays, 166.403, "bestEff transferDays", 0.001);
+    assertClose(ac.bestEfficiency!.vInfKms, 10.512, "bestEff v∞", 0.001);
+    assert.ok(ac.bestEfficiency!.propellantFraction < 0.01, "< 1% propellant");
   });
 
   it("two-phase scenarios: 12 computed, transfer time decreases with more thrust", () => {
