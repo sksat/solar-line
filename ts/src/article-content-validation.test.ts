@@ -5173,3 +5173,79 @@ describe("inter-JSON consistency: 3D orbital analysis internal coherence", () =>
     });
   }
 });
+
+// =============================================================================
+// Cross-episode comparison table → per-episode calc JSON cross-checks (Task 503)
+// =============================================================================
+
+describe("cross-episode comparison table → calc JSON consistency", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const crossEp = readReport("cross-episode.md");
+
+  // Extract the Hohmann ΔV values from the table in the report
+  // Expected: EP01=10.15, EP03=2.74, EP04=15.94, EP05=15.94
+  const hohmannExpected: Record<number, number> = { 1: 10.15, 3: 2.74, 4: 15.94, 5: 15.94 };
+
+  for (const [ep, expectedDv] of Object.entries(hohmannExpected)) {
+    const epNum = Number(ep);
+    it(`EP0${ep}: Hohmann ΔV ${expectedDv} km/s in report matches calc JSON`, () => {
+      const data = JSON.parse(
+        fs.readFileSync(path.join(calcDir, `ep0${ep}_calculations.json`), "utf-8"),
+      );
+      const calcDv = (data.hohmann.totalDv ?? data.hohmann.totalDvKms) as number;
+      assert.ok(
+        Math.abs(calcDv - expectedDv) < 0.01,
+        `EP0${ep} Hohmann ΔV: report=${expectedDv} calc=${calcDv.toFixed(2)}`,
+      );
+      // Also verify the value appears in the cross-episode report text
+      assert.ok(
+        crossEp.includes(String(expectedDv)),
+        `cross-episode report should cite Hohmann ΔV ${expectedDv} for EP0${ep}`,
+      );
+    });
+  }
+
+  // Brachistochrone ΔV values: EP01=8497, EP03=11165, EP04=1202, EP05=15207
+  const brachExpected: Record<number, { dv: number; field: string }> = {
+    1: { dv: 8497, field: "brachistochrone72h" },
+    3: { dv: 11165, field: "brachistochrone" },
+    4: { dv: 1202, field: "brachistochrone" },
+    5: { dv: 15207, field: "brachistochroneByMass" },
+  };
+
+  for (const [ep, { dv, field }] of Object.entries(brachExpected)) {
+    it(`EP0${ep}: Brachistochrone ΔV ~${dv} km/s in report matches calc JSON`, () => {
+      const data = JSON.parse(
+        fs.readFileSync(path.join(calcDir, `ep0${ep}_calculations.json`), "utf-8"),
+      );
+      const brachData = data[field];
+      // Get first scenario's deltaVKms
+      const calcDv = Array.isArray(brachData)
+        ? (brachData[0].deltaVKms as number)
+        : (brachData as { deltaVKms: number }).deltaVKms;
+      // Allow 1 km/s tolerance (report rounds to integer)
+      assert.ok(
+        Math.abs(calcDv - dv) < 1,
+        `EP0${ep} Brachistochrone ΔV: report=${dv} calc=${Math.round(calcDv)}`,
+      );
+      // Verify the rounded value appears in the report
+      const rounded = String(Math.round(dv));
+      const formatted = Number(rounded).toLocaleString("en-US");
+      assert.ok(
+        crossEp.includes(rounded) || crossEp.includes(formatted),
+        `cross-episode report should cite Brachistochrone ΔV ~${rounded} for EP0${ep}`,
+      );
+    });
+  }
+
+  // Bar chart values should match the table values
+  it("Brachistochrone ΔV bar chart values match table values", () => {
+    // The bar chart has: EP01=8497, EP03=11165, EP04=1202, EP05=15207
+    for (const [, { dv }] of Object.entries(brachExpected)) {
+      assert.ok(
+        crossEp.includes(String(dv)),
+        `Bar chart should include value ${dv}`,
+      );
+    }
+  });
+});
