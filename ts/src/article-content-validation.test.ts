@@ -5007,3 +5007,169 @@ describe("integrator_comparison.json → report cross-checks", () => {
     );
   });
 });
+
+// =============================================================================
+// Inter-JSON consistency cross-checks (Task 502)
+// =============================================================================
+
+describe("inter-JSON consistency: relativistic_effects vs per-episode calculations", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const relData = JSON.parse(
+    fs.readFileSync(path.join(calcDir, "relativistic_effects.json"), "utf-8"),
+  );
+  const relTransfers = relData.transfers as Array<{
+    episode: number;
+    classicalPeakVelocityKms: number;
+    relativistic: { betaPeak: number; gammaPeak: number };
+  }>;
+
+  // EP01: brachistochrone72h[0].deltaVKms / 2 should match relativistic peak
+  it("EP01: relativistic peak velocity matches brachistochrone72h closest scenario", () => {
+    const ep1 = JSON.parse(
+      fs.readFileSync(path.join(calcDir, "ep01_calculations.json"), "utf-8"),
+    );
+    const ep1Peak = ep1.brachistochrone72h[0].deltaVKms / 2;
+    const relEp1 = relTransfers.find(t => t.episode === 1)!;
+    assert.ok(relEp1, "should have EP01 in relativistic JSON");
+    assert.ok(
+      Math.abs(ep1Peak - relEp1.classicalPeakVelocityKms) < 1,
+      `EP01 peak mismatch: calc=${ep1Peak.toFixed(1)} vs rel=${relEp1.classicalPeakVelocityKms.toFixed(1)}`,
+    );
+  });
+
+  // EP03: brachistochrone[0].deltaVKms / 2 should be close to relativistic peak
+  // (may differ slightly due to different distance scenarios)
+  it("EP03: relativistic peak velocity close to brachistochrone closest scenario", () => {
+    const ep3 = JSON.parse(
+      fs.readFileSync(path.join(calcDir, "ep03_calculations.json"), "utf-8"),
+    );
+    const ep3Peak = ep3.brachistochrone[0].deltaVKms / 2;
+    const relEp3 = relTransfers.find(t => t.episode === 3)!;
+    assert.ok(relEp3, "should have EP03 in relativistic JSON");
+    // Allow 2% tolerance for different distance scenarios
+    const tolerance = relEp3.classicalPeakVelocityKms * 0.02;
+    assert.ok(
+      Math.abs(ep3Peak - relEp3.classicalPeakVelocityKms) < tolerance,
+      `EP03 peak divergence >2%: calc=${ep3Peak.toFixed(1)} vs rel=${relEp3.classicalPeakVelocityKms.toFixed(1)}`,
+    );
+  });
+
+  // EP04: massFeasibility[0].deltaVKms / 2 should match relativistic peak
+  it("EP04: relativistic peak velocity matches massFeasibility first scenario", () => {
+    const ep4 = JSON.parse(
+      fs.readFileSync(path.join(calcDir, "ep04_calculations.json"), "utf-8"),
+    );
+    const ep4Peak = ep4.massFeasibility[0].deltaVKms / 2;
+    const relEp4 = relTransfers.find(t => t.episode === 4)!;
+    assert.ok(relEp4, "should have EP04 in relativistic JSON");
+    assert.ok(
+      Math.abs(ep4Peak - relEp4.classicalPeakVelocityKms) < 1,
+      `EP04 peak mismatch: calc=${ep4Peak.toFixed(1)} vs rel=${relEp4.classicalPeakVelocityKms.toFixed(1)}`,
+    );
+  });
+
+  // EP05: brachistochroneByMass[0].peakVelocityKms should match relativistic peak
+  it("EP05: relativistic peak velocity matches brachistochroneByMass first scenario", () => {
+    const ep5 = JSON.parse(
+      fs.readFileSync(path.join(calcDir, "ep05_calculations.json"), "utf-8"),
+    );
+    const ep5Peak = ep5.brachistochroneByMass[0].peakVelocityKms;
+    const relEp5 = relTransfers.find(t => t.episode === 5)!;
+    assert.ok(relEp5, "should have EP05 in relativistic JSON");
+    assert.ok(
+      Math.abs(ep5Peak - relEp5.classicalPeakVelocityKms) < 1,
+      `EP05 peak mismatch: calc=${ep5Peak.toFixed(1)} vs rel=${relEp5.classicalPeakVelocityKms.toFixed(1)}`,
+    );
+  });
+
+  // All relativistic transfers should have β ≈ v/c (with relativistic correction)
+  // β_relativistic differs from v_classical/c by O(β³) due to proper momentum formulation
+  it("all relativistic β values are approximately v/c (within relativistic correction)", () => {
+    const C_KMS = 299_792.458;
+    for (const t of relTransfers) {
+      const naiveBeta = t.classicalPeakVelocityKms / C_KMS;
+      // Allow tolerance proportional to β² (relativistic correction order)
+      const tolerance = Math.max(naiveBeta * naiveBeta * 0.1, 1e-8);
+      assert.ok(
+        Math.abs(t.relativistic.betaPeak - naiveBeta) < tolerance,
+        `EP0${t.episode}: β divergence exceeds relativistic correction: stored=${t.relativistic.betaPeak.toFixed(8)} naive=${naiveBeta.toFixed(8)} tol=${tolerance.toExponential(2)}`,
+      );
+    }
+  });
+
+  // All relativistic γ values should be consistent with β
+  it("all relativistic γ values are consistent with β via Lorentz formula", () => {
+    for (const t of relTransfers) {
+      const beta = t.relativistic.betaPeak;
+      const expectedGamma = 1 / Math.sqrt(1 - beta * beta);
+      assert.ok(
+        Math.abs(t.relativistic.gammaPeak - expectedGamma) < 1e-8,
+        `EP0${t.episode}: γ mismatch: computed=${t.relativistic.gammaPeak} expected=${expectedGamma}`,
+      );
+    }
+  });
+});
+
+describe("inter-JSON consistency: integrator comparison episodes exist in calc JSONs", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const intData = JSON.parse(
+    fs.readFileSync(path.join(calcDir, "integrator_comparison.json"), "utf-8"),
+  );
+  const comparisons = intData.comparisons as Array<{ episode: number; transfer: string }>;
+
+  const episodes = [...new Set(comparisons.map(c => c.episode))];
+
+  for (const ep of episodes) {
+    it(`EP0${ep}: calculation JSON exists for integrator comparison episode`, () => {
+      const epFile = path.join(calcDir, `ep${String(ep).padStart(2, "0")}_calculations.json`);
+      assert.ok(
+        fs.existsSync(epFile),
+        `Missing ${epFile} — integrator comparison references EP0${ep} but calc JSON not found`,
+      );
+    });
+  }
+});
+
+describe("inter-JSON consistency: 3D orbital analysis internal coherence", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const data3d = JSON.parse(
+    fs.readFileSync(path.join(calcDir, "3d_orbital_analysis.json"), "utf-8"),
+  );
+  const transfers = data3d.transfers as Array<{
+    episode: number;
+    leg: string;
+    planeChangeDvKmS: number;
+    planeChangeFractionPercent: number;
+    inclinationChangeDeg: number;
+  }>;
+
+  it("maxPlaneChangeFractionPercent matches max of transfer fractions", () => {
+    const computedMax = Math.max(...transfers.map(t => t.planeChangeFractionPercent));
+    assert.ok(
+      Math.abs(computedMax - data3d.maxPlaneChangeFractionPercent) < 1e-10,
+      `Max fraction mismatch: transfers max=${computedMax} vs reported=${data3d.maxPlaneChangeFractionPercent}`,
+    );
+  });
+
+  it("coplanarApproximationValid is consistent with threshold", () => {
+    const valid = data3d.maxPlaneChangeFractionPercent < 1.0;
+    assert.strictEqual(
+      data3d.coplanarApproximationValid,
+      valid,
+      `coplanarApproximationValid=${data3d.coplanarApproximationValid} but max fraction=${data3d.maxPlaneChangeFractionPercent}%`,
+    );
+  });
+
+  for (const t of transfers) {
+    it(`${t.leg}: plane change ΔV is non-negative`, () => {
+      assert.ok(t.planeChangeDvKmS >= 0, `Negative plane change ΔV: ${t.planeChangeDvKmS}`);
+    });
+
+    it(`${t.leg}: inclination change is within 0-90°`, () => {
+      assert.ok(
+        t.inclinationChangeDeg >= 0 && t.inclinationChangeDeg <= 90,
+        `Inclination ${t.inclinationChangeDeg}° out of range for ${t.leg}`,
+      );
+    });
+  }
+});
