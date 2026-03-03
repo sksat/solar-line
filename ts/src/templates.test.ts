@@ -6442,4 +6442,25 @@ describe("inline 3D viewer __prepareScene constants sync", () => {
     // AU = 5 in inline matches AU_TO_SCENE=5 in data module
     assert.ok(html.includes("var AU = 5"), "AU_TO_SCENE constant should be 5");
   });
+
+  it("inline script converts slider fraction to day value using currentTotalDays", () => {
+    assert.ok(
+      html.includes("frac * currentTotalDays"),
+      "Slider input should multiply fraction by currentTotalDays to get day value",
+    );
+  });
+
+  it("inline script has fmtDay for hours display on short timelines", () => {
+    assert.ok(
+      html.includes("function fmtDay"),
+      "Should have fmtDay function for proper time formatting",
+    );
+  });
+
+  it("inline script updates data-scene on scene switch", () => {
+    assert.ok(
+      html.includes("container.dataset.scene = sceneName"),
+      "switchScene should update container data-scene attribute",
+    );
+  });
 });

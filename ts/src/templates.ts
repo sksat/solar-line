@@ -3264,19 +3264,32 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
   var figure = container.closest(".viewer3d-figure");
   var ctrl = figure.querySelector(".viewer3d-controls");
   var playing = false;
+  var currentTotalDays = 1;
+  var currentTransfers = [];
+  function getLabel(day) {
+    for (var i = 0; i < currentTransfers.length; i++) {
+      var t = currentTransfers[i];
+      if (day >= t.startDay && day <= t.endDay) return t.label;
+    }
+    return "";
+  }
   function switchScene(sceneName) {
     var sd = window.__prepareScene(sceneName, analysisData);
     if (!sd) return;
+    container.dataset.scene = sceneName;
     loadScene(sd);
     playing = false;
     setTimelinePlaying(false);
     if (ctrl) {
       if (sd.timeline) {
+        currentTotalDays = sd.timeline.totalDays;
+        currentTransfers = sd.timeline.transfers || [];
         loadTimeline(sd.timeline);
         ctrl.style.display = "flex";
         ctrl.querySelector(".viewer3d-play").textContent = "\\u25b6";
         ctrl.querySelector(".viewer3d-slider").value = "0";
         ctrl.querySelector(".viewer3d-time").textContent = "0日";
+        ctrl.querySelector(".viewer3d-label").textContent = "";
       } else {
         ctrl.style.display = "none";
       }
@@ -3296,26 +3309,40 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
     var playBtn = ctrl.querySelector(".viewer3d-play");
     var slider = ctrl.querySelector(".viewer3d-slider");
     var timeSpan = ctrl.querySelector(".viewer3d-time");
+    var labelSpan = ctrl.querySelector(".viewer3d-label");
+    window._onTimelineEnd = function() {
+      playing = false;
+      playBtn.textContent = "\\u25b6";
+    };
     playBtn.addEventListener("click", function() {
+      if (!playing && getTimelineCurrentDay() >= currentTotalDays) {
+        updateTimelineFrame(0);
+        slider.value = "0";
+        timeSpan.textContent = "0日";
+        if (labelSpan) labelSpan.textContent = "";
+      }
       playing = !playing;
       setTimelinePlaying(playing);
       playBtn.textContent = playing ? "\\u23f8" : "\\u25b6";
     });
+    function fmtDay(d) {
+      if (d < 1) return Math.round(d * 24) + "時間";
+      var dd = Math.floor(d), hh = Math.round((d - dd) * 24);
+      return hh > 0 ? dd + "日" + hh + "時間" : dd + "日";
+    }
     slider.addEventListener("input", function() {
       var frac = Number(slider.value) / 1000;
-      updateTimelineFrame(frac);
+      updateTimelineFrame(frac * currentTotalDays);
       var day = getTimelineCurrentDay();
-      timeSpan.textContent = Math.round(day) + "日";
+      timeSpan.textContent = fmtDay(day);
+      if (labelSpan) labelSpan.textContent = getLabel(day);
     });
     (function tick() {
       if (playing) {
         var day = getTimelineCurrentDay();
-        var sd = window.__prepareScene(container.dataset.scene, analysisData);
-        if (sd && sd.timeline) {
-          var total = sd.timeline.totalDays;
-          slider.value = String(Math.round((day / total) * 1000));
-          timeSpan.textContent = Math.round(day) + "日";
-        }
+        slider.value = String(Math.round((day / currentTotalDays) * 1000));
+        timeSpan.textContent = fmtDay(day);
+        if (labelSpan) labelSpan.textContent = getLabel(day);
       }
       requestAnimationFrame(tick);
     })();
