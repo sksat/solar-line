@@ -1740,3 +1740,72 @@ describe("Onscreen crossref: EP05 nozzle margin", () => {
     assertClose(nozzle.existingAnalysis.requiredBurnTime_hours, 55.200, "reqBurnTime");
   });
 });
+
+// ============================================================
+// 3D orbital analysis reproduction (3d_orbital_analysis.json)
+// Pins ecliptic z-heights, plane changes, approach geometry
+// ============================================================
+
+const orbital3d = JSON.parse(fs.readFileSync(path.join(calcDir, "3d_orbital_analysis.json"), "utf-8"));
+const transfers3d: Array<Record<string, unknown>> = orbital3d.transfers;
+
+describe("3D orbital: transfer plane change fractions", () => {
+  it("max plane change = EP03 Saturn→Uranus at 1.51%", () => {
+    assertClose(orbital3d.maxPlaneChangeFractionPercent, 1.510119325764719, "maxPlaneChange");
+    const ep3 = transfers3d.find((t) => (t.leg as string).includes("Saturn→Uranus"))!;
+    assertClose(ep3.planeChangeFractionPercent as number, 1.510119325764719, "ep03PlaneChange");
+  });
+
+  it("all 4 transfers have plane change < 2%", () => {
+    assert.equal(transfers3d.length, 4);
+    for (const t of transfers3d) {
+      const pct = t.planeChangeFractionPercent as number;
+      assert.ok(pct < 2, `${t.leg}: plane change ${pct}% exceeds 2%`);
+    }
+  });
+});
+
+describe("3D orbital: planetary z-heights at epoch", () => {
+  const heights = orbital3d.planetaryZHeightsAtEpoch;
+
+  it("Saturn z-height = 47,708,410 km (highest, 0.319 AU)", () => {
+    assertClose(heights.saturn.zHeightKm, 47708409.62265145, "saturnZKm");
+    assertClose(heights.saturn.zHeightAU, 0.3189110205874839, "saturnZAU");
+    assertClose(heights.saturn.latitudeDeg, 1.95006593534866, "saturnLat");
+  });
+
+  it("Earth z-height = -30,511 km (essentially zero, -0.0002 AU)", () => {
+    assertClose(heights.earth.zHeightKm, -30510.850005525346, "earthZKm");
+    assertClose(heights.earth.zHeightAU, -0.0002039524350363989, "earthZAU");
+    assert.ok(
+      Math.abs(heights.earth.zHeightAU) < 0.001,
+      `Earth z-height ${heights.earth.zHeightAU} AU should be ~0`,
+    );
+  });
+});
+
+describe("3D orbital: Saturn ring approach geometry", () => {
+  const ring = orbital3d.saturnRingAnalysis;
+
+  it("approach angle 9.33° (shallow, nearly ring-plane parallel)", () => {
+    assertClose(ring.approachFromJupiter.approachAngleToDeg, 9.32676353025429, "ringApproachAngle");
+    assert.ok(ring.approachFromJupiter.approachAngleToDeg < 15, "approach should be shallow (<15°)");
+  });
+
+  it("Enceladus orbit outside rings", () => {
+    assert.equal(ring.enceladusOutsideRings, true);
+    assertClose(ring.enceladusOrbitKm, 238042, "enceladusOrbit");
+    assert.ok(ring.enceladusOrbitKm > ring.ringOuterKm, "Enceladus should be outside ring outer edge");
+  });
+});
+
+describe("3D orbital: Uranus approach geometry", () => {
+  const uranus = orbital3d.uranusApproachAnalysis;
+
+  it("obliquity 97.77°, equatorial approach at 25.33°", () => {
+    assertClose(uranus.obliquityDeg, 97.77, "uranusObliquity");
+    assertClose(uranus.approachFromSaturn.angleToDeg, 25.328576629202104, "approachAngle");
+    assert.equal(uranus.approachFromSaturn.isEquatorial, true);
+    assert.equal(uranus.approachFromSaturn.isPolar, false);
+  });
+});
