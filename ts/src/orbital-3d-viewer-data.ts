@@ -105,6 +105,17 @@ export interface TimelineData {
   transfers: TimelineTransfer[];
 }
 
+export interface OrbitCircleData {
+  /** Planet name */
+  name: string;
+  /** Radius in scene units */
+  radiusScene: number;
+  /** Display color */
+  color: string;
+  /** Z offset in scene units */
+  z: number;
+}
+
 export interface SceneData {
   type: "full-route" | "saturn-ring" | "uranus-approach";
   title: string;
@@ -115,6 +126,8 @@ export interface SceneData {
   rings?: RingData[];
   axes?: AxisData[];
   planes?: PlaneData[];
+  /** Orbital path circles for planets */
+  orbitCircles?: OrbitCircleData[];
   /** Timeline data for animation (full-route only) */
   timeline?: TimelineData;
 }
@@ -331,6 +344,17 @@ export function prepareFullRouteScene(data: {
     transfers: timelineTransfers,
   };
 
+  // Orbit circles for planetary paths
+  const orbitCircles: OrbitCircleData[] = planetOrder.map((name, i) => {
+    const pData = data.planetaryZHeightsAtEpoch[name];
+    return {
+      name,
+      radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+      color: PLANET_COLORS[name] ?? "#ffffff",
+      z: zFromAU(pData?.zHeightAU ?? 0),
+    };
+  });
+
   return {
     type: "full-route",
     title: "ケストレル号全航路 — 3D黄道面ビュー",
@@ -338,6 +362,7 @@ export function prepareFullRouteScene(data: {
       "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を10倍誇張して表示。",
     planets,
     transferArcs,
+    orbitCircles,
     eclipticPlane: {
       type: "ecliptic",
       normal: [0, 0, 1],

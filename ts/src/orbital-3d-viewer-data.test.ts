@@ -12,6 +12,7 @@ import {
   prepareSaturnScene,
   prepareUranusScene,
   LOCAL_SCENE_SCALE,
+  AU_TO_SCENE,
 } from "./orbital-3d-viewer-data.ts";
 import type { TimelineOrbit } from "./orbital-3d-viewer-data.ts";
 
@@ -177,6 +178,42 @@ describe("prepareFullRouteScene", () => {
   it("includes transfer arcs matching input", () => {
     const scene = prepareFullRouteScene(minimalInput);
     assert.equal(scene.transferArcs.length, 1);
+  });
+
+  it("includes orbit circles for all 5 planets", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    assert.ok(scene.orbitCircles, "should have orbit circles");
+    assert.equal(scene.orbitCircles!.length, 5);
+    const names = scene.orbitCircles!.map(c => c.name);
+    assert.ok(names.includes("mars"));
+    assert.ok(names.includes("jupiter"));
+    assert.ok(names.includes("saturn"));
+    assert.ok(names.includes("uranus"));
+    assert.ok(names.includes("earth"));
+  });
+
+  it("orbit circle radii increase from inner to outer planets", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    const circles = scene.orbitCircles!;
+    const earth = circles.find(c => c.name === "earth")!;
+    const mars = circles.find(c => c.name === "mars")!;
+    const jupiter = circles.find(c => c.name === "jupiter")!;
+    const saturn = circles.find(c => c.name === "saturn")!;
+    const uranus = circles.find(c => c.name === "uranus")!;
+    assert.ok(earth.radiusScene < mars.radiusScene);
+    assert.ok(mars.radiusScene < jupiter.radiusScene);
+    assert.ok(jupiter.radiusScene < saturn.radiusScene);
+    assert.ok(saturn.radiusScene < uranus.radiusScene);
+  });
+
+  it("orbit circle radii match AU_TO_SCENE scaling", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    const earth = scene.orbitCircles!.find(c => c.name === "earth")!;
+    // Earth = 1.0 AU → 1.0 * AU_TO_SCENE scene units
+    assert.ok(
+      Math.abs(earth.radiusScene - 1.0 * AU_TO_SCENE) < 0.01,
+      `Earth orbit radius should be ${1.0 * AU_TO_SCENE}, got ${earth.radiusScene}`,
+    );
   });
 });
 

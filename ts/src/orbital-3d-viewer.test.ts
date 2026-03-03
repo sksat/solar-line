@@ -75,6 +75,20 @@ describe("orbital-3d-viewer-data", () => {
       assert.strictEqual(scene.eclipticPlane.z, 0);
     });
 
+    it("has orbit circles for all 5 planets", () => {
+      assert.ok(scene.orbitCircles, "should have orbit circles");
+      assert.strictEqual(scene.orbitCircles!.length, 5);
+      const names = scene.orbitCircles!.map((c: { name: string }) => c.name);
+      assert.deepStrictEqual(names, ["mars", "jupiter", "saturn", "uranus", "earth"]);
+    });
+
+    it("orbit circles have positive radii and colors", () => {
+      for (const circle of scene.orbitCircles!) {
+        assert.ok(circle.radiusScene > 0, `${circle.name} orbit should have positive radius`);
+        assert.ok(typeof circle.color === "string", `${circle.name} orbit should have color`);
+      }
+    });
+
     it("AU_TO_SCENE converts AU to scene units", () => {
       assert.ok(AU_TO_SCENE > 0, "conversion factor should be positive");
       // 1 AU should map to a reasonable scene size (1-20 units)

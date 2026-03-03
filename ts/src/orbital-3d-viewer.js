@@ -168,6 +168,13 @@ export function loadScene(sceneData) {
     }
   }
 
+  // Orbit circles (planetary paths)
+  if (sceneData.orbitCircles) {
+    for (const oc of sceneData.orbitCircles) {
+      addFullRouteOrbitCircle(currentSceneGroup, oc.radiusScene, oc.color, oc.z);
+    }
+  }
+
   // Planets
   for (const planet of sceneData.planets) {
     addPlanet(currentSceneGroup, planet, sceneData.type);
@@ -218,6 +225,28 @@ function addPlanet(group, planet, sceneType) {
     label.position.set(planet.x, planet.z + planet.radius + 0.3, planet.y);
     group.add(label);
   }
+}
+
+function addFullRouteOrbitCircle(group, radiusScene, color, z) {
+  const geo = new THREE.BufferGeometry();
+  const points = [];
+  for (let i = 0; i <= 128; i++) {
+    const angle = (i / 128) * Math.PI * 2;
+    points.push(
+      new THREE.Vector3(
+        radiusScene * Math.cos(angle),
+        z, // three.js Y-up: z height → Y coordinate
+        radiusScene * Math.sin(angle),
+      ),
+    );
+  }
+  geo.setFromPoints(points);
+  const mat = new THREE.LineBasicMaterial({
+    color: new THREE.Color(color),
+    opacity: 0.25,
+    transparent: true,
+  });
+  group.add(new THREE.Line(geo, mat));
 }
 
 function addOrbitCircle(group, radiusKm, color) {

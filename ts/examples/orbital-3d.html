@@ -193,9 +193,14 @@ function prepareFullRouteScene(data) {
 
   const timeline = { totalDays, orbits, transfers };
 
+  const orbitCircles = planetOrder.map((name, i) => {
+    const p = data.planetaryZHeightsAtEpoch[name];
+    return { name, radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE, color: PLANET_COLORS[name] ?? "#ffffff", z: zFromAU(p?.zHeightAU ?? 0) };
+  });
+
   return { type: "full-route", title: "ケストレル号全航路 — 3D黄道面ビュー",
     description: "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を10倍誇張して表示。土星が最も黄道面から離れ（+0.32 AU）、木星はわずかに下方（-0.04 AU）。",
-    planets, transferArcs,
+    planets, transferArcs, orbitCircles,
     eclipticPlane: { type: "ecliptic", normal: [0,0,1], z: 0, color: "#334455", opacity: 0.15, label: "黄道面" },
     timeline,
   };
