@@ -653,14 +653,14 @@ export function loadTimeline(timeline) {
       planetMeshes[obj.name] = obj;
     }
     if (obj.isCSS2DObject && obj.element) {
-      // Match label to planet by proximity check (labels are near planets)
+      // Match label to planet by name (English or Japanese)
       const text = obj.element.textContent;
       for (const orbit of timeline.orbits) {
-        const displayName = {
-          mars: "Mars", jupiter: "Jupiter", saturn: "Saturn",
-          uranus: "Uranus", earth: "Earth",
-        }[orbit.name];
-        if (text === displayName) {
+        const names = {
+          mars: ["Mars", "火星"], jupiter: ["Jupiter", "木星"], saturn: ["Saturn", "土星"],
+          uranus: ["Uranus", "天王星"], earth: ["Earth", "地球"],
+        }[orbit.name] || [];
+        if (names.includes(text)) {
           planetLabels[orbit.name] = obj;
         }
       }
@@ -713,11 +713,15 @@ export function loadTimeline(timeline) {
     }
   }
 
-  // Create ship marker (a bright sphere)
+  // Create ship marker — scale size based on scene type for visibility
   if (shipMarker3D) {
     currentSceneGroup.remove(shipMarker3D);
   }
-  const shipGeo = new THREE.SphereGeometry(0.2, 12, 12);
+  const sceneType = currentSceneGroup?.name || "full-route";
+  const isEpisode = sceneType.startsWith("episode-");
+  // Episode scenes span 20-100 scene units; use larger marker for visibility
+  const shipRadius = isEpisode ? 0.6 : 0.2;
+  const shipGeo = new THREE.SphereGeometry(shipRadius, 12, 12);
   const shipMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   shipMarker3D = new THREE.Mesh(shipGeo, shipMat);
   shipMarker3D.visible = false;
