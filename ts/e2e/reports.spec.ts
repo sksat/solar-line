@@ -1790,6 +1790,13 @@ test.describe("Inline 3D viewer in episode reports", () => {
     await expect(tocLink).toHaveText("3D軌道ビューア");
   });
 
+  test("EP02 has inline 3D viewer with saturn-ring scene", async ({ page }) => {
+    await page.goto("/episodes/ep-002.html");
+    const container = page.locator(".viewer3d-container");
+    await expect(container).toBeAttached();
+    await expect(container).toHaveAttribute("data-scene", "saturn-ring");
+  });
+
   test("EP01 does not have inline 3D viewer", async ({ page }) => {
     await page.goto("/episodes/ep-001.html");
     const container = page.locator(".viewer3d-container");
