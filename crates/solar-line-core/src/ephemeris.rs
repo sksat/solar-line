@@ -1021,4 +1021,45 @@ mod tests {
             pos_via_direct.y
         );
     }
+
+    #[test]
+    fn test_jd_calendar_round_trip_solar_line_epoch() {
+        // calendar_to_jd → jd_to_calendar should recover original date
+        // Using SOLAR LINE epoch (2215) to exercise far-future dates
+        let (year, month, day) = (2215, 1, 15.5);
+        let jd = calendar_to_jd(year, month, day);
+        let (y2, m2, d2) = jd_to_calendar(jd);
+        assert_eq!(y2, year, "year mismatch");
+        assert_eq!(m2, month, "month mismatch");
+        assert!(
+            (d2 - day).abs() < 1e-6,
+            "day mismatch: {d2} vs {day}"
+        );
+
+        // Also verify a known date: J2000.0 = 2000-01-01T12:00
+        let j2000 = calendar_to_jd(2000, 1, 1.5);
+        assert!(
+            (j2000 - J2000_JD).abs() < 1e-6,
+            "J2000 mismatch: {j2000} vs {J2000_JD}"
+        );
+    }
+
+    #[test]
+    fn test_synodic_periods_known_values() {
+        // Earth-Mars synodic period ≈ 780 days (well-known value)
+        let synodic = synodic_period(Planet::Earth, Planet::Mars);
+        let days = synodic.value() / 86400.0;
+        assert!(
+            (days - 780.0).abs() < 10.0,
+            "Earth-Mars synodic period: {days:.1} days (expected ~780)"
+        );
+
+        // Earth-Jupiter synodic period ≈ 399 days
+        let synodic_j = synodic_period(Planet::Earth, Planet::Jupiter);
+        let days_j = synodic_j.value() / 86400.0;
+        assert!(
+            (days_j - 399.0).abs() < 5.0,
+            "Earth-Jupiter synodic period: {days_j:.1} days (expected ~399)"
+        );
+    }
 }

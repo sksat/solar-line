@@ -106,6 +106,20 @@ describe("WASM bridge: hohmann_transfer_dv", () => {
       `dv2: TS=${tsDv2}, WASM=${wasmDvs[1]}`,
     );
   });
+
+  it("total ΔV is same for inner→outer and outer→inner", () => {
+    const mu = MU.SUN;
+    const rEarth = 149_597_870.7;
+    const rMars = 227_939_200;
+    const outward: Float64Array = wasm.hohmann_transfer_dv(mu, rEarth, rMars);
+    const inward: Float64Array = wasm.hohmann_transfer_dv(mu, rMars, rEarth);
+    const totalOut = Math.abs(outward[0]) + Math.abs(outward[1]);
+    const totalIn = Math.abs(inward[0]) + Math.abs(inward[1]);
+    assert.ok(
+      Math.abs(totalOut - totalIn) < 1e-6,
+      `total ΔV outward=${totalOut} vs inward=${totalIn} should match`,
+    );
+  });
 });
 
 describe("WASM bridge: orbital_period", () => {
@@ -248,6 +262,18 @@ describe("WASM bridge: propagate_mean_anomaly", () => {
       `full orbit M=${m} mod 2π=${mMod}, expected ~0`,
     );
   });
+
+  it("quarter orbit from non-zero M0 adds π/2", () => {
+    const TAU = 2 * Math.PI;
+    const n = TAU / 3600; // period = 3600s
+    const M0 = 1.0; // starting mean anomaly
+    const m = wasm.propagate_mean_anomaly(M0, n, 900); // quarter orbit
+    const expected = M0 + Math.PI / 2;
+    assert.ok(
+      Math.abs(m - expected) < 1e-10,
+      `quarter orbit from M0=${M0}: m=${m}, expected=${expected}`,
+    );
+  });
 });
 
 describe("WASM bridge: specific_energy", () => {
@@ -371,6 +397,18 @@ describe("WASM bridge: brachistochrone_accel", () => {
     assert.ok(accelSaturn > 0 && accelSaturn < 0.001,
       `Saturn accel=${accelSaturn} should be small positive value`);
   });
+
+  it("matches a=4d/t² formula", () => {
+    const d = 550_630_800; // km
+    const t = 72 * 3600; // seconds
+    const accel = wasm.brachistochrone_accel(d, t);
+    // Brachistochrone: d = ½·a·(t/2)² × 2 = a·t²/4 → a = 4d/t²
+    const expected = 4 * d / (t * t);
+    assert.ok(
+      Math.abs(accel - expected) < 1e-15,
+      `accel=${accel}, formula 4d/t²=${expected}`,
+    );
+  });
 });
 
 describe("WASM bridge: brachistochrone_dv", () => {
@@ -393,6 +431,20 @@ describe("WASM bridge: brachistochrone_dv", () => {
     assert.ok(
       Math.abs(dv - accel * t) < 1e-6,
       `dv=${dv}, accel*t=${accel * t}`,
+    );
+  });
+
+  it("longer distance at same time requires higher ΔV", () => {
+    const t = 72 * 3600;
+    const dv1 = wasm.brachistochrone_dv(550_630_800, t); // Mars-Jupiter
+    const dv2 = wasm.brachistochrone_dv(1_280_000_000, t); // Jupiter-Saturn in same time
+    assert.ok(dv2 > dv1, `longer distance ΔV=${dv2} should exceed shorter=${dv1}`);
+    // ΔV ∝ d (since a=4d/t² and ΔV=a·t=4d/t), so ratio should be d2/d1
+    const expectedRatio = 1_280_000_000 / 550_630_800;
+    const actualRatio = dv2 / dv1;
+    assert.ok(
+      Math.abs(actualRatio - expectedRatio) < 1e-6,
+      `ΔV ratio=${actualRatio}, expected distance ratio=${expectedRatio}`,
     );
   });
 });
