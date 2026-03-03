@@ -1640,6 +1640,19 @@ describe("other-ships.md content validation", () => {
       "should include fleet ΔV estimate of 842 km/s",
     );
   });
+
+  // Analysis-derived cross-checks (Task 500)
+  it("EP04 fleet ETA 33h matches analysis", () => {
+    const ep4 = analyzeEpisode4();
+    assertContainsApproxValue(content, ep4.fleetIntercept.fleetETAHours,
+      "other-ships fleet ETA from EP04 analysis");
+  });
+
+  it("EP04 fleet ship count matches analysis", () => {
+    const ep4 = analyzeEpisode4();
+    assertContainsApproxValue(content, ep4.fleetIntercept.fleetShipCount,
+      "other-ships fleet ship count from EP04 analysis");
+  });
 });
 
 // ============================================================
@@ -2529,6 +2542,25 @@ describe("science-accuracy.md content validation", () => {
       "chart should include EP02 β=0.02% (lowest)",
     );
   });
+
+  // Analysis-derived cross-checks (Task 500)
+  it("radiation 480 mSv matches EP04 analysis", () => {
+    const ep4 = analyzeEpisode4();
+    assertContainsApproxValue(content, ep4.plasmoid.totalExposureMSv,
+      "science-accuracy radiation dose from EP04 analysis");
+  });
+
+  it("Uranus magnetic tilt 59.7° matches EP04 analysis", () => {
+    const ep4 = analyzeEpisode4();
+    assertContainsApproxValue(content, ep4.plasmoid.realMagneticTiltDeg,
+      "science-accuracy Uranus magnetic tilt from EP04 analysis");
+  });
+
+  it("navigation error distance matches EP03 analysis", () => {
+    const ep3 = analyzeEpisode3();
+    assertContainsApproxValue(content, ep3.navCrisis.computedErrorKm,
+      "science-accuracy nav error distance from EP03 analysis");
+  });
 });
 
 // ============================================================
@@ -2748,6 +2780,14 @@ describe("communications.md content validation", () => {
       "chart should include 25 Mbps at 1.5 AU",
     );
   });
+
+  // Analysis-derived cross-checks (Task 500)
+  it("EP02 transit time matches analysis", () => {
+    const ep2 = analyzeEpisode2();
+    const transitDays = ep2.trimThrust.primary!.transferDays;
+    assertContainsApproxValue(content, transitDays,
+      "communications EP02 transit days from analysis");
+  });
 });
 
 // ============================================================
@@ -2928,6 +2968,19 @@ describe("attitude-control.md content validation", () => {
       "should include 136,318 N·m at 0.1% asymmetry",
     );
   });
+
+  // Analysis-derived cross-checks (Task 500)
+  it("EP03 nav crisis angle matches analysis", () => {
+    const ep3 = analyzeEpisode3();
+    assertContainsApproxValue(content, ep3.navCrisis.angleDeg,
+      "attitude-control nav crisis angle from EP03 analysis");
+  });
+
+  it("EP05 nozzle margin 26 min matches analysis", () => {
+    const ep5 = analyzeEpisode5();
+    assertContainsApproxValue(content, ep5.nozzleLifespan.marginMinutes,
+      "attitude-control nozzle margin from EP05 analysis");
+  });
 });
 
 // ============================================================
@@ -3096,6 +3149,17 @@ describe("infrastructure.md content validation", () => {
     assert.ok(content.includes("エンケラドスST"), "should show Enceladus Station");
     assert.ok(content.includes("タイタニア/ウラヌス3"), "should show Titania/Uranus-3");
     assert.ok(content.includes("内苑/外苑境界"), "should show inner/outer sphere boundary");
+  });
+
+  // Analysis-derived cross-check (Task 500)
+  it("72h mission reference consistent with EP01 analysis", () => {
+    const ep1 = analyzeEpisode1();
+    // Infrastructure report references "72時間配送ミッション" which is the EP01 target time
+    assert.ok(content.includes("72時間"),
+      "infrastructure should reference 72h delivery mission (EP01 analysis target)");
+    // Verify EP01 analysis boundary is reasonable (72h should be feasible at ≤299t)
+    assert.ok(ep1.boundaries.massBoundary72h.maxMassT > 200,
+      "EP01 72h boundary should exist and be > 200t");
   });
 });
 
