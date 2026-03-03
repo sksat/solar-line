@@ -108,6 +108,8 @@ interface ZHeightAnalysis {
   zHeightAU: number;
   latitudeDeg: number;
   inclinationDeg: number;
+  /** Ecliptic longitude in radians [0, 2π) — used for 3D viewer planet positioning */
+  eclipticLongitudeRad: number;
 }
 
 function analyzeZHeight(planet: PlanetName, jd: number): ZHeightAnalysis {
@@ -120,6 +122,7 @@ function analyzeZHeight(planet: PlanetName, jd: number): ZHeightAnalysis {
     zHeightAU: pos.z / AU_KM,
     latitudeDeg: pos.latitude * (180 / Math.PI),
     inclinationDeg: pos.inclination * (180 / Math.PI),
+    eclipticLongitudeRad: pos.longitude,
   };
 }
 

@@ -246,6 +246,44 @@ describe("prepareFullRouteScene", () => {
     );
   });
 
+  it("uses eclipticLongitudeRad for initial planet angles when provided", () => {
+    const marsLon = 1.5; // ~86°
+    const jupiterLon = 3.0; // ~172°
+    const inputWithLongitudes = {
+      transfers: [
+        {
+          leg: "EP01 Mars→Jupiter",
+          episode: 1,
+          departure: { planet: "mars", jd: 2460000, zHeightAU: 0.01, latitudeDeg: 1.0 },
+          arrival: { planet: "jupiter", jd: 2460003, zHeightAU: 0.02, latitudeDeg: 1.5 },
+        },
+      ],
+      planetaryZHeightsAtEpoch: {
+        mars: { planet: "mars", zHeightAU: 0.01, latitudeDeg: 1.0, eclipticLongitudeRad: marsLon },
+        jupiter: { planet: "jupiter", zHeightAU: 0.02, latitudeDeg: 1.5, eclipticLongitudeRad: jupiterLon },
+        saturn: { planet: "saturn", zHeightAU: 0.03, latitudeDeg: 2.0, eclipticLongitudeRad: 4.0 },
+        uranus: { planet: "uranus", zHeightAU: 0.04, latitudeDeg: 0.5, eclipticLongitudeRad: 5.0 },
+        earth: { planet: "earth", zHeightAU: 0.0, latitudeDeg: 0.0, eclipticLongitudeRad: 0.5 },
+      },
+    };
+    const scene = prepareFullRouteScene(inputWithLongitudes);
+    const mars = scene.planets.find(p => p.name === "mars")!;
+    const marsR = Math.sqrt(mars.x ** 2 + mars.y ** 2);
+    const marsAngle = Math.atan2(mars.y, mars.x);
+    // The initial angle should match eclipticLongitudeRad (1.5 rad)
+    const angleDiff = Math.abs(((marsAngle - marsLon + Math.PI) % (2 * Math.PI)) - Math.PI);
+    assert.ok(
+      angleDiff < 0.01,
+      `Mars angle should be ~${marsLon.toFixed(2)} rad, got ${marsAngle.toFixed(2)} rad`,
+    );
+    // Timeline orbit initial angle should also match
+    const marsOrbit = scene.timeline!.orbits.find(o => o.name === "mars")!;
+    assert.ok(
+      Math.abs(marsOrbit.initialAngle - marsLon) < 0.01,
+      `Mars orbit initialAngle should be ~${marsLon}, got ${marsOrbit.initialAngle}`,
+    );
+  });
+
   it("transfer arc endpoints match planet positions at departure/arrival times", () => {
     // With a 3-day transfer, planets should have moved from initial positions
     const longTransferInput = {
@@ -285,6 +323,33 @@ describe("prepareFullRouteScene", () => {
       Math.abs(arc.toPos[1] - jy100) < 0.01,
       `Arc arrival should match Jupiter at day 100, not day 0`,
     );
+  });
+
+  it("includes transferSummary when outOfPlaneDistanceAU is provided", () => {
+    const inputWithAnalysis = {
+      transfers: [
+        {
+          leg: "Mars→Jupiter (72h brachistochrone)",
+          episode: 1,
+          departure: { planet: "mars", jd: 2460000, zHeightAU: 0.01, latitudeDeg: 1.0 },
+          arrival: { planet: "jupiter", jd: 2460003, zHeightAU: 0.02, latitudeDeg: 1.5 },
+          outOfPlaneDistanceAU: 0.0699,
+          planeChangeFractionPercent: 0.468,
+        },
+      ],
+      planetaryZHeightsAtEpoch: minimalInput.planetaryZHeightsAtEpoch,
+    };
+    const scene = prepareFullRouteScene(inputWithAnalysis);
+    assert.ok(scene.transferSummary, "should have transferSummary");
+    assert.equal(scene.transferSummary!.length, 1);
+    assert.equal(scene.transferSummary![0].leg, "Mars→Jupiter (72h brachistochrone)");
+    assert.ok(Math.abs(scene.transferSummary![0].outOfPlaneDistanceAU - 0.0699) < 0.001);
+    assert.ok(Math.abs(scene.transferSummary![0].planeChangeFractionPercent - 0.468) < 0.01);
+  });
+
+  it("omits transferSummary when no analysis data present", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    assert.equal(scene.transferSummary, undefined);
   });
 });
 

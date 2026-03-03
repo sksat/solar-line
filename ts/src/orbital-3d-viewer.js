@@ -732,10 +732,15 @@ export function updateInfoPanel(panelEl, sceneData) {
   html += `<p>${sceneData.description}</p>`;
 
   if (sceneData.type === "full-route") {
-    html += "<table>";
-    html += "<tr><th>レグ</th><th>Z差 (AU)</th><th>傾斜ΔV比</th></tr>";
-    // Scene data doesn't have raw analysis; this is filled in from the HTML side
-    html += "</table>";
+    if (sceneData.transferSummary && sceneData.transferSummary.length > 0) {
+      html += "<table>";
+      html += "<tr><th>レグ</th><th>Z差 (AU)</th><th>傾斜ΔV比</th></tr>";
+      for (const ts of sceneData.transferSummary) {
+        const shortLeg = ts.leg.replace(/\s*\(.*\)/, "");
+        html += `<tr><td>${shortLeg}</td><td>${ts.outOfPlaneDistanceAU.toFixed(4)}</td><td>${ts.planeChangeFractionPercent.toFixed(2)}%</td></tr>`;
+      }
+      html += "</table>";
+    }
   } else if (sceneData.type === "saturn-ring") {
     const arc = sceneData.transferArcs[0];
     if (arc?.approachAngleDeg) {

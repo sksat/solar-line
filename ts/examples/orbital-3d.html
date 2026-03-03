@@ -150,19 +150,24 @@ const ORBITAL_PERIODS_DAYS = { mars: 686.97, jupiter: 4332.59, saturn: 10759.22,
 
 function zFromAU(zAU) { return zAU * AU_TO_SCENE * 3; }
 
-function planetXY(planet, index) {
+const FALLBACK_ANGLES = [Math.PI*0.1, Math.PI*0.35, Math.PI*0.55, Math.PI*0.75, Math.PI*1.85];
+
+function planetAngle(planet, index, data) {
+  const p = data?.planetaryZHeightsAtEpoch?.[planet];
+  return (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : (FALLBACK_ANGLES[index] ?? index * Math.PI * 0.4);
+}
+
+function planetXY(planet, index, data) {
   const r = (ORBIT_RADII_AU[planet] ?? 5) * AU_TO_SCENE;
-  const angles = [Math.PI*0.1, Math.PI*0.35, Math.PI*0.55, Math.PI*0.75, Math.PI*1.85];
-  const a = angles[index] ?? index * Math.PI * 0.4;
-  return { x: r * Math.cos(a), y: r * Math.sin(a) };
+  const a = planetAngle(planet, index, data);
+  return { x: r * Math.cos(a), y: r * Math.sin(a), angle: a };
 }
 
 function prepareFullRouteScene(data) {
   const planetOrder = ["mars", "jupiter", "saturn", "uranus", "earth"];
-  const initialAngles = [Math.PI*0.1, Math.PI*0.35, Math.PI*0.55, Math.PI*0.75, Math.PI*1.85];
   const planets = planetOrder.map((name, i) => {
     const p = data.planetaryZHeightsAtEpoch[name];
-    const pos = planetXY(name, i);
+    const pos = planetXY(name, i, data);
     return { name, x: pos.x, y: pos.y, z: zFromAU(p?.zHeightAU ?? 0),
       color: PLANET_COLORS[name], radius: PLANET_RADII[name] ?? 0.15,
       label: { mars:"火星", jupiter:"木星", saturn:"土星", uranus:"天王星", earth:"地球" }[name] };
@@ -175,10 +180,11 @@ function prepareFullRouteScene(data) {
   const orbits = planetOrder.map((name, i) => {
     const p = data.planetaryZHeightsAtEpoch[name];
     const period = ORBITAL_PERIODS_DAYS[name] || 1;
+    const a = planetAngle(name, i, data);
     return {
       name,
       radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
-      initialAngle: initialAngles[i],
+      initialAngle: a,
       meanMotionPerDay: (2 * Math.PI) / period,
       z: zFromAU(p?.zHeightAU ?? 0),
     };
@@ -219,11 +225,16 @@ function prepareFullRouteScene(data) {
     return { name, radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE, color: PLANET_COLORS[name] ?? "#ffffff", z: zFromAU(p?.zHeightAU ?? 0) };
   });
 
+  const transferSummary = data.transfers
+    .filter(t => typeof t.outOfPlaneDistanceAU === "number")
+    .map(t => ({ leg: t.leg, outOfPlaneDistanceAU: t.outOfPlaneDistanceAU, planeChangeFractionPercent: t.planeChangeFractionPercent || 0 }));
+
   return { type: "full-route", title: "ケストレル号全航路 — 3D黄道面ビュー",
-    description: "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を10倍誇張して表示。土星が最も黄道面から離れ（+0.32 AU）、木星はわずかに下方（-0.04 AU）。",
+    description: "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を3倍誇張して表示。土星が最も黄道面から離れ（+0.32 AU）、木星はわずかに下方（-0.04 AU）。",
     planets, transferArcs, orbitCircles,
     eclipticPlane: { type: "ecliptic", normal: [0,0,1], z: 0, color: "#334455", opacity: 0.15, label: "黄道面" },
     timeline,
+    transferSummary: transferSummary.length > 0 ? transferSummary : undefined,
   };
 }
 

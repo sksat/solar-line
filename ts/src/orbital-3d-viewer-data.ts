@@ -118,6 +118,13 @@ export interface OrbitCircleData {
 
 export type ViewMode = "inertial" | "ship";
 
+/** Per-transfer 3D analysis summary (for info panel) */
+export interface TransferSummaryItem {
+  leg: string;
+  outOfPlaneDistanceAU: number;
+  planeChangeFractionPercent: number;
+}
+
 export interface SceneData {
   type: "full-route" | "saturn-ring" | "uranus-approach";
   title: string;
@@ -134,6 +141,8 @@ export interface SceneData {
   supportedViewModes?: ViewMode[];
   /** Timeline data for animation */
   timeline?: TimelineData;
+  /** Per-transfer 3D analysis summary for info panel */
+  transferSummary?: TransferSummaryItem[];
 }
 
 // ── Constants ──
@@ -215,29 +224,31 @@ function zFromAU(zAU: number): number {
   return zAU * AU_TO_SCENE * 3;
 }
 
+/** Fallback angles when ecliptic longitudes are not provided */
+const FALLBACK_ANGLES = [
+  Math.PI * 0.1,   // Mars: ~18°
+  Math.PI * 0.35,  // Jupiter: ~63°
+  Math.PI * 0.55,  // Saturn: ~99°
+  Math.PI * 0.75,  // Uranus: ~135°
+  Math.PI * 1.85,  // Earth: ~333°
+];
+
 /**
- * Approximate planet x,y from orbital radius and ecliptic longitude.
- * Uses the latitude from the 3D data to estimate longitude position.
+ * Compute planet x,y from orbital radius and ecliptic longitude.
+ * Uses eclipticLongitudeRad from 3D analysis data when available,
+ * falls back to visual layout angles.
  */
 function planetXY(
   planet: string,
-  latDeg: number,
+  eclipticLongitudeRad: number | undefined,
   index: number,
-): { x: number; y: number } {
+): { x: number; y: number; angle: number } {
   const r = (ORBIT_RADII_AU[planet] ?? 5) * AU_TO_SCENE;
-  // Space planets around the orbit so they're visible
-  // Use longitude angles that spread them across the scene
-  const angles = [
-    Math.PI * 0.1,   // Mars: ~18°
-    Math.PI * 0.35,  // Jupiter: ~63°
-    Math.PI * 0.55,  // Saturn: ~99°
-    Math.PI * 0.75,  // Uranus: ~135°
-    Math.PI * 1.85,  // Earth: ~333°
-  ];
-  const angle = angles[index] ?? (index * Math.PI * 0.4);
+  const angle = eclipticLongitudeRad ?? FALLBACK_ANGLES[index] ?? (index * Math.PI * 0.4);
   return {
     x: r * Math.cos(angle),
     y: r * Math.sin(angle),
+    angle,
   };
 }
 
@@ -281,16 +292,18 @@ export function prepareFullRouteScene(data: {
     episode: number;
     departure: { planet: string; jd: number; zHeightAU: number; latitudeDeg: number };
     arrival: { planet: string; jd: number; zHeightAU: number; latitudeDeg: number };
+    outOfPlaneDistanceAU?: number;
+    planeChangeFractionPercent?: number;
   }>;
   planetaryZHeightsAtEpoch: Record<
     string,
-    { planet: string; zHeightAU: number; latitudeDeg: number }
+    { planet: string; zHeightAU: number; latitudeDeg: number; eclipticLongitudeRad?: number }
   >;
 }): SceneData {
   const planetOrder = ["mars", "jupiter", "saturn", "uranus", "earth"];
   const planets: PlanetData[] = planetOrder.map((name, i) => {
     const pData = data.planetaryZHeightsAtEpoch[name];
-    const { x, y } = planetXY(name, pData?.latitudeDeg ?? 0, i);
+    const { x, y } = planetXY(name, pData?.eclipticLongitudeRad, i);
     return {
       name,
       x,
@@ -308,20 +321,13 @@ export function prepareFullRouteScene(data: {
     data.transfers[data.transfers.length - 1]?.arrival.jd ?? firstJd;
   const totalDays = lastJd - firstJd;
 
-  const planetOrder2 = ["mars", "jupiter", "saturn", "uranus", "earth"];
-  const initialAngles = [
-    Math.PI * 0.1,
-    Math.PI * 0.35,
-    Math.PI * 0.55,
-    Math.PI * 0.75,
-    Math.PI * 1.85,
-  ];
-  const timelineOrbits: TimelineOrbit[] = planetOrder2.map((name, i) => {
+  const timelineOrbits: TimelineOrbit[] = planetOrder.map((name, i) => {
     const pData = data.planetaryZHeightsAtEpoch[name];
+    const { angle } = planetXY(name, pData?.eclipticLongitudeRad, i);
     return {
       name,
       radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
-      initialAngle: initialAngles[i],
+      initialAngle: angle,
       meanMotionPerDay: meanMotionPerDay(name),
       z: zFromAU(pData?.zHeightAU ?? 0),
     };
@@ -382,11 +388,20 @@ export function prepareFullRouteScene(data: {
     };
   });
 
+  // Build transfer summary for info panel
+  const transferSummary: TransferSummaryItem[] = data.transfers
+    .filter((t) => t.outOfPlaneDistanceAU !== undefined)
+    .map((t) => ({
+      leg: t.leg,
+      outOfPlaneDistanceAU: t.outOfPlaneDistanceAU!,
+      planeChangeFractionPercent: t.planeChangeFractionPercent ?? 0,
+    }));
+
   return {
     type: "full-route",
     title: "ケストレル号全航路 — 3D黄道面ビュー",
     description:
-      "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を10倍誇張して表示。",
+      "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を3倍誇張して表示。",
     planets,
     transferArcs,
     orbitCircles,
@@ -400,6 +415,7 @@ export function prepareFullRouteScene(data: {
       label: "黄道面",
     },
     timeline,
+    transferSummary: transferSummary.length > 0 ? transferSummary : undefined,
   };
 }
 

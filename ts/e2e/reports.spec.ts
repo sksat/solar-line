@@ -1823,3 +1823,60 @@ test.describe("Inline 3D viewer in episode reports", () => {
     await expect(container).toHaveAttribute("data-scene", "full-route");
   });
 });
+
+// --- 3D viewer interaction tests (Task 575) ---
+
+test.describe("3D viewer interaction: scene switching", () => {
+  test("clicking scene button changes active state", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const buttons = page.locator(".viewer3d-scene-btn");
+    // First button (full-route) starts active
+    await expect(buttons.nth(0)).toHaveCSS("font-weight", "700");
+
+    // Click second button (saturn-ring)
+    await buttons.nth(1).click();
+    // Second button becomes bold, first reverts to normal
+    await expect(buttons.nth(1)).toHaveCSS("font-weight", "700");
+    await expect(buttons.nth(0)).toHaveCSS("font-weight", "400");
+  });
+});
+
+test.describe("3D viewer interaction: speed button", () => {
+  test("clicking speed button cycles through speeds", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const speedBtn = page.locator(".viewer3d-speed");
+    await expect(speedBtn).toHaveText("1×");
+
+    // Click to advance: 1× → 2×
+    await speedBtn.click();
+    await expect(speedBtn).toHaveText("2×");
+
+    // Click to advance: 2× → 4×
+    await speedBtn.click();
+    await expect(speedBtn).toHaveText("4×");
+
+    // Click to advance: 4× → 0.5×
+    await speedBtn.click();
+    await expect(speedBtn).toHaveText("0.5×");
+
+    // Click to wrap: 0.5× → 1×
+    await speedBtn.click();
+    await expect(speedBtn).toHaveText("1×");
+  });
+});
+
+test.describe("3D viewer interaction: view mode toggle", () => {
+  test("clicking view mode button toggles text", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const vmBtn = page.locator(".viewer3d-viewmode");
+    await expect(vmBtn).toHaveText("慣性");
+
+    // Click to toggle
+    await vmBtn.click();
+    await expect(vmBtn).toHaveText("宇宙船");
+
+    // Click again to toggle back
+    await vmBtn.click();
+    await expect(vmBtn).toHaveText("慣性");
+  });
+});

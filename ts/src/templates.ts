@@ -3351,20 +3351,21 @@ window.__prepareScene = function(sceneName, data) {
   var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,titania:0.08};
   var OR = {mars:1.524,jupiter:5.203,saturn:9.537,uranus:19.19,earth:1.0};
   var OP = {mars:686.97,jupiter:4332.59,saturn:10759.22,uranus:30688.5,earth:365.256};
-  var angles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
+  var fallbackAngles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
   if (sceneName === "full-route") {
     var order = ["mars","jupiter","saturn","uranus","earth"];
     var planets = order.map(function(name,i){
       var p = data.planetaryZHeightsAtEpoch[name];
       var r = (OR[name]||5)*AU;
-      var a = angles[i];
+      var a = (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : fallbackAngles[i];
       return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*3,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
     });
     var firstJd = data.transfers[0].departure.jd;
     var lastJd = data.transfers[data.transfers.length-1].arrival.jd;
     var orbits = order.map(function(name,i){
       var p = data.planetaryZHeightsAtEpoch[name];
-      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:angles[i],meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*3};
+      var a = (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : fallbackAngles[i];
+      return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:a,meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*3};
     });
     function posAtDay(orb,day){var a=orb.initialAngle+orb.meanMotionPerDay*day;return [orb.radiusScene*Math.cos(a),orb.radiusScene*Math.sin(a),orb.z]}
     var orbMap={};orbits.forEach(function(o){orbMap[o.name]=o});
@@ -3377,7 +3378,8 @@ window.__prepareScene = function(sceneName, data) {
     });
     var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg}});
     var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*3}});
-    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl}};
+    var ts2=data.transfers.filter(function(t){return typeof t.outOfPlaneDistanceAU==="number"}).map(function(t){return{leg:t.leg,outOfPlaneDistanceAU:t.outOfPlaneDistanceAU,planeChangeFractionPercent:t.planeChangeFractionPercent||0}});
+    return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl},transferSummary:ts2.length>0?ts2:undefined};
   }
   if (sceneName === "saturn-ring") {
     var ring = data.saturnRingAnalysis;

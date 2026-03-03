@@ -45,6 +45,17 @@ describe("3D orbital analysis: structure", () => {
       assert.ok(typeof data.planetaryZHeightsAtEpoch[p].latitudeDeg === "number", `${p} has latitudeDeg`);
     }
   });
+
+  it("has ecliptic longitude for all 5 key planets", () => {
+    const planets = ["mars", "jupiter", "saturn", "uranus", "earth"];
+    for (const p of planets) {
+      const entry = data.planetaryZHeightsAtEpoch[p];
+      assert.ok(typeof entry.eclipticLongitudeRad === "number", `${p} has eclipticLongitudeRad`);
+      // Longitude should be in [0, 2π)
+      assert.ok(entry.eclipticLongitudeRad >= 0, `${p} longitude >= 0`);
+      assert.ok(entry.eclipticLongitudeRad < 2 * Math.PI, `${p} longitude < 2π`);
+    }
+  });
 });
 
 describe("3D orbital analysis: transfer legs", () => {

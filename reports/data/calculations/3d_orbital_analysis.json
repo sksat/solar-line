@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-03T00:33:56.603Z",
+  "generatedAt": "2026-03-03T15:12:12.497Z",
   "description": "3D orbital analysis for SOLAR LINE — ecliptic z-heights, ring crossings, approach geometry",
   "coplanarApproximationValid": false,
   "maxPlaneChangeFractionPercent": 1.510119325764719,
@@ -14,7 +14,8 @@
         "zHeightKm": 4046841.9819036266,
         "zHeightAU": 0.0270514677980883,
         "latitudeDeg": 1.0015460744706706,
-        "inclinationDeg": 1.835760064239129
+        "inclinationDeg": 1.835760064239129,
+        "eclipticLongitudeRad": 1.4309580627744725
       },
       "arrival": {
         "planet": "jupiter",
@@ -23,7 +24,8 @@
         "zHeightKm": -6415559.759189236,
         "zHeightAU": -0.04288536814842002,
         "latitudeDeg": -0.48363727717742694,
-        "inclinationDeg": 1.2990465228818076
+        "inclinationDeg": 1.2990465228818076,
+        "eclipticLongitudeRad": 1.3786265142639071
       },
       "outOfPlaneDistanceKm": 10462401.741092863,
       "outOfPlaneDistanceAU": 0.06993683594650832,
@@ -41,7 +43,8 @@
         "zHeightKm": -6343881.67542655,
         "zHeightAU": -0.042406229752751094,
         "latitudeDeg": -0.4781401264262156,
-        "inclinationDeg": 1.299046360253471
+        "inclinationDeg": 1.299046360253471,
+        "eclipticLongitudeRad": 1.383181457171967
       },
       "arrival": {
         "planet": "saturn",
@@ -50,7 +53,8 @@
         "zHeightKm": 47708409.62265145,
         "zHeightAU": 0.3189110205874839,
         "latitudeDeg": 1.95006593534866,
-        "inclinationDeg": 2.505326300603335
+        "inclinationDeg": 2.505326300603335,
+        "eclipticLongitudeRad": 2.8661766287105026
       },
       "outOfPlaneDistanceKm": 54052291.298078,
       "outOfPlaneDistanceAU": 0.361317250340235,
@@ -68,7 +72,8 @@
         "zHeightKm": 47757991.54025115,
         "zHeightAU": 0.3192424552353682,
         "latitudeDeg": 1.9519716367904496,
-        "inclinationDeg": 2.5053267244226367
+        "inclinationDeg": 2.5053267244226367,
+        "eclipticLongitudeRad": 2.86738886690656
       },
       "arrival": {
         "planet": "uranus",
@@ -77,7 +82,8 @@
         "zHeightKm": 36496041.71568574,
         "zHeightAU": 0.2439609704664449,
         "latitudeDeg": 0.7608524112996666,
-        "inclinationDeg": 0.7747916680126253
+        "inclinationDeg": 0.7747916680126253,
+        "eclipticLongitudeRad": 2.6742410588996055
       },
       "outOfPlaneDistanceKm": 11261949.82456541,
       "outOfPlaneDistanceAU": 0.07528148476892332,
@@ -95,7 +101,8 @@
         "zHeightKm": 36498950.25320604,
         "zHeightAU": 0.2439804128388977,
         "latitudeDeg": 0.7609178531975406,
-        "inclinationDeg": 0.774791708532817
+        "inclinationDeg": 0.774791708532817,
+        "eclipticLongitudeRad": 2.6746886652311934
       },
       "arrival": {
         "planet": "earth",
@@ -104,7 +111,8 @@
         "zHeightKm": -30510.850005525346,
         "zHeightAU": -0.0002039524350363989,
         "latitudeDeg": -0.011807545012931976,
-        "inclinationDeg": -0.02891603428453143
+        "inclinationDeg": -0.02891603428453143,
+        "eclipticLongitudeRad": 2.720958961891389
       },
       "outOfPlaneDistanceKm": 36529461.10321156,
       "outOfPlaneDistanceAU": 0.24418436527393408,
@@ -130,7 +138,8 @@
       "zHeightKm": 47708409.62265145,
       "zHeightAU": 0.3189110205874839,
       "latitudeDeg": 1.95006593534866,
-      "inclinationDeg": 2.505326300603335
+      "inclinationDeg": 2.505326300603335,
+      "eclipticLongitudeRad": 2.8661766287105026
     },
     "approachFromJupiter": {
       "approachAngleToDeg": 9.32676353025429,
@@ -167,7 +176,8 @@
       "zHeightKm": 4046841.9819036266,
       "zHeightAU": 0.0270514677980883,
       "latitudeDeg": 1.0015460744706706,
-      "inclinationDeg": 1.835760064239129
+      "inclinationDeg": 1.835760064239129,
+      "eclipticLongitudeRad": 1.4309580627744725
     },
     "jupiter": {
       "planet": "jupiter",
@@ -176,7 +186,8 @@
       "zHeightKm": -6415559.759189236,
       "zHeightAU": -0.04288536814842002,
       "latitudeDeg": -0.48363727717742694,
-      "inclinationDeg": 1.2990465228818076
+      "inclinationDeg": 1.2990465228818076,
+      "eclipticLongitudeRad": 1.3786265142639071
     },
     "saturn": {
       "planet": "saturn",
@@ -185,7 +196,8 @@
       "zHeightKm": 47708409.62265145,
       "zHeightAU": 0.3189110205874839,
       "latitudeDeg": 1.95006593534866,
-      "inclinationDeg": 2.505326300603335
+      "inclinationDeg": 2.505326300603335,
+      "eclipticLongitudeRad": 2.8661766287105026
     },
     "uranus": {
       "planet": "uranus",
@@ -194,7 +206,8 @@
       "zHeightKm": 36496041.71568574,
       "zHeightAU": 0.2439609704664449,
       "latitudeDeg": 0.7608524112996666,
-      "inclinationDeg": 0.7747916680126253
+      "inclinationDeg": 0.7747916680126253,
+      "eclipticLongitudeRad": 2.6742410588996055
     },
     "earth": {
       "planet": "earth",
@@ -203,7 +216,8 @@
       "zHeightKm": -30510.850005525346,
       "zHeightAU": -0.0002039524350363989,
       "latitudeDeg": -0.011807545012931976,
-      "inclinationDeg": -0.02891603428453143
+      "inclinationDeg": -0.02891603428453143,
+      "eclipticLongitudeRad": 2.720958961891389
     }
   },
   "_meta": {
