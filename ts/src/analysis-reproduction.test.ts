@@ -15,6 +15,8 @@
 
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 import { analyzeEpisode1 } from "./ep01-analysis.ts";
 import { analyzeEpisode2 } from "./ep02-analysis.ts";
 import { analyzeEpisode3 } from "./ep03-analysis.ts";
@@ -1536,5 +1538,114 @@ describe("Cross-episode: full route consistency", () => {
       expectedAccel,
       "EP05 48kt accel from EP04 damaged thrust",
     );
+  });
+});
+
+// ============================================================
+// Cross-integrator validation (integrator_comparison.json)
+// Pins RK4 vs RK45 vs Störmer-Verlet agreement from Rust tests
+// ============================================================
+
+const calcDir = path.join(import.meta.dirname, "..", "..", "reports", "data", "calculations");
+const intComp = JSON.parse(fs.readFileSync(path.join(calcDir, "integrator_comparison.json"), "utf-8"));
+const comparisons: Array<Record<string, unknown>> = intComp.comparisons;
+
+describe("Integrator comparison: EP01 brachistochrone", () => {
+  const ep1Brach = comparisons.find(
+    (c) => c.episode === 1 && (c.transfer as string).includes("72h"),
+  )!;
+  const ep1Flip = comparisons.find(
+    (c) => c.episode === 1 && (c.transfer as string).includes("flip"),
+  )!;
+
+  it("position diff = 0.015% (1.54e-4 relative)", () => {
+    assertClose(ep1Brach.position_diff_relative as number, 1.54e-4, "ep01 posDiffRel", 0.01);
+    assertClose(ep1Brach.position_diff_km as number, 84962, "ep01 posDiffKm");
+  });
+
+  it("speed diff at flip = 0.656 km/s (1.53e-4 relative)", () => {
+    assertClose(ep1Flip.speed_diff_km_s as number, 0.656, "ep01 speedDiffFlip");
+    assertClose(ep1Flip.speed_diff_relative as number, 1.53e-4, "ep01 speedDiffRel", 0.01);
+    assertClose(ep1Flip.rk4_speed_at_flip_km_s as number, 4272.1, "rk4FlipSpeed", 1e-4);
+    assertClose(ep1Flip.rk45_speed_at_flip_km_s as number, 4272.7, "rk45FlipSpeed", 1e-4);
+  });
+});
+
+describe("Integrator comparison: EP02 trim-thrust", () => {
+  const ep2RK = comparisons.find(
+    (c) => c.episode === 2 && (c.transfer as string).includes("Trim-thrust"),
+  )!;
+  const ep2SV = comparisons.find(
+    (c) => c.episode === 2 && (c.transfer as string).includes("Störmer-Verlet"),
+  )!;
+
+  it("RK4/RK45 machine precision agreement (3.01e-15)", () => {
+    assertClose(ep2RK.position_diff_relative as number, 3.01e-15, "ep02 machinePrec", 0.01);
+    assert.equal(ep2RK.speed_diff_km_s, 0.0);
+  });
+
+  it("Störmer-Verlet energy drift = 2.53e-9 (bounded)", () => {
+    assertClose(ep2SV.symplectic_energy_drift as number, 2.53e-9, "svEnergyDrift", 0.01);
+    assertClose(ep2SV.position_diff_relative as number, 3.52e-10, "svPosDiff", 0.01);
+  });
+
+  it("all integrators agree on Saturn final distance", () => {
+    const ep2All = comparisons.find(
+      (c) => c.episode === 2 && (c.transfer as string).includes("All integrators"),
+    )!;
+    assert.equal(ep2All.rk4_final_r_km, ep2All.rk45_final_r_km);
+    assert.equal(ep2All.rk4_final_r_km, ep2All.sv_final_r_km);
+    assertClose(ep2All.saturn_orbit_ratio as number, 0.877, "saturnOrbitRatio");
+  });
+});
+
+describe("Integrator comparison: EP03 brachistochrone", () => {
+  const ep3Brach = comparisons.find(
+    (c) => c.episode === 3 && (c.transfer as string).includes("Brachistochrone"),
+  )!;
+
+  it("position diff = 0.008% (7.76e-5 relative)", () => {
+    assertClose(ep3Brach.position_diff_relative as number, 7.76e-5, "ep03 posDiffRel", 0.01);
+    assertClose(ep3Brach.position_diff_km as number, 111616, "ep03 posDiffKm");
+    assertClose(ep3Brach.speed_diff_km_s as number, 0.433, "ep03 speedDiff");
+  });
+});
+
+describe("Integrator comparison: EP05 deceleration", () => {
+  const ep5Decel = comparisons.find(
+    (c) => c.episode === 5 && (c.transfer as string).includes("Main deceleration"),
+  )!;
+
+  it("main decel: position diff = 0.007% (6.68e-5 relative)", () => {
+    assertClose(ep5Decel.position_diff_relative as number, 6.68e-5, "ep05 posDiffRel", 0.01);
+    assertClose(ep5Decel.position_diff_km as number, 12625, "ep05 posDiffKm");
+    assertClose(ep5Decel.speed_diff_km_s as number, 0.202, "ep05 speedDiff");
+  });
+
+  it("RK45 cost ratio = 0.07 (15× cheaper)", () => {
+    const cost = intComp.computationCost.ep01_brachistochrone_72h;
+    assertClose(cost.costRatio, 0.07, "rk45CostRatio");
+    assertClose(cost.rk4_evals, 17280, "rk4Evals");
+    assertClose(cost.rk45_evals, 1134, "rk45Evals");
+    assert.ok(
+      cost.rk4_evals / cost.rk45_evals > 10,
+      `RK4/RK45 eval ratio ${cost.rk4_evals / cost.rk45_evals} should be >10`,
+    );
+  });
+});
+
+describe("Integrator comparison: cross-episode consistency", () => {
+  it("all episode position diffs < 0.02% relative", () => {
+    const brachComps = comparisons.filter(
+      (c) => typeof c.position_diff_relative === "number" && (c.position_diff_relative as number) > 0,
+    );
+    assert.ok(brachComps.length >= 3, `expected ≥3 comparisons with position_diff, got ${brachComps.length}`);
+    for (const comp of brachComps) {
+      const relDiff = comp.position_diff_relative as number;
+      assert.ok(
+        relDiff < 2e-4,
+        `${comp.transfer}: position diff ${relDiff} exceeds 0.02% threshold`,
+      );
+    }
   });
 });
