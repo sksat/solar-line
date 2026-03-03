@@ -1035,4 +1035,53 @@ mod tests {
             assert_eq!(NodeStatus::parse(s.as_str()), Some(*s));
         }
     }
+
+    #[test]
+    fn test_find_paths_complex_multiple() {
+        // In complex DAG: src0(0)→a0(3)→r0(6) and src0(0)→a1(4)→r0(6)
+        let dag = make_complex_dag();
+        let mut paths = dag.find_paths(0, 6, 10);
+        paths.sort_by_key(|p| p.len());
+        assert_eq!(paths.len(), 2, "two paths from src0 to r0");
+        assert_eq!(paths[0].len(), 3, "shortest path has 3 nodes");
+        // Both paths should start at 0 and end at 6
+        for p in &paths {
+            assert_eq!(*p.first().unwrap(), 0);
+            assert_eq!(*p.last().unwrap(), 6);
+        }
+    }
+
+    #[test]
+    fn test_impact_complex_data_source() {
+        // Changing src0 affects a0, a1, r0, r1 (4 downstream nodes)
+        // Changing src1 affects only a1, r0, r1 (3 downstream)
+        let dag = make_complex_dag();
+        let impact0 = dag.impact_analysis(0);
+        assert_eq!(impact0.source, 0);
+        assert_eq!(impact0.cascade_count, 4, "src0 affects 4 nodes: a0, a1, r0, r1");
+
+        let impact1 = dag.impact_analysis(1);
+        assert_eq!(impact1.cascade_count, 3, "src1 affects 3 nodes: a1, r0, r1");
+
+        // param0(2) affects only a2, r1
+        let impact2 = dag.impact_analysis(2);
+        assert_eq!(impact2.cascade_count, 2, "param0 affects 2 nodes: a2, r1");
+    }
+
+    #[test]
+    fn test_layout_complex_layered() {
+        // Complex DAG should produce a valid layout with layers matching node types
+        let dag = make_complex_dag();
+        let layout = dag.layout(800.0, 600.0);
+        assert_eq!(layout.len(), 8, "all 8 nodes should have positions");
+        // Data sources (0, 1) and param (2) should be in earlier layers (lower x)
+        // Reports (6, 7) should be in later layers (higher x)
+        let x_src0 = layout[0].0;
+        let x_r0 = layout[6].0;
+        assert!(
+            x_src0 < x_r0,
+            "data source should be left of report: x_src={}, x_report={}",
+            x_src0, x_r0
+        );
+    }
 }

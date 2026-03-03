@@ -985,6 +985,13 @@ test.describe("Summary: attitude-control page", () => {
     const chart = page.locator('svg[aria-label*="フリップ時間"]');
     await expect(chart).toBeVisible();
   });
+
+  test("has cross-reference links to episode reports", async ({ page }) => {
+    await page.goto("/summary/attitude-control.html");
+    // attitude-control should link back to episode reports where attitude events are analyzed
+    const epLinks = page.locator('a[href*="ep-00"]');
+    expect(await epLinks.count()).toBeGreaterThanOrEqual(1);
+  });
 });
 
 // --- Ship-kestrel page tests (Task 237) ---
