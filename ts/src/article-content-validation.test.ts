@@ -1735,6 +1735,30 @@ describe("EP05 article content validation", () => {
       "EP05 should cite navigation improvement factor ~290万 vs EP03",
     );
   });
+
+  it("Oberth 3% burn saving ~99 minutes exceeds nozzle margin", () => {
+    const saving = analysis.oberthEffect.threePercentBurnSavingMinutes;
+    assert.ok(Math.abs(saving - 99.36) < 1,
+      `Oberth 3% saving should be ~99 min, got ${saving}`);
+    assert.equal(analysis.oberthEffect.burnSavingExceedsMargin, true,
+      "burn saving should exceed nozzle margin");
+  });
+
+  it("nozzle sensitivity: 3% increase destroys nozzle", () => {
+    const scenarios = analysis.nozzleLifespan.sensitivityScenarios;
+    // 3% increase scenario should have negative margin (nozzle destroyed)
+    const threePercent = scenarios.find(
+      (s: { label: string }) => s.label.includes("3%増加"),
+    );
+    assert.ok(threePercent, "should have 3% increase scenario");
+    assert.ok(threePercent.marginSec < 0,
+      `3% increase margin ${threePercent.marginSec}s should be negative (nozzle destroyed)`);
+  });
+
+  it("Oberth interpretation is mission-level-composite", () => {
+    assert.equal(analysis.oberthEffect.interpretation, "mission-level-composite",
+      "Oberth effect applies at mission level, not individual burns");
+  });
 });
 
 // ============================================================
