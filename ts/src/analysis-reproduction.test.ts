@@ -458,6 +458,63 @@ describe("EP03 reproduction: mass feasibility", () => {
   });
 });
 
+describe("EP03 reproduction: Saturn departure", () => {
+  const r = analyzeEpisode3();
+  const sd = r.saturnDeparture;
+
+  it("Saturn escape velocity = 17.853 km/s", () => {
+    assertClose(sd.vEscSaturnKms, 17.852810964650672, "vEscSaturn");
+  });
+
+  it("Enceladus circular velocity = 12.624 km/s", () => {
+    assertClose(sd.vCircEnceladusKms, 12.62384369634604, "vCircEnceladus");
+  });
+
+  it("escape ΔV from Enceladus orbit = 5.229 km/s", () => {
+    assertClose(sd.dvEscapeFromEnceladusKms, 5.228967268304633, "dvEscape");
+  });
+});
+
+describe("EP03 reproduction: cruise velocity analysis", () => {
+  const r = analyzeEpisode3();
+  const cv = r.cruiseVelocity;
+
+  it("brachistochrone peak = 5582.4 km/s, average = 2791.2 km/s", () => {
+    assertClose(cv.brachistochrone.peakVelocityKms, 5582.441030415891, "peakV");
+    assertClose(cv.brachistochrone.averageVelocityKms, 2791.2205152079455, "avgV");
+  });
+
+  it("brachistochrone ΔV = 11164.9 km/s (consistent with earlier test)", () => {
+    assertClose(cv.brachistochrone.deltaVKms, 11164.882060831782, "deltaV");
+  });
+
+  it("heliocentric: solar escape at 14 AU = 10.98 km/s", () => {
+    assertClose(cv.heliocentric.solarVEscAt14AUKms, 10.978783068791758, "solarVEsc");
+  });
+
+  it("heliocentric: Saturn orbital = 9.62 km/s, Uranus orbital = 6.80 km/s", () => {
+    assertClose(cv.heliocentric.saturnOrbitalVKms, 9.62171356727013, "saturnOrbitV");
+    assertClose(cv.heliocentric.uranusOrbitalVKms, 6.797180803702068, "uranusOrbitV");
+  });
+});
+
+describe("EP03 reproduction: navigation confidence", () => {
+  const r = analyzeEpisode3();
+  const nc = r.navCrisis;
+
+  it("stellar nav confidence = 0.923", () => {
+    assertClose(nc.stellarNavConfidence, 0.923, "stellarNavConfidence");
+  });
+
+  it("inertial nav confidence = 0.917", () => {
+    assertClose(nc.inertialNavConfidence, 0.917, "inertialNavConfidence");
+  });
+
+  it("error margin = 18 km", () => {
+    assert.strictEqual(nc.errorMarginKm, 18);
+  });
+});
+
 // ============================================================
 // EP04: Titania → Earth departure
 // ============================================================
