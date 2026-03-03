@@ -1835,6 +1835,7 @@ const REFERENCE_POINT_IDS = new Set([
   "perijove", "perijove-point", "approach-point", "escape-point",
   "approach-25ru", "nav-crisis", "rings-inner", "rings-outer",
   "uranus-surface", "leo", "geo", "earth-soi",
+  "magnetopause", "plasmoid-zone", "departure-point", "exit-point",
 ]);
 
 describe("report data: animated diagram meanMotion consistency", () => {

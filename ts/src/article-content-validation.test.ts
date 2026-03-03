@@ -897,6 +897,36 @@ describe("EP02 article content validation", () => {
     assert.ok(angle > 75 && angle < 90,
       `angle ${angle}° should be between 75° and 90° (nearly tangential)`);
   });
+
+  // --- Task 601: IF counterfactual orbital diagram ---
+
+  it("has IF orbital diagram comparing Saturn moon capture orbits", () => {
+    assert.ok(
+      content.includes("ep02-diagram-04"),
+      "EP02 should have IF comparison diagram ep02-diagram-04",
+    );
+    assert.ok(
+      content.includes('"scenarios"') && content.includes('"enceladus"'),
+      "IF diagram should have enceladus scenario",
+    );
+    // Must show at least 2 capture alternatives (canonical + IF)
+    assert.ok(
+      content.includes('"titan"') || content.includes('"rhea"'),
+      "IF diagram should have at least one alternative moon scenario",
+    );
+  });
+
+  it("IF diagram has scenario toggles for Saturn moon comparison", () => {
+    // The diagram should use DiagramScenario with scenarioId on transfers
+    const diagramSection = content.slice(
+      content.indexOf("ep02-diagram-04"),
+      content.indexOf("ep02-diagram-04") + 3000,
+    );
+    assert.ok(
+      diagramSection.includes("scenarioId"),
+      "IF diagram transfers should have scenarioId for scenario toggle",
+    );
+  });
 });
 
 describe("EP03 article content validation", () => {
@@ -1181,6 +1211,39 @@ describe("EP03 article content validation", () => {
       "report should cite the error distance in km or 万km",
     );
   });
+
+  // --- Task 601: IF counterfactual orbital diagram ---
+
+  it("has IF orbital diagram comparing Uranus moon destinations", () => {
+    assert.ok(
+      content.includes("ep03-diagram-03"),
+      "EP03 should have IF comparison diagram ep03-diagram-03",
+    );
+    assert.ok(
+      content.includes('"titania"') && content.includes('"scenarios"'),
+      "IF diagram should have titania scenario",
+    );
+    assert.ok(
+      content.includes('"miranda"') || content.includes('"oberon"'),
+      "IF diagram should have at least one alternative moon scenario",
+    );
+  });
+
+  it("IF diagram shows Uranus moon orbital radii", () => {
+    const diagramSection = content.slice(
+      content.indexOf("ep03-diagram-03"),
+      content.indexOf("ep03-diagram-03") + 3000,
+    );
+    assert.ok(
+      diagramSection.includes("scenarioId"),
+      "IF diagram transfers should have scenarioId for scenario toggle",
+    );
+    // Should include Miranda (innermost) and Oberon (outermost) for scale
+    assert.ok(
+      diagramSection.includes("ミランダ") || diagramSection.includes("miranda"),
+      "IF diagram should show Miranda for innermost reference",
+    );
+  });
 });
 
 describe("EP04 article content validation", () => {
@@ -1446,6 +1509,38 @@ describe("EP04 article content validation", () => {
     );
     assert.ok(closest, "should have closest brachistochrone scenario");
     assertContainsApproxValue(content, closest!.timeDays, "EP04 closest transit days");
+  });
+
+  // --- Task 601: IF counterfactual orbital diagram ---
+
+  it("has IF orbital diagram comparing plasmoid response options", () => {
+    assert.ok(
+      content.includes("ep04-diagram-03"),
+      "EP04 should have IF comparison diagram ep04-diagram-03",
+    );
+    assert.ok(
+      content.includes('"scenarios"') && content.includes('"shield"'),
+      "IF diagram should have shield-breakthrough scenario",
+    );
+    assert.ok(
+      content.includes('"avoidance"') || content.includes('"engine"'),
+      "IF diagram should have engine-avoidance scenario",
+    );
+  });
+
+  it("IF diagram has scenarioId on transfers", () => {
+    const diagramSection = content.slice(
+      content.indexOf("ep04-diagram-03"),
+      content.indexOf("ep04-diagram-03") + 3000,
+    );
+    assert.ok(
+      diagramSection.includes("scenarioId"),
+      "IF diagram transfers should have scenarioId for scenario toggle",
+    );
+    assert.ok(
+      diagramSection.includes("プラズモイド") || diagramSection.includes("plasmoid"),
+      "IF diagram should reference plasmoid",
+    );
   });
 });
 

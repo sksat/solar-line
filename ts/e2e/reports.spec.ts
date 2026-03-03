@@ -1740,7 +1740,7 @@ test.describe("Inline 3D viewer in cross-episode report", () => {
     const caption = page.locator(".viewer3d-figure figcaption");
     await expect(caption).toBeAttached();
     const capText = await caption.textContent();
-    expect(capText).toContain("3Dインタラクティブビューア");
+    expect(capText).toContain("3次元");
     expect(capText).toContain("アニメーション再生");
   });
 
