@@ -8,6 +8,9 @@ import {
   meanMotionPerDay,
   planetPositionAtTime,
   formatDaysJa,
+  prepareFullRouteScene,
+  prepareSaturnScene,
+  prepareUranusScene,
 } from "./orbital-3d-viewer-data.ts";
 import type { TimelineOrbit } from "./orbital-3d-viewer-data.ts";
 
@@ -131,5 +134,105 @@ describe("formatDaysJa", () => {
   it("formats very small fractions as hours", () => {
     // 0.0417 days ≈ 1 hour
     assert.equal(formatDaysJa(1 / 24), "1時間");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// prepareFullRouteScene
+// ---------------------------------------------------------------------------
+
+describe("prepareFullRouteScene", () => {
+  const minimalInput = {
+    transfers: [
+      {
+        leg: "EP01 Mars→Jupiter",
+        episode: 1,
+        departure: { planet: "mars", jd: 2460000, zHeightAU: 0.01, latitudeDeg: 1.0 },
+        arrival: { planet: "jupiter", jd: 2460003, zHeightAU: 0.02, latitudeDeg: 1.5 },
+      },
+    ],
+    planetaryZHeightsAtEpoch: {
+      mars: { planet: "mars", zHeightAU: 0.01, latitudeDeg: 1.0 },
+      jupiter: { planet: "jupiter", zHeightAU: 0.02, latitudeDeg: 1.5 },
+      saturn: { planet: "saturn", zHeightAU: 0.03, latitudeDeg: 2.0 },
+      uranus: { planet: "uranus", zHeightAU: 0.04, latitudeDeg: 0.5 },
+      earth: { planet: "earth", zHeightAU: 0.0, latitudeDeg: 0.0 },
+    },
+  };
+
+  it("returns scene with type full-route", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    assert.equal(scene.type, "full-route");
+  });
+
+  it("includes all 5 planets", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    assert.equal(scene.planets.length, 5);
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("mars"));
+    assert.ok(names.includes("earth"));
+  });
+
+  it("includes transfer arcs matching input", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    assert.equal(scene.transferArcs.length, 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// prepareSaturnScene
+// ---------------------------------------------------------------------------
+
+describe("prepareSaturnScene", () => {
+  const saturnInput = {
+    saturnRingAnalysis: {
+      ringPlaneNormal: [0, 0.45, 0.89] as [number, number, number],
+      ringInnerKm: 66_900,
+      ringOuterKm: 140_180,
+      enceladusOrbitKm: 238_020,
+      approachFromJupiter: { approachAngleToDeg: 25 },
+    },
+  };
+
+  it("returns scene with type saturn-ring", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    assert.equal(scene.type, "saturn-ring");
+  });
+
+  it("includes Saturn as primary body", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    assert.ok(scene.planets.some(p => p.name === "saturn"));
+  });
+
+  it("includes ring data", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    assert.ok(scene.rings && scene.rings.length > 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// prepareUranusScene
+// ---------------------------------------------------------------------------
+
+describe("prepareUranusScene", () => {
+  const uranusInput = {
+    uranusApproachAnalysis: {
+      spinAxis: [0.97, 0, 0.24] as [number, number, number],
+      obliquityDeg: 97.77,
+      titaniaOrbitKm: 436_300,
+      ringOuterKm: 51_149,
+      approachFromSaturn: { angleToDeg: 25.3 },
+      approachFromUranus: { angleToDeg: 14.3 },
+    },
+  };
+
+  it("returns scene with type uranus-approach", () => {
+    const scene = prepareUranusScene(uranusInput);
+    assert.equal(scene.type, "uranus-approach");
+  });
+
+  it("includes Uranus as primary body", () => {
+    const scene = prepareUranusScene(uranusInput);
+    assert.ok(scene.planets.some(p => p.name === "uranus"));
   });
 });
