@@ -682,6 +682,61 @@ mod tests {
         );
     }
 
+    #[test]
+    fn test_dose_rate_continuity_at_30rj_boundary() {
+        // Check approximate continuity at the 30 RJ boundary (middle → outer)
+        let config = JupiterRadiationConfig::default_model();
+
+        // Rate just inside 30 RJ (middle region)
+        let rate_just_below = config.dose_rate_krad_h(29.999);
+        // Rate at exactly 30 RJ (outer region)
+        let rate_at_30 = config.dose_rate_krad_h(30.0);
+
+        // The outer region's d0 is calibrated to the middle region's endpoint,
+        // so these should be nearly identical
+        let ratio = rate_just_below / rate_at_30;
+        assert!(
+            ratio > 0.5 && ratio < 2.0,
+            "30 RJ boundary: below={rate_just_below:.8} vs at={rate_at_30:.8} (ratio={ratio:.3})"
+        );
+    }
+
+    #[test]
+    fn test_shield_life_increases_outward() {
+        // For outward transit, arrival is farther from Jupiter where dose rate is lower.
+        // So shield_life_at_arrival_h should be > shield_life_at_departure_h
+        // (more hours remain because the dose rate dropped AND budget was consumed slowly)
+        let config = JupiterRadiationConfig::default_model();
+        let departure_rate = config.dose_rate_krad_h(15.0);
+        let large_budget = departure_rate * 10.0; // 10 hours budget — plenty
+
+        let result = config.transit_analysis(15.0, 50.0, 60.0, large_budget);
+
+        // With a large budget and fast transit, shield life at arrival should increase
+        // because the dose rate at 50 RJ is much lower than at 15 RJ
+        assert!(
+            result.shield_life_at_arrival_h > result.shield_life_at_departure_h,
+            "Shield life should increase outward: arrival={:.2}h > departure={:.2}h",
+            result.shield_life_at_arrival_h, result.shield_life_at_departure_h,
+        );
+    }
+
+    #[test]
+    fn test_dose_inversely_proportional_to_velocity() {
+        // For a constant radial path, dose ∝ transit_time ∝ 1/velocity
+        // So halving the velocity should approximately double the dose
+        let config = JupiterRadiationConfig::default_model();
+        let result_10 = config.transit_analysis(15.0, 50.0, 10.0, 100.0);
+        let result_20 = config.transit_analysis(15.0, 50.0, 20.0, 100.0);
+
+        // dose at v=10 should be ~2x dose at v=20
+        let ratio = result_10.total_dose_krad / result_20.total_dose_krad;
+        assert!(
+            (ratio - 2.0).abs() < 0.1,
+            "Dose ratio (v=10/v=20) = {ratio:.3} (expected ~2.0)"
+        );
+    }
+
     /// Print full analysis report (run with --nocapture to see output).
     /// This test always passes — it's used to generate report data.
     #[test]

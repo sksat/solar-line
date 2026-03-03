@@ -225,6 +225,14 @@ describe("WASM bridge: mean_motion", () => {
       `n=${n}, expected~=${expected}`,
     );
   });
+
+  it("inner planet has faster mean motion than outer", () => {
+    const nVenus = wasm.mean_motion(MU.SUN, 108_208_000);
+    const nEarth = wasm.mean_motion(MU.SUN, 149_597_870.7);
+    const nMars = wasm.mean_motion(MU.SUN, 227_939_200);
+    assert.ok(nVenus > nEarth, `Venus n=${nVenus} should exceed Earth n=${nEarth}`);
+    assert.ok(nEarth > nMars, `Earth n=${nEarth} should exceed Mars n=${nMars}`);
+  });
 });
 
 describe("WASM bridge: brachistochrone_accel", () => {
@@ -348,6 +356,15 @@ describe("WASM bridge: exhaust_velocity", () => {
     assert.ok(
       Math.abs(ve - 9806.65) < 0.01,
       `ve=${ve}, expected ~9806.65`,
+    );
+  });
+
+  it("chemical rocket: Isp 450s → ~4.41 km/s", () => {
+    const ve = wasm.exhaust_velocity(450);
+    // 450 s * 9.80665 m/s² = 4412.99 m/s = 4.413 km/s
+    assert.ok(
+      Math.abs(ve - 4.413) < 0.01,
+      `chemical ve=${ve}, expected ~4.413 km/s`,
     );
   });
 });
