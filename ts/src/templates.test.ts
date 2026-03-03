@@ -6391,3 +6391,55 @@ describe("renderEpisode with viewer3d", () => {
     assert.ok(!html.includes("importmap"));
   });
 });
+
+// --- Inline 3D viewer __prepareScene sync tests (Task 581) ---
+
+describe("inline 3D viewer __prepareScene constants sync", () => {
+  // Generate HTML with a viewer3d to get the inline script
+  const reportWithViewer: SummaryReport = {
+    slug: "test-viewer3d-sync",
+    title: "同期テスト",
+    summary: "テスト",
+    sections: [{
+      heading: "3D解析",
+      markdown: "テスト",
+      viewer3d: { scene: "full-route" },
+    }],
+  };
+  const html = renderSummaryPage(reportWithViewer);
+
+  it("inline script includes from/to in saturn-ring timeline transfers", () => {
+    // The inline __prepareScene function handles all scenes in one script
+    assert.ok(
+      html.includes('from:"jupiter",to:"saturn"'),
+      "Saturn scene timeline transfer should include from/to planet names",
+    );
+  });
+
+  it("inline script includes from/to in uranus-approach timeline transfers", () => {
+    assert.ok(
+      html.includes('from:"saturn",to:"uranus"'),
+      "Uranus scene timeline transfer should include from/to planet names",
+    );
+  });
+
+  it("inline script includes from/to in full-route timeline transfers", () => {
+    // Full-route builds from data: from:t.departure.planet,to:t.arrival.planet
+    assert.ok(
+      html.includes("from:t.departure.planet,to:t.arrival.planet"),
+      "Full-route timeline transfer builder should include from/to from data",
+    );
+  });
+
+  it("inline script uses matching orbital period constants", () => {
+    // Enceladus period should be 1.370218 days (matches MOON_PERIODS_DAYS)
+    assert.ok(html.includes("1.370218"), "Enceladus orbital period constant");
+    // Titania period should be 8.705872 days
+    assert.ok(html.includes("8.705872"), "Titania orbital period constant");
+  });
+
+  it("inline script uses matching AU_TO_SCENE constant", () => {
+    // AU = 5 in inline matches AU_TO_SCENE=5 in data module
+    assert.ok(html.includes("var AU = 5"), "AU_TO_SCENE constant should be 5");
+  });
+});

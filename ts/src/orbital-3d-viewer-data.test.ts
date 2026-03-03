@@ -640,6 +640,34 @@ describe("orbit circle z-heights match planet z-heights", () => {
     assert.strictEqual(transfers[0].to, "jupiter");
   });
 
+  it("planetLongitudesAtMissionStart takes precedence over eclipticLongitudeRad", () => {
+    const inputWithBoth = {
+      ...input,
+      planetaryZHeightsAtEpoch: {
+        mars: { planet: "mars", zHeightAU: 0.027, latitudeDeg: 1.0, eclipticLongitudeRad: 1.0 },
+        jupiter: { planet: "jupiter", zHeightAU: -0.043, latitudeDeg: -0.5, eclipticLongitudeRad: 2.0 },
+        saturn: { planet: "saturn", zHeightAU: 0.319, latitudeDeg: 2.0, eclipticLongitudeRad: 3.0 },
+        uranus: { planet: "uranus", zHeightAU: 0.244, latitudeDeg: 0.7, eclipticLongitudeRad: 4.0 },
+        earth: { planet: "earth", zHeightAU: 0.0, latitudeDeg: 0.0, eclipticLongitudeRad: 5.0 },
+      },
+      planetLongitudesAtMissionStart: {
+        mars: 0.5, jupiter: 1.5, saturn: 2.5, uranus: 3.5, earth: 4.5,
+      },
+    };
+    const scene = prepareFullRouteScene(inputWithBoth);
+    // Mars planet should be at mission-start angle 0.5, not eclipticLongitudeRad 1.0
+    const mars = scene.planets.find(p => p.name === "mars")!;
+    const marsAngle = Math.atan2(mars.y, mars.x);
+    let diff = Math.abs(marsAngle - 0.5);
+    if (diff > Math.PI) diff = 2 * Math.PI - diff;
+    assert.ok(diff < 0.01, `Mars angle ${marsAngle.toFixed(3)} should be ~0.5 (missionStart), not ~1.0 (eclipticLon)`);
+    // Orbit initialAngle should also be from mission-start
+    const marsOrbit = scene.timeline!.orbits.find(o => o.name === "mars")!;
+    let orbitDiff = Math.abs(marsOrbit.initialAngle - 0.5);
+    if (orbitDiff > Math.PI) orbitDiff = 2 * Math.PI - orbitDiff;
+    assert.ok(orbitDiff < 0.01, `Mars orbit initialAngle ${marsOrbit.initialAngle.toFixed(3)} should be ~0.5`);
+  });
+
   it("transfer arc endpoints are at different ecliptic-plane angles for curved arc rendering", () => {
     const scene = prepareFullRouteScene(input);
     for (const arc of scene.transferArcs) {
