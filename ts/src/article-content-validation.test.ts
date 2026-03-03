@@ -2077,6 +2077,98 @@ describe("cross-report value consistency", () => {
     assert.strictEqual(uranusToEarth, null,
       "EP5 should NOT have a single Uranus→Earth transfer — must route through Jupiter");
   });
+
+  // --- Task 534: Cross-report value consistency for values appearing in 3+ reports ---
+
+  const ep04 = readReport("ep04.md", "episodes");
+  const ep05 = readReport("ep05.md", "episodes");
+  const scienceAccuracy = readReport("science-accuracy.md");
+  const attitudeControl = readReport("attitude-control.md");
+  const communications = readReport("communications.md");
+
+  it("nozzle margin 26 min (0.78%) cited consistently across all relevant reports", () => {
+    // All 5 reports cite the 26-minute margin
+    for (const [name, content] of [
+      ["ship-kestrel", shipKestrel],
+      ["cross-episode", crossEpisode],
+      ["ep05", ep05],
+      ["science-accuracy", scienceAccuracy],
+      ["attitude-control", attitudeControl],
+    ] as const) {
+      assert.ok(
+        content.includes("26分") || content.includes("26 min"),
+        `${name} should cite nozzle margin 26 min`,
+      );
+    }
+    // Percentage 0.78% is cited in reports with detailed margin analysis
+    for (const [name, content] of [
+      ["ship-kestrel", shipKestrel],
+      ["cross-episode", crossEpisode],
+      ["ep05", ep05],
+      ["attitude-control", attitudeControl],
+    ] as const) {
+      assert.ok(
+        content.includes("0.78"),
+        `${name} should cite 0.78% nozzle margin`,
+      );
+    }
+  });
+
+  it("total route distance ~35.9 AU cited consistently across reports", () => {
+    for (const [name, content] of [
+      ["ship-kestrel", shipKestrel],
+      ["cross-episode", crossEpisode],
+      ["ep05", ep05],
+      ["science-accuracy", scienceAccuracy],
+    ] as const) {
+      assert.ok(
+        content.includes("35.9") || content.includes("35.88"),
+        `${name} should cite ~35.9 AU total route distance`,
+      );
+    }
+  });
+
+  it("mission duration ~124 days cited consistently across reports", () => {
+    for (const [name, content] of [
+      ["cross-episode", crossEpisode],
+      ["ep05", ep05],
+      ["communications", communications],
+    ] as const) {
+      assert.ok(
+        content.includes("124日") || content.includes("124 day"),
+        `${name} should cite ~124-day mission duration`,
+      );
+    }
+  });
+
+  it("plasmoid radiation dose 480 mSv cited consistently across reports", () => {
+    for (const [name, content] of [
+      ["ep04", ep04],
+      ["ship-kestrel", shipKestrel],
+      ["cross-episode", crossEpisode],
+      ["science-accuracy", scienceAccuracy],
+      ["communications", communications],
+    ] as const) {
+      assert.ok(
+        content.includes("480 mSv") || content.includes("480mSv"),
+        `${name} should cite 480 mSv plasmoid radiation dose`,
+      );
+    }
+  });
+
+  it("EP02 trim-thrust ~87 days cited consistently across reports", () => {
+    for (const [name, content] of [
+      ["ship-kestrel", shipKestrel],
+      ["cross-episode", crossEpisode],
+      ["science-accuracy", scienceAccuracy],
+      ["communications", communications],
+    ] as const) {
+      assert.ok(
+        content.includes("87日") || content.includes("87 day") || content.includes("87d"),
+        `${name} should cite ~87-day EP02 trim-thrust transit`,
+      );
+    }
+  });
 });
 
 // ============================================================
