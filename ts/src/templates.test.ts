@@ -6261,3 +6261,68 @@ describe("renderCalculatorPage", () => {
     assert.equal(data["5"].defaults.thrustMN, 6.37);
   });
 });
+
+// --- renderEpisode viewer3d (Task 562) ---
+
+describe("renderEpisode with viewer3d", () => {
+  const reportWithViewer: EpisodeReport = {
+    ...sampleEpisodeReport,
+    viewer3d: {
+      scene: "saturn-ring",
+      height: 450,
+      caption: "テスト3Dビューア",
+    },
+  };
+
+  it("includes viewer3d container when viewer3d is present", () => {
+    const html = renderEpisode(reportWithViewer);
+    assert.ok(html.includes('class="viewer3d-container"'));
+    assert.ok(html.includes('data-scene="saturn-ring"'));
+  });
+
+  it("includes section heading with correct id", () => {
+    const html = renderEpisode(reportWithViewer);
+    assert.ok(html.includes('id="section-3d-viewer"'));
+    assert.ok(html.includes("3D軌道ビューア"));
+  });
+
+  it("includes Three.js importmap script", () => {
+    const html = renderEpisode(reportWithViewer);
+    assert.ok(html.includes("importmap"));
+    assert.ok(html.includes("three@0.170.0"));
+  });
+
+  it("includes viewer3d caption", () => {
+    const html = renderEpisode(reportWithViewer);
+    assert.ok(html.includes("テスト3Dビューア"));
+  });
+
+  it("includes timeline controls", () => {
+    const html = renderEpisode(reportWithViewer);
+    assert.ok(html.includes('class="viewer3d-play"'));
+    assert.ok(html.includes('class="viewer3d-slider"'));
+    assert.ok(html.includes('class="viewer3d-viewmode"'));
+  });
+
+  it("viewer3d section appears before transfers section", () => {
+    const html = renderEpisode(reportWithViewer);
+    const viewerPos = html.indexOf('id="section-3d-viewer"');
+    const transferPos = html.indexOf('id="section-transfers"');
+    assert.ok(viewerPos > 0, "viewer section should exist");
+    assert.ok(transferPos > 0, "transfer section should exist");
+    assert.ok(viewerPos < transferPos, "viewer should appear before transfers");
+  });
+
+  it("TOC includes 3D viewer link when viewer3d present", () => {
+    const html = renderEpisode(reportWithViewer);
+    assert.ok(html.includes('href="#section-3d-viewer"'));
+    assert.ok(html.includes("3D軌道ビューア"));
+  });
+
+  it("omits viewer3d when not present", () => {
+    const html = renderEpisode(sampleEpisodeReport);
+    assert.ok(!html.includes('class="viewer3d-container"'));
+    assert.ok(!html.includes('id="section-3d-viewer"'));
+    assert.ok(!html.includes("importmap"));
+  });
+});
