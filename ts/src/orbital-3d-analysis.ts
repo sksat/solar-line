@@ -314,6 +314,15 @@ export function analyze3DOrbital() {
       uranus: analyzeZHeight("uranus", ARRIVAL_URANUS),
       earth: analyzeZHeight("earth", ARRIVAL_EARTH),
     },
+    /** Ecliptic longitudes (radians) for all planets at mission start (DEPARTURE_MARS JD).
+     * Used as initialAngle for 3D viewer animation so all planets start at a common epoch. */
+    planetLongitudesAtMissionStart: {
+      mars: planetPosition("mars", DEPARTURE_MARS).longitude,
+      jupiter: planetPosition("jupiter", DEPARTURE_MARS).longitude,
+      saturn: planetPosition("saturn", DEPARTURE_MARS).longitude,
+      uranus: planetPosition("uranus", DEPARTURE_MARS).longitude,
+      earth: planetPosition("earth", DEPARTURE_MARS).longitude,
+    },
   };
 }
 

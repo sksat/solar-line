@@ -4,6 +4,7 @@
 
 import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import {
   meanMotionPerDay,
   planetPositionAtTime,
@@ -545,6 +546,78 @@ describe("orbit circle z-heights match planet z-heights", () => {
     }
   });
 
+  it("planet animated positions at arrival day match expected arrival longitudes", () => {
+    // Mars at mission start: longitude 1.431 rad
+    // Jupiter arrival is at day 3: Jupiter should be at its own longitude at that JD
+    // The initialAngle should be set from mission-start longitudes,
+    // and meanMotion propagation should bring planets to correct arrival positions.
+    const marsStartLon = 1.431;  // Mars at departure (day 0)
+    const jupStartLon = 1.375;   // Jupiter at mission start (day 0), NOT at arrival
+    const satStartLon = 2.860;   // Saturn at mission start
+    const uranStartLon = 2.670;  // Uranus at mission start
+    const earthStartLon = 2.510; // Earth at mission start
+    const multiTransferInput = {
+      transfers: [
+        {
+          leg: "Mars→Jupiter",
+          episode: 1,
+          departure: { planet: "mars", jd: 2460000, zHeightAU: 0.01, latitudeDeg: 1.0 },
+          arrival: { planet: "jupiter", jd: 2460003, zHeightAU: -0.04, latitudeDeg: -0.5 },
+        },
+        {
+          leg: "Jupiter→Saturn",
+          episode: 2,
+          departure: { planet: "jupiter", jd: 2460006, zHeightAU: -0.04, latitudeDeg: -0.5 },
+          arrival: { planet: "saturn", jd: 2460093, zHeightAU: 0.32, latitudeDeg: 2.0 },
+        },
+      ],
+      planetaryZHeightsAtEpoch: {
+        mars: { planet: "mars", zHeightAU: 0.01, latitudeDeg: 1.0, eclipticLongitudeRad: marsStartLon },
+        jupiter: { planet: "jupiter", zHeightAU: -0.04, latitudeDeg: -0.5, eclipticLongitudeRad: jupStartLon },
+        saturn: { planet: "saturn", zHeightAU: 0.32, latitudeDeg: 2.0, eclipticLongitudeRad: satStartLon },
+        uranus: { planet: "uranus", zHeightAU: 0.24, latitudeDeg: 0.7, eclipticLongitudeRad: uranStartLon },
+        earth: { planet: "earth", zHeightAU: 0.0, latitudeDeg: 0.0, eclipticLongitudeRad: earthStartLon },
+      },
+    };
+    const scene = prepareFullRouteScene(multiTransferInput);
+
+    // At day 0, all planets should be at their mission-start longitudes
+    for (const orbit of scene.timeline!.orbits) {
+      const [x, y] = planetPositionAtTime(orbit, 0);
+      const angle = Math.atan2(y, x);
+      const expectedLon = multiTransferInput.planetaryZHeightsAtEpoch[orbit.name]?.eclipticLongitudeRad ?? 0;
+      let diff = Math.abs(angle - expectedLon);
+      if (diff > Math.PI) diff = 2 * Math.PI - diff;
+      assert.ok(
+        diff < 0.01,
+        `${orbit.name} at day 0: angle=${angle.toFixed(4)} should match mission-start longitude=${expectedLon.toFixed(4)} (diff=${diff.toFixed(4)})`,
+      );
+    }
+
+    // At Jupiter arrival (day 3), Jupiter animated position should be at
+    // jupStartLon + 3 * meanMotion, which is Jupiter's correct arrival position
+    const jupOrbit = scene.timeline!.orbits.find(o => o.name === "jupiter")!;
+    const [jx3, jy3] = planetPositionAtTime(jupOrbit, 3);
+    const jupAngleAtDay3 = Math.atan2(jy3, jx3);
+    const expectedJupDay3 = jupStartLon + 3 * meanMotionPerDay("jupiter");
+    let jupDiff = Math.abs(jupAngleAtDay3 - expectedJupDay3);
+    if (jupDiff > Math.PI) jupDiff = 2 * Math.PI - jupDiff;
+    assert.ok(
+      jupDiff < 0.001,
+      `Jupiter at day 3: angle=${jupAngleAtDay3.toFixed(4)} should be ${expectedJupDay3.toFixed(4)}`,
+    );
+
+    // The arc endpoint (toPos) for EP01 should match Jupiter's animated position at day 3
+    const ep01Arc = scene.transferArcs[0];
+    const arcToAngle = Math.atan2(ep01Arc.toPos[1], ep01Arc.toPos[0]);
+    let arcJupDiff = Math.abs(arcToAngle - jupAngleAtDay3);
+    if (arcJupDiff > Math.PI) arcJupDiff = 2 * Math.PI - arcJupDiff;
+    assert.ok(
+      arcJupDiff < 0.01,
+      `EP01 arc arrival angle=${arcToAngle.toFixed(4)} should match Jupiter animated angle=${jupAngleAtDay3.toFixed(4)}`,
+    );
+  });
+
   it("transfer arc endpoints are at different ecliptic-plane angles for curved arc rendering", () => {
     const scene = prepareFullRouteScene(input);
     for (const arc of scene.transferArcs) {
@@ -566,6 +639,71 @@ describe("orbit circle z-heights match planet z-heights", () => {
       const toR = Math.sqrt(arc.toPos[0] ** 2 + arc.toPos[1] ** 2);
       assert.ok(fromR > 1, `${arc.from} fromPos radius ${fromR.toFixed(2)} should be > 1 scene unit`);
       assert.ok(toR > 1, `${arc.to} toPos radius ${toR.toFixed(2)} should be > 1 scene unit`);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Real data arrival alignment (uses 3d_orbital_analysis.json)
+// ---------------------------------------------------------------------------
+
+describe("arrival alignment with real analysis data", () => {
+  // Load the actual 3D analysis JSON
+  const analysisPath = new URL(
+    "../../reports/data/calculations/3d_orbital_analysis.json",
+    import.meta.url,
+  );
+  const analysis = JSON.parse(readFileSync(analysisPath, "utf-8"));
+
+  it("mission-start longitudes produce correct planet positions at each arrival JD", () => {
+    const scene = prepareFullRouteScene(analysis);
+    const firstJd = analysis.transfers[0].departure.jd;
+
+    for (const transfer of analysis.transfers) {
+      const arrivalPlanet = transfer.arrival.planet;
+      const arrDay = transfer.arrival.jd - firstJd;
+      const orbit = scene.timeline!.orbits.find(o => o.name === arrivalPlanet)!;
+      const [ax, ay] = planetPositionAtTime(orbit, arrDay);
+      const animatedAngle = Math.atan2(ay, ax);
+
+      // The expected angle is the planet's ecliptic longitude at arrival JD
+      const expectedAngle = transfer.arrival.eclipticLongitudeRad;
+
+      // Compare angles (handle wrapping)
+      let diff = Math.abs(animatedAngle - expectedAngle);
+      if (diff > Math.PI) diff = 2 * Math.PI - diff;
+
+      // Allow up to 0.1 rad (~6°) — constant mean motion approximation has inherent error
+      // vs. true ephemeris (due to orbital eccentricity). ~3° for Earth over 124 days.
+      assert.ok(
+        diff < 0.1,
+        `${arrivalPlanet} at day ${arrDay.toFixed(1)}: animated angle=${animatedAngle.toFixed(4)} ` +
+        `vs expected=${expectedAngle.toFixed(4)}, diff=${diff.toFixed(4)} rad (${(diff * 180 / Math.PI).toFixed(1)}°)`,
+      );
+    }
+  });
+
+  it("arc toPos angle matches animated planet position at arrival day", () => {
+    const scene = prepareFullRouteScene(analysis);
+    const firstJd = analysis.transfers[0].departure.jd;
+
+    for (let i = 0; i < scene.transferArcs.length; i++) {
+      const arc = scene.transferArcs[i];
+      const transfer = analysis.transfers[i];
+      const arrDay = transfer.arrival.jd - firstJd;
+      const orbit = scene.timeline!.orbits.find(o => o.name === arc.to)!;
+      const [ax, ay] = planetPositionAtTime(orbit, arrDay);
+      const animatedAngle = Math.atan2(ay, ax);
+      const arcAngle = Math.atan2(arc.toPos[1], arc.toPos[0]);
+
+      // Arc endpoint and animated planet should be at the same angle
+      let diff = Math.abs(arcAngle - animatedAngle);
+      if (diff > Math.PI) diff = 2 * Math.PI - diff;
+      assert.ok(
+        diff < 0.01,
+        `${arc.from}→${arc.to}: arc toPos angle=${arcAngle.toFixed(4)} ` +
+        `vs animated=${animatedAngle.toFixed(4)}, diff=${diff.toFixed(4)} rad`,
+      );
     }
   });
 });

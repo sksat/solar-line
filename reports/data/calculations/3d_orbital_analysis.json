@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-03T15:12:12.497Z",
+  "generatedAt": "2026-03-03T16:20:23.714Z",
   "description": "3D orbital analysis for SOLAR LINE — ecliptic z-heights, ring crossings, approach geometry",
   "coplanarApproximationValid": false,
   "maxPlaneChangeFractionPercent": 1.510119325764719,
@@ -220,8 +220,15 @@
       "eclipticLongitudeRad": 2.720958961891389
     }
   },
+  "planetLongitudesAtMissionStart": {
+    "mars": 1.4309580627744725,
+    "jupiter": 1.3740697831075575,
+    "saturn": 2.809644199949007,
+    "uranus": 2.651653777566043,
+    "earth": 0.5286494355308489
+  },
   "_meta": {
     "reproductionCommand": "npm run recalculate",
-    "durationMs": 0
+    "durationMs": 1
   }
 }

@@ -153,6 +153,9 @@ function zFromAU(zAU) { return zAU * AU_TO_SCENE * 3; }
 const FALLBACK_ANGLES = [Math.PI*0.1, Math.PI*0.35, Math.PI*0.55, Math.PI*0.75, Math.PI*1.85];
 
 function planetAngle(planet, index, data) {
+  // Prefer mission-start longitudes for correct animation timing
+  const ms = data?.planetLongitudesAtMissionStart?.[planet];
+  if (typeof ms === "number") return ms;
   const p = data?.planetaryZHeightsAtEpoch?.[planet];
   return (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : (FALLBACK_ANGLES[index] ?? index * Math.PI * 0.4);
 }

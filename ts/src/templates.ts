@@ -3354,17 +3354,18 @@ window.__prepareScene = function(sceneName, data) {
   var fallbackAngles = [Math.PI*0.1,Math.PI*0.35,Math.PI*0.55,Math.PI*0.75,Math.PI*1.85];
   if (sceneName === "full-route") {
     var order = ["mars","jupiter","saturn","uranus","earth"];
+    var msAngles = data.planetLongitudesAtMissionStart || {};
     var planets = order.map(function(name,i){
       var p = data.planetaryZHeightsAtEpoch[name];
       var r = (OR[name]||5)*AU;
-      var a = (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : fallbackAngles[i];
+      var a = (typeof msAngles[name] === "number") ? msAngles[name] : (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : fallbackAngles[i];
       return {name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:(p?p.zHeightAU:0)*AU*3,color:PC[name],radius:PR[name]||0.15,label:name.charAt(0).toUpperCase()+name.slice(1)};
     });
     var firstJd = data.transfers[0].departure.jd;
     var lastJd = data.transfers[data.transfers.length-1].arrival.jd;
     var orbits = order.map(function(name,i){
       var p = data.planetaryZHeightsAtEpoch[name];
-      var a = (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : fallbackAngles[i];
+      var a = (typeof msAngles[name] === "number") ? msAngles[name] : (p && typeof p.eclipticLongitudeRad === "number") ? p.eclipticLongitudeRad : fallbackAngles[i];
       return {name:name,radiusScene:(OR[name]||5)*AU,initialAngle:a,meanMotionPerDay:2*Math.PI/(OP[name]||365),z:(p?p.zHeightAU:0)*AU*3};
     });
     function posAtDay(orb,day){var a=orb.initialAngle+orb.meanMotionPerDay*day;return [orb.radiusScene*Math.cos(a),orb.radiusScene*Math.sin(a),orb.z]}

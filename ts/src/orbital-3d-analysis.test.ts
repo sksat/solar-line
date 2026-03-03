@@ -261,6 +261,47 @@ describe("3D orbital analysis: planetary z-heights", () => {
   });
 });
 
+describe("3D orbital analysis: planet longitudes at mission start", () => {
+  it("has planetLongitudesAtMissionStart with all 5 planets", () => {
+    assert.ok(data.planetLongitudesAtMissionStart, "has planetLongitudesAtMissionStart");
+    const planets = ["mars", "jupiter", "saturn", "uranus", "earth"];
+    for (const p of planets) {
+      assert.ok(
+        typeof data.planetLongitudesAtMissionStart[p] === "number",
+        `${p} has numeric longitude at mission start`,
+      );
+      assert.ok(
+        data.planetLongitudesAtMissionStart[p] >= 0 && data.planetLongitudesAtMissionStart[p] < 2 * Math.PI,
+        `${p} longitude ${data.planetLongitudesAtMissionStart[p]} in [0, 2π)`,
+      );
+    }
+  });
+
+  it("Mars mission-start longitude matches departure eclipticLongitudeRad", () => {
+    // Mars departure IS the mission start, so these should be identical
+    const marsStart = data.planetLongitudesAtMissionStart.mars;
+    const marsDeparture = data.planetaryZHeightsAtEpoch.mars.eclipticLongitudeRad;
+    assert.ok(
+      Math.abs(marsStart - marsDeparture) < 1e-10,
+      `Mars start=${marsStart} should equal departure=${marsDeparture}`,
+    );
+  });
+
+  it("other planet mission-start longitudes differ from event longitudes", () => {
+    // Earth arrival is ~124 days after mission start, so Earth's longitude
+    // at mission start should differ significantly from its arrival longitude
+    const earthStart = data.planetLongitudesAtMissionStart.earth;
+    const earthArrival = data.planetaryZHeightsAtEpoch.earth.eclipticLongitudeRad;
+    // Earth moves ~0.986°/day → ~122° in 124 days → ~2.13 rad difference
+    let diff = Math.abs(earthStart - earthArrival);
+    if (diff > Math.PI) diff = 2 * Math.PI - diff;
+    assert.ok(
+      diff > 1.0,
+      `Earth start=${earthStart.toFixed(3)} should differ significantly from arrival=${earthArrival.toFixed(3)} (diff=${diff.toFixed(3)} rad)`,
+    );
+  });
+});
+
 describe("3D orbital analysis: coplanar approximation", () => {
   it("maxPlaneChangeFractionPercent matches transfer data", () => {
     const maxFromTransfers = Math.max(

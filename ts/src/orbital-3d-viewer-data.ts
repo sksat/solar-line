@@ -299,11 +299,20 @@ export function prepareFullRouteScene(data: {
     string,
     { planet: string; zHeightAU: number; latitudeDeg: number; eclipticLongitudeRad?: number }
   >;
+  /** Ecliptic longitudes at mission start (common epoch) for animation initial angles.
+   * When provided, overrides eclipticLongitudeRad for animation timing accuracy. */
+  planetLongitudesAtMissionStart?: Record<string, number>;
 }): SceneData {
   const planetOrder = ["mars", "jupiter", "saturn", "uranus", "earth"];
+
+  // Use mission-start longitudes if available; fall back to per-event longitudes
+  const missionStartAngles = data.planetLongitudesAtMissionStart;
+
   const planets: PlanetData[] = planetOrder.map((name, i) => {
     const pData = data.planetaryZHeightsAtEpoch[name];
-    const { x, y } = planetXY(name, pData?.eclipticLongitudeRad, i);
+    // For initial display, use mission-start angle (matches animation day 0)
+    const startLon = missionStartAngles?.[name] ?? pData?.eclipticLongitudeRad;
+    const { x, y } = planetXY(name, startLon, i);
     return {
       name,
       x,
@@ -323,7 +332,9 @@ export function prepareFullRouteScene(data: {
 
   const timelineOrbits: TimelineOrbit[] = planetOrder.map((name, i) => {
     const pData = data.planetaryZHeightsAtEpoch[name];
-    const { angle } = planetXY(name, pData?.eclipticLongitudeRad, i);
+    // initialAngle from mission-start for correct animation propagation
+    const startLon = missionStartAngles?.[name] ?? pData?.eclipticLongitudeRad;
+    const { angle } = planetXY(name, startLon, i);
     return {
       name,
       radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
