@@ -1797,9 +1797,21 @@ test.describe("Inline 3D viewer in episode reports", () => {
     await expect(container).toHaveAttribute("data-scene", "saturn-ring");
   });
 
-  test("EP01 does not have inline 3D viewer", async ({ page }) => {
+  test("EP04 has inline 3D viewer with uranus-approach scene and switcher", async ({ page }) => {
+    await page.goto("/episodes/ep-004.html");
+    const container = page.locator(".viewer3d-container");
+    await expect(container).toBeAttached();
+    await expect(container).toHaveAttribute("data-scene", "uranus-approach");
+    const buttons = page.locator(".viewer3d-scene-btn");
+    expect(await buttons.count()).toBe(2);
+    await expect(buttons.nth(0)).toHaveText("天王星接近");
+    await expect(buttons.nth(1)).toHaveText("全航路");
+  });
+
+  test("EP01 has inline 3D viewer with full-route scene", async ({ page }) => {
     await page.goto("/episodes/ep-001.html");
     const container = page.locator(".viewer3d-container");
-    expect(await container.count()).toBe(0);
+    await expect(container).toBeAttached();
+    await expect(container).toHaveAttribute("data-scene", "full-route");
   });
 });
