@@ -477,6 +477,22 @@ describe("EP02 reproduction: additional ΔV needed", () => {
   });
 });
 
+describe("EP02 reproduction: Saturn arrival V-infinity", () => {
+  const r = analyzeEpisode2();
+  const sv = r.saturnArrivalVInf;
+
+  it("reaches Saturn on hyperbolic trajectory with V∞ = 4.691 km/s", () => {
+    assert.equal(sv.reachesSaturn, true);
+    assert.equal(sv.isHyperbolic, true);
+    assertClose(sv.vInfSaturnKms, 4.690712153879481, "vInfSaturn");
+  });
+
+  it("estimated transit = 455.3 days (1.25 years)", () => {
+    assertClose(sv.estimatedTransitDays, 455.2612176238103, "transitDays");
+    assertClose(sv.estimatedTransitYears, 1.2464372830220678, "transitYears");
+  });
+});
+
 // ============================================================
 // EP03: Enceladus → Titania
 // ============================================================
@@ -1298,6 +1314,14 @@ describe("EP05 reproduction: nozzle series margins", () => {
     const sd = sens.find((s: { label: string }) => s.label.includes("5%減少"));
     assert.ok(sd, "5% decrease scenario exists");
     assertClose(sd!.marginSec, 11496, "5% decrease margin");
+  });
+});
+
+describe("EP05 reproduction: analysis status flag", () => {
+  const r = analyzeEpisode5();
+
+  it("preliminary = false (analysis finalized)", () => {
+    assert.equal(r.preliminary, false);
   });
 });
 
