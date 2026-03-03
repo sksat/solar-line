@@ -144,6 +144,22 @@ describe("recalculate pipeline", () => {
     );
   });
 
+  it("EP01 analysis contains key domain-specific keys", () => {
+    const r = analyzeEpisode1();
+    const keys = Object.keys(r);
+    for (const k of ["shipAcceleration", "brachistochrone72h", "massSensitivity", "boundaries", "reachableWithShipThrust"]) {
+      assert.ok(keys.includes(k), `EP01 missing key: ${k}`);
+    }
+  });
+
+  it("EP02 analysis contains key domain-specific keys", () => {
+    const r = analyzeEpisode2();
+    const keys = Object.keys(r);
+    for (const k of ["jupiterEscape", "trimThrust", "saturnArrivalVInf", "jupiterRadiation", "enceladusInfo"]) {
+      assert.ok(keys.includes(k), `EP02 missing key: ${k}`);
+    }
+  });
+
   it("EP03 analysis contains key domain-specific keys", () => {
     const r = analyzeEpisode3();
     const keys = Object.keys(r);
