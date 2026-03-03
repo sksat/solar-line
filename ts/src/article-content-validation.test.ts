@@ -4442,6 +4442,47 @@ describe("calculation JSON structural validation", () => {
     assert.ok(episodes.length >= 1, `Should have at least 1 episode, got ${episodes.length}`);
   });
 
+  // Pipeline-generated JSONs: _meta with reproductionCommand (Task 505)
+  const pipelineGeneratedFiles = [
+    { file: "relativistic_effects.json", cmd: "npm run recalculate" },
+    { file: "3d_orbital_analysis.json", cmd: "npm run recalculate" },
+    { file: "transcription_accuracy.json", cmd: "npm run recalculate" },
+    { file: "integrator_comparison.json", cmd: "cargo test" },
+  ];
+
+  for (const { file, cmd } of pipelineGeneratedFiles) {
+    it(`${file}: _meta has reproductionCommand referencing "${cmd}"`, () => {
+      const data = loadJson(file);
+      const meta = data._meta as Record<string, unknown> | undefined;
+      assert.ok(meta, `${file}: missing _meta block`);
+      assert.ok(
+        typeof meta!.reproductionCommand === "string",
+        `${file}: _meta.reproductionCommand should be string`,
+      );
+      assert.ok(
+        (meta!.reproductionCommand as string).includes(cmd),
+        `${file}: reproductionCommand should reference "${cmd}", got "${meta!.reproductionCommand}"`,
+      );
+    });
+  }
+
+  it("all pipeline-generated calc JSONs have generatedAt timestamps", () => {
+    const files = [
+      "relativistic_effects.json",
+      "3d_orbital_analysis.json",
+      "transcription_accuracy.json",
+    ];
+    for (const file of files) {
+      const data = loadJson(file);
+      const generatedAt = (data._meta as Record<string, unknown> | undefined)?.generatedAt
+        ?? (data as Record<string, unknown>).generatedAt;
+      assert.ok(
+        typeof generatedAt === "string" && generatedAt.includes("T"),
+        `${file}: should have ISO timestamp generatedAt, got ${generatedAt}`,
+      );
+    }
+  });
+
   // Cross-episode consistency: Hohmann ΔV values match known approximate values
   it("Hohmann ΔV values are within expected ranges per episode", () => {
     const expected: Record<string, { min: number; max: number }> = {
