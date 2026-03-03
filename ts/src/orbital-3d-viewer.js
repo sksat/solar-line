@@ -107,6 +107,28 @@ function arcControlPoint(from, to) {
   return new THREE.Vector3(cx, midY + yBump, cz);
 }
 
+/**
+ * Compute a Bezier control point for local (planet-centric) scenes.
+ * Instead of curving around the Sun (which is off-screen), offset the midpoint
+ * laterally (perpendicular to the approach direction) to suggest a flyby trajectory.
+ */
+function arcControlPointLocal(from, to) {
+  const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
+  const dist = from.distanceTo(to);
+
+  // Lateral direction: cross product of approach vector with Y-up
+  const approach = new THREE.Vector3().subVectors(to, from).normalize();
+  const up = new THREE.Vector3(0, 1, 0);
+  const lateral = new THREE.Vector3().crossVectors(approach, up).normalize();
+
+  // Offset laterally by 20% of chord distance for a visible curve
+  mid.addScaledVector(lateral, dist * 0.2);
+  // Small Y bump for depth
+  mid.y += dist * 0.08;
+
+  return mid;
+}
+
 // ── Initialization ──
 
 export function initViewer(container) {
@@ -363,7 +385,8 @@ function addTransferArc(group, arc, sceneType) {
   const to = offsetFromPlanet(toCenter, fromCenter, arc.to, sceneType);
 
   // Create curved arc with in-plane curvature matching 2D orbital diagrams
-  const mid = arcControlPoint(from, to);
+  const isLocal = sceneType !== "full-route";
+  const mid = isLocal ? arcControlPointLocal(from, to) : arcControlPoint(from, to);
 
   const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
   const points = curve.getPoints(50);
@@ -376,6 +399,7 @@ function addTransferArc(group, arc, sceneType) {
   group.add(new THREE.Line(geo, mat));
 
   // Add arrow at endpoint
+  const dist = from.distanceTo(to);
   const tangent = curve.getTangent(1).normalize();
   const arrowHelper = new THREE.ArrowHelper(
     tangent,
@@ -596,7 +620,7 @@ export function loadTimeline(timeline) {
       const sceneType = currentSceneGroup?.name || "local";
       const from = offsetFromPlanet(fromCenter, toCenter, arc.from, sceneType);
       const to = offsetFromPlanet(toCenter, fromCenter, arc.to, sceneType);
-      const mid = arcControlPoint(from, to);
+      const mid = arcControlPointLocal(from, to);
 
       const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
       transferCurves.push({

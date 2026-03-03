@@ -371,6 +371,14 @@ test.describe("DAG Viewer Example", () => {
 // --- 3D Orbital Viewer Example ---
 
 test.describe("3D Orbital Viewer Example", () => {
+  test("loads without JS errors", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/examples/orbital-3d.html");
+    // Wait for Three.js CDN load and scene initialization
+    await page.waitForTimeout(3000);
+    expect(errors).toEqual([]);
+  });
+
   test("loads page structure", async ({ page }) => {
     await page.goto("/examples/orbital-3d.html");
     await expect(page.locator("h1")).toContainText("3D軌道ビューア");
