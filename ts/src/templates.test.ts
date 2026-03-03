@@ -2621,6 +2621,63 @@ describe("renderSummaryPage", () => {
     const html = renderSummaryPage(sampleSummaryReport);
     assert.ok(!html.includes("orbital-animation.js"));
   });
+
+  it("includes viewer3d container when section has viewer3d", () => {
+    const reportWithViewer: SummaryReport = {
+      slug: "test-viewer3d",
+      title: "3Dビューアテスト",
+      summary: "テスト",
+      sections: [{
+        heading: "3D解析",
+        markdown: "テスト",
+        viewer3d: { scene: "full-route", height: 500, caption: "テスト3Dビューア" },
+      }],
+    };
+    const html = renderSummaryPage(reportWithViewer);
+    assert.ok(html.includes('class="viewer3d-container"'));
+    assert.ok(html.includes('data-scene="full-route"'));
+    assert.ok(html.includes("テスト3Dビューア"));
+  });
+
+  it("includes Three.js importmap when section has viewer3d", () => {
+    const reportWithViewer: SummaryReport = {
+      slug: "test-viewer3d-script",
+      title: "3Dスクリプトテスト",
+      summary: "テスト",
+      sections: [{
+        heading: "3D解析",
+        markdown: "テスト",
+        viewer3d: { scene: "saturn-ring" },
+      }],
+    };
+    const html = renderSummaryPage(reportWithViewer);
+    assert.ok(html.includes("importmap"));
+    assert.ok(html.includes("three@0.170.0"));
+    assert.ok(html.includes("orbital-3d-viewer.js"));
+  });
+
+  it("does not include viewer3d script when no sections have viewer3d", () => {
+    const html = renderSummaryPage(sampleSummaryReport);
+    assert.ok(!html.includes("importmap"));
+    assert.ok(!html.includes("viewer3d-container"));
+  });
+
+  it("includes viewer3d controls (play, slider, viewmode)", () => {
+    const reportWithViewer: SummaryReport = {
+      slug: "test-viewer3d-controls",
+      title: "コントロールテスト",
+      summary: "テスト",
+      sections: [{
+        heading: "3D解析",
+        markdown: "テスト",
+        viewer3d: { scene: "full-route" },
+      }],
+    };
+    const html = renderSummaryPage(reportWithViewer);
+    assert.ok(html.includes('class="viewer3d-play"'));
+    assert.ok(html.includes('class="viewer3d-slider"'));
+    assert.ok(html.includes('class="viewer3d-viewmode"'));
+  });
 });
 
 // --- layoutHtml with summaryPages ---
