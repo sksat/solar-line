@@ -213,7 +213,9 @@ function addPlanet(group, planet, sceneType) {
     addOrbitCircle(group, planet.orbitRadius, planet.color);
   }
 
-  const geo = new THREE.SphereGeometry(planet.radius, 24, 24);
+  // Emphasize planet sizes in full-route view (3× scale) for visibility
+  const displayRadius = isLocal ? planet.radius : planet.radius * 3;
+  const geo = new THREE.SphereGeometry(displayRadius, 24, 24);
   const mat = new THREE.MeshStandardMaterial({
     color: new THREE.Color(planet.color),
     roughness: 0.6,
@@ -227,7 +229,7 @@ function addPlanet(group, planet, sceneType) {
   // Label
   if (planet.label) {
     const label = createLabel(planet.label, planet.color);
-    label.position.set(planet.x, planet.z + planet.radius + 0.3, planet.y);
+    label.position.set(planet.x, planet.z + displayRadius + 0.3, planet.y);
     group.add(label);
   }
 }
