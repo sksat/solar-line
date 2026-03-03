@@ -209,6 +209,19 @@ describe("WASM bridge: brachistochrone_accel", () => {
       `TS=${tsResult}, WASM=${wasmResult}`,
     );
   });
+
+  it("EP02 Saturn leg: longer distance/time gives lower accel", () => {
+    const dSaturn = 1_280_000_000; // km, ~Jupiter-Saturn distance
+    const tSaturn = 87 * 24 * 3600; // 87 days in seconds
+    const accelSaturn = wasm.brachistochrone_accel(dSaturn, tSaturn);
+    const accelMarsJupiter = wasm.brachistochrone_accel(550_630_800, 72 * 3600);
+    // Saturn leg has longer time for similar distance, so lower accel
+    assert.ok(accelSaturn < accelMarsJupiter,
+      `Saturn accel=${accelSaturn} should be < Mars-Jupiter=${accelMarsJupiter}`);
+    // Sanity: accel should be positive and physically reasonable
+    assert.ok(accelSaturn > 0 && accelSaturn < 0.001,
+      `Saturn accel=${accelSaturn} should be small positive value`);
+  });
 });
 
 describe("WASM bridge: brachistochrone_dv", () => {
@@ -1200,6 +1213,15 @@ describe("WASM bridge: Hohmann window", () => {
     assert.ok(jd !== null, "should find a window");
     assert.ok(jd > 2_451_545.0, `window JD=${jd} > search start`);
   });
+
+  it("window is within Earth-Mars synodic period (~780 days)", () => {
+    const start = 2_451_545.0; // J2000
+    const jd = wasm.next_hohmann_window("earth", "mars", start);
+    const daysDelta = jd - start;
+    // Earth-Mars synodic period ~780 days; window should be within that
+    assert.ok(daysDelta > 0 && daysDelta < 800,
+      `window ${daysDelta} days from start should be within synodic period ~780d`);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -1268,6 +1290,23 @@ describe("WASM bridge: Saturn ring crossing", () => {
     assert.ok(typeof result.crosses_ring_plane === "boolean", "has crosses_ring_plane");
     assert.ok(typeof result.within_rings === "boolean", "has within_rings");
     assert.ok(typeof result.approach_angle_to_ring_plane_deg === "number", "has approach angle");
+  });
+
+  it("straight-down approach crosses ring plane with valid angle", () => {
+    const j2000 = 2_451_545.0;
+    const result = wasm.saturn_ring_crossing(
+      0, 0, 100_000, // directly above ecliptic
+      0, 0, -10, // straight down in ecliptic z
+      j2000,
+    );
+    assert.equal(result.crosses_ring_plane, true,
+      "z-axis approach should cross ring plane");
+    // Saturn's ring plane is tilted ~26.7° from ecliptic, so approach angle
+    // from ecliptic z-axis is ~90°-26.7° = ~63° to ring plane
+    assert.ok(
+      result.approach_angle_to_ring_plane_deg > 50 && result.approach_angle_to_ring_plane_deg < 75,
+      `approach angle=${result.approach_angle_to_ring_plane_deg}° should reflect Saturn tilt`,
+    );
   });
 });
 
