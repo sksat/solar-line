@@ -4891,3 +4891,55 @@ describe("onscreen_crossref.json → report cross-checks", () => {
     }
   });
 });
+
+// =============================================================================
+// integrator_comparison.json → report cross-checks (Task 499)
+// =============================================================================
+
+describe("integrator_comparison.json → report cross-checks", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const intData = JSON.parse(
+    fs.readFileSync(path.join(calcDir, "integrator_comparison.json"), "utf-8"),
+  );
+  const comparisons = intData.comparisons as Array<{
+    episode: number;
+    transfer: string;
+    position_diff_relative?: number;
+    position_diff_km?: number;
+  }>;
+  const crossEp = readReport("cross-episode.md");
+
+  // Key brachistochrone legs with measurable position differences
+  const brachLegs = comparisons.filter(
+    c => c.position_diff_relative && c.position_diff_relative > 1e-6,
+  );
+
+  for (const leg of brachLegs) {
+    const pctStr = (leg.position_diff_relative! * 100).toFixed(3) + "%";
+    it(`EP0${leg.episode} ${leg.transfer}: position diff ${pctStr} cited in cross-episode`, () => {
+      // Check that the percentage appears (0.015%, 0.008%, 0.007%)
+      const pctValue = (leg.position_diff_relative! * 100).toFixed(3);
+      assert.ok(
+        crossEp.includes(pctValue),
+        `cross-episode should cite RK4 vs RK45 position diff ${pctValue}% for ${leg.transfer}`,
+      );
+    });
+  }
+
+  it("RK45 cost ratio ~0.07 cited in cross-episode", () => {
+    const cost = intData.computationCost as Record<string, { costRatio: number }>;
+    const ep01Cost = cost.ep01_brachistochrone_72h;
+    assert.ok(ep01Cost, "should have EP01 cost data");
+    assert.ok(
+      crossEp.includes("0.07") || crossEp.includes(String(ep01Cost.costRatio)),
+      "cross-episode should cite RK45 cost ratio 0.07",
+    );
+  });
+
+  it("conclusion 'no episode analysis results need updating' reflected in report", () => {
+    assert.ok(
+      crossEp.includes("更新は不要") || crossEp.includes("更新不要"),
+      "cross-episode should confirm no analysis results need updating from integrator comparison",
+    );
+  });
+});
