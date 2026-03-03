@@ -427,4 +427,56 @@ describe("prepareUranusScene", () => {
       `Titania distance from Uranus should be ~${expectedDist.toFixed(2)}, got ${dist.toFixed(2)}`,
     );
   });
+
+  it("supports inertial and ship view modes", () => {
+    const scene = prepareUranusScene(uranusInput);
+    assert.ok(scene.supportedViewModes);
+    assert.ok(scene.supportedViewModes!.includes("inertial"));
+    assert.ok(scene.supportedViewModes!.includes("ship"));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Constants and cross-cutting checks
+// ---------------------------------------------------------------------------
+
+describe("3D viewer constants", () => {
+  it("LOCAL_SCENE_SCALE is 50,000 km per scene unit", () => {
+    assert.equal(LOCAL_SCENE_SCALE, 50_000);
+  });
+
+  it("AU_TO_SCENE is 5 scene units per AU", () => {
+    assert.equal(AU_TO_SCENE, 5);
+  });
+});
+
+describe("orbit circle z-heights match planet z-heights", () => {
+  const input = {
+    transfers: [
+      {
+        leg: "EP01 Mars→Jupiter",
+        episode: 1,
+        departure: { planet: "mars", jd: 2460000, zHeightAU: 0.027, latitudeDeg: 1.0 },
+        arrival: { planet: "jupiter", jd: 2460003, zHeightAU: -0.043, latitudeDeg: -0.5 },
+      },
+    ],
+    planetaryZHeightsAtEpoch: {
+      mars: { planet: "mars", zHeightAU: 0.027, latitudeDeg: 1.0 },
+      jupiter: { planet: "jupiter", zHeightAU: -0.043, latitudeDeg: -0.5 },
+      saturn: { planet: "saturn", zHeightAU: 0.319, latitudeDeg: 2.0 },
+      uranus: { planet: "uranus", zHeightAU: 0.244, latitudeDeg: 0.7 },
+      earth: { planet: "earth", zHeightAU: 0.0, latitudeDeg: 0.0 },
+    },
+  };
+
+  it("each orbit circle z matches its planet z", () => {
+    const scene = prepareFullRouteScene(input);
+    for (const circle of scene.orbitCircles!) {
+      const planet = scene.planets.find(p => p.name === circle.name)!;
+      assert.ok(
+        Math.abs(circle.z - planet.z) < 0.01,
+        `${circle.name} orbit z=${circle.z.toFixed(3)} should match planet z=${planet.z.toFixed(3)}`,
+      );
+    }
+  });
 });
