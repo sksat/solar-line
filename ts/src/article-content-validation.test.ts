@@ -871,7 +871,8 @@ describe("EP02 article content validation", () => {
   });
 
   it("prograde-only capture ΔV impossibility: ~74 km/s", () => {
-    const captureDV = analysis.arrivalConsistency.progradeOnly.captureDeltaVKms;
+    assert.ok(analysis.arrivalConsistency.progradeOnly, "progradeOnly data missing");
+    const captureDV = analysis.arrivalConsistency.progradeOnly!.captureDeltaVKms;
     assert.ok(captureDV > 70 && captureDV < 80,
       `prograde-only capture ΔV should be ~74 km/s, got ${captureDV}`);
     assert.ok(
@@ -887,7 +888,8 @@ describe("EP02 article content validation", () => {
   });
 
   it("trim-thrust primary angle 80.5° in calculation", () => {
-    const angle = analysis.trimThrust.primary.thrustAngleDeg;
+    assert.ok(analysis.trimThrust.primary, "trimThrust.primary missing");
+    const angle = analysis.trimThrust.primary!.thrustAngleDeg;
     assert.ok(Math.abs(angle - 80.5) < 0.1,
       `thrust angle should be 80.5°, got ${angle}`);
     // The thrust angle is the off-radial direction for the primary trim-thrust scenario

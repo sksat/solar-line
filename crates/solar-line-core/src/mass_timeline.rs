@@ -895,7 +895,9 @@ mod tests {
             assert!(
                 diff < 1e-6,
                 "snapshot {i}: total={:.1} != dry={:.1} + prop={:.1} (diff={diff:.10})",
-                snap.total_mass_kg, snap.dry_mass_kg, snap.propellant_kg
+                snap.total_mass_kg,
+                snap.dry_mass_kg,
+                snap.propellant_kg
             );
         }
     }
@@ -944,7 +946,8 @@ mod tests {
         assert!(
             after_resupply.total_mass_kg > after_burn.total_mass_kg,
             "resupply increases mass: {:.1} > {:.1}",
-            after_resupply.total_mass_kg, after_burn.total_mass_kg
+            after_resupply.total_mass_kg,
+            after_burn.total_mass_kg
         );
         // Resupply adds exactly 5000 kg to propellant
         assert!(

@@ -686,7 +686,10 @@ mod tests {
         let pos = ring_normal.scale(300_000.0); // 300k km above ring plane
 
         let result = saturn_ring_crossing(pos, vel, jd);
-        assert!(result.crosses_ring_plane, "oblique approach should cross ring plane");
+        assert!(
+            result.crosses_ring_plane,
+            "oblique approach should cross ring plane"
+        );
         // Approach angle should be ~45° (between parallel 0° and perpendicular 90°)
         let angle_deg = result.approach_angle_to_ring_plane.value().to_degrees();
         assert!(

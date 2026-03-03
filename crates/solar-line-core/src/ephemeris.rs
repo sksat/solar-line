@@ -1031,10 +1031,7 @@ mod tests {
         let (y2, m2, d2) = jd_to_calendar(jd);
         assert_eq!(y2, year, "year mismatch");
         assert_eq!(m2, month, "month mismatch");
-        assert!(
-            (d2 - day).abs() < 1e-6,
-            "day mismatch: {d2} vs {day}"
-        );
+        assert!((d2 - day).abs() < 1e-6, "day mismatch: {d2} vs {day}");
 
         // Also verify a known date: J2000.0 = 2000-01-01T12:00
         let j2000 = calendar_to_jd(2000, 1, 1.5);

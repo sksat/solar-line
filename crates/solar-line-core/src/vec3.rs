@@ -259,7 +259,10 @@ mod tests {
         // Orthogonal vectors should have zero dot product
         let a = Vec3::new(Km(1.0), Km(0.0), Km(0.0));
         let b = Vec3::new(Km(0.0), Km(1.0), Km(0.0));
-        assert!(a.dot_raw(b).abs() < 1e-15, "orthogonal dot product should be 0");
+        assert!(
+            a.dot_raw(b).abs() < 1e-15,
+            "orthogonal dot product should be 0"
+        );
     }
 
     #[test]

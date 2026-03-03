@@ -717,7 +717,8 @@ mod tests {
         assert!(
             result.shield_life_at_arrival_h > result.shield_life_at_departure_h,
             "Shield life should increase outward: arrival={:.2}h > departure={:.2}h",
-            result.shield_life_at_arrival_h, result.shield_life_at_departure_h,
+            result.shield_life_at_arrival_h,
+            result.shield_life_at_departure_h,
         );
     }
 

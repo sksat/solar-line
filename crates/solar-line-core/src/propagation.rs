@@ -1077,7 +1077,8 @@ mod tests {
         assert!(
             (state.pos.x.value() - r).abs() < 1e-10,
             "pos.x should be r: got {}, expected {}",
-            state.pos.x.value(), r
+            state.pos.x.value(),
+            r
         );
         assert!(state.pos.y.value().abs() < 1e-15, "pos.y should be 0");
         assert!(state.pos.z.value().abs() < 1e-15, "pos.z should be 0");
@@ -1085,7 +1086,8 @@ mod tests {
         assert!(
             (state.vel.y.value() - v_expected).abs() < 1e-10,
             "vel.y should be v_circ: got {}, expected {}",
-            state.vel.y.value(), v_expected
+            state.vel.y.value(),
+            v_expected
         );
         assert!(state.vel.z.value().abs() < 1e-15, "vel.z should be 0");
         assert!((state.time - 0.0).abs() < 1e-15, "time should be 0");
@@ -1104,12 +1106,14 @@ mod tests {
         assert!(
             (state.pos.x.value() - r_p_expected).abs() < 1e-8,
             "periapsis radius: got {}, expected {}",
-            state.pos.x.value(), r_p_expected
+            state.pos.x.value(),
+            r_p_expected
         );
         assert!(
             (state.vel.y.value() - v_p_expected).abs() < 1e-8,
             "periapsis velocity: got {}, expected {}",
-            state.vel.y.value(), v_p_expected
+            state.vel.y.value(),
+            v_p_expected
         );
         // Specific energy should match -μ/(2a)
         let energy = state.specific_energy(mu::EARTH);
@@ -1118,16 +1122,17 @@ mod tests {
         assert!(
             rel_err < 1e-10,
             "specific energy: got {}, expected {}, rel_err={}",
-            energy, energy_expected, rel_err
+            energy,
+            energy_expected,
+            rel_err
         );
     }
 
     #[test]
     fn test_angular_momentum_conservation_elliptical() {
         // Angular momentum should be conserved for elliptical orbits too
-        let state = elliptical_orbit_state_at_periapsis(
-            mu::EARTH, reference_orbits::GEO_RADIUS, 0.7
-        );
+        let state =
+            elliptical_orbit_state_at_periapsis(mu::EARTH, reference_orbits::GEO_RADIUS, 0.7);
         let period = crate::orbits::orbital_period(mu::EARTH, reference_orbits::GEO_RADIUS);
 
         let config = IntegratorConfig {

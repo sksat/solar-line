@@ -1058,7 +1058,10 @@ mod tests {
         let dag = make_complex_dag();
         let impact0 = dag.impact_analysis(0);
         assert_eq!(impact0.source, 0);
-        assert_eq!(impact0.cascade_count, 4, "src0 affects 4 nodes: a0, a1, r0, r1");
+        assert_eq!(
+            impact0.cascade_count, 4,
+            "src0 affects 4 nodes: a0, a1, r0, r1"
+        );
 
         let impact1 = dag.impact_analysis(1);
         assert_eq!(impact1.cascade_count, 3, "src1 affects 3 nodes: a1, r0, r1");
@@ -1081,7 +1084,8 @@ mod tests {
         assert!(
             x_src0 < x_r0,
             "data source should be left of report: x_src={}, x_report={}",
-            x_src0, x_r0
+            x_src0,
+            x_r0
         );
     }
 }

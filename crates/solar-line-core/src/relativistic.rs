@@ -536,7 +536,7 @@ mod tests {
     fn test_delta_v_divergence_at_10_percent_c() {
         // At v=0.1c, the relativistic ΔV should diverge from classical by >0.5%
         let ve = KmPerSec(9806.65); // Kestrel Isp 10^6 s
-        // Mass ratio to achieve ~0.1c classically: exp(0.1c/ve) = exp(29979/9807) ≈ exp(3.057) ≈ 21.3
+                                    // Mass ratio to achieve ~0.1c classically: exp(0.1c/ve) = exp(29979/9807) ≈ exp(3.057) ≈ 21.3
         let target_v = 0.1 * C_KM_S; // ~29979 km/s
         let mr = (target_v / ve.value()).exp();
 

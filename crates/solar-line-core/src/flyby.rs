@@ -762,7 +762,8 @@ mod tests {
         assert!(
             speed_pro > speed_retro,
             "Prograde exit should be faster than retrograde: {:.2} vs {:.2}",
-            speed_pro, speed_retro
+            speed_pro,
+            speed_retro
         );
     }
 
@@ -780,7 +781,9 @@ mod tests {
             assert!(
                 (powered.v_inf_out_dir[i] - unpowered.v_inf_out_dir[i]).abs() < 1e-10,
                 "Zero-burn exit direction[{}] should match: {:.10} vs {:.10}",
-                i, powered.v_inf_out_dir[i], unpowered.v_inf_out_dir[i]
+                i,
+                powered.v_inf_out_dir[i],
+                unpowered.v_inf_out_dir[i]
             );
         }
     }
@@ -826,7 +829,8 @@ mod tests {
         assert!(
             (result_z.turn_angle_rad - result_y.turn_angle_rad).abs() < 1e-10,
             "Turn angle independent of flyby plane: {:.6} vs {:.6}",
-            result_z.turn_angle_rad, result_y.turn_angle_rad
+            result_z.turn_angle_rad,
+            result_y.turn_angle_rad
         );
 
         // Same v_inf (energy conserved regardless)
