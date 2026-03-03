@@ -21,6 +21,8 @@ let planetMeshes = {}; // name → THREE.Mesh
 let planetLabels = {}; // name → CSS2DObject
 let transferCurves = []; // Array of { curve, startDay, endDay, episode }
 let _sceneTransferArcs = null; // Store current scene's transfer arc data for local scenes
+let _viewMode = "inertial"; // "inertial" or "ship"
+let _cameraOffset = new THREE.Vector3(5, 8, 10); // offset from ship in ship-frame mode
 
 // ── Constants matching orbital-3d-viewer-data.ts ──
 const AU_TO_SCENE = 5;
@@ -601,7 +603,40 @@ export function updateTimelineFrame(day) {
     if (!shipVisible) {
       shipMarker3D.visible = false;
     }
+
+    // Ship-frame camera: follow the ship
+    if (_viewMode === "ship" && shipVisible) {
+      const shipPos = shipMarker3D.position;
+      controls.target.copy(shipPos);
+      camera.position.set(
+        shipPos.x + _cameraOffset.x,
+        shipPos.y + _cameraOffset.y,
+        shipPos.z + _cameraOffset.z,
+      );
+      controls.update();
+    }
   }
+}
+
+/**
+ * Set the view mode: "inertial" (fixed center) or "ship" (camera follows ship).
+ */
+export function setViewMode(mode) {
+  _viewMode = mode;
+  if (mode === "inertial") {
+    // Reset camera to scene center
+    controls.target.set(0, 0, 0);
+    if (currentSceneGroup?.name === "full-route") {
+      camera.position.set(30, 25, 40);
+    } else {
+      camera.position.set(8, 6, 10);
+    }
+    controls.update();
+  }
+}
+
+export function getViewMode() {
+  return _viewMode;
 }
 
 /**

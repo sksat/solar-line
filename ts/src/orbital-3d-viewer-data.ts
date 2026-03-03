@@ -116,6 +116,8 @@ export interface OrbitCircleData {
   z: number;
 }
 
+export type ViewMode = "inertial" | "ship";
+
 export interface SceneData {
   type: "full-route" | "saturn-ring" | "uranus-approach";
   title: string;
@@ -128,7 +130,9 @@ export interface SceneData {
   planes?: PlaneData[];
   /** Orbital path circles for planets */
   orbitCircles?: OrbitCircleData[];
-  /** Timeline data for animation (full-route only) */
+  /** Available view modes */
+  supportedViewModes?: ViewMode[];
+  /** Timeline data for animation */
   timeline?: TimelineData;
 }
 
@@ -369,6 +373,7 @@ export function prepareFullRouteScene(data: {
     planets,
     transferArcs,
     orbitCircles,
+    supportedViewModes: ["inertial", "ship"],
     eclipticPlane: {
       type: "ecliptic",
       normal: [0, 0, 1],
@@ -399,6 +404,7 @@ export function prepareSaturnScene(data: {
     title: "土星リング面交差 — 3Dビュー",
     description:
       "木星からの接近軌道と土星リング面の関係。接近角9.3°（リング面にほぼ平行）。",
+    supportedViewModes: ["inertial", "ship"],
     planets: [
       {
         name: "saturn",
@@ -488,6 +494,7 @@ export function prepareUranusScene(data: {
     title: "天王星接近 — 3Dビュー",
     description:
       "天王星の97.77°軸傾斜と赤道面の関係。土星からの接近角25.3°、地球への離脱角14.3°。",
+    supportedViewModes: ["inertial", "ship"],
     planets: [
       {
         name: "uranus",

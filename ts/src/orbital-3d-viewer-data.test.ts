@@ -206,6 +206,13 @@ describe("prepareFullRouteScene", () => {
     assert.ok(saturn.radiusScene < uranus.radiusScene);
   });
 
+  it("supports both inertial and ship view modes", () => {
+    const scene = prepareFullRouteScene(minimalInput);
+    assert.ok(scene.supportedViewModes, "should have supported view modes");
+    assert.ok(scene.supportedViewModes!.includes("inertial"));
+    assert.ok(scene.supportedViewModes!.includes("ship"));
+  });
+
   it("orbit circle radii match AU_TO_SCENE scaling", () => {
     const scene = prepareFullRouteScene(minimalInput);
     const earth = scene.orbitCircles!.find(c => c.name === "earth")!;
@@ -258,6 +265,13 @@ describe("prepareSaturnScene", () => {
       dist > 0.1,
       `Enceladus should be visually separated from Saturn (dist=${dist.toFixed(3)})`,
     );
+  });
+
+  it("supports inertial and ship view modes", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    assert.ok(scene.supportedViewModes);
+    assert.ok(scene.supportedViewModes!.includes("inertial"));
+    assert.ok(scene.supportedViewModes!.includes("ship"));
   });
 
   it("has timeline with Enceladus orbit for animation", () => {

@@ -72,6 +72,12 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
 #timeline-label {
   font-size: 0.8em; color: var(--text-muted); min-width: 200px;
 }
+#view-mode-btn {
+  background: #21262d; color: var(--accent); border: 1px solid var(--border);
+  padding: 4px 12px; cursor: pointer; border-radius: 4px;
+  font-size: 0.85em; white-space: nowrap;
+}
+#view-mode-btn:hover { background: var(--border); }
 #loading {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -110,6 +116,7 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
            aria-label="ミッションタイムライン" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000">
     <span id="timeline-time">0日</span>
     <span id="timeline-label"></span>
+    <button id="view-mode-btn" aria-label="視点切替" title="慣性座標/宇宙船視点の切替">慣性</button>
   </div>
 </div>
 
@@ -122,7 +129,7 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
 }
 </script>
 <script type="module">
-import { initViewer, loadScene, updateInfoPanel, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay } from "../src/orbital-3d-viewer.js";
+import { initViewer, loadScene, updateInfoPanel, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode } from "../src/orbital-3d-viewer.js";
 
 // ── Load analysis data ──
 const analysisDataUrl = "../reports/data/calculations/3d_orbital_analysis.json";
@@ -406,6 +413,16 @@ async function init() {
       btn.setAttribute("aria-pressed", "true");
       switchScene(btn.dataset.scene);
     });
+  });
+
+  // ── View mode toggle ──
+  const viewModeBtn = document.getElementById("view-mode-btn");
+  viewModeBtn.addEventListener("click", () => {
+    const current = getViewMode();
+    const next = current === "inertial" ? "ship" : "inertial";
+    setViewMode(next);
+    viewModeBtn.textContent = next === "inertial" ? "慣性" : "宇宙船";
+    viewModeBtn.setAttribute("aria-label", next === "inertial" ? "慣性座標系" : "宇宙船視点");
   });
 
   // Activate timeline for default scene
