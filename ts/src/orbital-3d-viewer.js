@@ -288,6 +288,18 @@ export function loadScene(sceneData) {
 
 // ── Planet rendering ──
 
+// Planet texture URLs (Solar System Scope, CC BY 4.0)
+// Attribution: Solar System Scope, https://www.solarsystemscope.com/textures/
+const PLANET_TEXTURE_URLS = {
+  earth: "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg",
+  mars: "https://www.solarsystemscope.com/textures/download/2k_mars.jpg",
+  jupiter: "https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg",
+  saturn: "https://www.solarsystemscope.com/textures/download/2k_saturn.jpg",
+  uranus: "https://www.solarsystemscope.com/textures/download/2k_uranus.jpg",
+};
+
+const textureLoader = typeof THREE !== "undefined" ? new THREE.TextureLoader() : null;
+
 function addPlanet(group, planet, sceneType) {
   const isLocal = sceneType !== "full-route";
 
@@ -298,7 +310,7 @@ function addPlanet(group, planet, sceneType) {
 
   // Emphasize planet sizes in full-route view (3× scale) for visibility
   const displayRadius = isLocal ? planet.radius : planet.radius * 3;
-  const geo = new THREE.SphereGeometry(displayRadius, 24, 24);
+  const geo = new THREE.SphereGeometry(displayRadius, 32, 32);
   const mat = new THREE.MeshStandardMaterial({
     color: new THREE.Color(planet.color),
     roughness: 0.6,
@@ -308,6 +320,22 @@ function addPlanet(group, planet, sceneType) {
   mesh.position.set(planet.x, planet.z, planet.y); // three.js Y-up: swap y/z
   mesh.name = planet.name;
   group.add(mesh);
+
+  // Load texture asynchronously (fallback to solid color on error)
+  const textureUrl = PLANET_TEXTURE_URLS[planet.name];
+  if (textureUrl && textureLoader) {
+    textureLoader.load(
+      textureUrl,
+      (texture) => {
+        mat.map = texture;
+        mat.needsUpdate = true;
+      },
+      undefined,
+      () => {
+        // Texture load failed — keep solid color fallback
+      },
+    );
+  }
 
   // Label
   if (planet.label) {
@@ -863,5 +891,6 @@ export function updateInfoPanel(panelEl, sceneData) {
     }
   }
 
+  html += '<p style="font-size:0.75em;color:#6e7681;margin-top:1em;">Planet textures: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener" style="color:#58a6ff;">Solar System Scope</a> (CC BY 4.0)</p>';
   panelEl.innerHTML = html;
 }
