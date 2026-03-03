@@ -82,7 +82,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python3 -m venv .venv && .venv/bin/pip install numpy scipy poliastro networkx
+      - name: Install Python dependencies
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install --only-binary ':all:' numpy scipy poliastro networkx
       - name: Export Rust values for cross-validation
         run: |
           cargo test --test cross_validation_export -- --nocapture 2>/dev/null \
