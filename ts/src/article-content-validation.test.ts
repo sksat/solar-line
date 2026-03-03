@@ -2211,6 +2211,72 @@ describe("ship-kestrel.md content validation", () => {
     assert.ok(content.includes("3-4") || content.includes("3〜4") || content.includes("3回"),
       "should cite post-repair 3-4 burn count");
   });
+
+  // --- Task 529: Additional ship-kestrel content cross-checks ---
+
+  it("~160x acceleration gap cited in mass mystery discussion", () => {
+    assert.ok(
+      content.includes("160倍") || content.includes("約160倍"),
+      "should cite ~160x acceleration shortfall at 48,000t",
+    );
+  });
+
+  it("total mission ΔV ~36,156 km/s cited", () => {
+    assert.ok(
+      content.includes("36,156") || content.includes("36156"),
+      "should cite total ΔV budget ~36,156 km/s across all episodes",
+    );
+  });
+
+  it("Isp = 10⁶ s baseline and 5×10⁶ s high-Isp scenario", () => {
+    assert.ok(
+      content.includes("10⁶") && content.includes("Isp"),
+      "should cite Isp = 10⁶ s baseline",
+    );
+    assert.ok(
+      content.includes("5×10⁶"),
+      "should cite high-Isp scenario 5×10⁶ s",
+    );
+  });
+
+  it("propellant margin 53% with high-Isp + Enceladus refuel", () => {
+    assert.ok(
+      content.includes("53%") && (content.includes("推進剤") || content.includes("マージン")),
+      "should cite 53% propellant margin for scenario C",
+    );
+  });
+
+  it("exhaust velocities: 9,807 km/s and 49,033 km/s", () => {
+    assert.ok(
+      content.includes("9,807") || content.includes("9807"),
+      "should cite exhaust velocity 9,807 km/s at Isp=10⁶",
+    );
+    assert.ok(
+      content.includes("49,033") || content.includes("49033"),
+      "should cite exhaust velocity 49,033 km/s at Isp=5×10⁶",
+    );
+  });
+
+  it("Tsiolkovsky equation referenced in propellant analysis", () => {
+    assert.ok(
+      content.includes("ツィオルコフスキー"),
+      "should reference Tsiolkovsky equation for mass ratio analysis",
+    );
+  });
+
+  it("fuel consumption rate ~0.46 kg/s cited", () => {
+    assert.ok(
+      content.includes("0.46") && (content.includes("kg/s") || content.includes("kg")),
+      "should cite D-He³ fuel consumption rate ~0.46 kg/s",
+    );
+  });
+
+  it("LEO target altitude 400 km cited in glossary", () => {
+    assert.ok(
+      content.includes("400") && content.includes("LEO"),
+      "should cite LEO target altitude 400 km",
+    );
+  });
 });
 
 // ============================================================
