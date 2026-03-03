@@ -1,5 +1,9 @@
 # 人間からの指示履歴
 
+## 2026-03-03 (commit f37c19d)
+
+28. **CI修復指示**: CI がコケ続けていてデプロイがずっと失敗している → Task 550 で対応: (1) cargo fmt 修正, (2) TypeScript null-check 修正, (3) poliastro バイナリホイール修正
+
 ## 2026-03-02 (commit 1e6f036)
 
 27. **3D interactive visualization**: 3次元的な変化などの可視化は、Three.js などを使って3D drag 可能な可視化にすること。履歴の可視化の場合は2Dの場合と同様にアニメーション可能であるとよりよい。TDD で開発すること → Task 461, CLAUDE.md 更新
