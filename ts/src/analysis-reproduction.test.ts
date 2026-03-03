@@ -1055,6 +1055,47 @@ describe("EP05 reproduction: Oberth effect at Jupiter", () => {
   });
 });
 
+describe("EP05 reproduction: Oberth efficiency matrix", () => {
+  const r = analyzeEpisode5();
+  const o = r.oberthEffect;
+  const em = o.efficiencyMatrix;
+
+  it("5 radii from 1 RJ to 10 RJ, each with 5 burn scenarios", () => {
+    assert.equal(em.length, 5);
+    assert.ok(em[0].label.includes("1 RJ"), "first is 1 RJ");
+    assert.ok(em[4].label.includes("10 RJ"), "last is 10 RJ");
+    for (const row of em) {
+      assert.equal(row.results.length, 5);
+    }
+  });
+
+  it("best case: 1 RJ, 10 km/s → 0.078% efficiency", () => {
+    const best = em[0].results[0];
+    assertClose(best.burnDvKms, 10, "burnDv");
+    assertClose(best.efficiencyPercent, 0.07820468330692609, "efficiency");
+    assertClose(best.gainKms, 0.007820468330692165, "gainKms");
+  });
+
+  it("worst case: 10 RJ, 200 km/s → 0.0069% efficiency", () => {
+    const worst = em[4].results[4];
+    assertClose(worst.burnDvKms, 200, "burnDv");
+    assertClose(worst.efficiencyPercent, 0.0069488662784333854, "efficiency");
+  });
+
+  it("efficiency decreases with higher periapsis radius (weaker Oberth)", () => {
+    // Compare 1 RJ vs 10 RJ at same burn (100 km/s)
+    const eff1RJ = em[0].results[3].efficiencyPercent;
+    const eff10RJ = em[4].results[3].efficiencyPercent;
+    assert.ok(eff1RJ > eff10RJ, `1 RJ (${eff1RJ}%) > 10 RJ (${eff10RJ}%)`);
+    // Factor ~10x difference (Oberth scales as sqrt(r))
+    assert.ok(eff1RJ / eff10RJ > 9, "~10x difference between 1 and 10 RJ");
+  });
+
+  it("energy efficiency percent = 0.0774%", () => {
+    assertClose(o.energyEfficiencyPercent, 0.07743565743707492, "energyEfficiency");
+  });
+});
+
 describe("EP05 reproduction: full route summary", () => {
   const r = analyzeEpisode5();
   const fr = r.fullRoute;
