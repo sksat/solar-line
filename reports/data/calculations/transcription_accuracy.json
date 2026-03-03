@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-01T05:51:37.677Z",
+  "generatedAt": "2026-03-03T00:34:01.227Z",
   "episodes": [
     {
       "episode": 1,
@@ -289,5 +289,9 @@
         }
       ]
     }
-  ]
+  ],
+  "_meta": {
+    "reproductionCommand": "npm run recalculate",
+    "durationMs": 4623
+  }
 }
