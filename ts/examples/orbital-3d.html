@@ -219,6 +219,8 @@ function prepareFullRouteScene(data) {
     endDay: t.arrival.jd - firstJd,
     episode: t.episode,
     label: t.leg,
+    from: t.departure.planet,
+    to: t.arrival.planet,
   }));
 
   const timeline = { totalDays, orbits, transfers };
@@ -252,7 +254,7 @@ function prepareSaturnScene(data) {
     transferArcs: [{ from: "jupiter", to: "saturn", fromPos: [10, 2, 0], toPos: [0, 0, 0],
       episode: 2, color: EPISODE_COLORS[2], label: "木星→土星 接近軌道", approachAngleDeg: r.approachFromJupiter.approachAngleToDeg }],
     rings: [{ innerRadius: r.ringInnerKm, outerRadius: r.ringOuterKm, normal: r.ringPlaneNormal, color: "#c8a86e", opacity: 0.3 }],
-    timeline: { totalDays: 1.370218 * 3, orbits: [{ name: "enceladus", radiusScene: r.enceladusOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / 1.370218, z: 0 }], transfers: [{ startDay: 0, endDay: 1.370218, episode: 2, label: "木星→土星 接近" }] }
+    timeline: { totalDays: 1.370218 * 3, orbits: [{ name: "enceladus", radiusScene: r.enceladusOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / 1.370218, z: 0 }], transfers: [{ startDay: 0, endDay: 1.370218, episode: 2, label: "木星→土星 接近", from: "jupiter", to: "saturn" }] }
   };
 }
 
@@ -273,7 +275,7 @@ function prepareUranusScene(data) {
     rings: [{ innerRadius: 37850, outerRadius: u.ringOuterKm, normal: u.spinAxis, color: "#556677", opacity: 0.2 }],
     axes: [{ type: "spin", direction: u.spinAxis, label: "天王星自転軸 (97.77°)", color: "#7ec8e3" }],
     planes: [{ type: "equatorial", normal: u.spinAxis, tiltDeg: u.obliquityDeg, color: "#7ec8e3", opacity: 0.12, label: "天王星赤道面" }],
-    timeline: { totalDays: 8.705872 * 3, orbits: [{ name: "titania", radiusScene: u.titaniaOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / 8.705872, z: 0 }], transfers: [{ startDay: 0, endDay: 8.705872, episode: 3, label: "土星→天王星 接近" }] }
+    timeline: { totalDays: 8.705872 * 3, orbits: [{ name: "titania", radiusScene: u.titaniaOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / 8.705872, z: 0 }], transfers: [{ startDay: 0, endDay: 8.705872, episode: 3, label: "土星→天王星 接近", from: "saturn", to: "uranus" }] }
   };
 }
 

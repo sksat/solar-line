@@ -643,19 +643,10 @@ export function loadTimeline(timeline) {
   currentSceneGroup.add(shipMarker3D);
 }
 
-/** Map transfer to departure/arrival orbit */
+/** Map transfer to departure/arrival orbit using from/to planet fields */
 function getOrbitForTransfer(timeline, transfer, isDeparture) {
-  // Transfer label format: "Mars→Jupiter (72h brachistochrone)"
-  // Use episode to index: ep1=Mars→Jupiter, ep2=Jupiter→Saturn, etc.
-  const episodeRoutes = {
-    1: { from: "mars", to: "jupiter" },
-    2: { from: "jupiter", to: "saturn" },
-    3: { from: "saturn", to: "uranus" },
-    4: { from: "uranus", to: "earth" },
-  };
-  const route = episodeRoutes[transfer.episode];
-  if (!route) return null;
-  const planet = isDeparture ? route.from : route.to;
+  const planet = isDeparture ? transfer.from : transfer.to;
+  if (!planet) return null;
   return timeline.orbits.find((o) => o.name === planet) || null;
 }
 

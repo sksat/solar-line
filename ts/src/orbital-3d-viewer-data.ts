@@ -81,6 +81,10 @@ export interface TimelineTransfer {
   episode: number;
   /** Label */
   label: string;
+  /** Departure planet name */
+  from: string;
+  /** Arrival planet name */
+  to: string;
 }
 
 export interface TimelineOrbit {
@@ -380,6 +384,8 @@ export function prepareFullRouteScene(data: {
     endDay: t.arrival.jd - firstJd,
     episode: t.episode,
     label: t.leg,
+    from: t.departure.planet,
+    to: t.arrival.planet,
   }));
 
   const timeline: TimelineData = {
@@ -513,6 +519,8 @@ export function prepareSaturnScene(data: {
           endDay: MOON_PERIODS_DAYS.enceladus,
           episode: 2,
           label: "木星→土星 接近",
+          from: "jupiter",
+          to: "saturn",
         },
       ],
     },
@@ -631,6 +639,8 @@ export function prepareUranusScene(data: {
           endDay: MOON_PERIODS_DAYS.titania,
           episode: 3,
           label: "土星→天王星 接近",
+          from: "saturn",
+          to: "uranus",
         },
       ],
     },

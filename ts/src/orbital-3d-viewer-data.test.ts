@@ -428,6 +428,13 @@ describe("prepareSaturnScene", () => {
       `Enceladus distance from Saturn should be ~${expectedDist.toFixed(2)}, got ${dist.toFixed(2)}`,
     );
   });
+
+  it("timeline transfers have from/to planet names", () => {
+    const scene = prepareSaturnScene(saturnInput);
+    const transfers = scene.timeline!.transfers;
+    assert.strictEqual(transfers[0].from, "jupiter");
+    assert.strictEqual(transfers[0].to, "saturn");
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -499,6 +506,13 @@ describe("prepareUranusScene", () => {
     assert.ok(scene.supportedViewModes);
     assert.ok(scene.supportedViewModes!.includes("inertial"));
     assert.ok(scene.supportedViewModes!.includes("ship"));
+  });
+
+  it("timeline transfers have from/to planet names", () => {
+    const scene = prepareUranusScene(uranusInput);
+    const transfers = scene.timeline!.transfers;
+    assert.strictEqual(transfers[0].from, "saturn");
+    assert.strictEqual(transfers[0].to, "uranus");
   });
 });
 
@@ -585,7 +599,7 @@ describe("orbit circle z-heights match planet z-heights", () => {
     for (const orbit of scene.timeline!.orbits) {
       const [x, y] = planetPositionAtTime(orbit, 0);
       const angle = Math.atan2(y, x);
-      const expectedLon = multiTransferInput.planetaryZHeightsAtEpoch[orbit.name]?.eclipticLongitudeRad ?? 0;
+      const expectedLon = (multiTransferInput.planetaryZHeightsAtEpoch as Record<string, { eclipticLongitudeRad?: number }>)[orbit.name]?.eclipticLongitudeRad ?? 0;
       let diff = Math.abs(angle - expectedLon);
       if (diff > Math.PI) diff = 2 * Math.PI - diff;
       assert.ok(
@@ -616,6 +630,14 @@ describe("orbit circle z-heights match planet z-heights", () => {
       arcJupDiff < 0.01,
       `EP01 arc arrival angle=${arcToAngle.toFixed(4)} should match Jupiter animated angle=${jupAngleAtDay3.toFixed(4)}`,
     );
+  });
+
+  it("timeline transfers have from/to planet names", () => {
+    const scene = prepareFullRouteScene(input);
+    const transfers = scene.timeline!.transfers;
+    assert.strictEqual(transfers.length, 1);
+    assert.strictEqual(transfers[0].from, "mars");
+    assert.strictEqual(transfers[0].to, "jupiter");
   });
 
   it("transfer arc endpoints are at different ecliptic-plane angles for curved arc rendering", () => {
@@ -704,6 +726,18 @@ describe("arrival alignment with real analysis data", () => {
         `${arc.from}→${arc.to}: arc toPos angle=${arcAngle.toFixed(4)} ` +
         `vs animated=${animatedAngle.toFixed(4)}, diff=${diff.toFixed(4)} rad`,
       );
+    }
+  });
+
+  it("timeline transfers have from/to matching analysis transfer planets", () => {
+    const scene = prepareFullRouteScene(analysis);
+    const transfers = scene.timeline!.transfers;
+    assert.strictEqual(transfers.length, analysis.transfers.length);
+    for (let i = 0; i < transfers.length; i++) {
+      assert.strictEqual(transfers[i].from, analysis.transfers[i].departure.planet,
+        `Transfer ${i} from should be ${analysis.transfers[i].departure.planet}`);
+      assert.strictEqual(transfers[i].to, analysis.transfers[i].arrival.planet,
+        `Transfer ${i} to should be ${analysis.transfers[i].arrival.planet}`);
     }
   });
 });

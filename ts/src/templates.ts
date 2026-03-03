@@ -3377,7 +3377,7 @@ window.__prepareScene = function(sceneName, data) {
       var tp2=to2?posAtDay(to2,arrDay):(function(){var p=planets.find(function(p){return p.name===t.arrival.planet});return [p.x,p.y,p.z]})();
       return {from:t.departure.planet,to:t.arrival.planet,fromPos:fp2,toPos:tp2,episode:t.episode,color:EC[t.episode],label:t.leg};
     });
-    var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg}});
+    var tl = data.transfers.map(function(t){return {startDay:t.departure.jd-firstJd,endDay:t.arrival.jd-firstJd,episode:t.episode,label:t.leg,from:t.departure.planet,to:t.arrival.planet}});
     var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*3}});
     var ts2=data.transfers.filter(function(t){return typeof t.outOfPlaneDistanceAU==="number"}).map(function(t){return{leg:t.leg,outOfPlaneDistanceAU:t.outOfPlaneDistanceAU,planeChangeFractionPercent:t.planeChangeFractionPercent||0}});
     return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:lastJd-firstJd,orbits:orbits,transfers:tl},transferSummary:ts2.length>0?ts2:undefined};
