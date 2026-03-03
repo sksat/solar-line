@@ -5249,3 +5249,94 @@ describe("cross-episode comparison table → calc JSON consistency", () => {
     }
   });
 });
+
+// =============================================================================
+// Full-route parameter cross-checks (Task 504)
+// =============================================================================
+
+describe("full-route parameter cross-checks: calc JSON vs cross-episode report", () => {
+  const calcDir = path.join(reportsDir, "calculations");
+  const crossEp = readReport("cross-episode.md");
+  const ep5 = JSON.parse(
+    fs.readFileSync(path.join(calcDir, "ep05_calculations.json"), "utf-8"),
+  );
+
+  it("total route distance ~35.9 AU cited in cross-episode report", () => {
+    const totalAU = ep5.fullRoute.totalDistAU;
+    assert.ok(totalAU > 35 && totalAU < 36, `total distance ${totalAU} AU out of expected range`);
+    assert.ok(crossEp.includes("35.9"), "cross-episode should cite 35.9 AU total route distance");
+  });
+
+  it("full route leg distances sum to total", () => {
+    const legs = ep5.fullRoute.legs as Array<{ distAU: number }>;
+    const sum = legs.reduce((s, l) => s + l.distAU, 0);
+    assert.ok(
+      Math.abs(sum - ep5.fullRoute.totalDistAU) < 0.001,
+      `Leg sum ${sum.toFixed(4)} != total ${ep5.fullRoute.totalDistAU.toFixed(4)}`,
+    );
+  });
+
+  it("nozzle margin 26 minutes matches EP05 calc JSON", () => {
+    const margin = ep5.nozzleLifespan.marginMinutes;
+    assert.strictEqual(margin, 26, `nozzle margin should be 26 min, got ${margin}`);
+    assert.ok(crossEp.includes("26分") || crossEp.includes("26 min"),
+      "cross-episode should cite 26 minute nozzle margin");
+  });
+
+  it("nozzle margin 0.78% matches EP05 calc JSON", () => {
+    const pct = ep5.nozzleLifespan.marginPercent;
+    assert.ok(Math.abs(pct - 0.78) < 0.01, `margin percent should be ~0.78, got ${pct}`);
+    assert.ok(crossEp.includes("0.78%"), "cross-episode should cite 0.78% margin");
+  });
+
+  it("nozzle lifetime ~55.6h matches EP05 calc JSON", () => {
+    const hours = ep5.nozzleLifespan.nozzleLifetimeHours;
+    assert.ok(hours > 55 && hours < 56, `nozzle lifetime ${hours}h out of range`);
+    assert.ok(
+      crossEp.includes("55h38m") || crossEp.includes("55時間38分") || crossEp.includes("55.6"),
+      "cross-episode should cite nozzle lifetime ~55h38m",
+    );
+  });
+
+  it("series margins: EP02 solar escape 0.53 km/s", () => {
+    const ep2Margin = ep5.nozzleLifespan.seriesMargins.find(
+      (m: { episode: number }) => m.episode === 2,
+    );
+    assert.ok(ep2Margin, "should have EP02 series margin");
+    assert.ok(
+      Math.abs(ep2Margin.margin - 0.53) < 0.01,
+      `EP02 margin should be ~0.53, got ${ep2Margin.margin}`,
+    );
+  });
+
+  it("series margins: EP03 nav accuracy 1.23°", () => {
+    const ep3Margin = ep5.nozzleLifespan.seriesMargins.find(
+      (m: { episode: number }) => m.episode === 3,
+    );
+    assert.ok(ep3Margin, "should have EP03 series margin");
+    assert.ok(
+      Math.abs(ep3Margin.margin - 1.23) < 0.01,
+      `EP03 margin should be ~1.23, got ${ep3Margin.margin}`,
+    );
+  });
+
+  it("earth capture LEO 400km scenario exists", () => {
+    const scenarios = ep5.earthCapture.scenarios as Array<{ label: string; targetRadiusKm: number }>;
+    const leoScenario = scenarios.find(s => s.label.includes("LEO") || s.label.includes("400"));
+    assert.ok(leoScenario, "should have LEO 400km earth capture scenario");
+    // 400km altitude = 6371 + 400 = 6771 km radius
+    assert.ok(
+      Math.abs(leoScenario!.targetRadiusKm - 6771) < 10,
+      `LEO target radius should be ~6771 km, got ${leoScenario!.targetRadiusKm}`,
+    );
+  });
+
+  it("route description matches expected path", () => {
+    const desc = ep5.fullRoute.routeDescription as string;
+    assert.ok(desc.includes("火星"), "route should start from Mars");
+    assert.ok(desc.includes("地球"), "route should end at Earth");
+    assert.ok(desc.includes("ガニメデ") || desc.includes("木星"), "route should include Jupiter/Ganymede");
+    assert.ok(desc.includes("エンケラドス"), "route should include Enceladus");
+    assert.ok(desc.includes("タイタニア"), "route should include Titania");
+  });
+});
