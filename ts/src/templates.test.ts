@@ -49,6 +49,7 @@ import {
   renderMarginGauges,
   renderInsetDiagrams,
   renderJourneyOverview,
+  render404Page,
 } from "./templates.ts";
 import type { NavEpisode } from "./templates.ts";
 import type { ADRRenderEntry } from "./templates.ts";
@@ -468,6 +469,29 @@ describe("layoutHtml", () => {
     // The regex /[\d.]+\)/ should appear literally in the output (with backslash-d and backslash-paren)
     assert.ok(script.includes("[\\d.]+\\)"), "inline JS regex should have escaped \\d and \\) for valid browser regex");
     assert.ok(!script.includes("[d.]+)"), "inline JS regex must NOT have unescaped [d.]+) which is invalid");
+  });
+});
+
+// --- Japanese localization regression tests ---
+
+describe("Japanese localization", () => {
+  it("footer uses Japanese label for API documentation", () => {
+    const html = layoutHtml("Test", "<p>ok</p>");
+    assert.ok(html.includes("APIドキュメント"), "footer should say APIドキュメント, not API Docs");
+    assert.ok(!html.includes(">API Docs<"), "footer should not contain English 'API Docs'");
+  });
+
+  it("404 page title is in Japanese", () => {
+    const html = render404Page();
+    assert.ok(html.includes("404 ページが見つかりません"), "404 page title should be in Japanese");
+    assert.ok(!html.includes("404 Not Found"), "404 page should not use English title");
+  });
+
+  it("ADR index heading is in Japanese", () => {
+    const adrs: ADRRenderEntry[] = [{ number: 1, title: "テスト", status: "Accepted", content: "テスト内容", slug: "001-test" }];
+    const html = renderADRIndex(adrs);
+    assert.ok(html.includes("設計意思決定記録"), "ADR heading should be in Japanese");
+    assert.ok(!html.includes("Architecture Decision Records"), "ADR heading should not be in English");
   });
 });
 
