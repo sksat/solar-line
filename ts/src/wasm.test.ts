@@ -867,6 +867,32 @@ describe("WASM bridge: orbital elements", () => {
       `polar orbit at ν=45° should have z-component: z=${result.position[2]}`,
     );
   });
+
+  it("eccentric orbit at periapsis has correct radius and speed", () => {
+    const muEarth = 3.986004418e5;
+    const a = 42_164; // GEO semi-major axis
+    const e = 0.5;
+    // At true anomaly=0 (periapsis): r_p = a(1-e), v_p = sqrt(mu(2/r_p - 1/a))
+    const result = wasm.elements_to_state_vector(
+      muEarth, a, e, 0.0, 0.0, 0.0, 0.0, // all angles = 0, ν=0 (periapsis)
+    );
+    const r = Math.sqrt(
+      result.position[0] ** 2 + result.position[1] ** 2 + result.position[2] ** 2,
+    );
+    const rpExpected = a * (1 - e);
+    assert.ok(
+      Math.abs(r - rpExpected) < 1,
+      `periapsis radius=${r} km, expected ${rpExpected} km`,
+    );
+    const v = Math.sqrt(
+      result.velocity[0] ** 2 + result.velocity[1] ** 2 + result.velocity[2] ** 2,
+    );
+    const vpExpected = Math.sqrt(muEarth * (2 / rpExpected - 1 / a));
+    assert.ok(
+      Math.abs(v - vpExpected) < 0.01,
+      `periapsis speed=${v} km/s, expected ${vpExpected} km/s`,
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
