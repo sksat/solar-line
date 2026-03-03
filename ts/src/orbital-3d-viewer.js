@@ -71,6 +71,42 @@ function offsetFromPlanet(point, otherPoint, planetName, sceneType) {
   return new THREE.Vector3().copy(point).addScaledVector(dir, offset);
 }
 
+/**
+ * Compute a Bezier control point for a transfer arc that curves in the ecliptic plane,
+ * matching how 2D orbital diagrams render brachistochrone/Hohmann arcs.
+ *
+ * In Three.js Y-up: X and Z are the ecliptic plane, Y is ecliptic height.
+ * The control point is placed at the angular midpoint (around the Sun at origin)
+ * at the average orbital radius, with a z-height bump for visual depth.
+ */
+function arcControlPoint(from, to) {
+  // Compute ecliptic-plane angles from origin (Sun)
+  const fromAngle = Math.atan2(from.z, from.x);
+  const toAngle = Math.atan2(to.z, to.x);
+
+  // Angular midpoint — handle wrapping correctly
+  let dAngle = toAngle - fromAngle;
+  if (dAngle > Math.PI) dAngle -= 2 * Math.PI;
+  if (dAngle < -Math.PI) dAngle += 2 * Math.PI;
+  const midAngle = fromAngle + dAngle * 0.5;
+
+  // Average radius in the ecliptic plane
+  const fromR = Math.sqrt(from.x * from.x + from.z * from.z);
+  const toR = Math.sqrt(to.x * to.x + to.z * to.z);
+  const midR = (fromR + toR) / 2;
+
+  // In-plane position at angular midpoint
+  const cx = midR * Math.cos(midAngle);
+  const cz = midR * Math.sin(midAngle);
+
+  // Y (ecliptic height): interpolate from endpoints + small bump for depth
+  const midY = (from.y + to.y) / 2;
+  const dist = from.distanceTo(to);
+  const yBump = dist * 0.08; // Reduced from 0.15 since we now have in-plane curvature
+
+  return new THREE.Vector3(cx, midY + yBump, cz);
+}
+
 // ── Initialization ──
 
 export function initViewer(container) {
@@ -326,10 +362,8 @@ function addTransferArc(group, arc, sceneType) {
   const from = offsetFromPlanet(fromCenter, toCenter, arc.from, sceneType);
   const to = offsetFromPlanet(toCenter, fromCenter, arc.to, sceneType);
 
-  // Create curved arc (quadratic bezier with midpoint raised)
-  const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
-  const dist = from.distanceTo(to);
-  mid.y += dist * 0.15; // Arc height proportional to distance
+  // Create curved arc with in-plane curvature matching 2D orbital diagrams
+  const mid = arcControlPoint(from, to);
 
   const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
   const points = curve.getPoints(50);
@@ -545,9 +579,7 @@ export function loadTimeline(timeline) {
       const sceneType = currentSceneGroup?.name || "full-route";
       const from = offsetFromPlanet(fromCenter, toCenter, fromOrbit.name, sceneType);
       const to = offsetFromPlanet(toCenter, fromCenter, toOrbit.name, sceneType);
-      const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
-      const dist = from.distanceTo(to);
-      mid.y += dist * 0.15;
+      const mid = arcControlPoint(from, to);
 
       const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
       transferCurves.push({
@@ -564,9 +596,7 @@ export function loadTimeline(timeline) {
       const sceneType = currentSceneGroup?.name || "local";
       const from = offsetFromPlanet(fromCenter, toCenter, arc.from, sceneType);
       const to = offsetFromPlanet(toCenter, fromCenter, arc.to, sceneType);
-      const mid = new THREE.Vector3().lerpVectors(from, to, 0.5);
-      const dist = from.distanceTo(to);
-      mid.y += dist * 0.15;
+      const mid = arcControlPoint(from, to);
 
       const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
       transferCurves.push({

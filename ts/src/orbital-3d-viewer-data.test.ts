@@ -544,4 +544,28 @@ describe("orbit circle z-heights match planet z-heights", () => {
       );
     }
   });
+
+  it("transfer arc endpoints are at different ecliptic-plane angles for curved arc rendering", () => {
+    const scene = prepareFullRouteScene(input);
+    for (const arc of scene.transferArcs) {
+      const fromAngle = Math.atan2(arc.fromPos[1], arc.fromPos[0]);
+      const toAngle = Math.atan2(arc.toPos[1], arc.toPos[0]);
+      // Arcs between different planets should have different ecliptic-plane angles
+      // (needed by arcControlPoint in the viewer to compute in-plane curvature)
+      assert.ok(
+        Math.abs(fromAngle - toAngle) > 0.01,
+        `${arc.from}→${arc.to}: fromAngle=${fromAngle.toFixed(3)} and toAngle=${toAngle.toFixed(3)} should differ`,
+      );
+    }
+  });
+
+  it("transfer arc endpoints are not at the origin (non-degenerate)", () => {
+    const scene = prepareFullRouteScene(input);
+    for (const arc of scene.transferArcs) {
+      const fromR = Math.sqrt(arc.fromPos[0] ** 2 + arc.fromPos[1] ** 2);
+      const toR = Math.sqrt(arc.toPos[0] ** 2 + arc.toPos[1] ** 2);
+      assert.ok(fromR > 1, `${arc.from} fromPos radius ${fromR.toFixed(2)} should be > 1 scene unit`);
+      assert.ok(toR > 1, `${arc.to} toPos radius ${toR.toFixed(2)} should be > 1 scene unit`);
+    }
+  });
 });
