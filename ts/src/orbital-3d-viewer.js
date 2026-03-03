@@ -944,6 +944,6 @@ export function updateInfoPanel(panelEl, sceneData) {
     }
   }
 
-  html += '<p style="font-size:0.75em;color:#6e7681;margin-top:1em;">Planet textures: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener" style="color:#58a6ff;">Solar System Scope</a> (CC BY 4.0)</p>';
+  html += '<p style="font-size:0.75em;color:#6e7681;margin-top:1em;">惑星テクスチャ: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener" style="color:#58a6ff;">Solar System Scope</a> (CC BY 4.0)</p>';
   panelEl.innerHTML = html;
 }
