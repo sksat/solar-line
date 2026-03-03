@@ -176,6 +176,18 @@ describe("WASM bridge: propagate_mean_anomaly", () => {
       `m=${m}, expected π=${Math.PI}`,
     );
   });
+
+  it("full orbit returns to starting anomaly (mod 2π)", () => {
+    const TAU = 2 * Math.PI;
+    const n = TAU / 3600;
+    const m = wasm.propagate_mean_anomaly(0, n, 3600);
+    // Full period → M = 2π, which modulo 2π = 0 (or 2π)
+    const mMod = m % TAU;
+    assert.ok(
+      mMod < 1e-8 || Math.abs(mMod - TAU) < 1e-8,
+      `full orbit M=${m} mod 2π=${mMod}, expected ~0`,
+    );
+  });
 });
 
 describe("WASM bridge: specific_energy", () => {
@@ -211,6 +223,22 @@ describe("WASM bridge: specific_angular_momentum", () => {
     assert.ok(
       Math.abs(h - expected) < 1e-6,
       `h=${h}, expected=${expected}`,
+    );
+  });
+
+  it("eccentric orbit has lower h than circular at same semi-major axis", () => {
+    const a = 6578; // same semi-major axis
+    const hCirc = wasm.specific_angular_momentum(MU.EARTH, a, 0);
+    const hEcc = wasm.specific_angular_momentum(MU.EARTH, a, 0.5);
+    // h = sqrt(mu * a * (1 - e²)), so h(e=0.5) = sqrt(0.75) * h(e=0) ≈ 0.866 * h(e=0)
+    assert.ok(
+      hEcc < hCirc,
+      `eccentric h=${hEcc} should be less than circular h=${hCirc} at same a`,
+    );
+    const ratio = hEcc / hCirc;
+    assert.ok(
+      Math.abs(ratio - Math.sqrt(0.75)) < 0.001,
+      `ratio=${ratio}, expected sqrt(0.75)=${Math.sqrt(0.75)}`,
     );
   });
 });
@@ -296,6 +324,18 @@ describe("WASM bridge: brachistochrone_max_distance", () => {
       `d=${d}, dBack=${dBack}`,
     );
   });
+
+  it("higher acceleration covers more distance in same time", () => {
+    const t = 72 * 3600;
+    const d1 = wasm.brachistochrone_max_distance(0.1, t);
+    const d2 = wasm.brachistochrone_max_distance(0.2, t);
+    assert.ok(d2 > d1, `higher accel distance ${d2} should exceed ${d1}`);
+    // Distance ∝ accel, so d2 should be ~2*d1
+    assert.ok(
+      Math.abs(d2 / d1 - 2.0) < 0.01,
+      `ratio=${d2 / d1}, expected ~2.0`,
+    );
+  });
 });
 
 describe("WASM bridge: constants", () => {
@@ -346,6 +386,11 @@ describe("WASM bridge: brachistochrone_time", () => {
       Math.abs(tBack - t) < 0.1,
       `t=${t}, tBack=${tBack}`,
     );
+  });
+
+  it("zero distance gives zero time", () => {
+    const t = wasm.brachistochrone_time(0, 1.0);
+    assert.ok(t === 0 || Math.abs(t) < 1e-10, `zero distance time=${t}, expected 0`);
   });
 });
 
@@ -444,6 +489,17 @@ describe("WASM bridge: speed_of_light", () => {
     assert.ok(
       Math.abs(c - 299_792.458) < 1e-10,
       `c=${c}`,
+    );
+  });
+
+  it("consistent with light_time at 1 AU", () => {
+    const c = wasm.speed_of_light();
+    const au = 149_597_870.7; // km
+    const expectedTime = au / c; // ~499 seconds
+    const actualTime = wasm.light_time_seconds(au);
+    assert.ok(
+      Math.abs(actualTime - expectedTime) < 0.01,
+      `light_time=${actualTime}, c-derived=${expectedTime}`,
     );
   });
 });
