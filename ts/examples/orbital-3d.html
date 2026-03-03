@@ -224,13 +224,13 @@ function prepareFullRouteScene(data) {
   }));
 
   // Generate parking orbits between transfer gaps
-  const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15 };
+  const PARKING_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15 };
   const parkingOrbits = [];
   for (let i = 0; i < transfers.length; i++) {
     const nextStart = i + 1 < transfers.length ? transfers[i + 1].startDay : totalDays;
     const gap = nextStart - transfers[i].endDay;
     if (gap > 0.01) {
-      const pr = (PLANET_RADII[transfers[i].to] ?? 0.15) * 3;
+      const pr = (PARKING_RADII[transfers[i].to] ?? 0.15) * 3;
       const numOrbits = Math.min(3, Math.max(2, gap * 0.5));
       parkingOrbits.push({
         planet: transfers[i].to,
@@ -378,6 +378,8 @@ async function init() {
   function activateTimeline(sceneData) {
     const timeline = sceneData.timeline;
     activeTimeline = timeline || null;
+    // Expose totalDays for screenshot automation
+    window.__timelineTotalDays = timeline ? timeline.totalDays : 0;
     if (timeline) {
       loadTimeline(timeline);
       tlControls.classList.add("active");
