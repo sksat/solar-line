@@ -72,12 +72,12 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
 #timeline-label {
   font-size: 0.8em; color: var(--text-muted); min-width: 200px;
 }
-#view-mode-btn {
+#speed-btn, #view-mode-btn {
   background: #21262d; color: var(--accent); border: 1px solid var(--border);
   padding: 4px 12px; cursor: pointer; border-radius: 4px;
   font-size: 0.85em; white-space: nowrap;
 }
-#view-mode-btn:hover { background: var(--border); }
+#speed-btn:hover, #view-mode-btn:hover { background: var(--border); }
 #loading {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -116,6 +116,7 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
            aria-label="ミッションタイムライン" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000">
     <span id="timeline-time">0日</span>
     <span id="timeline-label"></span>
+    <button id="speed-btn" aria-label="再生速度" title="アニメーション速度の切替">1×</button>
     <button id="view-mode-btn" aria-label="視点切替" title="慣性座標/宇宙船視点の切替">慣性</button>
   </div>
 </div>
@@ -413,6 +414,17 @@ async function init() {
       btn.setAttribute("aria-pressed", "true");
       switchScene(btn.dataset.scene);
     });
+  });
+
+  // ── Speed control ──
+  const speedBtn = document.getElementById("speed-btn");
+  const speeds = [0.5, 1, 2, 4];
+  speedBtn.addEventListener("click", () => {
+    const cur = getAnimationSpeed();
+    const idx = speeds.indexOf(cur);
+    const next = speeds[(idx + 1) % speeds.length];
+    setAnimationSpeed(next);
+    speedBtn.textContent = next + "×";
   });
 
   // ── View mode toggle ──

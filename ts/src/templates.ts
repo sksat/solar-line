@@ -3238,6 +3238,7 @@ ${sceneButtons}
 <input type="range" class="viewer3d-slider" min="0" max="1000" value="0" style="flex:1;accent-color:#58a6ff;" aria-label="タイムライン">
 <span class="viewer3d-time" style="font-size:0.85em;color:#58a6ff;min-width:80px;text-align:right;font-variant-numeric:tabular-nums;">0日</span>
 <span class="viewer3d-label" style="font-size:0.8em;color:#8b949e;min-width:200px;"></span>
+<button class="viewer3d-speed" aria-label="再生速度" title="アニメーション速度の切替" style="background:#21262d;color:#58a6ff;border:1px solid var(--border);padding:4px 12px;cursor:pointer;border-radius:4px;font-size:0.85em;white-space:nowrap;">1×</button>
 <button class="viewer3d-viewmode" aria-label="視点切替" title="慣性座標/宇宙船視点の切替" style="background:#21262d;color:#58a6ff;border:1px solid var(--border);padding:4px 12px;cursor:pointer;border-radius:4px;font-size:0.85em;white-space:nowrap;">慣性</button>
 </div>
 <div class="viewer3d-hint" style="font-size:0.8em;color:var(--text-secondary);margin-top:4px;">ドラッグ: 回転 ｜ スクロール: ズーム ｜ 右ドラッグ: 移動</div>
@@ -3253,7 +3254,7 @@ function generateViewer3dScript(basePath: string): string {
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script type="module" src="${basePath}/orbital-3d-viewer.js"></script>
 <script type="module">
-import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode } from "${basePath}/orbital-3d-viewer.js";
+import { initViewer, loadScene, loadTimeline, updateTimelineFrame, setTimelinePlaying, getTimelineCurrentDay, setViewMode, getViewMode, setAnimationSpeed, getAnimationSpeed } from "${basePath}/orbital-3d-viewer.js";
 document.querySelectorAll(".viewer3d-container").forEach(async function(container) {
   var scene = container.dataset.scene;
   var resp = await fetch("${basePath}/data/calculations/3d_orbital_analysis.json");
@@ -3326,6 +3327,17 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
       var next = cur === "inertial" ? "ship" : "inertial";
       setViewMode(next);
       vmBtn.textContent = next === "inertial" ? "慣性" : "宇宙船";
+    });
+  }
+  var speedBtn = figure.querySelector(".viewer3d-speed");
+  if (speedBtn) {
+    var speeds = [0.5, 1, 2, 4];
+    speedBtn.addEventListener("click", function() {
+      var cur = getAnimationSpeed();
+      var idx = speeds.indexOf(cur);
+      var next = speeds[(idx + 1) % speeds.length];
+      setAnimationSpeed(next);
+      speedBtn.textContent = next + "×";
     });
   }
 });

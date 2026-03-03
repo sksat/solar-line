@@ -1743,6 +1743,14 @@ test.describe("Inline 3D viewer in cross-episode report", () => {
     expect(capText).toContain("3Dインタラクティブビューア");
     expect(capText).toContain("アニメーション再生");
   });
+
+  test("has animation speed button", async ({ page }) => {
+    await page.goto("/summary/cross-episode.html");
+    const speedBtn = page.locator(".viewer3d-speed");
+    await expect(speedBtn).toBeAttached();
+    await expect(speedBtn).toHaveAttribute("aria-label", "再生速度");
+    await expect(speedBtn).toHaveText("1×");
+  });
 });
 
 // --- Episode inline 3D viewer tests (Task 561) ---

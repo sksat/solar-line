@@ -2662,7 +2662,7 @@ describe("renderSummaryPage", () => {
     assert.ok(!html.includes("viewer3d-container"));
   });
 
-  it("includes viewer3d controls (play, slider, viewmode)", () => {
+  it("includes viewer3d controls (play, slider, viewmode, speed)", () => {
     const reportWithViewer: SummaryReport = {
       slug: "test-viewer3d-controls",
       title: "コントロールテスト",
@@ -2677,6 +2677,8 @@ describe("renderSummaryPage", () => {
     assert.ok(html.includes('class="viewer3d-play"'));
     assert.ok(html.includes('class="viewer3d-slider"'));
     assert.ok(html.includes('class="viewer3d-viewmode"'));
+    assert.ok(html.includes('class="viewer3d-speed"'), "should have speed button");
+    assert.ok(html.includes('aria-label="再生速度"'), "speed button should have aria-label");
   });
 });
 
@@ -6359,6 +6361,12 @@ describe("renderEpisode with viewer3d", () => {
     assert.ok(html.includes('class="viewer3d-play"'));
     assert.ok(html.includes('class="viewer3d-slider"'));
     assert.ok(html.includes('class="viewer3d-viewmode"'));
+  });
+
+  it("includes speed button for animation speed control", () => {
+    const html = renderEpisode(reportWithViewer);
+    assert.ok(html.includes('class="viewer3d-speed"'), "should have speed button");
+    assert.ok(html.includes('aria-label="再生速度"'), "speed button should have aria-label");
   });
 
   it("viewer3d section appears before transfers section", () => {

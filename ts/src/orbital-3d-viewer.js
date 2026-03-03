@@ -23,6 +23,7 @@ let transferCurves = []; // Array of { curve, startDay, endDay, episode }
 let _sceneTransferArcs = null; // Store current scene's transfer arc data for local scenes
 let _viewMode = "inertial"; // "inertial" or "ship"
 let _cameraOffset = new THREE.Vector3(5, 8, 10); // offset from ship in ship-frame mode
+let _animationSpeed = 1.0; // Playback speed multiplier (0.5, 1, 2, 4)
 
 // ── Constants matching orbital-3d-viewer-data.ts ──
 const AU_TO_SCENE = 5;
@@ -640,6 +641,18 @@ export function getViewMode() {
 }
 
 /**
+ * Set animation playback speed multiplier.
+ * @param {number} speed - Speed multiplier (e.g. 0.5, 1, 2, 4)
+ */
+export function setAnimationSpeed(speed) {
+  _animationSpeed = speed;
+}
+
+export function getAnimationSpeed() {
+  return _animationSpeed;
+}
+
+/**
  * Start/stop timeline playback.
  */
 export function setTimelinePlaying(playing) {
@@ -651,8 +664,8 @@ export function setTimelinePlaying(playing) {
       if (timelineLastTimestamp === null) timelineLastTimestamp = timestamp;
       const dtMs = timestamp - timelineLastTimestamp;
       timelineLastTimestamp = timestamp;
-      // Playback: complete mission in ~15 seconds of wall time
-      const playbackRate = timelineData.totalDays / 15;
+      // Playback: complete mission in ~15 seconds at 1× speed
+      const playbackRate = (timelineData.totalDays / 15) * _animationSpeed;
       timelineCurrentDay += (dtMs / 1000) * playbackRate;
       if (timelineCurrentDay >= timelineData.totalDays) {
         timelineCurrentDay = timelineData.totalDays;
