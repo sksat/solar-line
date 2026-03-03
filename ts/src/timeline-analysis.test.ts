@@ -4,6 +4,10 @@ import {
   computeTimeline,
   diagramAngles,
   findOptimalEpoch,
+  searchMultipleEpochs,
+  ep02SensitivityAnalysis,
+  narrativePlausibilityAnalysis,
+  FIXED_DURATIONS,
 } from "./timeline-analysis.ts";
 import { calendarToJD, planetPosition } from "./ephemeris.ts";
 
@@ -178,6 +182,74 @@ describe("findOptimalEpoch", () => {
       distAU > 3,
       `Mars-Jupiter distance ${distAU.toFixed(2)} AU should be > 3 AU`,
     );
+  });
+});
+
+describe("FIXED_DURATIONS", () => {
+  it("EP01 is 72 hours = 3 days", () => {
+    assert.equal(FIXED_DURATIONS.ep01TransitDays, 3);
+  });
+
+  it("EP03 is ~143 hours ≈ 5.96 days", () => {
+    assert.ok(Math.abs(FIXED_DURATIONS.ep03TransitDays - 143 / 24) < 0.01);
+  });
+
+  it("EP05 coast is 375 hours ≈ 15.6 days", () => {
+    assert.ok(Math.abs(FIXED_DURATIONS.coastDays - 375 / 24) < 0.01);
+  });
+});
+
+describe("searchMultipleEpochs", () => {
+  const results = searchMultipleEpochs();
+
+  it("returns multiple candidate timelines", () => {
+    assert.ok(results.length >= 2,
+      `should find multiple epochs, got ${results.length}`);
+  });
+
+  it("all results have 4 events", () => {
+    for (const tl of results) {
+      assert.equal(tl.events.length, 4);
+    }
+  });
+
+  it("results are sorted by total duration (shortest first)", () => {
+    for (let i = 0; i < results.length - 1; i++) {
+      assert.ok(results[i].totalDurationDays <= results[i + 1].totalDurationDays,
+        `results should be sorted: ${results[i].totalDurationDays} <= ${results[i + 1].totalDurationDays}`);
+    }
+  });
+});
+
+describe("ep02SensitivityAnalysis", () => {
+  const scenarios = ep02SensitivityAnalysis();
+
+  it("returns multiple scenarios", () => {
+    assert.ok(scenarios.length >= 2);
+  });
+
+  it("each scenario has positive transit time", () => {
+    for (const s of scenarios) {
+      assert.ok(s.transitDays > 0,
+        `scenario "${s.label}" should have positive transit time`);
+    }
+  });
+});
+
+describe("narrativePlausibilityAnalysis", () => {
+  const analysis = narrativePlausibilityAnalysis();
+
+  it("returns plausibility entries for multiple episodes", () => {
+    assert.ok(analysis.length >= 3);
+  });
+
+  it("each entry has reasoning and coastFeelsLong boolean", () => {
+    for (const entry of analysis) {
+      assert.ok(typeof entry.coastFeelsLong === "boolean",
+        "coastFeelsLong should be boolean");
+      assert.ok(entry.reasoning.length > 0,
+        "reasoning should be non-empty");
+    }
   });
 });
 
