@@ -1332,6 +1332,22 @@ describe("prepareEpisodeScene", () => {
     );
   });
 
+  it("EP03 timeline totalDays matches ~6 days (143h)", () => {
+    const scene = prepareEpisodeScene(analysis, 3);
+    assert.ok(
+      Math.abs(scene.timeline!.totalDays - 5.96) < 0.5,
+      `EP03 totalDays should be ~5.96, got ${scene.timeline!.totalDays}`,
+    );
+  });
+
+  it("EP04 timeline totalDays matches ~21 days (507h composite)", () => {
+    const scene = prepareEpisodeScene(analysis, 4);
+    assert.ok(
+      scene.timeline!.totalDays > 18 && scene.timeline!.totalDays < 25,
+      `EP04 totalDays should be ~21, got ${scene.timeline!.totalDays}`,
+    );
+  });
+
   it("episode scene day=0 planet positions match full-route at departure day", () => {
     const fullScene = prepareFullRouteScene(analysis);
     const firstJd = analysis.transfers[0].departure.jd;
@@ -1643,6 +1659,15 @@ describe("EP05 Jupiter flyby IF scene", () => {
     const scene = prepareEp5FlybyScene(ep5Input);
     assert.ok(scene.eclipticPlane);
     assert.equal(scene.eclipticPlane!.type, "ecliptic");
+  });
+
+  it("EP05 flyby timeline totalDays matches ~21 days (200h+307h)", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    const expectedDays = (200 + 307) / 24;
+    assert.ok(
+      Math.abs(scene.timeline!.totalDays - expectedDays) < 0.5,
+      `EP05 totalDays should be ~${expectedDays.toFixed(1)}, got ${scene.timeline!.totalDays}`,
+    );
   });
 });
 
