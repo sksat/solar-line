@@ -1755,17 +1755,18 @@ test.describe("Inline 3D viewer in cross-episode report", () => {
     await expect(container).toHaveAttribute("data-scene", "full-route");
     const scenesAttr = await container.getAttribute("data-scenes");
     const scenes = JSON.parse(scenesAttr!);
-    expect(scenes).toEqual(["full-route", "jupiter-capture", "saturn-ring", "uranus-approach"]);
+    expect(scenes).toEqual(["full-route", "jupiter-capture", "saturn-ring", "uranus-approach", "earth-arrival"]);
   });
 
-  test("has 4 scene switcher buttons", async ({ page }) => {
+  test("has 5 scene switcher buttons", async ({ page }) => {
     await page.goto("/summary/cross-episode.html");
     const buttons = page.locator(".viewer3d-scene-btn");
-    expect(await buttons.count()).toBe(4);
+    expect(await buttons.count()).toBe(5);
     await expect(buttons.nth(0)).toHaveText("全航路");
     await expect(buttons.nth(1)).toHaveText("木星捕獲");
     await expect(buttons.nth(2)).toHaveText("土星リング");
     await expect(buttons.nth(3)).toHaveText("天王星接近");
+    await expect(buttons.nth(4)).toHaveText("地球到着");
   });
 
   test("first scene button is active by default", async ({ page }) => {
