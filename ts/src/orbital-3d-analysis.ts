@@ -20,6 +20,17 @@ import { findOptimalEpoch } from "./timeline-analysis.ts";
 import { equatorialToEcliptic, saturnRingPlaneNormal, uranusSpinAxis } from "./coordinate-transforms.ts";
 import { AU_KM } from "./kestrel.ts";
 
+// ── Jupiter system constants ────────────────────────────────────
+
+const JUPITER_RADIUS_KM = 71_492;
+const GANYMEDE_ORBITAL_RADIUS_KM = 1_070_400;
+/** Perijove capture radius from EP01 analysis (ep01-exploration-05) */
+const EP01_PERIJOVE_RJ = 1.5;
+/** ΔV for perijove capture (Oberth effect, V∞=12 km/s) */
+const EP01_CANONICAL_DV_KMS = 2.3;
+/** ΔV for direct capture at Ganymede orbit altitude (no Oberth benefit) */
+const EP01_IF_HIGH_ALTITUDE_DV_KMS = 4.13;
+
 // ── Saturn ring system constants ─────────────────────────────────
 
 const SATURN_RING_INNER_KM = 66_900;
@@ -176,6 +187,34 @@ interface SaturnRingAnalysis {
   };
 }
 
+interface JupiterCaptureAnalysis {
+  perijoveRJ: number;
+  ganymedeOrbitKm: number;
+  approachAngleDeg: number;
+  canonicalDeltaVKms: number;
+  ifDeltaVKms: number;
+}
+
+function analyzeJupiterCapture(): JupiterCaptureAnalysis {
+  // Approach direction from Mars
+  const marsPos = planetPosition("mars", DEPARTURE_MARS);
+  const jupPos = planetPosition("jupiter", ARRIVAL_JUPITER);
+  const dx = jupPos.x - marsPos.x;
+  const dy = jupPos.y - marsPos.y;
+  const dz = jupPos.z - marsPos.z;
+  const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  // Angle of approach relative to ecliptic
+  const approachAngle = Math.asin(Math.abs(dz) / dist) * (180 / Math.PI);
+
+  return {
+    perijoveRJ: EP01_PERIJOVE_RJ,
+    ganymedeOrbitKm: GANYMEDE_ORBITAL_RADIUS_KM,
+    approachAngleDeg: approachAngle,
+    canonicalDeltaVKms: EP01_CANONICAL_DV_KMS,
+    ifDeltaVKms: EP01_IF_HIGH_ALTITUDE_DV_KMS,
+  };
+}
+
 function analyzeSaturnRings(): SaturnRingAnalysis {
   const normal = saturnRingPlaneNormal();
   const saturnPos = analyzeZHeight("saturn", ARRIVAL_SATURN);
@@ -292,6 +331,7 @@ function analyzeUranusApproach(): UranusApproachAnalysis {
 
 export function analyze3DOrbital() {
   const transfers = LEGS.map(analyzeTransfer3D);
+  const jupiter = analyzeJupiterCapture();
   const saturn = analyzeSaturnRings();
   const uranus = analyzeUranusApproach();
 
@@ -305,6 +345,7 @@ export function analyze3DOrbital() {
     coplanarApproximationValid: maxPlaneChangeFraction < 1.0,
     maxPlaneChangeFractionPercent: maxPlaneChangeFraction,
     transfers,
+    jupiterCaptureAnalysis: jupiter,
     saturnRingAnalysis: saturn,
     uranusApproachAnalysis: uranus,
     planetaryZHeightsAtEpoch: {

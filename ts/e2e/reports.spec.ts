@@ -1755,16 +1755,17 @@ test.describe("Inline 3D viewer in cross-episode report", () => {
     await expect(container).toHaveAttribute("data-scene", "full-route");
     const scenesAttr = await container.getAttribute("data-scenes");
     const scenes = JSON.parse(scenesAttr!);
-    expect(scenes).toEqual(["full-route", "saturn-ring", "uranus-approach"]);
+    expect(scenes).toEqual(["full-route", "jupiter-capture", "saturn-ring", "uranus-approach"]);
   });
 
-  test("has 3 scene switcher buttons", async ({ page }) => {
+  test("has 4 scene switcher buttons", async ({ page }) => {
     await page.goto("/summary/cross-episode.html");
     const buttons = page.locator(".viewer3d-scene-btn");
-    expect(await buttons.count()).toBe(3);
+    expect(await buttons.count()).toBe(4);
     await expect(buttons.nth(0)).toHaveText("全航路");
-    await expect(buttons.nth(1)).toHaveText("土星リング");
-    await expect(buttons.nth(2)).toHaveText("天王星接近");
+    await expect(buttons.nth(1)).toHaveText("木星捕獲");
+    await expect(buttons.nth(2)).toHaveText("土星リング");
+    await expect(buttons.nth(3)).toHaveText("天王星接近");
   });
 
   test("first scene button is active by default", async ({ page }) => {
@@ -1895,15 +1896,16 @@ test.describe("Inline 3D viewer in episode reports", () => {
     await expect(buttons.nth(2)).toHaveText("全航路");
   });
 
-  test("EP01 has inline 3D viewer with episode-1 scene and switcher", async ({ page }) => {
+  test("EP01 has inline 3D viewer with episode-1 scene, jupiter-capture, and full-route switcher", async ({ page }) => {
     await page.goto("/episodes/ep-001.html");
     const container = page.locator(".viewer3d-container");
     await expect(container).toBeAttached();
     await expect(container).toHaveAttribute("data-scene", "episode-1");
     const buttons = page.locator(".viewer3d-scene-btn");
-    expect(await buttons.count()).toBe(2);
+    expect(await buttons.count()).toBe(3);
     await expect(buttons.nth(0)).toHaveText("EP01: 火星→木星");
-    await expect(buttons.nth(1)).toHaveText("全航路");
+    await expect(buttons.nth(1)).toHaveText("木星捕獲");
+    await expect(buttons.nth(2)).toHaveText("全航路");
   });
 });
 

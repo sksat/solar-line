@@ -24,6 +24,7 @@ describe("3D orbital analysis: structure", () => {
     assert.ok(typeof data.coplanarApproximationValid === "boolean", "has coplanarApproximationValid");
     assert.ok(typeof data.maxPlaneChangeFractionPercent === "number", "has maxPlaneChangeFractionPercent");
     assert.ok(Array.isArray(data.transfers), "has transfers array");
+    assert.ok(data.jupiterCaptureAnalysis, "has jupiterCaptureAnalysis");
     assert.ok(data.saturnRingAnalysis, "has saturnRingAnalysis");
     assert.ok(data.uranusApproachAnalysis, "has uranusApproachAnalysis");
     assert.ok(data.planetaryZHeightsAtEpoch, "has planetaryZHeightsAtEpoch");
@@ -123,6 +124,35 @@ describe("3D orbital analysis: transfer legs", () => {
     // Saturn (i≈2.49°) to Uranus (i≈0.77°) has largest Δi among our transfers
     const maxDeltaI = Math.max(...data.transfers.map((t: { inclinationChangeDeg: number }) => t.inclinationChangeDeg));
     assert.equal(ep03.inclinationChangeDeg, maxDeltaI, "EP03 has largest inclination change");
+  });
+});
+
+describe("3D orbital analysis: Jupiter capture analysis", () => {
+  const jupiter = data.jupiterCaptureAnalysis;
+
+  it("perijove is 1.5 RJ (from EP01 analysis)", () => {
+    assert.equal(jupiter.perijoveRJ, 1.5);
+  });
+
+  it("Ganymede orbit is ~1,070,400 km", () => {
+    assert.equal(jupiter.ganymedeOrbitKm, 1_070_400);
+  });
+
+  it("canonical ΔV is 2.3 km/s (Oberth-assisted perijove capture)", () => {
+    assert.equal(jupiter.canonicalDeltaVKms, 2.3);
+  });
+
+  it("IF high-altitude ΔV is 4.13 km/s (no Oberth benefit)", () => {
+    assert.equal(jupiter.ifDeltaVKms, 4.13);
+  });
+
+  it("IF ΔV > canonical ΔV (Oberth effect reduces required ΔV)", () => {
+    assert.ok(jupiter.ifDeltaVKms > jupiter.canonicalDeltaVKms,
+      "high-altitude capture requires more ΔV than perijove capture");
+  });
+
+  it("approach angle is positive and within 0-90°", () => {
+    assert.ok(jupiter.approachAngleDeg >= 0 && jupiter.approachAngleDeg <= 90);
   });
 });
 

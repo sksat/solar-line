@@ -455,6 +455,28 @@ test.describe("3D Orbital Viewer Example", () => {
     await expect(vmBtn).toContainText("慣性");
   });
 
+  test("jupiter-capture scene shows scenario toggles with IF checkboxes", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/examples/orbital-3d.html");
+    // Click the jupiter-capture preset button
+    const jupiterBtn = page.locator(".preset-btn", { hasText: "木星捕獲" });
+    await jupiterBtn.click();
+    await page.waitForTimeout(1000);
+    // Scenario toggles should appear in info panel
+    const toggles = page.locator(".scenario-toggles");
+    await expect(toggles).toBeVisible();
+    // Should have checkboxes with data-scenario attributes
+    const checkboxes = page.locator('input[data-scenario]');
+    expect(await checkboxes.count()).toBeGreaterThanOrEqual(2);
+    // Canonical should be checked
+    const canonical = page.locator('input[data-scenario="canonical"]');
+    await expect(canonical).toBeChecked();
+    // IF scenario should be checked by default
+    const highAlt = page.locator('input[data-scenario="high-altitude"]');
+    await expect(highAlt).toBeChecked();
+    expect(errors).toEqual([]);
+  });
+
   test("saturn-ring scene shows scenario toggles with IF checkboxes", async ({ page }) => {
     const errors = collectConsoleErrors(page);
     await page.goto("/examples/orbital-3d.html");

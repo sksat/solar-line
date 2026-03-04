@@ -10,6 +10,7 @@ import {
   planetPositionAtTime,
   formatDaysJa,
   prepareFullRouteScene,
+  prepareJupiterCaptureScene,
   prepareSaturnScene,
   prepareUranusScene,
   prepareEpisodeScene,
@@ -356,6 +357,167 @@ describe("prepareFullRouteScene", () => {
   it("omits transferSummary when no analysis data present", () => {
     const scene = prepareFullRouteScene(minimalInput);
     assert.equal(scene.transferSummary, undefined);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// prepareJupiterCaptureScene
+// ---------------------------------------------------------------------------
+
+describe("prepareJupiterCaptureScene", () => {
+  const jupiterInput = {
+    jupiterCaptureAnalysis: {
+      perijoveRJ: 1.5,
+      ganymedeOrbitKm: 1_070_400,
+      approachAngleDeg: 17,
+      canonicalDeltaVKms: 2.3,
+      ifDeltaVKms: 4.13,
+    },
+  };
+
+  it("returns scene with type jupiter-capture", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    assert.equal(scene.type, "jupiter-capture");
+  });
+
+  it("includes Jupiter as primary body", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const jupiter = scene.planets.find(p => p.name === "jupiter");
+    assert.ok(jupiter);
+    assert.equal(jupiter!.isCentral, true);
+  });
+
+  it("includes Ganymede, Io, and Europa", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("ganymede"), "should include Ganymede");
+    assert.ok(names.includes("io"), "should include Io");
+    assert.ok(names.includes("europa"), "should include Europa");
+  });
+
+  it("Ganymede is NOT at the same position as Jupiter", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const jupiter = scene.planets.find(p => p.name === "jupiter")!;
+    const ganymede = scene.planets.find(p => p.name === "ganymede")!;
+    const dx = ganymede.x - jupiter.x;
+    const dy = ganymede.y - jupiter.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    assert.ok(dist > 1, `Ganymede should be far from Jupiter, got dist=${dist}`);
+  });
+
+  it("Ganymede position is at orbitRadius distance from Jupiter", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const ganymede = scene.planets.find(p => p.name === "ganymede")!;
+    const dist = Math.sqrt(ganymede.x ** 2 + ganymede.y ** 2);
+    const expectedR = 1_070_400 / LOCAL_SCENE_SCALE;
+    assert.ok(Math.abs(dist - expectedR) < 0.1, `Ganymede dist ${dist} should be ~${expectedR}`);
+  });
+
+  it("Io is closer to Jupiter than Ganymede", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const io = scene.planets.find(p => p.name === "io")!;
+    const ganymede = scene.planets.find(p => p.name === "ganymede")!;
+    const ioDist = Math.sqrt(io.x ** 2 + io.y ** 2);
+    const ganymedeDist = Math.sqrt(ganymede.x ** 2 + ganymede.y ** 2);
+    assert.ok(ioDist < ganymedeDist, "Io should be closer to Jupiter than Ganymede");
+  });
+
+  it("supports inertial and ship view modes", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    assert.ok(scene.supportedViewModes);
+    assert.ok(scene.supportedViewModes!.includes("inertial"));
+    assert.ok(scene.supportedViewModes!.includes("ship"));
+  });
+
+  it("has timeline with Ganymede orbit for animation", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    assert.ok(scene.timeline, "Jupiter scene should have timeline");
+    const ganOrbit = scene.timeline!.orbits.find(o => o.name === "ganymede");
+    assert.ok(ganOrbit, "should have Ganymede orbit");
+    assert.ok(ganOrbit!.meanMotionPerDay > 0, "should have positive mean motion");
+  });
+
+  it("timeline includes orbits for all 3 moons", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const orbitNames = scene.timeline!.orbits.map(o => o.name);
+    assert.ok(orbitNames.includes("io"));
+    assert.ok(orbitNames.includes("europa"));
+    assert.ok(orbitNames.includes("ganymede"));
+  });
+
+  it("Io orbit is innermost, Ganymede is outermost", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const io = scene.timeline!.orbits.find(o => o.name === "io")!;
+    const europa = scene.timeline!.orbits.find(o => o.name === "europa")!;
+    const ganymede = scene.timeline!.orbits.find(o => o.name === "ganymede")!;
+    assert.ok(io.radiusScene < europa.radiusScene, "Io < Europa");
+    assert.ok(europa.radiusScene < ganymede.radiusScene, "Europa < Ganymede");
+  });
+
+  it("timeline transfers have from/to planet names", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const transfers = scene.timeline!.transfers;
+    assert.strictEqual(transfers[0].from, "mars");
+    assert.strictEqual(transfers[0].to, "jupiter");
+  });
+
+  it("has orbit circles for Io, Europa, Ganymede", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    assert.ok(scene.orbitCircles);
+    const names = scene.orbitCircles!.map(c => c.name);
+    assert.ok(names.includes("io"));
+    assert.ok(names.includes("europa"));
+    assert.ok(names.includes("ganymede"));
+  });
+
+  it("includes 2 scenarios: canonical and high-altitude", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    assert.ok(scene.scenarios, "Jupiter scene should have scenarios");
+    assert.equal(scene.scenarios!.length, 2);
+    const ids = scene.scenarios!.map(s => s.id);
+    assert.ok(ids.includes("canonical"));
+    assert.ok(ids.includes("high-altitude"));
+  });
+
+  it("high-altitude scenario is marked as counterfactual", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const canonical = scene.scenarios!.find(s => s.id === "canonical")!;
+    const highAlt = scene.scenarios!.find(s => s.id === "high-altitude")!;
+    assert.ok(!canonical.isCounterfactual);
+    assert.equal(highAlt.isCounterfactual, true);
+  });
+
+  it("has canonical transfer arcs (approach + perijove→ganymede)", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const canonicalArcs = scene.transferArcs.filter(a => a.scenarioId === "canonical");
+    assert.equal(canonicalArcs.length, 2, "should have 2 canonical arcs");
+    // First arc: approach to perijove
+    assert.equal(canonicalArcs[0].from, "mars");
+    assert.equal(canonicalArcs[0].to, "jupiter");
+    // Second arc: perijove to ganymede
+    assert.equal(canonicalArcs[1].from, "jupiter");
+    assert.equal(canonicalArcs[1].to, "ganymede");
+  });
+
+  it("has IF high-altitude arc (direct to ganymede)", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const ifArcs = scene.transferArcs.filter(a => a.scenarioId === "high-altitude");
+    assert.equal(ifArcs.length, 1, "should have 1 IF arc");
+    assert.equal(ifArcs[0].from, "mars");
+    assert.equal(ifArcs[0].to, "ganymede");
+    assert.equal(ifArcs[0].isCounterfactual, true);
+  });
+
+  it("canonical perijove arc destination is close to Jupiter", () => {
+    const scene = prepareJupiterCaptureScene(jupiterInput);
+    const perijoveArc = scene.transferArcs.find(
+      a => a.scenarioId === "canonical" && a.to === "jupiter"
+    )!;
+    const [x, y] = perijoveArc.toPos;
+    const dist = Math.sqrt(x * x + y * y);
+    // Perijove at 1.5 RJ = 107,238 km → 2.14 scene units
+    assert.ok(dist < 5, `perijove destination should be close to Jupiter, got ${dist}`);
+    assert.ok(dist > 0, "perijove should not be at exact center");
   });
 });
 

@@ -159,7 +159,7 @@ export interface SceneScenario {
 }
 
 export interface SceneData {
-  type: "full-route" | "saturn-ring" | "uranus-approach" | `episode-${number}`;
+  type: "full-route" | "jupiter-capture" | "saturn-ring" | "uranus-approach" | `episode-${number}`;
   title: string;
   description: string;
   planets: PlanetData[];
@@ -190,9 +190,15 @@ export const LOCAL_SCENE_SCALE = 50_000;
 
 /** Moon orbital periods in days */
 const MOON_PERIODS_DAYS: Record<string, number> = {
+  // Jupiter system
+  io: 1.769138,
+  europa: 3.551181,
+  ganymede: 7.154553,
+  // Saturn system
   enceladus: 1.370218,
   rhea: 4.518212,
   titan: 15.945,
+  // Uranus system
   titania: 8.705872,
   miranda: 1.413479,
   oberon: 13.463,
@@ -205,9 +211,15 @@ const PLANET_COLORS: Record<string, string> = {
   saturn: "#d4b896",
   uranus: "#7ec8e3",
   earth: "#4488ff",
+  // Jupiter moons
+  io: "#d29922",
+  europa: "#c8d8e8",
+  ganymede: "#58a6ff",
+  // Saturn moons
   enceladus: "#ccddee",
   rhea: "#eab308",
   titan: "#d2a8ff",
+  // Uranus moons
   titania: "#aabbcc",
   miranda: "#3b82f6",
   oberon: "#f97316",
@@ -229,9 +241,15 @@ const PLANET_RADII: Record<string, number> = {
   saturn: 0.35,
   uranus: 0.25,
   earth: 0.15,
+  // Jupiter moons
+  io: 0.06,
+  europa: 0.06,
+  ganymede: 0.08,
+  // Saturn moons
   enceladus: 0.08,
   rhea: 0.08,
   titan: 0.1,
+  // Uranus moons
   titania: 0.08,
   miranda: 0.06,
   oberon: 0.08,
@@ -776,9 +794,16 @@ export function prepareEpisodeScene(data: {
 
 /** Moon orbital radii in km (for IF counterfactual scenes) */
 const MOON_ORBIT_KM: Record<string, number> = {
+  // Jupiter system (Galilean moons)
+  io: 421_800,
+  europa: 671_100,
+  ganymede: 1_070_400,
+  callisto: 1_882_700,
+  // Saturn system
   enceladus: 238_020,
   rhea: 527_108,
   titan: 1_221_870,
+  // Uranus system
   miranda: 129_390,
   titania: 435_910,
   oberon: 583_520,
@@ -797,6 +822,185 @@ function makeMoon(name: string, label: string, angle: number): PlanetData {
     radius: PLANET_RADII[name] ?? 0.08,
     orbitRadius: orbitKm,
     label,
+  };
+}
+
+/** Jupiter radius in km */
+const JUPITER_RADIUS_KM = 71_492;
+
+/**
+ * Prepare Jupiter capture scene (local Jupiter-centric view).
+ * Shows canonical perijupiter capture (1.5 RJ, Oberth effect) vs IF high-altitude capture.
+ * EP01 analysis: approach from Mars with V∞=12 km/s.
+ */
+export function prepareJupiterCaptureScene(data: {
+  jupiterCaptureAnalysis: {
+    perijoveRJ: number;          // canonical perijove in Jupiter radii (1.5)
+    ganymedeOrbitKm: number;     // Ganymede semi-major axis in km
+    approachAngleDeg: number;    // approach direction from Mars
+    canonicalDeltaVKms: number;  // ΔV for perijove capture (2.3 km/s)
+    ifDeltaVKms: number;         // ΔV for high-altitude capture (4.13 km/s)
+  };
+}): SceneData {
+  const j = data.jupiterCaptureAnalysis;
+
+  // Ganymede is the destination; Io and Europa shown for context
+  const ganymedeOrbitKm = j.ganymedeOrbitKm;
+  const ganymedeSceneR = ganymedeOrbitKm / LOCAL_SCENE_SCALE;
+  const ganymedeAngle = Math.PI * 0.7;
+  const ganymedeMoon: PlanetData = {
+    name: "ganymede",
+    x: ganymedeSceneR * Math.cos(ganymedeAngle),
+    y: ganymedeSceneR * Math.sin(ganymedeAngle),
+    z: 0,
+    color: PLANET_COLORS.ganymede,
+    radius: PLANET_RADII.ganymede,
+    orbitRadius: ganymedeOrbitKm,
+    label: "ガニメデ",
+  };
+  const ioMoon = makeMoon("io", "イオ", Math.PI * 0.2);
+  const europaMoon = makeMoon("europa", "エウロパ", Math.PI * 1.4);
+
+  // Perijove reference point (very close to Jupiter)
+  const perijoveKm = j.perijoveRJ * JUPITER_RADIUS_KM;
+  const perijoveSceneR = perijoveKm / LOCAL_SCENE_SCALE;
+  const perijoveAngle = Math.PI * 1.5; // bottom of Jupiter
+  const perijovePos: [number, number, number] = [
+    perijoveSceneR * Math.cos(perijoveAngle),
+    perijoveSceneR * Math.sin(perijoveAngle),
+    0,
+  ];
+
+  // Approach point (far from Jupiter, upper-right)
+  const approachPos: [number, number, number] = [12, 5, 0];
+
+  return {
+    type: "jupiter-capture",
+    title: "木星捕獲 — 3Dビュー",
+    description:
+      `ペリジュピター捕獲（${j.perijoveRJ} RJ）とIF高高度捕獲の比較。` +
+      `深い重力井戸でのオーベルト効果により、ペリジュピター経由は` +
+      `ΔV ${j.canonicalDeltaVKms} km/sで捕獲可能だが、高高度では${j.ifDeltaVKms} km/s必要。`,
+    supportedViewModes: ["inertial", "ship"],
+    scenarios: [
+      {
+        id: "canonical",
+        label: `作中航路 — ペリジュピター捕獲（ΔV ${j.canonicalDeltaVKms} km/s, ${j.perijoveRJ} RJ）`,
+      },
+      {
+        id: "high-altitude",
+        label: `IF: 高高度捕獲（ΔV ${j.ifDeltaVKms} km/s, ガニメデ軌道高度）`,
+        isCounterfactual: true,
+        color: "#d2a8ff",
+      },
+    ],
+    planets: [
+      {
+        name: "jupiter",
+        x: 0,
+        y: 0,
+        z: 0,
+        color: PLANET_COLORS.jupiter,
+        radius: 0.5,
+        isCentral: true,
+        label: "木星",
+      },
+      ioMoon,
+      europaMoon,
+      ganymedeMoon,
+    ],
+    transferArcs: [
+      // Canonical: approach → perijove
+      {
+        from: "mars",
+        to: "jupiter",
+        fromPos: approachPos,
+        toPos: perijovePos,
+        episode: 1,
+        color: "#3fb950",
+        label: `ペリジュピター捕獲（ΔV=${j.canonicalDeltaVKms} km/s）`,
+        scenarioId: "canonical",
+      },
+      // Canonical: perijove → Ganymede
+      {
+        from: "jupiter",
+        to: "ganymede",
+        fromPos: perijovePos,
+        toPos: [ganymedeMoon.x, ganymedeMoon.y, 0],
+        episode: 1,
+        color: "#3fb950",
+        label: "ペリジュピター→ガニメデ遷移",
+        scenarioId: "canonical",
+      },
+      // IF: direct high-altitude capture at Ganymede orbit
+      {
+        from: "mars",
+        to: "ganymede",
+        fromPos: approachPos,
+        toPos: [ganymedeMoon.x, ganymedeMoon.y, 0],
+        episode: 1,
+        color: "#d2a8ff",
+        label: `IF: 高高度捕獲（ΔV=${j.ifDeltaVKms} km/s）`,
+        scenarioId: "high-altitude",
+        isCounterfactual: true,
+      },
+    ],
+    orbitCircles: [
+      {
+        name: "io",
+        radiusScene: MOON_ORBIT_KM.io / LOCAL_SCENE_SCALE,
+        color: PLANET_COLORS.io,
+        z: 0,
+      },
+      {
+        name: "europa",
+        radiusScene: MOON_ORBIT_KM.europa / LOCAL_SCENE_SCALE,
+        color: PLANET_COLORS.europa,
+        z: 0,
+      },
+      {
+        name: "ganymede",
+        radiusScene: ganymedeOrbitKm / LOCAL_SCENE_SCALE,
+        color: PLANET_COLORS.ganymede,
+        z: 0,
+      },
+    ],
+    timeline: {
+      totalDays: MOON_PERIODS_DAYS.ganymede * 3,
+      orbits: [
+        {
+          name: "io",
+          radiusScene: MOON_ORBIT_KM.io / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI * 0.2,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.io,
+          z: 0,
+        },
+        {
+          name: "europa",
+          radiusScene: MOON_ORBIT_KM.europa / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI * 1.4,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.europa,
+          z: 0,
+        },
+        {
+          name: "ganymede",
+          radiusScene: ganymedeOrbitKm / LOCAL_SCENE_SCALE,
+          initialAngle: ganymedeAngle,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.ganymede,
+          z: 0,
+        },
+      ],
+      transfers: [
+        {
+          startDay: 0,
+          endDay: MOON_PERIODS_DAYS.ganymede,
+          episode: 1,
+          label: "火星→木星 接近",
+          from: "mars",
+          to: "jupiter",
+        },
+      ],
+    },
   };
 }
 

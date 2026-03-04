@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-03T19:58:38.489Z",
+  "generatedAt": "2026-03-04T02:35:47.671Z",
   "description": "3D orbital analysis for SOLAR LINE — ecliptic z-heights, ring crossings, approach geometry",
   "coplanarApproximationValid": false,
   "maxPlaneChangeFractionPercent": 1.510119325764719,
@@ -121,6 +121,13 @@
       "planeChangeFractionPercent": 0.7013615665794648
     }
   ],
+  "jupiterCaptureAnalysis": {
+    "perijoveRJ": 1.5,
+    "ganymedeOrbitKm": 1070400,
+    "approachAngleDeg": 1.1330443692816106,
+    "canonicalDeltaVKms": 2.3,
+    "ifDeltaVKms": 4.13
+  },
   "saturnRingAnalysis": {
     "ringPlaneNormal": [
       0.08547883186107152,

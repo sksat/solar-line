@@ -3217,6 +3217,7 @@ export function renderMarginGauges(gauges: MarginGauge[]): string {
 /** Scene label mapping for 3D viewer buttons */
 const VIEWER3D_SCENE_LABELS: Record<string, string> = {
   "full-route": "全航路",
+  "jupiter-capture": "木星捕獲",
   "saturn-ring": "土星リング",
   "uranus-approach": "天王星接近",
   "episode-1": "EP01: 火星→木星",
@@ -3385,12 +3386,13 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
 // Scene preparation (matches orbital-3d-viewer-data.ts logic)
 window.__prepareScene = function(sceneName, data) {
   var AU = 5;
-  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",enceladus:"#ccddee",rhea:"#eab308",titan:"#d2a8ff",titania:"#aabbcc",miranda:"#3b82f6",oberon:"#f97316"};
+  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",io:"#d29922",europa:"#c8d8e8",ganymede:"#58a6ff",enceladus:"#ccddee",rhea:"#eab308",titan:"#d2a8ff",titania:"#aabbcc",miranda:"#3b82f6",oberon:"#f97316"};
   var EC = {1:"#ff6644",2:"#ffaa22",3:"#44cc88",4:"#4488ff",5:"#ff4444"};
-  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,enceladus:0.08,rhea:0.08,titan:0.1,titania:0.08,miranda:0.06,oberon:0.08};
+  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,io:0.06,europa:0.06,ganymede:0.08,enceladus:0.08,rhea:0.08,titan:0.1,titania:0.08,miranda:0.06,oberon:0.08};
   var PL = {mars:"火星",jupiter:"木星",saturn:"土星",uranus:"天王星",earth:"地球"};
-  var MK = {enceladus:238020,rhea:527108,titan:1221870,miranda:129390,titania:435910,oberon:583520};
-  var MP = {enceladus:1.370218,rhea:4.518212,titan:15.945,titania:8.705872,miranda:1.413479,oberon:13.463};
+  var MK = {io:421800,europa:671100,ganymede:1070400,enceladus:238020,rhea:527108,titan:1221870,miranda:129390,titania:435910,oberon:583520};
+  var MP = {io:1.769138,europa:3.551181,ganymede:7.154553,enceladus:1.370218,rhea:4.518212,titan:15.945,titania:8.705872,miranda:1.413479,oberon:13.463};
+  var JR_KM = 71492;
   function mkMoon(n,l,a){var r=MK[n]/50000;return{name:n,x:r*Math.cos(a),y:r*Math.sin(a),z:0,color:PC[n],radius:PR[n]||0.08,orbitRadius:MK[n],label:l};}
   function mkOrbit(n,a){return{name:n,radiusScene:MK[n]/50000,initialAngle:a,meanMotionPerDay:2*Math.PI/MP[n],z:0};}
   var OR = {mars:1.524,jupiter:5.203,saturn:9.537,uranus:19.19,earth:1.0};
@@ -3436,6 +3438,16 @@ window.__prepareScene = function(sceneName, data) {
     var oc = order.map(function(name,i){var p=data.planetaryZHeightsAtEpoch[name];return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:(p?p.zHeightAU:0)*AU*3}});
     var ts2=data.transfers.filter(function(t){return typeof t.outOfPlaneDistanceAU==="number"}).map(function(t){return{leg:t.leg,outOfPlaneDistanceAU:t.outOfPlaneDistanceAU,planeChangeFractionPercent:t.planeChangeFractionPercent||0}});
     return {type:"full-route",title:"",description:"",planets:planets,transferArcs:arcs,orbitCircles:oc,supportedViewModes:["inertial","ship"],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:totalDays,orbits:orbits,transfers:tl,parkingOrbits:pk.length>0?pk:undefined},transferSummary:ts2.length>0?ts2:undefined};
+  }
+  if (sceneName === "jupiter-capture") {
+    var j = data.jupiterCaptureAnalysis;
+    var gR=j.ganymedeOrbitKm/50000,gA=Math.PI*0.7;
+    var gM={name:"ganymede",x:gR*Math.cos(gA),y:gR*Math.sin(gA),z:0,color:PC.ganymede,radius:0.08,orbitRadius:j.ganymedeOrbitKm,label:"ガニメデ"};
+    var ioM=mkMoon("io","イオ",Math.PI*0.2),euM=mkMoon("europa","エウロパ",Math.PI*1.4);
+    var pjKm=j.perijoveRJ*JR_KM,pjR=pjKm/50000,pjA=Math.PI*1.5;
+    var pjPos=[pjR*Math.cos(pjA),pjR*Math.sin(pjA),0];
+    var appPos=[12,5,0];
+    return {type:"jupiter-capture",title:"",description:"ペリジュピター捕獲（"+j.perijoveRJ+" RJ）とIF高高度捕獲の比較。",supportedViewModes:["inertial","ship"],scenarios:[{id:"canonical",label:"作中航路 — ペリジュピター捕獲（ΔV "+j.canonicalDeltaVKms+" km/s）"},{id:"high-altitude",label:"IF: 高高度捕獲（ΔV "+j.ifDeltaVKms+" km/s）",isCounterfactual:true,color:"#d2a8ff"}],planets:[{name:"jupiter",x:0,y:0,z:0,color:PC.jupiter,radius:0.5,isCentral:true,label:"木星"},ioM,euM,gM],transferArcs:[{from:"mars",to:"jupiter",fromPos:appPos,toPos:pjPos,episode:1,color:"#3fb950",label:"ペリジュピター捕獲（ΔV="+j.canonicalDeltaVKms+" km/s）",scenarioId:"canonical"},{from:"jupiter",to:"ganymede",fromPos:pjPos,toPos:[gM.x,gM.y,0],episode:1,color:"#3fb950",label:"ペリジュピター→ガニメデ遷移",scenarioId:"canonical"},{from:"mars",to:"ganymede",fromPos:appPos,toPos:[gM.x,gM.y,0],episode:1,color:"#d2a8ff",label:"IF: 高高度捕獲（ΔV="+j.ifDeltaVKms+" km/s）",scenarioId:"high-altitude",isCounterfactual:true}],orbitCircles:[{name:"io",radiusScene:MK.io/50000,color:PC.io,z:0},{name:"europa",radiusScene:MK.europa/50000,color:PC.europa,z:0},{name:"ganymede",radiusScene:j.ganymedeOrbitKm/50000,color:PC.ganymede,z:0}],timeline:{totalDays:MP.ganymede*3,orbits:[mkOrbit("io",Math.PI*0.2),mkOrbit("europa",Math.PI*1.4),mkOrbit("ganymede",gA)],transfers:[{startDay:0,endDay:MP.ganymede,episode:1,label:"火星→木星 接近",from:"mars",to:"jupiter"}]}};
   }
   if (sceneName === "saturn-ring") {
     var ring = data.saturnRingAnalysis;

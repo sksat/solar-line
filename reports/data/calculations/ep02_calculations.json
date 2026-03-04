@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generatedAt": "2026-03-03T19:58:38.483Z",
+    "generatedAt": "2026-03-04T02:35:47.665Z",
     "reproductionCommand": "npm run recalculate -- --episode 2",
-    "durationMs": 6063
+    "durationMs": 6582
   },
   "hohmann": {
     "departureDv": 1.8076602726468902,
