@@ -1,6 +1,6 @@
 # Task 613: Fix 3D Viewer Label Localization in New Scenes
 
-Status: IN PROGRESS
+Status: DONE
 
 ## Problem
 The jupiter-capture (Task 609-610) and earth-arrival (Task 611) 3D scenes have inconsistent label localization:
