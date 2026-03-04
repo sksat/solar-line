@@ -561,4 +561,85 @@ test.describe("3D Orbital Viewer Example", () => {
     const toggles = page.locator(".scenario-toggles");
     expect(await toggles.count()).toBe(0);
   });
+
+  // --- Ship marker visibility tests (regression for Tasks 615-617) ---
+
+  test("ship marker label is visible at t=0 in full-route scene", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    // Wait for Three.js CDN load + scene + timeline initialization
+    await page.waitForTimeout(4000);
+    // CSS2DRenderer renders the ship label as an HTML div
+    const shipLabel = page.getByText("▲ ケストレル");
+    await expect(shipLabel).toBeVisible({ timeout: 5000 });
+  });
+
+  test("ship marker moves when timeline is scrubbed in full-route", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    await page.waitForTimeout(4000);
+    const shipLabel = page.getByText("▲ ケストレル");
+    await expect(shipLabel).toBeVisible({ timeout: 5000 });
+    // Get position at t=0%
+    const pos0 = await shipLabel.boundingBox();
+    // Scrub slider to 100%
+    await page.locator("#timeline-slider").fill("1000");
+    await page.locator("#timeline-slider").dispatchEvent("input");
+    await page.waitForTimeout(500);
+    // Get position at t=100%
+    const pos100 = await shipLabel.boundingBox();
+    expect(pos0).not.toBeNull();
+    expect(pos100).not.toBeNull();
+    if (pos0 && pos100) {
+      const dist = Math.sqrt((pos100.x - pos0.x) ** 2 + (pos100.y - pos0.y) ** 2);
+      // Ship should move significantly across the viewport
+      expect(dist).toBeGreaterThan(10);
+    }
+  });
+
+  test("ship marker is visible in episode-1 scene", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const ep1Btn = page.locator(".preset-btn", { hasText: "EP01" });
+    await ep1Btn.click();
+    await page.waitForTimeout(2000);
+    const shipLabel = page.getByText("▲ ケストレル");
+    await expect(shipLabel).toBeVisible({ timeout: 5000 });
+  });
+
+  test("ship marker is visible in jupiter-capture local scene", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const btn = page.locator(".preset-btn", { hasText: "木星捕獲" });
+    await btn.click();
+    await page.waitForTimeout(2000);
+    const shipLabel = page.getByText("▲ ケストレル");
+    await expect(shipLabel).toBeVisible({ timeout: 5000 });
+  });
+
+  test("ship marker is visible in earth-arrival local scene", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const btn = page.locator(".preset-btn", { hasText: "地球到着" });
+    await btn.click();
+    await page.waitForTimeout(2000);
+    const shipLabel = page.getByText("▲ ケストレル");
+    await expect(shipLabel).toBeVisible({ timeout: 5000 });
+  });
+
+  test("ship marker moves in episode scene when scrubbed", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    const ep1Btn = page.locator(".preset-btn", { hasText: "EP01" });
+    await ep1Btn.click();
+    await page.waitForTimeout(2000);
+    const shipLabel = page.getByText("▲ ケストレル");
+    await expect(shipLabel).toBeVisible({ timeout: 5000 });
+    const pos0 = await shipLabel.boundingBox();
+    // Scrub to end
+    await page.locator("#timeline-slider").fill("1000");
+    await page.locator("#timeline-slider").dispatchEvent("input");
+    await page.waitForTimeout(500);
+    const pos100 = await shipLabel.boundingBox();
+    expect(pos0).not.toBeNull();
+    expect(pos100).not.toBeNull();
+    if (pos0 && pos100) {
+      const dist = Math.sqrt((pos100.x - pos0.x) ** 2 + (pos100.y - pos0.y) ** 2);
+      expect(dist).toBeGreaterThan(10);
+    }
+  });
 });
