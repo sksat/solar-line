@@ -860,6 +860,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${fullTitle}</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀</text></svg>">
 <meta property="og:title" content="${fullTitle}">
 <meta property="og:description" content="${ogDescription}">
 <meta property="og:type" content="article">
@@ -1012,11 +1013,20 @@ ${connectors}
 
 /** Render a custom 404 page */
 export function render404Page(summaryPages?: SiteManifest["summaryPages"], navEpisodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+  const epLinks = (navEpisodes || []).map(ep => `<li><a href="./episodes/ep-${String(ep.episode).padStart(3, "0")}.html">第${ep.episode}話 — ${escapeHtml(ep.title)}</a></li>`).join("");
   const content = `
 <section>
 <h1>404 — ページが見つかりません</h1>
 <p>お探しのページは存在しないか、移動された可能性があります。</p>
 <p><a href="./index.html">トップページに戻る</a></p>
+<h2>主要ページ</h2>
+<ul>
+${epLinks}
+<li><a href="./summary/cross-episode.html">総合分析（クロスエピソード）</a></li>
+<li><a href="./transcriptions/index.html">文字起こしデータ</a></li>
+<li><a href="./calculator/index.html">Brachistochrone 計算機</a></li>
+<li><a href="./explorer/index.html">データエクスプローラー</a></li>
+</ul>
 </section>`;
   return layoutHtml("404 ページが見つかりません", content, ".", summaryPages, undefined, navEpisodes, metaPages);
 }

@@ -506,7 +506,17 @@ test("404 page renders with navigation and helpful content", async ({ page }) =>
   // Should have links to help users navigate back
   const links = page.locator("a");
   expect(await links.count()).toBeGreaterThan(0);
+  // Should have navigation suggestions
+  const body = await page.textContent("body");
+  expect(body).toContain("主要ページ");
+  expect(body).toContain("計算機");
   expect(errors).toEqual([]);
+});
+
+test("pages have favicon", async ({ page }) => {
+  await page.goto("/");
+  const favicon = page.locator('link[rel="icon"]');
+  expect(await favicon.count()).toBeGreaterThanOrEqual(1);
 });
 
 // --- Cross-cutting tests ---
