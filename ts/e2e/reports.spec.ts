@@ -119,6 +119,20 @@ test("CDN resources have SRI integrity attributes", async ({ page }) => {
   expect(await sriScripts.count()).toBeGreaterThanOrEqual(4);
 });
 
+test("CSS includes print styles", async ({ page }) => {
+  await page.goto("/");
+  const css = await page.locator("style").first().textContent();
+  expect(css).toContain("@media print");
+});
+
+test("pages have canonical URL and og:url", async ({ page }) => {
+  await page.goto("/");
+  const canonical = page.locator('link[rel="canonical"]');
+  expect(await canonical.getAttribute("href")).toContain("sksat.github.io/solar-line");
+  const ogUrl = page.locator('meta[property="og:url"]');
+  expect(await ogUrl.getAttribute("content")).toContain("sksat.github.io/solar-line");
+});
+
 test("index page has key findings section", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("text=注目の分析結果")).toBeVisible();

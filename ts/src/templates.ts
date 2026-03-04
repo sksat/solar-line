@@ -814,6 +814,15 @@ footer {
 .explorer-chart-area { margin: 1rem 0; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [role="tab"]:focus-visible, [role="menuitem"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+@media print {
+  :root { --bg: #fff; --fg: #000; --surface: #f5f5f5; --border: #ccc; --card-bg: #f9f9f9; --accent: #0366d6; --link: #0366d6; --text-primary: #000; --text-secondary: #333; --text-muted: #666; --muted: #666; }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  nav, footer, .site-banner, .orbital-animation-controls, .viewer3d-controls, .calc-presets, .explorer-controls, .dag-filter-bar, .dag-slider-wrap, .tab-btns { display: none !important; }
+  a { color: #0366d6; text-decoration: underline; }
+  .card, .analysis-section, details { border: 1px solid #ccc; }
+  pre, code { background: #f5f5f5; border: 1px solid #ddd; }
+  .verdict { border: 1px solid currentColor; }
+}
 `;
 
 /** Wrap content in the common HTML layout */
@@ -823,7 +832,7 @@ export interface NavEpisode {
   path: string;
 }
 
-export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"], description?: string, episodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"]): string {
+export function layoutHtml(title: string, content: string, basePath: string = ".", summaryPages?: SiteManifest["summaryPages"], description?: string, episodes?: NavEpisode[], metaPages?: SiteManifest["metaPages"], canonicalPath?: string): string {
   const episodeNav = episodes && episodes.length > 0
     ? `<span class="nav-sep">|</span><span class="nav-dropdown"><button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">各話分析</button><span class="nav-dropdown-menu" role="menu">${episodes.map(ep => `<a href="${basePath}/${ep.path}" role="menuitem">第${ep.episode}話</a>`).join("")}</span></span>`
     : "";
@@ -855,7 +864,7 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <meta property="og:description" content="${ogDescription}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="SOLAR LINE 考証">
-<meta property="og:locale" content="ja_JP">
+<meta property="og:locale" content="ja_JP">${canonicalPath ? `\n<meta property="og:url" content="https://sksat.github.io/solar-line${canonicalPath}">\n<link rel="canonical" href="https://sksat.github.io/solar-line${canonicalPath}">` : ""}
 <meta name="description" content="${ogDescription}">
 <style>${REPORT_CSS}</style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
@@ -1159,7 +1168,7 @@ ${metaList}
 </ul>
 <p><em>生成日時: ${escapeHtml(manifest.generatedAt)}</em></p>`;
 
-  return layoutHtml("トップ", content, ".", manifest.summaryPages, "SFアニメ「SOLAR LINE」の全5話に描かれた軌道遷移をΔV計算・加速度分析で検証する考証プロジェクト", navEpisodes, manifest.metaPages);
+  return layoutHtml("トップ", content, ".", manifest.summaryPages, "SFアニメ「SOLAR LINE」の全5話に描かれた軌道遷移をΔV計算・加速度分析で検証する考証プロジェクト", navEpisodes, manifest.metaPages, "/");
 }
 
 /** Map verdict to Japanese label */
@@ -2976,7 +2985,7 @@ ${calculator}`;
     : content;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(`第${report.episode}話`, enrichedContent + episodeNav + animScript + episodeViewer3dScript, "..", summaryPages, desc, navEpisodes, metaPages);
+  return layoutHtml(`第${report.episode}話`, enrichedContent + episodeNav + animScript + episodeViewer3dScript, "..", summaryPages, desc, navEpisodes, metaPages, `/episodes/ep-${String(report.episode).padStart(3, "0")}.html`);
 }
 
 /** Render the session logs index page */
@@ -3687,7 +3696,7 @@ ${glossarySection}`;
     : content;
 
   const desc = report.summary.length > 120 ? report.summary.substring(0, 120) + "…" : report.summary;
-  return layoutHtml(report.title, enrichedContent + animScript + dagScript + viewer3dScript, "..", summaryPages, desc, navEpisodes, metaPages);
+  return layoutHtml(report.title, enrichedContent + animScript + dagScript + viewer3dScript, "..", summaryPages, desc, navEpisodes, metaPages, `/summary/${report.slug}.html`);
 }
 
 // ---------------------------------------------------------------------------
@@ -3943,7 +3952,7 @@ ${sourceInfo}
 ${speakerSection}
 ${dialogueSection}`;
 
-  return layoutHtml(`文字起こし 第${data.episode}話`, content, "..", summaryPages, `第${data.episode}話の文字起こし・台詞データ`, navEpisodes, metaPages);
+  return layoutHtml(`文字起こし 第${data.episode}話`, content, "..", summaryPages, `第${data.episode}話の文字起こし・台詞データ`, navEpisodes, metaPages, `/transcriptions/ep-${String(data.episode).padStart(3, "0")}.html`);
 }
 
 /** Render a raw lines table (Phase 1 extracted lines) */
@@ -4283,7 +4292,7 @@ export function renderExplorerPage(summaryPages?: SiteManifest["summaryPages"], 
 <script type="importmap">{"imports":{"apache-arrow":"https://cdn.jsdelivr.net/npm/apache-arrow@17.0.0/+esm"}}</script>
 <script type="module" src="../duckdb-explorer.js"></script>`;
 
-  return layoutHtml("データエクスプローラー", content, "..", summaryPages, "DuckDB-WASM によるデータ探索ツール", navEpisodes, metaPages);
+  return layoutHtml("データエクスプローラー", content, "..", summaryPages, "DuckDB-WASM によるデータ探索ツール", navEpisodes, metaPages, "/explorer/");
 }
 
 /** Render the standalone brachistochrone calculator page */
@@ -4443,5 +4452,5 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>`;
 
-  return layoutHtml("Brachistochrone 計算機", content, "..", summaryPages, "ケストレル号のbrachistochrone遷移パラメータを自由に探索できるインタラクティブ計算機", navEpisodes, metaPages);
+  return layoutHtml("Brachistochrone 計算機", content, "..", summaryPages, "ケストレル号のbrachistochrone遷移パラメータを自由に探索できるインタラクティブ計算機", navEpisodes, metaPages, "/calculator/");
 }
