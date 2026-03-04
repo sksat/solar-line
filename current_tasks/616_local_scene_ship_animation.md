@@ -1,6 +1,6 @@
 # Task 616: Fix Ship Animation in Local Encounter 3D Scenes
 
-Status: IN PROGRESS
+Status: DONE
 
 ## Problem
 Ship marker is invisible and appears non-animated in local encounter scenes:
