@@ -1019,7 +1019,7 @@ export function prepareJupiterCaptureScene(data: {
       transfers: [
         {
           startDay: 0,
-          endDay: MOON_PERIODS_DAYS.ganymede,
+          endDay: MOON_PERIODS_DAYS.ganymede * 3,
           episode: 1,
           label: "火星→木星 接近",
           from: "mars",
@@ -1177,7 +1177,7 @@ export function prepareSaturnScene(data: {
       transfers: [
         {
           startDay: 0,
-          endDay: MOON_PERIODS_DAYS.enceladus,
+          endDay: MOON_PERIODS_DAYS.enceladus * 3,
           episode: 2,
           label: "木星→土星 接近",
           from: "jupiter",
@@ -1361,7 +1361,7 @@ export function prepareUranusScene(data: {
       transfers: [
         {
           startDay: 0,
-          endDay: MOON_PERIODS_DAYS.titania,
+          endDay: MOON_PERIODS_DAYS.titania * 3,
           episode: 3,
           label: "土星→天王星 接近",
           from: "saturn",
@@ -1702,7 +1702,7 @@ export function prepareEarthArrivalScene(data: {
       transfers: [
         {
           startDay: 0,
-          endDay: MOON_PERIODS_DAYS.luna * 0.3,
+          endDay: MOON_PERIODS_DAYS.luna,
           episode: 5,
           label: "木星フライバイ→地球 接近",
           from: "jupiter",

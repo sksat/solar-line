@@ -813,7 +813,8 @@ export function loadTimeline(timeline) {
   const isEpisode = sceneType.startsWith("episode-");
   const isLocal = sceneType !== "full-route" && !isEpisode;
   // Size ship relative to scene scale: full-route is far away, local is close
-  const shipRadius = isLocal ? 0.15 : isEpisode ? 0.8 : 0.4;
+  // Local: 0.3 (between moon 0.08 and planet 0.5 for clear visibility)
+  const shipRadius = isLocal ? 0.3 : isEpisode ? 0.8 : 0.4;
   const shipGeo = new THREE.SphereGeometry(shipRadius, 16, 16);
   // Use bright white MeshBasicMaterial so ship stands out against colored arcs
   const shipMat = new THREE.MeshBasicMaterial({ color: 0xffffff });

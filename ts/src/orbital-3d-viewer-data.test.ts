@@ -2035,6 +2035,58 @@ describe("ship animation data completeness", () => {
     }
   });
 
+  it("local scenes: transfer covers full timeline for continuous ship visibility", () => {
+    const localScenes = [
+      prepareJupiterCaptureScene(analysis.jupiterCaptureAnalysis
+        ? analysis
+        : { jupiterCaptureAnalysis: { perijoveRJ: 1.5, canonicalDeltaVKms: 2.3, ifDeltaVKms: 8.1, ganymedeOrbitKm: 1070400, approachAngleDeg: 30 } }),
+      prepareSaturnScene(analysis.saturnRingAnalysis
+        ? analysis
+        : { saturnRingAnalysis: { enceladusOrbitKm: 238020, ringPlaneAngleDeg: 27 } }),
+      prepareUranusScene(analysis.uranusApproachAnalysis
+        ? analysis
+        : { uranusApproachAnalysis: { titaniaOrbitKm: 435910, approachVelocityKms: 12.3, earthSOIRadiusKm: 929000 } }),
+      prepareEarthArrivalScene(analysis.earthArrivalAnalysis
+        ? analysis
+        : { earthArrivalAnalysis: { earthSOIRadiusKm: 929000, leoAltitudeKm: 400, geoAltitudeKm: 35786, lunaOrbitKm: 384400, arrivalDeltaVKms: 7.67, nozzleMarginMinutes: 26 } }),
+    ];
+    for (const scene of localScenes) {
+      const tl = scene.timeline!;
+      assert.ok(tl.totalDays > 0, `${scene.type}: totalDays must be > 0`);
+      // At least one transfer must cover the full timeline (endDay === totalDays)
+      // so the ship is visible from start to end during animation
+      const hasFullCoverage = tl.transfers.some(
+        t => Math.abs(t.endDay - tl.totalDays) < 0.01,
+      );
+      assert.ok(hasFullCoverage,
+        `${scene.type}: at least one transfer must have endDay = totalDays ` +
+        `for continuous ship visibility (endDays: ${tl.transfers.map(t => t.endDay.toFixed(2))}, totalDays: ${tl.totalDays.toFixed(2)})`);
+    }
+  });
+
+  it("local scenes: ship position changes between 0% and 100% of transfer", () => {
+    const localScenes = [
+      { scene: prepareJupiterCaptureScene(analysis.jupiterCaptureAnalysis
+        ? analysis
+        : { jupiterCaptureAnalysis: { perijoveRJ: 1.5, canonicalDeltaVKms: 2.3, ifDeltaVKms: 8.1, ganymedeOrbitKm: 1070400, approachAngleDeg: 30 } }),
+      },
+      { scene: prepareEarthArrivalScene(analysis.earthArrivalAnalysis
+        ? analysis
+        : { earthArrivalAnalysis: { earthSOIRadiusKm: 929000, leoAltitudeKm: 400, geoAltitudeKm: 35786, lunaOrbitKm: 384400, arrivalDeltaVKms: 7.67, nozzleMarginMinutes: 26 } }),
+      },
+    ];
+    for (const { scene } of localScenes) {
+      // The first transfer arc should have distinct fromPos and toPos
+      const arc = scene.transferArcs[0];
+      assert.ok(arc.fromPos && arc.toPos, `${scene.type}: first arc needs fromPos/toPos`);
+      const dx = arc.toPos[0] - arc.fromPos[0];
+      const dy = arc.toPos[1] - arc.fromPos[1];
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      assert.ok(dist > 0.5,
+        `${scene.type}: ship must move significantly along transfer arc, got distance ${dist.toFixed(2)}`);
+    }
+  });
+
   it("episode scene ship position changes across timeline", () => {
     const scene = prepareEpisodeScene(analysis, 1);
     const tl = scene.timeline!;

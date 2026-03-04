@@ -319,7 +319,7 @@ function prepareJupiterCaptureScene(data) {
       { name: "europa", radiusScene: MOON_ORBIT_KM.europa / 50000, initialAngle: Math.PI * 1.4, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.europa, z: 0 },
       { name: "ganymede", radiusScene: j.ganymedeOrbitKm / 50000, initialAngle: gA, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.ganymede, z: 0 },
       { name: "callisto", radiusScene: MOON_ORBIT_KM.callisto / 50000, initialAngle: Math.PI * 1.1, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.callisto, z: 0 },
-    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.ganymede, episode: 1, label: "火星→木星 接近", from: "mars", to: "jupiter" }] }
+    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.ganymede * 3, episode: 1, label: "火星→木星 接近", from: "mars", to: "jupiter" }] }
   };
 }
 
@@ -353,7 +353,7 @@ function prepareSaturnScene(data) {
       { name: "enceladus", radiusScene: r.enceladusOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.enceladus, z: 0 },
       { name: "rhea", radiusScene: MOON_ORBIT_KM.rhea / 50000, initialAngle: Math.PI * 0.6, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.rhea, z: 0 },
       { name: "titan", radiusScene: MOON_ORBIT_KM.titan / 50000, initialAngle: Math.PI * 1.1, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.titan, z: 0 },
-    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.enceladus, episode: 2, label: "木星→土星 接近", from: "jupiter", to: "saturn" }] }
+    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.enceladus * 3, episode: 2, label: "木星→土星 接近", from: "jupiter", to: "saturn" }] }
   };
 }
 
@@ -390,7 +390,7 @@ function prepareUranusScene(data) {
       { name: "titania", radiusScene: u.titaniaOrbitKm / 50000, initialAngle: Math.PI / 4, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.titania, z: 0 },
       { name: "miranda", radiusScene: MOON_ORBIT_KM.miranda / 50000, initialAngle: Math.PI * 0.8, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.miranda, z: 0 },
       { name: "oberon", radiusScene: MOON_ORBIT_KM.oberon / 50000, initialAngle: Math.PI * 1.3, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.oberon, z: 0 },
-    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.titania, episode: 3, label: "土星→天王星 接近", from: "saturn", to: "uranus" }] }
+    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.titania * 3, episode: 3, label: "土星→天王星 接近", from: "saturn", to: "uranus" }] }
   };
 }
 
@@ -430,7 +430,7 @@ function prepareEarthArrivalScene(data) {
     ],
     timeline: { totalDays: MOON_PERIODS_DAYS.luna, orbits: [
       { name: "luna", radiusScene: lunaR, initialAngle: lunaA, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.luna, z: 0 },
-    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.luna * 0.3, episode: 5, label: "木星フライバイ→地球 接近", from: "jupiter", to: "earth" }] }
+    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.luna, episode: 5, label: "木星フライバイ→地球 接近", from: "jupiter", to: "earth" }] }
   };
 }
 
