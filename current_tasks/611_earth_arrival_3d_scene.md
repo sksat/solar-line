@@ -1,6 +1,6 @@
 # Task 611: Earth Arrival 3D Scene
 
-## Status: **IN PROGRESS**
+## Status: **DONE**
 
 ## Summary
 
