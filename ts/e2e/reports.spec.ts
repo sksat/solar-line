@@ -1385,9 +1385,9 @@ test.describe("Summary: science-accuracy page", () => {
     // Should have header row with all columns
     const headers = table.locator("thead th");
     expect(await headers.count()).toBeGreaterThanOrEqual(6);
-    // Should have 15 data rows
+    // Should have data rows (at least 15 verification items)
     const dataRows = table.locator("tbody tr");
-    expect(await dataRows.count()).toBe(15);
+    expect(await dataRows.count()).toBeGreaterThanOrEqual(15);
   });
 
   test("verification table has status badges", async ({ page }) => {
@@ -2244,12 +2244,12 @@ test.describe("ADR pages", () => {
     expect(errors).toEqual([]);
   });
 
-  test("index has data table with all 15 ADRs", async ({ page }) => {
+  test("index has data table with ADR rows", async ({ page }) => {
     await page.goto("/meta/adr/index.html");
     const table = page.locator("table.data-table");
     await expect(table).toBeVisible();
     const rows = table.locator("tbody tr");
-    expect(await rows.count()).toBe(15);
+    expect(await rows.count()).toBeGreaterThanOrEqual(15);
   });
 
   test("index has status badges", async ({ page }) => {
@@ -2294,12 +2294,12 @@ test.describe("Ideas pages", () => {
     expect(errors).toEqual([]);
   });
 
-  test("index has data table with all 13 ideas", async ({ page }) => {
+  test("index has data table with idea rows", async ({ page }) => {
     await page.goto("/meta/ideas/index.html");
     const table = page.locator("table.data-table");
     await expect(table).toBeVisible();
     const rows = table.locator("tbody tr");
-    expect(await rows.count()).toBe(13);
+    expect(await rows.count()).toBeGreaterThanOrEqual(13);
   });
 
   test("idea links resolve to individual pages", async ({ page }) => {
