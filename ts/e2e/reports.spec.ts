@@ -484,6 +484,21 @@ test("sitemap.xml exists and contains expected URLs", async ({ page }) => {
   expect(text).toContain("/explorer/");
 });
 
+test("all sitemap URLs resolve to actual pages", async ({ page }) => {
+  const response = await page.request.get("/sitemap.xml");
+  const text = await response.text();
+  const urls = [...text.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  expect(urls.length).toBeGreaterThanOrEqual(20);
+  // Verify a sample of URLs resolve (not all, to keep test fast)
+  const sampleUrls = [urls[0], urls[5], urls[10], urls[urls.length - 1]];
+  for (const fullUrl of sampleUrls) {
+    const path = fullUrl.replace("https://sksat.github.io/solar-line", "");
+    const urlPath = path === "/" ? "/index.html" : path;
+    const resp = await page.request.get(urlPath);
+    expect(resp.status(), `sitemap URL ${urlPath} should return 200`).toBe(200);
+  }
+});
+
 test("robots.txt exists and references sitemap", async ({ page }) => {
   const response = await page.request.get("/robots.txt");
   expect(response.status()).toBe(200);
