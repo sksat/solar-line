@@ -348,6 +348,15 @@ export function analyze3DOrbital() {
     jupiterCaptureAnalysis: jupiter,
     saturnRingAnalysis: saturn,
     uranusApproachAnalysis: uranus,
+    earthArrivalAnalysis: {
+      leoAltitudeKm: 400,
+      leoRadiusKm: 6771,
+      moonOrbitRadiusKm: 384_400,
+      earthSOIRadiusKm: 924_000,
+      dvCaptureLEOKms: 7.67,
+      nozzleMarginMinutes: 26,
+      ifNozzleFailMinutes: 73,
+    },
     planetaryZHeightsAtEpoch: {
       mars: analyzeZHeight("mars", DEPARTURE_MARS),
       jupiter: analyzeZHeight("jupiter", ARRIVAL_JUPITER),

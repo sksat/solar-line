@@ -5073,6 +5073,7 @@ describe("calculation JSON structural validation", () => {
     assert.ok("transfers" in data, "Missing transfers");
     assert.ok("saturnRingAnalysis" in data, "Missing saturnRingAnalysis");
     assert.ok("uranusApproachAnalysis" in data, "Missing uranusApproachAnalysis");
+    assert.ok("earthArrivalAnalysis" in data, "Missing earthArrivalAnalysis");
     assertFiniteNumbers(data);
   });
 

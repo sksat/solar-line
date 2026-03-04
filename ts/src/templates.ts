@@ -3220,6 +3220,7 @@ const VIEWER3D_SCENE_LABELS: Record<string, string> = {
   "jupiter-capture": "木星捕獲",
   "saturn-ring": "土星リング",
   "uranus-approach": "天王星接近",
+  "earth-arrival": "地球到着",
   "episode-1": "EP01: 火星→木星",
   "episode-2": "EP02: 木星→土星",
   "episode-3": "EP03: 土星→天王星",
@@ -3386,12 +3387,12 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
 // Scene preparation (matches orbital-3d-viewer-data.ts logic)
 window.__prepareScene = function(sceneName, data) {
   var AU = 5;
-  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",io:"#d29922",europa:"#c8d8e8",ganymede:"#58a6ff",callisto:"#8b6914",enceladus:"#ccddee",rhea:"#eab308",titan:"#d2a8ff",titania:"#aabbcc",miranda:"#3b82f6",oberon:"#f97316"};
+  var PC = {mars:"#e05050",jupiter:"#e0a040",saturn:"#d4b896",uranus:"#7ec8e3",earth:"#4488ff",io:"#d29922",europa:"#c8d8e8",ganymede:"#58a6ff",callisto:"#8b6914",enceladus:"#ccddee",rhea:"#eab308",titan:"#d2a8ff",titania:"#aabbcc",miranda:"#3b82f6",oberon:"#f97316",luna:"#c0c0c0"};
   var EC = {1:"#ff6644",2:"#ffaa22",3:"#44cc88",4:"#4488ff",5:"#ff4444"};
-  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,io:0.06,europa:0.06,ganymede:0.08,callisto:0.07,enceladus:0.08,rhea:0.08,titan:0.1,titania:0.08,miranda:0.06,oberon:0.08};
+  var PR = {mars:0.15,jupiter:0.4,saturn:0.35,uranus:0.25,earth:0.15,io:0.06,europa:0.06,ganymede:0.08,callisto:0.07,enceladus:0.08,rhea:0.08,titan:0.1,titania:0.08,miranda:0.06,oberon:0.08,luna:0.08};
   var PL = {mars:"火星",jupiter:"木星",saturn:"土星",uranus:"天王星",earth:"地球"};
-  var MK = {io:421800,europa:671100,ganymede:1070400,callisto:1882700,enceladus:238020,rhea:527108,titan:1221870,miranda:129390,titania:435910,oberon:583520};
-  var MP = {io:1.769138,europa:3.551181,ganymede:7.154553,callisto:16.6890184,enceladus:1.370218,rhea:4.518212,titan:15.945,titania:8.705872,miranda:1.413479,oberon:13.463};
+  var MK = {io:421800,europa:671100,ganymede:1070400,callisto:1882700,enceladus:238020,rhea:527108,titan:1221870,miranda:129390,titania:435910,oberon:583520,luna:384400};
+  var MP = {io:1.769138,europa:3.551181,ganymede:7.154553,callisto:16.6890184,enceladus:1.370218,rhea:4.518212,titan:15.945,titania:8.705872,miranda:1.413479,oberon:13.463,luna:27.321661};
   var JR_KM = 71492;
   function mkMoon(n,l,a){var r=MK[n]/50000;return{name:n,x:r*Math.cos(a),y:r*Math.sin(a),z:0,color:PC[n],radius:PR[n]||0.08,orbitRadius:MK[n],label:l};}
   function mkOrbit(n,a){return{name:n,radiusScene:MK[n]/50000,initialAngle:a,meanMotionPerDay:2*Math.PI/MP[n],z:0};}
@@ -3460,6 +3461,20 @@ window.__prepareScene = function(sceneName, data) {
     var tiM=mkMoon("titania","タイタニア",Math.PI/4),miM=mkMoon("miranda","ミランダ (IF)",Math.PI*0.8),obM=mkMoon("oberon","オベロン (IF)",Math.PI*1.3);
     var tiR=u.titaniaOrbitKm/50000,miR=MK.miranda/50000,obR=MK.oberon/50000;
     return {type:"uranus-approach",title:"",description:"IF分析: タイタニア（作中）・ミランダ・オベロンの各衛星への捕獲軌道を比較。",supportedViewModes:["inertial","ship"],scenarios:[{id:"canonical",label:"作中航路 — タイタニア捕獲（ΔV 0.37 km/s）"},{id:"miranda",label:"IF: ミランダ捕獲（ΔV 0.21 km/s）",isCounterfactual:true,color:PC.miranda},{id:"oberon",label:"IF: オベロン捕獲（ΔV 0.43 km/s）",isCounterfactual:true,color:PC.oberon}],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},tiM,miM,obM],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星 接近",approachAngleDeg:u.approachFromSaturn.angleToDeg,scenarioId:"canonical"},{from:"uranus",to:"titania",fromPos:[tiR*1.5,tiR*0.3,0],toPos:[tiM.x,tiM.y,0],episode:3,color:"#22c55e",label:"タイタニア捕獲（ΔV=0.37 km/s）",scenarioId:"canonical"},{from:"uranus",to:"miranda",fromPos:[miR*1.5,miR*0.5,0],toPos:[miM.x,miM.y,0],episode:3,color:PC.miranda,label:"IF: ミランダ捕獲（ΔV=0.21 km/s）",scenarioId:"miranda",isCounterfactual:true},{from:"uranus",to:"oberon",fromPos:[obR*1.3,obR*0.5,0],toPos:[obM.x,obM.y,0],episode:3,color:PC.oberon,label:"IF: オベロン捕獲（ΔV=0.43 km/s）",scenarioId:"oberon",isCounterfactual:true},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球 離脱",approachAngleDeg:u.approachFromUranus.angleToDeg,scenarioId:"canonical"}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:MP.titania*3,orbits:[mkOrbit("titania",Math.PI/4),mkOrbit("miranda",Math.PI*0.8),mkOrbit("oberon",Math.PI*1.3)],transfers:[{startDay:0,endDay:MP.titania,episode:3,label:"土星→天王星 接近",from:"saturn",to:"uranus"}]}};
+  }
+  if (sceneName === "earth-arrival") {
+    var ea = data.earthArrivalAnalysis;
+    var lunaA2=Math.PI*0.65,lunaR2=MK.luna/50000;
+    var lunaM2=mkMoon("luna","月",lunaA2);
+    var leoR2=ea.leoRadiusKm/50000,geoR2=42157/50000;
+    var soiR2=ea.earthSOIRadiusKm/50000;
+    var appDist2=Math.min(soiR2*0.8,15);
+    var appPos2=[appDist2*Math.cos(Math.PI*0.15),appDist2*Math.sin(Math.PI*0.15),0];
+    var leoInsPos=[leoR2*2*Math.cos(Math.PI*1.2),leoR2*2*Math.sin(Math.PI*1.2),0];
+    var dirAppPos=[appDist2*Math.cos(Math.PI*0.3),appDist2*Math.sin(Math.PI*0.3),0];
+    var failD2=MK.luna/50000*0.5;
+    var failPos2=[failD2*Math.cos(Math.PI*0.9),failD2*Math.sin(Math.PI*0.9),0];
+    return{type:"earth-arrival",title:"",description:"LEO "+ea.leoAltitudeKm+"km投入シーン。",supportedViewModes:["inertial","ship"],scenarios:[{id:"canonical",label:"作中航路 — LEO投入成功（ΔV "+ea.dvCaptureLEOKms.toFixed(1)+" km/s, ノズル残"+ea.nozzleMarginMinutes+"分）"},{id:"direct-fail",label:"IF: 直行ルート — ノズル"+ea.ifNozzleFailMinutes+"分前に消失",isCounterfactual:true,color:"#888888"}],planets:[{name:"earth",x:0,y:0,z:0,color:PC.earth,radius:0.5,isCentral:true,label:"地球"},lunaM2],transferArcs:[{from:"jupiter",to:"earth",fromPos:appPos2,toPos:leoInsPos,episode:5,color:"#3fb950",label:"LEO投入成功（ΔV="+ea.dvCaptureLEOKms.toFixed(2)+" km/s, ノズル残"+ea.nozzleMarginMinutes+"分）",scenarioId:"canonical"},{from:"uranus",to:"earth",fromPos:dirAppPos,toPos:failPos2,episode:5,color:"#888888",label:"IF: 直行ルート（ノズル"+ea.ifNozzleFailMinutes+"分前消失 ✕）",scenarioId:"direct-fail",isCounterfactual:true}],orbitCircles:[{name:"leo",radiusScene:leoR2,color:"#22c55e",z:0},{name:"geo",radiusScene:geoR2,color:"#666666",z:0},{name:"luna",radiusScene:lunaR2,color:PC.luna,z:0}],timeline:{totalDays:MP.luna,orbits:[{name:"luna",radiusScene:lunaR2,initialAngle:lunaA2,meanMotionPerDay:2*Math.PI/MP.luna,z:0}],transfers:[{startDay:0,endDay:MP.luna*0.3,episode:5,label:"木星フライバイ→地球 接近",from:"jupiter",to:"earth"}]}};
   }
   // EP05 Jupiter flyby IF scene
   if (sceneName === "episode-5") {

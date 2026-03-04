@@ -175,6 +175,15 @@
       "description": "赤道方向からの接近（天王星赤道面にほぼ平行）"
     }
   },
+  "earthArrivalAnalysis": {
+    "leoAltitudeKm": 400,
+    "leoRadiusKm": 6771,
+    "moonOrbitRadiusKm": 384400,
+    "earthSOIRadiusKm": 924000,
+    "dvCaptureLEOKms": 7.67,
+    "nozzleMarginMinutes": 26,
+    "ifNozzleFailMinutes": 73
+  },
   "planetaryZHeightsAtEpoch": {
     "mars": {
       "planet": "mars",

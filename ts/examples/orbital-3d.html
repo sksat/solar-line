@@ -104,6 +104,7 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
       <button class="preset-btn" data-scene="jupiter-capture" aria-pressed="false">木星捕獲</button>
       <button class="preset-btn" data-scene="saturn-ring" aria-pressed="false">土星リング</button>
       <button class="preset-btn" data-scene="uranus-approach" aria-pressed="false">天王星接近</button>
+      <button class="preset-btn" data-scene="earth-arrival" aria-pressed="false">地球到着</button>
     </div>
   </header>
   <div id="main">
@@ -152,11 +153,12 @@ const PLANET_COLORS = {
   io: "#d29922", europa: "#c8d8e8", ganymede: "#58a6ff", callisto: "#8b6914",
   enceladus: "#ccddee", titania: "#aabbcc",
   rhea: "#aaaacc", titan: "#ddaa55", miranda: "#99bbaa", oberon: "#bb9988",
+  luna: "#c0c0c0",
 };
 const EPISODE_COLORS = { 1: "#ff6644", 2: "#ffaa22", 3: "#44cc88", 4: "#4488ff", 5: "#ff4444" };
-const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, io: 0.06, europa: 0.06, ganymede: 0.08, callisto: 0.07, enceladus: 0.08, titania: 0.08, rhea: 0.07, titan: 0.09, miranda: 0.06, oberon: 0.07 };
-const MOON_ORBIT_KM = { io: 421800, europa: 671100, ganymede: 1070400, callisto: 1882700, enceladus: 238020, rhea: 527108, titan: 1221870, miranda: 129390, titania: 435910, oberon: 583520 };
-const MOON_PERIODS_DAYS = { io: 1.769138, europa: 3.551181, ganymede: 7.154553, callisto: 16.6890184, enceladus: 1.370218, rhea: 4.518212, titan: 15.945, miranda: 1.413479, titania: 8.705872, oberon: 13.463 };
+const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, io: 0.06, europa: 0.06, ganymede: 0.08, callisto: 0.07, enceladus: 0.08, titania: 0.08, rhea: 0.07, titan: 0.09, miranda: 0.06, oberon: 0.07, luna: 0.08 };
+const MOON_ORBIT_KM = { io: 421800, europa: 671100, ganymede: 1070400, callisto: 1882700, enceladus: 238020, rhea: 527108, titan: 1221870, miranda: 129390, titania: 435910, oberon: 583520, luna: 384400 };
+const MOON_PERIODS_DAYS = { io: 1.769138, europa: 3.551181, ganymede: 7.154553, callisto: 16.6890184, enceladus: 1.370218, rhea: 4.518212, titan: 15.945, miranda: 1.413479, titania: 8.705872, oberon: 13.463, luna: 27.321661 };
 const JUPITER_RADIUS_KM = 71492;
 function mkMoon(name, label, angle) {
   const r = MOON_ORBIT_KM[name] / 50000;
@@ -391,6 +393,46 @@ function prepareUranusScene(data) {
   };
 }
 
+function prepareEarthArrivalScene(data) {
+  const e = data.earthArrivalAnalysis;
+  const lunaA = Math.PI * 0.65;
+  const lunaR = MOON_ORBIT_KM.luna / 50000;
+  const lunaM = mkMoon("luna", "月", lunaA);
+  const leoR = e.leoRadiusKm / 50000;
+  const geoR = 42157 / 50000;
+  const soiR = e.earthSOIRadiusKm / 50000;
+  const approachDist = Math.min(soiR * 0.8, 15);
+  const approachPos = [approachDist * Math.cos(Math.PI * 0.15), approachDist * Math.sin(Math.PI * 0.15), 0];
+  const leoInsertPos = [leoR * 2 * Math.cos(Math.PI * 1.2), leoR * 2 * Math.sin(Math.PI * 1.2), 0];
+  const directApproachPos = [approachDist * Math.cos(Math.PI * 0.3), approachDist * Math.sin(Math.PI * 0.3), 0];
+  const failDist = MOON_ORBIT_KM.luna / 50000 * 0.5;
+  const failPos = [failDist * Math.cos(Math.PI * 0.9), failDist * Math.sin(Math.PI * 0.9), 0];
+  return { type: "earth-arrival", title: "地球到着 — 3Dビュー",
+    description: `LEO ${e.leoAltitudeKm}km投入シーン。作中航路（木星フライバイ経由）ではΔV ${e.dvCaptureLEOKms.toFixed(2)} km/sでLEO捕獲成功、ノズル残余${e.nozzleMarginMinutes}分。IF直行ルートではノズルが${e.ifNozzleFailMinutes}分前に寿命を迎え、LEO投入失敗。`,
+    supportedViewModes: ["inertial", "ship"],
+    scenarios: [
+      { id: "canonical", label: `作中航路 — LEO投入成功（ΔV ${e.dvCaptureLEOKms.toFixed(1)} km/s, ノズル残${e.nozzleMarginMinutes}分）` },
+      { id: "direct-fail", label: `IF: 直行ルート — ノズル${e.ifNozzleFailMinutes}分前に消失（LEO投入失敗）`, isCounterfactual: true, color: "#888888" },
+    ],
+    planets: [
+      { name: "earth", x: 0, y: 0, z: 0, color: PLANET_COLORS.earth, radius: 0.5, isCentral: true, label: "地球" },
+      lunaM,
+    ],
+    transferArcs: [
+      { from: "jupiter", to: "earth", fromPos: approachPos, toPos: leoInsertPos, episode: 5, color: "#3fb950", label: `LEO投入成功（ΔV=${e.dvCaptureLEOKms.toFixed(2)} km/s, ノズル残${e.nozzleMarginMinutes}分）`, scenarioId: "canonical" },
+      { from: "uranus", to: "earth", fromPos: directApproachPos, toPos: failPos, episode: 5, color: "#888888", label: `IF: 直行ルート（ノズル${e.ifNozzleFailMinutes}分前消失 ✕）`, scenarioId: "direct-fail", isCounterfactual: true },
+    ],
+    orbitCircles: [
+      { name: "leo", radiusScene: leoR, color: "#22c55e", z: 0 },
+      { name: "geo", radiusScene: geoR, color: "#666666", z: 0 },
+      { name: "luna", radiusScene: lunaR, color: PLANET_COLORS.luna, z: 0 },
+    ],
+    timeline: { totalDays: MOON_PERIODS_DAYS.luna, orbits: [
+      { name: "luna", radiusScene: lunaR, initialAngle: lunaA, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.luna, z: 0 },
+    ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.luna * 0.3, episode: 5, label: "木星フライバイ→地球 接近", from: "jupiter", to: "earth" }] }
+  };
+}
+
 const PLANET_LABELS = { mars: "火星", jupiter: "木星", saturn: "土星", uranus: "天王星", earth: "地球" };
 const EPISODE_TITLES = { 1: "EP01: 火星→木星", 2: "EP02: 木星→土星", 3: "EP03: 土星→天王星", 4: "EP04: 天王星→地球" };
 
@@ -531,6 +573,7 @@ async function init() {
     "jupiter-capture": prepareJupiterCaptureScene(analysisData),
     "saturn-ring": prepareSaturnScene(analysisData),
     "uranus-approach": prepareUranusScene(analysisData),
+    "earth-arrival": prepareEarthArrivalScene(analysisData),
   };
 
   // Load default scene

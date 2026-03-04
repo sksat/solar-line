@@ -159,7 +159,7 @@ export interface SceneScenario {
 }
 
 export interface SceneData {
-  type: "full-route" | "jupiter-capture" | "saturn-ring" | "uranus-approach" | `episode-${number}`;
+  type: "full-route" | "jupiter-capture" | "saturn-ring" | "uranus-approach" | "earth-arrival" | `episode-${number}`;
   title: string;
   description: string;
   planets: PlanetData[];
@@ -203,6 +203,8 @@ const MOON_PERIODS_DAYS: Record<string, number> = {
   titania: 8.705872,
   miranda: 1.413479,
   oberon: 13.463,
+  // Earth system
+  luna: 27.321661,
 };
 
 /** Planet display colors */
@@ -225,6 +227,8 @@ const PLANET_COLORS: Record<string, string> = {
   titania: "#aabbcc",
   miranda: "#3b82f6",
   oberon: "#f97316",
+  // Earth system
+  luna: "#c0c0c0",
 };
 
 /** Episode transfer colors */
@@ -256,6 +260,8 @@ const PLANET_RADII: Record<string, number> = {
   titania: 0.08,
   miranda: 0.06,
   oberon: 0.08,
+  // Earth system
+  luna: 0.08,
 };
 
 // ── Heliocentric orbital radii (AU) for x/y positioning ──
@@ -810,6 +816,8 @@ const MOON_ORBIT_KM: Record<string, number> = {
   miranda: 129_390,
   titania: 435_910,
   oberon: 583_520,
+  // Earth system
+  luna: 384_400,
 };
 
 /** Create a moon planet entry at a given angular position */
@@ -1516,5 +1524,191 @@ export function prepareEp5FlybyScene(data: {
       { id: "flyby", label: "作中航路 — 507h（木星フライバイ, ノズル残26分）" },
       { id: "direct", label: "IF: 直行ルート — ノズル73分前に消失（帰還失敗）", isCounterfactual: true, color: "#888888" },
     ],
+  };
+}
+
+// ── Earth Arrival Scene Constants ──
+
+/** Earth radius in km */
+const EARTH_RADIUS_KM = 6_371;
+
+/** LEO altitude in km (from ep05_calculations.json) */
+const LEO_ALTITUDE_KM = 400;
+
+/** LEO orbital radius in km */
+const LEO_RADIUS_KM = EARTH_RADIUS_KM + LEO_ALTITUDE_KM;
+
+/** GEO orbital radius in km */
+const GEO_RADIUS_KM = 42_157;
+
+/**
+ * Prepare Earth arrival scene (local Earth-centric view).
+ * Shows LEO 400km insertion, Moon orbit for scale, and IF comparison:
+ * canonical (successful via Jupiter flyby) vs direct route (nozzle fails 73 min before capture).
+ *
+ * EP05 analysis: arrival from Jupiter flyby with Oberth boost.
+ * Nozzle destroyed upon LEO insertion — margin was 26 minutes.
+ */
+export function prepareEarthArrivalScene(data: {
+  earthArrivalAnalysis: {
+    leoAltitudeKm: number;        // 400
+    leoRadiusKm: number;          // 6771
+    moonOrbitRadiusKm: number;    // 384,400
+    earthSOIRadiusKm: number;     // 924,000
+    dvCaptureLEOKms: number;      // ~7.67 km/s (brachistochrone)
+    nozzleMarginMinutes: number;  // 26 min
+    ifNozzleFailMinutes: number;  // 73 min (direct route nozzle shortfall)
+  };
+}): SceneData {
+  const e = data.earthArrivalAnalysis;
+
+  // Moon at orbital distance
+  const lunaAngle = Math.PI * 0.65;
+  const lunaMoon = makeMoon("luna", "月", lunaAngle);
+
+  // LEO reference orbit (shown as a small circle)
+  const leoSceneR = e.leoRadiusKm / LOCAL_SCENE_SCALE;
+
+  // GEO reference orbit
+  const geoSceneR = GEO_RADIUS_KM / LOCAL_SCENE_SCALE;
+
+  // SOI boundary (for approach starting position)
+  const soiSceneR = e.earthSOIRadiusKm / LOCAL_SCENE_SCALE;
+
+  // Approach from Jupiter flyby (upper-right, scaled to SOI-distance)
+  const approachAngle = Math.PI * 0.15;
+  const approachDist = Math.min(soiSceneR * 0.8, 15);
+  const approachPos: [number, number, number] = [
+    approachDist * Math.cos(approachAngle),
+    approachDist * Math.sin(approachAngle),
+    0,
+  ];
+
+  // LEO insertion point (near Earth, opposite side from approach)
+  const leoInsertAngle = Math.PI * 1.2;
+  const leoInsertPos: [number, number, number] = [
+    leoSceneR * 2 * Math.cos(leoInsertAngle),
+    leoSceneR * 2 * Math.sin(leoInsertAngle),
+    0,
+  ];
+
+  // IF direct route approach (slightly different angle)
+  const directApproachAngle = Math.PI * 0.3;
+  const directApproachPos: [number, number, number] = [
+    approachDist * Math.cos(directApproachAngle),
+    approachDist * Math.sin(directApproachAngle),
+    0,
+  ];
+
+  // IF direct route fails — nozzle dies before reaching LEO
+  // Show failure point at Moon orbit distance (couldn't decelerate enough)
+  const failDist = e.moonOrbitRadiusKm / LOCAL_SCENE_SCALE * 0.5;
+  const failAngle = Math.PI * 0.9;
+  const failPos: [number, number, number] = [
+    failDist * Math.cos(failAngle),
+    failDist * Math.sin(failAngle),
+    0,
+  ];
+
+  return {
+    type: "earth-arrival",
+    title: "地球到着 — 3Dビュー",
+    description:
+      `LEO ${e.leoAltitudeKm}km投入シーン。作中航路（木星フライバイ経由）では` +
+      `ΔV ${e.dvCaptureLEOKms.toFixed(2)} km/sでLEO捕獲成功、ノズル残余${e.nozzleMarginMinutes}分。` +
+      `IF直行ルートではノズルが${e.ifNozzleFailMinutes}分前に寿命を迎え、LEO投入失敗。`,
+    supportedViewModes: ["inertial", "ship"],
+    scenarios: [
+      {
+        id: "canonical",
+        label: `作中航路 — LEO投入成功（ΔV ${e.dvCaptureLEOKms.toFixed(1)} km/s, ノズル残${e.nozzleMarginMinutes}分）`,
+      },
+      {
+        id: "direct-fail",
+        label: `IF: 直行ルート — ノズル${e.ifNozzleFailMinutes}分前に消失（LEO投入失敗）`,
+        isCounterfactual: true,
+        color: "#888888",
+      },
+    ],
+    planets: [
+      {
+        name: "earth",
+        x: 0,
+        y: 0,
+        z: 0,
+        color: PLANET_COLORS.earth,
+        radius: 0.5,
+        isCentral: true,
+        label: "地球",
+      },
+      lunaMoon,
+    ],
+    transferArcs: [
+      // Canonical: approach from Jupiter flyby → LEO insertion
+      {
+        from: "jupiter",
+        to: "earth",
+        fromPos: approachPos,
+        toPos: leoInsertPos,
+        episode: 5,
+        color: "#3fb950",
+        label: `LEO投入成功（ΔV=${e.dvCaptureLEOKms.toFixed(2)} km/s, ノズル残${e.nozzleMarginMinutes}分）`,
+        scenarioId: "canonical",
+      },
+      // IF: direct route → nozzle failure
+      {
+        from: "uranus",
+        to: "earth",
+        fromPos: directApproachPos,
+        toPos: failPos,
+        episode: 5,
+        color: "#888888",
+        label: `IF: 直行ルート（ノズル${e.ifNozzleFailMinutes}分前消失 ✕）`,
+        scenarioId: "direct-fail",
+        isCounterfactual: true,
+      },
+    ],
+    orbitCircles: [
+      {
+        name: "leo",
+        radiusScene: leoSceneR,
+        color: "#22c55e",
+        z: 0,
+      },
+      {
+        name: "geo",
+        radiusScene: geoSceneR,
+        color: "#666666",
+        z: 0,
+      },
+      {
+        name: "luna",
+        radiusScene: e.moonOrbitRadiusKm / LOCAL_SCENE_SCALE,
+        color: PLANET_COLORS.luna,
+        z: 0,
+      },
+    ],
+    timeline: {
+      totalDays: MOON_PERIODS_DAYS.luna,
+      orbits: [
+        {
+          name: "luna",
+          radiusScene: e.moonOrbitRadiusKm / LOCAL_SCENE_SCALE,
+          initialAngle: lunaAngle,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.luna,
+          z: 0,
+        },
+      ],
+      transfers: [
+        {
+          startDay: 0,
+          endDay: MOON_PERIODS_DAYS.luna * 0.3,
+          episode: 5,
+          label: "木星フライバイ→地球 接近",
+          from: "jupiter",
+          to: "earth",
+        },
+      ],
+    },
   };
 }

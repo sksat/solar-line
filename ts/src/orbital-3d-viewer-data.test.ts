@@ -15,6 +15,7 @@ import {
   prepareUranusScene,
   prepareEpisodeScene,
   prepareEp5FlybyScene,
+  prepareEarthArrivalScene,
   arcControlPoint,
   arcControlPointLocal,
   offsetFromPlanet,
@@ -1642,5 +1643,184 @@ describe("EP05 Jupiter flyby IF scene", () => {
     const scene = prepareEp5FlybyScene(ep5Input);
     assert.ok(scene.eclipticPlane);
     assert.equal(scene.eclipticPlane!.type, "ecliptic");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Earth arrival scene (Task 611)
+// ---------------------------------------------------------------------------
+
+describe("prepareEarthArrivalScene", () => {
+  const earthInput = {
+    earthArrivalAnalysis: {
+      leoAltitudeKm: 400,
+      leoRadiusKm: 6771,
+      moonOrbitRadiusKm: 384_400,
+      earthSOIRadiusKm: 924_000,
+      dvCaptureLEOKms: 7.67,
+      nozzleMarginMinutes: 26,
+      ifNozzleFailMinutes: 73,
+    },
+  };
+
+  it("returns scene with type earth-arrival", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    assert.equal(scene.type, "earth-arrival");
+  });
+
+  it("includes Earth as central body", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const earth = scene.planets.find(p => p.name === "earth");
+    assert.ok(earth, "should include Earth");
+    assert.equal(earth!.isCentral, true);
+    assert.equal(earth!.x, 0);
+    assert.equal(earth!.y, 0);
+  });
+
+  it("includes Moon (Luna) at orbital distance", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const luna = scene.planets.find(p => p.name === "luna");
+    assert.ok(luna, "should include Luna");
+    const dist = Math.sqrt(luna!.x ** 2 + luna!.y ** 2);
+    const expectedR = 384_400 / LOCAL_SCENE_SCALE;
+    assert.ok(
+      Math.abs(dist - expectedR) < 0.1,
+      `Luna distance ${dist.toFixed(2)} should be ~${expectedR.toFixed(2)}`,
+    );
+  });
+
+  it("has 2 planets: Earth + Luna", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    assert.equal(scene.planets.length, 2);
+  });
+
+  it("has 2 scenarios: canonical and direct-fail", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    assert.ok(scene.scenarios);
+    assert.equal(scene.scenarios!.length, 2);
+    const ids = scene.scenarios!.map(s => s.id);
+    assert.ok(ids.includes("canonical"));
+    assert.ok(ids.includes("direct-fail"));
+  });
+
+  it("direct-fail scenario is marked as counterfactual", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const canonical = scene.scenarios!.find(s => s.id === "canonical")!;
+    const directFail = scene.scenarios!.find(s => s.id === "direct-fail")!;
+    assert.ok(!canonical.isCounterfactual);
+    assert.equal(directFail.isCounterfactual, true);
+  });
+
+  it("has canonical arc (Jupiter flyby → LEO insertion)", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const canonicalArcs = scene.transferArcs.filter(a => a.scenarioId === "canonical");
+    assert.equal(canonicalArcs.length, 1);
+    assert.equal(canonicalArcs[0].from, "jupiter");
+    assert.equal(canonicalArcs[0].to, "earth");
+    assert.ok(!canonicalArcs[0].isCounterfactual);
+  });
+
+  it("has IF direct-fail arc (direct route nozzle failure)", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const ifArcs = scene.transferArcs.filter(a => a.scenarioId === "direct-fail");
+    assert.equal(ifArcs.length, 1);
+    assert.equal(ifArcs[0].from, "uranus");
+    assert.equal(ifArcs[0].to, "earth");
+    assert.equal(ifArcs[0].isCounterfactual, true);
+  });
+
+  it("canonical arc label mentions nozzle margin", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const canonicalArc = scene.transferArcs.find(a => a.scenarioId === "canonical")!;
+    assert.ok(canonicalArc.label!.includes("26"), "should mention 26 min margin");
+  });
+
+  it("IF arc label mentions nozzle failure timing", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const ifArc = scene.transferArcs.find(a => a.scenarioId === "direct-fail")!;
+    assert.ok(ifArc.label!.includes("73"), "should mention 73 min nozzle failure");
+  });
+
+  it("has orbit circles for LEO, GEO, and Luna", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    assert.ok(scene.orbitCircles);
+    const names = scene.orbitCircles!.map(c => c.name);
+    assert.ok(names.includes("leo"), "should have LEO orbit circle");
+    assert.ok(names.includes("geo"), "should have GEO orbit circle");
+    assert.ok(names.includes("luna"), "should have Luna orbit circle");
+  });
+
+  it("LEO orbit circle is smallest, Luna is largest", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const leo = scene.orbitCircles!.find(c => c.name === "leo")!;
+    const geo = scene.orbitCircles!.find(c => c.name === "geo")!;
+    const luna = scene.orbitCircles!.find(c => c.name === "luna")!;
+    assert.ok(leo.radiusScene < geo.radiusScene, "LEO < GEO");
+    assert.ok(geo.radiusScene < luna.radiusScene, "GEO < Luna");
+  });
+
+  it("LEO orbit radius matches input leoRadiusKm", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const leo = scene.orbitCircles!.find(c => c.name === "leo")!;
+    const expectedR = 6771 / LOCAL_SCENE_SCALE;
+    assert.ok(
+      Math.abs(leo.radiusScene - expectedR) < 0.001,
+      `LEO radius ${leo.radiusScene} should be ${expectedR}`,
+    );
+  });
+
+  it("supports inertial and ship view modes", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    assert.ok(scene.supportedViewModes);
+    assert.ok(scene.supportedViewModes!.includes("inertial"));
+    assert.ok(scene.supportedViewModes!.includes("ship"));
+  });
+
+  it("has timeline with Luna orbit for animation", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    assert.ok(scene.timeline, "should have timeline");
+    const lunaOrbit = scene.timeline!.orbits.find(o => o.name === "luna");
+    assert.ok(lunaOrbit, "should have Luna orbit");
+    assert.ok(lunaOrbit!.meanMotionPerDay > 0.2, "Luna mean motion should be ~0.23 rad/day");
+  });
+
+  it("timeline transfers have from/to planet names", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const transfers = scene.timeline!.transfers;
+    assert.ok(transfers.length >= 1);
+    assert.strictEqual(transfers[0].from, "jupiter");
+    assert.strictEqual(transfers[0].to, "earth");
+  });
+
+  it("description mentions LEO altitude and ΔV", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    assert.ok(scene.description.includes("400"), "should mention 400km");
+    assert.ok(scene.description.includes("7.67"), "should mention ΔV");
+  });
+
+  it("approach positions are at non-trivial distance from Earth", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    for (const arc of scene.transferArcs) {
+      const fromDist = Math.sqrt(arc.fromPos[0] ** 2 + arc.fromPos[1] ** 2);
+      assert.ok(fromDist > 1, `${arc.from} approach distance ${fromDist.toFixed(2)} should be > 1`);
+    }
+  });
+
+  it("canonical arc destination is close to Earth (LEO range)", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const canonicalArc = scene.transferArcs.find(a => a.scenarioId === "canonical")!;
+    const toDist = Math.sqrt(canonicalArc.toPos[0] ** 2 + canonicalArc.toPos[1] ** 2);
+    // LEO at 6771 km / 50,000 = 0.135 scene units; toPos at 2× that = 0.27
+    assert.ok(toDist < 1, `canonical toPos dist ${toDist.toFixed(3)} should be near Earth`);
+  });
+
+  it("IF arc failure point is farther from Earth than canonical destination", () => {
+    const scene = prepareEarthArrivalScene(earthInput);
+    const canonical = scene.transferArcs.find(a => a.scenarioId === "canonical")!;
+    const ifFail = scene.transferArcs.find(a => a.scenarioId === "direct-fail")!;
+    const canDist = Math.sqrt(canonical.toPos[0] ** 2 + canonical.toPos[1] ** 2);
+    const failDist = Math.sqrt(ifFail.toPos[0] ** 2 + ifFail.toPos[1] ** 2);
+    assert.ok(failDist > canDist,
+      `IF fail point ${failDist.toFixed(2)} should be farther from Earth than LEO ${canDist.toFixed(2)}`);
   });
 });

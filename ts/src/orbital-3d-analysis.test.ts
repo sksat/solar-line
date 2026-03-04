@@ -27,6 +27,7 @@ describe("3D orbital analysis: structure", () => {
     assert.ok(data.jupiterCaptureAnalysis, "has jupiterCaptureAnalysis");
     assert.ok(data.saturnRingAnalysis, "has saturnRingAnalysis");
     assert.ok(data.uranusApproachAnalysis, "has uranusApproachAnalysis");
+    assert.ok(data.earthArrivalAnalysis, "has earthArrivalAnalysis");
     assert.ok(data.planetaryZHeightsAtEpoch, "has planetaryZHeightsAtEpoch");
   });
 
