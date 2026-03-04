@@ -98,6 +98,27 @@ test("CSS includes focus-visible and reduced-motion rules", async ({ page }) => 
   expect(css).toContain("prefers-reduced-motion");
 });
 
+test("site banner has accessibility role", async ({ page }) => {
+  await page.goto("/");
+  const banner = page.locator('.site-banner[role="note"]');
+  await expect(banner).toBeVisible();
+  expect(await banner.getAttribute("aria-label")).toBe("サイト注意事項");
+});
+
+test("pages have og:locale meta tag", async ({ page }) => {
+  await page.goto("/");
+  const locale = page.locator('meta[property="og:locale"]');
+  expect(await locale.getAttribute("content")).toBe("ja_JP");
+});
+
+test("CDN resources have SRI integrity attributes", async ({ page }) => {
+  await page.goto("/");
+  const sriLinks = page.locator('link[integrity^="sha384-"]');
+  const sriScripts = page.locator('script[integrity^="sha384-"]');
+  expect(await sriLinks.count()).toBeGreaterThanOrEqual(3);
+  expect(await sriScripts.count()).toBeGreaterThanOrEqual(4);
+});
+
 test("index page has key findings section", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("text=注目の分析結果")).toBeVisible();

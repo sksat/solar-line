@@ -296,7 +296,7 @@ export const REPORT_CSS = `
   --link: #58a6ff;
   --text-primary: #c9d1d9;
   --text-secondary: #8b949e;
-  --text-muted: #6e7681;
+  --text-muted: #848d97;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -379,7 +379,7 @@ li { margin: 0.25rem 0; }
 .verdict-implausible { background: var(--red); color: #fff; }
 .verdict-indeterminate { background: var(--yellow); color: #000; }
 .verdict-conditional { background: #8957e5; color: #fff; }
-.verdict-reference { background: #6e7681; color: #fff; }
+.verdict-reference { background: #565d65; color: #fff; }
 .verdict-summary-box {
   border-left: 4px solid var(--accent);
   background: var(--card-bg);
@@ -855,19 +855,20 @@ export function layoutHtml(title: string, content: string, basePath: string = ".
 <meta property="og:description" content="${ogDescription}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="SOLAR LINE 考証">
+<meta property="og:locale" content="ja_JP">
 <meta name="description" content="${ogDescription}">
 <style>${REPORT_CSS}</style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/github-dark.min.css" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.min.css" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.iife.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu9WSYMCuulLhIqYSGZ2gKCJWIqhBWqMQfh" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.min.css" integrity="sha384-IfV0B7MIOYuO95kO9G5ySKPz/85zqFNOAs8iy4tkK5zd9izhJAB8b7lHrwYqqmYE" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.iife.min.js" integrity="sha384-Gx3t0zdBAuQOuvvmaLZj7HKEiSgWTAs+VdtNY7wt19QDPTDQjFIwAuXDj0zeN00c" crossorigin="anonymous"></script>
 </head>
 <body>
 <nav><a href="${basePath}/index.html">トップ</a>${episodeNav}${summaryNav}${metaNav}<span class="nav-sep">|</span><a href="https://github.com/sksat/solar-line" target="_blank" rel="noopener">GitHub</a></nav>
-<div class="site-banner"><strong>⚠ ネタバレ注意:</strong> 本サイトはSFアニメ「SOLAR LINE」の内容を詳細に分析しています。未視聴の方はご注意ください。<br><strong>📝 AI生成コンテンツ:</strong> 本考証の大部分は AI（Claude Code 等）によって生成されています。内容の正確性については原作および引用元をご確認ください。</div>
+<div class="site-banner" role="note" aria-label="サイト注意事項"><strong>⚠ ネタバレ注意:</strong> 本サイトはSFアニメ「SOLAR LINE」の内容を詳細に分析しています。未視聴の方はご注意ください。<br><strong>📝 AI生成コンテンツ:</strong> 本考証の大部分は AI（Claude Code 等）によって生成されています。内容の正確性については原作および引用元をご確認ください。</div>
 <main>
 ${content}
 </main>
