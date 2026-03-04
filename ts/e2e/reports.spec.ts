@@ -383,6 +383,38 @@ test("logs index page loads", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+// --- Task 624: Individual log page spot-checks ---
+
+test.describe("Individual log pages", () => {
+  const logPages = [
+    "2026-02-23-task-001-scaffold.html",
+    "2026-02-23-session-8b46.html",
+    "2026-02-24-session-08a3.html",
+  ];
+
+  for (const logFile of logPages) {
+    test(`log page ${logFile} renders correctly`, async ({ page }) => {
+      const errors = collectConsoleErrors(page);
+      await page.goto(`/logs/${logFile}`);
+      await expect(page.locator("h1").first()).toBeVisible();
+      await expect(page.locator("nav")).toBeVisible();
+      // Should have substantive content (log text)
+      const body = await page.textContent("body");
+      expect(body!.length).toBeGreaterThan(200);
+      expect(errors).toEqual([]);
+    });
+  }
+
+  test("log page has back-link to logs index", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/logs/2026-02-23-task-001-scaffold.html");
+    // Should have a link back to logs index or parent navigation
+    const navLinks = page.locator('nav a[href*="logs"]');
+    expect(await navLinks.count()).toBeGreaterThanOrEqual(1);
+    expect(errors).toEqual([]);
+  });
+});
+
 // --- Cross-cutting tests ---
 
 test("no broken internal links on index page", async ({ page }) => {
@@ -1736,6 +1768,81 @@ test.describe("Standalone calculator page", () => {
     await page.goto("/calculator/index.html");
     await expect(page.locator("nav")).toBeVisible();
     await expect(page.locator(".site-banner")).toBeVisible();
+  });
+
+  // --- Task 623: Calculator numeric verification ---
+
+  test("EP01 defaults produce correct required acceleration and verdict", async ({
+    page,
+  }) => {
+    await page.goto("/calculator/index.html");
+    // Wait for calculator to initialize with EP01 defaults (3.68 AU, 48000 t, 72 h, 9.8 MN)
+    await page.waitForFunction(() => {
+      const el = document.getElementById("res-req-accel");
+      return el && el.textContent !== "—";
+    });
+    // Required acceleration: 4 * (3.68 AU * 149597870.7 km) / (72h * 3600s)² ≈ 32.78 m/s² (3.34 g)
+    const accel = await page.locator("#res-req-accel").textContent();
+    expect(accel).toContain("32.78");
+    expect(accel).toContain("3.34 g");
+    // Required ΔV: 4 * distKm / timeSec ≈ 8,495.68 km/s
+    const dv = await page.locator("#res-req-dv").textContent();
+    expect(dv).toContain("8,495.68");
+    // Ship accel at 48,000t: 0.204 m/s² (0.021 g)
+    const shipAccel = await page.locator("#res-ship-accel").textContent();
+    expect(shipAccel).toContain("0.204");
+    expect(shipAccel).toContain("0.021 g");
+    // Accel ratio ≈ 161× → verdict "161× 不足" (implausible)
+    const verdict = await page.locator("#res-verdict").textContent();
+    expect(verdict).toContain("161");
+    expect(verdict).toContain("不足");
+  });
+
+  test("changing distance input recalculates results correctly", async ({
+    page,
+  }) => {
+    await page.goto("/calculator/index.html");
+    await page.waitForFunction(() => {
+      const el = document.getElementById("res-req-accel");
+      return el && el.textContent !== "—";
+    });
+    // Change distance to 1.0 AU (keeping mass=48000t, time=72h, thrust=9.8MN)
+    await page.locator("#calc-distance").fill("1.0");
+    await page.locator("#calc-distance").dispatchEvent("input");
+    // Wait for recalculation
+    await page.waitForFunction(() => {
+      const el = document.getElementById("res-req-accel");
+      return el && el.textContent && el.textContent.includes("8.91");
+    });
+    // Required accel at 1.0 AU: 4 * 149597870.7 / 259200² ≈ 8.909 m/s² → "8.91 m/s²"
+    const accel = await page.locator("#res-req-accel").textContent();
+    expect(accel).toContain("8.91");
+    // ΔV at 1.0 AU: 4 * 149597870.7 / 259200 ≈ 2,308.61 km/s
+    const dv = await page.locator("#res-req-dv").textContent();
+    expect(dv).toContain("2,308.6");
+    // Accel ratio at 1.0 AU: 8.909 / 0.204 ≈ 43.6× → still "不足"
+    const verdict = await page.locator("#res-verdict").textContent();
+    expect(verdict).toContain("不足");
+  });
+
+  test("preset button loads values and recalculates", async ({ page }) => {
+    await page.goto("/calculator/index.html");
+    await page.waitForFunction(() => {
+      const el = document.getElementById("res-req-accel");
+      return el && el.textContent !== "—";
+    });
+    // Click a preset button — find the first one available
+    const presetBtn = page.locator("[data-preset]").first();
+    const presetKey = await presetBtn.getAttribute("data-preset");
+    expect(presetKey).toBeTruthy();
+    await presetBtn.click();
+    // After clicking preset, results should update (not be "—")
+    const accel = await page.locator("#res-req-accel").textContent();
+    expect(accel).not.toBe("—");
+    expect(accel).toContain("m/s²");
+    expect(accel).toContain("g)");
+    const verdict = await page.locator("#res-verdict").textContent();
+    expect(verdict).not.toBe("—");
   });
 });
 
