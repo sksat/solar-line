@@ -1091,6 +1091,15 @@ struct DagPathResult {
     paths: Vec<Vec<String>>,
 }
 
+/// Task planning result.
+#[derive(Serialize, Deserialize)]
+struct DagTaskPlanningResult {
+    plannable: Vec<String>,
+    blocked: Vec<String>,
+    active: Vec<String>,
+    parallel_groups: Vec<Vec<String>>,
+}
+
 /// Convert JS DAG state to internal Rust representation.
 /// Returns (Dag, id_list) where id_list maps index→string ID.
 fn parse_dag_state(state: &JsDagState) -> (dag::Dag, Vec<String>) {
@@ -1292,6 +1301,80 @@ pub fn dag_subgraph(state: JsValue, tag: &str, depth: usize) -> Result<JsValue, 
     let sub = d.subgraph(|n| n.tags.contains(&tag_str), depth);
     let result: Vec<String> = sub.iter().map(|&i| ids[i].clone()).collect();
     serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Validate the DAG. Returns array of issue strings (empty = valid).
+#[wasm_bindgen]
+pub fn dag_validate(state: JsValue) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let issues = d.validate();
+    // Replace numeric IDs with string IDs in issue messages
+    let result: Vec<String> = issues
+        .iter()
+        .map(|issue| {
+            let mut s = issue.clone();
+            for (i, id) in ids.iter().enumerate() {
+                s = s.replace(&format!("node {}", i), &format!("node '{}'", id));
+                s = s.replace(&format!("Node {}", i), &format!("Node '{}'", id));
+                s = s.replace(&format!("source {}", i), &format!("source '{}'", id));
+                s = s.replace(&format!("report {}", i), &format!("report '{}'", id));
+            }
+            s
+        })
+        .collect();
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Get task planning info: plannable, blocked, active, and parallel groups.
+#[wasm_bindgen]
+pub fn dag_task_planning(state: JsValue) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let plannable: Vec<String> = d
+        .plannable_tasks()
+        .iter()
+        .map(|&i| ids[i].clone())
+        .collect();
+    let blocked: Vec<String> = d.blocked_tasks().iter().map(|&i| ids[i].clone()).collect();
+    let active: Vec<String> = d.active_tasks().iter().map(|&i| ids[i].clone()).collect();
+    let parallel: Vec<Vec<String>> = d
+        .parallel_groups()
+        .iter()
+        .map(|group| group.iter().map(|&i| ids[i].clone()).collect())
+        .collect();
+
+    let result = DagTaskPlanningResult {
+        plannable,
+        blocked,
+        active,
+        parallel_groups: parallel,
+    };
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Get stale nodes sorted by dependency depth (shallowest first).
+#[wasm_bindgen]
+pub fn dag_stale_nodes(state: JsValue) -> Result<JsValue, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, ids) = parse_dag_state(&js_state);
+
+    let stale: Vec<String> = d.stale_nodes().iter().map(|&i| ids[i].clone()).collect();
+    serde_wasm_bindgen::to_value(&stale).map_err(|e| JsError::new(&e.to_string()))
+}
+
+/// Summarize the DAG state as a human-readable string.
+#[wasm_bindgen]
+pub fn dag_summarize(state: JsValue) -> Result<String, JsError> {
+    let js_state: JsDagState =
+        serde_wasm_bindgen::from_value(state).map_err(|e| JsError::new(&e.to_string()))?;
+    let (d, _ids) = parse_dag_state(&js_state);
+    Ok(d.summarize())
 }
 
 // ---------------------------------------------------------------------------
@@ -2482,6 +2565,147 @@ mod tests {
         assert!(node_ids.contains(&"analysis.ep01".to_string()));
         assert!(node_ids.contains(&"report.ep01".to_string()));
         assert!(node_ids.contains(&"src.data".to_string()));
+    }
+
+    #[test]
+    fn test_dag_validate_clean() {
+        let state = make_test_dag_state();
+        let (d, _ids) = parse_dag_state(&state);
+        let issues = d.validate();
+        assert!(
+            issues.is_empty(),
+            "clean DAG should have no issues: {:?}",
+            issues
+        );
+    }
+
+    #[test]
+    fn test_dag_stale_nodes_via_parse() {
+        let state = make_test_dag_state();
+        let (d, _ids) = parse_dag_state(&state);
+        // All nodes are valid in the test state
+        assert!(d.stale_nodes().is_empty());
+    }
+
+    #[test]
+    fn test_dag_task_planning_no_tasks() {
+        let state = make_test_dag_state();
+        let (d, _ids) = parse_dag_state(&state);
+        // No task nodes in the test state
+        assert!(d.plannable_tasks().is_empty());
+        assert!(d.blocked_tasks().is_empty());
+        assert!(d.active_tasks().is_empty());
+        assert!(d.parallel_groups().is_empty());
+    }
+
+    fn make_test_dag_state_with_tasks() -> JsDagState {
+        let json = r#"{
+            "nodes": {
+                "src.data": {
+                    "id": "src.data",
+                    "type": "data_source",
+                    "dependsOn": [],
+                    "status": "valid",
+                    "tags": ["source"]
+                },
+                "analysis.ep01": {
+                    "id": "analysis.ep01",
+                    "type": "analysis",
+                    "dependsOn": ["src.data"],
+                    "status": "valid",
+                    "tags": ["episode:01"]
+                },
+                "task.001": {
+                    "id": "task.001",
+                    "type": "task",
+                    "dependsOn": ["analysis.ep01"],
+                    "status": "pending",
+                    "tags": []
+                },
+                "task.002": {
+                    "id": "task.002",
+                    "type": "task",
+                    "dependsOn": ["analysis.ep01"],
+                    "status": "pending",
+                    "tags": []
+                },
+                "task.003": {
+                    "id": "task.003",
+                    "type": "task",
+                    "dependsOn": ["task.001", "task.002"],
+                    "status": "pending",
+                    "tags": []
+                },
+                "task.004": {
+                    "id": "task.004",
+                    "type": "task",
+                    "dependsOn": ["src.data"],
+                    "status": "active",
+                    "tags": []
+                }
+            },
+            "schemaVersion": 1
+        }"#;
+        serde_json::from_str(json).unwrap()
+    }
+
+    #[test]
+    fn test_dag_plannable_tasks_via_parse() {
+        let state = make_test_dag_state_with_tasks();
+        let (d, ids) = parse_dag_state(&state);
+        let plannable: Vec<String> = d
+            .plannable_tasks()
+            .iter()
+            .map(|&i| ids[i].clone())
+            .collect();
+        // task.001 and task.002 have all deps valid
+        assert!(plannable.contains(&"task.001".to_string()));
+        assert!(plannable.contains(&"task.002".to_string()));
+        // task.003 is blocked (depends on pending tasks)
+        assert!(!plannable.contains(&"task.003".to_string()));
+        // task.004 is active, not pending
+        assert!(!plannable.contains(&"task.004".to_string()));
+    }
+
+    #[test]
+    fn test_dag_blocked_tasks_via_parse() {
+        let state = make_test_dag_state_with_tasks();
+        let (d, ids) = parse_dag_state(&state);
+        let blocked: Vec<String> = d.blocked_tasks().iter().map(|&i| ids[i].clone()).collect();
+        assert_eq!(blocked, vec!["task.003".to_string()]);
+    }
+
+    #[test]
+    fn test_dag_active_tasks_via_parse() {
+        let state = make_test_dag_state_with_tasks();
+        let (d, ids) = parse_dag_state(&state);
+        let active: Vec<String> = d.active_tasks().iter().map(|&i| ids[i].clone()).collect();
+        assert_eq!(active, vec!["task.004".to_string()]);
+    }
+
+    #[test]
+    fn test_dag_parallel_groups_via_parse() {
+        let state = make_test_dag_state_with_tasks();
+        let (d, ids) = parse_dag_state(&state);
+        let groups = d.parallel_groups();
+        // task.001 and task.002 can run in parallel
+        assert!(!groups.is_empty());
+        let group_ids: Vec<Vec<String>> = groups
+            .iter()
+            .map(|g| g.iter().map(|&i| ids[i].clone()).collect())
+            .collect();
+        let first_group = &group_ids[0];
+        assert!(first_group.contains(&"task.001".to_string()));
+        assert!(first_group.contains(&"task.002".to_string()));
+    }
+
+    #[test]
+    fn test_dag_summarize_via_parse() {
+        let state = make_test_dag_state();
+        let (d, _ids) = parse_dag_state(&state);
+        let summary = d.summarize();
+        assert!(summary.contains("DAG:"));
+        assert!(summary.contains("6 nodes"));
     }
 
     // ── Mass timeline WASM tests ──────────────────────────────────

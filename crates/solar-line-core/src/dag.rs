@@ -58,6 +58,8 @@ pub enum NodeStatus {
     Valid,
     Stale,
     Pending,
+    Active,
+    Blocked,
 }
 
 impl NodeStatus {
@@ -66,6 +68,8 @@ impl NodeStatus {
             NodeStatus::Valid => "valid",
             NodeStatus::Stale => "stale",
             NodeStatus::Pending => "pending",
+            NodeStatus::Active => "active",
+            NodeStatus::Blocked => "blocked",
         }
     }
 
@@ -74,6 +78,8 @@ impl NodeStatus {
             "valid" => Some(NodeStatus::Valid),
             "stale" => Some(NodeStatus::Stale),
             "pending" => Some(NodeStatus::Pending),
+            "active" => Some(NodeStatus::Active),
+            "blocked" => Some(NodeStatus::Blocked),
             _ => None,
         }
     }
@@ -537,6 +543,249 @@ impl Dag {
             .filter(|n| n.depends_on.is_empty() && self.forward[n.id].is_empty())
             .map(|n| n.id)
             .collect()
+    }
+
+    // -----------------------------------------------------------------------
+    // Validation
+    // -----------------------------------------------------------------------
+
+    /// Validate the DAG state. Returns a list of issues (empty = valid).
+    /// Issues starting with "ERROR:" are critical; "WARN:" are advisory.
+    pub fn validate(&self) -> Vec<String> {
+        let mut issues = Vec::new();
+
+        // Check for missing dependency targets
+        for node in &self.nodes {
+            for &dep in &node.depends_on {
+                if dep >= self.nodes.len() {
+                    issues.push(format!(
+                        "ERROR: Node {} depends on unknown node {}",
+                        node.id, dep
+                    ));
+                }
+            }
+        }
+
+        // Check for cycles
+        if let Some(cycle) = self.detect_cycle() {
+            let cycle_str: Vec<String> = cycle.iter().map(|i| i.to_string()).collect();
+            issues.push(format!("ERROR: Cycle detected: {}", cycle_str.join(" → ")));
+        }
+
+        // Warn about orphans
+        for id in self.orphans() {
+            issues.push(format!("WARN: Orphan node {} has no connections", id));
+        }
+
+        // Type rules: data sources shouldn't have dependencies
+        for node in &self.nodes {
+            if node.node_type == NodeType::DataSource && !node.depends_on.is_empty() {
+                issues.push(format!(
+                    "WARN: Data source {} has dependencies (unusual)",
+                    node.id
+                ));
+            }
+        }
+
+        // Type rules: parameters shouldn't depend on reports
+        for node in &self.nodes {
+            if node.node_type == NodeType::Parameter {
+                for &dep in &node.depends_on {
+                    if dep < self.nodes.len() && self.nodes[dep].node_type == NodeType::Report {
+                        issues.push(format!(
+                            "WARN: Parameter {} depends on report {} (unusual direction)",
+                            node.id, dep
+                        ));
+                    }
+                }
+            }
+        }
+
+        issues
+    }
+
+    // -----------------------------------------------------------------------
+    // Stale nodes (sorted by dependency order — leaves first)
+    // -----------------------------------------------------------------------
+
+    /// Get stale nodes sorted by dependency depth (shallowest first).
+    pub fn stale_nodes(&self) -> Vec<usize> {
+        let depths = self.compute_depths();
+        let mut stale: Vec<usize> = self
+            .nodes
+            .iter()
+            .filter(|n| n.status == NodeStatus::Stale)
+            .map(|n| n.id)
+            .collect();
+        stale.sort_by_key(|&id| depths[id]);
+        stale
+    }
+
+    // -----------------------------------------------------------------------
+    // Task planning
+    // -----------------------------------------------------------------------
+
+    /// Get task nodes that are ready to work on:
+    /// - Type is Task
+    /// - Status is Pending
+    /// - All dependencies are Valid
+    pub fn plannable_tasks(&self) -> Vec<usize> {
+        self.nodes
+            .iter()
+            .filter(|n| n.node_type == NodeType::Task && n.status == NodeStatus::Pending)
+            .filter(|n| {
+                n.depends_on.iter().all(|&dep| {
+                    dep < self.nodes.len() && self.nodes[dep].status == NodeStatus::Valid
+                })
+            })
+            .map(|n| n.id)
+            .collect()
+    }
+
+    /// Get task nodes that are blocked:
+    /// - Type is Task
+    /// - Status is Pending
+    /// - At least one dependency is not Valid
+    pub fn blocked_tasks(&self) -> Vec<usize> {
+        self.nodes
+            .iter()
+            .filter(|n| n.node_type == NodeType::Task && n.status == NodeStatus::Pending)
+            .filter(|n| {
+                n.depends_on.iter().any(|&dep| {
+                    dep >= self.nodes.len() || self.nodes[dep].status != NodeStatus::Valid
+                })
+            })
+            .map(|n| n.id)
+            .collect()
+    }
+
+    /// Get active (in-progress) task nodes.
+    pub fn active_tasks(&self) -> Vec<usize> {
+        self.nodes
+            .iter()
+            .filter(|n| n.node_type == NodeType::Task && n.status == NodeStatus::Active)
+            .map(|n| n.id)
+            .collect()
+    }
+
+    /// Find groups of plannable tasks that can be executed in parallel
+    /// (no mutual transitive dependencies).
+    pub fn parallel_groups(&self) -> Vec<Vec<usize>> {
+        let plannable = self.plannable_tasks();
+        if plannable.is_empty() {
+            return Vec::new();
+        }
+
+        let mut groups: Vec<Vec<usize>> = Vec::new();
+        let mut assigned = vec![false; self.nodes.len()];
+
+        for &task in &plannable {
+            if assigned[task] {
+                continue;
+            }
+            let mut group = vec![task];
+            assigned[task] = true;
+            let task_up: Vec<bool> = {
+                let up = self.all_upstream(task);
+                let mut v = vec![false; self.nodes.len()];
+                for &u in &up {
+                    v[u] = true;
+                }
+                v
+            };
+            let task_down: Vec<bool> = {
+                let down = self.all_downstream(task);
+                let mut v = vec![false; self.nodes.len()];
+                for &d in &down {
+                    v[d] = true;
+                }
+                v
+            };
+
+            for &other in &plannable {
+                if assigned[other] {
+                    continue;
+                }
+                if task_up[other] || task_down[other] {
+                    continue;
+                }
+                // Also check against all existing group members
+                let mut conflicts = false;
+                for &member in &group {
+                    let m_up = self.all_upstream(member);
+                    let m_down = self.all_downstream(member);
+                    if m_up.contains(&other) || m_down.contains(&other) {
+                        conflicts = true;
+                        break;
+                    }
+                }
+                if !conflicts {
+                    group.push(other);
+                    assigned[other] = true;
+                }
+            }
+
+            groups.push(group);
+        }
+
+        groups
+    }
+
+    /// Summarize the DAG state as a human-readable string.
+    pub fn summarize(&self) -> String {
+        let mut by_type = [0usize; 5];
+        let mut by_status = [0usize; 5]; // valid, stale, pending, active, blocked
+        for node in &self.nodes {
+            by_type[node.node_type.layer_order()] += 1;
+            match node.status {
+                NodeStatus::Valid => by_status[0] += 1,
+                NodeStatus::Stale => by_status[1] += 1,
+                NodeStatus::Pending => by_status[2] += 1,
+                NodeStatus::Active => by_status[3] += 1,
+                NodeStatus::Blocked => by_status[4] += 1,
+            }
+        }
+
+        let type_names = ["data_source", "parameter", "analysis", "report", "task"];
+        let status_names = ["valid", "stale", "pending", "active", "blocked"];
+
+        let mut lines = Vec::new();
+        lines.push(format!(
+            "DAG: {} nodes, {} edges",
+            self.nodes.len(),
+            self.edge_count()
+        ));
+
+        let types_str: Vec<String> = type_names
+            .iter()
+            .zip(by_type.iter())
+            .filter(|(_, &c)| c > 0)
+            .map(|(n, c)| format!("{}={}", n, c))
+            .collect();
+        lines.push(format!("Types: {}", types_str.join(", ")));
+
+        let status_str: Vec<String> = status_names
+            .iter()
+            .zip(by_status.iter())
+            .filter(|(_, &c)| c > 0)
+            .map(|(n, c)| format!("{}={}", n, c))
+            .collect();
+        lines.push(format!("Status: {}", status_str.join(", ")));
+
+        let issues = self.validate();
+        let errors = issues.iter().filter(|i| i.starts_with("ERROR")).count();
+        let warns = issues.iter().filter(|i| i.starts_with("WARN")).count();
+        if errors > 0 {
+            lines.push(format!("Errors: {}", errors));
+        }
+        if warns > 0 {
+            lines.push(format!("Warnings: {}", warns));
+        }
+        for issue in &issues {
+            lines.push(format!("  {}", issue));
+        }
+
+        lines.join("\n")
     }
 
     // -----------------------------------------------------------------------
@@ -1031,9 +1280,182 @@ mod tests {
 
     #[test]
     fn test_node_status_roundtrip() {
-        for s in &[NodeStatus::Valid, NodeStatus::Stale, NodeStatus::Pending] {
+        for s in &[
+            NodeStatus::Valid,
+            NodeStatus::Stale,
+            NodeStatus::Pending,
+            NodeStatus::Active,
+            NodeStatus::Blocked,
+        ] {
             assert_eq!(NodeStatus::parse(s.as_str()), Some(*s));
         }
+    }
+
+    // -- Validation --
+
+    #[test]
+    fn test_validate_clean_dag() {
+        let dag = make_linear_dag();
+        let issues = dag.validate();
+        assert!(issues.is_empty(), "linear DAG should have no issues");
+    }
+
+    #[test]
+    fn test_validate_orphan_warning() {
+        let dag = Dag::new(vec![
+            make_node(0, NodeType::DataSource, vec![]),
+            make_node(1, NodeType::Analysis, vec![0]),
+            make_node(2, NodeType::Report, vec![]),
+        ]);
+        let issues = dag.validate();
+        assert!(issues.iter().any(|i| i.contains("Orphan")));
+    }
+
+    #[test]
+    fn test_validate_data_source_with_deps() {
+        let dag = Dag::new(vec![
+            make_node(0, NodeType::Analysis, vec![]),
+            make_node(1, NodeType::DataSource, vec![0]),
+        ]);
+        let issues = dag.validate();
+        assert!(issues
+            .iter()
+            .any(|i| i.contains("Data source") && i.contains("dependencies")));
+    }
+
+    #[test]
+    fn test_validate_param_depends_on_report() {
+        let dag = Dag::new(vec![
+            make_node(0, NodeType::Report, vec![]),
+            make_node(1, NodeType::Parameter, vec![0]),
+        ]);
+        let issues = dag.validate();
+        assert!(issues
+            .iter()
+            .any(|i| i.contains("Parameter") && i.contains("report")));
+    }
+
+    // -- Stale nodes --
+
+    #[test]
+    fn test_stale_nodes_empty() {
+        let dag = make_linear_dag();
+        assert!(dag.stale_nodes().is_empty());
+    }
+
+    #[test]
+    fn test_stale_nodes_sorted_by_depth() {
+        let dag = Dag::new(vec![
+            make_node_with_status(0, NodeType::DataSource, vec![], NodeStatus::Stale),
+            make_node_with_status(1, NodeType::Parameter, vec![0], NodeStatus::Valid),
+            make_node_with_status(2, NodeType::Analysis, vec![1], NodeStatus::Stale),
+            make_node_with_status(3, NodeType::Report, vec![2], NodeStatus::Stale),
+        ]);
+        let stale = dag.stale_nodes();
+        assert_eq!(stale, vec![0, 2, 3], "shallowest stale node first");
+    }
+
+    // -- Task planning --
+
+    fn make_task_dag() -> Dag {
+        //   data0 → analysis0 → task0 (pending)
+        //   data1 → analysis1 → task1 (pending)
+        //                      task2 (pending, depends on task0 and task1)
+        Dag::new(vec![
+            make_node_with_status(0, NodeType::DataSource, vec![], NodeStatus::Valid),
+            make_node_with_status(1, NodeType::DataSource, vec![], NodeStatus::Valid),
+            make_node_with_status(2, NodeType::Analysis, vec![0], NodeStatus::Valid),
+            make_node_with_status(3, NodeType::Analysis, vec![1], NodeStatus::Valid),
+            make_node_with_status(4, NodeType::Task, vec![2], NodeStatus::Pending), // task0
+            make_node_with_status(5, NodeType::Task, vec![3], NodeStatus::Pending), // task1
+            make_node_with_status(6, NodeType::Task, vec![4, 5], NodeStatus::Pending), // task2
+        ])
+    }
+
+    fn make_node_with_status(
+        id: usize,
+        node_type: NodeType,
+        depends_on: Vec<usize>,
+        status: NodeStatus,
+    ) -> DagNode {
+        DagNode {
+            id,
+            node_type,
+            status,
+            depends_on,
+            tags: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn test_plannable_tasks() {
+        let dag = make_task_dag();
+        let plannable = dag.plannable_tasks();
+        // task0 (4) and task1 (5) have all deps valid; task2 (6) is blocked
+        assert_eq!(plannable, vec![4, 5]);
+    }
+
+    #[test]
+    fn test_blocked_tasks() {
+        let dag = make_task_dag();
+        let blocked = dag.blocked_tasks();
+        // task2 (6) depends on pending tasks
+        assert_eq!(blocked, vec![6]);
+    }
+
+    #[test]
+    fn test_active_tasks() {
+        let dag = Dag::new(vec![
+            make_node_with_status(0, NodeType::DataSource, vec![], NodeStatus::Valid),
+            make_node_with_status(1, NodeType::Task, vec![0], NodeStatus::Active),
+            make_node_with_status(2, NodeType::Task, vec![0], NodeStatus::Pending),
+        ]);
+        assert_eq!(dag.active_tasks(), vec![1]);
+    }
+
+    #[test]
+    fn test_parallel_groups() {
+        let dag = make_task_dag();
+        let groups = dag.parallel_groups();
+        // task0 and task1 have no mutual deps → in same group
+        assert_eq!(groups.len(), 1);
+        let mut group = groups[0].clone();
+        group.sort();
+        assert_eq!(group, vec![4, 5]);
+    }
+
+    #[test]
+    fn test_parallel_groups_serial() {
+        // task1 depends on task0 → must be in separate groups
+        let dag = Dag::new(vec![
+            make_node_with_status(0, NodeType::DataSource, vec![], NodeStatus::Valid),
+            make_node_with_status(1, NodeType::Task, vec![0], NodeStatus::Pending), // task0
+            make_node_with_status(2, NodeType::Task, vec![0, 1], NodeStatus::Pending), // task1 depends on task0
+        ]);
+        let plannable = dag.plannable_tasks();
+        // Only task0 (1) is plannable; task1 (2) is blocked
+        assert_eq!(plannable, vec![1]);
+    }
+
+    // -- Summarize --
+
+    #[test]
+    fn test_summarize_basic() {
+        let dag = make_linear_dag();
+        let summary = dag.summarize();
+        assert!(summary.contains("DAG: 4 nodes, 3 edges"));
+        assert!(summary.contains("data_source=1"));
+        assert!(summary.contains("valid=4"));
+    }
+
+    #[test]
+    fn test_summarize_with_warnings() {
+        let dag = Dag::new(vec![
+            make_node(0, NodeType::DataSource, vec![]),
+            make_node(1, NodeType::Report, vec![]),
+        ]);
+        let summary = dag.summarize();
+        assert!(summary.contains("Warnings:"));
     }
 
     #[test]
