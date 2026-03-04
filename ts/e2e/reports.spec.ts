@@ -1720,6 +1720,70 @@ test.describe("Data explorer page", () => {
     // Wait for result table to appear
     await expect(page.locator(".explorer-table")).toBeVisible({ timeout: 10_000 });
   });
+
+  // Task 627: DuckDB query result validation
+  test("preset query returns transfer data with expected columns", async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.goto("/explorer/index.html");
+    const statusEl = page.locator("#explorer-status");
+    await expect(statusEl).toContainText("準備完了", { timeout: 90_000 });
+
+    // Click first preset "全軌道遷移一覧" — lists all transfers
+    const firstPreset = page.locator(".preset-btn").first();
+    await firstPreset.click();
+    await expect(page.locator(".explorer-table")).toBeVisible({ timeout: 10_000 });
+
+    // Verify result has expected columns (episode, id, description, dv_km_s, verdict)
+    const headers = page.locator(".explorer-table thead th");
+    const headerTexts = await headers.allTextContents();
+    expect(headerTexts).toContain("episode");
+    expect(headerTexts).toContain("verdict");
+
+    // Verify result has data rows (24 transfers across 5 episodes)
+    const rows = page.locator(".explorer-table tbody tr");
+    expect(await rows.count()).toBeGreaterThanOrEqual(20);
+
+    // Verify row count is displayed
+    const meta = page.locator(".explorer-result-meta");
+    const metaText = await meta.textContent();
+    expect(metaText).toContain("行");
+  });
+
+  test("custom SQL query returns correct results", async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.goto("/explorer/index.html");
+    const statusEl = page.locator("#explorer-status");
+    await expect(statusEl).toContainText("準備完了", { timeout: 90_000 });
+
+    // Type a custom query to count episodes
+    const textarea = page.locator("#explorer-query");
+    await textarea.fill("SELECT COUNT(DISTINCT episode) AS ep_count FROM transfers");
+    await page.locator("#explorer-exec").click();
+    await expect(page.locator(".explorer-table")).toBeVisible({ timeout: 10_000 });
+
+    // Should return exactly 1 row with ep_count = 5
+    const cell = page.locator(".explorer-table tbody td").first();
+    const value = await cell.textContent();
+    expect(value).toBe("5");
+  });
+
+  test("malformed SQL shows error message", async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.goto("/explorer/index.html");
+    const statusEl = page.locator("#explorer-status");
+    await expect(statusEl).toContainText("準備完了", { timeout: 90_000 });
+
+    // Type invalid SQL
+    const textarea = page.locator("#explorer-query");
+    await textarea.fill("SELECTT INVALID SYNTAX");
+    await page.locator("#explorer-exec").click();
+
+    // Error message should appear in result area
+    const errorEl = page.locator("#explorer-result .explorer-error");
+    await expect(errorEl).toBeVisible({ timeout: 5_000 });
+    const errorText = await errorEl.textContent();
+    expect(errorText).toContain("エラー");
+  });
 });
 
 // --- Task 260: Meta task dashboard ---
