@@ -6498,4 +6498,20 @@ describe("inline 3D viewer __prepareScene constants sync", () => {
       "Parking orbits should have angular velocity",
     );
   });
+
+  // Regression test for Task 620: template literal regex escape bug.
+  // `\d` in a backtick template literal is silently converted to `d`.
+  // The fix uses `\\d` to produce `\d` in the output.
+  it("inline script episode regex uses \\d (not bare d) for digit matching", () => {
+    // The built HTML must contain the correct regex /^episode-(\d+)$/
+    // If the template literal escape is wrong, it would produce /^episode-(d+)$/
+    assert.ok(
+      html.includes("episode-(\\d+)"),
+      "Episode scene regex must use \\d for digit matching, not bare d (Task 620 regression)",
+    );
+    assert.ok(
+      !html.includes("episode-(d+)"),
+      "Episode scene regex must NOT have bare (d+) — indicates missing backslash escape",
+    );
+  });
 });
