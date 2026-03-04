@@ -29,6 +29,7 @@ let _inertialCameraTarget = new THREE.Vector3(0, 0, 0);
 let _scenarioObjects = {}; // scenarioId → Array<THREE.Object3D> (for show/hide)
 let _activeScenarios = new Set(); // currently visible scenario IDs
 let _currentSceneData = null; // store for info panel updates
+let _planetDisplayRadii = {}; // name → actual rendered sphere radius (populated during scene build)
 
 // ── Constants matching orbital-3d-viewer-data.ts ──
 const AU_TO_SCENE = 5;
@@ -73,11 +74,22 @@ const PLANET_RADII = {
 /**
  * Offset a point away from a planet center along the transfer direction.
  * Returns a new Vector3 that is `offset` scene units away from `planet` toward `other`.
+ * Uses actual rendered sphere radius from planetMeshes when available,
+ * falling back to PLANET_RADII lookup.
  */
 function offsetFromPlanet(point, otherPoint, planetName, sceneType) {
   const isLocal = sceneType !== "full-route";
-  const baseRadius = PLANET_RADII[planetName] || 0.15;
-  const displayRadius = isLocal ? baseRadius : baseRadius * 3;
+  // Use actual rendered sphere radius: scene build cache → mesh geometry → PLANET_RADII fallback
+  let displayRadius = _planetDisplayRadii[planetName];
+  if (displayRadius == null) {
+    const mesh = planetMeshes[planetName];
+    if (mesh && mesh.geometry && mesh.geometry.parameters) {
+      displayRadius = mesh.geometry.parameters.radius;
+    } else {
+      const baseRadius = PLANET_RADII[planetName] || 0.15;
+      displayRadius = isLocal ? baseRadius : baseRadius * 3;
+    }
+  }
   // Offset by 1.5× display radius to clear the sphere surface
   const offset = displayRadius * 1.5;
   const dir = new THREE.Vector3().subVectors(otherPoint, point).normalize();
@@ -296,8 +308,11 @@ export function loadScene(sceneData) {
     }
   }
 
-  // Planets
+  // Planets — build display radius map for offsetFromPlanet collision avoidance
+  _planetDisplayRadii = {};
   for (const planet of sceneData.planets) {
+    const isLocal = sceneData.type !== "full-route";
+    _planetDisplayRadii[planet.name] = isLocal ? planet.radius : planet.radius * 3;
     addPlanet(currentSceneGroup, planet, sceneData.type, planetScenarioMap[planet.name]);
   }
 

@@ -871,6 +871,33 @@ describe("offsetFromPlanet", () => {
     const result = offsetFromPlanet(point, other, "pluto", "full-route");
     assert.ok(result[0] > point[0]);
   });
+
+  it("uses explicitRadius when provided (local scene override)", () => {
+    const point: [number, number, number] = [0, 0, 0]; // planet center
+    const other: [number, number, number] = [10, 0, 0]; // approach from
+    // Saturn PLANET_RADII=0.35 but local scene renders at 0.5
+    const withoutOverride = offsetFromPlanet(point, other, "saturn", "saturn-ring");
+    const withOverride = offsetFromPlanet(point, other, "saturn", "saturn-ring", 0.5);
+    // Without override: offset = 0.35 * 1.5 = 0.525
+    // With override: offset = 0.5 * 1.5 = 0.75
+    assert.ok(withOverride[0] > withoutOverride[0],
+      `explicit radius offset ${withOverride[0].toFixed(3)} should be > base ${withoutOverride[0].toFixed(3)}`);
+    assert.ok(Math.abs(withOverride[0] - 0.75) < 0.001,
+      `expected offset 0.75 but got ${withOverride[0].toFixed(3)}`);
+  });
+
+  it("offset with local scene central body radius clears planet sphere", () => {
+    const center: [number, number, number] = [0, 0, 0];
+    const approach: [number, number, number] = [10, 0, 0];
+    // Saturn: rendered radius = 0.5
+    const saturnOffset = offsetFromPlanet(center, approach, "saturn", "saturn-ring", 0.5);
+    assert.ok(saturnOffset[0] > 0.5,
+      `Saturn arc endpoint ${saturnOffset[0].toFixed(3)} must clear sphere radius 0.5`);
+    // Uranus: rendered radius = 0.4
+    const uranusOffset = offsetFromPlanet(center, approach, "uranus", "uranus-approach", 0.4);
+    assert.ok(uranusOffset[0] > 0.4,
+      `Uranus arc endpoint ${uranusOffset[0].toFixed(3)} must clear sphere radius 0.4`);
+  });
 });
 
 // ---------------------------------------------------------------------------

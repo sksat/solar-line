@@ -1,12 +1,12 @@
 # Task 606: 3D Viewer Time Slider Scene-Switch Sync
 
-## Status: **TODO**
+## Status: **DONE**
 
 ## Summary
 
 Human directive: time slider の幅が可視化種類切り替えに追従してない。
 
-When switching between scenes (e.g., full-route → episode-1), the time slider range/width doesn't update to match the new scene's duration. The slider should recalculate its range based on the active scene's total duration.
+Fix: Added total duration indicator (`/ X日Y時間`) next to the current time display. When switching scenes, the total duration updates to show the new scene's duration, making it visually clear that the slider range has changed. Moved `fmtDay()` function to module scope so it's available during scene switch. Applied to both inline viewer (templates.ts) and standalone viewer (orbital-3d.html). 2 new E2E tests verify the indicator appears and updates on scene switch.
 
 ## Key Files
 

@@ -3247,6 +3247,7 @@ ${sceneButtons}
 <button class="viewer3d-play" aria-label="再生" style="background:#21262d;color:#c9d1d9;border:1px solid var(--border);width:36px;height:36px;cursor:pointer;border-radius:4px;font-size:1.1em;">&#x25b6;</button>
 <input type="range" class="viewer3d-slider" min="0" max="1000" value="0" style="flex:1;accent-color:#58a6ff;" aria-label="タイムライン">
 <span class="viewer3d-time" style="font-size:0.85em;color:#58a6ff;min-width:80px;text-align:right;font-variant-numeric:tabular-nums;">0日</span>
+<span class="viewer3d-total" style="font-size:0.75em;color:#8b949e;white-space:nowrap;"></span>
 <span class="viewer3d-label" style="font-size:0.8em;color:#8b949e;min-width:200px;"></span>
 <button class="viewer3d-speed" aria-label="再生速度" title="アニメーション速度の切替" style="background:#21262d;color:#58a6ff;border:1px solid var(--border);padding:4px 12px;cursor:pointer;border-radius:4px;font-size:0.85em;white-space:nowrap;">1×</button>
 <button class="viewer3d-viewmode" aria-label="視点切替" title="慣性座標/宇宙船視点の切替" style="background:#21262d;color:#58a6ff;border:1px solid var(--border);padding:4px 12px;cursor:pointer;border-radius:4px;font-size:0.85em;white-space:nowrap;">慣性</button>
@@ -3283,6 +3284,11 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
     }
     return "";
   }
+  function fmtDay(d) {
+    if (d < 1) return Math.round(d * 24) + "時間";
+    var dd = Math.floor(d), hh = Math.round((d - dd) * 24);
+    return hh > 0 ? dd + "日" + hh + "時間" : dd + "日";
+  }
   function switchScene(sceneName) {
     var sd = window.__prepareScene(sceneName, analysisData);
     if (!sd) return;
@@ -3299,6 +3305,7 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
         ctrl.querySelector(".viewer3d-play").textContent = "\\u25b6";
         ctrl.querySelector(".viewer3d-slider").value = "0";
         ctrl.querySelector(".viewer3d-time").textContent = "0日";
+        ctrl.querySelector(".viewer3d-total").textContent = "/ " + fmtDay(currentTotalDays);
         ctrl.querySelector(".viewer3d-label").textContent = "";
       } else {
         ctrl.style.display = "none";
@@ -3335,11 +3342,6 @@ document.querySelectorAll(".viewer3d-container").forEach(async function(containe
       setTimelinePlaying(playing);
       playBtn.textContent = playing ? "\\u23f8" : "\\u25b6";
     });
-    function fmtDay(d) {
-      if (d < 1) return Math.round(d * 24) + "時間";
-      var dd = Math.floor(d), hh = Math.round((d - dd) * 24);
-      return hh > 0 ? dd + "日" + hh + "時間" : dd + "日";
-    }
     slider.addEventListener("input", function() {
       var frac = Number(slider.value) / 1000;
       updateTimelineFrame(frac * currentTotalDays);

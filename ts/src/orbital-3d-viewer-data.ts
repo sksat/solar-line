@@ -335,16 +335,24 @@ export function arcControlPointLocal(from: Vec3, to: Vec3): Vec3 {
 /**
  * Offset a point away from a planet center along the transfer direction.
  * Returns a new position displaced by 1.5× the display radius.
+ * @param explicitRadius - If provided, use this as the display radius instead of looking up PLANET_RADII.
+ *   This handles local scenes where central bodies have larger radii than the base PLANET_RADII values.
  */
 export function offsetFromPlanet(
   point: Vec3,
   otherPoint: Vec3,
   planetName: string,
   sceneType: string,
+  explicitRadius?: number,
 ): Vec3 {
-  const isLocal = sceneType !== "full-route";
-  const baseRadius = PLANET_RADII[planetName] ?? 0.15;
-  const displayRadius = isLocal ? baseRadius : baseRadius * 3;
+  let displayRadius: number;
+  if (explicitRadius != null) {
+    displayRadius = explicitRadius;
+  } else {
+    const isLocal = sceneType !== "full-route";
+    const baseRadius = PLANET_RADII[planetName] ?? 0.15;
+    displayRadius = isLocal ? baseRadius : baseRadius * 3;
+  }
   const offset = displayRadius * 1.5;
 
   const dx = otherPoint[0] - point[0];

@@ -120,6 +120,7 @@ header h1 { font-size: 1.1em; color: var(--accent); white-space: nowrap; }
     <input type="range" id="timeline-slider" min="0" max="1000" value="0"
            aria-label="ミッションタイムライン" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000">
     <span id="timeline-time">0日</span>
+    <span id="timeline-total" style="font-size:0.75em;color:var(--text-muted);white-space:nowrap;"></span>
     <span id="timeline-label"></span>
     <button id="speed-btn" aria-label="再生速度" title="アニメーション速度の切替">1×</button>
     <button id="view-mode-btn" aria-label="視点切替" title="慣性座標/宇宙船視点の切替">慣性</button>
@@ -496,6 +497,7 @@ async function init() {
   const tlPlayBtn = document.getElementById("timeline-play");
   const tlSlider = document.getElementById("timeline-slider");
   const tlTime = document.getElementById("timeline-time");
+  const tlTotal = document.getElementById("timeline-total");
   const tlLabel = document.getElementById("timeline-label");
   let isPlaying = false;
   let activeTimeline = null;
@@ -549,6 +551,7 @@ async function init() {
       loadTimeline(timeline);
       tlControls.classList.add("active");
       updateTimelineUI(0, timeline);
+      if (tlTotal) tlTotal.textContent = "/ " + formatDays(timeline.totalDays);
       updateTimelineFrame(0);
 
       // Callback from animation loop
