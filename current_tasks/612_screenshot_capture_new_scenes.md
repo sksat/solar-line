@@ -1,6 +1,6 @@
 # Task 612: Add New 3D Scenes to Screenshot Capture
 
-Status: IN PROGRESS
+Status: DONE
 
 ## Problem
 Tasks 609-611 added three new 3D scenes (jupiter-capture, earth-arrival, episode-5) to the orbital viewer, but the animation screenshot capture spec (animation-screenshots.spec.ts) was not updated to include them. The review-screenshots command only captures 7 scenes (37 screenshots) but there are now 10 scenes in total.
