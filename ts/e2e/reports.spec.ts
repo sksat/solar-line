@@ -444,6 +444,22 @@ test("robots.txt exists and references sitemap", async ({ page }) => {
   expect(text).toContain("sitemap.xml");
 });
 
+// --- Task 625: 404 page ---
+
+test("404 page renders with navigation and helpful content", async ({ page }) => {
+  const errors = collectConsoleErrors(page);
+  // Access the 404 page directly (dev server serves it at /404.html)
+  await page.goto("/404.html");
+  await expect(page.locator("h1")).toBeVisible();
+  const h1Text = await page.locator("h1").textContent();
+  expect(h1Text).toContain("404");
+  await expect(page.locator("nav")).toBeVisible();
+  // Should have links to help users navigate back
+  const links = page.locator("a");
+  expect(await links.count()).toBeGreaterThan(0);
+  expect(errors).toEqual([]);
+});
+
 // --- Cross-cutting tests ---
 
 test("no broken internal links on index page", async ({ page }) => {
