@@ -1937,3 +1937,120 @@ describe("3D label localization", () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// Ship animation data completeness — verifies all scene types provide
+// the timeline data needed for the ship marker to animate along transfers.
+// ---------------------------------------------------------------------------
+describe("ship animation data completeness", () => {
+  // Helper: build all scene types from the real analysis data
+  function allScenes() {
+    const fullRoute = prepareFullRouteScene(analysis);
+    const ep1 = prepareEpisodeScene(analysis, 1);
+    const ep2 = prepareEpisodeScene(analysis, 2);
+    const ep3 = prepareEpisodeScene(analysis, 3);
+    const ep4 = prepareEpisodeScene(analysis, 4);
+    const ep5 = prepareEp5FlybyScene(analysis);
+    const jc = prepareJupiterCaptureScene(analysis.jupiterCaptureAnalysis
+      ? analysis
+      : { jupiterCaptureAnalysis: { perijoveRJ: 1.5, canonicalDeltaVKms: 2.3, ifDeltaVKms: 8.1, ganymedeOrbitKm: 1070400, approachAngleDeg: 30 } });
+    const sr = prepareSaturnScene(analysis.saturnRingAnalysis
+      ? analysis
+      : { saturnRingAnalysis: { enceladusOrbitKm: 238020, ringPlaneAngleDeg: 27 } });
+    const ua = prepareUranusScene(analysis.uranusApproachAnalysis
+      ? analysis
+      : { uranusApproachAnalysis: { titaniaOrbitKm: 435910, approachVelocityKms: 12.3, earthSOIRadiusKm: 929000 } });
+    const ea = prepareEarthArrivalScene(analysis.earthArrivalAnalysis
+      ? analysis
+      : { earthArrivalAnalysis: { earthSOIRadiusKm: 929000, leoAltitudeKm: 400, geoAltitudeKm: 35786, lunaOrbitKm: 384400, arrivalDeltaVKms: 7.67, nozzleMarginMinutes: 26 } });
+    return [fullRoute, ep1, ep2, ep3, ep4, ep5, jc, sr, ua, ea];
+  }
+
+  it("all scenes have timeline with totalDays > 0", () => {
+    for (const scene of allScenes()) {
+      assert.ok(scene.timeline, `${scene.type}: missing timeline`);
+      assert.ok(scene.timeline!.totalDays > 0, `${scene.type}: totalDays must be > 0, got ${scene.timeline!.totalDays}`);
+    }
+  });
+
+  it("all scenes have at least one timeline transfer with from/to", () => {
+    for (const scene of allScenes()) {
+      const tl = scene.timeline!;
+      assert.ok(tl.transfers.length > 0, `${scene.type}: no timeline transfers`);
+      for (const t of tl.transfers) {
+        assert.ok(typeof t.from === "string" && t.from.length > 0,
+          `${scene.type}: transfer missing 'from' field`);
+        assert.ok(typeof t.to === "string" && t.to.length > 0,
+          `${scene.type}: transfer missing 'to' field`);
+        assert.ok(t.endDay > t.startDay,
+          `${scene.type}: transfer endDay (${t.endDay}) must be > startDay (${t.startDay})`);
+      }
+    }
+  });
+
+  it("full-route and episode scenes: transfer from/to match timeline orbits", () => {
+    const scenes = [
+      prepareFullRouteScene(analysis),
+      prepareEpisodeScene(analysis, 1),
+      prepareEpisodeScene(analysis, 2),
+      prepareEpisodeScene(analysis, 3),
+      prepareEpisodeScene(analysis, 4),
+    ];
+    for (const scene of scenes) {
+      const tl = scene.timeline!;
+      const orbitNames = new Set(tl.orbits.map(o => o.name));
+      for (const t of tl.transfers) {
+        assert.ok(orbitNames.has(t.from!),
+          `${scene.type}: transfer from="${t.from}" not found in timeline orbits [${[...orbitNames]}]`);
+        assert.ok(orbitNames.has(t.to!),
+          `${scene.type}: transfer to="${t.to}" not found in timeline orbits [${[...orbitNames]}]`);
+      }
+    }
+  });
+
+  it("local scenes: provide transferArcs with fromPos/toPos for ship curve fallback", () => {
+    const localScenes = [
+      prepareJupiterCaptureScene(analysis.jupiterCaptureAnalysis
+        ? analysis
+        : { jupiterCaptureAnalysis: { perijoveRJ: 1.5, canonicalDeltaVKms: 2.3, ifDeltaVKms: 8.1, ganymedeOrbitKm: 1070400, approachAngleDeg: 30 } }),
+      prepareSaturnScene(analysis.saturnRingAnalysis
+        ? analysis
+        : { saturnRingAnalysis: { enceladusOrbitKm: 238020, ringPlaneAngleDeg: 27 } }),
+      prepareUranusScene(analysis.uranusApproachAnalysis
+        ? analysis
+        : { uranusApproachAnalysis: { titaniaOrbitKm: 435910, approachVelocityKms: 12.3, earthSOIRadiusKm: 929000 } }),
+      prepareEarthArrivalScene(analysis.earthArrivalAnalysis
+        ? analysis
+        : { earthArrivalAnalysis: { earthSOIRadiusKm: 929000, leoAltitudeKm: 400, geoAltitudeKm: 35786, lunaOrbitKm: 384400, arrivalDeltaVKms: 7.67, nozzleMarginMinutes: 26 } }),
+    ];
+    for (const scene of localScenes) {
+      assert.ok(scene.transferArcs && scene.transferArcs.length > 0,
+        `${scene.type}: must provide transferArcs for ship curve fallback`);
+      // At least one arc should have fromPos and toPos
+      const hasPositions = scene.transferArcs.some(
+        a => Array.isArray(a.fromPos) && Array.isArray(a.toPos),
+      );
+      assert.ok(hasPositions,
+        `${scene.type}: transferArcs need fromPos/toPos arrays for ship animation`);
+    }
+  });
+
+  it("episode scene ship position changes across timeline", () => {
+    const scene = prepareEpisodeScene(analysis, 1);
+    const tl = scene.timeline!;
+    const transfer = tl.transfers[0];
+    const orbit0 = tl.orbits.find(o => o.name === transfer.from);
+    const orbit1 = tl.orbits.find(o => o.name === transfer.to);
+    assert.ok(orbit0, "departure orbit must exist");
+    assert.ok(orbit1, "arrival orbit must exist");
+    // Ship at startDay should be near departure planet
+    const depPos = planetPositionAtTime(orbit0!, transfer.startDay);
+    // Ship at endDay should be near arrival planet
+    const arrPos = planetPositionAtTime(orbit1!, transfer.endDay);
+    // Positions must differ significantly (at least 5 scene units apart)
+    const dx = arrPos[0] - depPos[0];
+    const dy = arrPos[1] - depPos[1];
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    assert.ok(dist > 5, `departure and arrival positions must differ significantly, got distance ${dist.toFixed(2)}`);
+  });
+});

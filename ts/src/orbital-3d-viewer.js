@@ -17,6 +17,7 @@ let timelineAnimFrameId = null;
 let timelineLastTimestamp = null;
 let timelineCurrentDay = 0;
 let shipMarker3D = null;
+let _shipLabel3D = null; // CSS2DObject label above ship marker
 let planetMeshes = {}; // name → THREE.Mesh
 let planetLabels = {}; // name → CSS2DObject
 let transferCurves = []; // Array of { curve, startDay, endDay, episode }
@@ -802,15 +803,31 @@ export function loadTimeline(timeline) {
   if (shipMarker3D) {
     currentSceneGroup.remove(shipMarker3D);
   }
+  if (_shipLabel3D) {
+    currentSceneGroup.remove(_shipLabel3D);
+    if (_shipLabel3D.element?.parentNode) {
+      _shipLabel3D.element.parentNode.removeChild(_shipLabel3D.element);
+    }
+  }
   const sceneType = currentSceneGroup?.name || "full-route";
   const isEpisode = sceneType.startsWith("episode-");
-  // Episode scenes span 20-100 scene units; use larger marker for visibility
-  const shipRadius = isEpisode ? 0.6 : 0.2;
-  const shipGeo = new THREE.SphereGeometry(shipRadius, 12, 12);
+  const isLocal = sceneType !== "full-route" && !isEpisode;
+  // Size ship relative to scene scale: full-route is far away, local is close
+  const shipRadius = isLocal ? 0.15 : isEpisode ? 0.8 : 0.4;
+  const shipGeo = new THREE.SphereGeometry(shipRadius, 16, 16);
+  // Use bright white MeshBasicMaterial so ship stands out against colored arcs
   const shipMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   shipMarker3D = new THREE.Mesh(shipGeo, shipMat);
   shipMarker3D.visible = false;
   currentSceneGroup.add(shipMarker3D);
+
+  // Add CSS2D label above ship for identification
+  const labelDiv = document.createElement("div");
+  labelDiv.textContent = "▲ ケストレル";
+  labelDiv.style.cssText = "color: #ffffff; font-size: 10px; text-shadow: 0 0 4px #000, 0 0 2px #000; pointer-events: none; white-space: nowrap;";
+  _shipLabel3D = new CSS2DObject(labelDiv);
+  _shipLabel3D.visible = false;
+  currentSceneGroup.add(_shipLabel3D);
 }
 
 /** Map transfer to departure/arrival orbit using from/to planet fields */
@@ -859,9 +876,6 @@ export function updateTimelineFrame(day) {
         const point = tc.curve.getPoint(Math.max(0, Math.min(1, progress)));
         shipMarker3D.position.copy(point);
         shipMarker3D.visible = true;
-        // Color ship marker by episode
-        const epColor = EPISODE_COLORS[tc.episode] || 0xffffff;
-        shipMarker3D.material.color.set(epColor);
         shipVisible = true;
         break;
       }
@@ -880,7 +894,6 @@ export function updateTimelineFrame(day) {
             const pz = planetMesh.position.z + po.radiusScene * Math.sin(angle);
             shipMarker3D.position.set(px, py, pz);
             shipMarker3D.visible = true;
-            shipMarker3D.material.color.set(0x58a6ff); // Parking orbit: blue tint
             shipVisible = true;
           }
           break;
@@ -889,6 +902,18 @@ export function updateTimelineFrame(day) {
     }
     if (!shipVisible) {
       shipMarker3D.visible = false;
+    }
+    // Sync ship label with marker
+    if (_shipLabel3D) {
+      _shipLabel3D.visible = shipVisible;
+      if (shipVisible) {
+        const r = shipMarker3D.geometry.parameters.radius || 0.4;
+        _shipLabel3D.position.set(
+          shipMarker3D.position.x,
+          shipMarker3D.position.y + r + 0.5,
+          shipMarker3D.position.z,
+        );
+      }
     }
 
     // Ship-frame camera: follow the ship
