@@ -1,6 +1,6 @@
 # Task 614: Sync Standalone orbital-3d.html with TypeScript Data Module
 
-Status: IN PROGRESS
+Status: DONE
 
 ## Problem
 The standalone `orbital-3d.html` has diverged from the TypeScript `orbital-3d-viewer-data.ts` module in several ways:
