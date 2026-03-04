@@ -1824,3 +1824,116 @@ describe("prepareEarthArrivalScene", () => {
       `IF fail point ${failDist.toFixed(2)} should be farther from Earth than LEO ${canDist.toFixed(2)}`);
   });
 });
+
+// --- Label localization: all labels must be Japanese (Task 613) ---
+
+/** Map of orbit circle names → expected Japanese labels used in the viewer */
+const ORBIT_NAME_JA_MAP: Record<string, string> = {
+  mars: "火星軌道", jupiter: "木星軌道", saturn: "土星軌道",
+  uranus: "天王星軌道", earth: "地球軌道",
+  io: "イオ軌道", europa: "エウロパ軌道", ganymede: "ガニメデ軌道", callisto: "カリスト軌道",
+  enceladus: "エンケラドス軌道", rhea: "レア軌道", titan: "タイタン軌道",
+  miranda: "ミランダ軌道", titania: "タイタニア軌道", oberon: "オベロン軌道",
+  luna: "月軌道", leo: "LEO（低軌道）", geo: "GEO（静止軌道）",
+};
+
+describe("3D label localization", () => {
+  it("jupiter-capture: all planet labels are Japanese", () => {
+    const scene = prepareJupiterCaptureScene({
+      jupiterCaptureAnalysis: {
+        perijoveRJ: 1.5,
+        ganymedeOrbitKm: 1_070_400,
+        approachAngleDeg: 30,
+        canonicalDeltaVKms: 2.3,
+        ifDeltaVKms: 4.13,
+      },
+    });
+    for (const planet of scene.planets) {
+      if (planet.label) {
+        assert.ok(
+          /[\u3000-\u9fff]/.test(planet.label),
+          `Planet "${planet.name}" label "${planet.label}" should contain Japanese characters`,
+        );
+      }
+    }
+  });
+
+  it("jupiter-capture: all orbit circle names have Japanese mapping", () => {
+    const scene = prepareJupiterCaptureScene({
+      jupiterCaptureAnalysis: {
+        perijoveRJ: 1.5,
+        ganymedeOrbitKm: 1_070_400,
+        approachAngleDeg: 30,
+        canonicalDeltaVKms: 2.3,
+        ifDeltaVKms: 4.13,
+      },
+    });
+    for (const oc of scene.orbitCircles ?? []) {
+      assert.ok(
+        ORBIT_NAME_JA_MAP[oc.name],
+        `Orbit circle "${oc.name}" must have a Japanese label mapping`,
+      );
+    }
+  });
+
+  it("earth-arrival: all planet labels are Japanese", () => {
+    const scene = prepareEarthArrivalScene({
+      earthArrivalAnalysis: {
+        leoAltitudeKm: 400,
+        leoRadiusKm: 6771,
+        moonOrbitRadiusKm: 384_400,
+        earthSOIRadiusKm: 924_000,
+        dvCaptureLEOKms: 7.67,
+        nozzleMarginMinutes: 26,
+        ifNozzleFailMinutes: 73,
+      },
+    });
+    for (const planet of scene.planets) {
+      if (planet.label) {
+        assert.ok(
+          /[\u3000-\u9fff]/.test(planet.label),
+          `Planet "${planet.name}" label "${planet.label}" should contain Japanese characters`,
+        );
+      }
+    }
+  });
+
+  it("earth-arrival: all orbit circle names have Japanese mapping", () => {
+    const scene = prepareEarthArrivalScene({
+      earthArrivalAnalysis: {
+        leoAltitudeKm: 400,
+        leoRadiusKm: 6771,
+        moonOrbitRadiusKm: 384_400,
+        earthSOIRadiusKm: 924_000,
+        dvCaptureLEOKms: 7.67,
+        nozzleMarginMinutes: 26,
+        ifNozzleFailMinutes: 73,
+      },
+    });
+    for (const oc of scene.orbitCircles ?? []) {
+      assert.ok(
+        ORBIT_NAME_JA_MAP[oc.name],
+        `Orbit circle "${oc.name}" must have a Japanese label mapping`,
+      );
+    }
+  });
+
+  it("all scene planet labels use Japanese characters", () => {
+    // Comprehensive check across all scene types (using real analysis data)
+    const allScenes = [
+      prepareJupiterCaptureScene(analysis),
+      prepareEarthArrivalScene(analysis),
+      prepareEpisodeScene(analysis, 5),
+    ];
+    for (const scene of allScenes) {
+      for (const planet of scene.planets) {
+        if (planet.label) {
+          assert.ok(
+            /[\u3000-\u9fff]/.test(planet.label),
+            `${scene.type}: Planet "${planet.name}" label "${planet.label}" should be Japanese`,
+          );
+        }
+      }
+    }
+  });
+});
