@@ -149,14 +149,14 @@ const AU_TO_SCENE = 5;
 const PLANET_COLORS = {
   mars: "#e05050", jupiter: "#e0a040", saturn: "#d4b896",
   uranus: "#7ec8e3", earth: "#4488ff",
-  io: "#d29922", europa: "#c8d8e8", ganymede: "#58a6ff",
+  io: "#d29922", europa: "#c8d8e8", ganymede: "#58a6ff", callisto: "#8b6914",
   enceladus: "#ccddee", titania: "#aabbcc",
   rhea: "#aaaacc", titan: "#ddaa55", miranda: "#99bbaa", oberon: "#bb9988",
 };
 const EPISODE_COLORS = { 1: "#ff6644", 2: "#ffaa22", 3: "#44cc88", 4: "#4488ff", 5: "#ff4444" };
-const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, io: 0.06, europa: 0.06, ganymede: 0.08, enceladus: 0.08, titania: 0.08, rhea: 0.07, titan: 0.09, miranda: 0.06, oberon: 0.07 };
-const MOON_ORBIT_KM = { io: 421800, europa: 671100, ganymede: 1070400, enceladus: 238020, rhea: 527108, titan: 1221870, miranda: 129390, titania: 435910, oberon: 583520 };
-const MOON_PERIODS_DAYS = { io: 1.769138, europa: 3.551181, ganymede: 7.154553, enceladus: 1.370218, rhea: 4.518212, titan: 15.945, miranda: 1.413479, titania: 8.705872, oberon: 13.463 };
+const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, io: 0.06, europa: 0.06, ganymede: 0.08, callisto: 0.07, enceladus: 0.08, titania: 0.08, rhea: 0.07, titan: 0.09, miranda: 0.06, oberon: 0.07 };
+const MOON_ORBIT_KM = { io: 421800, europa: 671100, ganymede: 1070400, callisto: 1882700, enceladus: 238020, rhea: 527108, titan: 1221870, miranda: 129390, titania: 435910, oberon: 583520 };
+const MOON_PERIODS_DAYS = { io: 1.769138, europa: 3.551181, ganymede: 7.154553, callisto: 16.6890184, enceladus: 1.370218, rhea: 4.518212, titan: 15.945, miranda: 1.413479, titania: 8.705872, oberon: 13.463 };
 const JUPITER_RADIUS_KM = 71492;
 function mkMoon(name, label, angle) {
   const r = MOON_ORBIT_KM[name] / 50000;
@@ -285,6 +285,7 @@ function prepareJupiterCaptureScene(data) {
   const gM = { name: "ganymede", x: gR*Math.cos(gA), y: gR*Math.sin(gA), z: 0, color: PLANET_COLORS.ganymede, radius: 0.08, orbitRadius: j.ganymedeOrbitKm, label: "ガニメデ" };
   const ioM = mkMoon("io", "イオ", Math.PI*0.2);
   const euM = mkMoon("europa", "エウロパ", Math.PI*1.4);
+  const caM = mkMoon("callisto", "カリスト", Math.PI*1.1);
   const pjKm = j.perijoveRJ * JUPITER_RADIUS_KM, pjR = pjKm / 50000, pjA = Math.PI * 1.5;
   const pjPos = [pjR*Math.cos(pjA), pjR*Math.sin(pjA), 0];
   const approachPos = [12, 5, 0];
@@ -297,7 +298,7 @@ function prepareJupiterCaptureScene(data) {
     ],
     planets: [
       { name: "jupiter", x: 0, y: 0, z: 0, color: PLANET_COLORS.jupiter, radius: 0.5, isCentral: true, label: "木星" },
-      ioM, euM, gM,
+      ioM, euM, gM, caM,
     ],
     transferArcs: [
       { from: "mars", to: "jupiter", fromPos: approachPos, toPos: pjPos, episode: 1, color: "#3fb950", label: `ペリジュピター捕獲（ΔV=${j.canonicalDeltaVKms} km/s）`, scenarioId: "canonical" },
@@ -308,11 +309,13 @@ function prepareJupiterCaptureScene(data) {
       { name: "io", radiusScene: MOON_ORBIT_KM.io / 50000, color: PLANET_COLORS.io, z: 0 },
       { name: "europa", radiusScene: MOON_ORBIT_KM.europa / 50000, color: PLANET_COLORS.europa, z: 0 },
       { name: "ganymede", radiusScene: j.ganymedeOrbitKm / 50000, color: PLANET_COLORS.ganymede, z: 0 },
+      { name: "callisto", radiusScene: MOON_ORBIT_KM.callisto / 50000, color: PLANET_COLORS.callisto, z: 0 },
     ],
     timeline: { totalDays: MOON_PERIODS_DAYS.ganymede * 3, orbits: [
       { name: "io", radiusScene: MOON_ORBIT_KM.io / 50000, initialAngle: Math.PI * 0.2, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.io, z: 0 },
       { name: "europa", radiusScene: MOON_ORBIT_KM.europa / 50000, initialAngle: Math.PI * 1.4, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.europa, z: 0 },
       { name: "ganymede", radiusScene: j.ganymedeOrbitKm / 50000, initialAngle: gA, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.ganymede, z: 0 },
+      { name: "callisto", radiusScene: MOON_ORBIT_KM.callisto / 50000, initialAngle: Math.PI * 1.1, meanMotionPerDay: 2 * Math.PI / MOON_PERIODS_DAYS.callisto, z: 0 },
     ], transfers: [{ startDay: 0, endDay: MOON_PERIODS_DAYS.ganymede, episode: 1, label: "火星→木星 接近", from: "mars", to: "jupiter" }] }
   };
 }

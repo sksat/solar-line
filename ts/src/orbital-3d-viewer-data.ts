@@ -194,6 +194,7 @@ const MOON_PERIODS_DAYS: Record<string, number> = {
   io: 1.769138,
   europa: 3.551181,
   ganymede: 7.154553,
+  callisto: 16.6890184,
   // Saturn system
   enceladus: 1.370218,
   rhea: 4.518212,
@@ -215,6 +216,7 @@ const PLANET_COLORS: Record<string, string> = {
   io: "#d29922",
   europa: "#c8d8e8",
   ganymede: "#58a6ff",
+  callisto: "#8b6914",
   // Saturn moons
   enceladus: "#ccddee",
   rhea: "#eab308",
@@ -245,6 +247,7 @@ const PLANET_RADII: Record<string, number> = {
   io: 0.06,
   europa: 0.06,
   ganymede: 0.08,
+  callisto: 0.07,
   // Saturn moons
   enceladus: 0.08,
   rhea: 0.08,
@@ -860,6 +863,7 @@ export function prepareJupiterCaptureScene(data: {
   };
   const ioMoon = makeMoon("io", "イオ", Math.PI * 0.2);
   const europaMoon = makeMoon("europa", "エウロパ", Math.PI * 1.4);
+  const callistoMoon = makeMoon("callisto", "カリスト", Math.PI * 1.1);
 
   // Perijove reference point (very close to Jupiter)
   const perijoveKm = j.perijoveRJ * JUPITER_RADIUS_KM;
@@ -908,6 +912,7 @@ export function prepareJupiterCaptureScene(data: {
       ioMoon,
       europaMoon,
       ganymedeMoon,
+      callistoMoon,
     ],
     transferArcs: [
       // Canonical: approach → perijove
@@ -964,6 +969,12 @@ export function prepareJupiterCaptureScene(data: {
         color: PLANET_COLORS.ganymede,
         z: 0,
       },
+      {
+        name: "callisto",
+        radiusScene: MOON_ORBIT_KM.callisto / LOCAL_SCENE_SCALE,
+        color: PLANET_COLORS.callisto,
+        z: 0,
+      },
     ],
     timeline: {
       totalDays: MOON_PERIODS_DAYS.ganymede * 3,
@@ -987,6 +998,13 @@ export function prepareJupiterCaptureScene(data: {
           radiusScene: ganymedeOrbitKm / LOCAL_SCENE_SCALE,
           initialAngle: ganymedeAngle,
           meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.ganymede,
+          z: 0,
+        },
+        {
+          name: "callisto",
+          radiusScene: MOON_ORBIT_KM.callisto / LOCAL_SCENE_SCALE,
+          initialAngle: Math.PI * 1.1,
+          meanMotionPerDay: (2 * Math.PI) / MOON_PERIODS_DAYS.callisto,
           z: 0,
         },
       ],

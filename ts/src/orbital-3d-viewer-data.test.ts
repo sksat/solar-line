@@ -387,12 +387,13 @@ describe("prepareJupiterCaptureScene", () => {
     assert.equal(jupiter!.isCentral, true);
   });
 
-  it("includes Ganymede, Io, and Europa", () => {
+  it("includes all 4 Galilean moons", () => {
     const scene = prepareJupiterCaptureScene(jupiterInput);
     const names = scene.planets.map(p => p.name);
     assert.ok(names.includes("ganymede"), "should include Ganymede");
     assert.ok(names.includes("io"), "should include Io");
     assert.ok(names.includes("europa"), "should include Europa");
+    assert.ok(names.includes("callisto"), "should include Callisto");
   });
 
   it("Ganymede is NOT at the same position as Jupiter", () => {
@@ -437,21 +438,24 @@ describe("prepareJupiterCaptureScene", () => {
     assert.ok(ganOrbit!.meanMotionPerDay > 0, "should have positive mean motion");
   });
 
-  it("timeline includes orbits for all 3 moons", () => {
+  it("timeline includes orbits for all 4 Galilean moons", () => {
     const scene = prepareJupiterCaptureScene(jupiterInput);
     const orbitNames = scene.timeline!.orbits.map(o => o.name);
     assert.ok(orbitNames.includes("io"));
     assert.ok(orbitNames.includes("europa"));
     assert.ok(orbitNames.includes("ganymede"));
+    assert.ok(orbitNames.includes("callisto"));
   });
 
-  it("Io orbit is innermost, Ganymede is outermost", () => {
+  it("moon orbits ordered Io < Europa < Ganymede < Callisto", () => {
     const scene = prepareJupiterCaptureScene(jupiterInput);
     const io = scene.timeline!.orbits.find(o => o.name === "io")!;
     const europa = scene.timeline!.orbits.find(o => o.name === "europa")!;
     const ganymede = scene.timeline!.orbits.find(o => o.name === "ganymede")!;
+    const callisto = scene.timeline!.orbits.find(o => o.name === "callisto")!;
     assert.ok(io.radiusScene < europa.radiusScene, "Io < Europa");
     assert.ok(europa.radiusScene < ganymede.radiusScene, "Europa < Ganymede");
+    assert.ok(ganymede.radiusScene < callisto.radiusScene, "Ganymede < Callisto");
   });
 
   it("timeline transfers have from/to planet names", () => {
@@ -461,13 +465,14 @@ describe("prepareJupiterCaptureScene", () => {
     assert.strictEqual(transfers[0].to, "jupiter");
   });
 
-  it("has orbit circles for Io, Europa, Ganymede", () => {
+  it("has orbit circles for all 4 Galilean moons", () => {
     const scene = prepareJupiterCaptureScene(jupiterInput);
     assert.ok(scene.orbitCircles);
     const names = scene.orbitCircles!.map(c => c.name);
     assert.ok(names.includes("io"));
     assert.ok(names.includes("europa"));
     assert.ok(names.includes("ganymede"));
+    assert.ok(names.includes("callisto"));
   });
 
   it("includes 2 scenarios: canonical and high-altitude", () => {
