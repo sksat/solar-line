@@ -12,11 +12,6 @@ import * as path from "node:path";
 
 const SCREENSHOT_DIR = path.resolve(import.meta.dirname, "..", "..", "dist", "screenshots");
 
-// Ensure screenshot directory exists
-test.beforeAll(async () => {
-  fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
-});
-
 const episodes = [
   { slug: "ep-001", name: "EP01" },
   { slug: "ep-002", name: "EP02" },
@@ -28,6 +23,7 @@ const episodes = [
 for (const ep of episodes) {
   test.describe(`${ep.name} diagram screenshots`, () => {
     test(`capture all orbital diagrams`, async ({ page }) => {
+      fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
       await page.goto(`/episodes/${ep.slug}.html`);
       await page.waitForLoadState("load");
 

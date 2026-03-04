@@ -94,13 +94,10 @@ const scenes = [
   },
 ];
 
-test.beforeAll(async () => {
-  fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
-});
-
 test.describe("3D Animation Screenshots", () => {
   test("capture progressive screenshots of all scenes", async ({ page }) => {
     test.setTimeout(180_000);
+    fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
 
     // Collect console messages for diagnostics
     const consoleLogs: string[] = [];
