@@ -6,3 +6,7 @@ Claim a task, work on it, commit your changes, push to origin, check CI status.
 以下追加指示（新しい記述を見逃さないようにするため、削除前に git diff を再確認すること。）
 
 ---
+
+- 3D 可視化
+  - time slider の幅が可視化種類切り替えに追従してない
+  - 土星 -> 天王星接近軌道などがターゲット天体に直接突っ込むような軌道になっており、可視化上も突っ込んでいるように見える
