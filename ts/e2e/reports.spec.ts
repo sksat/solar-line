@@ -91,6 +91,13 @@ test("pages have semantic landmarks (nav, main, footer)", async ({ page }) => {
   await expect(page.locator("footer")).toBeVisible();
 });
 
+test("CSS includes focus-visible and reduced-motion rules", async ({ page }) => {
+  await page.goto("/");
+  const css = await page.locator("style").first().textContent();
+  expect(css).toContain("focus-visible");
+  expect(css).toContain("prefers-reduced-motion");
+});
+
 test("index page has key findings section", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("text=注目の分析結果")).toBeVisible();
@@ -525,8 +532,7 @@ test.describe("DAG Viewer Temporal Slider", () => {
   test("tech-overview page has temporal slider (not dropdown)", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
     // Wait for DAG viewer to initialize
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     // Slider should exist
     const slider = page.locator(".dag-temporal-slider");
@@ -539,8 +545,7 @@ test.describe("DAG Viewer Temporal Slider", () => {
 
   test("slider info label shows 最新 at max position", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     const infoLabel = page.locator(".dag-slider-info");
     await expect(infoLabel).toContainText("最新");
@@ -548,8 +553,7 @@ test.describe("DAG Viewer Temporal Slider", () => {
 
   test("slider updates info label when moved", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     const slider = page.locator(".dag-temporal-slider");
     const infoLabel = page.locator(".dag-slider-info");
@@ -557,19 +561,17 @@ test.describe("DAG Viewer Temporal Slider", () => {
     // Move slider to first position (oldest snapshot)
     await slider.fill("0");
     await slider.dispatchEvent("input");
-    await page.waitForTimeout(200);
 
     // Info label should no longer say 最新
+    await expect(infoLabel).not.toContainText("最新", { timeout: 3000 });
     const text = await infoLabel.textContent();
-    expect(text).not.toBe("最新");
     // Should contain date-like text (e.g., "2026/2/24")
     expect(text).toMatch(/\d/);
   });
 
   test("slider has correct range matching snapshot count", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     const slider = page.locator(".dag-temporal-slider");
     const max = await slider.getAttribute("max");
@@ -583,8 +585,7 @@ test.describe("DAG Viewer Temporal Slider", () => {
 test.describe("DAG Viewer WASM Features", () => {
   test("validation badge is visible", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     const badge = page.locator("#dag-validation-badge");
     await expect(badge).toBeVisible();
@@ -595,8 +596,7 @@ test.describe("DAG Viewer WASM Features", () => {
 
   test("summary bar shows node type counts", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     const summaryBar = page.locator("#dag-summary-bar");
     await expect(summaryBar).toBeVisible();
@@ -607,8 +607,7 @@ test.describe("DAG Viewer WASM Features", () => {
 
   test("path-finding button is visible", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     const pathBtn = page.locator("#dag-pathfind-btn");
     await expect(pathBtn).toBeVisible();
@@ -617,8 +616,7 @@ test.describe("DAG Viewer WASM Features", () => {
 
   test("path-finding button toggles active state", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     const pathBtn = page.locator("#dag-pathfind-btn");
     // Initially not active
@@ -640,8 +638,7 @@ test.describe("DAG Viewer WASM Features", () => {
 
   test("stale nodes have dashed ring indicator", async ({ page }) => {
     await page.goto("/summary/tech-overview.html");
-    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    await page.waitForSelector("#dag-viewer .dag-filter-bar", { timeout: 10000 });
 
     // Check if stale rings exist (may be 0 if no stale nodes)
     const staleRings = page.locator(".dag-stale-ring");
@@ -849,7 +846,7 @@ test.describe("Transcription pages", () => {
     await page.goto("/transcriptions/ep-001.html");
     // Switch to primary (VTT) tab
     await page.locator('.tab-btn[data-tab="primary"]').click();
-    await page.waitForTimeout(200);
+    await expect(page.locator("#tab-primary")).toBeVisible();
     const panelText = await page.locator("#tab-primary").innerText();
     // VTT timing lines like "00:01:23.456 --> 00:01:25.789" should not appear
     expect(panelText).not.toMatch(/\d{2}:\d{2}:\d{2}\.\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{3}/);
@@ -2172,13 +2169,11 @@ test.describe("3D viewer interaction: scene switching", () => {
     await page.goto("/summary/cross-episode.html");
     // Scene buttons are rendered statically but click handlers require Three.js init
     const controls = page.locator(".viewer3d-controls");
-    const visible = await controls.isVisible().catch(() => false);
-    if (!visible) {
-      await page.waitForTimeout(3000);
-      if (!await controls.isVisible().catch(() => false)) {
-        test.skip();
-        return;
-      }
+    try {
+      await controls.waitFor({ state: "visible", timeout: 10000 });
+    } catch {
+      test.skip();
+      return;
     }
     const buttons = page.locator(".viewer3d-scene-btn");
     if (await buttons.count() < 2) {
@@ -2200,13 +2195,11 @@ test.describe("3D viewer interaction: total duration display", () => {
   test("total duration indicator appears in timeline controls", async ({ page }) => {
     await page.goto("/summary/cross-episode.html");
     const controls = page.locator(".viewer3d-controls");
-    const visible = await controls.isVisible().catch(() => false);
-    if (!visible) {
-      await page.waitForTimeout(3000);
-      if (!await controls.isVisible().catch(() => false)) {
-        test.skip();
-        return;
-      }
+    try {
+      await controls.waitFor({ state: "visible", timeout: 10000 });
+    } catch {
+      test.skip();
+      return;
     }
     // Total duration indicator should be visible
     const total = page.locator(".viewer3d-total");
@@ -2219,13 +2212,11 @@ test.describe("3D viewer interaction: total duration display", () => {
   test("total duration updates on scene switch", async ({ page }) => {
     await page.goto("/summary/cross-episode.html");
     const controls = page.locator(".viewer3d-controls");
-    const visible = await controls.isVisible().catch(() => false);
-    if (!visible) {
-      await page.waitForTimeout(3000);
-      if (!await controls.isVisible().catch(() => false)) {
-        test.skip();
-        return;
-      }
+    try {
+      await controls.waitFor({ state: "visible", timeout: 10000 });
+    } catch {
+      test.skip();
+      return;
     }
     const buttons = page.locator(".viewer3d-scene-btn");
     if (await buttons.count() < 2) {
@@ -2236,7 +2227,15 @@ test.describe("3D viewer interaction: total duration display", () => {
     const fullRouteText = await total.textContent();
     // Switch to a different scene (episode)
     await buttons.nth(1).click();
-    await page.waitForTimeout(500);
+    // Wait for total duration text to update after scene switch
+    await page.waitForFunction(
+      (prev) => {
+        const el = document.querySelector(".viewer3d-total");
+        return el && el.textContent !== prev;
+      },
+      fullRouteText,
+      { timeout: 5000 },
+    );
     const episodeText = await total.textContent();
     // The total duration should be different (episode is shorter than full route)
     // Or at least the display should exist
@@ -2249,14 +2248,11 @@ test.describe("3D viewer interaction: speed button", () => {
     await page.goto("/summary/cross-episode.html");
     // Wait for controls to become visible (requires Three.js CDN)
     const controls = page.locator(".viewer3d-controls");
-    const visible = await controls.isVisible().catch(() => false);
-    if (!visible) {
-      // Wait a bit for async init
-      await page.waitForTimeout(3000);
-      if (!await controls.isVisible().catch(() => false)) {
-        test.skip();
-        return;
-      }
+    try {
+      await controls.waitFor({ state: "visible", timeout: 10000 });
+    } catch {
+      test.skip();
+      return;
     }
     const speedBtn = page.locator(".viewer3d-speed");
     await expect(speedBtn).toHaveText("1×");
@@ -2284,13 +2280,11 @@ test.describe("3D viewer interaction: view mode toggle", () => {
     await page.goto("/summary/cross-episode.html");
     // Wait for controls to become visible (requires Three.js CDN)
     const controls = page.locator(".viewer3d-controls");
-    const visible = await controls.isVisible().catch(() => false);
-    if (!visible) {
-      await page.waitForTimeout(3000);
-      if (!await controls.isVisible().catch(() => false)) {
-        test.skip();
-        return;
-      }
+    try {
+      await controls.waitFor({ state: "visible", timeout: 10000 });
+    } catch {
+      test.skip();
+      return;
     }
     const vmBtn = page.locator(".viewer3d-viewmode");
     await expect(vmBtn).toHaveText("慣性");

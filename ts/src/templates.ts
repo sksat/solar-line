@@ -812,6 +812,8 @@ footer {
 .explorer-truncated { color: #d29922; font-size: 0.85rem; }
 .null-val { color: #484f58; font-style: italic; }
 .explorer-chart-area { margin: 1rem 0; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [role="tab"]:focus-visible, [role="menuitem"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
 `;
 
 /** Wrap content in the common HTML layout */
