@@ -2049,3 +2049,95 @@ test.describe("3D viewer interaction: view mode toggle", () => {
     await expect(vmBtn).toHaveText("慣性");
   });
 });
+
+// --- Task 608: ADR and Ideas pages ---
+
+test.describe("ADR pages", () => {
+  test("index page loads without JS errors", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/meta/adr/index.html");
+    await expect(page.locator("h1")).toContainText("設計意思決定記録");
+    expect(errors).toEqual([]);
+  });
+
+  test("index has data table with all 15 ADRs", async ({ page }) => {
+    await page.goto("/meta/adr/index.html");
+    const table = page.locator("table.data-table");
+    await expect(table).toBeVisible();
+    const rows = table.locator("tbody tr");
+    expect(await rows.count()).toBe(15);
+  });
+
+  test("index has status badges", async ({ page }) => {
+    await page.goto("/meta/adr/index.html");
+    const badges = page.locator(".verdict");
+    expect(await badges.count()).toBeGreaterThanOrEqual(15);
+  });
+
+  test("ADR links resolve to individual pages", async ({ page }) => {
+    await page.goto("/meta/adr/index.html");
+    const firstLink = page.locator('table.data-table a[href$=".html"]').first();
+    const href = await firstLink.getAttribute("href");
+    expect(href).toBeTruthy();
+    await firstLink.click();
+    await expect(page.locator("h1")).toBeVisible();
+    // Back link to index
+    await expect(page.locator('a[href="index.html"]')).toBeVisible();
+  });
+
+  test("individual ADR page loads without JS errors", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/meta/adr/001-report-language.html");
+    await expect(page.locator("h1")).toContainText("ADR-001");
+    // Content sections rendered
+    const bodyText = await page.textContent("body");
+    expect(bodyText).toContain("Status");
+    expect(bodyText).toContain("Context");
+    expect(errors).toEqual([]);
+  });
+
+  test("has navigation", async ({ page }) => {
+    await page.goto("/meta/adr/index.html");
+    await expect(page.locator("nav")).toBeVisible();
+  });
+});
+
+test.describe("Ideas pages", () => {
+  test("index page loads without JS errors", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/meta/ideas/index.html");
+    await expect(page.locator("h1")).toContainText("アイデア");
+    expect(errors).toEqual([]);
+  });
+
+  test("index has data table with all 13 ideas", async ({ page }) => {
+    await page.goto("/meta/ideas/index.html");
+    const table = page.locator("table.data-table");
+    await expect(table).toBeVisible();
+    const rows = table.locator("tbody tr");
+    expect(await rows.count()).toBe(13);
+  });
+
+  test("idea links resolve to individual pages", async ({ page }) => {
+    await page.goto("/meta/ideas/index.html");
+    const firstLink = page.locator('table.data-table a[href$=".html"]').first();
+    const href = await firstLink.getAttribute("href");
+    expect(href).toBeTruthy();
+    await firstLink.click();
+    await expect(page.locator("h1")).toBeVisible();
+  });
+
+  test("individual idea page loads without JS errors", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/meta/ideas/cost_efficiency_analysis.html");
+    await expect(page.locator("h1")).toBeVisible();
+    const bodyText = await page.textContent("body");
+    expect(bodyText).toContain("RESOLVED");
+    expect(errors).toEqual([]);
+  });
+
+  test("has navigation", async ({ page }) => {
+    await page.goto("/meta/ideas/index.html");
+    await expect(page.locator("nav")).toBeVisible();
+  });
+});
