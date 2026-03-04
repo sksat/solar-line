@@ -378,8 +378,47 @@ export function loadScene(sceneData) {
       _inertialCameraTarget.set(0, 0, 0);
     }
   } else {
-    _inertialCameraPos.set(8, 6, 10);
-    _inertialCameraTarget.set(0, 0, 0);
+    // Local encounter scenes: compute bounding box from all arc endpoints + planets
+    // so the camera frames the full trajectory including approach points
+    const threePositions = [];
+    for (const arc of sceneData.transferArcs) {
+      if (arc.fromPos) threePositions.push(new THREE.Vector3(arc.fromPos[0], arc.fromPos[2], arc.fromPos[1]));
+      if (arc.toPos) threePositions.push(new THREE.Vector3(arc.toPos[0], arc.toPos[2], arc.toPos[1]));
+    }
+    for (const p of sceneData.planets) {
+      threePositions.push(new THREE.Vector3(p.x, p.z, p.y));
+    }
+    if (threePositions.length > 0) {
+      const bbox = new THREE.Box3();
+      for (const p of threePositions) bbox.expandByPoint(p);
+      const center = new THREE.Vector3();
+      bbox.getCenter(center);
+      const size = new THREE.Vector3();
+      bbox.getSize(size);
+      const span = Math.max(size.x, size.y, size.z, 5);
+      const camDist = span * 1.5;
+      const elevAngle = 35 * Math.PI / 180;
+      const radialDir = new THREE.Vector3(center.x, 0, center.z);
+      if (radialDir.length() > 0.01) {
+        radialDir.normalize();
+      } else {
+        radialDir.set(1, 0, 0);
+      }
+      const camDir = new THREE.Vector3(
+        radialDir.x * Math.cos(elevAngle),
+        Math.sin(elevAngle),
+        radialDir.z * Math.cos(elevAngle),
+      ).normalize();
+      _inertialCameraPos.set(
+        center.x + camDir.x * camDist,
+        center.y + camDir.y * camDist,
+        center.z + camDir.z * camDist,
+      );
+      _inertialCameraTarget.copy(center);
+    } else {
+      _inertialCameraPos.set(8, 6, 10);
+      _inertialCameraTarget.set(0, 0, 0);
+    }
   }
   camera.position.copy(_inertialCameraPos);
   controls.target.copy(_inertialCameraTarget);
