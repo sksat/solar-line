@@ -384,17 +384,18 @@ test.describe("3D Orbital Viewer Example", () => {
     await expect(page.locator("h1")).toContainText("3D軌道ビューア");
   });
 
-  test("has 7 preset buttons", async ({ page }) => {
+  test("has 8 preset buttons", async ({ page }) => {
     await page.goto("/examples/orbital-3d.html");
     const buttons = page.locator(".preset-btn");
-    expect(await buttons.count()).toBe(7);
+    expect(await buttons.count()).toBe(8);
     await expect(buttons.nth(0)).toContainText("全航路");
     await expect(buttons.nth(1)).toContainText("EP01");
     await expect(buttons.nth(2)).toContainText("EP02");
     await expect(buttons.nth(3)).toContainText("EP03");
     await expect(buttons.nth(4)).toContainText("EP04");
-    await expect(buttons.nth(5)).toContainText("土星リング");
-    await expect(buttons.nth(6)).toContainText("天王星接近");
+    await expect(buttons.nth(5)).toContainText("EP05");
+    await expect(buttons.nth(6)).toContainText("土星リング");
+    await expect(buttons.nth(7)).toContainText("天王星接近");
   });
 
   test("has viewer container and info panel", async ({ page }) => {
@@ -452,5 +453,88 @@ test.describe("3D Orbital Viewer Example", () => {
     await expect(vmBtn).toBeAttached();
     await expect(vmBtn).toHaveAttribute("aria-label", "視点切替");
     await expect(vmBtn).toContainText("慣性");
+  });
+
+  test("saturn-ring scene shows scenario toggles with IF checkboxes", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/examples/orbital-3d.html");
+    // Click the saturn-ring preset button
+    const saturnBtn = page.locator(".preset-btn", { hasText: "土星リング" });
+    await saturnBtn.click();
+    await page.waitForTimeout(1000);
+    // Scenario toggles should appear in info panel
+    const toggles = page.locator(".scenario-toggles");
+    await expect(toggles).toBeVisible();
+    // Should have checkboxes with data-scenario attributes
+    const checkboxes = page.locator('input[data-scenario]');
+    expect(await checkboxes.count()).toBeGreaterThanOrEqual(2);
+    // Canonical should be checked
+    const canonical = page.locator('input[data-scenario="canonical"]');
+    await expect(canonical).toBeChecked();
+    // IF scenarios should be checked by default
+    const rhea = page.locator('input[data-scenario="rhea"]');
+    await expect(rhea).toBeChecked();
+    expect(errors).toEqual([]);
+  });
+
+  test("uranus-approach scene shows scenario toggles with IF checkboxes", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/examples/orbital-3d.html");
+    // Click the uranus-approach preset button
+    const uranusBtn = page.locator(".preset-btn", { hasText: "天王星接近" });
+    await uranusBtn.click();
+    await page.waitForTimeout(1000);
+    // Scenario toggles should appear
+    const toggles = page.locator(".scenario-toggles");
+    await expect(toggles).toBeVisible();
+    const checkboxes = page.locator('input[data-scenario]');
+    expect(await checkboxes.count()).toBeGreaterThanOrEqual(2);
+    // Canonical should be checked
+    const canonical = page.locator('input[data-scenario="canonical"]');
+    await expect(canonical).toBeChecked();
+    // IF scenarios should be checked by default
+    const miranda = page.locator('input[data-scenario="miranda"]');
+    await expect(miranda).toBeChecked();
+    expect(errors).toEqual([]);
+  });
+
+  test("scenario toggle unchecking hides IF scenario label", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    // Switch to saturn-ring scene
+    const saturnBtn = page.locator(".preset-btn", { hasText: "土星リング" });
+    await saturnBtn.click();
+    await page.waitForTimeout(1000);
+    // Uncheck Rhea IF scenario
+    const rhea = page.locator('input[data-scenario="rhea"]');
+    await expect(rhea).toBeChecked();
+    await rhea.uncheck();
+    await expect(rhea).not.toBeChecked();
+    // Re-check to verify toggle works both ways
+    await rhea.check();
+    await expect(rhea).toBeChecked();
+  });
+
+  test("EP05 scene shows flyby vs direct scenario toggles", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/examples/orbital-3d.html");
+    const ep05Btn = page.locator(".preset-btn", { hasText: "EP05" });
+    await ep05Btn.click();
+    await page.waitForTimeout(1000);
+    const toggles = page.locator(".scenario-toggles");
+    await expect(toggles).toBeVisible();
+    // Flyby and direct scenarios
+    const flyby = page.locator('input[data-scenario="flyby"]');
+    await expect(flyby).toBeChecked();
+    const direct = page.locator('input[data-scenario="direct"]');
+    await expect(direct).toBeChecked();
+    expect(errors).toEqual([]);
+  });
+
+  test("full-route scene does not show scenario toggles", async ({ page }) => {
+    await page.goto("/examples/orbital-3d.html");
+    // Full-route is the default scene — it has no scenarios
+    await page.waitForTimeout(1000);
+    const toggles = page.locator(".scenario-toggles");
+    expect(await toggles.count()).toBe(0);
   });
 });

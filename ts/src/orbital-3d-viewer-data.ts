@@ -1133,3 +1133,158 @@ export function prepareUranusScene(data: {
     },
   };
 }
+
+// ── EP05 Jupiter Flyby IF Constants ──
+
+/** EP05 flyby route timing (hours) */
+const EP5_FLYBY_LEG1_HOURS = 200; // Uranus → Jupiter
+const EP5_FLYBY_LEG2_HOURS = 307; // Jupiter → Earth (with Oberth)
+const EP5_DIRECT_HOURS = 398;     // Uranus → Earth direct (nozzle fails)
+
+/** Prepare EP05 Jupiter flyby IF scene — solar-system scale comparison
+ *  of canonical flyby route vs direct route (where nozzle dies 73 min before capture).
+ */
+export function prepareEp5FlybyScene(data: {
+  planetLongitudesAtMissionStart?: Record<string, number>;
+}): SceneData {
+  const visiblePlanets = ["earth", "jupiter", "uranus"];
+
+  const startAngles = data.planetLongitudesAtMissionStart;
+  const planets: PlanetData[] = visiblePlanets.map((name) => {
+    const startLon = startAngles?.[name];
+    const globalIdx = ["mars", "jupiter", "saturn", "uranus", "earth"].indexOf(name);
+    const { x, y } = planetXY(name, startLon, globalIdx);
+    return {
+      name,
+      x,
+      y,
+      z: 0,
+      color: PLANET_COLORS[name] ?? "#ffffff",
+      radius: PLANET_RADII[name] ?? 0.15,
+      label: PLANET_LABELS[name] ?? name,
+    };
+  });
+
+  // Timeline orbits
+  const timelineOrbits: TimelineOrbit[] = visiblePlanets.map((name) => {
+    const startLon = startAngles?.[name];
+    const globalIdx = ["mars", "jupiter", "saturn", "uranus", "earth"].indexOf(name);
+    const { angle } = planetXY(name, startLon, globalIdx);
+    return {
+      name,
+      radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+      initialAngle: angle,
+      meanMotionPerDay: meanMotionPerDay(name),
+      z: 0,
+    };
+  });
+
+  // Flyby route: day 0 = departure from Uranus
+  const flybyLeg1Days = EP5_FLYBY_LEG1_HOURS / 24;
+  const flybyLeg2Days = EP5_FLYBY_LEG2_HOURS / 24;
+  const totalFlybyDays = flybyLeg1Days + flybyLeg2Days;
+  const directDays = EP5_DIRECT_HOURS / 24;
+
+  // Planet positions at key times
+  const uranusOrbit = timelineOrbits.find(o => o.name === "uranus")!;
+  const jupiterOrbit = timelineOrbits.find(o => o.name === "jupiter")!;
+  const earthOrbit = timelineOrbits.find(o => o.name === "earth")!;
+
+  const uranusPos = planetPositionAtTime(uranusOrbit, 0);
+  const jupiterPosFlyby = planetPositionAtTime(jupiterOrbit, flybyLeg1Days);
+  const earthPosFlyby = planetPositionAtTime(earthOrbit, totalFlybyDays);
+  const earthPosDirect = planetPositionAtTime(earthOrbit, directDays);
+
+  const transferArcs: TransferArcData[] = [
+    // Canonical flyby route leg 1: Uranus → Jupiter
+    {
+      from: "uranus",
+      to: "jupiter",
+      fromPos: uranusPos,
+      toPos: jupiterPosFlyby,
+      episode: 5,
+      color: EPISODE_COLORS[5],
+      label: "天王星→木星 200h",
+      scenarioId: "flyby",
+    },
+    // Canonical flyby route leg 2: Jupiter → Earth (with Oberth)
+    {
+      from: "jupiter",
+      to: "earth",
+      fromPos: jupiterPosFlyby,
+      toPos: earthPosFlyby,
+      episode: 5,
+      color: "#ff8844",
+      label: "木星→地球 307h（Oberth +3%）",
+      scenarioId: "flyby",
+    },
+    // IF direct route: Uranus → Earth (nozzle fails)
+    {
+      from: "uranus",
+      to: "earth",
+      fromPos: uranusPos,
+      toPos: earthPosDirect,
+      episode: 5,
+      color: "#888888",
+      label: "IF: 直行 398h（ノズル73分前に消失 ✕）",
+      scenarioId: "direct",
+      isCounterfactual: true,
+    },
+  ];
+
+  const orbitCircles: OrbitCircleData[] = visiblePlanets.map((name) => ({
+    name,
+    radiusScene: (ORBIT_RADII_AU[name] ?? 5) * AU_TO_SCENE,
+    color: PLANET_COLORS[name] ?? "#ffffff",
+    z: 0,
+  }));
+
+  const timelineTransfers: TimelineTransfer[] = [
+    {
+      startDay: 0,
+      endDay: flybyLeg1Days,
+      episode: 5,
+      label: "天王星→木星",
+      from: "uranus",
+      to: "jupiter",
+    },
+    {
+      startDay: flybyLeg1Days,
+      endDay: totalFlybyDays,
+      episode: 5,
+      label: "木星→地球",
+      from: "jupiter",
+      to: "earth",
+    },
+  ];
+
+  const timeline: TimelineData = {
+    totalDays: totalFlybyDays,
+    orbits: timelineOrbits,
+    transfers: timelineTransfers,
+  };
+
+  return {
+    type: "episode-5",
+    title: "EP05: IF分析 — 木星フライバイ vs 直行ルート",
+    description:
+      "作中航路（赤/オレンジ: 木星フライバイ経由507h）と直行ルート（灰色: ノズル73分前に消失）を比較。フライバイによるOberth効果+3%がノズル残寿命26分のマージンを生む。",
+    planets,
+    transferArcs,
+    orbitCircles,
+    supportedViewModes: ["inertial", "ship"],
+    eclipticPlane: {
+      type: "ecliptic",
+      normal: [0, 0, 1],
+      z: 0,
+      color: "#334455",
+      opacity: 0.15,
+      label: "黄道面",
+    },
+    timeline,
+    scenarios: [
+      { id: "flyby", label: "作中航路 — 507h（木星フライバイ, ノズル残26分）" },
+      { id: "direct", label: "IF: 直行ルート — ノズル73分前に消失（帰還失敗）", isCounterfactual: true, color: "#888888" },
+    ],
+  };
+}

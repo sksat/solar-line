@@ -3218,6 +3218,7 @@ const VIEWER3D_SCENE_LABELS: Record<string, string> = {
   "episode-2": "EP02: 木星→土星",
   "episode-3": "EP03: 土星→天王星",
   "episode-4": "EP04: 天王星→地球",
+  "episode-5": "EP05: フライバイIF",
 };
 
 /** Render an inline 3D viewer embed container */
@@ -3440,6 +3441,20 @@ window.__prepareScene = function(sceneName, data) {
     var tiM=mkMoon("titania","タイタニア",Math.PI/4),miM=mkMoon("miranda","ミランダ (IF)",Math.PI*0.8),obM=mkMoon("oberon","オベロン (IF)",Math.PI*1.3);
     var tiR=u.titaniaOrbitKm/50000,miR=MK.miranda/50000,obR=MK.oberon/50000;
     return {type:"uranus-approach",title:"",description:"IF分析: タイタニア（作中）・ミランダ・オベロンの各衛星への捕獲軌道を比較。",supportedViewModes:["inertial","ship"],scenarios:[{id:"canonical",label:"作中航路 — タイタニア捕獲（ΔV 0.37 km/s）"},{id:"miranda",label:"IF: ミランダ捕獲（ΔV 0.21 km/s）",isCounterfactual:true,color:PC.miranda},{id:"oberon",label:"IF: オベロン捕獲（ΔV 0.43 km/s）",isCounterfactual:true,color:PC.oberon}],planets:[{name:"uranus",x:0,y:0,z:0,color:PC.uranus,radius:0.4,isCentral:true,label:"天王星"},tiM,miM,obM],transferArcs:[{from:"saturn",to:"uranus",fromPos:[10,3,0],toPos:[0,0,0],episode:3,color:EC[3],label:"土星→天王星 接近",approachAngleDeg:u.approachFromSaturn.angleToDeg,scenarioId:"canonical"},{from:"uranus",to:"titania",fromPos:[tiR*1.5,tiR*0.3,0],toPos:[tiM.x,tiM.y,0],episode:3,color:"#22c55e",label:"タイタニア捕獲（ΔV=0.37 km/s）",scenarioId:"canonical"},{from:"uranus",to:"miranda",fromPos:[miR*1.5,miR*0.5,0],toPos:[miM.x,miM.y,0],episode:3,color:PC.miranda,label:"IF: ミランダ捕獲（ΔV=0.21 km/s）",scenarioId:"miranda",isCounterfactual:true},{from:"uranus",to:"oberon",fromPos:[obR*1.3,obR*0.5,0],toPos:[obM.x,obM.y,0],episode:3,color:PC.oberon,label:"IF: オベロン捕獲（ΔV=0.43 km/s）",scenarioId:"oberon",isCounterfactual:true},{from:"uranus",to:"earth",fromPos:[0,0,0],toPos:[-8,-4,0],episode:5,color:EC[5],label:"天王星→地球 離脱",approachAngleDeg:u.approachFromUranus.angleToDeg,scenarioId:"canonical"}],rings:[{innerRadius:37850,outerRadius:u.ringOuterKm,normal:u.spinAxis,color:"#556677",opacity:0.2}],axes:[{type:"spin",direction:u.spinAxis,label:"天王星自転軸 (97.77°)",color:"#7ec8e3"}],planes:[{type:"equatorial",normal:u.spinAxis,tiltDeg:u.obliquityDeg,color:"#7ec8e3",opacity:0.12,label:"天王星赤道面"}],timeline:{totalDays:MP.titania*3,orbits:[mkOrbit("titania",Math.PI/4),mkOrbit("miranda",Math.PI*0.8),mkOrbit("oberon",Math.PI*1.3)],transfers:[{startDay:0,endDay:MP.titania,episode:3,label:"土星→天王星 接近",from:"saturn",to:"uranus"}]}};
+  }
+  // EP05 Jupiter flyby IF scene
+  if (sceneName === "episode-5") {
+    var vis5 = ["earth","jupiter","uranus"];
+    var allP5 = ["mars","jupiter","saturn","uranus","earth"];
+    var msA5 = data.planetLongitudesAtMissionStart || {};
+    var ep5Planets = vis5.map(function(name){var r=(OR[name]||5)*AU;var idx=allP5.indexOf(name);var a=(typeof msA5[name]==="number")?msA5[name]:fallbackAngles[idx];return{name:name,x:r*Math.cos(a),y:r*Math.sin(a),z:0,color:PC[name],radius:PR[name]||0.15,label:PL[name]||name}});
+    var ep5Orbits = vis5.map(function(name){var idx=allP5.indexOf(name);var a=(typeof msA5[name]==="number")?msA5[name]:fallbackAngles[idx];var mm=2*Math.PI/(OP[name]||365);return{name:name,radiusScene:(OR[name]||5)*AU,initialAngle:a,meanMotionPerDay:mm,z:0}});
+    var ep5OrbMap={};ep5Orbits.forEach(function(o){ep5OrbMap[o.name]=o});
+    function ep5Pos(orb,day){var a2=orb.initialAngle+orb.meanMotionPerDay*day;return[orb.radiusScene*Math.cos(a2),orb.radiusScene*Math.sin(a2),orb.z]}
+    var leg1D=200/24,leg2D=307/24,dirD=398/24,totD=leg1D+leg2D;
+    var uPos=ep5Pos(ep5OrbMap["uranus"],0),jPos=ep5Pos(ep5OrbMap["jupiter"],leg1D),ePosF=ep5Pos(ep5OrbMap["earth"],totD),ePosD=ep5Pos(ep5OrbMap["earth"],dirD);
+    var ep5Oc=vis5.map(function(name){return{name:name,radiusScene:(OR[name]||5)*AU,color:PC[name]||"#ffffff",z:0}});
+    return{type:"episode-5",title:"EP05: IF分析 — 木星フライバイ vs 直行ルート",description:"作中航路（赤/オレンジ: 木星フライバイ経由507h）と直行ルート（灰色: ノズル73分前に消失）を比較。",planets:ep5Planets,orbitCircles:ep5Oc,supportedViewModes:["inertial","ship"],scenarios:[{id:"flyby",label:"作中航路 — 507h（木星フライバイ, ノズル残26分）"},{id:"direct",label:"IF: 直行ルート — ノズル73分前に消失（帰還失敗）",isCounterfactual:true,color:"#888888"}],transferArcs:[{from:"uranus",to:"jupiter",fromPos:uPos,toPos:jPos,episode:5,color:EC[5],label:"天王星→木星 200h",scenarioId:"flyby"},{from:"jupiter",to:"earth",fromPos:jPos,toPos:ePosF,episode:5,color:"#ff8844",label:"木星→地球 307h（Oberth +3%）",scenarioId:"flyby"},{from:"uranus",to:"earth",fromPos:uPos,toPos:ePosD,episode:5,color:"#888888",label:"IF: 直行 398h（ノズル73分前に消失 ✕）",scenarioId:"direct",isCounterfactual:true}],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:totD,orbits:ep5Orbits,transfers:[{startDay:0,endDay:leg1D,episode:5,label:"天王星→木星",from:"uranus",to:"jupiter"},{startDay:leg1D,endDay:totD,episode:5,label:"木星→地球",from:"jupiter",to:"earth"}]}};
   }
   // Per-episode scenes
   var epMatch = sceneName.match(/^episode-(\d+)$/);

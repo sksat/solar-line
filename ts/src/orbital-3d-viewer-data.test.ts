@@ -13,6 +13,7 @@ import {
   prepareSaturnScene,
   prepareUranusScene,
   prepareEpisodeScene,
+  prepareEp5FlybyScene,
   arcControlPoint,
   arcControlPointLocal,
   offsetFromPlanet,
@@ -1353,5 +1354,99 @@ describe("Uranus scene IF counterfactual routes", () => {
     assert.ok(orbitNames.includes("miranda"));
     assert.ok(orbitNames.includes("oberon"));
     assert.equal(scene.timeline!.orbits.length, 3);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// EP05 Jupiter flyby IF scene
+// ---------------------------------------------------------------------------
+
+describe("EP05 Jupiter flyby IF scene", () => {
+  const ep5Input = {
+    planetLongitudesAtMissionStart: {
+      uranus: 2.6747,
+      jupiter: 1.5294,
+      earth: 2.721,
+    },
+  };
+
+  it("returns a scene with type episode-5", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    assert.equal(scene.type, "episode-5");
+  });
+
+  it("has 2 scenarios: flyby (canonical) and direct (IF)", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    assert.ok(scene.scenarios);
+    assert.equal(scene.scenarios!.length, 2);
+    assert.equal(scene.scenarios![0].id, "flyby");
+    assert.equal(scene.scenarios![1].id, "direct");
+    assert.ok(scene.scenarios![1].isCounterfactual);
+  });
+
+  it("shows uranus, jupiter, and earth planets", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    const names = scene.planets.map(p => p.name);
+    assert.ok(names.includes("uranus"));
+    assert.ok(names.includes("jupiter"));
+    assert.ok(names.includes("earth"));
+  });
+
+  it("has flyby route arcs (uranus→jupiter, jupiter→earth) with scenarioId flyby", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    const flybyArcs = scene.transferArcs.filter(a => a.scenarioId === "flyby");
+    assert.equal(flybyArcs.length, 2);
+    assert.equal(flybyArcs[0].from, "uranus");
+    assert.equal(flybyArcs[0].to, "jupiter");
+    assert.equal(flybyArcs[1].from, "jupiter");
+    assert.equal(flybyArcs[1].to, "earth");
+  });
+
+  it("has direct route arc (uranus→earth) with scenarioId direct", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    const directArcs = scene.transferArcs.filter(a => a.scenarioId === "direct");
+    assert.equal(directArcs.length, 1);
+    assert.equal(directArcs[0].from, "uranus");
+    assert.equal(directArcs[0].to, "earth");
+    assert.ok(directArcs[0].isCounterfactual);
+  });
+
+  it("direct route arc is marked as counterfactual", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    const directArc = scene.transferArcs.find(a => a.scenarioId === "direct");
+    assert.ok(directArc);
+    assert.equal(directArc!.isCounterfactual, true);
+  });
+
+  it("flyby arcs are not counterfactual", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    const flybyArcs = scene.transferArcs.filter(a => a.scenarioId === "flyby");
+    for (const arc of flybyArcs) {
+      assert.ok(!arc.isCounterfactual);
+    }
+  });
+
+  it("has orbit circles for uranus, jupiter, earth", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    assert.ok(scene.orbitCircles);
+    const names = scene.orbitCircles!.map(c => c.name);
+    assert.ok(names.includes("uranus"));
+    assert.ok(names.includes("jupiter"));
+    assert.ok(names.includes("earth"));
+  });
+
+  it("has timeline with planet orbits", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    assert.ok(scene.timeline);
+    const orbitNames = scene.timeline!.orbits.map(o => o.name);
+    assert.ok(orbitNames.includes("uranus"));
+    assert.ok(orbitNames.includes("jupiter"));
+    assert.ok(orbitNames.includes("earth"));
+  });
+
+  it("has ecliptic plane", () => {
+    const scene = prepareEp5FlybyScene(ep5Input);
+    assert.ok(scene.eclipticPlane);
+    assert.equal(scene.eclipticPlane!.type, "ecliptic");
   });
 });

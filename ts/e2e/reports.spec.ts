@@ -1777,11 +1777,11 @@ test.describe("Inline 3D viewer in episode reports", () => {
     await expect(tocLink).toHaveText("3D軌道ビューア");
   });
 
-  test("EP05 has inline 3D viewer with uranus-approach scene", async ({ page }) => {
+  test("EP05 has inline 3D viewer with episode-5 scene", async ({ page }) => {
     await page.goto("/episodes/ep-005.html");
     const container = page.locator(".viewer3d-container");
     await expect(container).toBeAttached();
-    await expect(container).toHaveAttribute("data-scene", "uranus-approach");
+    await expect(container).toHaveAttribute("data-scene", "episode-5");
   });
 
   test("EP05 viewer has timeline controls and view mode button", async ({ page }) => {
