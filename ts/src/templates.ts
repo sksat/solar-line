@@ -3491,7 +3491,7 @@ window.__prepareScene = function(sceneName, data) {
     return{type:"episode-5",title:"EP05: IF分析 — 木星フライバイ vs 直行ルート",description:"作中航路（赤/オレンジ: 木星フライバイ経由507h）と直行ルート（灰色: ノズル73分前に消失）を比較。",planets:ep5Planets,orbitCircles:ep5Oc,supportedViewModes:["inertial","ship"],scenarios:[{id:"flyby",label:"作中航路 — 507h（木星フライバイ, ノズル残26分）"},{id:"direct",label:"IF: 直行ルート — ノズル73分前に消失（帰還失敗）",isCounterfactual:true,color:"#888888"}],transferArcs:[{from:"uranus",to:"jupiter",fromPos:uPos,toPos:jPos,episode:5,color:EC[5],label:"天王星→木星 200h",scenarioId:"flyby"},{from:"jupiter",to:"earth",fromPos:jPos,toPos:ePosF,episode:5,color:"#ff8844",label:"木星→地球 307h（Oberth +3%）",scenarioId:"flyby"},{from:"uranus",to:"earth",fromPos:uPos,toPos:ePosD,episode:5,color:"#888888",label:"IF: 直行 398h（ノズル73分前に消失 ✕）",scenarioId:"direct",isCounterfactual:true}],eclipticPlane:{type:"ecliptic",normal:[0,0,1],z:0,color:"#334455",opacity:0.15,label:"黄道面"},timeline:{totalDays:totD,orbits:ep5Orbits,transfers:[{startDay:0,endDay:leg1D,episode:5,label:"天王星→木星",from:"uranus",to:"jupiter"},{startDay:leg1D,endDay:totD,episode:5,label:"木星→地球",from:"jupiter",to:"earth"}]}};
   }
   // Per-episode scenes
-  var epMatch = sceneName.match(/^episode-(\d+)$/);
+  var epMatch = sceneName.match(/^episode-(\\d+)$/);
   if (epMatch) {
     var epNum = parseInt(epMatch[1],10);
     var epTransfer = data.transfers.find(function(t){return t.episode===epNum});

@@ -1910,6 +1910,35 @@ test.describe("Inline 3D viewer in episode reports", () => {
   });
 });
 
+// --- Inline 3D viewer initialization tests (Task 620) ---
+// Verify that inline 3D viewers in episode pages actually initialize
+// (controls become visible after WebGL init) and produce no JS errors.
+// The viewer3d-controls div starts display:none and becomes display:flex
+// after switchScene() successfully creates a scene with timeline data.
+
+test.describe("Inline 3D viewer initialization in episode pages", () => {
+  for (const ep of [1, 2, 3, 4, 5]) {
+    test(`EP0${ep} inline 3D viewer initializes without JS errors`, async ({ page }) => {
+      const errors = collectConsoleErrors(page);
+      await page.goto(`/episodes/ep-00${ep}.html`);
+      const controls = page.locator(".viewer3d-controls");
+      await expect(controls).toBeVisible({ timeout: 15000 });
+      expect(errors).toEqual([]);
+    });
+  }
+
+  test("EP01 inline 3D viewer scene name matches episode-1", async ({ page }) => {
+    const errors = collectConsoleErrors(page);
+    await page.goto("/episodes/ep-001.html");
+    const controls = page.locator(".viewer3d-controls");
+    await expect(controls).toBeVisible({ timeout: 15000 });
+    // After init, the container's data-scene should be "episode-1" (active scene)
+    const container = page.locator(".viewer3d-container");
+    await expect(container).toHaveAttribute("data-scene", "episode-1");
+    expect(errors).toEqual([]);
+  });
+});
+
 // --- 3D viewer interaction tests (Task 575) ---
 // These tests require Three.js CDN access for the 3D viewer to initialize.
 // The controls div starts hidden (display:none) and becomes visible only after
