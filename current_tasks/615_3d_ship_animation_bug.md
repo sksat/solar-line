@@ -2,6 +2,7 @@
 
 Status: DONE
 
+
 ## Problem
 The ship marker in the 3D orbital viewer was invisible in all scene types:
 - Screenshots at different timeline positions looked identical — no visible ship movement
