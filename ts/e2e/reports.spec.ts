@@ -84,6 +84,13 @@ test("index page has reading guide section", async ({ page }) => {
   expect(await guideLinks.count()).toBeGreaterThanOrEqual(4);
 });
 
+test("pages have semantic landmarks (nav, main, footer)", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("nav")).toBeVisible();
+  await expect(page.locator("main")).toBeVisible();
+  await expect(page.locator("footer")).toBeVisible();
+});
+
 test("index page has key findings section", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("text=注目の分析結果")).toBeVisible();
@@ -2344,6 +2351,25 @@ test.describe("ADR pages", () => {
     expect(errors).toEqual([]);
   });
 
+  const adrSpotChecks = [
+    { file: "005-custom-markdown-renderer.html", titleFragment: "ADR-005" },
+    { file: "010-subagent-delegation.html", titleFragment: "ADR-010" },
+    { file: "015-naming-kousatsu-vs-koushou.html", titleFragment: "ADR-015" },
+  ];
+
+  for (const adr of adrSpotChecks) {
+    test(`ADR page ${adr.file} renders correctly`, async ({ page }) => {
+      const errors = collectConsoleErrors(page);
+      await page.goto(`/meta/adr/${adr.file}`);
+      await expect(page.locator("h1")).toContainText(adr.titleFragment);
+      await expect(page.locator("nav")).toBeVisible();
+      const bodyText = await page.textContent("body");
+      expect(bodyText!.length).toBeGreaterThan(200);
+      expect(bodyText).toContain("Status");
+      expect(errors).toEqual([]);
+    });
+  }
+
   test("has navigation", async ({ page }) => {
     await page.goto("/meta/adr/index.html");
     await expect(page.locator("nav")).toBeVisible();
@@ -2383,6 +2409,25 @@ test.describe("Ideas pages", () => {
     expect(bodyText).toContain("RESOLVED");
     expect(errors).toEqual([]);
   });
+
+  const ideaSpotChecks = [
+    "cross_episode_consistency.html",
+    "ep01_mass_ambiguity.html",
+    "orbital_transfer_diagrams.html",
+  ];
+
+  for (const ideaFile of ideaSpotChecks) {
+    test(`idea page ${ideaFile} renders correctly`, async ({ page }) => {
+      const errors = collectConsoleErrors(page);
+      await page.goto(`/meta/ideas/${ideaFile}`);
+      await expect(page.locator("h1")).toBeVisible();
+      await expect(page.locator("nav")).toBeVisible();
+      const bodyText = await page.textContent("body");
+      expect(bodyText!.length).toBeGreaterThan(200);
+      expect(bodyText).toContain("RESOLVED");
+      expect(errors).toEqual([]);
+    });
+  }
 
   test("has navigation", async ({ page }) => {
     await page.goto("/meta/ideas/index.html");
