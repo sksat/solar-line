@@ -1386,6 +1386,7 @@ ${transferCards}
     `第${report.episode}話の分析詳細: ${pageTitle}`,
     navEpisodes,
     metaPages,
+    `/episodes/ep-${epNum}/${detailPage.slug}.html`,
   );
 }
 
@@ -3013,7 +3014,7 @@ export function renderLogsIndex(logs: SiteManifest["logs"], summaryPages?: SiteM
 ${logList}
 </ul>`;
 
-  return layoutHtml("セッションログ", content, "..", summaryPages, undefined, navEpisodes, metaPages);
+  return layoutHtml("セッションログ", content, "..", summaryPages, undefined, navEpisodes, metaPages, "/logs/");
 }
 
 /** Render a single session log page */
@@ -4073,7 +4074,7 @@ ${hasAccuracy || hasAgreement ? `<div class="card" style="font-size:0.85em;margi
 <p style="margin-top:0.3rem"><span class="accuracy-high">■</span> 80%以上 <span class="accuracy-mid">■</span> 60〜80% <span class="accuracy-low">■</span> 60%未満</p>
 </div>` : ""}`;
 
-  return layoutHtml("文字起こしデータ", content, "..", summaryPages, "SOLAR LINE 全エピソードの文字起こし・台詞データ一覧", navEpisodes, metaPages);
+  return layoutHtml("文字起こしデータ", content, "..", summaryPages, "SOLAR LINE 全エピソードの文字起こし・台詞データ一覧", navEpisodes, metaPages, "/transcriptions/");
 }
 
 /** Task entry for dashboard rendering */
