@@ -415,6 +415,35 @@ test.describe("Individual log pages", () => {
   });
 });
 
+// --- Task 625: sitemap.xml and robots.txt ---
+
+test("sitemap.xml exists and contains expected URLs", async ({ page }) => {
+  const response = await page.request.get("/sitemap.xml");
+  expect(response.status()).toBe(200);
+  const text = await response.text();
+  expect(text).toContain('<?xml version="1.0"');
+  expect(text).toContain("<urlset");
+  // Should contain episode pages
+  expect(text).toContain("/episodes/ep-001.html");
+  expect(text).toContain("/episodes/ep-005.html");
+  // Should contain summary pages
+  expect(text).toContain("/summary/cross-episode.html");
+  // Should contain transcription index
+  expect(text).toContain("/transcriptions/");
+  // Should contain calculator and explorer
+  expect(text).toContain("/calculator/");
+  expect(text).toContain("/explorer/");
+});
+
+test("robots.txt exists and references sitemap", async ({ page }) => {
+  const response = await page.request.get("/robots.txt");
+  expect(response.status()).toBe(200);
+  const text = await response.text();
+  expect(text).toContain("User-agent: *");
+  expect(text).toContain("Sitemap:");
+  expect(text).toContain("sitemap.xml");
+});
+
 // --- Cross-cutting tests ---
 
 test("no broken internal links on index page", async ({ page }) => {

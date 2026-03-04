@@ -933,6 +933,40 @@ export function build(config: BuildConfig): void {
     copyDirRecursive(rustdocDir, docOutDir);
   }
 
+  // Generate sitemap.xml for search engine discoverability (Task 625)
+  const siteBase = "https://sksat.github.io/solar-line";
+  const sitemapUrls: string[] = [
+    "/",
+    ...episodes.map(ep => `/episodes/ep-${String(ep.episode).padStart(3, "0")}.html`),
+    ...episodes.flatMap(ep =>
+      (ep.detailPages ?? []).map(dp =>
+        `/episodes/ep-${String(ep.episode).padStart(3, "0")}/${dp.slug}.html`,
+      ),
+    ),
+    ...summaries.map(s => `/summary/${s.slug}.html`),
+    "/transcriptions/",
+    ...transcriptions.map(tr => `/transcriptions/ep-${String(tr.episode).padStart(3, "0")}.html`),
+    "/calculator/",
+    "/explorer/",
+    "/logs/",
+  ];
+  const sitemapXml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...sitemapUrls.map(u => `  <url><loc>${siteBase}${u}</loc></url>`),
+    "</urlset>",
+    "",
+  ].join("\n");
+  fs.writeFileSync(path.join(outDir, "sitemap.xml"), sitemapXml);
+
+  // Generate robots.txt
+  fs.writeFileSync(path.join(outDir, "robots.txt"), [
+    "User-agent: *",
+    "Allow: /",
+    `Sitemap: ${siteBase}/sitemap.xml`,
+    "",
+  ].join("\n"));
+
   const totalTransfers = episodes.reduce((sum, ep) => sum + ep.transfers.length, 0);
   const docStatus = rustdocDir ? " + rustdoc" : "";
   const devDocs = [
