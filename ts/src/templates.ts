@@ -342,6 +342,11 @@ pre code.hljs { background: transparent; padding: 0; }
 .dag-temporal-slider { width: 140px; height: 4px; cursor: pointer; accent-color: var(--accent, #58a6ff); }
 .dag-slider-info { font-size: 0.7em; color: var(--text-secondary); white-space: nowrap; min-width: 6em; }
 @keyframes dagPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 0.15; } }
+.dag-summary-bar { display: flex; gap: 0.5rem; align-items: center; padding: 0.3rem 0.5rem; font-size: 0.75em; border-bottom: 1px solid var(--border); background: var(--surface); }
+.dag-summary-items { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.dag-summary-item { white-space: nowrap; }
+.dag-pathfind-status { font-size: 0.8em; padding: 0.4rem 0.8rem; border: 1px solid #58a6ff44; background: #58a6ff11; border-radius: 4px; margin-top: 0.3rem; color: #58a6ff; }
+.dag-stale-ring { pointer-events: none; }
 .table-wrap { overflow-x: auto; margin: 1rem 0; }
 .table-wrap > table:not([class]) { width: 100%; border-collapse: collapse; font-size: 0.9em; }
 .table-wrap > table:not([class]) th { color: #8b949e; font-weight: 600; font-size: 0.85em; padding: 0.5rem 0.6rem; border-bottom: 2px solid var(--border); text-align: left; white-space: nowrap; }

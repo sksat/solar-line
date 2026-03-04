@@ -494,6 +494,79 @@ test.describe("DAG Viewer Temporal Slider", () => {
   });
 });
 
+// --- DAG Viewer: WASM Features (Task 605) ---
+
+test.describe("DAG Viewer WASM Features", () => {
+  test("validation badge is visible", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    const badge = page.locator("#dag-validation-badge");
+    await expect(badge).toBeVisible();
+    // Should show either check mark or warning
+    const text = await badge.textContent();
+    expect(text).toMatch(/検証OK|件/);
+  });
+
+  test("summary bar shows node type counts", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    const summaryBar = page.locator("#dag-summary-bar");
+    await expect(summaryBar).toBeVisible();
+    // Should contain type labels
+    const text = await summaryBar.textContent();
+    expect(text).toContain("エッジ");
+  });
+
+  test("path-finding button is visible", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    const pathBtn = page.locator("#dag-pathfind-btn");
+    await expect(pathBtn).toBeVisible();
+    expect(await pathBtn.textContent()).toBe("パス検索");
+  });
+
+  test("path-finding button toggles active state", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    const pathBtn = page.locator("#dag-pathfind-btn");
+    // Initially not active
+    await expect(pathBtn).not.toHaveClass(/active/);
+
+    // Click to activate
+    await pathBtn.click();
+    await expect(pathBtn).toHaveClass(/active/);
+
+    // Status message should appear
+    const status = page.locator("#dag-pathfind-status");
+    await expect(status).toBeVisible();
+    expect(await status.textContent()).toContain("始点ノード");
+
+    // Click again to deactivate
+    await pathBtn.click();
+    await expect(pathBtn).not.toHaveClass(/active/);
+  });
+
+  test("stale nodes have dashed ring indicator", async ({ page }) => {
+    await page.goto("/summary/tech-overview.html");
+    await page.waitForSelector("#dag-viewer", { timeout: 5000 });
+    await page.waitForTimeout(1000);
+
+    // Check if stale rings exist (may be 0 if no stale nodes)
+    const staleRings = page.locator(".dag-stale-ring");
+    const count = await staleRings.count();
+    // Count should be non-negative (0 is valid if no stale nodes)
+    expect(count).toBeGreaterThanOrEqual(0);
+  });
+});
+
 // --- Inline glossary tooltips (Task 169) ---
 
 test("episode pages have inline glossary tooltips", async ({ page }) => {

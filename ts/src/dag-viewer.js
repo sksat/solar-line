@@ -145,6 +145,50 @@
     }
   }
 
+  function runValidate(state) {
+    if (!wasmModule) return null;
+    try {
+      return wasmModule.dag_validate(state);
+    } catch (e) {
+      console.warn("WASM dag_validate failed:", e);
+      return null;
+    }
+  }
+
+  function runStaleNodes(state) {
+    if (!wasmModule) return null;
+    try {
+      return wasmModule.dag_stale_nodes(state);
+    } catch (e) {
+      console.warn("WASM dag_stale_nodes failed:", e);
+      return null;
+    }
+  }
+
+  function runFindPaths(state, sourceId, targetId, maxPaths) {
+    if (!wasmModule) return null;
+    try {
+      return wasmModule.dag_find_paths(state, sourceId, targetId, maxPaths || 5);
+    } catch (e) {
+      console.warn("WASM dag_find_paths failed:", e);
+      return null;
+    }
+  }
+
+  function runSummarize(state) {
+    if (!wasmModule) return null;
+    try {
+      return wasmModule.dag_summarize(state);
+    } catch (e) {
+      console.warn("WASM dag_summarize failed:", e);
+      return null;
+    }
+  }
+
+  // --- Path-finding state ---
+  let pathFindSource = null;
+  let pathFindMode = false;
+
   // --- Node classification helpers ---
 
   function getEpisodeTag(node) {
@@ -357,18 +401,129 @@
       (wasmModule ? "#3fb95033;color:#3fb950" : "#f0883e33;color:#f0883e") + ";margin-left:0.5rem;";
     filterBar.appendChild(engineBadge);
 
+    // Validation indicator (WASM only)
+    if (wasmModule) {
+      const issues = runValidate(state);
+      const validBadge = document.createElement("span");
+      validBadge.className = "dag-validation-badge";
+      validBadge.id = "dag-validation-badge";
+      if (issues && issues.length > 0) {
+        validBadge.textContent = `\u26A0 ${issues.length}件`;
+        validBadge.style.cssText = "font-size:0.7em;padding:1px 6px;border-radius:4px;background:#f8514933;color:#f85149;margin-left:0.3rem;cursor:pointer;";
+        validBadge.title = issues.join("\n");
+        validBadge.addEventListener("click", () => showValidationPanel(issues));
+      } else {
+        validBadge.textContent = "\u2713 検証OK";
+        validBadge.style.cssText = "font-size:0.7em;padding:1px 6px;border-radius:4px;background:#3fb95033;color:#3fb950;margin-left:0.3rem;";
+      }
+      filterBar.appendChild(validBadge);
+
+      // Path-finding toggle button
+      const pathBtn = document.createElement("button");
+      pathBtn.className = "dag-filter-btn dag-pathfind-btn";
+      pathBtn.id = "dag-pathfind-btn";
+      pathBtn.textContent = "パス検索";
+      pathBtn.style.cssText += "margin-left:0.3rem;";
+      pathBtn.addEventListener("click", () => {
+        pathFindMode = !pathFindMode;
+        pathFindSource = null;
+        pathBtn.classList.toggle("active", pathFindMode);
+        updatePathFindStatus();
+      });
+      filterBar.appendChild(pathBtn);
+    }
+
     container.innerHTML = "";
     container.appendChild(filterBar);
+
+    // Summary bar (WASM only)
+    if (wasmModule) {
+      const summaryBar = document.createElement("div");
+      summaryBar.className = "dag-summary-bar";
+      summaryBar.id = "dag-summary-bar";
+      buildSummaryBar(summaryBar, state);
+      container.appendChild(summaryBar);
+    }
 
     const graphContainer = document.createElement("div");
     graphContainer.id = "dag-graph-container";
     container.appendChild(graphContainer);
+
+    // Path-finding status indicator
+    const pathStatus = document.createElement("div");
+    pathStatus.id = "dag-pathfind-status";
+    pathStatus.className = "dag-pathfind-status";
+    pathStatus.style.display = "none";
+    container.appendChild(pathStatus);
 
     // Analysis panel (hidden by default, shown on node click)
     const analysisPanel = document.createElement("div");
     analysisPanel.id = "dag-analysis-panel";
     analysisPanel.style.display = "none";
     container.appendChild(analysisPanel);
+  }
+
+  function buildSummaryBar(el, state) {
+    const nodes = Object.values(state.nodes);
+    const typeCounts = {};
+    const statusCounts = {};
+    for (const n of nodes) {
+      typeCounts[n.type] = (typeCounts[n.type] || 0) + 1;
+      statusCounts[n.status] = (statusCounts[n.status] || 0) + 1;
+    }
+    const edges = nodes.reduce((sum, n) => sum + (n.dependsOn || []).length, 0);
+    const stale = runStaleNodes(state);
+
+    let html = '<div class="dag-summary-items">';
+    // Type distribution
+    for (const [type, count] of Object.entries(typeCounts)) {
+      const color = TYPE_COLORS[type] || "#8b949e";
+      const label = TYPE_LABELS[type] || type;
+      html += `<span class="dag-summary-item" style="color:${color}">${label}: ${count}</span>`;
+    }
+    html += `<span class="dag-summary-item" style="opacity:0.7">エッジ: ${edges}</span>`;
+    // Stale count
+    if (stale && stale.length > 0) {
+      html += `<span class="dag-summary-item dag-stale-count" style="color:#f0883e;cursor:pointer;" title="要再検証ノードを表示">要再検証: ${stale.length}</span>`;
+    }
+    html += "</div>";
+    el.innerHTML = html;
+    el.style.cssText = "display:flex;gap:0.5rem;align-items:center;padding:0.3rem 0.5rem;font-size:0.75em;border-bottom:1px solid var(--border,#30363d);background:var(--bg-secondary,#161b22);";
+  }
+
+  function showValidationPanel(issues) {
+    const panel = document.getElementById("dag-analysis-panel");
+    if (!panel) return;
+    let html = `<h4 style="margin:0 0 0.5rem;">DAG 検証結果</h4>`;
+    if (issues.length === 0) {
+      html += `<p style="color:#3fb950;">問題は検出されませんでした。</p>`;
+    } else {
+      html += `<p style="color:#f85149;">${issues.length}件の問題が検出されました:</p>`;
+      html += `<ul style="margin:0.3rem 0;padding-left:1.2rem;font-size:0.85em;">`;
+      for (const issue of issues) {
+        html += `<li style="margin:0.2rem 0;">${escapeHtml(issue)}</li>`;
+      }
+      html += `</ul>`;
+    }
+    panel.innerHTML = html;
+    panel.style.display = "block";
+    panel.style.cssText += "padding:1rem;margin-top:0.5rem;background:var(--bg-secondary,#161b22);border:1px solid var(--border,#30363d);border-radius:6px;";
+  }
+
+  function updatePathFindStatus() {
+    const statusEl = document.getElementById("dag-pathfind-status");
+    if (!statusEl) return;
+    if (!pathFindMode) {
+      statusEl.style.display = "none";
+      return;
+    }
+    statusEl.style.display = "block";
+    statusEl.style.cssText += "padding:0.4rem 0.8rem;font-size:0.8em;border:1px solid #58a6ff44;background:#58a6ff11;border-radius:4px;margin-top:0.3rem;color:#58a6ff;";
+    if (!pathFindSource) {
+      statusEl.textContent = "パス検索モード: 始点ノードをクリックしてください";
+    } else {
+      statusEl.textContent = `パス検索モード: 始点 ${pathFindSource} → 終点ノードをクリックしてください`;
+    }
   }
 
   function renderFiltered(state, filter) {
@@ -469,6 +624,10 @@
     }
     svg.appendChild(edgeGroup);
 
+    // Compute stale nodes for visual indication
+    const staleList = runStaleNodes(filteredState);
+    const staleNodeIds = new Set(staleList || []);
+
     // Draw nodes
     const nodeGroup = document.createElementNS(svgNS, "g");
     nodeGroup.setAttribute("class", "dag-nodes");
@@ -502,6 +661,19 @@
         g.insertBefore(glow, circle);
       }
 
+      // Stale nodes get an orange dashed ring
+      if (staleNodeIds.has(node.id)) {
+        const staleRing = document.createElementNS(svgNS, "circle");
+        staleRing.setAttribute("r", nodeRadius + 3);
+        staleRing.setAttribute("fill", "none");
+        staleRing.setAttribute("stroke", "#f0883e");
+        staleRing.setAttribute("stroke-width", "1.5");
+        staleRing.setAttribute("stroke-dasharray", "3 2");
+        staleRing.setAttribute("opacity", "0.8");
+        staleRing.setAttribute("class", "dag-stale-ring");
+        g.insertBefore(staleRing, circle);
+      }
+
       // Label (abbreviated)
       const label = document.createElementNS(svgNS, "text");
       label.setAttribute("x", nodeRadius + 4);
@@ -512,9 +684,13 @@
       label.textContent = abbreviateId(node.id);
       g.appendChild(label);
 
-      // Click handler — enhanced with WASM analysis
+      // Click handler — enhanced with WASM analysis and path-finding
       g.addEventListener("click", (e) => {
         e.stopPropagation();
+        if (pathFindMode) {
+          handlePathFindClick(node.id, filteredState, edgeGroup, nodeGroup);
+          return;
+        }
         showTooltip(node, pos, svg, edgeGroup, nodeGroup, edges, width, height, nodeMap, visibleIds, filteredState);
         highlightDependencyChain(node.id, edges, edgeGroup, nodeGroup, visibleIds, filteredState);
       });
@@ -559,6 +735,10 @@
     svg.addEventListener("click", () => {
       dismissTooltip(graphContainer, edgeGroup, nodeGroup);
       hideAnalysisPanel();
+      if (pathFindMode) {
+        pathFindSource = null;
+        updatePathFindStatus();
+      }
     });
   }
 
@@ -769,6 +949,36 @@
         }
         highlightNodeSet(new Set(upstream), nodeId, edgeGroup, nodeGroup, "#58a6ff", "url(#dag-arrow-hl)");
       }
+    } else if (action === "paths") {
+      const parts = nodeId.split("|");
+      if (parts.length === 2) {
+        const result = runFindPaths(dagState, parts[0], parts[1], 5);
+        if (result && result.paths) {
+          html = `<h4 style="margin:0 0 0.5rem;">パス検索: ${escapeHtml(parts[0])} → ${escapeHtml(parts[1])}</h4>`;
+          if (result.paths.length === 0) {
+            html += `<p>パスが見つかりませんでした。</p>`;
+          } else {
+            html += `<p><strong>${result.paths.length}</strong> 本のパスが見つかりました:</p>`;
+            for (let pi = 0; pi < result.paths.length; pi++) {
+              const path = result.paths[pi];
+              html += `<div style="margin:0.3rem 0;font-size:0.8em;">`;
+              html += `<strong>パス${pi + 1}</strong> (${path.length}ノード): `;
+              html += path.map((id) => {
+                const n = dagState.nodes[id];
+                const color = n ? TYPE_COLORS[n.type] || "#8b949e" : "#8b949e";
+                return `<span style="padding:0 4px;border-radius:2px;background:${color}22;color:${color};">${escapeHtml(id)}</span>`;
+              }).join(" → ");
+              html += `</div>`;
+            }
+            // Highlight all path nodes
+            const allPathNodes = new Set();
+            for (const path of result.paths) {
+              for (const id of path) allPathNodes.add(id);
+            }
+            highlightNodeSet(allPathNodes, parts[0], edgeGroup, nodeGroup, "#bc8cff", "url(#dag-arrow-hl)");
+          }
+        }
+      }
     } else if (action === "downstream") {
       const downstream = runDownstream(dagState, nodeId);
       if (downstream) {
@@ -914,6 +1124,27 @@
         const text = g.querySelector("text");
         if (text) text.setAttribute("opacity", "1");
       });
+    }
+  }
+
+  // --- Path-finding click handler ---
+  function handlePathFindClick(nodeId, filteredState, edgeGroup, nodeGroup) {
+    if (!pathFindSource) {
+      pathFindSource = nodeId;
+      updatePathFindStatus();
+      // Highlight the source node
+      nodeGroup.querySelectorAll(".dag-node").forEach((g) => {
+        const nid = g.dataset.nodeId;
+        if (nid === nodeId) {
+          g.querySelector("circle").setAttribute("stroke", "#bc8cff");
+          g.querySelector("circle").setAttribute("stroke-width", "3");
+        }
+      });
+    } else {
+      const targetId = nodeId;
+      showAnalysisPanel("paths", pathFindSource + "|" + targetId, edgeGroup, nodeGroup);
+      pathFindSource = null;
+      updatePathFindStatus();
     }
   }
 
