@@ -63,15 +63,33 @@ const scenes = [
     timePoints: [0, 0.25, 0.5, 0.75, 1.0],
   },
   {
+    name: "episode-5",
+    label: "EP05: フライバイIF",
+    btnIndex: 5,
+    timePoints: [0, 0.25, 0.5, 0.75, 1.0],
+  },
+  {
+    name: "jupiter-capture",
+    label: "木星捕獲",
+    btnIndex: 6,
+    timePoints: [0, 0.25, 0.5, 0.75, 1.0],
+  },
+  {
     name: "saturn-ring",
     label: "土星リング",
-    btnIndex: 5,
+    btnIndex: 7,
     timePoints: [0, 0.25, 0.5, 0.75, 1.0],
   },
   {
     name: "uranus-approach",
     label: "天王星接近",
-    btnIndex: 6,
+    btnIndex: 8,
+    timePoints: [0, 0.25, 0.5, 0.75, 1.0],
+  },
+  {
+    name: "earth-arrival",
+    label: "地球到着",
+    btnIndex: 9,
     timePoints: [0, 0.25, 0.5, 0.75, 1.0],
   },
 ];
