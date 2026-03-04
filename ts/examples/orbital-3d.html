@@ -152,11 +152,11 @@ const PLANET_COLORS = {
   uranus: "#7ec8e3", earth: "#4488ff",
   io: "#d29922", europa: "#c8d8e8", ganymede: "#58a6ff", callisto: "#8b6914",
   enceladus: "#ccddee", titania: "#aabbcc",
-  rhea: "#aaaacc", titan: "#ddaa55", miranda: "#99bbaa", oberon: "#bb9988",
+  rhea: "#eab308", titan: "#d2a8ff", miranda: "#3b82f6", oberon: "#f97316",
   luna: "#c0c0c0",
 };
 const EPISODE_COLORS = { 1: "#ff6644", 2: "#ffaa22", 3: "#44cc88", 4: "#4488ff", 5: "#ff4444" };
-const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, io: 0.06, europa: 0.06, ganymede: 0.08, callisto: 0.07, enceladus: 0.08, titania: 0.08, rhea: 0.07, titan: 0.09, miranda: 0.06, oberon: 0.07, luna: 0.08 };
+const PLANET_RADII = { mars: 0.15, jupiter: 0.4, saturn: 0.35, uranus: 0.25, earth: 0.15, io: 0.06, europa: 0.06, ganymede: 0.08, callisto: 0.07, enceladus: 0.08, titania: 0.08, rhea: 0.08, titan: 0.10, miranda: 0.06, oberon: 0.08, luna: 0.08 };
 const MOON_ORBIT_KM = { io: 421800, europa: 671100, ganymede: 1070400, callisto: 1882700, enceladus: 238020, rhea: 527108, titan: 1221870, miranda: 129390, titania: 435910, oberon: 583520, luna: 384400 };
 const MOON_PERIODS_DAYS = { io: 1.769138, europa: 3.551181, ganymede: 7.154553, callisto: 16.6890184, enceladus: 1.370218, rhea: 4.518212, titan: 15.945, miranda: 1.413479, titania: 8.705872, oberon: 13.463, luna: 27.321661 };
 const JUPITER_RADIUS_KM = 71492;
@@ -274,6 +274,7 @@ function prepareFullRouteScene(data) {
 
   return { type: "full-route", title: "ケストレル号全航路 — 3D黄道面ビュー",
     description: "太陽系横断4レグの軌道遷移を3Dで表示。Z軸（黄道面からの高さ）を3倍誇張して表示。土星が最も黄道面から離れ（+0.32 AU）、木星はわずかに下方（-0.04 AU）。",
+    supportedViewModes: ["inertial", "ship"],
     planets, transferArcs, orbitCircles,
     eclipticPlane: { type: "ecliptic", normal: [0,0,1], z: 0, color: "#334455", opacity: 0.15, label: "黄道面" },
     timeline,
@@ -434,7 +435,7 @@ function prepareEarthArrivalScene(data) {
 }
 
 const PLANET_LABELS = { mars: "火星", jupiter: "木星", saturn: "土星", uranus: "天王星", earth: "地球" };
-const EPISODE_TITLES = { 1: "EP01: 火星→木星", 2: "EP02: 木星→土星", 3: "EP03: 土星→天王星", 4: "EP04: 天王星→地球" };
+const EPISODE_TITLES = { 1: "EP01: 火星→木星（ガニメデ）72h brachistochrone", 2: "EP02: 木星→土星 87日 trim-thrust遷移", 3: "EP03: 土星→天王星 143h brachistochrone", 4: "EP04: 天王星→地球 507h複合航路" };
 
 function prepareEpisodeScene(data, episode) {
   const transfer = data.transfers.find(t => t.episode === episode);
